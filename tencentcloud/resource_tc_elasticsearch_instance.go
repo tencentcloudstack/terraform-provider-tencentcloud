@@ -561,50 +561,52 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		d.SetPartial("basic_security_type")
 	}
 
-	if v, ok := d.GetOk("node_info_list"); ok {
-		nodeInfos := v.([]interface{})
-		nodeInfoList := make([]*es.NodeInfo, 0, len(nodeInfos))
-		for _, d := range nodeInfos {
-			value := d.(map[string]interface{})
-			nodeType := value["node_type"].(string)
-			diskSize := uint64(value["disk_size"].(int))
-			nodeNum := uint64(value["node_num"].(int))
-			types := value["type"].(string)
-			diskType := value["disk_type"].(string)
-			encrypt := value["encrypt"].(bool)
-			dataDisk := es.NodeInfo{
-				NodeType:    &nodeType,
-				DiskSize:    &diskSize,
-				NodeNum:     &nodeNum,
-				Type:        &types,
-				DiskType:    &diskType,
-				DiskEncrypt: helper.BoolToInt64Pointer(encrypt),
+	if d.HasChange("node_info_list") {
+		if v, ok := d.GetOk("node_info_list"); ok {
+			nodeInfos := v.([]interface{})
+			nodeInfoList := make([]*es.NodeInfo, 0, len(nodeInfos))
+			for _, d := range nodeInfos {
+				value := d.(map[string]interface{})
+				nodeType := value["node_type"].(string)
+				diskSize := uint64(value["disk_size"].(int))
+				nodeNum := uint64(value["node_num"].(int))
+				types := value["type"].(string)
+				diskType := value["disk_type"].(string)
+				encrypt := value["encrypt"].(bool)
+				dataDisk := es.NodeInfo{
+					NodeType:    &nodeType,
+					DiskSize:    &diskSize,
+					NodeNum:     &nodeNum,
+					Type:        &types,
+					DiskType:    &diskType,
+					DiskEncrypt: helper.BoolToInt64Pointer(encrypt),
+				}
+				nodeInfoList = append(nodeInfoList, &dataDisk)
 			}
-			nodeInfoList = append(nodeInfoList, &dataDisk)
-		}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList)
-			if errRet != nil {
-				return retryError(errRet)
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList)
+				if errRet != nil {
+					return retryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-		d.SetPartial("node_info_list")
-		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
+			d.SetPartial("node_info_list")
+			err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+				instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				if instance != nil && *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
+					return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
+				}
+				return nil
+			})
+			if err != nil {
+				return err
 			}
-			if instance != nil && *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-				return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
-			}
-			return nil
-		})
-		if err != nil {
-			return err
 		}
 	}
 	if d.HasChange("tags") {

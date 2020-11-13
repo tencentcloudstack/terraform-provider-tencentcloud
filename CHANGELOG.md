@@ -5,6 +5,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_sqlserver_instance` add new argument `tags`.
 * Resource: `tencentcloud_sqlserver_readonly_instance` add new argument `tags`.
 * Resource: `tencentcloud_elasticsearch_instance` support nodeType and diskSize modification.
+* Data Source: `tencentcloud_sqlserver_instances` add new argument `tags`.
 
 BUG FIXES:
 
