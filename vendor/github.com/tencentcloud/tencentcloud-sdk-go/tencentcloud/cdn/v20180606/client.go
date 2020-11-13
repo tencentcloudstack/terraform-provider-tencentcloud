@@ -83,12 +83,37 @@ func NewCreateClsLogTopicResponse() (response *CreateClsLogTopicResponse) {
     return
 }
 
-// CreatClsLogTopic 用于创建日志主题。注意：一个日志集下至多可创建10个日志主题。
+// CreateClsLogTopic 用于创建日志主题。注意：一个日志集下至多可创建10个日志主题。
 func (c *Client) CreateClsLogTopic(request *CreateClsLogTopicRequest) (response *CreateClsLogTopicResponse, err error) {
     if request == nil {
         request = NewCreateClsLogTopicRequest()
     }
     response = NewCreateClsLogTopicResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateDiagnoseUrlRequest() (request *CreateDiagnoseUrlRequest) {
+    request = &CreateDiagnoseUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "CreateDiagnoseUrl")
+    return
+}
+
+func NewCreateDiagnoseUrlResponse() (response *CreateDiagnoseUrlResponse) {
+    response = &CreateDiagnoseUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateDiagnoseUrl 用于添加域名诊断任务URL
+func (c *Client) CreateDiagnoseUrl(request *CreateDiagnoseUrlRequest) (response *CreateDiagnoseUrlResponse, err error) {
+    if request == nil {
+        request = NewCreateDiagnoseUrlRequest()
+    }
+    response = NewCreateDiagnoseUrlResponse()
     err = c.Send(request, response)
     return
 }
@@ -349,6 +374,31 @@ func (c *Client) DescribeCertDomains(request *DescribeCertDomainsRequest) (respo
         request = NewDescribeCertDomainsRequest()
     }
     response = NewDescribeCertDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDiagnoseReportRequest() (request *DescribeDiagnoseReportRequest) {
+    request = &DescribeDiagnoseReportRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeDiagnoseReport")
+    return
+}
+
+func NewDescribeDiagnoseReportResponse() (response *DescribeDiagnoseReportResponse) {
+    response = &DescribeDiagnoseReportResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDiagnoseReport 用于获取指定报告id的内容
+func (c *Client) DescribeDiagnoseReport(request *DescribeDiagnoseReportRequest) (response *DescribeDiagnoseReportResponse, err error) {
+    if request == nil {
+        request = NewDescribeDiagnoseReportRequest()
+    }
+    response = NewDescribeDiagnoseReportResponse()
     err = c.Send(request, response)
     return
 }
@@ -844,6 +894,31 @@ func (c *Client) DisableClsLogTopic(request *DisableClsLogTopicRequest) (respons
     return
 }
 
+func NewDuplicateDomainConfigRequest() (request *DuplicateDomainConfigRequest) {
+    request = &DuplicateDomainConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DuplicateDomainConfig")
+    return
+}
+
+func NewDuplicateDomainConfigResponse() (response *DuplicateDomainConfigResponse) {
+    response = &DuplicateDomainConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 拷贝参考域名的配置至新域名。暂不支持自有证书以及定制化配置
+func (c *Client) DuplicateDomainConfig(request *DuplicateDomainConfigRequest) (response *DuplicateDomainConfigResponse, err error) {
+    if request == nil {
+        request = NewDuplicateDomainConfigRequest()
+    }
+    response = NewDuplicateDomainConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewEnableCachesRequest() (request *EnableCachesRequest) {
     request = &EnableCachesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -965,6 +1040,31 @@ func (c *Client) ListClsTopicDomains(request *ListClsTopicDomainsRequest) (respo
         request = NewListClsTopicDomainsRequest()
     }
     response = NewListClsTopicDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListDiagnoseReportRequest() (request *ListDiagnoseReportRequest) {
+    request = &ListDiagnoseReportRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "ListDiagnoseReport")
+    return
+}
+
+func NewListDiagnoseReportResponse() (response *ListDiagnoseReportResponse) {
+    response = &ListDiagnoseReportResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ListDiagnoseReport 用于获取用户诊断URL访问后各个子任务的简要详情。
+func (c *Client) ListDiagnoseReport(request *ListDiagnoseReportRequest) (response *ListDiagnoseReportResponse, err error) {
+    if request == nil {
+        request = NewListDiagnoseReportRequest()
+    }
+    response = NewListDiagnoseReportResponse()
     err = c.Send(request, response)
     return
 }

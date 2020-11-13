@@ -44,6 +44,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Project ID, default value is 0.
 * `security_groups` - (Optional) Security group bound to the instance.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
+* `tags` - (Optional) The tags of the SQL Server.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.
 
 ## Attributes Reference

@@ -31,6 +31,7 @@ func TestAccTencentCloudDataSqlserverInstances(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.vport"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.status"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.used_storage"),
+					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.tags.tf", "test"),
 				),
 			},
 		},
@@ -39,16 +40,19 @@ func TestAccTencentCloudDataSqlserverInstances(t *testing.T) {
 
 const testAccTencentCloudDataSqlserverInstancesBasic = `
 variable "availability_zone"{
-default = "ap-guangzhou-2"
+	default = "ap-guangzhou-2"
 }
 
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_postsql_instance"
+  name              = "tf_postsql_instance"
   availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  project_id = 0
-  memory = 2
-  storage = 10
+  charge_type       = "POSTPAID_BY_HOUR"
+  project_id        = 0
+  memory            = 2
+  storage           = 10
+  tags = {
+	tf = "test"
+  }
 }
 
 data "tencentcloud_sqlserver_instances" "id_test"{

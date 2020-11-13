@@ -56,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
   * `storage` - Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
   * `subnet_id` - ID of subnet.
+  * `tags` - Tags of the SQL Server instance.
   * `used_storage` - Used storage.
   * `vip` - IP for private access.
   * `vpc_id` - ID of VPC.

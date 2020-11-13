@@ -40,7 +40,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 The following arguments are supported:
 
 * `availability_zone` - (Required, ForceNew) Availability zone.
-* `node_info_list` - (Required, ForceNew) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
+* `node_info_list` - (Required) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
 * `password` - (Required) Password to an instance.
 * `subnet_id` - (Required, ForceNew) The id of a VPC subnetwork.
 * `version` - (Required) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.
