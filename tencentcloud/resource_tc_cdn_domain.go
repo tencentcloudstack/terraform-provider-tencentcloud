@@ -35,7 +35,7 @@ Example Usage of COS bucket url as origin
 ```hcl
 resource "tencentcloud_cos_bucket" "bucket" {
   # Bucket format should be [custom name]-[appid].
-  bucket = "ajaxhe-demo-bucket-1251234567"
+  bucket = "demo-bucket-1251234567"
   acl    = "private"
 }
 

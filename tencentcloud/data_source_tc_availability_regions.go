@@ -29,7 +29,7 @@ func dataSourceTencentCloudAvailabilityRegions() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "When specified, only the region with the exactly name match will be returned. `default` value means it consistent with the TIC resource stack region.",
+				Description: "When specified, only the region with the exactly name match will be returned. `default` value means it consistent with the provider region.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,

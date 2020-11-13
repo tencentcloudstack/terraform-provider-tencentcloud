@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 * Resource: `tencentcloud_clb_listener` support import.
-* Resource: `tencentcloud_clb_listener` add computed argument `listener_id`, when refer to listener ID, please use this argument instead of the origin id of resource `tencentcloud_clb_listener`.
+* Resource: `tencentcloud_clb_listener` add computed argument `listener_id`.
 * Resource: `tencentcloud_clb_listener_rule` support import.
 * Resource: `tencentcloud_cdn_domain` add example that use COS bucket url as origin.
 * Data Source: `tencentcloud_instance_types` add argument `exclude_sold_out` to support filtering sold out instance types. 
