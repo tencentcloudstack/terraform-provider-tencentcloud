@@ -32,6 +32,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -87,7 +89,10 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	sqlserverService := SqlserverService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	var (
 		name              = d.Get("name").(string)
@@ -147,6 +152,12 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 		return outErr
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("sqlserver", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudSqlserverReadonlyInstanceRead(d, meta)
 }
 
@@ -189,6 +200,14 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 	}
 	_ = d.Set("master_instance_id", masterInstanceId)
 	_ = d.Set("readonly_group_id", readonlyGroupId)
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }

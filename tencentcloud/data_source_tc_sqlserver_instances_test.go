@@ -31,6 +31,7 @@ func TestAccTencentCloudDataSqlserverInstances(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.vport"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.status"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverInstancesName, "instance_list.0.used_storage"),
+					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.tags.tf", "test"),
 				),
 			},
 		},
@@ -49,6 +50,9 @@ resource "tencentcloud_sqlserver_instance" "test" {
   project_id = 0
   memory = 2
   storage = 10
+  tags = {
+	tf = "test"
+  }
 }
 
 data "tencentcloud_sqlserver_instances" "id_test"{

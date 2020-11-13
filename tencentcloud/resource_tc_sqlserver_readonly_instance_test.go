@@ -35,6 +35,7 @@ func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "status"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.test", "test"),
 				),
 			},
 			{
@@ -60,6 +61,8 @@ func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "status"),
+					resource.TestCheckNoResourceAttr(testSqlserverInstanceResourceKey, "tags.test"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.abc", "abc"),
 				),
 			},
 		},
@@ -130,6 +133,9 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set = [1,2,3]
   maintenance_start_time = "09:00"
   maintenance_time_span = 3
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "test" {
@@ -143,6 +149,9 @@ resource "tencentcloud_sqlserver_readonly_instance" "test" {
   master_instance_id = tencentcloud_sqlserver_instance.test.id
   readonly_group_type = 1
   force_upgrade = true
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
@@ -161,6 +170,9 @@ resource = tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set = [1,2,3]
   maintenance_start_time = "09:00"
   maintenance_time_span = 3
+  tags = {
+    abc = "abc"
+  }
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "test" {
@@ -174,5 +186,8 @@ resource "tencentcloud_sqlserver_readonly_instance" "test" {
   master_instance_id = tencentcloud_sqlserver_instance.test.id
   readonly_group_type = 1
   force_upgrade = true
+  tags = {
+    abc = "abc"
+  }
 }
 `

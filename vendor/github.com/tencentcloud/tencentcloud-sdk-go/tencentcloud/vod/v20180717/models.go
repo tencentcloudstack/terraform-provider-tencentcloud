@@ -193,6 +193,11 @@ type AdaptiveStreamTemplate struct {
 	// <li>0：否，</li>
 	// <li>1：是。</li>
 	RemoveAudio *uint64 `json:"RemoveAudio,omitempty" name:"RemoveAudio"`
+
+	// 是否移除视频流，取值范围：
+	// <li>0：否，</li>
+	// <li>1：是。</li>
+	RemoveVideo *uint64 `json:"RemoveVideo,omitempty" name:"RemoveVideo"`
 }
 
 type AiAnalysisResult struct {
@@ -1722,6 +1727,7 @@ type AudioTemplateInfo struct {
 	// <li>1：单通道</li>
 	// <li>2：双通道</li>
 	// <li>6：立体声</li>
+	// 当媒体的封装格式是音频格式时（flac，ogg，mp3，m4a）时，声道数不允许设为立体声。
 	// 默认值：2。
 	AudioChannel *int64 `json:"AudioChannel,omitempty" name:"AudioChannel"`
 }
@@ -1760,6 +1766,7 @@ type AudioTemplateInfoForUpdate struct {
 	// <li>1：单通道</li>
 	// <li>2：双通道</li>
 	// <li>6：立体声</li>
+	// 当媒体的封装格式是音频格式时（flac，ogg，mp3，m4a）时，声道数不允许设为立体声。
 	AudioChannel *int64 `json:"AudioChannel,omitempty" name:"AudioChannel"`
 }
 
@@ -5046,6 +5053,9 @@ func (r *DescribeStorageDetailsResponse) FromJsonString(s string) error {
 
 type DescribeSubAppIdsRequest struct {
 	*tchttp.BaseRequest
+
+	// 标签信息，查询指定标签的子应用列表。
+	Tags []*ResourceTag `json:"Tags,omitempty" name:"Tags" list`
 }
 
 func (r *DescribeSubAppIdsRequest) ToJsonString() string {
@@ -8030,8 +8040,10 @@ type ModifySubAppIdStatusRequest struct {
 	SubAppId *uint64 `json:"SubAppId,omitempty" name:"SubAppId"`
 
 	// 子应用状态，取值范围：
-	// <li>On：启用</li>
-	// <li>Off：停用</li>
+	// <li>On：启用。</li>
+	// <li>Off：停用。</li>
+	// <li>Destroyed：销毁。</li>
+	// 当前状态如果是 Destoying ，不能进行启用操作，需要等待销毁完成后才能重新启用。
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -8975,7 +8987,7 @@ func (r *ProcessMediaByProcedureResponse) FromJsonString(s string) error {
 type ProcessMediaByUrlRequest struct {
 	*tchttp.BaseRequest
 
-	// 输入视频信息，包括视频 URL ， 名称、视频自定义 ID。
+	// API 已经<font color='red'>不再维护</font>。推荐使用的替代 API 请参考接口描述。
 	InputInfo *MediaInputInfo `json:"InputInfo,omitempty" name:"InputInfo"`
 
 	// 输出文件 COS 路径信息。
@@ -9428,6 +9440,15 @@ type ResolutionNameInfo struct {
 
 	// 展示名字。
 	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+type ResourceTag struct {
+
+	// 标签键。
+	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
+
+	// 标签值。
+	TagValue *string `json:"TagValue,omitempty" name:"TagValue"`
 }
 
 type SampleSnapshotTaskInput struct {
@@ -9917,6 +9938,8 @@ type SubAppIdInfo struct {
 	// 子应用状态，有效值：
 	// <li>On：启用；</li>
 	// <li>Off：停用。</li>
+	// <li>Destroying：销毁中。</li>
+	// <li>Destroyed：销毁完成。</li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -10334,6 +10357,18 @@ type TranscodeTaskInput struct {
 
 	// 马赛克列表，最大可支持 10 张。
 	MosaicSet []*MosaicInput `json:"MosaicSet,omitempty" name:"MosaicSet" list`
+
+	// 转码后的视频的起始时间偏移，单位：秒。
+	// <li>不填或填0，表示转码后的视频从原始视频的起始位置开始；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频从原始视频的第 n 秒位置开始；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频从原始视频结束 n 秒前的位置开始。</li>
+	StartTimeOffset *float64 `json:"StartTimeOffset,omitempty" name:"StartTimeOffset"`
+
+	// 转码后视频的终止时间偏移，单位：秒。
+	// <li>不填或填0，表示转码后的视频持续到原始视频的末尾终止；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频持续到原始视频第 n 秒时终止；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频持续到原始视频结束 n 秒前终止。</li>
+	EndTimeOffset *float64 `json:"EndTimeOffset,omitempty" name:"EndTimeOffset"`
 }
 
 type TranscodeTemplate struct {
@@ -10618,8 +10653,15 @@ type VideoTemplateInfo struct {
 	// 填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：
 	// <li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li>
 	// <li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li>
+	// <li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li>
+	// <li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>
 	// 默认值：black 。
 	FillType *string `json:"FillType,omitempty" name:"FillType"`
+
+	// 视频恒定码率控制因子，取值范围为[1, 51]。
+	// 如果指定该参数，将使用 CRF 的码率控制方式做转码（视频码率将不再生效）。
+	// 如果没有特殊需求，不建议指定该参数。
+	Vcrf *uint64 `json:"Vcrf,omitempty" name:"Vcrf"`
 }
 
 type VideoTemplateInfoForUpdate struct {
@@ -10657,8 +10699,13 @@ type VideoTemplateInfoForUpdate struct {
 	// 填充方式，当视频流配置宽高参数与原始视频的宽高比不一致时，对转码的处理方式，即为“填充”。可选填充方式：
 	// <li> stretch：拉伸，对每一帧进行拉伸，填满整个画面，可能导致转码后的视频被“压扁“或者“拉长“；</li>
 	// <li>black：留黑，保持视频宽高比不变，边缘剩余部分使用黑色填充。</li>
-	// 默认值：black 。
+	// <li>white：留白，保持视频宽高比不变，边缘剩余部分使用白色填充。</li>
+	// <li>gauss：高斯模糊，保持视频宽高比不变，边缘剩余部分使用高斯模糊填充。</li>
 	FillType *string `json:"FillType,omitempty" name:"FillType"`
+
+	// 视频恒定码率控制因子。取值范围为[0, 51]，填0表示禁用该参数。
+	// 如果没有特殊需求，不建议指定该参数。
+	Vcrf *uint64 `json:"Vcrf,omitempty" name:"Vcrf"`
 }
 
 type VideoTrackItem struct {
@@ -10734,9 +10781,11 @@ type WatermarkInput struct {
 	Definition *uint64 `json:"Definition,omitempty" name:"Definition"`
 
 	// 文字内容，长度不超过100个字符。仅当水印类型为文字水印时填写。
+	// 文字水印不支持截图打水印。
 	TextContent *string `json:"TextContent,omitempty" name:"TextContent"`
 
 	// SVG 内容。长度不超过 2000000 个字符。仅当水印类型为 SVG 水印时填写。
+	// SVG 水印不支持截图打水印。
 	SvgContent *string `json:"SvgContent,omitempty" name:"SvgContent"`
 
 	// 水印的起始时间偏移，单位：秒。不填或填0，表示水印从画面出现时开始显现。

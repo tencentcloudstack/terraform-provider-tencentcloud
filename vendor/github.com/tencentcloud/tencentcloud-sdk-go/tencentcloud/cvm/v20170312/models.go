@@ -247,7 +247,7 @@ type CreateImageRequest struct {
 	// 取值范围：<br><li>TRUE：表示关机之后制作镜像<br><li>FALSE：表示开机状态制作镜像<br><br>默认取值：FALSE。<br><br>开机状态制作镜像，可能导致部分数据未备份，影响数据安全。
 	ForcePoweroff *string `json:"ForcePoweroff,omitempty" name:"ForcePoweroff"`
 
-	// 创建Windows镜像时是否启用Sysprep
+	// 创建Windows镜像时是否启用Sysprep，关于Sysprep的详情请参考[链接](https://cloud.tencent.com/document/product/213/43498)
 	Sysprep *string `json:"Sysprep,omitempty" name:"Sysprep"`
 
 	// 基于实例创建整机镜像时，指定包含在镜像里的数据盘Id
@@ -2604,7 +2604,7 @@ type ItemPrice struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiscountPrice *float64 `json:"DiscountPrice,omitempty" name:"DiscountPrice"`
 
-	// 折扣，如20.0代表2折
+	// 折扣，如20.0代表2折。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Discount *float64 `json:"Discount,omitempty" name:"Discount"`
 
@@ -2627,6 +2627,51 @@ type ItemPrice struct {
 	// 使用时间区间在(360, ∞)小时的后续合计费用的折扣价，后付费模式使用，单位：元
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitPriceDiscountThirdStep *float64 `json:"UnitPriceDiscountThirdStep,omitempty" name:"UnitPriceDiscountThirdStep"`
+
+	// 预支三年合计费用的原价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginalPriceThreeYear *float64 `json:"OriginalPriceThreeYear,omitempty" name:"OriginalPriceThreeYear"`
+
+	// 预支三年合计费用的折扣价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountPriceThreeYear *float64 `json:"DiscountPriceThreeYear,omitempty" name:"DiscountPriceThreeYear"`
+
+	// 预支三年应用的折扣，如20.0代表2折。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountThreeYear *float64 `json:"DiscountThreeYear,omitempty" name:"DiscountThreeYear"`
+
+	// 预支五年合计费用的原价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginalPriceFiveYear *float64 `json:"OriginalPriceFiveYear,omitempty" name:"OriginalPriceFiveYear"`
+
+	// 预支五年合计费用的折扣价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountPriceFiveYear *float64 `json:"DiscountPriceFiveYear,omitempty" name:"DiscountPriceFiveYear"`
+
+	// 预支五年应用的折扣，如20.0代表2折。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountFiveYear *float64 `json:"DiscountFiveYear,omitempty" name:"DiscountFiveYear"`
+
+	// 预支一年合计费用的原价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginalPriceOneYear *float64 `json:"OriginalPriceOneYear,omitempty" name:"OriginalPriceOneYear"`
+
+	// 预支一年合计费用的折扣价，预付费模式使用，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountPriceOneYear *float64 `json:"DiscountPriceOneYear,omitempty" name:"DiscountPriceOneYear"`
+
+	// 预支一年应用的折扣，如20.0代表2折。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiscountOneYear *float64 `json:"DiscountOneYear,omitempty" name:"DiscountOneYear"`
 }
 
 type KeyPair struct {
@@ -3115,7 +3160,7 @@ type OsVersion struct {
 
 type Placement struct {
 
-	// 实例所属的[可用区](https://cloud.tencent.com/document/product/213/15753#ZoneInfo)ID。该参数也可以通过调用  [DescribeZones](https://cloud.tencent.com/document/product/213/15707) 的返回值中的Zone字段来获取。
+	// 实例所属的可用区ID。该参数可以通过调用  [DescribeZones](https://cloud.tencent.com/document/product/213/15707) 的返回值中的Zone字段来获取。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
 	// 实例所属项目ID。该参数可以通过调用 [DescribeProject](/document/api/378/4400) 的返回值中的 projectId 字段来获取。不填为默认项目。
@@ -4120,8 +4165,10 @@ type ZoneInfo struct {
 	// <li> ap-guangzhou-2（售罄）</li>
 	// <li> ap-guangzhou-3 </li>
 	// <li> ap-guangzhou-4 </li>
+	// <li> ap-guangzhou-6 </li>
 	// <li> ap-tokyo-1 </li>
 	// <li> ap-singapore-1 </li>
+	// <li> ap-singapore-2 </li>
 	// <li> ap-shanghai-fsi-1 </li>
 	// <li> ap-shanghai-fsi-2 </li>
 	// <li> ap-shanghai-fsi-3 </li>
@@ -4130,6 +4177,7 @@ type ZoneInfo struct {
 	// <li> ap-shanghai-2 </li>
 	// <li> ap-shanghai-3 </li>
 	// <li> ap-shanghai-4 </li>
+	// <li> ap-shanghai-5 </li>
 	// <li> ap-mumbai-1 </li>
 	// <li> ap-mumbai-2 </li>
 	// <li> eu-moscow-1 </li>

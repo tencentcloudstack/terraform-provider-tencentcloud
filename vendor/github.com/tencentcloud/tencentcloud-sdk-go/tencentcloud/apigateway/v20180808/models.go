@@ -952,6 +952,9 @@ type CreateServiceRequest struct {
 
 	// 用户类型。保留类型，serverless用户使用。
 	AppIdType *string `json:"AppIdType,omitempty" name:"AppIdType"`
+
+	// 标签。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
 }
 
 func (r *CreateServiceRequest) ToJsonString() string {

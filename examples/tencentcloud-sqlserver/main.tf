@@ -24,6 +24,9 @@ resource "tencentcloud_sqlserver_instance" "example" {
   project_id        = 0
   memory            = 2
   storage           = 10
+  tags = {
+      "test" = "test"
+  }
 }
 
 resource "tencentcloud_sqlserver_db" "example" {
@@ -58,6 +61,9 @@ resource "tencentcloud_sqlserver_readonly_instance" "example" {
   master_instance_id  = tencentcloud_sqlserver_instance.test.id
   readonly_group_type = 1
   force_upgrade       = true
+  tags = {
+      "test" = "test"
+  }
 }
 
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {

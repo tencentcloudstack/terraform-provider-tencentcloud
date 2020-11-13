@@ -885,6 +885,12 @@ type CreateDBInstanceHourRequest struct {
 
 	// 实例类型。支持值包括： "HA" - 高可用版实例， "BASIC" - 基础版实例。 不指定则默认为高可用版。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
+
+	// 参数模板id。
+	ParamTemplateId *int64 `json:"ParamTemplateId,omitempty" name:"ParamTemplateId"`
+
+	// 告警策略id数组。
+	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList" list`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -1003,6 +1009,12 @@ type CreateDBInstanceRequest struct {
 
 	// 实例类型。支持值包括： "HA" - 高可用版实例， "BASIC" - 基础版实例。 不指定则默认为高可用版。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
+
+	// 参数模板id。
+	ParamTemplateId *int64 `json:"ParamTemplateId,omitempty" name:"ParamTemplateId"`
+
+	// 告警策略id数组。
+	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList" list`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -2470,6 +2482,10 @@ type DescribeDBInstanceInfoResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		KeyRegion *string `json:"KeyRegion,omitempty" name:"KeyRegion"`
 
+		// 当前 CDB 后端服务使用的 KMS 服务的默认地域。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		DefaultKmsRegion *string `json:"DefaultKmsRegion,omitempty" name:"DefaultKmsRegion"`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -2665,6 +2681,9 @@ type DescribeDBPriceRequest struct {
 
 	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
 	ProtectMode *int64 `json:"ProtectMode,omitempty" name:"ProtectMode"`
+
+	// 部署策略，取值范围：HA-高可用版两节点，FE-金融版三节点；默认值根据数据复制方式决定，数据复制方式为强同步复制时默认值为FE，数据复制方式非强同步时默认值为HA。
+	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 }
 
 func (r *DescribeDBPriceRequest) ToJsonString() string {
@@ -4201,6 +4220,9 @@ type InquiryPriceUpgradeInstancesRequest struct {
 
 	// 数据复制方式，支持值包括：0 - 异步复制，1 - 半同步复制，2 - 强同步复制，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
 	ProtectMode *uint64 `json:"ProtectMode,omitempty" name:"ProtectMode"`
+
+	// 部署策略，取值范围：HA-高可用版两节点，FE-金融版三节点；默认值根据数据复制方式决定，数据复制方式为强同步复制时默认值为FE，数据复制方式非强同步时默认值为HA。
+	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 }
 
 func (r *InquiryPriceUpgradeInstancesRequest) ToJsonString() string {

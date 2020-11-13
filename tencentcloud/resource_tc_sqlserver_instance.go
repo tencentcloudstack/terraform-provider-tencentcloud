@@ -30,6 +30,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -114,6 +116,11 @@ func TencentSqlServerBasicInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "The tags of the SQL Server.",
+		},
 	}
 }
 
@@ -189,8 +196,10 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-
+	client := meta.(*TencentCloudClient).apiV3Conn
+	sqlserverService := SqlserverService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 	var (
 		name           = d.Get("name").(string)
 		dbVersion      = d.Get("engine_version").(string)
@@ -252,11 +261,20 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		return outErr
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("sqlserver", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudSqlserverInstanceRead(d, meta)
 }
 
 func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	sqlserverService := SqlserverService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 	instanceId := d.Id()
 
 	var outErr, inErr error
@@ -332,6 +350,18 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		d.SetPartial("security_groups")
 	}
 
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("sqlserver", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
 	return nil
 }
 
@@ -350,7 +380,10 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 	var outErr, inErr error
 	instanceId := d.Id()
 
-	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	sqlserverService := SqlserverService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 	//update project id
 	if d.HasChange("project_id") {
 		projectId := d.Get("project_id").(int)
@@ -393,6 +426,17 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 		d.SetPartial("maintenance_week_set")
 		d.SetPartial("maintenance_start_time")
 		d.SetPartial("maintenance_time_span")
+	}
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("sqlserver", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
@@ -503,6 +547,14 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("maintenance_week_set", weekSet)
 	_ = d.Set("maintenance_start_time", startTime)
 	_ = d.Set("maintenance_time_span", timeSpan)
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }

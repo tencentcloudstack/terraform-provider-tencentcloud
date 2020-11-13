@@ -1,4 +1,10 @@
 ## 1.46.5 (Unreleased)
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_sqlserver_instance` add new argument `tags`.
+* Resource: `tencentcloud_sqlserver_readonly_instance` add new argument `tags`.
+* Resource: `tencentcloud_elasticsearch_instance` support nodeType and diskSize modification.
+
 ## 1.46.4 (November 6, 2020)
 
 BUG FIXES:

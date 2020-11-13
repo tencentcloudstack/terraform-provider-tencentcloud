@@ -43,6 +43,8 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.MEDIUM8"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.disk_size", "200"),
 				),
 			},
 			{
@@ -155,7 +157,8 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   
 	node_info_list {
 	  node_num  = 2
-	  node_type = "ES.S1.SMALL2"
+	  node_type = "ES.S1.MEDIUM8"
+      disk_size = 200
 	}
   
 	tags = {

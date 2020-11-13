@@ -37,6 +37,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "status"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "security_groups.#", "1"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.test", "test"),
 				),
 			},
 			{
@@ -65,6 +66,8 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "status"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "security_groups.#", "0"),
+					resource.TestCheckNoResourceAttr(testSqlserverInstanceResourceKey, "tags.test"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.abc", "abc"),
 				),
 			},
 		},
@@ -96,6 +99,7 @@ func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vip"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "status"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.test", "test"),
 				),
 			},
 			{
@@ -176,6 +180,10 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_start_time = "09:00"
   maintenance_time_span = 3
   security_groups = ["sg-nltpbqg1"]
+
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
@@ -193,6 +201,9 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_start_time = "08:00"
   maintenance_time_span = 4
 
+  tags = {
+    abc = "abc"
+  }
 }
 `
 
@@ -212,5 +223,8 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set = [1,2,3]
   maintenance_start_time = "09:00"
   maintenance_time_span = 3
+  tags = {
+    "test" = "test"
+  }
 }
 `
