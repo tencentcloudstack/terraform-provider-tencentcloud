@@ -341,7 +341,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	d.SetId(instanceId)
 
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
