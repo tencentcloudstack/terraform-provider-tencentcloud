@@ -35,6 +35,7 @@ func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "status"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.test", "test"),
 				),
 			},
 			{
@@ -60,6 +61,8 @@ func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testReadonlySqlserverInstanceResourceKey, "status"),
+					resource.TestCheckNoResourceAttr(testSqlserverInstanceResourceKey, "tags.test"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.abc", "abc"),
 				),
 			},
 		},
@@ -117,62 +120,74 @@ func testAccCheckReadonlySqlserverInstanceExists(n string) resource.TestCheckFun
 
 const testAccReadonlySqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_sqlserver_instance_multi"
-  availability_zone = "ap-guangzhou-2"
-  charge_type = "POSTPAID_BY_HOUR"
-  engine_version = "2017"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  project_id = 0
-  memory = 2
-  storage = 10
-  ha_type = "CLUSTER"
-  maintenance_week_set = [1,2,3]
-  maintenance_start_time = "09:00"
-  maintenance_time_span = 3
+  name                          = "tf_sqlserver_instance_multi"
+  availability_zone             = "ap-guangzhou-2"
+  charge_type                   = "POSTPAID_BY_HOUR"
+  engine_version                = "2017"
+  vpc_id                        = "` + defaultVpcId + `"
+  subnet_id                     = "` + defaultSubnetId + `"
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  ha_type                       = "CLUSTER"
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "test" {
-  name = "tf_sqlserver_instance_ro"
-  availability_zone = "ap-guangzhou-2"
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  memory = 2
-  storage = 10
-  master_instance_id = tencentcloud_sqlserver_instance.test.id
-  readonly_group_type = 1
-  force_upgrade = true
+  name                      = "tf_sqlserver_instance_ro"
+  availability_zone         = "ap-guangzhou-2"
+  charge_type               = "POSTPAID_BY_HOUR"
+  vpc_id                    = "` + defaultVpcId + `"
+  subnet_id                 = "` + defaultSubnetId + `"
+  memory                    = 2
+  storage                   = 10
+  master_instance_id        = tencentcloud_sqlserver_instance.test.id
+  readonly_group_type       = 1
+  force_upgrade             = true
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
 const testAccReadonlySqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
 resource = tencentcloud_sqlserver_instance" "test" {
-  name = "tf_sqlserver_instance_multi"
-  availability_zone = "ap-guangzhou-2"
-  charge_type = "POSTPAID_BY_HOUR"
-  engine_version = "2017"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  project_id = 0
-  memory = 2
-  storage = 10
-  ha_type = "CLUSTER"
-  maintenance_week_set = [1,2,3]
-  maintenance_start_time = "09:00"
-  maintenance_time_span = 3
+  name                      = "tf_sqlserver_instance_multi"
+  availability_zone         = "ap-guangzhou-2"
+  charge_type               = "POSTPAID_BY_HOUR"
+  engine_version            = "2017"
+  vpc_id                    = "` + defaultVpcId + `"
+  subnet_id                 = "` + defaultSubnetId + `"
+  project_id                = 0
+  memory                    = 2
+  storage                   = 10
+  ha_type                   = "CLUSTER"
+  maintenance_week_set      = [1,2,3]
+  maintenance_start_time    = "09:00"
+  maintenance_time_span     = 3
+  tags = {
+    abc = "abc"
+  }
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "test" {
-  name = "tf_sqlserver_instance_update_ro"
-  availability_zone = "ap-guangzhou-2"
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  memory = 4
-  storage = 20
-  master_instance_id = tencentcloud_sqlserver_instance.test.id
-  readonly_group_type = 1
-  force_upgrade = true
+  name                      = "tf_sqlserver_instance_update_ro"
+  availability_zone         = "ap-guangzhou-2"
+  charge_type               = "POSTPAID_BY_HOUR"
+  vpc_id                    = "` + defaultVpcId + `"
+  subnet_id                 = "` + defaultSubnetId + `"
+  memory                    = 4
+  storage                   = 20
+  master_instance_id        = tencentcloud_sqlserver_instance.test.id
+  readonly_group_type       = 1
+  force_upgrade             = true
+  tags = {
+    abc = "abc"
+  }
 }
 `

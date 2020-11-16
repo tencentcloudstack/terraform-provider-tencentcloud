@@ -243,6 +243,31 @@ func (c *Client) DescribeBackupUrl(request *DescribeBackupUrlRequest) (response 
     return
 }
 
+func NewDescribeCommonDBInstancesRequest() (request *DescribeCommonDBInstancesRequest) {
+    request = &DescribeCommonDBInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeCommonDBInstances")
+    return
+}
+
+func NewDescribeCommonDBInstancesResponse() (response *DescribeCommonDBInstancesResponse) {
+    response = &DescribeCommonDBInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询Redis实例列表信息
+func (c *Client) DescribeCommonDBInstances(request *DescribeCommonDBInstancesRequest) (response *DescribeCommonDBInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCommonDBInstancesRequest()
+    }
+    response = NewDescribeCommonDBInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequest) {
     request = &DescribeDBSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1189,6 +1214,31 @@ func (c *Client) ModifyAutoBackupConfig(request *ModifyAutoBackupConfigRequest) 
         request = NewModifyAutoBackupConfigRequest()
     }
     response = NewModifyAutoBackupConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConnectionConfigRequest() (request *ModifyConnectionConfigRequest) {
+    request = &ModifyConnectionConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyConnectionConfig")
+    return
+}
+
+func NewModifyConnectionConfigResponse() (response *ModifyConnectionConfigResponse) {
+    response = &ModifyConnectionConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改实例的连接配置，包括带宽和最大连接数
+func (c *Client) ModifyConnectionConfig(request *ModifyConnectionConfigRequest) (response *ModifyConnectionConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyConnectionConfigRequest()
+    }
+    response = NewModifyConnectionConfigResponse()
     err = c.Send(request, response)
     return
 }

@@ -25,7 +25,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -149,6 +148,11 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the SQL Server instance.",
+						},
 					},
 				},
 			},
@@ -162,7 +166,9 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	service := SqlserverService{client: tcClient}
 
 	id := d.Get("id").(string)
 
@@ -210,6 +216,13 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 		} else {
 			listItem["charge_type"] = COMMON_PAYTYPE_POSTPAID
 		}
+
+		tagList, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, *v.InstanceId)
+		if err != nil {
+			return err
+		}
+
+		listItem["tags"] = tagList
 		list = append(list, listItem)
 		ids = append(ids, *v.InstanceId)
 	}

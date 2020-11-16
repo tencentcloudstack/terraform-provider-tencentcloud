@@ -43,6 +43,7 @@ The following arguments are supported:
 * `readonly_group_id` - (Optional) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
 * `security_groups` - (Optional) Security group bound to the instance.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
+* `tags` - (Optional) The tags of the SQL Server.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.
 
 ## Attributes Reference

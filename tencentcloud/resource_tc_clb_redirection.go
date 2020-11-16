@@ -257,6 +257,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		rparams["domain"] = *domain
 		rparams["url"] = *url
 		rparams["listener_id"] = sourceListenerId
+		rparams["url"] = *url
 		var rules []*clb.RuleOutput
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			results, e := clbService.DescribeRulesByFilter(ctx, rparams)
@@ -273,6 +274,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		if len(rules) == 0 {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: rule not found!")
 		}
+
 		rule := rules[0]
 		sourceLocId = *rule.LocationId
 

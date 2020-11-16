@@ -441,8 +441,8 @@ github.com/subosito/gotenv v1.2.0 h1:Slr1R9HxAlEKefgq5jn9U+DnETlIUa6HfgEzj0g5d7s
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2 h1:Xr9gkxfOP0KQWXKNqmwe8vEeSUiUj4Rlee9CMVX2ZUQ=
 github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2/go.mod h1:yHp0ai0Z9gUljN3o0xMhYJnH/IcvkdTBOX2fmJ93JEM=
-github.com/tencentcloud/tencentcloud-sdk-go v1.0.37 h1:zNJfC6+5sj/OloSq6GzmdSC9lwlZbgQ438zz3qH+v4k=
-github.com/tencentcloud/tencentcloud-sdk-go v1.0.37/go.mod h1:asUz5BPXxgoPGaRgZaVm1iGcUAuHyYUo1nXqKa83cvI=
+github.com/tencentcloud/tencentcloud-sdk-go v1.0.50 h1:KAIRXHVSVMvRX3Dl5gvrcVqCxBv7fDLvHahU0F3GNsc=
+github.com/tencentcloud/tencentcloud-sdk-go v1.0.50/go.mod h1:asUz5BPXxgoPGaRgZaVm1iGcUAuHyYUo1nXqKa83cvI=
 github.com/tetafro/godot v0.3.7 h1:+mecr7RKrUKB5UQ1gwqEMn13sDKTyDR8KNIquB9mm+8=
 github.com/tetafro/godot v0.3.7/go.mod h1:/7NLHhv08H1+8DNj0MElpAACw1ajsCuf3TKNQxA5S+0=
 github.com/timakin/bodyclose v0.0.0-20190930140734-f7f2e9bca95e h1:RumXZ56IrCj4CL+g1b9OL/oH0QnsF976bC8xQFYUD5Q=

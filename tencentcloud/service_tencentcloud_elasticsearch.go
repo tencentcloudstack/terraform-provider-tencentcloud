@@ -94,7 +94,7 @@ func (me *ElasticsearchService) DeleteInstance(ctx context.Context, instanceId s
 	return nil
 }
 
-func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password string, basicSecurityType int64) error {
+func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password string, basicSecurityType int64, nodeList []*es.NodeInfo) error {
 	logId := getLogId(ctx)
 	request := es.NewUpdateInstanceRequest()
 	request.InstanceId = &instanceId
@@ -107,7 +107,9 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	if basicSecurityType > 0 {
 		request.BasicSecurityType = &basicSecurityType
 	}
-
+	if nodeList != nil {
+		request.NodeInfoList = nodeList
+	}
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseEsClient().UpdateInstance(request)
 	if err != nil {

@@ -104,6 +104,10 @@ type AddExistedInstancesResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		TimeoutInstanceIds []*string `json:"TimeoutInstanceIds,omitempty" name:"TimeoutInstanceIds" list`
 
+		// 失败的节点的失败原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FailedReasons []*string `json:"FailedReasons,omitempty" name:"FailedReasons" list`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -118,6 +122,46 @@ func (r *AddExistedInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type AddNodeToNodePoolRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 节点池id
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// 节点id
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
+}
+
+func (r *AddNodeToNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AddNodeToNodePoolRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AddNodeToNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AddNodeToNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AddNodeToNodePoolResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type AutoScalingGroupRange struct {
 
 	// 伸缩组最小实例数
@@ -125,6 +169,21 @@ type AutoScalingGroupRange struct {
 
 	// 伸缩组最大实例数
 	MaxSize *int64 `json:"MaxSize,omitempty" name:"MaxSize"`
+}
+
+type AutoscalingAdded struct {
+
+	// 正在加入中的节点数量
+	Joining *int64 `json:"Joining,omitempty" name:"Joining"`
+
+	// 初始化中的节点数量
+	Initializing *int64 `json:"Initializing,omitempty" name:"Initializing"`
+
+	// 正常的节点数量
+	Normal *int64 `json:"Normal,omitempty" name:"Normal"`
+
+	// 节点总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
 }
 
 type Cluster struct {
@@ -228,6 +287,9 @@ type ClusterAdvancedSettings struct {
 
 	// 审计日志上传到的topic
 	AuditLogTopicId *string `json:"AuditLogTopicId,omitempty" name:"AuditLogTopicId"`
+
+	// 区分单网卡多IP模式和独立网卡模式
+	VpcCniType *string `json:"VpcCniType,omitempty" name:"VpcCniType"`
 }
 
 type ClusterAsGroup struct {
@@ -585,6 +647,104 @@ func (r *CreateClusterInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateClusterNodePoolFromExistingAsgRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 伸缩组ID
+	AutoscalingGroupId *string `json:"AutoscalingGroupId,omitempty" name:"AutoscalingGroupId"`
+}
+
+func (r *CreateClusterNodePoolFromExistingAsgRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateClusterNodePoolFromExistingAsgRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateClusterNodePoolFromExistingAsgResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 节点池ID
+		NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateClusterNodePoolFromExistingAsgResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateClusterNodePoolFromExistingAsgResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateClusterNodePoolRequest struct {
+	*tchttp.BaseRequest
+
+	// cluster id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// AutoScalingGroupPara AS组参数
+	AutoScalingGroupPara *string `json:"AutoScalingGroupPara,omitempty" name:"AutoScalingGroupPara"`
+
+	// LaunchConfigurePara 运行参数
+	LaunchConfigurePara *string `json:"LaunchConfigurePara,omitempty" name:"LaunchConfigurePara"`
+
+	// InstanceAdvancedSettings 示例参数
+	InstanceAdvancedSettings *InstanceAdvancedSettings `json:"InstanceAdvancedSettings,omitempty" name:"InstanceAdvancedSettings"`
+
+	// 是否启用自动伸缩
+	EnableAutoscale *bool `json:"EnableAutoscale,omitempty" name:"EnableAutoscale"`
+
+	// 节点池名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// Labels标签
+	Labels []*Label `json:"Labels,omitempty" name:"Labels" list`
+
+	// Taints互斥
+	Taints []*Taint `json:"Taints,omitempty" name:"Taints" list`
+}
+
+func (r *CreateClusterNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateClusterNodePoolRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateClusterNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 节点池id
+		NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateClusterNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateClusterNodePoolResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateClusterRequest struct {
 	*tchttp.BaseRequest
 
@@ -726,6 +886,47 @@ func (r *CreateClusterRouteTableResponse) ToJsonString() string {
 }
 
 func (r *CreateClusterRouteTableResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreatePrometheusDashboardRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 面板组名称
+	DashboardName *string `json:"DashboardName,omitempty" name:"DashboardName"`
+
+	// 面板列表
+	// 每一项是一个grafana dashboard的json定义
+	Contents []*string `json:"Contents,omitempty" name:"Contents" list`
+}
+
+func (r *CreatePrometheusDashboardRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreatePrometheusDashboardRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreatePrometheusDashboardResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreatePrometheusDashboardResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreatePrometheusDashboardResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -915,6 +1116,46 @@ func (r *DeleteClusterInstancesResponse) ToJsonString() string {
 }
 
 func (r *DeleteClusterInstancesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteClusterNodePoolRequest struct {
+	*tchttp.BaseRequest
+
+	// 节点池对应的 ClusterId
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 需要删除的节点池 Id 列表
+	NodePoolIds []*string `json:"NodePoolIds,omitempty" name:"NodePoolIds" list`
+
+	// 删除节点池时是否保留节点池内节点(节点仍然会被移出集群，但对应的实例不会被销毁)
+	KeepInstance *bool `json:"KeepInstance,omitempty" name:"KeepInstance"`
+}
+
+func (r *DeleteClusterNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteClusterNodePoolRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteClusterNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteClusterNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteClusterNodePoolResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1290,6 +1531,87 @@ func (r *DescribeClusterKubeconfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeClusterNodePoolDetailRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 节点池id
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+}
+
+func (r *DescribeClusterNodePoolDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeClusterNodePoolDetailRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterNodePoolDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 节点池详情
+		NodePool *NodePool `json:"NodePool,omitempty" name:"NodePool"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeClusterNodePoolDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeClusterNodePoolDetailResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterNodePoolsRequest struct {
+	*tchttp.BaseRequest
+
+	// ClusterId（集群id）
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeClusterNodePoolsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeClusterNodePoolsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterNodePoolsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// NodePools（节点池列表）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		NodePoolSet []*NodePool `json:"NodePoolSet,omitempty" name:"NodePoolSet" list`
+
+		// 资源总数
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeClusterNodePoolsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeClusterNodePoolsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeClusterRouteTablesRequest struct {
 	*tchttp.BaseRequest
 }
@@ -1579,6 +1901,45 @@ func (r *DescribeImagesResponse) ToJsonString() string {
 }
 
 func (r *DescribeImagesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePrometheusAgentInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群id
+	// 可以是tke, eks, edge的集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribePrometheusAgentInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePrometheusAgentInstancesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePrometheusAgentInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 关联该集群的实例列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Instances []*string `json:"Instances,omitempty" name:"Instances" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribePrometheusAgentInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePrometheusAgentInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1915,6 +2276,21 @@ type LoginSettings struct {
 	KeepImageLogin *string `json:"KeepImageLogin,omitempty" name:"KeepImageLogin"`
 }
 
+type ManuallyAdded struct {
+
+	// 加入中节的点数量
+	Joining *int64 `json:"Joining,omitempty" name:"Joining"`
+
+	// 初始化中的节点数量
+	Initializing *int64 `json:"Initializing,omitempty" name:"Initializing"`
+
+	// 正常的节点数量
+	Normal *int64 `json:"Normal,omitempty" name:"Normal"`
+
+	// 节点总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+}
+
 type ModifyClusterAsGroupAttributeRequest struct {
 	*tchttp.BaseRequest
 
@@ -2044,6 +2420,118 @@ func (r *ModifyClusterEndpointSPResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyClusterNodePoolRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 节点池ID
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// 名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 最大节点数
+	MaxNodesNum *int64 `json:"MaxNodesNum,omitempty" name:"MaxNodesNum"`
+
+	// 最小节点数
+	MinNodesNum *int64 `json:"MinNodesNum,omitempty" name:"MinNodesNum"`
+
+	// 标签
+	Labels []*Label `json:"Labels,omitempty" name:"Labels" list`
+
+	// 污点
+	Taints []*Taint `json:"Taints,omitempty" name:"Taints" list`
+
+	// 是否开启伸缩
+	EnableAutoscale *bool `json:"EnableAutoscale,omitempty" name:"EnableAutoscale"`
+}
+
+func (r *ModifyClusterNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyClusterNodePoolRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyClusterNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyClusterNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyClusterNodePoolResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type NodeCountSummary struct {
+
+	// 手动管理的节点
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ManuallyAdded *ManuallyAdded `json:"ManuallyAdded,omitempty" name:"ManuallyAdded"`
+
+	// 自动管理的节点
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoscalingAdded *AutoscalingAdded `json:"AutoscalingAdded,omitempty" name:"AutoscalingAdded"`
+}
+
+type NodePool struct {
+
+	// NodePoolId 资源池id
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// Name 资源池名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// ClusterInstanceId 集群实例id
+	ClusterInstanceId *string `json:"ClusterInstanceId,omitempty" name:"ClusterInstanceId"`
+
+	// LifeState 状态
+	LifeState *string `json:"LifeState,omitempty" name:"LifeState"`
+
+	// LaunchConfigurationId 配置
+	LaunchConfigurationId *string `json:"LaunchConfigurationId,omitempty" name:"LaunchConfigurationId"`
+
+	// AutoscalingGroupId 分组id
+	AutoscalingGroupId *string `json:"AutoscalingGroupId,omitempty" name:"AutoscalingGroupId"`
+
+	// Labels 标签
+	Labels []*Label `json:"Labels,omitempty" name:"Labels" list`
+
+	// Taints 污点标记
+	Taints []*Taint `json:"Taints,omitempty" name:"Taints" list`
+
+	// NodeCountSummary 节点列表
+	NodeCountSummary *NodeCountSummary `json:"NodeCountSummary,omitempty" name:"NodeCountSummary"`
+
+	// 状态信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoscalingGroupStatus *string `json:"AutoscalingGroupStatus,omitempty" name:"AutoscalingGroupStatus"`
+
+	// 最大节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxNodesNum *int64 `json:"MaxNodesNum,omitempty" name:"MaxNodesNum"`
+
+	// 最小节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MinNodesNum *int64 `json:"MinNodesNum,omitempty" name:"MinNodesNum"`
+
+	// 期望的节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DesiredNodesNum *int64 `json:"DesiredNodesNum,omitempty" name:"DesiredNodesNum"`
+}
+
 type RegionInstance struct {
 
 	// 地域名称
@@ -2069,6 +2557,46 @@ type RegionInstance struct {
 	// 地域白名单
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type RemoveNodeFromNodePoolRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 节点池id
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// 节点id列表
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
+}
+
+func (r *RemoveNodeFromNodePoolRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RemoveNodeFromNodePoolRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RemoveNodeFromNodePoolResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RemoveNodeFromNodePoolResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RemoveNodeFromNodePoolResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type ResourceDeleteOption struct {
@@ -2164,4 +2692,16 @@ type TagSpecification struct {
 	// 标签对列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
+}
+
+type Taint struct {
+
+	// Key
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// Value
+	Value *string `json:"Value,omitempty" name:"Value"`
+
+	// Effect
+	Effect *string `json:"Effect,omitempty" name:"Effect"`
 }

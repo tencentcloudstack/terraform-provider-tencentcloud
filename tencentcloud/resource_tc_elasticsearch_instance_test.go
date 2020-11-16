@@ -43,6 +43,8 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.MEDIUM8"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.disk_size", "200"),
 				),
 			},
 			{
@@ -123,17 +125,17 @@ func testAccCheckElasticsearchInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccElasticsearchInstance = defaultVpcVariable + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
-	instance_name     = "tf-ci-test"
-	availability_zone = var.availability_zone
-	version           = "7.5.1"
-	vpc_id            = var.vpc_id
-	subnet_id         = var.subnet_id
-	password          = "Test1234"
-	license_type      = "oss"
+	instance_name       = "tf-ci-test"
+	availability_zone   = var.availability_zone
+	version             = "7.5.1"
+	vpc_id              = var.vpc_id
+	subnet_id           = var.subnet_id
+	password            = "Test1234"
+	license_type        = "oss"
   
 	node_info_list {
-	  node_num  = 2
-	  node_type = "ES.S1.SMALL2"
+	  node_num          = 2
+	  node_type         = "ES.S1.SMALL2"
 	}
   
 	tags = {
@@ -154,8 +156,9 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	basic_security_type = 2
   
 	node_info_list {
-	  node_num  = 2
-	  node_type = "ES.S1.SMALL2"
+	  node_num          = 2
+	  node_type         = "ES.S1.MEDIUM8"
+	  disk_size         = 200
 	}
   
 	tags = {
