@@ -37,6 +37,25 @@ func TestAccTencentClbTargetGroupAttachmentResource(t *testing.T) {
 	})
 }
 
+func TestAccTencentClbTargetGroupAttachmentHttpResource(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbTargetGroupAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbTargetGroupAttachmentHttp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbTargetGroupAttachmentExists(clbTargetGroupAttachment),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "clb_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "listener_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "target_group_id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckClbTargetGroupAttachmentDestroy(s *terraform.State) error {
 	var (
 		clbService = ClbService{
@@ -115,6 +134,48 @@ func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc
 		return nil
 	}
 }
+
+const testAccClbTargetGroupAttachmentHttp = `
+resource "tencentcloud_vpc" "foo" {
+	name       = "guagua-ci-temp-test"
+	cidr_block = "10.0.0.0/16"
+  }
+
+  resource "tencentcloud_clb_instance" "clb_basic" {
+	network_type = "OPEN"
+	clb_name     = "tf-clb-basic"
+	vpc_id       = tencentcloud_vpc.foo.id
+  }
+
+  resource "tencentcloud_clb_listener" "listener_basic" {
+	clb_id        = tencentcloud_clb_instance.clb_basic.id
+	port          = 1
+	protocol      = "HTTP"
+	listener_name = "listener_basic"
+  }
+
+  resource "tencentcloud_clb_listener_rule" "rule_basic" {
+	clb_id              = tencentcloud_clb_instance.clb_basic.id
+	listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
+	domain              = "abc.com"
+	url                 = "/"
+	session_expire_time = 30
+	scheduler           = "WRR"
+	target_type         = "TARGETGROUP"
+  }
+
+  resource "tencentcloud_clb_target_group" "test"{
+	  target_group_name = "test-target-keep-1"
+	  vpc_id            = tencentcloud_vpc.foo.id
+  }
+
+  resource "tencentcloud_clb_target_group_attachment" "group" {
+	  clb_id          = tencentcloud_clb_instance.clb_basic.id
+	  listener_id     = tencentcloud_clb_listener.listener_basic.listener_id
+	  rule_id         = tencentcloud_clb_listener_rule.rule_basic.rule_id
+	  target_group_id = tencentcloud_clb_target_group.test.id 
+  }
+`
 
 const testAccClbTargetGroupAttachment = `
   resource "tencentcloud_vpc" "foo" {
