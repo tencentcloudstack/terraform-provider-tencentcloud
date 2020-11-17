@@ -48,6 +48,11 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
+  health_check_port          = 200
+  health_check_type          = "HTTP"
+  health_check_http_code     = 2
+  health_check_http_version  = "HTTP/1.0"
+  health_check_http_method   = "GET"
 }
 
 resource "tencentcloud_clb_attachment" "attachment_tcp" {

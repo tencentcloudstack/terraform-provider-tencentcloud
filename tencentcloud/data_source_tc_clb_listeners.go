@@ -112,6 +112,56 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 							Computed:    true,
 							Description: "Unhealthy threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
+						"health_check_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Protocol used for health check.",
+						},
+						"health_check_port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The health check port is the port of the backend service.",
+						},
+						"health_check_http_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The HTTP version of the backend service.",
+						},
+						"health_check_http_code": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "HTTP health check code of TCP listener.",
+						},
+						"health_check_http_path": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "HTTP health check path of TCP listener.",
+						},
+						"health_check_http_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "HTTP health check domain of TCP listener.",
+						},
+						"health_check_http_method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "HTTP health check method of TCP listener.",
+						},
+						"health_check_context_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Health check protocol.",
+						},
+						"health_check_send_context": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "It represents the content of the request sent by the health check.",
+						},
+						"health_check_recv_context": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "It represents the result returned by the health check.",
+						},
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -223,6 +273,16 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
 			mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
 			mapping["health_check_unhealth_num"] = *listener.HealthCheck.UnHealthNum
+			mapping["health_check_http_code"] = listener.HealthCheck.HttpCode
+			mapping["health_check_http_path"] = listener.HealthCheck.HttpCheckPath
+			mapping["health_check_http_domain"] = listener.HealthCheck.HttpCheckDomain
+			mapping["health_check_http_method"] = listener.HealthCheck.HttpCheckMethod
+			mapping["health_check_http_version"] = listener.HealthCheck.HttpVersion
+			mapping["health_check_context_type"] = listener.HealthCheck.ContextType
+			mapping["health_check_send_context"] = listener.HealthCheck.SendContext
+			mapping["health_check_recv_context"] = listener.HealthCheck.RecvContext
+			mapping["health_check_type"] = listener.HealthCheck.CheckType
+			mapping["health_check_port"] = listener.HealthCheck.CheckPort
 		}
 		if listener.Certificate != nil {
 			mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode

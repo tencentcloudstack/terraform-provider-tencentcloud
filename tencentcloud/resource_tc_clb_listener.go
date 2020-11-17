@@ -29,6 +29,11 @@ resource "tencentcloud_clb_listener" "TCP_listener" {
   health_check_unhealth_num  = 3
   session_expire_time        = 30
   scheduler                  = "WRR"
+  health_check_port          = 200
+  health_check_type          = "HTTP"
+  health_check_http_code     = 2
+  health_check_http_version  = "HTTP/1.0"
+  health_check_http_method   = "GET"
 }
 ```
 
@@ -159,7 +164,89 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Unhealthy threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description: "Unhealthy threshold of health check, and the default is 3. " +
+					"If a success result is returned for the health check 3 consecutive times, " +
+					"the CVM is identified as unhealthy. The value range is 2-10. " +
+					"NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, " +
+					"HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+			},
+			"health_check_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(HEALTH_CHECK_TYPE),
+				Description:  "Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`.",
+			},
+			"health_check_port": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateIntegerInRange(1, 65535),
+				Description: "The health check port is the port of the backend service by default. " +
+					"Unless you want to specify a specific port, it is recommended to leave it blank. " +
+					"Only applicable to TCP/UDP listener.",
+			},
+			"health_check_http_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue(HTTP_VERSION),
+				Description: "The HTTP version of the backend service. When the value of `health_check_type` of " +
+					"the health check protocol is `HTTP`, this field is required. " +
+					"Valid values: `HTTP/1.0`, `HTTP/1.1`.",
+			},
+			"health_check_http_code": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue([]int{1, 2, 4, 8, 16}),
+				Description: "HTTP health check code of TCP listener. When the value of `health_check_type` of " +
+					"the health check protocol is `HTTP`, this field is required. Valid values: 1, 2, 4, 8, 16. " +
+					"1 means http_1xx, 2 means http_2xx, 4 means http_3xx, 8 means http_4xx, 16 means http_5xx.",
+			},
+			"health_check_http_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "HTTP health check path of TCP listener.",
+			},
+			"health_check_http_domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "HTTP health check domain of TCP listener.",
+			},
+			"health_check_http_method": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(CLB_HTTP_METHOD),
+				Description:  "HTTP health check method of TCP listener. Valid values: `HEAD`, `GET`.",
+			},
+			"health_check_context_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue(CONTEX_TYPE),
+				Description: "Health check protocol. When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
+					"this field is required, which represents the input format of the health check. " +
+					"Valid values: `HEX`, `TEXT`.",
+			},
+			"health_check_send_context": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateStringLengthInRange(0, 500),
+				Description: "It represents the content of the request sent by the health check. " +
+					"When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
+					"this field is required. Only visible ASCII characters are allowed and the maximum length is 500. " +
+					"When `health_check_context_type` value is `HEX`, " +
+					"the characters of SendContext and RecvContext can only be selected in `0123456789ABCDEF` " +
+					"and the length must be even digits.",
+			},
+			"health_check_recv_context": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateStringLengthInRange(0, 500),
+				Description: "It represents the result returned by the health check. " +
+					"When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
+					"this field is required. Only ASCII visible characters are allowed and the maximum length is 500. " +
+					"When `health_check_context_type` value is `HEX`, " +
+					"the characters of SendContext and RecvContext can only be selected in `0123456789ABCDEF` " +
+					"and the length must be even digits.",
 			},
 			"certificate_ssl_mode": {
 				Type:         schema.TypeString,
@@ -326,7 +413,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	clbId := d.Get("clb_id").(string)
 
 	if itemLength == 1 && clbId == "" {
-		return fmt.Errorf("The old style listenerId %s does not support import, please use clbId#listenerId style", resourceId)
+		return fmt.Errorf("the old style listenerId %s does not support import, please use clbId#listenerId style", resourceId)
 	} else if itemLength == 2 && clbId == "" {
 		listenerId = items[1]
 		clbId = items[0]
@@ -368,15 +455,25 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	//health check
 	if instance.HealthCheck != nil {
-		health_check_switch := false
+		healthCheckSwitch := false
 		if *instance.HealthCheck.HealthSwitch == int64(1) {
-			health_check_switch = true
+			healthCheckSwitch = true
 		}
-		_ = d.Set("health_check_switch", health_check_switch)
+		_ = d.Set("health_check_switch", healthCheckSwitch)
 		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
 		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 		_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
 		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+		_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
+		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
+		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
+		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
+		_ = d.Set("health_check_http_method", instance.HealthCheck.HttpCheckMethod)
+		_ = d.Set("health_check_http_version", instance.HealthCheck.HttpVersion)
+		_ = d.Set("health_check_context_type", instance.HealthCheck.ContextType)
+		_ = d.Set("health_check_send_context", instance.HealthCheck.SendContext)
+		_ = d.Set("health_check_recv_context", instance.HealthCheck.RecvContext)
 	}
 
 	if instance.Certificate != nil {
@@ -483,7 +580,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	return nil
+	return resourceTencentCloudClbListenerRead(d, meta)
 }
 
 func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interface{}) error {
