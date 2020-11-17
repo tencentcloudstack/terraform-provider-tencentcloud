@@ -268,8 +268,9 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("target_type"); ok {
 		targetType := v.(string)
 		request.TargetType = &targetType
-	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: protocol TCP/UDP must set target_type")
+	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+		targetType := CLB_TARGET_TYPE_NODE
+		request.TargetType = &targetType
 	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {

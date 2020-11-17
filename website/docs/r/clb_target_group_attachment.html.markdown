@@ -56,9 +56,9 @@ The following arguments are supported:
 
 * `clb_id` - (Required, ForceNew) ID of the CLB.
 * `listener_id` - (Required, ForceNew) ID of the CLB listener.
-* `target_group_id` - (Required, ForceNew) ID of the CLB target group.
 * `rule_id` - (Optional, ForceNew) ID of the CLB listener rule.
-* `targrt_group_id` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.47.1. Use `target_group_id` instead. ID of the CLB target group.
+* `target_group_id` - (Optional, ForceNew) ID of the CLB target group.
+* `targrt_group_id` - (Optional, **Deprecated**) It has been deprecated from version 1.47.1. Use `target_group_id` instead. ID of the CLB target group.
 
 ## Attributes Reference
 

@@ -65,6 +65,7 @@ func resourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbTargetGroupAttachmentCreate,
 		Read:   resourceTencentCloudClbTargetGroupAttachmentRead,
+		Update: resourceTencentCloudClbTargetGroupAttachmentUpdate,
 		Delete: resourceTencentCloudClbTargetGroupAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -84,7 +85,6 @@ func resourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 			},
 			"targrt_group_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the CLB target group.",
 				Deprecated:  "It has been deprecated from version 1.47.1. Use `target_group_id` instead.",
@@ -92,7 +92,7 @@ func resourceTencentCloudClbTargetGroupAttachment() *schema.Resource {
 			"target_group_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
-				Required:    true,
+				Optional:    true,
 				Description: "ID of the CLB target group.",
 			},
 			"rule_id": {
@@ -116,7 +116,7 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 		locationId    string
 		listenerId    = d.Get("listener_id").(string)
 		clbId         = d.Get("clb_id").(string)
-		targetGroupId = d.Get("target_group_id").(string)
+		targetGroupId string
 
 		targetInfos []*clb.TargetGroupInfo
 		instance    *clb.LoadBalancer
@@ -127,6 +127,20 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
 	}
+	vTarget, eHas := d.GetOk("target_group_id")
+	vTargrt, rHas := d.GetOk("targrt_group_id")
+
+	if eHas || rHas {
+		if rHas {
+			targetGroupId = vTargrt.(string)
+		}
+		if eHas {
+			targetGroupId = vTarget.(string)
+		}
+	} else {
+		return fmt.Errorf("'target_group_id' or 'targrt_group_id' at least one")
+	}
+
 	//check listenerId
 	checkErr := ListenerIdCheck(listenerId)
 	if checkErr != nil {
@@ -221,6 +235,13 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 	return nil
 }
 
+func resourceTencentCloudClbTargetGroupAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_clb_redirection.update")()
+	defer inconsistentCheck(d, meta)()
+	// this nil update method works for the only filed `delete_all_auto_rewrite`
+	return resourceTencentCloudClbRedirectionRead(d, meta)
+}
+
 func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_target_group_attachment.delete")()
 
@@ -259,12 +280,18 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 				if rule.LocationId != nil {
 					originLocationId = *rule.LocationId
 				}
-
-				if originListenerId == ids[1] && originClbId == ids[2] || originLocationId == ids[3] {
+				if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP || *rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+					if originListenerId == ids[1] && originClbId == ids[2] {
+						return resource.RetryableError(
+							fmt.Errorf("rule association target group instance still exist. [targetGroupId=%s, listenerId=%s, cldId=%s]",
+								ids[0], ids[1], ids[2]))
+					}
+				} else if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
 					return resource.RetryableError(
 						fmt.Errorf("rule association target group instance still exist. [targetGroupId=%s, listenerId=%s, cldId=%s, ruleId=%s]",
 							ids[0], ids[1], ids[2], ids[3]))
 				}
+
 			}
 		}
 		return nil

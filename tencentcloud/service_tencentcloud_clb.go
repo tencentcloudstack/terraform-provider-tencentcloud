@@ -1220,7 +1220,11 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 				originLocationId = *rule.LocationId
 			}
 
-			if originListenerId == ids[1] && originClbId == ids[2] || originLocationId == ids[3] {
+			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP || *rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+				if originListenerId == ids[1] && originClbId == ids[2] {
+					return true, nil
+				}
+			} else if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
 				return true, nil
 			}
 		}
