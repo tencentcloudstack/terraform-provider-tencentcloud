@@ -1165,16 +1165,17 @@ func (me *ClbService) DescribeTargetGroupInstances(ctx context.Context, filters 
 	return
 }
 
-func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clbId, targrtGroupId, locationId string) (errRet error) {
+func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clbId, targetGroupId, locationId string) (errRet error) {
 	request := clb.NewAssociateTargetGroupsRequest()
-	request.Associations = []*clb.TargetGroupAssociation{
-		{
-			LoadBalancerId: &clbId,
-			ListenerId:     &listenerId,
-			TargetGroupId:  &targrtGroupId,
-			LocationId:     &locationId,
-		},
+	association := clb.TargetGroupAssociation{
+		LoadBalancerId: &clbId,
+		ListenerId:     &listenerId,
+		TargetGroupId:  &targetGroupId,
 	}
+	if locationId != "" {
+		association.LocationId = &locationId
+	}
+	request.Associations = append(request.Associations, &association)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1219,7 +1220,7 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 				originLocationId = *rule.LocationId
 			}
 
-			if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
+			if originListenerId == ids[1] && originClbId == ids[2] || originLocationId == ids[3] {
 				return true, nil
 			}
 		}
@@ -1228,7 +1229,7 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 	return false, nil
 }
 
-func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targrtGroupId, listenerId, clbId, locationId string) (errRet error) {
+func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targetGroupId, listenerId, clbId, locationId string) (errRet error) {
 	var ruleId *string
 
 	if locationId != "" {
@@ -1240,7 +1241,7 @@ func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targrtGroupI
 		{
 			LoadBalancerId: &clbId,
 			ListenerId:     &listenerId,
-			TargetGroupId:  &targrtGroupId,
+			TargetGroupId:  &targetGroupId,
 			LocationId:     ruleId,
 		},
 	}

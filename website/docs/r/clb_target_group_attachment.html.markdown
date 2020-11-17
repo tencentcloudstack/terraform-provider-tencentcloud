@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a CLB target group attachment is bound to the load balancing listener or forwarding rule.
 
+~> **NOTE:** Required argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
+
 ## Example Usage
 
 ```hcl
@@ -44,7 +46,7 @@ resource "tencentcloud_clb_target_group_attachment" "group" {
   clb_id          = tencentcloud_clb_instance.clb_basic.id
   listener_id     = tencentcloud_clb_listener.listener_basic.id
   rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
-  targrt_group_id = tencentcloud_clb_target_group.test.id
+  target_group_id = tencentcloud_clb_target_group.test.id
 }
 ```
 
@@ -54,8 +56,9 @@ The following arguments are supported:
 
 * `clb_id` - (Required, ForceNew) ID of the CLB.
 * `listener_id` - (Required, ForceNew) ID of the CLB listener.
-* `rule_id` - (Required, ForceNew) ID of the CLB listener rule.
-* `targrt_group_id` - (Required, ForceNew) ID of the CLB target group.
+* `target_group_id` - (Required, ForceNew) ID of the CLB target group.
+* `rule_id` - (Optional, ForceNew) ID of the CLB listener rule.
+* `targrt_group_id` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.47.1. Use `target_group_id` instead. ID of the CLB target group.
 
 ## Attributes Reference
 

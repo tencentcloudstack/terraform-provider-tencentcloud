@@ -1,4 +1,11 @@
 ## 1.47.1 (Unreleased)
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_clb_listener` add computed argument `target_type`.
+
+DEPRECATED:
+* Resource: `tencentcloud_clb_target_group_attachment`: optional argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
+
 ## 1.47.0 (November 13, 2020)
 
 ENHANCEMENTS:
