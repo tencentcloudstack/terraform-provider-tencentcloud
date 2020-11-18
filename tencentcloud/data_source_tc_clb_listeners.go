@@ -245,13 +245,13 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	for _, listener := range listeners {
 		mapping := map[string]interface{}{
 			"clb_id":        clbId,
-			"listener_id":   *listener.ListenerId,
-			"listener_name": *listener.ListenerName,
-			"protocol":      *listener.Protocol,
-			"port":          *listener.Port,
+			"listener_id":   listener.ListenerId,
+			"listener_name": listener.ListenerName,
+			"protocol":      listener.Protocol,
+			"port":          listener.Port,
 		}
 		if listener.SessionExpireTime != nil {
-			mapping["session_expire_time"] = *listener.SessionExpireTime
+			mapping["session_expire_time"] = listener.SessionExpireTime
 		}
 		if listener.SniSwitch != nil {
 			sniSwitch := false
@@ -260,19 +260,17 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			}
 			mapping["sni_switch"] = sniSwitch
 		}
-		if listener.Scheduler != nil {
-			mapping["scheduler"] = *listener.Scheduler
-		}
+		mapping["scheduler"] = listener.Scheduler
 		if listener.HealthCheck != nil {
 			health_check_switch := false
 			if *listener.HealthCheck.HealthSwitch == int64(1) {
 				health_check_switch = true
 			}
 			mapping["health_check_switch"] = health_check_switch
-			mapping["health_check_time_out"] = *listener.HealthCheck.TimeOut
-			mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
-			mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
-			mapping["health_check_unhealth_num"] = *listener.HealthCheck.UnHealthNum
+			mapping["health_check_time_out"] = listener.HealthCheck.TimeOut
+			mapping["health_check_interval_time"] = listener.HealthCheck.IntervalTime
+			mapping["health_check_health_num"] = listener.HealthCheck.HealthNum
+			mapping["health_check_unhealth_num"] = listener.HealthCheck.UnHealthNum
 			mapping["health_check_http_code"] = listener.HealthCheck.HttpCode
 			mapping["health_check_http_path"] = listener.HealthCheck.HttpCheckPath
 			mapping["health_check_http_domain"] = listener.HealthCheck.HttpCheckDomain
@@ -285,10 +283,10 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["health_check_port"] = listener.HealthCheck.CheckPort
 		}
 		if listener.Certificate != nil {
-			mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode
-			mapping["certificate_id"] = *listener.Certificate.CertId
+			mapping["certificate_ssl_mode"] = listener.Certificate.SSLMode
+			mapping["certificate_id"] = listener.Certificate.CertId
 			if listener.Certificate.CertCaId != nil {
-				mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
+				mapping["certificate_ca_id"] = listener.Certificate.CertCaId
 			}
 		}
 		listenerList = append(listenerList, mapping)
