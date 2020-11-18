@@ -900,29 +900,44 @@ func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseSqlserverClient().DescribeOrders(request)
-	if err != nil {
-		errRet = err
-		return
+	var flowId int64
+	outErr := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeOrders(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK returns nil response, %s", request.GetAction())
+			return resource.RetryableError(errRet)
+		}
+		if len(response.Response.Deals) == 0 {
+			errRet = fmt.Errorf("TencentCloud SDK returns empty deal")
+			return resource.RetryableError(errRet)
+		} else if len(response.Response.Deals) > 1 {
+			errRet = fmt.Errorf("TencentCloud SDK returns more than one deal")
+			return resource.RetryableError(errRet)
+		}
+		if len(response.Response.Deals[0].InstanceIdSet) == 0 {
+			err = fmt.Errorf("TencentCloud SDK returns empty InstanceIdSet")
+			return resource.RetryableError(err)
+		}
+		instanceId = *response.Response.Deals[0].InstanceIdSet[0]
+		flowId = *response.Response.Deals[0].FlowId
+		if flowId == 0 {
+			err = fmt.Errorf("TencentCloud SDK returns empty flowId")
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if outErr != nil {
+		return instanceId, outErr
 	}
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK returns nil response, %s", request.GetAction())
-		return
+	outErr = me.WaitForTaskFinish(ctx, flowId)
+	if outErr != nil {
+		errRet = outErr
 	}
-	if len(response.Response.Deals) == 0 {
-		errRet = fmt.Errorf("TencentCloud SDK returns empty deal")
-		return
-	} else if len(response.Response.Deals) > 1 {
-		errRet = fmt.Errorf("TencentCloud SDK returns more than one deal")
-		return
-	}
-	instanceId = *response.Response.Deals[0].InstanceIdSet[0]
-	flowId := *response.Response.Deals[0].FlowId
-	err = me.WaitForTaskFinish(ctx, flowId)
-	if err != nil {
-		errRet = err
-	}
+
 	return
 }
 
@@ -1368,4 +1383,160 @@ func (me *SqlserverService) RecycleDBInstance(ctx context.Context, instanceId st
 		errRet = err
 	}
 	return
+}
+
+func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, paramMap map[string]interface{}, weekSet []int, voucherIds, securityGroups []string) (instanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreateBasicDBInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	var (
+		cpu         = paramMap["cpu"].(int)
+		memory      = paramMap["memory"].(int)
+		storage     = paramMap["storage"].(int)
+		subnetId    = paramMap["subnetId"].(string)
+		vpcId       = paramMap["vpcId"].(string)
+		machineType = paramMap["machineType"].(string)
+		payType     = paramMap["payType"].(string)
+		goodsNum    = paramMap["goodsNum"].(int)
+		dbVersion   = paramMap["engineVersion"].(string)
+		period      = paramMap["period"].(int)
+		autoRenew   = paramMap["autoRenew"].(int)
+		autoVoucher = paramMap["autoVoucher"].(int)
+		zone        = paramMap["availabilityZone"].(string)
+	)
+	request.Cpu = helper.IntUint64(cpu)
+	request.Memory = helper.IntUint64(memory)
+	request.Storage = helper.IntUint64(storage)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
+	request.MachineType = &machineType
+	request.InstanceChargeType = &payType
+	request.GoodsNum = helper.IntUint64(goodsNum)
+	request.DBVersion = &dbVersion
+	request.Period = helper.IntInt64(period)
+	request.AutoRenewFlag = helper.IntInt64(autoRenew)
+
+	request.AutoVoucher = helper.IntInt64(autoVoucher)
+	request.Zone = &zone
+	if v, ok := paramMap["projectId"]; ok {
+		projectId := v.(int)
+		request.ProjectId = helper.IntUint64(projectId)
+	}
+	if v, ok := paramMap["startTime"]; ok {
+		startTime := v.(string)
+		request.StartTime = &startTime
+	}
+	if v, ok := paramMap["timeSpan"]; ok {
+		timeSpan := v.(int)
+		request.Span = helper.IntInt64(timeSpan)
+	}
+
+	if len(weekSet) > 0 {
+		request.Weekly = make([]*int64, 0)
+		for _, i := range weekSet {
+			request.Weekly = append(request.Weekly, helper.IntInt64(i))
+		}
+	}
+	request.VoucherIds = make([]*string, 0, len(voucherIds))
+	for _, v := range voucherIds {
+		request.VoucherIds = append(request.VoucherIds, &v)
+	}
+
+	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
+	for _, v := range securityGroups {
+		request.SecurityGroupList = append(request.SecurityGroupList, &v)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().CreateBasicDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	dealId := *response.Response.DealName
+	instanceId, err = me.GetInfoFromDeal(ctx, dealId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *SqlserverService) UpgradeSqlserverBasicInstance(ctx context.Context, instanceId string, memory int, storage, cpu, autoVoucher int, voucherIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewUpgradeDBInstanceRequest()
+	request.InstanceId = &instanceId
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	request.Cpu = helper.IntInt64(cpu)
+	request.AutoVoucher = helper.IntInt64(autoVoucher)
+	if autoVoucher == 1 {
+		request.VoucherIds = make([]*string, 0, len(voucherIds))
+	}
+	for _, v := range voucherIds {
+		request.VoucherIds = append(request.VoucherIds, &v)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().UpgradeDBInstance(request)
+	if err != nil {
+		return err
+	}
+
+	//check status not expanding
+	retryCount := 0
+	errRet = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		instance, has, err := me.DescribeSqlserverInstanceById(ctx, instanceId)
+		if err != nil {
+			return resource.NonRetryableError(errors.WithStack(err))
+		}
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server Basic instance %s", instanceId))
+		}
+		if int(*instance.Status) == 9 {
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server Basic instance ID %s, status %d.... ", instanceId, *instance.Status))
+		} else if int(*instance.Status) == 2 && *instance.PayMode == 1 && retryCount < 2 {
+			retryCount++
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server Basic Prepaid instance ID %s, status %d.... ", instanceId, *instance.Status))
+		} else {
+			return nil
+		}
+	})
+
+	return
+}
+
+func (me *SqlserverService) NewModifyDBInstanceRenewFlag(ctx context.Context, instanceId string, renewFlag int) (errRet error) {
+	logId := getLogId(ctx)
+	var instanceRenewInfo = make([]*sqlserver.InstanceRenewInfo, 1)
+	instanceRenewInfo[0] = &sqlserver.InstanceRenewInfo{
+		InstanceId: &instanceId,
+		RenewFlag:  helper.IntInt64(renewFlag),
+	}
+	request := sqlserver.NewModifyDBInstanceRenewFlagRequest()
+	request.RenewFlags = instanceRenewInfo
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ModifyDBInstanceRenewFlag(request)
+
+	return err
 }

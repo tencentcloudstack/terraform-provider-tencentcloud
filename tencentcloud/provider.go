@@ -383,6 +383,7 @@ SQLServer
 	tencentcloud_sqlserver_backups
   	tencentcloud_sqlserver_readonly_groups
 	tencentcloud_sqlserver_publish_subscribes
+	tencentcloud_sqlserver_basic_instances
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -391,6 +392,7 @@ SQLServer
 	tencentcloud_sqlserver_account
 	tencentcloud_sqlserver_account_db_attachment
 	tencentcloud_sqlserver_publish_subscribe
+	tencentcloud_sqlserver_basic_instance
 
 SSL Certificates
   Data Source
@@ -725,6 +727,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_apis":                         dataSourceTencentCloudAPIGatewayAPIs(),
 			"tencentcloud_api_gateway_services":                     dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                     dataSourceTencentCloudAPIGatewayAPIKeys(),
+			"tencentcloud_sqlserver_basic_instances":                dataSourceTencentCloudSqlserverBasicInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -870,6 +873,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_api_key":                     resourceTencentCloudAPIGatewayAPIKey(),
 			"tencentcloud_api_gateway_api_key_attachment":          resourceTencentCloudAPIGatewayAPIKeyAttachment(),
 			"tencentcloud_api_gateway_service_release":             resourceTencentCloudAPIGatewayServiceRelease(),
+			"tencentcloud_sqlserver_basic_instance":                resourceTencentCloudSqlserverBasicInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

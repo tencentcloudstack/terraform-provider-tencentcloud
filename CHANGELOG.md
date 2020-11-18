@@ -1,3 +1,10 @@
+## 1.48.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_sqlserver_basic_instance`
+* **New Data Source**: `tencentcloud_sqlserver_basic_instances` 
+
 ## 1.47.0 (Unreleased)
 
 ENHANCEMENTS:
