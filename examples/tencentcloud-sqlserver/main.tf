@@ -43,25 +43,25 @@ resource "tencentcloud_sqlserver_instance" "example" {
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "test" {
-	name                    = "tf_sqlserver_basic_instance"
-	availability_zone       = "ap-guangzhou-3"
-	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = tencentcloud_vpc.sqlserver_vpc.id
-	subnet_id               = tencentcloud_subnet.sqlserver_subnet.id
-	machine_type            ="CLOUD_PREMIUM"
-	project_id              = 0
-	memory                  = 2
-	storage                 = 20
-	cpu                     = 1
-	security_groups         = ["sg-nltpbqg1"]
-	goods_num               = 1
+    name                    = "tf_sqlserver_basic_instance"
+    availability_zone       = "ap-guangzhou-3"
+    charge_type             = "POSTPAID_BY_HOUR"
+    vpc_id                  = tencentcloud_vpc.sqlserver_vpc.id
+    subnet_id               = tencentcloud_subnet.sqlserver_subnet.id
+    machine_type            ="CLOUD_PREMIUM"
+    project_id              = 0
+    memory                  = 2
+    storage                 = 20
+    cpu                     = 1
+    security_groups         = ["sg-nltpbqg1"]
+    goods_num               = 1
     maintenance_week_set    = [1,2,3]
     maintenance_start_time  = "09:00"
     maintenance_time_span   = 3
 
-	tags = {
-		"test" = "test"
-	}
+    tags = {
+        "test" = "test"
+    }
 }
 
 resource "tencentcloud_sqlserver_db" "example" {
