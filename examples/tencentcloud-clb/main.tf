@@ -1,7 +1,3 @@
-provider "tencentcloud" {
-    region = "ap-guangzhou"
-}
-
 resource "tencentcloud_security_group" "foo" {
   name = "example"
 }
