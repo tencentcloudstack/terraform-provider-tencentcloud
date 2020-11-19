@@ -827,7 +827,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			d.SetPartial(attr)
 		}
 
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
 				return retryError(err, InternalError)
