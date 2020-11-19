@@ -32,6 +32,10 @@ resource "tencentcloud_cdn_domain" "foo" {
     ocsp_stapling_switch = "off"
     spdy_switch          = "off"
     verify_client        = "off"
+
+    force_redirect {
+      switch = "on"
+    }
   }
 
   tags = {
@@ -91,10 +95,17 @@ The `client_certificate_config` object supports the following:
 
 * `certificate_content` - (Required) Client Certificate PEM format, requires Base64 encoding.
 
+The `force_redirect` object supports the following:
+
+* `redirect_status_code` - (Optional) Access forced jump code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`.
+* `redirect_type` - (Optional) Access forced jump type. Valid values are `http` and `https`. When `switch` setting `off`, this property does not need to be set or set to `http`.
+* `switch` - (Optional) Access forced jump configuration switch. Valid values are `on` and `off`. Default value is `off`.
+
 The `https_config` object supports the following:
 
 * `https_switch` - (Required) HTTPS configuration switch. Valid values are `on` and `off`.
 * `client_certificate_config` - (Optional) Client certificate configuration information.
+* `force_redirect` - (Optional) Access protocol mandatory jump configuration. It's a list and consist of at most one item.
 * `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional) Server certificate configuration information.

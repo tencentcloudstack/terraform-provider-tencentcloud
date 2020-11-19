@@ -22,6 +22,10 @@ resource "tencentcloud_cdn_domain" "foo" {
     ocsp_stapling_switch = "off"
     spdy_switch          = "off"
     verify_client        = "off"
+
+	force_redirect {
+      switch = "on"
+    }
   }
 
   tags = {
@@ -304,6 +308,40 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 								},
 							},
 						},
+						"force_redirect": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Access protocol mandatory jump configuration. It's a list and consist of at most one item.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										Default:      CDN_SWITCH_OFF,
+										ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+										Description:  "Access forced jump configuration switch. Valid values are `on` and `off`. Default value is `off`.",
+									},
+									"redirect_type": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										Computed:     true,
+										ValidateFunc: validateAllowedStringValue(CDN_FORCE_REDIRECT_TYPE),
+										Description: "Access forced jump type. Valid values are `http` and `https`. " +
+											"When `switch` setting `off`, this property does not need to be set or set to `http`.",
+									},
+									"redirect_status_code": {
+										Type:         schema.TypeInt,
+										Optional:     true,
+										Computed:     true,
+										ValidateFunc: validateAllowedIntValue([]int{301, 302}),
+										Description: "Access forced jump code. Valid values are `301` and `302`. " +
+											"When `switch` setting `off`, this property does not need to be set or set to `302`.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -435,6 +473,23 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 					}
 				}
 			}
+			if v := config["force_redirect"]; len(v.([]interface{})) > 0 {
+				forceRedirect := v.([]interface{})
+				if len(forceRedirect) > 0 {
+					var redirect cdn.ForceRedirect
+					redirectMap := forceRedirect[0].(map[string]interface{})
+					if sw := redirectMap["switch"]; sw.(string) != "" {
+						redirect.Switch = helper.String(sw.(string))
+					}
+					if rt := redirectMap["redirect_type"]; rt.(string) != "" {
+						redirect.RedirectType = helper.String(rt.(string))
+					}
+					if rsc := redirectMap["redirect_status_code"]; rsc.(int) != 0 {
+						redirect.RedirectStatusCode = helper.Int64(int64(rsc.(int)))
+					}
+					request.ForceRedirect = &redirect
+				}
+			}
 		}
 	}
 
@@ -542,7 +597,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("origin", origins)
 
 	httpsConfigs := make([]map[string]interface{}, 0, 1)
-	httpsConfig := make(map[string]interface{}, 7)
+	httpsConfig := make(map[string]interface{}, 8)
 	httpsConfig["https_switch"] = domainConfig.Https.Switch
 	httpsConfig["http2_switch"] = domainConfig.Https.Http2
 	httpsConfig["ocsp_stapling_switch"] = domainConfig.Https.OcspStapling
@@ -596,6 +651,15 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		clientCertConfig["expire_time"] = domainConfig.Https.ClientCertInfo.ExpireTime
 		clientCertConfigs = append(clientCertConfigs, clientCertConfig)
 		httpsConfig["client_certificate_config"] = clientCertConfigs
+	}
+	if domainConfig.ForceRedirect != nil {
+		httpsConfig["force_redirect"] = []map[string]interface{}{
+			{
+				"switch":               domainConfig.ForceRedirect.Switch,
+				"redirect_type":        domainConfig.ForceRedirect.RedirectType,
+				"redirect_status_code": domainConfig.ForceRedirect.RedirectStatusCode,
+			},
+		}
 	}
 	httpsConfigs = append(httpsConfigs, httpsConfig)
 	_ = d.Set("https_config", httpsConfigs)
@@ -724,6 +788,23 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 					}
 				}
 			}
+			if v := config["force_redirect"]; len(v.([]interface{})) > 0 {
+				forceRedirect := v.([]interface{})
+				if len(forceRedirect) > 0 {
+					var redirect cdn.ForceRedirect
+					redirectMap := forceRedirect[0].(map[string]interface{})
+					if sw := redirectMap["switch"]; sw.(string) != "" {
+						redirect.Switch = helper.String(sw.(string))
+					}
+					if rt := redirectMap["redirect_type"]; rt.(string) != "" {
+						redirect.RedirectType = helper.String(rt.(string))
+					}
+					if rsc := redirectMap["redirect_status_code"]; rsc.(int) != 0 {
+						redirect.RedirectStatusCode = helper.Int64(int64(rsc.(int)))
+					}
+					request.ForceRedirect = &redirect
+				}
+			}
 		}
 	}
 
@@ -746,7 +827,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			d.SetPartial(attr)
 		}
 
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
 				return retryError(err, InternalError)
