@@ -11,8 +11,6 @@ description: |-
 
 Provides a resource to create a CLB target group attachment is bound to the load balancing listener or forwarding rule.
 
-~> **NOTE:** Required argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
-
 ## Example Usage
 
 ```hcl

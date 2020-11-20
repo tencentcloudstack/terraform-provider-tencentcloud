@@ -1,8 +1,6 @@
 /*
 Provides a resource to create a CLB target group attachment is bound to the load balancing listener or forwarding rule.
 
-~> **NOTE:** Required argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
-
 Example Usage
 
 ```hcl
@@ -54,7 +52,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -138,7 +135,7 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 			targetGroupId = vTarget.(string)
 		}
 	} else {
-		return fmt.Errorf("'target_group_id' or 'targrt_group_id' at least one")
+		return fmt.Errorf("'target_group_id' or 'targrt_group_id' at least set one, please use 'target_group_id'")
 	}
 
 	//check listenerId
@@ -236,10 +233,8 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudClbTargetGroupAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clb_redirection.update")()
-	defer inconsistentCheck(d, meta)()
-	// this nil update method works for the only filed `delete_all_auto_rewrite`
-	return resourceTencentCloudClbRedirectionRead(d, meta)
+	defer logElapsed("resource.tencentcloud_clb_target_group_attachment.update")()
+	return resourceTencentCloudClbTargetGroupAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -264,7 +259,6 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 	if err := clbService.DisassociateTargetGroups(ctx, ids[0], ids[1], ids[2], ids[3]); err != nil {
 		return err
 	}
-	time.Sleep(10 * time.Second)
 
 	// check status
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
