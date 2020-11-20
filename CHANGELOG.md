@@ -1,4 +1,5 @@
-## 1.48.0 (Unreleased)
+## 1.48.1 (Unreleased)
+## 1.48.0 (November 20, 2020)
 
 FEATURES:
 
