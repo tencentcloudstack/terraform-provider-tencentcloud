@@ -40,7 +40,6 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "auto_renew"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "security_groups.#", "1"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "tags.test", "test"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "goods_num", "1"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_start_time", "09:00"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_time_span", "3"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_week_set.#", "3"),
@@ -77,7 +76,7 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 				ResourceName:            testSqlserverBasicInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"auto_voucher", "goods_num", "period"},
+				ImportStateVerifyIgnore: []string{"auto_voucher", "period"},
 			},
 		},
 	})
@@ -157,7 +156,6 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	storage                 = 20
 	cpu                     = 1
 	machine_type            = "CLOUD_PREMIUM"
-	goods_num               = 1
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
 	maintenance_time_span   = 3
@@ -181,7 +179,6 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	storage                 = 100
 	cpu                     = 1
 	machine_type            = "CLOUD_PREMIUM"
-	goods_num               = 1
 	maintenance_week_set    = [1,2,3,4]
 	maintenance_start_time  = "08:00"
 	maintenance_time_span   = 4

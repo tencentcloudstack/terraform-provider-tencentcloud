@@ -1,5 +1,5 @@
 /*
-Provides a SQL Server instance resource to create Basic database instances.
+Provides a SQL Server instance resource to create basic database instances.
 
 Example Usage
 
@@ -15,7 +15,6 @@ resource "tencentcloud_sqlserver_basic_instance" "foo" {
 	storage                 = 20
 	cpu                     = 1
 	machine_type            = "CLOUD_PREMIUM"
-	goods_num               = 1
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
 	maintenance_time_span   = 3
@@ -28,7 +27,7 @@ resource "tencentcloud_sqlserver_basic_instance" "foo" {
 ```
 Import
 
-SQL Server Basic instance can be imported using the id, e.g.
+SQL Server basic instance can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_sqlserver_basic_instance.foo mssql-3cdq7kx5
@@ -61,12 +60,12 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the SQL Server Basic instance.",
+				Description:  "Name of the SQL Server basic instance.",
 			},
 			"cpu": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The CPU number of the SQL Server Basic instance.",
+				Description: "The CPU number of the SQL Server basic instance.",
 			},
 			"storage": {
 				Type:        schema.TypeInt,
@@ -90,14 +89,7 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Default:      COMMON_PAYTYPE_POSTPAID,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{COMMON_PAYTYPE_PREPAID, COMMON_PAYTYPE_POSTPAID}),
-				Description:  "Pay type of the SQL Server Basic instance. For now, only `POSTPAID_BY_HOUR` is valid.",
-			},
-			"goods_num": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      1,
-				ValidateFunc: validateIntegerInRange(1, 10),
-				Description:  "Purchase several instances this time, the default value is 1. The value does not exceed 10.",
+				Description:  "Pay type of the SQL Server basic instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -116,7 +108,7 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Default:     "2008R2",
-				Description: "Version of the SQL Server Basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+				Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
@@ -197,17 +189,17 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the SQL Server Basic instance.",
+				Description: "Create time of the SQL Server basic instance.",
 			},
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the SQL Server Basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
+				Description: "Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "The tags of the SQL Server Basic instance.",
+				Description: "The tags of the SQL Server basic instance.",
 			},
 		},
 	}
@@ -247,7 +239,6 @@ func resourceTencentCloudSqlserverBasicInstanceCreate(d *schema.ResourceData, me
 	paramMap["vpcId"] = d.Get("vpc_id").(string)
 	paramMap["machineType"] = d.Get("machine_type").(string)
 	paramMap["payType"] = payType
-	paramMap["goodsNum"] = d.Get("goods_num").(int)
 	paramMap["engineVersion"] = d.Get("engine_version").(string)
 	paramMap["period"] = d.Get("period").(int)
 	paramMap["autoVoucher"] = d.Get("auto_voucher").(int)
@@ -348,12 +339,14 @@ func resourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, meta
 	_ = d.Set("machine_type", instance.Type)
 	if int(*chargeType) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
+		_ = d.Set("auto_renew", instance.RenewFlag)
 	} else {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
+		_ = d.Set("auto_renew", 0)
 	}
 	_ = d.Set("name", instance.Name)
 	_ = d.Set("engine_version", instance.Version)
-	_ = d.Set("auto_renew", instance.RenewFlag)
+
 	_ = d.Set("availability_zone", instance.Zone)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("create_time", instance.CreateTime)
@@ -646,7 +639,7 @@ func resourceTencentCLoudSqlserverBasicInstanceDelete(d *schema.ResourceData, me
 			return retryError(inErr)
 		}
 		if has {
-			inErr = fmt.Errorf("delete SQL Server Basic instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
+			inErr = fmt.Errorf("delete SQL Server basic instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
 			return resource.RetryableError(inErr)
 		}
 		return nil

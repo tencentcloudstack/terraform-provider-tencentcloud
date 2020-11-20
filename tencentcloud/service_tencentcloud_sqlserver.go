@@ -1401,7 +1401,6 @@ func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, pa
 		vpcId       = paramMap["vpcId"].(string)
 		machineType = paramMap["machineType"].(string)
 		payType     = paramMap["payType"].(string)
-		goodsNum    = paramMap["goodsNum"].(int)
 		dbVersion   = paramMap["engineVersion"].(string)
 		period      = paramMap["period"].(int)
 		autoRenew   = paramMap["autoRenew"].(int)
@@ -1415,7 +1414,7 @@ func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, pa
 	request.VpcId = &vpcId
 	request.MachineType = &machineType
 	request.InstanceChargeType = &payType
-	request.GoodsNum = helper.IntUint64(goodsNum)
+	request.GoodsNum = helper.IntUint64(1)
 	request.DBVersion = &dbVersion
 	request.Period = helper.IntInt64(period)
 	request.AutoRenewFlag = helper.IntInt64(autoRenew)
@@ -1496,7 +1495,7 @@ func (me *SqlserverService) UpgradeSqlserverBasicInstance(ctx context.Context, i
 		return err
 	}
 
-	//check status not expanding
+	// prepaid expansion number of retries
 	retryCount := 0
 	errRet = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := me.DescribeSqlserverInstanceById(ctx, instanceId)
@@ -1504,13 +1503,15 @@ func (me *SqlserverService) UpgradeSqlserverBasicInstance(ctx context.Context, i
 			return resource.NonRetryableError(errors.WithStack(err))
 		}
 		if !has {
-			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server Basic instance %s", instanceId))
+			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server basic instance %s", instanceId))
 		}
+		// Status == 9, expanding
 		if int(*instance.Status) == 9 {
-			return resource.RetryableError(fmt.Errorf("expanding , SQL Server Basic instance ID %s, status %d.... ", instanceId, *instance.Status))
-		} else if int(*instance.Status) == 2 && *instance.PayMode == 1 && retryCount < 2 {
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server basic instance ID %s, status %d.... ", instanceId, *instance.Status))
+			// After UpgradeDBInstance of the prepaid instance, the status does not immediately change to 9 and is still 2, so we need to query it again
+		} else if *instance.PayMode == 1 && int(*instance.Status) == 2 && retryCount < 2 {
 			retryCount++
-			return resource.RetryableError(fmt.Errorf("expanding , SQL Server Basic Prepaid instance ID %s, status %d.... ", instanceId, *instance.Status))
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server basic Prepaid instance ID %s, status %d.... ", instanceId, *instance.Status))
 		} else {
 			return nil
 		}

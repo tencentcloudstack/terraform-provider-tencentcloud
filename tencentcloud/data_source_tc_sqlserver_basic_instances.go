@@ -1,5 +1,5 @@
 /*
-Use this data source to query SQL Server Basic instances
+Use this data source to query SQL Server basic instances
 
 Example Usage
 
@@ -11,7 +11,7 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	charge_type         = "POSTPAID_BY_HOUR"
 	vpc_id              = "vpc-26w7r56z"
 	subnet_id           = "subnet-lvlr6eeu"
-	machine_type        ="CLOUD_PREMIUM"
+	machine_type        = "CLOUD_PREMIUM"
 	project_id          = 0
 	memory              = 2
 	storage             = 10
@@ -41,22 +41,22 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the SQL Server Basic instance to be query.",
+				Description: "ID of the SQL Server basic instance to be query.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Project ID of the SQL Server Basic instance to be query.",
+				Description: "Project ID of the SQL Server basic instance to be query.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Vpc ID of the SQL Server Basic instance to be query.",
+				Description: "Vpc ID of the SQL Server basic instance to be query.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Subnet ID of the SQL Server Basic instance to be query.",
+				Description: "Subnet ID of the SQL Server basic instance to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -66,28 +66,28 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 			"instance_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of SQL Server Basic instances. Each element contains the following attributes.",
+				Description: "A list of SQL Server basic instances. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the SQL Server Basic instance.",
+							Description: "ID of the SQL Server basic instance.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the SQL Server Basic instance.",
+							Description: "Name of the SQL Server basic instance.",
 						},
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Pay type of the SQL Server Basic instance. For now, only `POSTPAID_BY_HOUR` is valid.",
+							Description: "Pay type of the SQL Server basic instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version of the SQL Server Basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+							Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -112,7 +112,7 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 						"cpu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The CPU number of the SQL Server Basic instance.",
+							Description: "The CPU number of the SQL Server basic instance.",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
@@ -142,17 +142,17 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the SQL Server Basic instance.",
+							Description: "Create time of the SQL Server basic instance.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the SQL Server Basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
+							Description: "Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Tags of the SQL Server Basic instance.",
+							Description: "Tags of the SQL Server basic instance.",
 						},
 					},
 				},
