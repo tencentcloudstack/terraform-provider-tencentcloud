@@ -34,7 +34,9 @@ resource "tencentcloud_cdn_domain" "foo" {
     verify_client        = "off"
 
     force_redirect {
-      switch = "on"
+      switch               = "on"
+      redirect_type        = "http"
+      redirect_status_code = 302
     }
   }
 
@@ -97,8 +99,8 @@ The `client_certificate_config` object supports the following:
 
 The `force_redirect` object supports the following:
 
-* `redirect_status_code` - (Optional) Access forced jump code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`.
-* `redirect_type` - (Optional) Access forced jump type. Valid values are `http` and `https`. When `switch` setting `off`, this property does not need to be set or set to `http`.
+* `redirect_status_code` - (Optional) Access forced jump code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
+* `redirect_type` - (Optional) Access forced jump type. Valid values are `http` and `https`. `http` means force http redirect, `https` means force http redirect. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
 * `switch` - (Optional) Access forced jump configuration switch. Valid values are `on` and `off`. Default value is `off`.
 
 The `https_config` object supports the following:

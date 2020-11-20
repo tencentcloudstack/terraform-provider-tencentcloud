@@ -24,7 +24,9 @@ resource "tencentcloud_cdn_domain" "foo" {
     verify_client        = "off"
 
 	force_redirect {
-      switch = "on"
+      switch               = "on"
+      redirect_type        = "http"
+      redirect_status_code = 302
     }
   }
 
@@ -326,18 +328,18 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 									"redirect_type": {
 										Type:         schema.TypeString,
 										Optional:     true,
-										Computed:     true,
+										Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
 										ValidateFunc: validateAllowedStringValue(CDN_FORCE_REDIRECT_TYPE),
-										Description: "Access forced jump type. Valid values are `http` and `https`. " +
-											"When `switch` setting `off`, this property does not need to be set or set to `http`.",
+										Description: "Access forced jump type. Valid values are `http` and `https`. `http` means force http redirect, `https` means force http redirect. " +
+											"When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.",
 									},
 									"redirect_status_code": {
 										Type:         schema.TypeInt,
 										Optional:     true,
-										Computed:     true,
+										Default:      302,
 										ValidateFunc: validateAllowedIntValue([]int{301, 302}),
 										Description: "Access forced jump code. Valid values are `301` and `302`. " +
-											"When `switch` setting `off`, this property does not need to be set or set to `302`.",
+											"When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.",
 									},
 								},
 							},
@@ -473,7 +475,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 					}
 				}
 			}
-			if v := config["force_redirect"]; len(v.([]interface{})) > 0 {
+			if v, ok := config["force_redirect"]; ok {
 				forceRedirect := v.([]interface{})
 				if len(forceRedirect) > 0 {
 					var redirect cdn.ForceRedirect
@@ -788,7 +790,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 					}
 				}
 			}
-			if v := config["force_redirect"]; len(v.([]interface{})) > 0 {
+			if v, ok := config["force_redirect"]; ok {
 				forceRedirect := v.([]interface{})
 				if len(forceRedirect) > 0 {
 					var redirect cdn.ForceRedirect

@@ -64,8 +64,8 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.deploy_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.expire_time"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "tags.hello", "world"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "off"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "http"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "https"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_status_code", "302"),
 				),
 			},
@@ -89,8 +89,8 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.deploy_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.expire_time"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "tags.hello", "world"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "on"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "https"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_status_code", "302"),
 				),
 			},
@@ -203,6 +203,12 @@ resource "tencentcloud_cdn_domain" "foo" {
     spdy_switch          = "on"
 	verify_client        = "off"
 
+    force_redirect {
+        switch               = "on"
+        redirect_type        = "https"
+        redirect_status_code = 302
+    }
+
 	server_certificate_config {
       certificate_content = <<EOT
 -----BEGIN CERTIFICATE-----
@@ -290,9 +296,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 	verify_client        = "off"
 
     force_redirect {
-        switch               = "on"
-        redirect_type        = "https"
-        redirect_status_code = 302
+        switch               = "off"
     }
 
 	server_certificate_config {
