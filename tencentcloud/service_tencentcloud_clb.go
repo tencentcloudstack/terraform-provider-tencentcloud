@@ -767,13 +767,11 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		vv := int64(v.(int))
 		healthCheck.TimeOut = &vv
 	}
-
 	if v, ok := d.GetOk("health_check_interval_time"); ok {
 		healthSetFlag = true
 		vv := int64(v.(int))
 		healthCheck.IntervalTime = &vv
 	}
-
 	if v, ok := d.GetOk("health_check_health_num"); ok {
 		healthSetFlag = true
 		vv := int64(v.(int))
@@ -784,63 +782,121 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		vv := int64(v.(int))
 		healthCheck.UnHealthNum = &vv
 	}
-
+	if v, ok := d.GetOk("health_check_port"); ok {
+		healthSetFlag = true
+		healthCheck.CheckPort = helper.Int64(int64(v.(int)))
+	}
+	var checkType string
+	if v, ok := d.GetOk("health_check_type"); ok {
+		healthSetFlag = true
+		checkType = v.(string)
+		healthCheck.CheckType = &checkType
+	}
 	if v, ok := d.GetOk("health_check_http_code"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS ||
+			(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP)) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_code can only be set with protocol HTTP/HTTPS.")
+			errRet = fmt.Errorf("health_check_http_code can only be set with protocol HTTP/HTTPS or HTTP of TCP")
 			errRet = errors.WithStack(errRet)
 			return
-		} else {
-			healthSetFlag = true
-			vv := int64(v.(int))
-			healthCheck.HttpCode = &vv
 		}
+		healthSetFlag = true
+		healthCheck.HttpCode = helper.Int64(int64(v.(int)))
 	}
-
 	if v, ok := d.GetOk("health_check_http_path"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS ||
+			(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP)) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_path can only be set with protocol HTTP/HTTPS")
+			errRet = fmt.Errorf("health_check_http_path can only be set with protocol HTTP/HTTPS or HTTP of TCP")
 			errRet = errors.WithStack(errRet)
 			return
-		} else {
-			healthSetFlag = true
-			healthCheck.HttpCheckPath = helper.String(v.(string))
 		}
+		healthSetFlag = true
+		healthCheck.HttpCheckPath = helper.String(v.(string))
 	}
-
 	if v, ok := d.GetOk("health_check_http_domain"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS ||
+			(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP)) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol HTTP/HTTPS")
+			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol HTTP/HTTPS or HTTP of TCP")
 			errRet = errors.WithStack(errRet)
 			return
-		} else {
-			healthSetFlag = true
-			healthCheck.HttpCheckDomain = helper.String(v.(string))
 		}
+		healthSetFlag = true
+		healthCheck.HttpCheckDomain = helper.String(v.(string))
 	}
-
 	if v, ok := d.GetOk("health_check_http_method"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS ||
+			(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP)) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_method can only be set with protocol HTTP/HTTPS")
+			errRet = fmt.Errorf("health_check_http_method can only be set with protocol HTTP/HTTPS or HTTP of TCP")
 			errRet = errors.WithStack(errRet)
 			return
-		} else {
-			healthSetFlag = true
-			healthCheck.HttpCheckMethod = helper.String(v.(string))
 		}
-
+		healthSetFlag = true
+		healthCheck.HttpCheckMethod = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("health_check_http_version"); ok {
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_HTTP) {
+			healthSetFlag = false
+			errRet = fmt.Errorf("health_check_http_version can only be set with protocol HTTP of TCP")
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		healthSetFlag = true
+		healthCheck.HttpVersion = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("health_check_context_type"); ok {
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+			healthSetFlag = false
+			errRet = fmt.Errorf("health_check_context_type can only be set with protocol CUSTOM of TCP")
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		healthSetFlag = true
+		healthCheck.ContextType = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("health_check_send_context"); ok {
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+			healthSetFlag = false
+			errRet = fmt.Errorf("health_check_send_context can only be set with protocol CUSTOM of TCP")
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		healthSetFlag = true
+		healthCheck.SendContext = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("health_check_recv_context"); ok {
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP && checkType == HEALTH_CHECK_TYPE_CUSTOM) {
+			healthSetFlag = false
+			errRet = fmt.Errorf("health_check_recv_context can only be set with protocol CUSTOM of TCP")
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		healthSetFlag = true
+		healthCheck.RecvContext = helper.String(v.(string))
 	}
 
 	if healthSetFlag {
-		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
+		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
+			protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) ||
+			((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) &&
+				applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health para can only be set with TCP/UDP/TCP_SSL listener or rule of HTTP/HTTPS listener")
 			errRet = errors.WithStack(errRet)
 			return
+		}
+		if protocol == CLB_LISTENER_PROTOCOL_TCP {
+			if checkType == HEALTH_CHECK_TYPE_HTTP && healthCheck.HttpCheckDomain == nil {
+				healthCheck.HttpCheckDomain = helper.String("")
+			}
+			if healthCheck.CheckPort == nil {
+				healthCheck.CheckPort = helper.Int64(-1)
+			}
+			if healthCheck.HttpCheckPath == nil {
+				healthCheck.HttpCheckPath = helper.String("")
+			}
 		}
 		healthCheckPara = &healthCheck
 	}
