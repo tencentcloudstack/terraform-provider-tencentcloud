@@ -97,6 +97,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
   health_check_context_type  = "HEX"
   health_check_send_context  = "0123456789ABCDEF"
   health_check_recv_context  = "ABCD"
+  target_type                = "TARGETGROUP"
 }
 ```
 
@@ -132,6 +133,7 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
   scheduler                  = "WRR"
+  target_type                = "TARGETGROUP"
 }
 ```
 Import
@@ -346,6 +348,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'. If enabled, you can set a certificate for each rule in `tencentcloud_clb_listener_rule`, otherwise all rules have a certificate.",
 			},
+			"target_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
+				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -405,6 +414,13 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		}
 		scheduler = v.(string)
 		request.Scheduler = helper.String(scheduler)
+	}
+	if v, ok := d.GetOk("target_type"); ok {
+		targetType := v.(string)
+		request.TargetType = &targetType
+	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+		targetType := CLB_TARGET_TYPE_NODE
+		request.TargetType = &targetType
 	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
@@ -508,6 +524,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("clb_id", clbId)
 	_ = d.Set("listener_id", instance.ListenerId)
 	_ = d.Set("listener_name", instance.ListenerName)
+	_ = d.Set("target_type", instance.TargetType)
 	_ = d.Set("port", instance.Port)
 	_ = d.Set("protocol", instance.Protocol)
 	_ = d.Set("session_expire_time", instance.SessionExpireTime)

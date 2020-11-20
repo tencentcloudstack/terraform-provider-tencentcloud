@@ -15,6 +15,10 @@ resource "tencentcloud_cdn_domain" "foo" {
     ocsp_stapling_switch = "off"
     spdy_switch          = "off"
     verify_client        = "off"
+
+    force_redirect {
+      switch = "on"
+    }
   }
 
   tags = {
