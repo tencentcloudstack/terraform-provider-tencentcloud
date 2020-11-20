@@ -1,4 +1,9 @@
-## 1.47.1 (Unreleased)
+## 1.48.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_sqlserver_basic_instance`
+* **New Data Source**: `tencentcloud_sqlserver_basic_instances` 
 
 ENHANCEMENTS:
 
@@ -8,7 +13,6 @@ ENHANCEMENTS:
 
 DEPRECATED:
 * Resource: `tencentcloud_clb_target_group_attachment`: optional argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
-
 
 ## 1.47.0 (November 13, 2020)
 

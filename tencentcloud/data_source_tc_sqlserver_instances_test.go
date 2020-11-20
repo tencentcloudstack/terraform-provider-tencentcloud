@@ -12,7 +12,7 @@ func TestAccTencentCloudDataSqlserverInstances(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckLBDestroy,
+		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudDataSqlserverInstancesBasic,
