@@ -412,6 +412,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 
 	var outErr, inErr error
 	instanceId := d.Id()
+	d.Partial(true)
 	//update name
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
@@ -567,7 +568,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 
 		d.SetPartial("tags")
 	}
-
+	d.Partial(false)
 	return resourceTencentCloudSqlserverBasicInstanceRead(d, meta)
 }
 
