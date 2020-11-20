@@ -74,7 +74,7 @@ func testAccCheckClbTargetGroupAttachmentDestroy(s *terraform.State) error {
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(ids) != 4 {
-			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, target_group_id, rule_id")
+			return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 		}
 
 		targetInfos, err = clbService.DescribeTargetGroups(ctx, ids[0], nil)
@@ -120,7 +120,7 @@ func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(ids) != 4 {
-			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, target_group_id, rule_id")
+			return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 		}
 
 		has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)

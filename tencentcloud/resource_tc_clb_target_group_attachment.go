@@ -117,9 +117,8 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 
 		targetInfos []*clb.TargetGroupInfo
 		instance    *clb.LoadBalancer
-		//listener         *clb.Listener
-		has bool
-		err error
+		has         bool
+		err         error
 	)
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
@@ -210,7 +209,7 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 
 	ids := strings.Split(id, FILED_SP)
 	if len(ids) != 4 {
-		return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, target_group_id, rule_id")
+		return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 	}
 
 	has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
@@ -253,7 +252,7 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 
 	ids := strings.Split(id, FILED_SP)
 	if len(ids) != 4 {
-		return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, target_group_id, rule_id")
+		return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 	}
 
 	if err := clbService.DisassociateTargetGroups(ctx, ids[0], ids[1], ids[2], ids[3]); err != nil {
