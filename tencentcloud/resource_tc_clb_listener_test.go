@@ -91,6 +91,181 @@ func TestAccTencentCloudClbListener_tcp(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbListenerTCPWithTCP(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_tcp_tcp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "200"),
+				),
+			},
+			{
+				Config: testAccClbListener_tcp_update_tcp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "60"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_tcp",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbListenerTCPWithHTTP(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_tcp_http,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_code", "16"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_path", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_domain", "www.tencent.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_method", "HEAD"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_version", "HTTP/1.1"),
+				),
+			},
+			{
+				Config: testAccClbListener_tcp_update_http,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "60"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_code", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_path", ""),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_domain", ""),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_method", "GET"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_version", "HTTP/1.0"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_tcp",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbListenerTCPWithCustomer(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_tcp_customer,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "CUSTOM"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_context_type", "HEX"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_send_context", "0123456789ABCDEF"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_recv_context", "ABCD"),
+				),
+			},
+			{
+				Config: testAccClbListener_tcp_customer_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcp", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "listener_name", "listener_tcp_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "60"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "CUSTOM"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_context_type", "TEXT"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_send_context", "/get/test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_recv_context", "http_1xx"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_tcp",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudClbListener_https(t *testing.T) {
 	t.Parallel()
 
@@ -263,6 +438,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name       = "listener_basic"
   session_expire_time = 30
   scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -284,6 +460,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -305,6 +482,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
   health_check_unhealth_num  = 3
   session_expire_time        = 60
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -327,6 +505,7 @@ resource "tencentcloud_clb_listener" "listener_tcpssl" {
   health_check_health_num    = 2
   health_check_unhealth_num  = 2
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 const testAccClbListener_tcpssl_update = `
@@ -348,6 +527,7 @@ resource "tencentcloud_clb_listener" "listener_tcpssl"{
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 const testAccClbListener_https = `
@@ -381,5 +561,130 @@ resource "tencentcloud_clb_listener" "listener_https" {
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "%s"
   sni_switch           = false
+}
+`
+
+const clb_instance = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-tcp"
+}
+`
+
+const testAccClbListener_tcp_tcp = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp" {
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+  health_check_type          = "TCP"
+  health_check_port          = 200
+}
+`
+
+const testAccClbListener_tcp_update_tcp = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp"{
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp_update"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 20
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  session_expire_time        = 60
+  scheduler                  = "WRR"
+  health_check_type          = "TCP"
+}
+`
+
+const testAccClbListener_tcp_http = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp" {
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+  health_check_type          = "HTTP"
+  health_check_http_domain   = "www.tencent.com"
+  health_check_http_code     = 16
+  health_check_http_version  = "HTTP/1.1"
+  health_check_http_method   = "HEAD"
+  health_check_http_path     = "/"
+}
+`
+
+const testAccClbListener_tcp_update_http = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp"{
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp_update"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 20
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  session_expire_time        = 60
+  scheduler                  = "WRR"
+  health_check_port          = 200
+  health_check_type          = "HTTP"
+  health_check_http_code     = 2
+  health_check_http_version  = "HTTP/1.0"
+  health_check_http_method   = "GET"
+}
+`
+
+const testAccClbListener_tcp_customer = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp"{
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+  health_check_type          = "CUSTOM"
+  health_check_context_type  = "HEX"
+  health_check_send_context  = "0123456789ABCDEF"
+  health_check_recv_context  = "ABCD"
+}
+`
+
+const testAccClbListener_tcp_customer_update = clb_instance + `
+resource "tencentcloud_clb_listener" "listener_tcp"{
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_name              = "listener_tcp_update"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 20
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  session_expire_time        = 60
+  scheduler                  = "WRR"
+  health_check_type          = "CUSTOM"
+  health_check_context_type  = "TEXT"
+  health_check_send_context  = "/get/test"
+  health_check_recv_context  = "http_1xx"
 }
 `
