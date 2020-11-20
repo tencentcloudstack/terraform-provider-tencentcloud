@@ -25,14 +25,32 @@ func TestAccTencentClbTargetGroupAttachmentResource(t *testing.T) {
 					testAccCheckClbTargetGroupAttachmentExists(clbTargetGroupAttachment),
 					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "clb_id"),
 					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "listener_id"),
-					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "targrt_group_id"),
-					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "rule_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "target_group_id"),
 				),
 			},
 			{
 				ResourceName:      clbTargetGroupAttachment,
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentClbTargetGroupAttachmentHttpResource(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbTargetGroupAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbTargetGroupAttachmentHttp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbTargetGroupAttachmentExists(clbTargetGroupAttachment),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "clb_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "listener_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "target_group_id"),
+				),
 			},
 		},
 	})
@@ -56,7 +74,7 @@ func testAccCheckClbTargetGroupAttachmentDestroy(s *terraform.State) error {
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(ids) != 4 {
-			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, targrt_group_id, rule_id")
+			return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 		}
 
 		targetInfos, err = clbService.DescribeTargetGroups(ctx, ids[0], nil)
@@ -102,7 +120,7 @@ func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(ids) != 4 {
-			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, targrt_group_id, rule_id")
+			return fmt.Errorf("CLB target group attachment id is clb_id#listener_id#target_group_id#rule_id(only required for 7 layer CLB)")
 		}
 
 		has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
@@ -117,36 +135,89 @@ func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc
 	}
 }
 
+const testAccClbTargetGroupAttachmentHttp = `
+resource "tencentcloud_vpc" "foo" {
+	name       = "guagua-ci-temp-test"
+	cidr_block = "10.0.0.0/16"
+  }
+
+  resource "tencentcloud_clb_instance" "clb_basic" {
+	network_type = "OPEN"
+	clb_name     = "tf-clb-basic"
+	vpc_id       = tencentcloud_vpc.foo.id
+  }
+
+  resource "tencentcloud_clb_listener" "listener_basic" {
+	clb_id        = tencentcloud_clb_instance.clb_basic.id
+	port          = 1
+	protocol      = "HTTP"
+	listener_name = "listener_basic"
+  }
+
+  resource "tencentcloud_clb_listener_rule" "rule_basic" {
+	clb_id              = tencentcloud_clb_instance.clb_basic.id
+	listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
+	domain              = "abc.com"
+	url                 = "/"
+	session_expire_time = 30
+	scheduler           = "WRR"
+	target_type         = "TARGETGROUP"
+  }
+
+  resource "tencentcloud_clb_target_group" "test"{
+	  target_group_name = "test-target-keep-1"
+	  vpc_id            = tencentcloud_vpc.foo.id
+  }
+
+  resource "tencentcloud_clb_target_group_attachment" "group" {
+	  clb_id          = tencentcloud_clb_instance.clb_basic.id
+	  listener_id     = tencentcloud_clb_listener.listener_basic.listener_id
+	  rule_id         = tencentcloud_clb_listener_rule.rule_basic.rule_id
+	  target_group_id = tencentcloud_clb_target_group.test.id 
+  }
+`
+
 const testAccClbTargetGroupAttachment = `
-resource "tencentcloud_clb_instance" "clb_basic" {
-  network_type = "OPEN"
-  clb_name     = "tf-clb-rule-basic"
-}
-
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = tencentcloud_clb_instance.clb_basic.id
-  port          = 1
-  protocol      = "HTTP"
-  listener_name = "listener_basic"
-}
-
-resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = tencentcloud_clb_instance.clb_basic.id
-  listener_id         = tencentcloud_clb_listener.listener_basic.id
-  domain              = "abc.com"
-  url                 = "/"
-  session_expire_time = 30
-  scheduler           = "WRR"
-  target_type         = "TARGETGROUP"
-}
-
-resource "tencentcloud_clb_target_group" "test"{
-    target_group_name = "test-target-keep-1"
-}
-
-resource "tencentcloud_clb_target_group_attachment" "group" {
-    clb_id          = tencentcloud_clb_instance.clb_basic.id
-    listener_id     = tencentcloud_clb_listener.listener_basic.id
-    rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
-    targrt_group_id = tencentcloud_clb_target_group.test.id 
-}`
+  resource "tencentcloud_vpc" "foo" {
+	name       = "guagua-ci-temp-test"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+  resource "tencentcloud_clb_instance" "clb_open" {
+	network_type              = "OPEN"
+	clb_name                  = "tf-clb-update-open"
+	vpc_id                    = tencentcloud_vpc.foo.id
+	project_id                = 0
+	target_region_info_region = "ap-guangzhou"
+	target_region_info_vpc_id = tencentcloud_vpc.foo.id
+	tags = {
+	  test = "test"
+	}
+  }
+  
+  resource "tencentcloud_clb_listener" "TCP_listener" {
+	clb_id                     = tencentcloud_clb_instance.clb_open.id
+	listener_name              = "test_listener"
+	port                       = 80
+	protocol                   = "TCP"
+	health_check_switch        = true
+	health_check_time_out      = 2
+	health_check_interval_time = 5
+	health_check_health_num    = 3
+	health_check_unhealth_num  = 3
+	session_expire_time        = 30
+	scheduler                  = "WRR"
+	target_type = "TARGETGROUP"
+  }
+  
+  resource "tencentcloud_clb_target_group" "test"{
+	target_group_name = "test-target-keep-1"
+	vpc_id = tencentcloud_vpc.foo.id
+  }
+  
+  resource "tencentcloud_clb_target_group_attachment" "group" {
+	  clb_id          = tencentcloud_clb_instance.clb_open.id
+	  listener_id     = tencentcloud_clb_listener.TCP_listener.listener_id
+	  target_group_id = tencentcloud_clb_target_group.test.id 
+  }
+`

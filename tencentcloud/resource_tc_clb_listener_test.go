@@ -263,6 +263,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name       = "listener_basic"
   session_expire_time = 30
   scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -284,6 +285,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -305,6 +307,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
   health_check_unhealth_num  = 3
   session_expire_time        = 60
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 
@@ -327,6 +330,7 @@ resource "tencentcloud_clb_listener" "listener_tcpssl" {
   health_check_health_num    = 2
   health_check_unhealth_num  = 2
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 const testAccClbListener_tcpssl_update = `
@@ -348,6 +352,7 @@ resource "tencentcloud_clb_listener" "listener_tcpssl"{
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
   scheduler                  = "WRR"
+  target_type         = "TARGETGROUP"
 }
 `
 const testAccClbListener_https = `
