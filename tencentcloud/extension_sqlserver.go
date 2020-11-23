@@ -76,3 +76,8 @@ const (
 	INTERNALERROR_DBERROR   = "InternalError.DBError"
 	INSTANCE_STATUS_INVALID = "ResourceUnavailable.InstanceStatusInvalid"
 )
+
+const (
+	CLOUD_PREMIUM = "CLOUD_PREMIUM"
+	CLOUD_SSD     = "CLOUD_SSD"
+)

@@ -1,6 +1,19 @@
 data "tencentcloud_sqlserver_zone_config" "foo" {
 }
 
+resource "tencentcloud_vpc" "sqlserver_vpc" {
+	name       = "tf-sqlserver-vpc"
+	cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "sqlserver_subnet" {
+	availability_zone = "ap-guangzhou-3"
+	name              = "tf-sqlserver-subnet"
+	vpc_id            = tencentcloud_vpc.sqlserver_vpc.id
+	cidr_block        = "10.0.0.0/16"
+	is_multicast      = false
+}
+
 resource "tencentcloud_vpc" "foo" {
   name       = "example"
   cidr_block = "10.0.0.0/16"
@@ -27,6 +40,28 @@ resource "tencentcloud_sqlserver_instance" "example" {
   tags = {
       "test" = "test"
   }
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "test" {
+    name                    = "tf_sqlserver_basic_instance"
+    availability_zone       = "ap-guangzhou-3"
+    charge_type             = "POSTPAID_BY_HOUR"
+    vpc_id                  = tencentcloud_vpc.sqlserver_vpc.id
+    subnet_id               = tencentcloud_subnet.sqlserver_subnet.id
+    machine_type            ="CLOUD_PREMIUM"
+    project_id              = 0
+    memory                  = 2
+    storage                 = 20
+    cpu                     = 1
+    security_groups         = ["sg-nltpbqg1"]
+    goods_num               = 1
+    maintenance_week_set    = [1,2,3]
+    maintenance_start_time  = "09:00"
+    maintenance_time_span   = 3
+
+    tags = {
+        "test" = "test"
+    }
 }
 
 resource "tencentcloud_sqlserver_db" "example" {
@@ -118,3 +153,6 @@ data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
 	publish_subscribe_name          = tencentcloud_sqlserver_publish_subscribe.example.publish_subscribe_name
 }
 
+data "tencentcloud_sqlserver_basic_instances" "id_test"{
+	id = tencentcloud_sqlserver_basic_instance.test.id
+}

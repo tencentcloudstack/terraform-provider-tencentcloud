@@ -26,6 +26,13 @@ func TestAccTencentCloudClbListenersDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.protocol", "TCP"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.session_expire_time", "30"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.scheduler", "WRR"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_type", "HTTP"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_port", "0"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_http_code", "16"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_http_path", "/"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_http_domain", "www.tencent.com"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_http_method", "HEAD"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.health_check_http_version", "HTTP/1.1"),
 				),
 			},
 		},
@@ -34,21 +41,27 @@ func TestAccTencentCloudClbListenersDataSource(t *testing.T) {
 
 const testAccClbListenersDataSource = `
 resource "tencentcloud_clb_instance" "clb" {
-  network_type = "OPEN"
-  clb_name     = "tf-clb-listeners"
+    network_type = "OPEN"
+    clb_name     = "tf-clb-listeners"
 }
 
 resource "tencentcloud_clb_listener" "listener" {
-  clb_id              = tencentcloud_clb_instance.clb.id
-  port                = 1
-  protocol            = "TCP"
-  listener_name       = "mylistener1234"
-  session_expire_time = 30
-  scheduler           = "WRR"
+    clb_id                     = tencentcloud_clb_instance.clb.id
+    port                       = 1
+    protocol                   = "TCP"
+    listener_name              = "mylistener1234"
+    session_expire_time        = 30
+    scheduler                  = "WRR"
+    health_check_type          = "HTTP"
+    health_check_http_domain   = "www.tencent.com"
+    health_check_http_code     = 16
+    health_check_http_version  = "HTTP/1.1"
+    health_check_http_method   = "HEAD"
+    health_check_http_path     = "/"
 }
 
 data "tencentcloud_clb_listeners" "listeners" {
-  clb_id      = tencentcloud_clb_instance.clb.id
-  listener_id = tencentcloud_clb_listener.listener.listener_id
+    clb_id      = tencentcloud_clb_instance.clb.id
+    listener_id = tencentcloud_clb_listener.listener.listener_id
 }
 `

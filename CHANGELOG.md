@@ -1,4 +1,20 @@
-## 1.47.1 (Unreleased)
+## 1.48.1 (Unreleased)
+## 1.48.0 (November 20, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_sqlserver_basic_instance`
+* **New Data Source**: `tencentcloud_sqlserver_basic_instances` 
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_clb_listener` support configure HTTP health check for TCP listener([#539](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/539)).
+* Resource: `tencentcloud_clb_listener` add computed argument `target_type`.
+* Data Source: `tencentcloud_clb_listeners` support getting HTTP health check config for TCP listener.
+
+DEPRECATED:
+* Resource: `tencentcloud_clb_target_group_attachment`: optional argument `targrt_group_id` is no longer supported, replace by `target_group_id`.
+
 ## 1.47.0 (November 13, 2020)
 
 ENHANCEMENTS:

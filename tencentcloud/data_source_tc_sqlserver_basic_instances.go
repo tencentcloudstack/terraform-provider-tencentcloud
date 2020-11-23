@@ -1,20 +1,26 @@
 /*
-Use this data source to query SQL Server instances
+Use this data source to query SQL Server basic instances
 
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_instances" "vpc"{
-  vpc_id = "vpc-409mvdvv"
-  subnet_id = "subnet-nf9n81ps"
-}
 
-data "tencentcloud_sqlserver_instances" "project"{
-  project_id = 0
-}
+resource "tencentcloud_sqlserver_basic_instance" "test" {
+	name                = "tf_sqlserver_basic_instance"
+	availability_zone   = var.availability_zone
+	charge_type         = "POSTPAID_BY_HOUR"
+	vpc_id              = "vpc-26w7r56z"
+	subnet_id           = "subnet-lvlr6eeu"
+	machine_type        = "CLOUD_PREMIUM"
+	project_id          = 0
+	memory              = 2
+	storage             = 10
+	cpu                 = 1
+	security_groups     = ["sg-nltpbqg1"]
 
-data "tencentcloud_sqlserver_instances" "id"{
-  id = "postgres-h9t4fde1"
+	tags = {
+		"test" = "test"
+	}
 }
 ```
 */
@@ -28,29 +34,29 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
+func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSqlserverInstanceRead,
+		Read: dataSourceTencentCloudSqlserverBasicInstanceRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the SQL Server instance to be query.",
+				Description: "ID of the SQL Server basic instance to be query.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Project ID of the SQL Server instance to be query.",
+				Description: "Project ID of the SQL Server basic instance to be query.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Vpc ID of the SQL Server instance to be query.",
+				Description: "Vpc ID of the SQL Server basic instance to be query.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Subnet ID of the SQL Server instance to be query.",
+				Description: "Subnet ID of the SQL Server basic instance to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -60,33 +66,28 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 			"instance_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of SQL Server instances. Each element contains the following attributes.",
+				Description: "A list of SQL Server basic instances. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the SQL Server instance.",
+							Description: "ID of the SQL Server basic instance.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the SQL Server instance.",
+							Description: "Name of the SQL Server basic instance.",
 						},
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Pay type of the SQL Server instance. For now, only `POSTPAID_BY_HOUR` is valid.",
+							Description: "Pay type of the SQL Server basic instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
-						},
-						"ha_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Instance type.",
+							Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -108,15 +109,15 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.",
 						},
+						"cpu": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The CPU number of the SQL Server basic instance.",
+						},
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Project ID, default value is 0.",
-						},
-						"ro_flag": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Readonly flag. `RO` for readonly instance, `MASTER` for master instance,  `` for not readonly instance.",
 						},
 						"availability_zone": {
 							Type:        schema.TypeString,
@@ -141,17 +142,17 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the SQL Server instance.",
+							Description: "Create time of the SQL Server basic instance.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
+							Description: "Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Tags of the SQL Server instance.",
+							Description: "Tags of the SQL Server basic instance.",
 						},
 					},
 				},
@@ -160,39 +161,36 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_sqlserver_instances.read")()
+func dataSourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_sqlserver_basic_instances.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	service := SqlserverService{client: tcClient}
-
-	id := d.Get("id").(string)
-
-	project_id := -1
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		tcClient   = meta.(*TencentCloudClient).apiV3Conn
+		tagService = &TagService{client: tcClient}
+		service    = SqlserverService{client: tcClient}
+		id         = d.Get("id").(string)
+		projectId  = -1
+		vpcId      string
+		subnetId   string
+	)
 	if v, ok := d.GetOk("project_id"); ok {
-		project_id = v.(int)
+		projectId = v.(int)
 	}
-
-	vpc_id := d.Get("vpc_id").(string)
-
-	subnet_id := d.Get("subnet_id").(string)
-
-	instanceList, err := service.DescribeSqlserverInstances(ctx, id, project_id, vpc_id, subnet_id, 1)
-
-	if err != nil {
-		instanceList, err = service.DescribeSqlserverInstances(ctx, id, project_id, vpc_id, subnet_id, 1)
+	if v, ok := d.GetOk("vpc_id"); ok {
+		vpcId = v.(string)
 	}
+	if v, ok := d.GetOk("subnet_id"); ok {
+		subnetId = v.(string)
+	}
+	instanceList, err := service.DescribeSqlserverInstances(ctx, id, projectId, vpcId, subnetId, 1)
 	if err != nil {
 		return err
 	}
 
 	ids := make([]string, 0, len(instanceList))
 	list := make([]map[string]interface{}, 0, len(instanceList))
-
 	for _, v := range instanceList {
 		listItem := make(map[string]interface{})
 		listItem["id"] = v.InstanceId
@@ -209,14 +207,13 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 		listItem["vport"] = v.Vport
 		listItem["used_storage"] = v.UsedStorage
 		listItem["status"] = v.Status
-		listItem["ro_flag"] = v.ROFlag
+		listItem["cpu"] = v.Cpu
 
 		if *v.PayMode == 1 {
 			listItem["charge_type"] = COMMON_PAYTYPE_PREPAID
 		} else {
 			listItem["charge_type"] = COMMON_PAYTYPE_POSTPAID
 		}
-
 		tagList, err := tagService.DescribeResourceTags(ctx, "sqlserver", "instance", tcClient.Region, *v.InstanceId)
 		if err != nil {
 			return err
