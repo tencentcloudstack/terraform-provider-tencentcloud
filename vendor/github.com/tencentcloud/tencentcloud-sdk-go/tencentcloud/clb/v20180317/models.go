@@ -742,7 +742,7 @@ type CreateLoadBalancerRequest struct {
 	// 负载均衡实例的类型。1：通用的负载均衡实例，目前只支持传入1
 	Forward *int64 `json:"Forward,omitempty" name:"Forward"`
 
-	// 负载均衡实例的名称，只在创建一个实例的时候才会生效。规则：1-50 个英文、汉字、数字、连接线“-”或下划线“_”。
+	// 负载均衡实例的名称，只在创建一个实例的时候才会生效。规则：1-60 个英文、汉字、数字、连接线“-”或下划线“_”。
 	// 注意：如果名称与系统中已有负载均衡实例的名称相同，则系统将会自动生成此次创建的负载均衡实例的名称。
 	LoadBalancerName *string `json:"LoadBalancerName,omitempty" name:"LoadBalancerName"`
 
@@ -785,6 +785,12 @@ type CreateLoadBalancerRequest struct {
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// 是否支持绑定跨地域/跨Vpc绑定IP的功能。
+	SnatPro *bool `json:"SnatPro,omitempty" name:"SnatPro"`
+
+	// 开启绑定跨地域/跨Vpc绑定IP的功能后，创建SnatIp。
+	SnatIps []*SnatIp `json:"SnatIps,omitempty" name:"SnatIps" list`
 
 	// Stgw独占集群的标签。
 	ClusterTag *string `json:"ClusterTag,omitempty" name:"ClusterTag"`
@@ -2819,6 +2825,10 @@ type LoadBalancer struct {
 	// 开启IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标功能。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MixIpTarget *bool `json:"MixIpTarget,omitempty" name:"MixIpTarget"`
+
+	// 私有网络内网负载均衡，就近接入模式下规则所落在的可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zones []*string `json:"Zones,omitempty" name:"Zones" list`
 }
 
 type LoadBalancerDetail struct {

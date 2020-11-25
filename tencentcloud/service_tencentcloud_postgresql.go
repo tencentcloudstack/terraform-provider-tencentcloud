@@ -254,13 +254,12 @@ func (me *PostgresqlService) DescribePostgresqlInstances(ctx context.Context, fi
 		}
 	}()
 
-	var offset, limit uint64 = 0, 20
-
-	request.Offset = &offset
-	request.Limit = &limit
-	request.Filters = filter
+	var offset, limit uint64 = 0, 200
 
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		request.Filters = filter
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UsePostgresqlClient().DescribeDBInstances(request)
 		if err != nil {

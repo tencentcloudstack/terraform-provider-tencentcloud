@@ -63,6 +63,9 @@ type AccountDetail struct {
 
 	// 该账户对相关db的读写权限信息
 	Dbs []*DBPrivilege `json:"Dbs,omitempty" name:"Dbs" list`
+
+	// 是否为管理员账户
+	IsAdmin *bool `json:"IsAdmin,omitempty" name:"IsAdmin"`
 }
 
 type AccountPassword struct {
@@ -855,7 +858,7 @@ type DBInstance struct {
 	// 实例续费标记，0-正常续费，1-自动续费，2-到期不续费
 	RenewFlag *int64 `json:"RenewFlag,omitempty" name:"RenewFlag"`
 
-	// 实例高可用， 1-双机高可用，2-单机
+	// 实例高可用， 1-双机高可用，2-单机，3-跨可用区，4-集群跨可用区，5-集群，9-自研机房
 	Model *int64 `json:"Model,omitempty" name:"Model"`
 
 	// 实例所在地域名称，如 ap-guangzhou
@@ -1861,6 +1864,9 @@ type DescribeProductConfigRequest struct {
 
 	// 可用区英文ID，形如ap-guangzhou-1
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 购买实例的类型 HA-高可用型(包括双机高可用，alwaysOn集群)，RO-只读副本型，SI-基础版本型
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
 }
 
 func (r *DescribeProductConfigRequest) ToJsonString() string {
@@ -3505,6 +3511,40 @@ func (r *RecycleDBInstanceResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type RecycleReadOnlyGroupRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *RecycleReadOnlyGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RecycleReadOnlyGroupRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RecycleReadOnlyGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 任务流ID
+		FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RecycleReadOnlyGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RecycleReadOnlyGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type RegionInfo struct {
 
 	// 地域英文ID，类似ap-guanghou
@@ -3973,6 +4013,12 @@ type SpecInfo struct {
 
 	// 此规格下支持的付费模式，POST-仅支持按量计费 PRE-仅支持包年包月 ALL-支持所有
 	PayModeStatus *string `json:"PayModeStatus,omitempty" name:"PayModeStatus"`
+
+	// 产品类型，HA-高可用型(包括双机高可用，alwaysOn集群)，RO-只读副本型，SI-基础版本型
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 跨可用区类型，MultiZones-只支持跨可用区，SameZones-只支持同可用区，ALL-支持所有
+	MultiZonesStatus *string `json:"MultiZonesStatus,omitempty" name:"MultiZonesStatus"`
 }
 
 type StartMigrationCheckRequest struct {

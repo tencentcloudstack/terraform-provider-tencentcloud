@@ -1122,16 +1122,16 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	basic.ProjectId = int64(d.Get("project_id").(int))
 
 	cluster_os := d.Get("cluster_os").(string)
-	
+
 	if v, ok := tkeClusterOsMap[cluster_os]; ok {
 		basic.ClusterOs = v
 	} else {
 		basic.ClusterOs = cluster_os
 	}
 
-	if tkeClusterOsMap[cluster_os]!= ""{
+	if tkeClusterOsMap[cluster_os] != "" {
 		basic.ClusterOs = tkeClusterOsMap[cluster_os]
-	}else{
+	} else {
 		basic.ClusterOs = cluster_os
 	}
 

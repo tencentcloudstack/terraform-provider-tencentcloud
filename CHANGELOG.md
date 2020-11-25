@@ -1,4 +1,16 @@
-## 1.48.1 (Unreleased)
+## 1.49.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_tcr_instance`
+* **New Resource**: `tencentcloud_tcr_token`
+* **New Resource**: `tencentcloud_tcr_namespace`
+* **New Resource**: `tencentcloud_tcr_repository`
+* **New Data Source**: `tencentcloud_tcr_instances` 
+* **New Data Source**: `tencentcloud_tcr_tokens` 
+* **New Data Source**: `tencentcloud_tcr_namespaces` 
+* **New Data Source**: `tencentcloud_tcr_repositories` 
+
 ## 1.48.0 (November 20, 2020)
 
 FEATURES:
