@@ -577,7 +577,6 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 		return
 	}
 
-	log.Printf("!!!%+v len %d", response.Response.RewriteSet, len(response.Response.RewriteSet))
 	for _, v := range response.Response.RewriteSet {
 		//sometimes the response returns all the rules under a certain url, so filter again in the code
 		if v.RewriteTarget != nil {
