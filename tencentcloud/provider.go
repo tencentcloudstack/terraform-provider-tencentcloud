@@ -874,6 +874,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_api_key_attachment":          resourceTencentCloudAPIGatewayAPIKeyAttachment(),
 			"tencentcloud_api_gateway_service_release":             resourceTencentCloudAPIGatewayServiceRelease(),
 			"tencentcloud_sqlserver_basic_instance":                resourceTencentCloudSqlserverBasicInstance(),
+			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

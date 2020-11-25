@@ -145,6 +145,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 		Create: resourceKubernetesAsScalingGroupCreate,
 		Read:   resourceKubernetesAsScalingGroupRead,
 		Delete: resourceKubernetesAsScalingGroupDelete,
+		Update: resourceKubernetesAsScalingGroupUpdate,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -155,7 +156,6 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 			"auto_scaling_group": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingGroupPara(),
@@ -343,14 +343,12 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 		"max_size": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ForceNew:     true,
 			ValidateFunc: validateIntegerInRange(0, 2000),
 			Description:  "Maximum number of CVM instances (0~2000).",
 		},
 		"min_size": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ForceNew:     true,
 			ValidateFunc: validateIntegerInRange(0, 2000),
 			Description:  "Minimum number of CVM instances (0~2000).",
 		},
@@ -878,6 +876,45 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	}
 
 	return nil
+}
+
+func resourceKubernetesAsScalingGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_kubernetes_as_scaling_group.update")()
+
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		items   = strings.Split(d.Id(), ":")
+	)
+	if len(items) != 2 {
+		return fmt.Errorf("resource_tc_kubernetes_as_scaling_group id  is broken")
+	}
+	clusterId := items[0]
+	asGroupId := items[1]
+	if d.HasChange("auto_scaling_group") {
+		asGroups := d.Get("auto_scaling_group").([]interface{})
+		if len(asGroups) != 1 {
+			return fmt.Errorf("need only one auto_scaling_group")
+		}
+		for _, d := range asGroups {
+			value := d.(map[string]interface{})
+			maxSize := int64(value["max_size"].(int))
+			minSize := int64(value["min_size"].(int))
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				errRet := service.ModifyClusterAsGroupAttribute(ctx, clusterId, asGroupId, maxSize, minSize)
+				if errRet != nil {
+					return retryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return resourceKubernetesAsScalingGroupRead(d, meta)
 }
 
 func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interface{}) error {
