@@ -90,7 +90,7 @@ func resourceTencentCloudCosBucketPolicy() *schema.Resource {
 					flag := reflect.DeepEqual(oldJson, newJson)
 					return flag
 				},
-				Description: "The text of the policy. for more info please refer to [Tencent official doc](https://intl.cloud.tencent.com/document/product/436/18023).",
+				Description: "The text of the policy. For more info please refer to [Tencent official doc](https://intl.cloud.tencent.com/document/product/436/18023).",
 			},
 		},
 	}
