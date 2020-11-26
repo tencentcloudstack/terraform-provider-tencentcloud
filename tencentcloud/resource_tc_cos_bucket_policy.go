@@ -51,6 +51,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceTencentCloudCosBucketPolicy() *schema.Resource {
@@ -72,8 +73,9 @@ func resourceTencentCloudCosBucketPolicy() *schema.Resource {
 				Description:  "The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.",
 			},
 			"policy": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringIsJSON,
 				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
 					var oldJson interface{}
 					err := json.Unmarshal([]byte(olds), &oldJson)
@@ -102,7 +104,16 @@ func resourceTencentCloudCosBucketPolicyCreate(d *schema.ResourceData, meta inte
 	bucket := d.Get("bucket").(string)
 	policy := d.Get("policy").(string)
 
-	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cosService := CosService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	policyErr := camService.PolicyDocumentForceCheck(policy)
+	if policyErr != nil {
+		return policyErr
+	}
 
 	err := cosService.PutBucketPolicy(ctx, bucket, policy)
 	if err != nil {
@@ -160,6 +171,13 @@ func resourceTencentCloudCosBucketPolicyUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("policy") {
 		policy := d.Get("policy").(string)
+		camService := CamService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		policyErr := camService.PolicyDocumentForceCheck(policy)
+		if policyErr != nil {
+			return policyErr
+		}
 		err := cosService.PutBucketPolicy(ctx, bucket, policy)
 		if err != nil {
 			return err
@@ -205,8 +223,6 @@ func removeSid(v string) (result string, err error) {
 	var stateMend []interface{}
 	if v, ok := m["Statement"]; ok {
 		stateMend = v.([]interface{})
-	} else if v, ok := m["statement"]; ok {
-		stateMend = v.([]interface{})
 	}
 	for index, v := range stateMend {
 		mp := v.(map[string]interface{})
@@ -215,8 +231,6 @@ func removeSid(v string) (result string, err error) {
 	}
 	if _, ok := m["Statement"]; ok {
 		m["Statement"] = stateMend
-	} else if _, ok := m["statement"]; ok {
-		m["statement"] = stateMend
 	}
 	s, err := json.Marshal(m)
 	return string(s), err
