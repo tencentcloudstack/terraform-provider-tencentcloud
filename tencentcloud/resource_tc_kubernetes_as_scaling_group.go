@@ -894,9 +894,6 @@ func resourceKubernetesAsScalingGroupUpdate(d *schema.ResourceData, meta interfa
 	asGroupId := items[1]
 	if d.HasChange("auto_scaling_group") {
 		asGroups := d.Get("auto_scaling_group").([]interface{})
-		if len(asGroups) != 1 {
-			return fmt.Errorf("need only one auto_scaling_group")
-		}
 		for _, d := range asGroups {
 			value := d.(map[string]interface{})
 			maxSize := int64(value["max_size"].(int))

@@ -31,7 +31,7 @@ variable "policy" {
       ],
       "Effect": "allow",
       "Resource": [
-        "qcs::cos:ap-nanjing:uid/1259649581:hhermanwang-1259649581/*"
+        "*"
       ]
     }
   ]
