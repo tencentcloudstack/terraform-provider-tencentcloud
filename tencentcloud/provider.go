@@ -895,6 +895,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_namespace":                           resourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                          resourceTencentCloudTcrRepository(),
 			"tencentcloud_tcr_token":                               resourceTencentCloudTcrToken(),
+			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

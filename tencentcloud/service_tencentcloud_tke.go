@@ -837,3 +837,30 @@ func GetTkeLabels(d *schema.ResourceData, k string) []*tke.Label {
 	}
 	return labels
 }
+
+func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asGroupId string, maxSize, minSize int64) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterAsGroupAttributeRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.ClusterAsGroupAttribute = &tke.ClusterAsGroupAttribute{
+		AutoScalingGroupId: &asGroupId,
+		AutoScalingGroupRange: &tke.AutoScalingGroupRange{
+			MaxSize: &maxSize,
+			MinSize: &minSize,
+		},
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterAsGroupAttribute(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}

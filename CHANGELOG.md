@@ -10,6 +10,11 @@ FEATURES:
 * **New Data Source**: `tencentcloud_tcr_tokens` 
 * **New Data Source**: `tencentcloud_tcr_namespaces` 
 * **New Data Source**: `tencentcloud_tcr_repositories` 
+* **New Resource**: `tencentcloud_cos_bucket_policy`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_as_scaling_group` support `max_size` and `min_size` modification.
 
 ## 1.48.0 (November 20, 2020)
 
