@@ -561,3 +561,66 @@ func (me *CosService) GetBucketTags(ctx context.Context, bucket string) (map[str
 
 	return tags, nil
 }
+
+func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.PutBucketPolicyInput{
+		Bucket: &bucket,
+		Policy: &policy,
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "put bucket", request.String(), errRet.Error())
+		}
+	}()
+	ratelimit.Check("PutBucketPolicy")
+	response, err := me.client.UseCosClient().PutBucketPolicy(&request)
+	if err != nil {
+		errRet = fmt.Errorf("cos put bucket policy error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "put bucket policy", request.String(), response.String())
+
+	return nil
+}
+
+func (me *CosService) DescribePolicyByBucket(ctx context.Context, bucket string) (bucketPolicy string, errRet error) {
+	logId := getLogId(ctx)
+	request := s3.GetBucketPolicyInput{Bucket: aws.String(bucket)}
+
+	ratelimit.Check("GetBucketPolicy")
+	response, err := me.client.UseCosClient().GetBucketPolicy(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket policy", request.String(), err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket policy", request.String(), response.String())
+	bucketPolicy = *response.Policy
+	return
+}
+
+func (me *CosService) DeleteBucketPolicy(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.DeleteBucketPolicyInput{
+		Bucket: aws.String(bucket),
+	}
+	ratelimit.Check("DeleteBucketPolicy")
+	response, err := me.client.UseCosClient().DeleteBucketPolicy(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "delete bucket policy", request.String(), err.Error())
+		return fmt.Errorf("cos delete bucket policy error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "delete bucket policy", request.String(), response.String())
+
+	return nil
+}

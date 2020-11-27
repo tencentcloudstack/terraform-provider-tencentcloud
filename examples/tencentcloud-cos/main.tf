@@ -54,3 +54,8 @@ data "tencentcloud_cos_buckets" "data_bucket" {
   bucket_prefix = tencentcloud_cos_bucket.bucket.id
   tags          = tencentcloud_cos_bucket.bucket.tags
 }
+
+resource "tencentcloud_cos_bucket_policy" "cos_policy" {
+  bucket        = "mycos-1258798060"
+  policy        = var.policy
+}

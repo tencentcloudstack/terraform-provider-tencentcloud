@@ -20,7 +20,7 @@ func TestAccTencentCloudTkeAsResource(t *testing.T) {
 		CheckDestroy: testAccCheckTkeAsDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAsCluster(),
+				Config: testAccTkeAsCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeAsExists,
 					resource.TestCheckResourceAttrSet(testTkeClusterAsResourceKey, "cluster_id"),
@@ -28,6 +28,17 @@ func TestAccTencentCloudTkeAsResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test2", "test2"),
+				),
+			},
+			{
+				Config: testAccTkeAsClusterUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeAsExists,
+					resource.TestCheckResourceAttrSet(testTkeClusterAsResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_group.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_group.0.max_size", "6"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_group.0.min_size", "1"),
 				),
 			},
 		},
@@ -102,8 +113,7 @@ func testAccCheckTkeAsExists(s *terraform.State) error {
 
 }
 
-func testAccTkeAsCluster() string {
-	return `
+const testAccTkeAsClusterBasic = `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -153,9 +163,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
-}
+}`
 
-
+const testAccTkeAsCluster string = testAccTkeAsClusterBasic + `
 resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
   cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
@@ -168,7 +178,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
     subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
     project_id           = 0
     default_cooldown     = 400
-    desired_capacity     = "0"
+    desired_capacity     = "1"
     termination_policies = ["NEWEST_INSTANCE"]
     retry_policy         = "INCREMENTAL_INTERVALS"
 
@@ -213,4 +223,61 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 }
 
 `
+
+const testAccTkeAsClusterUpdate string = testAccTkeAsClusterBasic + `
+resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
+
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+
+  auto_scaling_group {
+    scaling_group_name   = "tf-tke-as-group-unit-test"
+    max_size             = "6"
+    min_size             = "1"
+    vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+    subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+    project_id           = 0
+    default_cooldown     = 400
+    desired_capacity     = "1"
+    termination_policies = ["NEWEST_INSTANCE"]
+    retry_policy         = "INCREMENTAL_INTERVALS"
+
+    tags = {
+      "test" = "test"
+    }
+
+  }
+
+  auto_scaling_config {
+    configuration_name = "tf-tke-as-config-unit-test"
+    instance_type      = var.default_instance_type
+    project_id         = 0
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+
+    instance_tags = {
+      tag = "as"
+    }
+
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
 }
+`

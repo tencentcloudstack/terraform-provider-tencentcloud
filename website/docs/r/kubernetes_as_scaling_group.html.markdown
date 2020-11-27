@@ -136,7 +136,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 The following arguments are supported:
 
 * `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
-* `auto_scaling_group` - (Required, ForceNew) Auto scaling group parameters.
+* `auto_scaling_group` - (Required) Auto scaling group parameters.
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `labels` - (Optional, ForceNew) Labels of kubernetes AS Group created nodes.
@@ -161,8 +161,8 @@ The `auto_scaling_config` object supports the following:
 
 The `auto_scaling_group` object supports the following:
 
-* `max_size` - (Required, ForceNew) Maximum number of CVM instances (0~2000).
-* `min_size` - (Required, ForceNew) Minimum number of CVM instances (0~2000).
+* `max_size` - (Required) Maximum number of CVM instances (0~2000).
+* `min_size` - (Required) Minimum number of CVM instances (0~2000).
 * `scaling_group_name` - (Required, ForceNew) Name of a scaling group.
 * `vpc_id` - (Required, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional, ForceNew) Default cooldown time in second, and default value is 300.
