@@ -1,4 +1,5 @@
-## 1.49.0 (Unreleased)
+## 1.49.1 (Unreleased)
+## 1.49.0 (November 27, 2020)
 
 FEATURES:
 
