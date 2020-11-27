@@ -118,6 +118,31 @@ func (c *Client) CreateDiagnoseUrl(request *CreateDiagnoseUrlRequest) (response 
     return
 }
 
+func NewCreateEdgePackTaskRequest() (request *CreateEdgePackTaskRequest) {
+    request = &CreateEdgePackTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "CreateEdgePackTask")
+    return
+}
+
+func NewCreateEdgePackTaskResponse() (response *CreateEdgePackTaskResponse) {
+    response = &CreateEdgePackTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 动态打包任务提交接口
+func (c *Client) CreateEdgePackTask(request *CreateEdgePackTaskRequest) (response *CreateEdgePackTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateEdgePackTaskRequest()
+    }
+    response = NewCreateEdgePackTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateScdnLogTaskRequest() (request *CreateScdnLogTaskRequest) {
     request = &CreateScdnLogTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1221,7 +1246,6 @@ func NewPushUrlsCacheResponse() (response *PushUrlsCacheResponse) {
 
 // PushUrlsCache 用于将指定 URL 资源列表加载至 CDN 节点，支持指定加速区域预热。
 // 默认情况下境内、境外每日预热 URL 限额为各 1000 条，每次最多可提交 20 条。
-// 接口灰度中，暂未全量开放，敬请期待。
 func (c *Client) PushUrlsCache(request *PushUrlsCacheRequest) (response *PushUrlsCacheResponse, err error) {
     if request == nil {
         request = NewPushUrlsCacheRequest()

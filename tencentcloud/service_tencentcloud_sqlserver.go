@@ -955,7 +955,6 @@ func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64)
 
 	errRet = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
 		taskResponse, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
-		log.Printf("This is the time out interface, thanks2")
 		ratelimit.Check(request.GetAction())
 		if err != nil {
 			return resource.NonRetryableError(errors.WithStack(err))

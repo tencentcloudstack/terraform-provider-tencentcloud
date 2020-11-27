@@ -893,6 +893,49 @@ func (r *CreateDiagnoseUrlResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateEdgePackTaskRequest struct {
+	*tchttp.BaseRequest
+
+	// apk 所在的 cos 存储桶, 如 edgepack-xxxxxxxx
+	CosBucket *string `json:"CosBucket,omitempty" name:"CosBucket"`
+
+	// apk 源文件的存储路径, 如 /apk/xxxx.apk
+	CosUriFrom *string `json:"CosUriFrom,omitempty" name:"CosUriFrom"`
+
+	// 拓展之后的 apk 目标存储路径,如 /out/xxxx.apk
+	CosUriTo *string `json:"CosUriTo,omitempty" name:"CosUriTo"`
+
+	// BlockID 的值, WALLE为1903654775(0x71777777)，VasDolly为2282837503(0x881155ff),传0或不传时默认为 WALLE 方案
+	BlockID *uint64 `json:"BlockID,omitempty" name:"BlockID"`
+}
+
+func (r *CreateEdgePackTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateEdgePackTaskRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateEdgePackTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateEdgePackTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateEdgePackTaskResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateScdnLogTaskRequest struct {
 	*tchttp.BaseRequest
 
@@ -3279,7 +3322,6 @@ type HttpHeaderPathRule struct {
 
 	// http 头部设置方式
 	// add：添加头部，若已存在头部，则会存在重复头部
-	// set：仅回源头部配置支持，若头部已存在则会覆盖原有头部值，若不存在，则会增加该头部及值
 	// del：删除头部
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HeaderMode *string `json:"HeaderMode,omitempty" name:"HeaderMode"`
@@ -4244,6 +4286,9 @@ type PurgePathCacheRequest struct {
 	// flush：刷新产生更新的资源
 	// delete：刷新全部资源
 	FlushType *string `json:"FlushType,omitempty" name:"FlushType"`
+
+	// 是否对中文字符进行编码后刷新
+	UrlEncode *bool `json:"UrlEncode,omitempty" name:"UrlEncode"`
 }
 
 func (r *PurgePathCacheRequest) ToJsonString() string {
@@ -4316,6 +4361,9 @@ type PurgeUrlsCacheRequest struct {
 	// 填充 overseas 时，仅刷新中国境外加速节点上缓存内容
 	// 指定刷新区域时，需要与域名加速区域匹配
 	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 是否对中文字符进行编码后刷新
+	UrlEncode *bool `json:"UrlEncode,omitempty" name:"UrlEncode"`
 }
 
 func (r *PurgeUrlsCacheRequest) ToJsonString() string {

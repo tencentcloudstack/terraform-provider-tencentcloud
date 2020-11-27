@@ -35,6 +35,7 @@ import (
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
+	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -61,6 +62,7 @@ type TencentCloudClient struct {
 	tagConn        *tag.Client
 	mongodbConn    *mongodb.Client
 	tkeConn        *tke.Client
+	tcrConn        *tcr.Client
 	camConn        *cam.Client
 	stsConn        *sts.Client
 	gaapConn       *gaap.Client
@@ -502,4 +504,17 @@ func (me *TencentCloudClient) UseAPIGatewayClient() *apigateway.Client {
 	me.apiGatewayConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apiGatewayConn
+}
+
+// UseTCRClient returns apigateway client for service
+func (me *TencentCloudClient) UseTCRClient() *tcr.Client {
+	if me.tcrConn != nil {
+		return me.tcrConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tcrConn, _ = tcr.NewClient(me.Credential, me.Region, cpf)
+	me.tcrConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tcrConn
 }

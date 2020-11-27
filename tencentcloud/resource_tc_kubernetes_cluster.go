@@ -1128,6 +1128,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	} else {
 		basic.ClusterOs = cluster_os
 	}
+
+	if tkeClusterOsMap[cluster_os] != "" {
+		basic.ClusterOs = tkeClusterOsMap[cluster_os]
+	} else {
+		basic.ClusterOs = cluster_os
+	}
+
 	basic.ClusterOsType = d.Get("cluster_os_type").(string)
 
 	if basic.ClusterOsType == TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE {

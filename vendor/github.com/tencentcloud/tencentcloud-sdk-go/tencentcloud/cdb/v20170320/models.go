@@ -56,25 +56,25 @@ type AddTimeWindowRequest struct {
 	// 实例ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 星期一的可维护时间段，其中每一个时间段的格式形如：10:00-12:00；起始时间按半个小时对齐；最短半个小时，最长三个小时；最多设置两个时间段；下同。
+	// 星期一的可维护时间段，其中每一个时间段的格式形如：10:00-12:00；起始时间按半个小时对齐；最短半个小时，最长三个小时；可设置多个时间段。 一周中应至少设置一天的时间窗。下同。
 	Monday []*string `json:"Monday,omitempty" name:"Monday" list`
 
-	// 星期二的可维护时间窗口。
+	// 星期二的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Tuesday []*string `json:"Tuesday,omitempty" name:"Tuesday" list`
 
-	// 星期三的可维护时间窗口。
+	// 星期三的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Wednesday []*string `json:"Wednesday,omitempty" name:"Wednesday" list`
 
-	// 星期四的可维护时间窗口。
+	// 星期四的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Thursday []*string `json:"Thursday,omitempty" name:"Thursday" list`
 
-	// 星期五的可维护时间窗口。
+	// 星期五的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Friday []*string `json:"Friday,omitempty" name:"Friday" list`
 
-	// 星期六的可维护时间窗口。
+	// 星期六的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Saturday []*string `json:"Saturday,omitempty" name:"Saturday" list`
 
-	// 星期日的可维护时间窗口。
+	// 星期日的可维护时间窗口。 一周中应至少设置一天的时间窗。
 	Sunday []*string `json:"Sunday,omitempty" name:"Sunday" list`
 }
 
@@ -4669,6 +4669,7 @@ type ModifyAuditConfigRequest struct {
 
 	// 是否关闭审计服务。可选值：true - 关闭审计服务；false - 不关闭审计服务。默认值为 false。
 	// 当关闭审计服务时，会删除用户的审计日志和文件，并删除该实例的所有审计策略。
+	// CloseAudit、LogExpireDay必须至少提供一个，如果两个都提供则按照CloseAudit优先的逻辑处理。
 	CloseAudit *bool `json:"CloseAudit,omitempty" name:"CloseAudit"`
 }
 

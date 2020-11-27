@@ -525,7 +525,7 @@ github.com/stretchr/testify/mock
 github.com/subosito/gotenv
 # github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go v1.0.50
+# github.com/tencentcloud/tencentcloud-sdk-go v1.0.59
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
@@ -555,6 +555,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
@@ -710,6 +711,7 @@ golang.org/x/tools/go/internal/packagesdriver
 golang.org/x/tools/go/loader
 golang.org/x/tools/go/packages
 golang.org/x/tools/go/ssa
+golang.org/x/tools/go/ssa/interp/testdata/src/strings
 golang.org/x/tools/go/ssa/ssautil
 golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/go/types/typeutil

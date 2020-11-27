@@ -1640,7 +1640,7 @@ type CreateCcnRequest struct {
 	// 计费模式，PREPAID：表示预付费，即包年包月，POSTPAID：表示后付费，即按量计费。默认：POSTPAID。
 	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
 
-	// 限速类型，OUTER_REGION_LIMIT表示地域出口限速，INTER_REGION_LIMIT为地域间限速，默认为OUTER_REGION_LIMIT
+	// 限速类型，OUTER_REGION_LIMIT表示地域出口限速，INTER_REGION_LIMIT为地域间限速，默认为OUTER_REGION_LIMIT。预付费模式仅支持地域间限速，后付费模式支持地域间限速和地域出口限速。
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitempty" name:"BandwidthLimitType"`
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
@@ -5458,6 +5458,89 @@ func (r *DescribeIp6TranslatorsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeIpGeolocationDatabaseUrlRequest struct {
+	*tchttp.BaseRequest
+
+	// ip地址库协议类型，目前支持"ipv4"和"ipv6"。
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
+func (r *DescribeIpGeolocationDatabaseUrlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeIpGeolocationDatabaseUrlRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeIpGeolocationDatabaseUrlResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// IP地址库下载链接地址
+		DownLoadUrl *string `json:"DownLoadUrl,omitempty" name:"DownLoadUrl"`
+
+		// 链接到期时间。按照`ISO8601`标准表示，并且使用`UTC`时间。
+		ExpiredAt *string `json:"ExpiredAt,omitempty" name:"ExpiredAt"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeIpGeolocationDatabaseUrlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeIpGeolocationDatabaseUrlResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeIpGeolocationInfosRequest struct {
+	*tchttp.BaseRequest
+
+	// 查询IP地址列表，支持IPv4和IPv6。
+	AddressIps []*string `json:"AddressIps,omitempty" name:"AddressIps" list`
+
+	// 查询IP地址的字段信息，包括"Country","Province","City","Region","Isp","AsName","AsId"
+	Fields *IpField `json:"Fields,omitempty" name:"Fields"`
+}
+
+func (r *DescribeIpGeolocationInfosRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeIpGeolocationInfosRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeIpGeolocationInfosResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// IP地址信息列表
+		AddressInfo []*IpGeolocationInfo `json:"AddressInfo,omitempty" name:"AddressInfo" list`
+
+		// IP地址信息个数
+		Total *int64 `json:"Total,omitempty" name:"Total"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeIpGeolocationInfosResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeIpGeolocationInfosResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeNatGatewayDestinationIpPortTranslationNatRulesRequest struct {
 	*tchttp.BaseRequest
 
@@ -8068,6 +8151,72 @@ type Ip6Translator struct {
 	IP6RuleSet []*Ip6Rule `json:"IP6RuleSet,omitempty" name:"IP6RuleSet" list`
 }
 
+type IpField struct {
+
+	// 国家字段信息
+	Country *bool `json:"Country,omitempty" name:"Country"`
+
+	// 省、州、郡一级行政区域字段信息
+	Province *bool `json:"Province,omitempty" name:"Province"`
+
+	// 市一级行政区域字段信息
+	City *bool `json:"City,omitempty" name:"City"`
+
+	// 市内区域字段信息
+	Region *bool `json:"Region,omitempty" name:"Region"`
+
+	// 接入运营商字段信息
+	Isp *bool `json:"Isp,omitempty" name:"Isp"`
+
+	// 骨干运营商字段信息
+	AsName *bool `json:"AsName,omitempty" name:"AsName"`
+
+	// 骨干As号
+	AsId *bool `json:"AsId,omitempty" name:"AsId"`
+
+	// 注释字段
+	Comment *bool `json:"Comment,omitempty" name:"Comment"`
+}
+
+type IpGeolocationInfo struct {
+
+	// 国家信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Country *string `json:"Country,omitempty" name:"Country"`
+
+	// 省、州、郡一级行政区域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Province *string `json:"Province,omitempty" name:"Province"`
+
+	// 市一级行政区域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	City *string `json:"City,omitempty" name:"City"`
+
+	// 市内区域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 接入运营商信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Isp *string `json:"Isp,omitempty" name:"Isp"`
+
+	// 骨干运营商名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsName *string `json:"AsName,omitempty" name:"AsName"`
+
+	// 骨干运营商AS号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsId *string `json:"AsId,omitempty" name:"AsId"`
+
+	// 注释信息。目前的填充值为移动接入用户的APN值，如无APN属性则为空
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Comment *string `json:"Comment,omitempty" name:"Comment"`
+
+	// IP地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AddressIp *string `json:"AddressIp,omitempty" name:"AddressIp"`
+}
+
 type Ipv6Address struct {
 
 	// `IPv6`地址，形如：`3402:4e00:20:100:0:8cd9:2a67:71f3`
@@ -10433,6 +10582,9 @@ type ReplaceSecurityGroupPolicyRequest struct {
 
 	// 安全组规则集合对象。
 	SecurityGroupPolicySet *SecurityGroupPolicySet `json:"SecurityGroupPolicySet,omitempty" name:"SecurityGroupPolicySet"`
+
+	// 旧的安全组规则集合对象，可选，日志记录用。
+	OriginalSecurityGroupPolicySet *SecurityGroupPolicySet `json:"OriginalSecurityGroupPolicySet,omitempty" name:"OriginalSecurityGroupPolicySet"`
 }
 
 func (r *ReplaceSecurityGroupPolicyRequest) ToJsonString() string {

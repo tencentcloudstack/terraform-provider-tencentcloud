@@ -414,6 +414,19 @@ TcaplusDB
     tencentcloud_tcaplus_idl
     tencentcloud_tcaplus_table
 
+TCR
+  Data Source
+	tencentcloud_tcr_instances
+	tencentcloud_tcr_namespaces
+	tencentcloud_tcr_repositories
+	tencentcloud_tcr_tokens
+
+  Resource
+	tencentcloud_tcr_instance
+	tencentcloud_tcr_namespace
+	tencentcloud_tcr_repository
+	tencentcloud_tcr_token
+
 VOD
   Data Source
 	tencentcloud_vod_adaptive_dynamic_streaming_templates
@@ -728,6 +741,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_services":                     dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                     dataSourceTencentCloudAPIGatewayAPIKeys(),
 			"tencentcloud_sqlserver_basic_instances":                dataSourceTencentCloudSqlserverBasicInstances(),
+			"tencentcloud_tcr_instances":                            dataSourceTencentCloudTCRInstances(),
+			"tencentcloud_tcr_namespaces":                           dataSourceTencentCloudTCRNamespaces(),
+			"tencentcloud_tcr_tokens":                               dataSourceTencentCloudTCRTokens(),
+			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -874,6 +891,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_api_key_attachment":          resourceTencentCloudAPIGatewayAPIKeyAttachment(),
 			"tencentcloud_api_gateway_service_release":             resourceTencentCloudAPIGatewayServiceRelease(),
 			"tencentcloud_sqlserver_basic_instance":                resourceTencentCloudSqlserverBasicInstance(),
+			"tencentcloud_tcr_instance":                            resourceTencentCloudTcrInstance(),
+			"tencentcloud_tcr_namespace":                           resourceTencentCloudTcrNamespace(),
+			"tencentcloud_tcr_repository":                          resourceTencentCloudTcrRepository(),
+			"tencentcloud_tcr_token":                               resourceTencentCloudTcrToken(),
 			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 		},
 

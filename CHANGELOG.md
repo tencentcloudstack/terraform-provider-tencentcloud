@@ -2,6 +2,14 @@
 
 FEATURES:
 
+* **New Resource**: `tencentcloud_tcr_instance`
+* **New Resource**: `tencentcloud_tcr_token`
+* **New Resource**: `tencentcloud_tcr_namespace`
+* **New Resource**: `tencentcloud_tcr_repository`
+* **New Data Source**: `tencentcloud_tcr_instances` 
+* **New Data Source**: `tencentcloud_tcr_tokens` 
+* **New Data Source**: `tencentcloud_tcr_namespaces` 
+* **New Data Source**: `tencentcloud_tcr_repositories` 
 * **New Resource**: `tencentcloud_cos_bucket_policy`
 
 ENHANCEMENTS:
@@ -36,6 +44,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_elasticsearch_instance` support `node_type` and `disk_size` modification.
 * Data Source: `tencentcloud_instance_types` add argument `exclude_sold_out` to support filtering sold out instance types. 
 * Data Source: `tencentcloud_sqlserver_instances` add new argument `tags`.
+* Data Source: `tencentcloud_instance_types` add argument `exclude_sold_out` to support filtering sold out instance types. 
 
 BUG FIXES:
 
