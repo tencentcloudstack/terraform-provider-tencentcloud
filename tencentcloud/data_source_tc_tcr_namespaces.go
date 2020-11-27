@@ -41,7 +41,6 @@ func dataSourceTencentCloudTCRNamespaces() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-
 			// Computed values
 			"namespace_list": {
 				Type:        schema.TypeList,
@@ -54,7 +53,6 @@ func dataSourceTencentCloudTCRNamespaces() *schema.Resource {
 							Computed:    true,
 							Description: "Name of TCR namespace.",
 						},
-						//Computed values
 						"is_public": {
 							Type:        schema.TypeBool,
 							Computed:    true,

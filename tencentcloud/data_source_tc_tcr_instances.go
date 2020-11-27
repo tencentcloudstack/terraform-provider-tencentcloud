@@ -60,7 +60,6 @@ func dataSourceTencentCloudTCRInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Name of TCR instance.",
 						},
-						//Computed values
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,

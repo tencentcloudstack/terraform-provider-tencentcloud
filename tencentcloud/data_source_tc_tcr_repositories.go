@@ -65,7 +65,6 @@ func dataSourceTencentCloudTCRRepositories() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the namespace that the repository belongs to.",
 						},
-						//Computed values
 						"is_public": {
 							Type:        schema.TypeBool,
 							Computed:    true,

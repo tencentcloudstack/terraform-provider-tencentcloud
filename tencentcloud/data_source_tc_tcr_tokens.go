@@ -53,7 +53,6 @@ func dataSourceTencentCloudTCRTokens() *schema.Resource {
 							Computed:    true,
 							Description: "Id of TCR token.",
 						},
-						//Computed values
 						"enable": {
 							Type:        schema.TypeBool,
 							Computed:    true,
