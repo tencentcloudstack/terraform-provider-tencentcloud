@@ -1,5 +1,5 @@
 ---
-subcategory: "TCR"
+subcategory: "Tencent Container Registry(TCR)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_token"
 sidebar_current: "docs-tencentcloud-resource-tcr_token"

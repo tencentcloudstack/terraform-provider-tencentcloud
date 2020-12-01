@@ -216,6 +216,7 @@ COS
   Resource
     tencentcloud_cos_bucket
     tencentcloud_cos_bucket_object
+    tencentcloud_cos_bucket_policy
 
 CVM
   Data Source
@@ -414,7 +415,7 @@ TcaplusDB
     tencentcloud_tcaplus_idl
     tencentcloud_tcaplus_table
 
-TCR
+Tencent Container Registry(TCR)
   Data Source
 	tencentcloud_tcr_instances
 	tencentcloud_tcr_namespaces
