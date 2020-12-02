@@ -1,4 +1,10 @@
-## 1.49.1 (Unreleased)
+## 1.49.2 (Unreleased)
+## 1.49.1 (December 01, 2020)
+
+ENHANCEMENTS:
+
+* Doc: Update directory of document.
+
 ## 1.49.0 (November 27, 2020)
 
 FEATURES:
