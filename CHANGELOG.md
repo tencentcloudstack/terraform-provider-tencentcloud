@@ -1,4 +1,15 @@
-## 1.49.2 (Unreleased)
+## 1.50.0 (Unreleased)
+
+FEATURES:
+* **New Resource**: `tencentcloud_address_template`
+* **New Resource**: `tencentcloud_address_template_group`
+* **New Resource**: `tencentcloud_service_template`
+* **New Resource**: `tencentcloud_service_template_group`
+* **New Data Source**: `tencentcloud_address_templates` 
+* **New Data Source**: `tencentcloud_address_template_groups` 
+* **New Data Source**: `tencentcloud_service_templates` 
+* **New Data Source**: `tencentcloud_service_template_groups` 
+
 ## 1.49.1 (December 01, 2020)
 
 ENHANCEMENTS:

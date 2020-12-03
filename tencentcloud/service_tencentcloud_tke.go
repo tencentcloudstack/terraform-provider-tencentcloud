@@ -806,6 +806,29 @@ func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, se
 	return
 }
 
+func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, projectId int64, clusterName string, clusterDesc string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.ProjectId = &projectId
+	request.ClusterName = &clusterName
+	request.ClusterDesc = &clusterDesc
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().ModifyClusterAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
 func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeImagesRequest()

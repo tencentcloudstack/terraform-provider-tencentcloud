@@ -67,7 +67,7 @@ func resourceTencentCloudTcrToken() *schema.Resource {
 			"token": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Brief description of the token.",
+				Description: "The content of the token.",
 			},
 			"user_name": {
 				Type:        schema.TypeString,
