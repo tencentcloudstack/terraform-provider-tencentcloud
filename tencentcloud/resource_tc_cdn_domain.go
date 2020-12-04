@@ -23,7 +23,7 @@ resource "tencentcloud_cdn_domain" "foo" {
     spdy_switch          = "off"
     verify_client        = "off"
 
-	force_redirect {
+    force_redirect {
       switch               = "on"
       redirect_type        = "http"
       redirect_status_code = 302
@@ -315,7 +315,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
-							Description: "Access protocol mandatory jump configuration. It's a list and consist of at most one item.",
+							Description: "Configuration of forced HTTP or HTTPS redirects.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
@@ -323,14 +323,14 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Optional:     true,
 										Default:      CDN_SWITCH_OFF,
 										ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
-										Description:  "Access forced jump configuration switch. Valid values are `on` and `off`. Default value is `off`.",
+										Description:  "Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.",
 									},
 									"redirect_type": {
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
 										ValidateFunc: validateAllowedStringValue(CDN_FORCE_REDIRECT_TYPE),
-										Description: "Access forced jump type. Valid values are `http` and `https`. `http` means force http redirect, `https` means force http redirect. " +
+										Description: "Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. " +
 											"When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.",
 									},
 									"redirect_status_code": {
@@ -338,7 +338,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Optional:     true,
 										Default:      302,
 										ValidateFunc: validateAllowedIntValue([]int{301, 302}),
-										Description: "Access forced jump code. Valid values are `301` and `302`. " +
+										Description: "Forced redirect status code. Valid values are `301` and `302`. " +
 											"When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.",
 									},
 								},
