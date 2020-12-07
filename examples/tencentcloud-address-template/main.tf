@@ -1,12 +1,16 @@
-resource "tencentcloud_service_template" "example" {
-  name     = "example"
-  services = ["udp:all", "tcp:90,110", "icmp", "tcp:1110-1120"]
+resource "tencentcloud_address_template" "example" {
+  name      = "example"
+  addresses = ["10.0.0.0/24", "1.1.1.1", "1.0.0.1-1.0.0.100"]
 }
 
-resource "tencentcloud_service_template_group" "example" {
+resource "tencentcloud_address_template_group" "example" {
   name         = "example"
-  template_ids = [tencentcloud_service_template.example.id]
+  template_ids = [tencentcloud_address_template.example.id]
 }
 
-data "tencentcloud_service_template_groups" "example" {
+data "tencentcloud_address_templates" "example" {
+  id = tencentcloud_address_template.example.id
+}
+
+data "tencentcloud_address_template_groups" "example" {
 }

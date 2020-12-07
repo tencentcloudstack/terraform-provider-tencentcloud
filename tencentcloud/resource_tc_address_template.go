@@ -12,7 +12,7 @@ resource "tencentcloud_address_template" "foo" {
 
 Import
 
-CAM user can be imported using the address template, e.g.
+Address template can be imported using the address template, e.g.
 
 ```
 $ terraform import tencentcloud_address_template.foo ipm-makf7k9e"
@@ -144,8 +144,6 @@ func resourceTencentCloudAddressTemplateUpdate(d *schema.ResourceData, meta inte
 			return outErr
 		}
 
-		d.SetPartial("name")
-		d.SetPartial("addresses")
 	}
 
 	return resourceTencentCloudAddressTemplateRead(d, meta)

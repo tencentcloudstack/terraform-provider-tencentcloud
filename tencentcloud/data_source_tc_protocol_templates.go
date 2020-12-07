@@ -60,7 +60,7 @@ func dataSourceTencentCloudProtocolTemplates() *schema.Resource {
 							Description: "Name of protocol template.",
 						},
 						"protocols": {
-							Type: schema.TypeSet,
+							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

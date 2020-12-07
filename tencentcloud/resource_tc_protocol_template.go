@@ -12,7 +12,7 @@ resource "tencentcloud_protocol_template" "foo" {
 
 Import
 
-CAM user can be imported using the protocol template, e.g.
+Protocol template can be imported using the protocol template, e.g.
 
 ```
 $ terraform import tencentcloud_protocol_template.foo ppm-nwrggd14
@@ -144,9 +144,6 @@ func resourceTencentCloudProtocolTemplateUpdate(d *schema.ResourceData, meta int
 		if outErr != nil {
 			return outErr
 		}
-
-		d.SetPartial("name")
-		d.SetPartial("protocols")
 	}
 
 	return resourceTencentCloudProtocolTemplateRead(d, meta)

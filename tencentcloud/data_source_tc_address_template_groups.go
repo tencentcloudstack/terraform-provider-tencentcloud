@@ -60,7 +60,7 @@ func dataSourceTencentCloudAddressTemplateGroups() *schema.Resource {
 							Description: "Name of address template group.",
 						},
 						"template_ids": {
-							Type: schema.TypeSet,
+							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

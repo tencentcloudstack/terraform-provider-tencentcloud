@@ -12,7 +12,7 @@ resource "tencentcloud_address_template_group" "foo" {
 
 Import
 
-CAM user can be imported using the address template, e.g.
+Address template group can be imported using the address template, e.g.
 
 ```
 $ terraform import tencentcloud_address_template_group.foo ipmg-0np3u974
@@ -143,9 +143,6 @@ func resourceTencentCloudAddressTemplateGroupUpdate(d *schema.ResourceData, meta
 		if outErr != nil {
 			return outErr
 		}
-
-		d.SetPartial("name")
-		d.SetPartial("templadte_ids")
 	}
 
 	return resourceTencentCloudAddressTemplateGroupRead(d, meta)

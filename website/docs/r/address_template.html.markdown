@@ -37,7 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-CAM user can be imported using the address template, e.g.
+Address template can be imported using the address template, e.g.
 
 ```
 $ terraform import tencentcloud_address_template.foo ipm-makf7k9e"
