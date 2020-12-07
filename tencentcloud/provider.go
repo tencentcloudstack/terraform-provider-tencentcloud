@@ -451,8 +451,8 @@ VPC
     tencentcloud_security_groups
 	tencentcloud_address_templates
 	tencentcloud_address_template_groups
-	tencentcloud_service_templates
-	tencentcloud_service_template_groups
+	tencentcloud_protocol_templates
+	tencentcloud_protocol_template_groups
     tencentcloud_subnet
     tencentcloud_vpc
     tencentcloud_vpc_acls
@@ -478,8 +478,8 @@ VPC
     tencentcloud_security_group_lite_rule
 	tencentcloud_address_template
 	tencentcloud_address_template_group
-	tencentcloud_service_template
-	tencentcloud_service_template_group
+	tencentcloud_protocol_template
+	tencentcloud_protocol_template_group
     tencentcloud_route_table
     tencentcloud_route_entry
     tencentcloud_route_table_entry
@@ -756,8 +756,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
-			"tencentcloud_service_templates":                        dataSourceTencentCloudServiceTemplates(),
-			"tencentcloud_service_template_groups":                  dataSourceTencentCloudServiceTemplateGroups(),
+			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
+			"tencentcloud_protocol_template_groups":                 dataSourceTencentCloudProtocolTemplateGroups(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -911,8 +911,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_address_template":                        resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                  resourceTencentCloudAddressTemplateGroup(),
-			"tencentcloud_service_template":                        resourceTencentCloudServiceTemplate(),
-			"tencentcloud_service_template_group":                  resourceTencentCloudServiceTemplateGroup(),
+			"tencentcloud_protocol_template":                       resourceTencentCloudProtocolTemplate(),
+			"tencentcloud_protocol_template_group":                 resourceTencentCloudProtocolTemplateGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,

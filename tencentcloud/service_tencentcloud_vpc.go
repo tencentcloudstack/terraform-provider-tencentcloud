@@ -1145,6 +1145,22 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 
 	policy.CidrBlock = info.CidrIp
 	policy.SecurityGroupId = info.SourceSgId
+	policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		policy.AddressTemplate.AddressId = info.AddressTemplateId
+	}
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		policy.AddressTemplate.AddressGroupId = info.AddressTemplateGroupId
+	}
+
+	policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
+	}
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		policy.ServiceTemplate.ServiceGroupId = info.ProtocolTemplateGroupId
+	}
+
 	if info.Protocol != nil {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
@@ -1276,6 +1292,26 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 
 	if *info.SourceSgId != "" {
 		policy.SecurityGroupId = info.SourceSgId
+	}
+
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+		policy.AddressTemplate.AddressGroupId = info.AddressTemplateGroupId
+	}
+
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+		policy.AddressTemplate.AddressId = info.AddressTemplateId
+	}
+
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+		policy.ServiceTemplate.ServiceGroupId = info.ProtocolTemplateGroupId
+	}
+
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
 	}
 
 	switch strings.ToLower(info.PolicyType) {
@@ -1608,14 +1644,18 @@ func (me *VpcService) DetachAllLiteRulesFromSecurityGroup(ctx context.Context, s
 }
 
 type securityGroupRuleBasicInfo struct {
-	SgId        string  `json:"sg_id"`
-	PolicyType  string  `json:"policy_type"`
-	CidrIp      *string `json:"cidr_ip,omitempty"`
-	Protocol    *string `json:"protocol"`
-	PortRange   *string `json:"port_range"`
-	Action      string  `json:"action"`
-	SourceSgId  *string `json:"source_sg_id"`
-	Description *string `json:"description,omitempty"`
+	SgId                    string  `json:"sg_id"`
+	PolicyType              string  `json:"policy_type"`
+	CidrIp                  *string `json:"cidr_ip,omitempty"`
+	Protocol                *string `json:"protocol"`
+	PortRange               *string `json:"port_range"`
+	Action                  string  `json:"action"`
+	SourceSgId              *string `json:"source_sg_id"`
+	Description             *string `json:"description,omitempty"`
+	AddressTemplateId       *string `json:"address_template_id,omitempty"`
+	AddressTemplateGroupId  *string `json:"address_template_group_id,omitempty"`
+	ProtocolTemplateId      *string `json:"protocol_template_id,omitempty"`
+	ProtocolTemplateGroupId *string `json:"protocol_template_group_id,omitempty"`
 }
 
 // Build an ID for a Security Group Rule (new version)
@@ -1659,14 +1699,42 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 	info.SgId = m["sgId"]
 	info.PolicyType = m["direction"]
 	info.Action = m["action"]
-	if m["sourceSgid"] == "" {
-		info.CidrIp = common.StringPtr(m["cidrIp"])
-	} else {
+
+	//the newest version include template
+	addressTemplateId, addressTemplateOk := m["address_template_id"]
+	addressGroupTemplateId, addressTemplateGroupOk := m["address_template_group_id"]
+	if addressTemplateOk || addressTemplateGroupOk {
+		if addressTemplateGroupOk {
+			info.AddressTemplateGroupId = common.StringPtr(addressGroupTemplateId)
+		} else {
+			info.AddressTemplateId = common.StringPtr(addressTemplateId)
+		}
 		info.CidrIp = common.StringPtr("")
+		info.SourceSgId = common.StringPtr("")
+	} else {
+		if m["sourceSgid"] == "" {
+			info.CidrIp = common.StringPtr(m["cidrIp"])
+		} else {
+			info.CidrIp = common.StringPtr("")
+		}
+		info.SourceSgId = common.StringPtr(m["sourceSgid"])
 	}
-	info.SourceSgId = common.StringPtr(m["sourceSgid"])
-	info.Protocol = common.StringPtr(m["ipProtocol"])
-	info.PortRange = common.StringPtr(m["portRange"])
+
+	protocolTemplateId, protocolTemplateOk := m["protocol_template_id"]
+	protocolGroupTemplateId, protocolTemplateGroupOk := m["protocol_template_group_id"]
+	if protocolTemplateOk || protocolTemplateGroupOk {
+		if protocolTemplateGroupOk {
+			info.ProtocolTemplateGroupId = common.StringPtr(protocolGroupTemplateId)
+		} else {
+			info.ProtocolTemplateId = common.StringPtr(protocolTemplateId)
+		}
+		info.Protocol = common.StringPtr("")
+		info.PortRange = common.StringPtr("")
+	} else {
+		info.Protocol = common.StringPtr(m["ipProtocol"])
+		info.PortRange = common.StringPtr(m["portRange"])
+	}
+
 	info.Description = common.StringPtr(m["description"])
 
 	log.Printf("[DEBUG] parseSecurityGroupRuleId after: %v", info)
@@ -1674,19 +1742,25 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
-	// policy.CidrBlock always not nil
-	if *policy.CidrBlock != *info.CidrIp {
-		return false
+	// policy.CidrBlock will be nil if address template is set
+	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
+		if *policy.CidrBlock != *info.CidrIp {
+			return false
+		}
 	}
 
-	// policy.Port always not nil
-	if *policy.Port != *info.PortRange {
-		return false
+	// policy.Port will be nil if protocol template is set
+	if policy.Port != nil && *policy.Port != "" {
+		if *policy.Port != *info.PortRange {
+			return false
+		}
 	}
 
-	// policy.Protocol always not nil
-	if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
-		return false
+	// policy.Protocol will be nil if protocol template is set
+	if policy.Protocol != nil && *policy.Protocol != "" {
+		if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+			return false
+		}
 	}
 
 	// policy.SecurityGroupId always not nil
@@ -1696,6 +1770,30 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 
 	if !strings.EqualFold(*policy.Action, info.Action) {
 		return false
+	}
+
+	//if template is not null it must be compared
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceId == nil || *info.ProtocolTemplateId != *policy.ServiceTemplate.ServiceId {
+			log.Printf("%s %v test", *info.ProtocolTemplateId, policy.ServiceTemplate)
+			return false
+		}
+	}
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceGroupId == nil || *info.ProtocolTemplateGroupId != *policy.ServiceTemplate.ServiceGroupId {
+			log.Printf("%s %v test", *info.ProtocolTemplateGroupId, policy.ServiceTemplate)
+			return false
+		}
+	}
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressGroupId == nil || *info.AddressTemplateGroupId != *policy.AddressTemplate.AddressGroupId {
+			return false
+		}
+	}
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressId == nil || *info.AddressTemplateId != *policy.AddressTemplate.AddressId {
+			return false
+		}
 	}
 
 	return true

@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of service templates.
+Use this data source to query detailed information of protocol template groups.
 
 Example Usage
 
 ```hcl
-data "tencentcloud_service_template" "name" {
+data "tencentcloud_protocol_template_groups" "name" {
   name       = "test"
 }
 ```
@@ -21,20 +21,20 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudServiceTemplates() *schema.Resource {
+func dataSourceTencentCloudProtocolTemplateGroups() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudServiceTemplatesRead,
+		Read: dataSourceTencentCloudProtocolTemplateGroupsRead,
 
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the service template to query.",
+				Description: "Name of the protocol template group to query.",
 			},
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the service template to query.",
+				Description: "Id of the protocol template group to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -43,29 +43,29 @@ func dataSourceTencentCloudServiceTemplates() *schema.Resource {
 			},
 
 			// Computed values
-			"template_list": {
+			"group_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Information list of the dedicated service templates.",
+				Description: "Information list of the dedicated protocol template groups.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the service template.",
+							Description: "Id of the protocol template group.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of service template.",
+							Description: "Name of protocol template group.",
 						},
-						"services": {
+						"template_ids": {
 							Type: schema.TypeSet,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "Set of the services.",
+							Description: "ID set of the protocol template.",
 						},
 					},
 				},
@@ -74,8 +74,8 @@ func dataSourceTencentCloudServiceTemplates() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudServiceTemplatesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_service_template.read")()
+func dataSourceTencentCloudProtocolTemplateGroupsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_protocol_template_groups.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -84,20 +84,20 @@ func dataSourceTencentCloudServiceTemplatesRead(d *schema.ResourceData, meta int
 	var filters = make([]*vpc.Filter, 0)
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
-		filters = append(filters, &vpc.Filter{Name: helper.String("service-template-name"), Values: []*string{&name}})
+		filters = append(filters, &vpc.Filter{Name: helper.String("service-template-group-name"), Values: []*string{&name}})
 	}
 
 	if v, ok := d.GetOk("id"); ok {
 		templateId = v.(string)
-		filters = append(filters, &vpc.Filter{Name: helper.String("service-template-id"), Values: []*string{&templateId}})
+		filters = append(filters, &vpc.Filter{Name: helper.String("service-template-group-id"), Values: []*string{&templateId}})
 	}
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	var outErr, inErr error
-	templates, outErr := vpcService.DescribeServiceTemplates(ctx, filters)
+	groups, outErr := vpcService.DescribeServiceTemplateGroups(ctx, filters)
 	if outErr != nil {
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			templates, inErr = vpcService.DescribeServiceTemplates(ctx, filters)
+			groups, inErr = vpcService.DescribeServiceTemplateGroups(ctx, filters)
 			if inErr != nil {
 				return retryError(inErr)
 			}
@@ -109,26 +109,26 @@ func dataSourceTencentCloudServiceTemplatesRead(d *schema.ResourceData, meta int
 		return outErr
 	}
 
-	ids := make([]string, 0, len(templates))
-	templateList := make([]map[string]interface{}, 0, len(templates))
-	for _, ins := range templates {
+	ids := make([]string, 0, len(groups))
+	templateGroupList := make([]map[string]interface{}, 0, len(groups))
+	for _, ins := range groups {
 		mapping := map[string]interface{}{
-			"id":       ins.ServiceTemplateId,
-			"name":     ins.ServiceTemplateName,
-			"services": ins.ServiceSet,
+			"id":           ins.ServiceTemplateGroupId,
+			"name":         ins.ServiceTemplateGroupName,
+			"template_ids": ins.ServiceTemplateIdSet,
 		}
-		templateList = append(templateList, mapping)
-		ids = append(ids, *ins.ServiceTemplateId)
+		templateGroupList = append(templateGroupList, mapping)
+		ids = append(ids, *ins.ServiceTemplateGroupId)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	if e := d.Set("template_list", templateList); e != nil {
-		log.Printf("[CRITAL]%s provider set service template list fail, reason:%s\n", logId, e)
+	if e := d.Set("group_list", templateGroupList); e != nil {
+		log.Printf("[CRITAL]%s provider set protocol template group list fail, reason:%s\n", logId, e)
 		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), templateList); e != nil {
+		if e := writeToFile(output.(string), templateGroupList); e != nil {
 			return e
 		}
 	}

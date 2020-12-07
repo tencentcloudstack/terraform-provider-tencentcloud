@@ -9,42 +9,42 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudServiceTemplateGroup_basic_and_update(t *testing.T) {
+func TestAccTencentCloudProtocolTemplateGroup_basic_and_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckServiceTemplateGroupDestroy,
+		CheckDestroy: testAccCheckProtocolTemplateGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServiceTemplateGroup_basic,
+				Config: testAccProtocolTemplateGroup_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_service_template_group.group", "name", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template_group.group", "template_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template_group.group", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template_group.group", "template_ids.#", "1"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_service_template_group.group",
+				ResourceName:      "tencentcloud_protocol_template_group.group",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccServiceTemplateGroup_basic_update_remark,
+				Config: testAccProtocolTemplateGroup_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckServiceTemplateGroupExists("tencentcloud_service_template_group.group"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template_group.group", "name", "test_update"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template_group.group", "template_ids.#", "1"),
+					testAccCheckProtocolTemplateGroupExists("tencentcloud_protocol_template_group.group"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template_group.group", "name", "test_update"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template_group.group", "template_ids.#", "1"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckServiceTemplateGroupDestroy(s *terraform.State) error {
+func testAccCheckProtocolTemplateGroupDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_service_template_group" {
+		if rs.Type != "tencentcloud_protocol_template_group" {
 			continue
 		}
 
@@ -59,7 +59,7 @@ func testAccCheckServiceTemplateGroupDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckServiceTemplateGroupExists(n string) resource.TestCheckFunc {
+func testAccCheckProtocolTemplateGroupExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -82,31 +82,31 @@ func testAccCheckServiceTemplateGroupExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccServiceTemplateGroup_basic = `
-resource "tencentcloud_service_template" "template" {
+const testAccProtocolTemplateGroup_basic = `
+resource "tencentcloud_protocol_template" "template" {
   name = "test"
-  services = ["tcp:all"]
+  protocols = ["tcp:all"]
 }
 
-resource "tencentcloud_service_template_group" "group"{
+resource "tencentcloud_protocol_template_group" "group"{
 	name = "test"
-	template_ids = [tencentcloud_service_template.template.id]
+	template_ids = [tencentcloud_protocol_template.template.id]
 }
 `
 
-const testAccServiceTemplateGroup_basic_update_remark = `
-resource "tencentcloud_service_template" "template" {
+const testAccProtocolTemplateGroup_basic_update_remark = `
+resource "tencentcloud_protocol_template" "template" {
   name = "test"
-  services = ["tcp:all"]
+  protocols = ["tcp:all"]
 }
 
-resource "tencentcloud_service_template" "templateB" {
+resource "tencentcloud_protocol_template" "templateB" {
   name = "testB"
-  services = ["tcp:80", "udp:90,111"]
+  protocols = ["tcp:80", "udp:90,111"]
 }
 
-resource "tencentcloud_service_template_group" "group"{
+resource "tencentcloud_protocol_template_group" "group"{
 	name = "test_update"
-	template_ids = [tencentcloud_service_template.templateB.id]
+	template_ids = [tencentcloud_protocol_template.templateB.id]
 }
 `

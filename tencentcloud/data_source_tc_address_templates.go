@@ -4,7 +4,7 @@ Use this data source to query detailed information of address templates.
 Example Usage
 
 ```hcl
-data "tencentcloud_address_template" "name" {
+data "tencentcloud_address_templates" "name" {
   name       = "test"
 }
 ```
@@ -75,7 +75,7 @@ func dataSourceTencentCloudAddressTemplates() *schema.Resource {
 }
 
 func dataSourceTencentCloudAddressTemplatesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_address_template.read")()
+	defer logElapsed("data_source.tencentcloud_address_templates.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

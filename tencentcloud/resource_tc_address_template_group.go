@@ -58,7 +58,7 @@ func resourceTencentCloudAddressTemplateGroup() *schema.Resource {
 }
 
 func resourceTencentCloudAddressTemplateGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_address_template.create")()
+	defer logElapsed("resource.tencentcloud_address_template_group.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -88,7 +88,7 @@ func resourceTencentCloudAddressTemplateGroupCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudAddressTemplateGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_address_template.read")()
+	defer logElapsed("resource.tencentcloud_address_template_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -122,7 +122,7 @@ func resourceTencentCloudAddressTemplateGroupRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudAddressTemplateGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_address_template.update")()
+	defer logElapsed("resource.tencentcloud_address_template_group.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -152,7 +152,7 @@ func resourceTencentCloudAddressTemplateGroupUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudAddressTemplateGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_address_template.delete")()
+	defer logElapsed("resource.tencentcloud_address_template_group.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

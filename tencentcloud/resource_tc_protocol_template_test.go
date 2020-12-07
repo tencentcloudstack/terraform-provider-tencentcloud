@@ -9,48 +9,48 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudServiceTemplate_basic_and_update(t *testing.T) {
+func TestAccTencentCloudProtocolTemplate_basic_and_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckServiceTemplateDestroy,
+		CheckDestroy: testAccCheckProtocolTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServiceTemplate_basic,
+				Config: testAccProtocolTemplate_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_service_template.template", "name", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template.template", "services.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template.template", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template.template", "protocols.#", "1"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_service_template.template",
+				ResourceName:      "tencentcloud_protocol_template.template",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccServiceTemplate_basic_update_remark,
+				Config: testAccProtocolTemplate_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckServiceTemplateExists("tencentcloud_service_template.template"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template.template", "name", "test_update"),
-					resource.TestCheckResourceAttr("tencentcloud_service_template.template", "services.#", "2"),
+					testAccCheckProtocolTemplateExists("tencentcloud_protocol_template.template"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template.template", "name", "test_update"),
+					resource.TestCheckResourceAttr("tencentcloud_protocol_template.template", "protocols.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckServiceTemplateDestroy(s *terraform.State) error {
+func testAccCheckProtocolTemplateDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_service_template" {
+		if rs.Type != "tencentcloud_protocol_template" {
 			continue
 		}
 
 		_, has, err := vpcService.DescribeServiceTemplateById(ctx, rs.Primary.ID)
 		if has {
-			return fmt.Errorf("service template still exists")
+			return fmt.Errorf("protocol template still exists")
 		}
 		if err != nil {
 			return err
@@ -59,7 +59,7 @@ func testAccCheckServiceTemplateDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckServiceTemplateExists(n string) resource.TestCheckFunc {
+func testAccCheckProtocolTemplateExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -82,14 +82,14 @@ func testAccCheckServiceTemplateExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccServiceTemplate_basic = `
-resource "tencentcloud_service_template" "template" {
+const testAccProtocolTemplate_basic = `
+resource "tencentcloud_protocol_template" "template" {
   name = "test"
-  services = ["tcp:80"]
+  protocols = ["tcp:80"]
 }`
 
-const testAccServiceTemplate_basic_update_remark = `
-resource "tencentcloud_service_template" "template" {
+const testAccProtocolTemplate_basic_update_remark = `
+resource "tencentcloud_protocol_template" "template" {
   name = "test_update"
-  services = ["udp:all", "tcp:80,90"]
+  protocols = ["udp:all", "tcp:80,90"]
 }`

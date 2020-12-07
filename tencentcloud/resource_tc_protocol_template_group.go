@@ -1,21 +1,21 @@
 /*
-Provides a resource to manage service template group.
+Provides a resource to manage protocol template group.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_service_template_group" "foo" {
+resource "tencentcloud_protocol_template_group" "foo" {
   name                = "group-test"
-  services = ["ipl-axaf24151","ipl-axaf24152"]
+  protocols = ["ipl-axaf24151","ipl-axaf24152"]
 }
 ```
 
 Import
 
-CAM user can be imported using the service template, e.g.
+CAM user can be imported using the protocol template, e.g.
 
 ```
-$ terraform import tencentcloud_service_template.foo ppmg-0np3u974
+$ terraform import tencentcloud_protocol_template_group.foo ppmg-0np3u974
 ```
 */
 package tencentcloud
@@ -28,12 +28,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourceTencentCloudServiceTemplateGroup() *schema.Resource {
+func resourceTencentCloudProtocolTemplateGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudServiceTemplateGroupCreate,
-		Read:   resourceTencentCloudServiceTemplateGroupRead,
-		Update: resourceTencentCloudServiceTemplateGroupUpdate,
-		Delete: resourceTencentCloudServiceTemplateGroupDelete,
+		Create: resourceTencentCloudProtocolTemplateGroupCreate,
+		Read:   resourceTencentCloudProtocolTemplateGroupRead,
+		Update: resourceTencentCloudProtocolTemplateGroupUpdate,
+		Delete: resourceTencentCloudProtocolTemplateGroupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -43,7 +43,7 @@ func resourceTencentCloudServiceTemplateGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Name of the service template group.",
+				Description: "Name of the protocol template group.",
 			},
 			"template_ids": {
 				Type: schema.TypeSet,
@@ -57,13 +57,13 @@ func resourceTencentCloudServiceTemplateGroup() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudServiceTemplateGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_service_template.create")()
+func resourceTencentCloudProtocolTemplateGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_protocol_template_group.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
-	servicees := d.Get("template_ids").(*schema.Set).List()
+	protocols := d.Get("template_ids").(*schema.Set).List()
 
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -72,7 +72,7 @@ func resourceTencentCloudServiceTemplateGroupCreate(d *schema.ResourceData, meta
 	var templateGroupId string
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		templateGroupId, inErr = vpcService.CreateServiceTemplateGroup(ctx, name, servicees)
+		templateGroupId, inErr = vpcService.CreateServiceTemplateGroup(ctx, name, protocols)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -84,11 +84,11 @@ func resourceTencentCloudServiceTemplateGroupCreate(d *schema.ResourceData, meta
 
 	d.SetId(templateGroupId)
 
-	return resourceTencentCloudServiceTemplateGroupRead(d, meta)
+	return resourceTencentCloudProtocolTemplateGroupRead(d, meta)
 }
 
-func resourceTencentCloudServiceTemplateGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_service_template.read")()
+func resourceTencentCloudProtocolTemplateGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_protocol_template_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -121,8 +121,8 @@ func resourceTencentCloudServiceTemplateGroupRead(d *schema.ResourceData, meta i
 	return nil
 }
 
-func resourceTencentCloudServiceTemplateGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_service_template.update")()
+func resourceTencentCloudProtocolTemplateGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_protocol_template_group.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -148,11 +148,11 @@ func resourceTencentCloudServiceTemplateGroupUpdate(d *schema.ResourceData, meta
 		d.SetPartial("templadte_ids")
 	}
 
-	return resourceTencentCloudServiceTemplateGroupRead(d, meta)
+	return resourceTencentCloudProtocolTemplateGroupRead(d, meta)
 }
 
-func resourceTencentCloudServiceTemplateGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_service_template.delete")()
+func resourceTencentCloudProtocolTemplateGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_protocol_template_group.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -182,7 +182,7 @@ func resourceTencentCloudServiceTemplateGroupDelete(d *schema.ResourceData, meta
 			return retryError(inErr)
 		}
 		if has {
-			return resource.RetryableError(fmt.Errorf("service template group %s is still exists, retry...", templateGroupId))
+			return resource.RetryableError(fmt.Errorf("protocol template group %s is still exists, retry...", templateGroupId))
 		} else {
 			return nil
 		}
