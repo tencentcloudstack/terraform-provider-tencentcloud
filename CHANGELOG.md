@@ -1,4 +1,9 @@
 ## 1.49.2 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix bucket name validator.
+
 ## 1.49.1 (December 01, 2020)
 
 ENHANCEMENTS:

@@ -99,15 +99,15 @@ The `client_certificate_config` object supports the following:
 
 The `force_redirect` object supports the following:
 
-* `redirect_status_code` - (Optional) Access forced jump code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
-* `redirect_type` - (Optional) Access forced jump type. Valid values are `http` and `https`. `http` means force http redirect, `https` means force http redirect. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
-* `switch` - (Optional) Access forced jump configuration switch. Valid values are `on` and `off`. Default value is `off`.
+* `redirect_status_code` - (Optional) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
+* `redirect_type` - (Optional) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
+* `switch` - (Optional) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
 
 The `https_config` object supports the following:
 
 * `https_switch` - (Required) HTTPS configuration switch. Valid values are `on` and `off`.
 * `client_certificate_config` - (Optional) Client certificate configuration information.
-* `force_redirect` - (Optional) Access protocol mandatory jump configuration. It's a list and consist of at most one item.
+* `force_redirect` - (Optional) Configuration of forced HTTP or HTTPS redirects.
 * `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional) Server certificate configuration information.

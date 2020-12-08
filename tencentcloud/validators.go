@@ -225,11 +225,11 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 	}
 }
 
-// Only support lowercase letters, numbers and "-". It cannot be longer than 40 characters.
+// Only support lowercase letters, numbers and "-". It cannot be longer than 60 characters.
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	if len(value) > 40 || len(value) < 0 {
-		errors = append(errors, fmt.Errorf("the length of %s must be 1-40: %s", k, value))
+	if len(value) > 60 || len(value) < 0 {
+		errors = append(errors, fmt.Errorf("the length of %s must be 1-60: %s", k, value))
 	}
 
 	pattern := `^[a-z0-9-]+$`
