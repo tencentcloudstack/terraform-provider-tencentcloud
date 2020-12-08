@@ -66,11 +66,23 @@ The following arguments are supported:
 * `policy` - (Required, ForceNew) Rule policy of security group. Valid values: `ACCEPT` and `DROP`.
 * `security_group_id` - (Required, ForceNew) ID of the security group to be queried.
 * `type` - (Required, ForceNew) Type of the security group rule. Valid values: `ingress` and `egress`.
-* `cidr_ip` - (Optional, ForceNew) An IP address network or segment, and conflict with `source_sgid`.
+* `address_template` - (Optional, ForceNew) ID of the address template, and confilicts with `source_sgid` and `cidr_ip`.
+* `cidr_ip` - (Optional, ForceNew) An IP address network or segment, and conflict with `source_sgid` and `address_template`.
 * `description` - (Optional, ForceNew) Description of the security group rule.
-* `ip_protocol` - (Optional, ForceNew) Type of ip protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol.
-* `port_range` - (Optional, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.
-* `source_sgid` - (Optional, ForceNew) ID of the nested security group, and conflict with `cidr_ip`.
+* `ip_protocol` - (Optional, ForceNew) Type of ip protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `protocol_template`.
+* `port_range` - (Optional, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and confilicts with `protocol_template`.
+* `protocol_template` - (Optional, ForceNew) ID of the address template, and conflict with `ip_protocol`, `port_range`.
+* `source_sgid` - (Optional, ForceNew) ID of the nested security group, and conflicts with `cidr_ip` and `address_template`.
+
+The `address_template` object supports the following:
+
+* `group_id` - (Optional, ForceNew) Address template group ID, conflicts with `template_id`.
+* `template_id` - (Optional, ForceNew) Address template ID, conflicts with `group_id`.
+
+The `protocol_template` object supports the following:
+
+* `group_id` - (Optional, ForceNew) Address template group ID, conflicts with `template_id`.
+* `template_id` - (Optional, ForceNew) Address template ID, conflicts with `group_id`.
 
 ## Attributes Reference
 

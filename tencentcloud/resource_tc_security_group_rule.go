@@ -102,22 +102,28 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "An IP address network or segment, and conflict with `source_sgid`.",
+				Description: "An IP address network or segment, and conflict with `source_sgid` and `address_template`.",
 			},
 			"ip_protocol": {
-				Type:         schema.TypeString,
-				Optional:     true,
+				Type:     schema.TypeString,
+				Optional: true,
+				ConflictsWith: []string{
+					"protocol_template",
+				},
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"TCP", "UDP", "ICMP"}),
-				Description:  "Type of ip protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol.",
+				Description:  "Type of ip protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `protocol_template`.",
 			},
 			"port_range": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:     schema.TypeString,
+				Optional: true,
+				ConflictsWith: []string{
+					"protocol_template",
+				},
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.",
+				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and confilicts with `protocol_template`.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$", value)
@@ -139,10 +145,64 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				ConflictsWith: []string{
-					"cidr_ip",
+					"cidr_ip", "address_template",
 				},
 				Computed:    true,
-				Description: "ID of the nested security group, and conflict with `cidr_ip`.",
+				Description: "ID of the nested security group, and conflicts with `cidr_ip` and `address_template`.",
+			},
+			"address_template": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"template_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Address template ID, conflicts with `group_id`.",
+						},
+						"group_id": {
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
+							Description: "Address template group ID, conflicts with `template_id`.",
+						},
+					},
+				},
+				Optional: true,
+				ForceNew: true,
+				ConflictsWith: []string{
+					"cidr_ip", "source_sgid",
+				},
+				Computed:    true,
+				Description: "ID of the address template, and confilicts with `source_sgid` and `cidr_ip`.",
+			},
+			"protocol_template": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"template_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Address template ID, conflicts with `group_id`.",
+						},
+						"group_id": {
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
+							Description: "Address template group ID, conflicts with `template_id`.",
+						},
+					},
+				},
+				Optional: true,
+				ForceNew: true,
+				ConflictsWith: []string{
+					"ip_protocol", "port_range",
+				},
+				Computed:    true,
+				Description: "ID of the address template, and conflict with `ip_protocol`, `port_range`.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -168,11 +228,15 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 	policyType := d.Get("type").(string)
 
 	var (
-		cidrIp     *string
-		sourceSgId *string
-		protocol   *string
-		portRange  *string
-		desc       *string
+		cidrIp                  *string
+		sourceSgId              *string
+		protocol                *string
+		portRange               *string
+		desc                    *string
+		addressTemplateId       *string
+		addressTemplateGroupId  *string
+		protocolTemplateId      *string
+		protocolTemplateGroupId *string
 	)
 
 	if raw, ok := d.GetOk("cidr_ip"); ok {
@@ -191,12 +255,48 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		portRange = common.StringPtr(raw.(string))
 	}
 
-	desc = common.StringPtr(d.Get("description").(string))
-
-	if cidrIp == nil && sourceSgId == nil {
-		return errors.New("need cidr_ip or source_sgid")
+	if raw, ok := d.GetOk("address_template"); ok {
+		addressRaw := raw.([]interface{})
+		address := addressRaw[0].(map[string]interface{})
+		if v, ok := address["template_id"]; ok {
+			addressTemplateId = common.StringPtr(v.(string))
+		}
+		if v, ok := address["group_id"]; ok {
+			addressTemplateGroupId = common.StringPtr(v.(string))
+		}
+		//complex conflict check
+		if addressTemplateGroupId != nil && *addressTemplateGroupId != "" && addressTemplateId != nil && *addressTemplateId != "" {
+			return fmt.Errorf("`address_template.group_id` conflicts with `address_template.template_id`")
+		}
 	}
 
+	if raw, ok := d.GetOk("protocol_template"); ok {
+		protocolRaw := raw.([]interface{})
+		protocol := protocolRaw[0].(map[string]interface{})
+		if v, ok := protocol["template_id"]; ok {
+			protocolTemplateId = common.StringPtr(v.(string))
+		}
+		if v, ok := protocol["group_id"]; ok {
+			protocolTemplateGroupId = common.StringPtr(v.(string))
+		}
+		//complex conflict check
+		if protocolTemplateGroupId != nil && *protocolTemplateGroupId != "" && protocolTemplateId != nil && *protocolTemplateId != "" {
+			return fmt.Errorf("`protocol_template.group_id` conflicts with `protocol_template.template_id`")
+		}
+	}
+
+	desc = common.StringPtr(d.Get("description").(string))
+
+	if cidrIp == nil && sourceSgId == nil && addressTemplateId == nil && addressTemplateGroupId == nil {
+		return errors.New("need cidr_ip or source_sgid or address_template")
+	}
+
+	/*
+		if protocol == nil && portRange == nil && protocolTemplateGroupId == nil && protocolTemplateId == nil{
+			return errors.New("need protocol and port_range  or protocol_template")
+		}
+
+	*/
 	action := d.Get("policy").(string)
 
 	if protocol != nil {
@@ -206,14 +306,18 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 	}
 
 	info := securityGroupRuleBasicInfo{
-		SgId:        sgId,
-		Action:      action,
-		CidrIp:      cidrIp,
-		Protocol:    protocol,
-		PortRange:   portRange,
-		SourceSgId:  sourceSgId,
-		PolicyType:  policyType,
-		Description: desc,
+		SgId:                    sgId,
+		Action:                  action,
+		CidrIp:                  cidrIp,
+		Protocol:                protocol,
+		PortRange:               portRange,
+		SourceSgId:              sourceSgId,
+		PolicyType:              policyType,
+		Description:             desc,
+		AddressTemplateId:       addressTemplateId,
+		AddressTemplateGroupId:  addressTemplateGroupId,
+		ProtocolTemplateId:      protocolTemplateId,
+		ProtocolTemplateGroupId: protocolTemplateGroupId,
 	}
 
 	ruleId, err := service.CreateSecurityGroupPolicy(ctx, info)
@@ -259,6 +363,38 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 			_ = d.Set("source_sgid", *policy.SecurityGroupId)
 		}
 
+		if policy.AddressTemplate != nil && ((policy.AddressTemplate.AddressGroupId != nil && *policy.AddressTemplate.AddressGroupId != "") || (policy.AddressTemplate.AddressId != nil && *policy.AddressTemplate.AddressId != "")) {
+			addressTemplates := make([]map[string]string, 0)
+			addressTemplate := map[string]string{
+				"group_id":    "",
+				"template_id": "",
+			}
+			if policy.AddressTemplate.AddressGroupId != nil && *policy.AddressTemplate.AddressGroupId != "" {
+				addressTemplate["group_id"] = *policy.AddressTemplate.AddressGroupId
+			}
+			if policy.AddressTemplate.AddressId != nil && *policy.AddressTemplate.AddressId != "" {
+				addressTemplate["template_id"] = *policy.AddressTemplate.AddressId
+			}
+			addressTemplates = append(addressTemplates, addressTemplate)
+			_ = d.Set("address_template", addressTemplates)
+		}
+
+		if policy.ServiceTemplate != nil && ((policy.ServiceTemplate.ServiceGroupId != nil && *policy.ServiceTemplate.ServiceGroupId != "") || (policy.ServiceTemplate.ServiceId != nil && *policy.ServiceTemplate.ServiceId != "")) {
+			protocolTemplates := make([]map[string]string, 0)
+			protocolTemplate := map[string]string{
+				"group_id":    "",
+				"template_id": "",
+			}
+			if policy.ServiceTemplate.ServiceGroupId != nil && *policy.ServiceTemplate.ServiceGroupId != "" {
+				protocolTemplate["group_id"] = *policy.ServiceTemplate.ServiceGroupId
+			}
+			if policy.ServiceTemplate.ServiceId != nil && *policy.ServiceTemplate.ServiceId != "" {
+				protocolTemplate["template_id"] = *policy.ServiceTemplate.ServiceId
+			}
+			protocolTemplates = append(protocolTemplates, protocolTemplate)
+			_ = d.Set("protocol_template", protocolTemplates)
+		}
+
 		if policy.Protocol != nil {
 			inputProtocol := d.Get("ip_protocol").(string)
 			if inputProtocol == "" {
@@ -267,7 +403,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 			_ = d.Set("ip_protocol", inputProtocol)
 		}
 
-		if policy.Port != nil {
+		if policy.Port != nil && *policy.Port != "" {
 			_ = d.Set("port_range", *policy.Port)
 		}
 

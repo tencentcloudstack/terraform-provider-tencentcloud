@@ -1145,6 +1145,22 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 
 	policy.CidrBlock = info.CidrIp
 	policy.SecurityGroupId = info.SourceSgId
+	policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		policy.AddressTemplate.AddressId = info.AddressTemplateId
+	}
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		policy.AddressTemplate.AddressGroupId = info.AddressTemplateGroupId
+	}
+
+	policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
+	}
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		policy.ServiceTemplate.ServiceGroupId = info.ProtocolTemplateGroupId
+	}
+
 	if info.Protocol != nil {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
@@ -1276,6 +1292,26 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 
 	if *info.SourceSgId != "" {
 		policy.SecurityGroupId = info.SourceSgId
+	}
+
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+		policy.AddressTemplate.AddressGroupId = info.AddressTemplateGroupId
+	}
+
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+		policy.AddressTemplate.AddressId = info.AddressTemplateId
+	}
+
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+		policy.ServiceTemplate.ServiceGroupId = info.ProtocolTemplateGroupId
+	}
+
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
 	}
 
 	switch strings.ToLower(info.PolicyType) {
@@ -1608,14 +1644,18 @@ func (me *VpcService) DetachAllLiteRulesFromSecurityGroup(ctx context.Context, s
 }
 
 type securityGroupRuleBasicInfo struct {
-	SgId        string  `json:"sg_id"`
-	PolicyType  string  `json:"policy_type"`
-	CidrIp      *string `json:"cidr_ip,omitempty"`
-	Protocol    *string `json:"protocol"`
-	PortRange   *string `json:"port_range"`
-	Action      string  `json:"action"`
-	SourceSgId  *string `json:"source_sg_id"`
-	Description *string `json:"description,omitempty"`
+	SgId                    string  `json:"sg_id"`
+	PolicyType              string  `json:"policy_type"`
+	CidrIp                  *string `json:"cidr_ip,omitempty"`
+	Protocol                *string `json:"protocol"`
+	PortRange               *string `json:"port_range"`
+	Action                  string  `json:"action"`
+	SourceSgId              *string `json:"source_sg_id"`
+	Description             *string `json:"description,omitempty"`
+	AddressTemplateId       *string `json:"address_template_id,omitempty"`
+	AddressTemplateGroupId  *string `json:"address_template_group_id,omitempty"`
+	ProtocolTemplateId      *string `json:"protocol_template_id,omitempty"`
+	ProtocolTemplateGroupId *string `json:"protocol_template_group_id,omitempty"`
 }
 
 // Build an ID for a Security Group Rule (new version)
@@ -1659,14 +1699,42 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 	info.SgId = m["sgId"]
 	info.PolicyType = m["direction"]
 	info.Action = m["action"]
-	if m["sourceSgid"] == "" {
-		info.CidrIp = common.StringPtr(m["cidrIp"])
-	} else {
+
+	//the newest version include template
+	addressTemplateId, addressTemplateOk := m["address_template_id"]
+	addressGroupTemplateId, addressTemplateGroupOk := m["address_template_group_id"]
+	if addressTemplateOk || addressTemplateGroupOk {
+		if addressTemplateGroupOk {
+			info.AddressTemplateGroupId = common.StringPtr(addressGroupTemplateId)
+		} else {
+			info.AddressTemplateId = common.StringPtr(addressTemplateId)
+		}
 		info.CidrIp = common.StringPtr("")
+		info.SourceSgId = common.StringPtr("")
+	} else {
+		if m["sourceSgid"] == "" {
+			info.CidrIp = common.StringPtr(m["cidrIp"])
+		} else {
+			info.CidrIp = common.StringPtr("")
+		}
+		info.SourceSgId = common.StringPtr(m["sourceSgid"])
 	}
-	info.SourceSgId = common.StringPtr(m["sourceSgid"])
-	info.Protocol = common.StringPtr(m["ipProtocol"])
-	info.PortRange = common.StringPtr(m["portRange"])
+
+	protocolTemplateId, protocolTemplateOk := m["protocol_template_id"]
+	protocolGroupTemplateId, protocolTemplateGroupOk := m["protocol_template_group_id"]
+	if protocolTemplateOk || protocolTemplateGroupOk {
+		if protocolTemplateGroupOk {
+			info.ProtocolTemplateGroupId = common.StringPtr(protocolGroupTemplateId)
+		} else {
+			info.ProtocolTemplateId = common.StringPtr(protocolTemplateId)
+		}
+		info.Protocol = common.StringPtr("")
+		info.PortRange = common.StringPtr("")
+	} else {
+		info.Protocol = common.StringPtr(m["ipProtocol"])
+		info.PortRange = common.StringPtr(m["portRange"])
+	}
+
 	info.Description = common.StringPtr(m["description"])
 
 	log.Printf("[DEBUG] parseSecurityGroupRuleId after: %v", info)
@@ -1674,19 +1742,25 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
-	// policy.CidrBlock always not nil
-	if *policy.CidrBlock != *info.CidrIp {
-		return false
+	// policy.CidrBlock will be nil if address template is set
+	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
+		if *policy.CidrBlock != *info.CidrIp {
+			return false
+		}
 	}
 
-	// policy.Port always not nil
-	if *policy.Port != *info.PortRange {
-		return false
+	// policy.Port will be nil if protocol template is set
+	if policy.Port != nil && *policy.Port != "" {
+		if *policy.Port != *info.PortRange {
+			return false
+		}
 	}
 
-	// policy.Protocol always not nil
-	if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
-		return false
+	// policy.Protocol will be nil if protocol template is set
+	if policy.Protocol != nil && *policy.Protocol != "" {
+		if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+			return false
+		}
 	}
 
 	// policy.SecurityGroupId always not nil
@@ -1696,6 +1770,30 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 
 	if !strings.EqualFold(*policy.Action, info.Action) {
 		return false
+	}
+
+	//if template is not null it must be compared
+	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
+		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceId == nil || *info.ProtocolTemplateId != *policy.ServiceTemplate.ServiceId {
+			log.Printf("%s %v test", *info.ProtocolTemplateId, policy.ServiceTemplate)
+			return false
+		}
+	}
+	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
+		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceGroupId == nil || *info.ProtocolTemplateGroupId != *policy.ServiceTemplate.ServiceGroupId {
+			log.Printf("%s %v test", *info.ProtocolTemplateGroupId, policy.ServiceTemplate)
+			return false
+		}
+	}
+	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
+		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressGroupId == nil || *info.AddressTemplateGroupId != *policy.AddressTemplate.AddressGroupId {
+			return false
+		}
+	}
+	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
+		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressId == nil || *info.AddressTemplateId != *policy.AddressTemplate.AddressId {
+			return false
+		}
 	}
 
 	return true
@@ -3256,4 +3354,488 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 	gateway = response.Response.VpnGatewaySet[0]
 	has = true
 	return
+}
+
+func (me *VpcService) CreateAddressTemplate(ctx context.Context, name string, addresses []interface{}) (templateId string, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateAddressTemplateRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.AddressTemplateName = &name
+	request.Addresses = make([]*string, len(addresses))
+	for i, v := range addresses {
+		request.Addresses[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateAddressTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.AddressTemplate == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	templateId = *response.Response.AddressTemplate.AddressTemplateId
+	return
+}
+
+func (me *VpcService) DescribeAddressTemplateById(ctx context.Context, templateId string) (template *vpc.AddressTemplate, has bool, errRet error) {
+	filter := vpc.Filter{Name: helper.String("address-template-id"), Values: []*string{&templateId}}
+	templates, err := me.DescribeAddressTemplates(ctx, []*vpc.Filter{&filter})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(templates) == 0 {
+		return
+	}
+	if len(templates) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than one templates, instanceId %s", templateId)
+	}
+
+	has = true
+	template = templates[0]
+	return
+}
+
+func (me *VpcService) DescribeAddressTemplates(ctx context.Context, filter []*vpc.Filter) (templateList []*vpc.AddressTemplate, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeAddressTemplatesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit = 0, 100
+	request.Filters = filter
+
+	for {
+		request.Offset = helper.String(strconv.Itoa(offset))
+		request.Limit = helper.String(strconv.Itoa(limit))
+
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeAddressTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		templateList = append(templateList, response.Response.AddressTemplateSet...)
+		if len(response.Response.AddressTemplateSet) < limit {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *VpcService) ModifyAddressTemplate(ctx context.Context, templateId string, name string, addresses []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyAddressTemplateAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.AddressTemplateId = &templateId
+	request.AddressTemplateName = &name
+	request.Addresses = make([]*string, len(addresses))
+	for i, v := range addresses {
+		request.Addresses[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().ModifyAddressTemplateAttribute(request)
+	return err
+}
+
+func (me *VpcService) DeleteAddressTemplate(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteAddressTemplateRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.AddressTemplateId = &templateId
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().DeleteAddressTemplate(request)
+	return err
+}
+
+func (me *VpcService) CreateAddressTemplateGroup(ctx context.Context, name string, addressTemplate []interface{}) (templateId string, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateAddressTemplateGroupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.AddressTemplateGroupName = &name
+	request.AddressTemplateIds = make([]*string, len(addressTemplate))
+	for i, v := range addressTemplate {
+		request.AddressTemplateIds[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateAddressTemplateGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.AddressTemplateGroup == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	templateId = *response.Response.AddressTemplateGroup.AddressTemplateGroupId
+	return
+}
+
+func (me *VpcService) ModifyAddressTemplateGroup(ctx context.Context, templateGroupId string, name string, templateIds []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyAddressTemplateGroupAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.AddressTemplateGroupId = &templateGroupId
+	request.AddressTemplateGroupName = &name
+	request.AddressTemplateIds = make([]*string, len(templateIds))
+	for i, v := range templateIds {
+		request.AddressTemplateIds[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().ModifyAddressTemplateGroupAttribute(request)
+	return err
+}
+
+func (me *VpcService) DescribeAddressTemplateGroupById(ctx context.Context, templateGroupId string) (templateGroup *vpc.AddressTemplateGroup, has bool, errRet error) {
+	filter := vpc.Filter{Name: helper.String("address-template-group-id"), Values: []*string{&templateGroupId}}
+	templateGroups, err := me.DescribeAddressTemplateGroups(ctx, []*vpc.Filter{&filter})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(templateGroups) == 0 {
+		return
+	}
+	if len(templateGroups) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than one template group, instanceId %s", templateGroupId)
+	}
+
+	has = true
+	templateGroup = templateGroups[0]
+	return
+}
+
+func (me *VpcService) DescribeAddressTemplateGroups(ctx context.Context, filter []*vpc.Filter) (templateList []*vpc.AddressTemplateGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeAddressTemplateGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit = 0, 100
+	request.Filters = filter
+
+	for {
+		request.Offset = helper.String(strconv.Itoa(offset))
+		request.Limit = helper.String(strconv.Itoa(limit))
+
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeAddressTemplateGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		templateList = append(templateList, response.Response.AddressTemplateGroupSet...)
+		if len(response.Response.AddressTemplateGroupSet) < limit {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *VpcService) DeleteAddressTemplateGroup(ctx context.Context, templateGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteAddressTemplateGroupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.AddressTemplateGroupId = &templateGroupId
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().DeleteAddressTemplateGroup(request)
+	return err
+}
+
+func (me *VpcService) CreateServiceTemplate(ctx context.Context, name string, services []interface{}) (templateId string, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateServiceTemplateRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.ServiceTemplateName = &name
+	request.Services = make([]*string, len(services))
+	for i, v := range services {
+		request.Services[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateServiceTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.ServiceTemplate == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	templateId = *response.Response.ServiceTemplate.ServiceTemplateId
+	return
+}
+
+func (me *VpcService) ModifyServiceTemplate(ctx context.Context, templateId string, name string, services []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyServiceTemplateAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.ServiceTemplateId = &templateId
+	request.ServiceTemplateName = &name
+	request.Services = make([]*string, len(services))
+	for i, v := range services {
+		request.Services[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().ModifyServiceTemplateAttribute(request)
+	return err
+}
+
+func (me *VpcService) DescribeServiceTemplateById(ctx context.Context, templateId string) (template *vpc.ServiceTemplate, has bool, errRet error) {
+	filter := vpc.Filter{Name: helper.String("service-template-id"), Values: []*string{&templateId}}
+	templates, err := me.DescribeServiceTemplates(ctx, []*vpc.Filter{&filter})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(templates) == 0 {
+		return
+	}
+	if len(templates) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than one templates, instanceId %s", templateId)
+	}
+
+	has = true
+	template = templates[0]
+	return
+}
+
+func (me *VpcService) DescribeServiceTemplates(ctx context.Context, filter []*vpc.Filter) (templateList []*vpc.ServiceTemplate, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeServiceTemplatesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit = 0, 100
+	request.Filters = filter
+
+	for {
+		request.Offset = helper.String(strconv.Itoa(offset))
+		request.Limit = helper.String(strconv.Itoa(limit))
+
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeServiceTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		templateList = append(templateList, response.Response.ServiceTemplateSet...)
+		if len(response.Response.ServiceTemplateSet) < limit {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *VpcService) DeleteServiceTemplate(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteServiceTemplateRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ServiceTemplateId = &templateId
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().DeleteServiceTemplate(request)
+	return err
+}
+
+func (me *VpcService) CreateServiceTemplateGroup(ctx context.Context, name string, serviceTemplate []interface{}) (templateId string, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateServiceTemplateGroupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.ServiceTemplateGroupName = &name
+	request.ServiceTemplateIds = make([]*string, len(serviceTemplate))
+	for i, v := range serviceTemplate {
+		request.ServiceTemplateIds[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateServiceTemplateGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.ServiceTemplateGroup == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	templateId = *response.Response.ServiceTemplateGroup.ServiceTemplateGroupId
+	return
+}
+
+func (me *VpcService) DescribeServiceTemplateGroupById(ctx context.Context, templateGroupId string) (template *vpc.ServiceTemplateGroup, has bool, errRet error) {
+	filter := vpc.Filter{Name: helper.String("service-template-group-id"), Values: []*string{&templateGroupId}}
+	templates, err := me.DescribeServiceTemplateGroups(ctx, []*vpc.Filter{&filter})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(templates) == 0 {
+		return
+	}
+	if len(templates) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than one templates, instanceId %s", templateGroupId)
+	}
+
+	has = true
+	template = templates[0]
+	return
+}
+
+func (me *VpcService) DescribeServiceTemplateGroups(ctx context.Context, filter []*vpc.Filter) (templateList []*vpc.ServiceTemplateGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeServiceTemplateGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit = 0, 100
+	request.Filters = filter
+
+	for {
+		request.Offset = helper.String(strconv.Itoa(offset))
+		request.Limit = helper.String(strconv.Itoa(limit))
+
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeServiceTemplateGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		templateList = append(templateList, response.Response.ServiceTemplateGroupSet...)
+		if len(response.Response.ServiceTemplateGroupSet) < limit {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *VpcService) ModifyServiceTemplateGroup(ctx context.Context, serviceGroupId string, name string, templateIds []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyServiceTemplateGroupAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), errRet)
+		}
+	}()
+
+	request.ServiceTemplateGroupId = &serviceGroupId
+	request.ServiceTemplateGroupName = &name
+	request.ServiceTemplateIds = make([]*string, len(templateIds))
+	for i, v := range templateIds {
+		request.ServiceTemplateIds[i] = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().ModifyServiceTemplateGroupAttribute(request)
+	return err
+}
+
+func (me *VpcService) DeleteServiceTemplateGroup(ctx context.Context, templateGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteServiceTemplateGroupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ServiceTemplateGroupId = &templateGroupId
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseVpcClient().DeleteServiceTemplateGroup(request)
+	return err
 }
