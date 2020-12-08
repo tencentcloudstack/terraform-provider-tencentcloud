@@ -4,12 +4,12 @@ FEATURES:
 
 * **New Resource**: `tencentcloud_address_template`
 * **New Resource**: `tencentcloud_address_template_group`
-* **New Resource**: `tencentcloud_service_template`
-* **New Resource**: `tencentcloud_service_template_group`
+* **New Resource**: `tencentcloud_protocol_template`
+* **New Resource**: `tencentcloud_protocol_template_group`
 * **New Data Source**: `tencentcloud_address_templates` 
 * **New Data Source**: `tencentcloud_address_template_groups` 
-* **New Data Source**: `tencentcloud_service_templates` 
-* **New Data Source**: `tencentcloud_service_template_groups` 
+* **New Data Source**: `tencentcloud_protocol_templates` 
+* **New Data Source**: `tencentcloud_protocol_template_groups` 
 
 ENHANCEMENTS:
 
