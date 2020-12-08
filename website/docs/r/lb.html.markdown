@@ -1,5 +1,5 @@
 ---
-subcategory: "CLB"
+subcategory: "Cloud Load Balancer(CLB)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_lb"
 sidebar_current: "docs-tencentcloud-resource-lb"
