@@ -1,4 +1,5 @@
-## 1.50.0 (Unreleased)
+## 1.50.1 (Unreleased)
+## 1.50.0 (December 08, 2020)
 
 FEATURES:
 
