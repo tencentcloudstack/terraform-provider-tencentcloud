@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 	"unicode/utf8"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -333,6 +334,17 @@ func validateStringNumber(v interface{}, k string) (ws []string, errors []error)
 	_, err := strconv.ParseFloat(value, 64)
 	if err != nil {
 		errors = append(errors, fmt.Errorf("%s must be a number: %s", k, value))
+	}
+	return
+}
+
+func validateLowCase(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	for _, c := range value {
+		if unicode.IsUpper(c) {
+			errors = append(errors, fmt.Errorf("%s must be a low case string: %s", k, value))
+			return
+		}
 	}
 	return
 }

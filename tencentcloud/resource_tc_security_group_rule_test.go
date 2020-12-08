@@ -126,6 +126,66 @@ func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSecurityGroupRule_addressTemplate(t *testing.T) {
+	var sgrId string
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityGroupRuleDestroy(&sgrId),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecurityGroupRuleConfigAddressTemplate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.address_template", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template", "address_template.#", "1"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.address_template", "address_template.group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template", "port_range", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template", "ip_protocol", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template", "policy", "DROP"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.address_template", "cidr_ip"),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.address_template_group", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template_group", "address_template.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template_group", "ip_protocol", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template_group", "policy", "DROP"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.address_template_group", "cidr_ip"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.address_template_group", "port_range", "ALL"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.address_template_group", "address_template.template_id"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudSecurityGroupRule_protocolTemplate(t *testing.T) {
+	var sgrId string
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityGroupRuleDestroy(&sgrId),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecurityGroupRuleConfigProtocolTemplate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.protocol_template", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template", "protocol_template.#", "1"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template", "protocol_template.group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template", "cidr_ip", "0.0.0.0/0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template", "ip_protocol"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template", "policy", "DROP"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template", "cip_protocol"),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.protocol_template_group", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "protocol_template.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "cidr_ip", "0.0.0.0/0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "port_range"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "policy", "DROP"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "ip_protocol"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.protocol_template_group", "protocol_template.template_id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckSecurityGroupRuleDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
@@ -252,5 +312,81 @@ resource "tencentcloud_security_group_rule" "egress-drop" {
   cidr_ip           = "0.0.0.0/0"
   type              = "ingress"
   policy            = "DROP"
+}
+`
+
+const testAccSecurityGroupRuleConfigAddressTemplate = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_address_template" "templateB" {
+  name = "testB"
+  addresses = ["1.1.1.1/24", "1.1.1.0-1.1.1.1"]
+}
+
+resource "tencentcloud_address_template_group" "group"{
+	name = "test_update"
+	template_ids = [tencentcloud_address_template.templateB.id]
+}
+
+resource "tencentcloud_security_group_rule" "address_template_group" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "ingress"
+  policy            = "DROP"
+
+  address_template  {
+		group_id = tencentcloud_address_template_group.group.id
+	}
+}
+
+resource "tencentcloud_security_group_rule" "address_template" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "INGRESS"
+  policy            = "DROP"
+
+  address_template  {
+		template_id = tencentcloud_address_template.templateB.id
+	}
+}
+`
+
+const testAccSecurityGroupRuleConfigProtocolTemplate = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_protocol_template" "templateB" {
+  name = "testB"
+  protocols = ["tcp:80", "udp:90,111"]
+}
+
+resource "tencentcloud_protocol_template_group" "group"{
+	name = "test_update"
+	template_ids = [tencentcloud_protocol_template.templateB.id]
+}
+
+resource "tencentcloud_security_group_rule" "protocol_template_group" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "ingress"
+  policy            = "DROP"
+  cidr_ip           = "0.0.0.0/0"
+
+  protocol_template  {
+		group_id = tencentcloud_protocol_template_group.group.id
+	}
+}
+
+resource "tencentcloud_security_group_rule" "protocol_template" {
+  security_group_id = tencentcloud_security_group.foo.id
+  type              = "INGRESS"
+  policy            = "DROP"
+  cidr_ip           = "0.0.0.0/0"
+
+  protocol_template  {
+		template_id = tencentcloud_protocol_template.templateB.id
+	}
 }
 `

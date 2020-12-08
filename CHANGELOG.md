@@ -1,4 +1,20 @@
-## 1.49.2 (Unreleased)
+## 1.50.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_address_template`
+* **New Resource**: `tencentcloud_address_template_group`
+* **New Resource**: `tencentcloud_protocol_template`
+* **New Resource**: `tencentcloud_protocol_template_group`
+* **New Data Source**: `tencentcloud_address_templates` 
+* **New Data Source**: `tencentcloud_address_template_groups` 
+* **New Data Source**: `tencentcloud_protocol_templates` 
+* **New Data Source**: `tencentcloud_protocol_template_groups` 
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_sercurity_group_rule` add `address_template` and `protocol_template` to support building new security group rule with resource `tencentcloud_address_template` and `tencentcloud_protocol_template`.
+
 ## 1.49.1 (December 01, 2020)
 
 ENHANCEMENTS:

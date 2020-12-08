@@ -35,7 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Create time.
 * `token_id` - Sub ID of the TCR token. The full ID of token format like `instance_id#token_id`.
-* `token` - Brief description of the token.
+* `token` - The content of the token.
 * `user_name` - User name of the token.
 
 
