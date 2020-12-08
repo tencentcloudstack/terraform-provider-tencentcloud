@@ -12,7 +12,7 @@ resource "tencentcloud_address_template" "foo" {
 
 Import
 
-Address template can be imported using the address template, e.g.
+Address template can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_address_template.foo ipm-makf7k9e"

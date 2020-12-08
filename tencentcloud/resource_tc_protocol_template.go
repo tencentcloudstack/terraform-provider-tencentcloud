@@ -12,7 +12,7 @@ resource "tencentcloud_protocol_template" "foo" {
 
 Import
 
-Protocol template can be imported using the protocol template, e.g.
+Protocol template can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_protocol_template.foo ppm-nwrggd14
