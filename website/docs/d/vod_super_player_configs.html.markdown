@@ -1,5 +1,5 @@
 ---
-subcategory: "VOD"
+subcategory: "Video on Demand(VOD)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_super_player_configs"
 sidebar_current: "docs-tencentcloud-datasource-vod_super_player_configs"

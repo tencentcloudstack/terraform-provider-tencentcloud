@@ -1,5 +1,5 @@
 ---
-subcategory: "CLB"
+subcategory: "Cloud Load Balancer(CLB)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_listener_rule"
 sidebar_current: "docs-tencentcloud-resource-clb_listener_rule"

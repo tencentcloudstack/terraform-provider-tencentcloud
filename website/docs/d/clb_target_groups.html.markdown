@@ -1,5 +1,5 @@
 ---
-subcategory: "CLB"
+subcategory: "Cloud Load Balancer(CLB)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_target_groups"
 sidebar_current: "docs-tencentcloud-datasource-clb_target_groups"

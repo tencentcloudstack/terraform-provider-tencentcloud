@@ -1,5 +1,5 @@
 ---
-subcategory: "COS"
+subcategory: "Cloud Object Storage(COS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cos_bucket_object"
 sidebar_current: "docs-tencentcloud-resource-cos_bucket_object"

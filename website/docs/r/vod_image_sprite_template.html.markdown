@@ -1,5 +1,5 @@
 ---
-subcategory: "VOD"
+subcategory: "Video on Demand(VOD)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_image_sprite_template"
 sidebar_current: "docs-tencentcloud-resource-vod_image_sprite_template"

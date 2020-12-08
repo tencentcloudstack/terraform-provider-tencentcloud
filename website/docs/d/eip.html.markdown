@@ -1,5 +1,5 @@
 ---
-subcategory: "CVM"
+subcategory: "Cloud Virtual Machine(CVM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_eip"
 sidebar_current: "docs-tencentcloud-datasource-eip"

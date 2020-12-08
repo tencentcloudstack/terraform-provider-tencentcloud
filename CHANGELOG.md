@@ -14,6 +14,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * Resource `tencentcloud_sercurity_group_rule` add `address_template` and `protocol_template` to support building new security group rule with resource `tencentcloud_address_template` and `tencentcloud_protocol_template`.
+* Doc: optimize document directory.
 
 BUG FIXES:
 
