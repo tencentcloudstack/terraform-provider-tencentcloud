@@ -15,6 +15,10 @@ ENHANCEMENTS:
 
 * Resource `tencentcloud_sercurity_group_rule` add `address_template` and `protocol_template` to support building new security group rule with resource `tencentcloud_address_template` and `tencentcloud_protocol_template`.
 
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix bucket name validator.
+
 ## 1.49.1 (December 01, 2020)
 
 ENHANCEMENTS:

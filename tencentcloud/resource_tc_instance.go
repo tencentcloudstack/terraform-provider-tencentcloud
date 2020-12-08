@@ -614,7 +614,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+		if instance != nil && (*instance.InstanceState == CVM_STATUS_RUNNING ||
+			*instance.InstanceState == CVM_STATUS_LAUNCH_FAILED) {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
