@@ -51,12 +51,12 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
-				Description:  "Types of storage medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
+				Description:  "Filter by cloud disk media type (`CLOUD_BASIC`: HDD cloud disk | `CLOUD_PREMIUM`: Premium Cloud Storage | `CLOUD_SSD`: SSD cloud disk).",
 			},
 			"storage_usage": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Types of CBS, and available values include SYSTEM_DISK and DATA_DISK.",
+				Description: "Filter by cloud disk type (`SYSTEM_DISK`: system disk | `DATA_DISK`: data disk).",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

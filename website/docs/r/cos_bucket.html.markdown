@@ -90,7 +90,7 @@ The following arguments are supported:
 The `cors_rules` object supports the following:
 
 * `allowed_headers` - (Required) Specifies which headers are allowed.
-* `allowed_methods` - (Required) Specifies which methods are allowed. Can be GET, PUT, POST, DELETE or HEAD.
+* `allowed_methods` - (Required) Specifies which methods are allowed. Can be `GET`, `PUT`, `POST`, `DELETE` or `HEAD`.
 * `allowed_origins` - (Required) Specifies which origins are allowed.
 * `expose_headers` - (Optional) Specifies expose header in the response.
 * `max_age_seconds` - (Optional) Specifies time in seconds that browser can cache the response for a preflight request.
@@ -108,7 +108,7 @@ The `lifecycle_rules` object supports the following:
 
 The `transition` object supports the following:
 
-* `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
+* `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
 * `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
 

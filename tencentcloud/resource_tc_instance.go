@@ -173,7 +173,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
-				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 			},
 			"spot_instance_type": {
 				Type:         schema.TypeString,
@@ -244,7 +244,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:      CVM_DISK_TYPE_CLOUD_BASIC,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
-				Description:  "Type of the system disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. default value is `CLOUD_BASIC`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 			},
 			"system_disk_size": {
 				Type:         schema.TypeInt,
@@ -274,7 +274,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Required:     true,
 							ForceNew:     true,
 							ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
-							Description:  "Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+							Description:  "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
 							Type:         schema.TypeInt,
