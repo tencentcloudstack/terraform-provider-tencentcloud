@@ -326,7 +326,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      CVM_PREPAID_RENEW_FLAG_NOTIFY_AND_MANUAL_RENEW,
 			ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
-			Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+			Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
@@ -341,7 +341,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-			Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
+			Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
@@ -365,7 +365,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						Optional:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.",
+						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
@@ -389,7 +389,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
-			Description:  "Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.",
+			Description:  "Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.",
 		},
 		"internet_max_bandwidth_out": {
 			Type:        schema.TypeInt,

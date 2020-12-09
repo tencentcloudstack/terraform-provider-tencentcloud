@@ -399,27 +399,27 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_group.0.forward_balancer_ids"},
-			Description:   "ID list of traditional load balancers.",
+			Description:   "ID list of traditional load balances.",
 		},
 		"forward_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
 			ForceNew:      true,
 			ConflictsWith: []string{"auto_scaling_group.0.load_balancer_ids"},
-			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
+			Description:   "List of application load balances, which can't be specified with load_balancer_ids together.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"load_balancer_id": {
 						Type:        schema.TypeString,
 						Required:    true,
 						ForceNew:    true,
-						Description: "ID of available load balancers.",
+						Description: "ID of available load balances.",
 					},
 					"listener_id": {
 						Type:        schema.TypeString,
 						Required:    true,
 						ForceNew:    true,
-						Description: "Listener ID for application load balancers.",
+						Description: "Listener ID for application load balances.",
 					},
 					"rule_id": {
 						Type:        schema.TypeString,
@@ -457,7 +457,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Optional:    true,
 			ForceNew:    true,
 			MaxItems:    1,
-			Description: "Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.",
+			Description: "Available values for termination policies include `OLDEST_INSTANCE` and `NEWEST_INSTANCE`.",
 			Elem: &schema.Schema{
 				Type:    schema.TypeString,
 				Default: SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
@@ -469,7 +469,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
+			Description: "Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.",
 			Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 			ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 				SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
