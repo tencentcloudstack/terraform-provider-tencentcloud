@@ -116,7 +116,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.",
+				Description:  "Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -128,7 +128,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_AREA),
-				Description:  "Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.",
+				Description:  "Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.",
 			},
 			"full_url_cache": {
 				Type:        schema.TypeBool,
@@ -147,7 +147,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_TYPE),
-							Description:  "Master origin server type. Valid values are `domain`, `cos`, `ip`, `ipv6` and `ip_ipv6`.",
+							Description:  "Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.",
 						},
 						"origin_list": {
 							Type:        schema.TypeList,
@@ -171,13 +171,13 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:     true,
 							Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
 							ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
-							Description:  "Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. Default value is `http`.",
+							Description:  "Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.",
 						},
 						"backup_origin_type": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validateAllowedStringValue(CDN_BACKUP_ORIGIN_TYPE),
-							Description:  "Backup origin server type. Valid values are `domain` and `ip`.",
+							Description:  "Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.",
 						},
 						"backup_origin_list": {
 							Type:        schema.TypeList,

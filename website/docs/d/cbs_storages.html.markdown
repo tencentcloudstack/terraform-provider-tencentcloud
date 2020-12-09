@@ -29,8 +29,8 @@ The following arguments are supported:
 * `result_output_file` - (Optional) Used to save results.
 * `storage_id` - (Optional) ID of the CBS to be queried.
 * `storage_name` - (Optional) Name of the CBS to be queried.
-* `storage_type` - (Optional) Types of storage medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.
-* `storage_usage` - (Optional) Types of CBS, and available values include SYSTEM_DISK and DATA_DISK.
+* `storage_type` - (Optional) Filter by cloud disk media type (`CLOUD_BASIC`: HDD cloud disk | `CLOUD_PREMIUM`: Premium Cloud Storage | `CLOUD_SSD`: SSD cloud disk).
+* `storage_usage` - (Optional) Filter by cloud disk type (`SYSTEM_DISK`: system disk | `DATA_DISK`: data disk).
 
 ## Attributes Reference
 
