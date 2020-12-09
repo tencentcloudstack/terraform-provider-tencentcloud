@@ -399,27 +399,27 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_group.0.forward_balancer_ids"},
-			Description:   "ID list of traditional load balances.",
+			Description:   "ID list of traditional load balancers.",
 		},
 		"forward_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
 			ForceNew:      true,
 			ConflictsWith: []string{"auto_scaling_group.0.load_balancer_ids"},
-			Description:   "List of application load balances, which can't be specified with load_balancer_ids together.",
+			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"load_balancer_id": {
 						Type:        schema.TypeString,
 						Required:    true,
 						ForceNew:    true,
-						Description: "ID of available load balances.",
+						Description: "ID of available load balancers.",
 					},
 					"listener_id": {
 						Type:        schema.TypeString,
 						Required:    true,
 						ForceNew:    true,
-						Description: "Listener ID for application load balances.",
+						Description: "Listener ID for application load balancers.",
 					},
 					"rule_id": {
 						Type:        schema.TypeString,
