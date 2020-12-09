@@ -59,8 +59,8 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, ForceNew) The available zone of the Mongodb standby instance. NOTE: must not be same with father instance's.
-* `father_instance_id` - (Required, ForceNew) Indicates the father instance ID of standby instances.
-* `father_instance_region` - (Required, ForceNew) Indicates the region of father instance.
+* `father_instance_id` - (Required, ForceNew) Indicates the main instance ID of standby instances.
+* `father_instance_region` - (Required, ForceNew) Indicates the region of main instance.
 * `instance_name` - (Required) Name of the Mongodb instance.
 * `memory` - (Required) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `volume` - (Required) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
@@ -79,8 +79,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of the Mongodb instance.
-* `engine_version` - Version of the standby Mongodb instance and must be same as the father's.
-* `machine_type` - Type of standby Mongodb instance and must be same as the father's.
+* `engine_version` - Version of the standby Mongodb instance and must be same as the version of main instance.
+* `machine_type` - Type of standby Mongodb instance and must be same as the type of main instance.
 * `status` - Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
