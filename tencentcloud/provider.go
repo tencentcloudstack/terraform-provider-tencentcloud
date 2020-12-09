@@ -298,7 +298,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
 
-Kubernetes
+Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
 

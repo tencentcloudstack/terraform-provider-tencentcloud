@@ -457,7 +457,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Optional:    true,
 			ForceNew:    true,
 			MaxItems:    1,
-			Description: "Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.",
+			Description: "Available values for termination policies include `OLDEST_INSTANCE` and `NEWEST_INSTANCE`.",
 			Elem: &schema.Schema{
 				Type:    schema.TypeString,
 				Default: SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
@@ -469,7 +469,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
+			Description: "Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.",
 			Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 			ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 				SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
