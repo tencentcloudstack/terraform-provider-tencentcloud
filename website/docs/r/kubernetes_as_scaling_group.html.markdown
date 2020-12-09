@@ -167,8 +167,8 @@ The `auto_scaling_group` object supports the following:
 * `vpc_id` - (Required, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional, ForceNew) Default cooldown time in second, and default value is 300.
 * `desired_capacity` - (Optional, ForceNew) Desired volume of CVM instances, which is between max_size and min_size.
-* `forward_balancer_ids` - (Optional, ForceNew) List of application load balances, which can't be specified with load_balancer_ids together.
-* `load_balancer_ids` - (Optional, ForceNew) ID list of traditional load balances.
+* `forward_balancer_ids` - (Optional, ForceNew) List of application load balancers, which can't be specified with load_balancer_ids together.
+* `load_balancer_ids` - (Optional, ForceNew) ID list of traditional load balancers.
 * `project_id` - (Optional, ForceNew) Specifys to which project the scaling group belongs.
 * `retry_policy` - (Optional, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
 * `subnet_ids` - (Optional, ForceNew) ID list of subnet, and for VPC it is required.
@@ -184,8 +184,8 @@ The `data_disk` object supports the following:
 
 The `forward_balancer_ids` object supports the following:
 
-* `listener_id` - (Required, ForceNew) Listener ID for application load balances.
-* `load_balancer_id` - (Required, ForceNew) ID of available load balances.
+* `listener_id` - (Required, ForceNew) Listener ID for application load balancers.
+* `load_balancer_id` - (Required, ForceNew) ID of available load balancers.
 * `target_attribute` - (Required, ForceNew) Attribute list of target rules.
 * `rule_id` - (Optional, ForceNew) ID of forwarding rules.
 
