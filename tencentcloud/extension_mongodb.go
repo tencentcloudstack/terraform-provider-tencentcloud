@@ -89,7 +89,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS`, `MONGO_36_WT` and `MONGO_40_WT`.",
+			Description: "Version of the Mongodb, and available values include `MONGO_3_WT` (represents MongoDB 3.2 WiredTiger Edition), `MONGO_3_ROCKS` (represents MongoDB 3.2 RocksDB Edition), `MONGO_36_WT` (represents MongoDB 3.6 WiredTiger Edition) and `MONGO_40_WT` (represents MongoDB 4.0 WiredTiger Edition).",
 		},
 		"machine_type": {
 			Type:     schema.TypeString,
@@ -105,7 +105,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 				}
 				return olds == news
 			},
-			Description: "Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated) and `HIO10G`(or `TGIO` which will be deprecated).",
+			Description: "Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated, represents high IO) and `HIO10G`(or `TGIO` which will be deprecated, represents 10-gigabit high IO).",
 		},
 		"available_zone": {
 			Type:        schema.TypeString,
