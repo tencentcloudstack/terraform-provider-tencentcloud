@@ -62,7 +62,7 @@ func resourceTencentCloudAPIGatewayCustomDomain() *schema.Resource {
 				Type:        schema.TypeBool,
 				Default:     true,
 				Optional:    true,
-				Description: "Whether the default path mapping is used. The default value is true. If the value is false, the custom path mapping will be used and PathMappingSet will be required in this case.",
+				Description: "Whether the default path mapping is used. The default value is `true`. When it is `false`, it means custom path mapping. In this case, the `path_mappings` attribute is required.",
 			},
 			"default_domain": {
 				Type:         schema.TypeString,
@@ -74,20 +74,20 @@ func resourceTencentCloudAPIGatewayCustomDomain() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Unique certificate ID of the custom domain name to be bound. The certificate can be uploaded if Protocol is `https` or `http&https`.",
+				Description: "Unique certificate ID of the custom domain name to be bound. You can choose to upload for the `protocol` attribute value `https` or `http&https`.",
 			},
 			"path_mappings": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Custom domain name path mapping. Valid values: `test`, `prepub`, `release`. Respectively.eg: path#environment.",
+				Description: "Custom domain name path mapping. The data format is: `path#environment`. Optional values for the environment are `test`, `prepub`, and `release`.",
 			},
 			//compute
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Domain name resolution status. True: success; False: failure.",
+				Description: "Domain name resolution status.",
 			},
 		},
 	}

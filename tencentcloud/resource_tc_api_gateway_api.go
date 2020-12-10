@@ -116,7 +116,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Optional:     true,
 				Default:      "GET",
 				ValidateFunc: validateAllowedStringValue([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "ANY"}),
-				Description:  "Request frontend method configuration. Like `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.",
+				Description:  "Request frontend method configuration. Valid values: `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.",
 			},
 			"request_parameters": {
 				Type:        schema.TypeSet,
@@ -169,7 +169,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     5,
-				Description: "API backend service timeout period in seconds. Default is `5`.",
+				Description: "API backend service timeout period in seconds. Default value: `5`.",
 			},
 			"service_config_product": {
 				Type:        schema.TypeString,
@@ -204,7 +204,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 			"service_config_scf_function_namespace": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "SCF function namespace. This parameter takes effect when  `service_config_type` is `SCF`.",
+				Description: "SCF function namespace. This parameter takes effect when `service_config_type` is `SCF`.",
 			},
 			"service_config_scf_function_qualifier": {
 				Type:        schema.TypeString,

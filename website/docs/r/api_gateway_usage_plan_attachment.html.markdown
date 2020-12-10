@@ -76,7 +76,7 @@ resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
 
 The following arguments are supported:
 
-* `environment` - (Required, ForceNew) Environment to be bound `test`,`prepub` or `release`.
+* `environment` - (Required, ForceNew) The environment to be bound. Valid values: `test`, `prepub`, `release`.
 * `service_id` - (Required, ForceNew) ID of the service.
 * `usage_plan_id` - (Required, ForceNew) ID of the usage plan.
 * `api_id` - (Optional, ForceNew) ID of the API. This parameter will be required when `bind_type` is `API`.

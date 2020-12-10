@@ -109,7 +109,7 @@ func resourceTencentCloudAPIGatewayUsagePlanAttachment() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_SERVICE_ENVS),
-				Description:  "Environment to be bound `test`,`prepub` or `release`.",
+				Description:  "The environment to be bound. Valid values: `test`, `prepub`, `release`.",
 			},
 			"bind_type": {
 				Type:         schema.TypeString,
