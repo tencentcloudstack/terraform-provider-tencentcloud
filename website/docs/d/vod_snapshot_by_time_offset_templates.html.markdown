@@ -1,5 +1,5 @@
 ---
-subcategory: "VOD"
+subcategory: "Video on Demand(VOD)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_snapshot_by_time_offset_templates"
 sidebar_current: "docs-tencentcloud-datasource-vod_snapshot_by_time_offset_templates"

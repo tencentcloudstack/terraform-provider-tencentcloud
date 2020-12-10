@@ -1,5 +1,5 @@
 ---
-subcategory: "Kubernetes"
+subcategory: "Tencent Kubernetes Engine(TKE)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_as_scaling_group"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_as_scaling_group"
@@ -170,10 +170,10 @@ The `auto_scaling_group` object supports the following:
 * `forward_balancer_ids` - (Optional, ForceNew) List of application load balancers, which can't be specified with load_balancer_ids together.
 * `load_balancer_ids` - (Optional, ForceNew) ID list of traditional load balancers.
 * `project_id` - (Optional, ForceNew) Specifys to which project the scaling group belongs.
-* `retry_policy` - (Optional, ForceNew) Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
+* `retry_policy` - (Optional, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
 * `subnet_ids` - (Optional, ForceNew) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional, ForceNew) Tags of a scaling group.
-* `termination_policies` - (Optional, ForceNew) Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.
+* `termination_policies` - (Optional, ForceNew) Available values for termination policies include `OLDEST_INSTANCE` and `NEWEST_INSTANCE`.
 * `zones` - (Optional, ForceNew) List of available zones, for Basic network it is required.
 
 The `data_disk` object supports the following:

@@ -1,5 +1,5 @@
 ---
-subcategory: "VPC"
+subcategory: "Virtual Private Cloud(VPC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ha_vips"
 sidebar_current: "docs-tencentcloud-datasource-ha_vips"

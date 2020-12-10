@@ -1,5 +1,5 @@
 ---
-subcategory: "VPC"
+subcategory: "Virtual Private Cloud(VPC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group_rule"
 sidebar_current: "docs-tencentcloud-resource-security_group_rule"

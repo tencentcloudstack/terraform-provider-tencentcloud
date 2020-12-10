@@ -1,5 +1,5 @@
 ---
-subcategory: "CVM"
+subcategory: "Cloud Virtual Machine(CVM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_key_pairs"
 sidebar_current: "docs-tencentcloud-datasource-key_pairs"

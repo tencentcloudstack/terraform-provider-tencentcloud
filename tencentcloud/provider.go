@@ -103,7 +103,7 @@ Auto Scaling(AS)
     tencentcloud_as_lifecycle_hook
     tencentcloud_as_notification
 
-CDN
+Content Delivery Network(CDN)
   Data Source
     tencentcloud_cdn_domains
 
@@ -187,7 +187,7 @@ Container Cluster
     tencentcloud_container_cluster
     tencentcloud_container_cluster_instance
 
-CLB
+Cloud Load Balancer(CLB)
   Data Source
     tencentcloud_clb_attachments
     tencentcloud_clb_instances
@@ -208,7 +208,7 @@ CLB
     tencentcloud_clb_target_group_instance_attachment
     tencentcloud_clb_target_group_attachment
 
-COS
+Cloud Object Storage(COS)
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
@@ -218,7 +218,7 @@ COS
     tencentcloud_cos_bucket_object
     tencentcloud_cos_bucket_policy
 
-CVM
+Cloud Virtual Machine(CVM)
   Data Source
     tencentcloud_image
     tencentcloud_images
@@ -298,7 +298,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
 
-Kubernetes
+Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
 
@@ -428,7 +428,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_repository
 	tencentcloud_tcr_token
 
-VOD
+Video on Demand(VOD)
   Data Source
 	tencentcloud_vod_adaptive_dynamic_streaming_templates
 	tencentcloud_vod_snapshot_by_time_offset_templates
@@ -444,7 +444,7 @@ VOD
     tencentcloud_vod_image_sprite_template
     tencentcloud_vod_super_player_config
 
-VPC
+Virtual Private Cloud(VPC)
   Data Source
     tencentcloud_route_table
     tencentcloud_security_group

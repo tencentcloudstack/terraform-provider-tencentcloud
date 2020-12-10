@@ -1,5 +1,5 @@
 ---
-subcategory: "Kubernetes"
+subcategory: "Tencent Kubernetes Engine(TKE)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_cluster_attachment"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_cluster_attachment"

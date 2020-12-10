@@ -159,7 +159,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 							Type:        schema.TypeList,
 							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Specifies which methods are allowed. Can be GET, PUT, POST, DELETE or HEAD.",
+							Description: "Specifies which methods are allowed. Can be `GET`, `PUT`, `POST`, `DELETE` or `HEAD`.",
 						},
 						"allowed_headers": {
 							Type:        schema.TypeList,
@@ -215,7 +215,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 										Type:         schema.TypeString,
 										Required:     true,
 										ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
-										Description:  "Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.",
+										Description:  "Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 									},
 								},
 							},

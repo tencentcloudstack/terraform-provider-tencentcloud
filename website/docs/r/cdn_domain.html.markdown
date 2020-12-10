@@ -1,5 +1,5 @@
 ---
-subcategory: "CDN"
+subcategory: "Content Delivery Network(CDN)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cdn_domain"
 sidebar_current: "docs-tencentcloud-resource-cdn_domain"
@@ -86,8 +86,8 @@ The following arguments are supported:
 
 * `domain` - (Required, ForceNew) Name of the acceleration domain.
 * `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
-* `service_type` - (Required, ForceNew) Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.
-* `area` - (Optional) Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.
+* `service_type` - (Required, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
+* `area` - (Optional) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
 * `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
@@ -117,12 +117,12 @@ The `https_config` object supports the following:
 The `origin` object supports the following:
 
 * `origin_list` - (Required) Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.
-* `origin_type` - (Required) Master origin server type. Valid values are `domain`, `cos`, `ip`, `ipv6` and `ip_ipv6`.
+* `origin_type` - (Required) Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.
 * `backup_origin_list` - (Optional) Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
-* `backup_origin_type` - (Optional) Backup origin server type. Valid values are `domain` and `ip`.
+* `backup_origin_type` - (Optional) Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.
 * `backup_server_name` - (Optional) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
 * `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
-* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. Default value is `http`.
+* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
 * `server_name` - (Optional) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `server_certificate_config` object supports the following:
