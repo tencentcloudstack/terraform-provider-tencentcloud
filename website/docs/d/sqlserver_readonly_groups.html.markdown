@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
   * `min_instances` - Minimum readonly instances that stays in the group.
   * `name` - Name of the readonly group.
   * `readonly_instance_set` - Readonly instance ID set of the readonly group.
-  * `status` - Status of the readonly group. 1 for running, 5 for applying.
+  * `status` - Status of the readonly group. `1` for running, `5` for applying.
   * `vip` - Virtual IP address of the readonly group.
   * `vport` - Virtual port of the readonly group.
 

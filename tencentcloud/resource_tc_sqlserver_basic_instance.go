@@ -108,7 +108,7 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Default:     "2008R2",
-				Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+				Description: "Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 			},
 			"period": {
 				Type:         schema.TypeInt,

@@ -91,7 +91,7 @@ func dataSourceTencentCloudSqlserverReadonlyGroups() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the readonly group. 1 for running, 5 for applying.",
+							Description: "Status of the readonly group. `1` for running, `5` for applying.",
 						},
 					},
 				},

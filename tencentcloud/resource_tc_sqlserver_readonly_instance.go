@@ -50,7 +50,7 @@ func resourceTencentCloudSqlserverReadonlyInstance() *schema.Resource {
 			ForceNew:     true,
 			Required:     true,
 			ValidateFunc: validateAllowedIntValue([]int{1, 3}),
-			Description:  "Type of readonly group. Valid values: 1, 3. 1 for one auto-assigned readonly instance per one readonly group, 2 for creating new readonly group, 3 for all exist readonly instances stay in the exist readonly group. For now, only 1 and 3 are supported.",
+			Description:  "Type of readonly group. Valid values: `1`, `3`. `1` for one auto-assigned readonly instance per one readonly group, `2` for creating new readonly group, `3` for all exist readonly instances stay in the exist readonly group. For now, only `1` and `3` are supported.",
 		},
 		"force_upgrade": {
 			Type:        schema.TypeBool,

@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
   * `charge_type` - Pay type of the SQL Server basic instance. For now, only `POSTPAID_BY_HOUR` is valid.
   * `cpu` - The CPU number of the SQL Server basic instance.
   * `create_time` - Create time of the SQL Server basic instance.
-  * `engine_version` - Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
+  * `engine_version` - Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
   * `id` - ID of the SQL Server basic instance.
   * `memory` - Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
   * `name` - Name of the SQL Server basic instance.
