@@ -87,7 +87,7 @@ func resourceTencentCloudAPIGatewayCustomDomain() *schema.Resource {
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Domain name resolution status.",
+				Description: "Domain name resolution status. `1` means normal analysis, `0` means parsing failed.",
 			},
 		},
 	}

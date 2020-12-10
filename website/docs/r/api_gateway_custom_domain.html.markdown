@@ -43,6 +43,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `status` - Domain name resolution status.
+* `status` - Domain name resolution status. `1` means normal analysis, `0` means parsing failed.
 
 
