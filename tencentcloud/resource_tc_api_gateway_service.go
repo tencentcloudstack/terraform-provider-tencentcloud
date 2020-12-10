@@ -87,7 +87,7 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				ForceNew:     true,
 				Default:      "IPv4",
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_NET_IP_VERSIONS),
-				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value is `IPv4`.",
+				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
