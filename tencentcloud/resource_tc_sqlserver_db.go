@@ -45,13 +45,13 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "SQLServer instance ID which DB belongs to.",
+				Description: "SQL Server instance ID which DB belongs to.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of SQL Server DB. The DataBase name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
+				Description: "Name of SQL Server DB. The database name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
 			},
 			"charset": {
 				Type:        schema.TypeString,
