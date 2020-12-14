@@ -42,32 +42,32 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 			"pub_or_sub_instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The subscribe/publish instance ID is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.",
+				Description: "The subscribe/publish instance ID. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.",
 			},
 			"pub_or_sub_instance_ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The intranet IP of the subscribe/publish instance is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.",
+				Description: "The intranet IP of the subscribe/publish instance. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.",
 			},
 			"publish_subscribe_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "The id of the Publish and Subscribe in the SQLServer instance.",
+				Description: "The id of the Publish and Subscribe.",
 			},
 			"publish_subscribe_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The name of the Publish and Subscribe in the SQLServer instance.",
+				Description: "The name of the Publish and Subscribe.",
 			},
 			"publish_database": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Publish the database.",
+				Description: "Name of publish database.",
 			},
 			"subscribe_database": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Subscribe to the database.",
+				Description: "Name of subscribe database.",
 			},
 			"publish_subscribe_list": {
 				Type:        schema.TypeList,
@@ -78,42 +78,42 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 						"publish_subscribe_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The id of the Publish and Subscribe in the SQLServer instance.",
+							Description: "The id of the Publish and Subscribe.",
 						},
 						"publish_subscribe_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The name of the Publish and Subscribe in the SQLServer instance.",
+							Description: "The name of the Publish and Subscribe.",
 						},
 						"publish_instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Publish the instance ID in the SQLServer instance.",
+							Description: "ID of the SQL Server instance which publish.",
 						},
 						"publish_instance_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Publish the instance name in the SQLServer instance.",
+							Description: "Name of the SQL Server instance which publish.",
 						},
 						"publish_instance_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Publish the instance IP in the SQLServer instance.",
+							Description: "IP of the the SQL Server instance which publish.",
 						},
 						"subscribe_instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Subscribe the instance ID in the SQLServer instance.",
+							Description: "ID of the SQL Server instance which subscribe.",
 						},
 						"subscribe_instance_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Subscribe the instance name in the SQLServer instance.",
+							Description: "Name of the SQL Server instance which subscribe.",
 						},
 						"subscribe_instance_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Subscribe the instance IP in the SQLServer instance.",
+							Description: "IP of the SQL Server instance which subscribe.",
 						},
 						"database_tuples": {
 							Type:        schema.TypeSet,
@@ -124,12 +124,12 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 									"publish_database": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Publish the database.",
+										Description: "Name of the publish SQL Server instance.",
 									},
 									"subscribe_database": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Subscribe to the database.",
+										Description: "Name of the subscribe SQL Server instance.",
 									},
 									"last_sync_time": {
 										Type:        schema.TypeString,
@@ -139,7 +139,7 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Publish and subscribe status between databases `running`, `success`, `fail`, `unknow`.",
+										Description: "Publish and subscribe status between databases, valid values are `running`, `success`, `fail`, `unknow`.",
 									},
 								},
 							},

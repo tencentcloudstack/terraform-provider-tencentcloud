@@ -71,7 +71,7 @@ The following arguments are supported:
 * `pre_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `protocol` - (Optional, ForceNew) API frontend request type. Valid values: `HTTP`, `WEBSOCKET`. Default value: `HTTP`.
 * `release_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
-* `request_config_method` - (Optional) Request frontend method configuration. Like `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.
+* `request_config_method` - (Optional) Request frontend method configuration. Valid values: `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.
 * `request_parameters` - (Optional) Frontend request parameters.
 * `response_error_codes` - (Optional) Custom error code configuration. Must keep at least one after set.
 * `response_fail_example` - (Optional) Response failure sample of custom response configuration.
@@ -82,9 +82,9 @@ The following arguments are supported:
 * `service_config_path` - (Optional) API backend service path, such as /path. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_path` and backend path `service_config_path` can be different.
 * `service_config_product` - (Optional) Backend type. This parameter takes effect when VPC is enabled. Currently, only `clb` is supported.
 * `service_config_scf_function_name` - (Optional) SCF function name. This parameter takes effect when `service_config_type` is `SCF`.
-* `service_config_scf_function_namespace` - (Optional) SCF function namespace. This parameter takes effect when  `service_config_type` is `SCF`.
+* `service_config_scf_function_namespace` - (Optional) SCF function namespace. This parameter takes effect when `service_config_type` is `SCF`.
 * `service_config_scf_function_qualifier` - (Optional) SCF function version. This parameter takes effect when `service_config_type` is `SCF`.
-* `service_config_timeout` - (Optional) API backend service timeout period in seconds. Default is `5`.
+* `service_config_timeout` - (Optional) API backend service timeout period in seconds. Default value: `5`.
 * `service_config_type` - (Optional) API backend service type. Valid values: `WEBSOCKET`, `HTTP`, `SCF`, `MOCK`. Default value: `HTTP`.
 * `service_config_url` - (Optional) API backend service url. This parameter is required when `service_config_type` is `HTTP`.
 * `service_config_vpc_id` - (Optional) Unique VPC ID.

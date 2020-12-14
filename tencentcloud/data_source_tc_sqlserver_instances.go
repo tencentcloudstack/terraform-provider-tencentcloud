@@ -81,12 +81,12 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+							Description: "Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 						},
 						"ha_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance type.",
+							Description: "Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster).",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -116,7 +116,7 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 						"ro_flag": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Readonly flag. `RO` for readonly instance, `MASTER` for master instance,  `` for not readonly instance.",
+							Description: "Readonly flag. `RO` (read-only instance), `MASTER` (primary instance with read-only instances). If it is left empty, it refers to an instance which is not read-only and has no RO group.",
 						},
 						"availability_zone": {
 							Type:        schema.TypeString,

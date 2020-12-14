@@ -49,7 +49,7 @@ The following arguments are supported:
 * `auto_voucher` - (Optional) Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the SQL Server basic instance. For now, only `POSTPAID_BY_HOUR` is valid.
-* `engine_version` - (Optional, ForceNew) Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
+* `engine_version` - (Optional, ForceNew) Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
 * `maintenance_start_time` - (Optional) Start time of the maintenance in one day, format like `HH:mm`.
 * `maintenance_time_span` - (Optional) The timespan of maintenance in one day, unit is hour.
 * `maintenance_week_set` - (Optional) A list of integer indicates weekly maintenance. For example, [1,7] presents do weekly maintenance on every Monday and Sunday.

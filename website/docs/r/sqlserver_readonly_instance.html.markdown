@@ -35,7 +35,7 @@ The following arguments are supported:
 * `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
 * `memory` - (Required) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
 * `name` - (Required) Name of the SQL Server instance.
-* `readonly_group_type` - (Required, ForceNew) Type of readonly group. Valid values: 1, 3. 1 for one auto-assigned readonly instance per one readonly group, 2 for creating new readonly group, 3 for all exist readonly instances stay in the exist readonly group. For now, only 1 and 3 are supported.
+* `readonly_group_type` - (Required, ForceNew) Type of readonly group. Valid values: `1`, `3`. `1` for one auto-assigned readonly instance per one readonly group, `2` for creating new readonly group, `3` for all exist readonly instances stay in the exist readonly group. For now, only `1` and `3` are supported.
 * `storage` - (Required) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the SQL Server instance. For now, only `POSTPAID_BY_HOUR` is valid.
@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the SQL Server instance.
-* `ro_flag` - Readonly flag. `RO` for readonly instance, `MASTER` for master instance,  `` for not readonly instance.
+* `ro_flag` - Readonly flag. `RO` (read-only instance), `MASTER` (primary instance with read-only instances). If it is left empty, it refers to an instance which is not read-only and has no RO group.
 * `status` - Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
 * `vip` - IP for private access.
 * `vport` - Port for private access.
