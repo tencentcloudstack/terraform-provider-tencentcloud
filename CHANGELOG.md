@@ -1,7 +1,12 @@
-## 1.50.1 (Unreleased)
+## 1.51.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_tcr_vpc_attachment`
+* **New Data Source**: `tencentcloud_tcr_vpc_attachments` 
 
 ENHANCEMENTS:
-
+* Resource: `tencentcloud_kubernetes_cluster` support `name`, `project_id` and `description` modification.
 * Doc: optimize document.
 
 ## 1.50.0 (December 08, 2020)
