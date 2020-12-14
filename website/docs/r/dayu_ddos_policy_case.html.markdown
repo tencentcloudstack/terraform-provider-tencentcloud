@@ -75,6 +75,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the DDoS policy case.
-* `scene_id` - Id of the DDoS policy case.
+* `scene_id` - ID of the DDoS policy case.
 
 

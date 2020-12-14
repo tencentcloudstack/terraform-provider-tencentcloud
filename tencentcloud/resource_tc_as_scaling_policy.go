@@ -55,24 +55,24 @@ func resourceTencentCloudAsScalingPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_ADJUSTMENT_TYPE),
-				Description:  "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values: CHANGE_IN_CAPACITY, EXACT_CAPACITY and PERCENT_CHANGE_IN_CAPACITY.",
+				Description:  "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Valid values: `CHANGE_IN_CAPACITY`, `EXACT_CAPACITY` and `PERCENT_CHANGE_IN_CAPACITY`.",
 			},
 			"adjustment_value": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Define the number of instances by which to scale.For CHANGE_IN_CAPACITY type or PERCENT_CHANGE_IN_CAPACITY, a positive increment adds to the current capacity and a negative value removes from the current capacity. For EXACT_CAPACITY type, it defines an absolute number of the existing Auto Scaling group size.",
+				Description: "Define the number of instances by which to scale.For `CHANGE_IN_CAPACITY` type or PERCENT_CHANGE_IN_CAPACITY, a positive increment adds to the current capacity and a negative value removes from the current capacity. For `EXACT_CAPACITY` type, it defines an absolute number of the existing Auto Scaling group size.",
 			},
 			"comparison_operator": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_COMPARISON_OPERATOR),
-				Description:  "Comparison operator. Valid values: GREATER_THAN, GREATER_THAN_OR_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO, EQUAL_TO and NOT_EQUAL_TO.",
+				Description:  "Comparison operator. Valid values: `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `EQUAL_TO` and `NOT_EQUAL_TO`.",
 			},
 			"metric_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_METRIC_NAME),
-				Description:  "Name of an indicator. Valid values: CPU_UTILIZATION, MEM_UTILIZATION, LAN_TRAFFIC_OUT, LAN_TRAFFIC_IN, WAN_TRAFFIC_OUT and WAN_TRAFFIC_IN.",
+				Description:  "Name of an indicator. Valid values: `CPU_UTILIZATION`, `MEM_UTILIZATION`, `LAN_TRAFFIC_OUT`, `LAN_TRAFFIC_IN`, `WAN_TRAFFIC_OUT` and `WAN_TRAFFIC_IN`.",
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
@@ -83,7 +83,7 @@ func resourceTencentCloudAsScalingPolicy() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAllowedIntValue([]int{60, 300}),
-				Description:  "Time period in second. Valid values: 60 and 300.",
+				Description:  "Time period in second. Valid values: `60` and `300`.",
 			},
 			"continuous_time": {
 				Type:         schema.TypeInt,
@@ -96,13 +96,13 @@ func resourceTencentCloudAsScalingPolicy() *schema.Resource {
 				Optional:     true,
 				Default:      SCALING_GROUP_STATISTIC_AVERAGE,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_STATISTIC),
-				Description:  "Statistic types. Valid values: AVERAGE, MAXIMUM and MINIMUM. Default is AVERAGE.",
+				Description:  "Statistic types. Valid values: `AVERAGE`, `MAXIMUM` and `MINIMUM`. Default is `AVERAGE`.",
 			},
 			"cooldown": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     300,
-				Description: "Cooldwon time in second. Default is 300.",
+				Description: "Cooldwon time in second. Default is `30`0.",
 			},
 			"notification_user_group_ids": {
 				Type:        schema.TypeList,

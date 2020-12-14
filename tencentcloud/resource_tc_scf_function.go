@@ -148,12 +148,12 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "VPC id of the SCF function.",
+				Description: "VPC ID of the SCF function.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Subnet id of the SCF function.",
+				Description: "Subnet ID of the SCF function.",
 			},
 			"namespace": {
 				Type:        schema.TypeString,

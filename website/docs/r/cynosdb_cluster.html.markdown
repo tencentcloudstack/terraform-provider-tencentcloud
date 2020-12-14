@@ -74,7 +74,7 @@ The following arguments are supported:
 * `instance_maintain_start_time` - (Optional) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 * `port` - (Optional, ForceNew) Port of CynosDB cluster.
-* `prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
+* `prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.

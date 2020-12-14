@@ -43,8 +43,8 @@ In addition to all arguments above, the following attributes are exported:
 * `list` - A list of API keys.
   * `access_key_secret` - Created API key.
   * `api_key_id` - API key ID.
-  * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
-  * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
-  * `status` - Key status. Valid values: `on`, `off`.
+  * `create_time` - Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
+  * `modify_time` - Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
+  * `status` - Key status. Values: `on`, `off`.
 
 

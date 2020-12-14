@@ -25,8 +25,8 @@ resource "tencentcloud_tcr_namespace" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) Id of the TCR instance.
-* `name` - (Required, ForceNew) Name of the TCR namespace. Valid length is 2~30. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`), and cannot start, end or continue with separators.
+* `instance_id` - (Required, ForceNew) ID of the TCR instance.
+* `name` - (Required, ForceNew) Name of the TCR namespace. Valid length is [2~30]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`), and cannot start, end or continue with separators.
 * `is_public` - (Optional) Indicate that the namespace is public or not. Default is `false`.
 
 ## Attributes Reference

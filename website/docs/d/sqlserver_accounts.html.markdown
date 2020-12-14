@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - SQL server instance ID that the account belongs to.
   * `name` - Name of the SQL server account.
   * `remark` - Remark of the SQL Server account.
-  * `status` - Status of the SQL Server account. 1 for creating, 2 for running, 3 for modifying, 4 for resetting password, -1 for deleting.
+  * `status` - Status of the SQL Server account. `1` for creating, `2` for running, `3` for modifying, 4 for resetting password, -1 for deleting.
   * `update_time` - Last updated time of the SQL Server account.
 
 

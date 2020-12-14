@@ -28,12 +28,12 @@ func dataSourceTencentCloudTCRTokens() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the instance that the token belongs to.",
+				Description: "ID of the instance that the token belongs to.",
 			},
 			"token_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the TCR token to query.",
+				Description: "ID of the TCR token to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

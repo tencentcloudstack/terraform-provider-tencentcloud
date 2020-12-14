@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 * `list` - A list of usage plan binding details.
   * `api_id` - The API ID, this value is empty if attach service.
   * `api_name` - The API name, this value is empty if attach service.
-  * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
+  * `create_time` - Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
   * `environment` - The environment name.
   * `method` - The API method, this value is empty if attach service.
-  * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
+  * `modify_time` - Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
   * `path` - The API path, this value is empty if attach service.
   * `service_id` - The service ID.
   * `service_name` - The service name.

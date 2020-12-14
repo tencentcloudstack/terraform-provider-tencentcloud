@@ -29,7 +29,7 @@ The following arguments are supported:
 * `file_system_id` - (Optional) A specified file system ID used to query.
 * `name` - (Optional) A file system name used to query.
 * `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) ID of a vpc subnetwork.
+* `subnet_id` - (Optional) ID of a vpc subnet.
 * `vpc_id` - (Optional) ID of the vpc to be queried.
 
 ## Attributes Reference

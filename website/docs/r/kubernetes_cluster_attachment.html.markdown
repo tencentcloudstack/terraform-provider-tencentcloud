@@ -107,14 +107,14 @@ The following arguments are supported:
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `instance_id` - (Required, ForceNew) ID of the CVM instance, this cvm will reinstall the system.
 * `key_ids` - (Optional, ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
-* `labels` - (Optional, ForceNew) Labels of tke attachment exits cvm.
+* `labels` - (Optional, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
 
 The `data_disk` object supports the following:
 
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 
 The `worker_config` object supports the following:
 
@@ -129,6 +129,6 @@ The `worker_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `security_groups` - A list of security group ids after attach to cluster.
+* `security_groups` - A list of security group IDs after attach to cluster.
 
 

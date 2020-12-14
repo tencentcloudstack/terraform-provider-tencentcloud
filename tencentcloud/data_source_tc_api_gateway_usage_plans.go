@@ -77,22 +77,22 @@ func dataSourceTencentCloudAPIGatewayUsagePlans() *schema.Resource {
 						"max_request_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Total number of requests allowed. Valid values: -1, [1,99999999]. The default value is -1, which indicates no limit.",
+							Description: "Total number of requests allowed. Valid value formats: `-1`, `[1,99999999]`. The default value is -1, which indicates no limit.",
 						},
 						"max_request_num_pre_sec": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Limit of requests per second. Valid values: -1, [1,2000]. The default value is -1, which indicates no limit.",
+							Description: "Limit of requests per second. Valid values formats: `-1`, `[1,2000]`. The default value is -1, which indicates no limit.",
 						},
 						"modify_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
+							Description: "Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
+							Description: "Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.",
 						},
 					},
 				},

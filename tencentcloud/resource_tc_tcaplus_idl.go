@@ -86,13 +86,13 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
+				Description: "ID of the TcaplusDB cluster to which the table group belongs.",
 			},
 			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the table group to which the IDL file belongs.",
+				Description: "ID of the table group to which the IDL file belongs.",
 			},
 			"file_name": {
 				Type:        schema.TypeString,

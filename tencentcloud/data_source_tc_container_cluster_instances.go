@@ -28,14 +28,14 @@ import (
 
 func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.16.0. Please use 'tencentcloud_kubernetes_clusters' instead.",
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.16.0. Please use `tencentcloud_kubernetes_clusters` instead.",
 		Read:               dataSourceTencentCloudContainerClusterInstancesRead,
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "An id identify the cluster, like cls-xxxxxx.",
+				Description: "An ID identify the cluster, like cls-xxxxxx.",
 			},
 			"limit": {
 				Type:        schema.TypeInt,
@@ -81,12 +81,12 @@ func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 						"wan_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Describe the wan ip of the node.",
+							Description: "Describe the WAN IP of the node.",
 						},
 						"lan_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Describe the lan ip of the node.",
+							Description: "Describe the LAN IP of the node.",
 						},
 					},
 				},

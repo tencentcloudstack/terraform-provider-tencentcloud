@@ -31,17 +31,17 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the CLB listener to be queried.",
+				Description: "ID of the CLB listener to be queried.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the CLB listener rule. If the protocol of listener is HTTP/HTTPS, this para is required.",
+				Description: "ID of the CLB listener rule. If the protocol of listener is `HTTP`/`HTTPS`, this para is required.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -57,22 +57,22 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CLB.",
+							Description: "ID of the CLB.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CLB listener.",
+							Description: "ID of the CLB listener.",
 						},
 						"protocol_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.",
+							Description: "Type of protocol within the listener, and available values include `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`. NOTES: `TCP_SSL` is testing internally, please apply if you need to use.",
 						},
 						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CLB listener rule.",
+							Description: "ID of the CLB listener rule.",
 						},
 						"targets": {
 							Type:        schema.TypeSet,
@@ -93,7 +93,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 									"weight": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
+										Description: "Forwarding weight of the backend service, the range of [0, 100], defaults to `10`.",
 									},
 								},
 							},

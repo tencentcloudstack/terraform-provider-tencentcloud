@@ -66,7 +66,7 @@ func dataSourceTencentCloudDcInstances() *schema.Resource {
 						"state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "State of the DC, and available values include REJECTED, TOPAY, PAID, ALLOCATED, AVAILABLE, DELETING and DELETED.",
+							Description: "State of the DC, and available values include `REJECTED`, `TOPAY`, `PAID`, `ALLOCATED`, `AVAILABLE`, `DELETING` and `DELETED`.",
 						},
 						"access_point_id": {
 							Type:        schema.TypeString,
@@ -76,7 +76,7 @@ func dataSourceTencentCloudDcInstances() *schema.Resource {
 						"line_operator": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Operator of the DC, and available values include ChinaTelecom, ChinaMobile, ChinaUnicom, In-houseWiring, ChinaOther and InternationalOperator.",
+							Description: "Operator of the DC, and available values include `ChinaTelecom`, `ChinaMobile`, `ChinaUnicom`, `In-houseWiring`, `ChinaOther` and `InternationalOperator`.",
 						},
 						"location": {
 							Type:        schema.TypeString,
@@ -91,7 +91,7 @@ func dataSourceTencentCloudDcInstances() *schema.Resource {
 						"port_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Port type of the DC in client, and available values include 100Base-T, 1000Base-T, 1000Base-LX, 10GBase-T and 10GBase-LR. The default value is 1000Base-LX.",
+							Description: "Port type of the DC in client, and available values include `100Base-T`, `1000Base-T`, `1000Base-LX`, `10GBase-T` and `10GBase-LR`. The default value is `1000Base-LX`.",
 						},
 						"circuit_code": {
 							Type:        schema.TypeString,

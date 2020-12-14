@@ -37,11 +37,11 @@ The following arguments are supported:
 * `description` - (Optional) Description of the NAT forward.
 * `elastic_ip` - (Optional) Network address of the EIP.
 * `elastic_port` - (Optional) Port of the EIP.
-* `nat_id` - (Optional) Id of the NAT gateway.
+* `nat_id` - (Optional) ID of the NAT gateway.
 * `private_ip` - (Optional) Network address of the backend service.
 * `private_port` - (Optional) Port of intranet.
 * `result_output_file` - (Optional) Used to save results.
-* `vpc_id` - (Optional) Id of the VPC.
+* `vpc_id` - (Optional) ID of the VPC.
 
 ## Attributes Reference
 
@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 * `dnat_list` - Information list of the DNATs.
   * `elastic_ip` - Network address of the EIP.
   * `elastic_port` - Port of the EIP.
-  * `nat_id` - Id of the NAT.
+  * `nat_id` - ID of the NAT.
   * `private_ip` - Network address of the backend service.
   * `private_port` - Port of intranet.
   * `protocol` - Type of the network protocol. Valid values: `TCP` and `UDP`.
-  * `vpc_id` - Id of the VPC.
+  * `vpc_id` - ID of the VPC.
 
 

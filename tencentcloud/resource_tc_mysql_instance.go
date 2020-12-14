@@ -69,7 +69,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				return true
 			},
 			Default:     -1,
-			Description: "Pay type of instance. Valid values:0, 1. 0: prepaid, 1: postpaid.",
+			Description: "Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.",
 		},
 		"charge_type": {
 			Type:          schema.TypeString,
@@ -126,7 +126,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateIntegerInRange(1024, 65535),
 			Default:      3306,
-			Description:  "Public access port. Valid value ranges: (1024~65535). The default value is 3306.",
+			Description:  "Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.",
 		},
 		"mem_size": {
 			Type:        schema.TypeInt,
@@ -148,7 +148,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
-			Description:  "Private network ID. If vpc_id is set, this value is required.",
+			Description:  "Private network ID. If `vpc_id` is set, this value is required.",
 		},
 
 		"security_groups": {
@@ -171,7 +171,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Optional:    true,
 			Default:     false,
-			Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
+			Description: "Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
 		},
 		// Computed values
 		"intranet_ip": {
@@ -183,12 +183,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"locked": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether the instance is locked. Valid values: 0, 1. 0 - No; 1 - Yes.",
+			Description: "Indicates whether the instance is locked. Valid values: `0`, `1`. `0` - No; `1` - Yes.",
 		},
 		"status": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Instance status. Valid values: 0, 1, 4, 5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
+			Description: "Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.",
 		},
 		"task_status": {
 			Type:        schema.TypeInt,
@@ -199,7 +199,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"gtid": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether GTID is enable. 0 - Not enabled; 1 - Enabled.",
+			Description: "Indicates whether GTID is enable. `0` - Not enabled; `1` - Enabled.",
 		},
 	}
 }

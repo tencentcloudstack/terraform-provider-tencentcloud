@@ -97,7 +97,7 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.",
+							Description: "The maximum public network output bandwidth of VPN gateway (unit: Mbps).",
 						},
 						"public_ip_address": {
 							Type:        schema.TypeString,
@@ -107,22 +107,22 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.",
+							Description: "Type of gateway instance.",
 						},
 						"state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.",
+							Description: "State of the VPN gateway.",
 						},
 						"prepaid_renew_flag": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`.",
+							Description: "Flag indicates whether to renew or not.",
 						},
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.",
+							Description: "Charge Type of the VPN gateway.",
 						},
 						"expired_time": {
 							Type:        schema.TypeString,
@@ -137,12 +137,12 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"new_purchase_plan": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The plan of new purchase, valid value is `PREPAID_TO_POSTPAID`.",
+							Description: "The plan of new purchase.",
 						},
 						"restrict_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Restrict state of VPN gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.",
+							Description: "Restrict state of VPN gateway.",
 						},
 						"zone": {
 							Type:        schema.TypeString,

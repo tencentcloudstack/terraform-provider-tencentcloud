@@ -519,3 +519,117 @@ func (me *TCRService) DescribeTCRLongTermTokenById(ctx context.Context, instance
 	has = true
 	return
 }
+
+//VPC attachment
+func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewManageInternalEndpointRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = &instanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Operation = helper.String("Create")
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().ManageInternalEndpoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return
+}
+
+func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewManageInternalEndpointRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = &instanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Operation = helper.String("Delete")
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().ManageInternalEndpoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return
+}
+
+func (me *TCRService) DescribeTCRVPCAttachments(ctx context.Context, instanceId string, vpcId string, subnetId string) (vpcList []*tcr.AccessVpc, errRet error) {
+	logId := getLogId(ctx)
+	//sdk has internal error as invalid instance id para result
+	//to avoid error code check
+	//check instance exist first
+	_, insHas, err := me.DescribeTCRInstanceById(ctx, instanceId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if !insHas {
+		return
+	}
+
+	request := tcr.NewDescribeInternalEndpointsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DescribeInternalEndpoints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	for _, v := range response.Response.AccessVpcSet {
+		if vpcId != "" && *v.VpcId != vpcId {
+			continue
+		}
+		if subnetId != "" && *v.SubnetId != subnetId {
+			continue
+		}
+		vpcList = append(vpcList, v)
+	}
+	return
+}
+
+func (me *TCRService) DescribeTCRVPCAttachmentById(ctx context.Context, instanceId string, vpcId string, subnetId string) (vpcAccess *tcr.AccessVpc, has bool, errRet error) {
+	vpcAccesses, err := me.DescribeTCRVPCAttachments(ctx, instanceId, vpcId, subnetId)
+	if err != nil {
+		return nil, false, err
+	}
+
+	if len(vpcAccesses) == 0 {
+		return nil, has, nil
+	} else if len(vpcAccesses) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than 1 namespaces, %s %s %s", instanceId, vpcId, subnetId)
+		return
+	}
+
+	vpcAccess = vpcAccesses[0]
+	has = true
+	return
+}

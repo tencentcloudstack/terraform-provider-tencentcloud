@@ -34,7 +34,7 @@ func dataSourceTencentCloudProtocolTemplateGroups() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the protocol template group to query.",
+				Description: "ID of the protocol template group to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

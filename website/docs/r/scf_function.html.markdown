@@ -43,11 +43,11 @@ The following arguments are supported:
 * `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.
 * `namespace` - (Optional, ForceNew) Namespace of the SCF function, default is `default`.
 * `role` - (Optional) Role of the SCF function.
-* `subnet_id` - (Optional) Subnet id of the SCF function.
+* `subnet_id` - (Optional) Subnet ID of the SCF function.
 * `tags` - (Optional) Tags of the SCF function.
 * `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
-* `vpc_id` - (Optional) VPC id of the SCF function.
+* `vpc_id` - (Optional) VPC ID of the SCF function.
 * `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
 
 The `triggers` object supports the following:

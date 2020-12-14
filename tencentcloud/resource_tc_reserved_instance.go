@@ -45,7 +45,7 @@ func resourceTencentCloudReservedInstance() *schema.Resource {
 			"config_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Configuration id of the reserved instance.",
+				Description: "Configuration ID of the reserved instance.",
 			},
 			"instance_count": {
 				Type:         schema.TypeInt,

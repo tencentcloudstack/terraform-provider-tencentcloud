@@ -44,21 +44,21 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(7, 732),
 				Optional:     true,
 				Default:      7,
-				Description:  "Instance backup retention days. Valid value ranges: (7~730). And default value is 7.",
+				Description:  "Instance backup retention days. Valid value ranges: [7~730]. And default value is `7`.",
 			},
 			"backup_model": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      MYSQL_ALLOW_BACKUP_MODEL[1],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_MODEL),
-				Description:  "Backup method. Supported values include: 'physical' - physical backup.",
+				Description:  "Backup method. Supported values include: `physical` - physical backup.",
 			},
 			"backup_time": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      MYSQL_ALLOW_BACKUP_TIME[0],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_TIME),
-				Description:  `Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00-06:00, 06:00-10:00, 10:00-14:00, 14:00-18:00, 18:00-22:00, and 22:00-02:00.`,
+				Description:  "Instance backup time, in the format of 'HH:mm-HH:mm'. Time setting interval is four hours. Default to `02:00-06:00`. The following value can be supported: `02:00-06:00`, `06:00-10:00`, `10:00-14:00`, `14:00-18:00`, `18:00-22:00`, and `22:00-02:00`.",
 			},
 
 			// Computed values

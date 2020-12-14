@@ -43,20 +43,20 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `gateway_list` - Information list of the dedicated gateways.
-  * `bandwidth` - The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.
-  * `charge_type` - Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.
+  * `bandwidth` - The maximum public network output bandwidth of VPN gateway (unit: Mbps).
+  * `charge_type` - Charge Type of the VPN gateway.
   * `create_time` - Create time of the VPN gateway.
   * `expired_time` - Expired time of the VPN gateway when charge type is `PREPAID`.
   * `id` - ID of the VPN gateway.
   * `is_address_blocked` - Indicates whether ip address is blocked.
   * `name` - Name of the VPN gateway.
-  * `new_purchase_plan` - The plan of new purchase, valid value is `PREPAID_TO_POSTPAID`.
-  * `prepaid_renew_flag` - Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`.
+  * `new_purchase_plan` - The plan of new purchase.
+  * `prepaid_renew_flag` - Flag indicates whether to renew or not.
   * `public_ip_address` - Public ip of the VPN gateway.
-  * `restrict_state` - Restrict state of VPN gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.
-  * `state` - State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.
+  * `restrict_state` - Restrict state of VPN gateway.
+  * `state` - State of the VPN gateway.
   * `tags` - A list of tags used to associate different resources.
-  * `type` - Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.
+  * `type` - Type of gateway instance.
   * `vpc_id` - ID of the VPC.
   * `zone` - Zone of the VPN gateway.
 

@@ -65,7 +65,7 @@ func dataSourceTencentCloudAPIGatewayAPIKeys() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Key status. Valid values: `on`, `off`.",
+							Description: "Key status. Values: `on`, `off`.",
 						},
 						"access_key_secret": {
 							Type:        schema.TypeString,
@@ -75,12 +75,12 @@ func dataSourceTencentCloudAPIGatewayAPIKeys() *schema.Resource {
 						"modify_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
+							Description: "Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
+							Description: "Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.",
 						},
 					},
 				},

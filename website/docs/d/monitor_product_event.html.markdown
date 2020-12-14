@@ -58,18 +58,18 @@ In addition to all arguments above, the following attributes are exported:
     * `value` - The value of this dimension.
   * `event_cname` - Event chinese name.
   * `event_ename` - Event english name.
-  * `event_id` - Event id.
+  * `event_id` - Event ID.
   * `event_name` - Event short name.
   * `group_info` - A list of group info. Each element contains the following attributes:
-    * `group_id` - Policy group id.
+    * `group_id` - Policy group ID.
     * `group_name` - Policy group name.
-  * `instance_id` - The instance id of this event.
+  * `instance_id` - The instance ID of this event.
   * `instance_name` - The name of this instance.
   * `is_alarm_config` - Whether to configure alarm.
   * `product_cname` - Product chinese name.
   * `product_ename` - Product english name.
   * `product_name` - Product short name.
-  * `project_id` - Project id of this instance.
+  * `project_id` - Project ID of this instance.
   * `region` - The region of this instance.
   * `start_time` - The start timestamp of this event.
   * `status` - The status of this event.

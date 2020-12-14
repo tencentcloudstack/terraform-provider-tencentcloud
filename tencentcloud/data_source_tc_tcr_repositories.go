@@ -30,7 +30,7 @@ func dataSourceTencentCloudTCRRepositories() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the TCR instance that the repository belongs to.",
+				Description: "ID of the TCR instance that the repository belongs to.",
 			},
 			"namespace_name": {
 				Type:        schema.TypeString,
@@ -40,7 +40,7 @@ func dataSourceTencentCloudTCRRepositories() *schema.Resource {
 			"repository_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the TCR repositories to query.",
+				Description: "ID of the TCR repositories to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

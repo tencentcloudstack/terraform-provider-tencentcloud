@@ -65,17 +65,17 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Vpc Id of the cluster.",
+			Description: "Vpc ID of the cluster.",
 		},
 		"project_id": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Project Id of the cluster.",
+			Description: "Project ID of the cluster.",
 		},
 		"cluster_cidr": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc.",
+			Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this VPC.",
 		},
 		"ignore_cluster_cidr_conflict": {
 			Type:        schema.TypeBool,
@@ -100,7 +100,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"node_name_type": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Node name type of Cluster.",
+			Description: "Node name type of cluster.",
 		},
 		"cluster_extra_args": {
 			Type:     schema.TypeList,
@@ -154,7 +154,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Computed:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "Subnet Ids for cluster with VPC-CNI network mode.",
+			Description: "Subnet IDs for cluster with VPC-CNI network mode.",
 		},
 		"claim_expired_seconds": {
 			Type:        schema.TypeInt,

@@ -126,7 +126,7 @@ func dataSourceTencentCloudDayuL7Rules() *schema.Resource {
 						"health_check_code": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "HTTP Status Code. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
+							Description: "HTTP Status Code. `1` means the return value `1xx` is health. `2` means the return value `2xx` is health. `4` means the return value `3xx` is health. `8` means the return value `4xx` is health. `16` means the return value `5xx` is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
 						},
 						"health_check_path": {
 							Type:        schema.TypeString,
@@ -146,7 +146,7 @@ func dataSourceTencentCloudDayuL7Rules() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.",
+							Description: "Status of the rule. `0` for create/modify success, `2` for create/modify fail, `3` for delete success, `5` for waiting to be created/modified, `7` for waiting to be deleted and `8` for waiting to get SSL id.",
 						},
 						"threshold": {
 							Type:        schema.TypeInt,

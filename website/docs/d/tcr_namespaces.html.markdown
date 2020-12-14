@@ -24,8 +24,8 @@ data "tencentcloud_tcr_namespaces" "name" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Id of the instance that the namespace belongs to.
-* `namespace_name` - (Optional) Id of the TCR namespace to query.
+* `instance_id` - (Required) ID of the instance that the namespace belongs to.
+* `namespace_name` - (Optional) ID of the TCR namespace to query.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

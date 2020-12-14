@@ -111,7 +111,7 @@ func resourceTencentCloudCamRole() *schema.Resource {
 					flag := reflect.DeepEqual(oldJson, newJson)
 					return flag
 				},
-				Description: "Document of the CAM role. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.",
+				Description: "Document of the CAM role. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.",
 			},
 			"description": {
 				Type:        schema.TypeString,

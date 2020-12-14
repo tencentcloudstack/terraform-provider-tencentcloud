@@ -82,7 +82,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Whether to open the ip whitelist, true: open, false: close.",
+				Description: "Whether to open the ip whitelist, `true`: open, `false`: close.",
 			},
 			"ip_white_list": {
 				Type:        schema.TypeList,
@@ -101,13 +101,13 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 				Optional:     true,
 				Default:      60000,
 				ValidateFunc: validateIntegerMin(60000),
-				Description:  "Message can be selected. Retention time, unit ms, the current minimum value is 60000ms.",
+				Description:  "Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.",
 			},
 			"sync_replica_min_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "Min number of sync replicas, Default is 1.",
+				Description: "Min number of sync replicas, Default is `1`.",
 			},
 			"clean_up_policy": {
 				Type:        schema.TypeString,
@@ -156,7 +156,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"forward_status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Data backup cos status. Valid values: 0, 1. 1: do not open data backup, 0: open data backup.",
+				Description: "Data backup cos status. Valid values: `0`, `1`. `1`: do not open data backup, `0`: open data backup.",
 			},
 			"segment_bytes": {
 				Type:        schema.TypeInt,

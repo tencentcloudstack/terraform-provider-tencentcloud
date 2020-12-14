@@ -114,13 +114,13 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     300,
-				Description: "Default cooldown time in second, and default value is 300.",
+				Description: "Default cooldown time in second, and default value is `300`.",
 			},
 			"desired_capacity": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Desired volume of CVM instances, which is between max_size and min_size.",
+				Description: "Desired volume of CVM instances, which is between `max_size` and `min_size`.",
 			},
 			"load_balancer_ids": {
 				Type:          schema.TypeList,
@@ -133,7 +133,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"load_balancer_ids"},
-				Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
+				Description:   "List of application load balancers, which can't be specified with `load_balancer_ids` together.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"load_balancer_id": {

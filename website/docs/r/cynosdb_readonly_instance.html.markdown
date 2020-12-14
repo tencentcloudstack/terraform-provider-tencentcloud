@@ -39,7 +39,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) Cluster id which the readonly instance belongs to.
+* `cluster_id` - (Required, ForceNew) Cluster ID which the readonly instance belongs to.
 * `instance_cpu_core` - (Required) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_memory_size` - (Required) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_name` - (Required, ForceNew) Name of instance.

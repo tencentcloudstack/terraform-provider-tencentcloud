@@ -44,7 +44,7 @@ func resourceTencentCloudTcrToken() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the TCR instance.",
+				Description: "ID of the TCR instance.",
 			},
 			"enable": {
 				Type:        schema.TypeBool,
@@ -56,7 +56,7 @@ func resourceTencentCloudTcrToken() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Description of the token. Valid length is 0~255.",
+				Description: "Description of the token. Valid length is [0~255].",
 			},
 			//computed
 			"token_id": {

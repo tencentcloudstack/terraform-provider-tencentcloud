@@ -52,21 +52,21 @@ func resourceTencentCloudAsLifecycleHook() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"INSTANCE_LAUNCHING", "INSTANCE_TERMINATING"}),
-				Description:  "The instance state to which you want to attach the lifecycle hook. Valid values: INSTANCE_LAUNCHING and INSTANCE_TERMINATING.",
+				Description:  "The instance state to which you want to attach the lifecycle hook. Valid values: `INSTANCE_LAUNCHING` and `INSTANCE_TERMINATING`.",
 			},
 			"default_result": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "CONTINUE",
 				ValidateFunc: validateAllowedStringValue([]string{"CONTINUE", "ABANDON"}),
-				Description:  "Defines the action the AS group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs. Valid values: CONTINUE and ABANDON. The default value is CONTINUE.",
+				Description:  "Defines the action the AS group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs. Valid values: `CONTINUE` and `ABANDON`. The default value is `CONTINUE`.",
 			},
 			"heartbeat_timeout": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      300,
 				ValidateFunc: validateIntegerInRange(30, 3600),
-				Description:  "Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~3600). and default value is 300.",
+				Description:  "Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~3600). and default value is `300`.",
 			},
 			"notification_metadata": {
 				Type:        schema.TypeString,
@@ -78,7 +78,7 @@ func resourceTencentCloudAsLifecycleHook() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"CMQ_QUEUE", "CMQ_TOPIC"}),
-				Description:  "Target type. Valid values: CMQ_QUEUE, CMQ_TOPIC.",
+				Description:  "Target type. Valid values: `CMQ_QUEUE`, `CMQ_TOPIC`.",
 			},
 			"notification_queue_name": {
 				Type:        schema.TypeString,

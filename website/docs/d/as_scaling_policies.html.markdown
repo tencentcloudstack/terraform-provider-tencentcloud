@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
   * `adjustment_value` - Adjustment value of the scaling rule.
   * `comparison_operator` - Comparison operator.
   * `continuous_time` - Retry times.
-  * `cooldown` - Cooldown time of the scaling rule.
+  * `cooldown` - Cool down time of the scaling rule.
   * `metric_name` - Name of an indicator.
   * `notification_user_group_ids` - Users need to be notified when an alarm is triggered.
   * `period` - Time period in second.

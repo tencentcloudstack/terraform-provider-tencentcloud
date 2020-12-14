@@ -45,11 +45,11 @@ data "tencentcloud_tcaplus_tables" "all" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) Id of the TcaplusDB cluster to be query.
+* `cluster_id` - (Required) ID of the TcaplusDB cluster to be query.
 * `result_output_file` - (Optional) File for saving results.
-* `table_id` - (Optional) Table id to be query.
+* `table_id` - (Optional) Table ID to be query.
 * `table_name` - (Optional) Table name to be query.
-* `tablegroup_id` - (Optional) Id of the table group to be query.
+* `tablegroup_id` - (Optional) ID of the table group to be query.
 
 ## Attributes Reference
 
@@ -64,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `reserved_volume` - Reserved storage capacity of the TcaplusDB table (unit:GB).
   * `reserved_write_cu` - Reserved write capacity units of the TcaplusDB table.
   * `status` - Status of the TcaplusDB table.
-  * `table_id` - Id of the TcaplusDB table.
+  * `table_id` - ID of the TcaplusDB table.
   * `table_idl_type` - IDL type of  the TcaplusDB table.
-  * `table_name` - Name of  the TcaplusDB table.
+  * `table_name` - Name of the TcaplusDB table.
   * `table_size` - Size of the TcaplusDB table.
   * `table_type` - Type of the TcaplusDB table.
   * `tablegroup_id` - Table group id of the TcaplusDB table.

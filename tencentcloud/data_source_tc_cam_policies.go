@@ -42,7 +42,7 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 			"policy_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of CAM policy to be queried.",
+				Description: "ID of CAM policy to be queried.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -53,13 +53,13 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2}),
-				Description:  "Type of the policy strategy. Valid values: 1, 2. 1 means customer strategy and 2 means preset strategy.",
+				Description:  "Type of the policy strategy. Valid values: `1`, `2`. `1` means customer strategy and `2` means preset strategy.",
 			},
 			"create_mode": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2}),
-				Description:  "Mode of creation of policy strategy. Valid values: 1, 2. 1 means policy was created with console, and 2 means it was created by strategies.",
+				Description:  "Mode of creation of policy strategy. Valid values: `1`, `2`. `1` means policy was created with console, and `2` means it was created by strategies.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -100,17 +100,17 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 						"type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Type of the policy strategy. 1 means customer strategy and 2 means preset strategy.",
+							Description: "Type of the policy strategy. `1` means customer strategy and `2` means preset strategy.",
 						},
 						"create_mode": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Mode of creation of policy strategy. 1 means policy was created with console, and 2 means it was created by strategies.",
+							Description: "Mode of creation of policy strategy. `1` means policy was created with console, and `2` means it was created by strategies.",
 						},
 						"policy_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the policy strategy.",
+							Description: "ID of the policy strategy.",
 						},
 					},
 				},

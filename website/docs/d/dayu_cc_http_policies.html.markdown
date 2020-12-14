@@ -30,7 +30,7 @@ data "tencentcloud_dayu_cc_http_policies" "name_test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource that the CC http policy works for.
+* `resource_id` - (Required) ID of the resource that the CC http policy works for.
 * `resource_type` - (Required) Type of the resource that the CC http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
 * `name` - (Optional) Name of the CC http policy to be queried.
 * `policy_id` - (Optional) Id of the CC http policy to be queried.
@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `action` - Action mode.
   * `create_time` - Create time of the CC self-define http policy.
   * `frequency` - Max frequency per minute.
-  * `ip_list` - Ip of the CC self-define http policy.
+  * `ip_list` - IP of the CC self-define http policy.
   * `name` - Name of the CC self-define http policy.
-  * `policy_id` - Id of the CC self-define http policy.
+  * `policy_id` - ID of the CC self-define http policy.
   * `resource_id` - ID of the resource that the CC self-define http policy works for.
   * `resource_type` - Type of the resource that the CC self-define http policy works for.
   * `smode` - Match mode.

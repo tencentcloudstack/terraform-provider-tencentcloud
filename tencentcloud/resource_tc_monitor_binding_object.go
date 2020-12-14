@@ -58,7 +58,7 @@ func resourceTencentMonitorBindingObject() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Policy group id for binding objects.",
+				Description: "Policy group ID for binding objects.",
 			},
 			"dimensions": {
 				Type:        schema.TypeSet,
@@ -85,7 +85,7 @@ func resourceTencentMonitorBindingObject() *schema.Resource {
 						"unique_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Object unique id.",
+							Description: "Object unique ID.",
 						},
 					},
 				},

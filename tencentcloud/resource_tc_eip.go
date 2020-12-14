@@ -88,7 +88,7 @@ func resourceTencentCloudEip() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "The bandwidth limit of eip, unit is Mbps.",
+				Description: "The bandwidth limit of EIP, unit is Mbps.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -100,12 +100,12 @@ func resourceTencentCloudEip() *schema.Resource {
 			"public_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The elastic ip address.",
+				Description: "The elastic IP address.",
 			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The eip current status.",
+				Description: "The EIP current status.",
 			},
 		},
 	}

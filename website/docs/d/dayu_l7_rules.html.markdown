@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of layer 7 rules. Each element contains the following attributes:
   * `domain` - Domain that the 7 layer rule works for.
-  * `health_check_code` - HTTP Status Code. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.
+  * `health_check_code` - HTTP Status Code. `1` means the return value `1xx` is health. `2` means the return value `2xx` is health. `4` means the return value `3xx` is health. `8` means the return value `4xx` is health. `16` means the return value `5xx` is health. If you want multiple return codes to indicate health, need to add the corresponding values.
   * `health_check_health_num` - Health threshold of health check.
   * `health_check_interval` - Interval time of health check.
   * `health_check_method` - Methods of health check.
@@ -55,7 +55,7 @@ In addition to all arguments above, the following attributes are exported:
   * `source_list` - Source list of the rule.
   * `source_type` - Source type, 1 for source of host, 2 for source of ip.
   * `ssl_id` - SSL id.
-  * `status` - Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.
+  * `status` - Status of the rule. `0` for create/modify success, `2` for create/modify fail, `3` for delete success, `5` for waiting to be created/modified, `7` for waiting to be deleted and `8` for waiting to get SSL id.
   * `switch` - Indicate the rule will take effect or not.
   * `threshold` - Threshold of the rule.
 

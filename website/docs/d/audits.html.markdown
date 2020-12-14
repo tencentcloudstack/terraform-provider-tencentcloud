@@ -33,7 +33,7 @@ In addition to all arguments above, the following attributes are exported:
 * `audit_list` - Information list of the dedicated audits.
   * `audit_switch` - Indicate whether audit start logging or not.
   * `cos_bucket` - Cos bucket name where audit save logs.
-  * `id` - Id of the audit.
+  * `id` - ID of the audit.
   * `log_file_prefix` - Prefix of the log file of the audit.
   * `name` - Name of the audit.
 

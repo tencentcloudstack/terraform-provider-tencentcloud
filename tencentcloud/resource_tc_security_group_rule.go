@@ -113,7 +113,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"TCP", "UDP", "ICMP"}),
-				Description:  "Type of ip protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `protocol_template`.",
+				Description:  "Type of IP protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `protocol_template`.",
 			},
 			"port_range": {
 				Type:     schema.TypeString,

@@ -54,7 +54,7 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "IDL type of the TcaplusDB cluster. Valid values: PROTO and TDR.",
+				Description:  "IDL type of the TcaplusDB cluster. Valid values: `PROTO` and `TDR`.",
 			},
 			"cluster_name": {
 				Type:         schema.TypeString,
@@ -136,12 +136,12 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 			"api_access_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access id of the TcaplusDB cluster.For TcaplusDB SDK connect.",
+				Description: "Access ID of the TcaplusDB cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access ip of the TcaplusDB cluster.For TcaplusDB SDK connect.",
+				Description: "Access IP of the TcaplusDB cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_port": {
 				Type:        schema.TypeInt,

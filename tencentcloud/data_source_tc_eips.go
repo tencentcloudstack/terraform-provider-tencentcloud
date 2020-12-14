@@ -29,12 +29,12 @@ func dataSourceTencentCloudEips() *schema.Resource {
 			"eip_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the eip to be queried.",
+				Description: "ID of the EIP to be queried.",
 			},
 			"eip_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the eip to be queried.",
+				Description: "Name of the EIP to be queried.",
 			},
 			"public_ip": {
 				Type:        schema.TypeString,
@@ -44,7 +44,7 @@ func dataSourceTencentCloudEips() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "The tags of eip.",
+				Description: "The tags of EIP.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -55,28 +55,28 @@ func dataSourceTencentCloudEips() *schema.Resource {
 			"eip_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "An information list of eip. Each element contains the following attributes:",
+				Description: "An information list of EIP. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"eip_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the eip.",
+							Description: "ID of the EIP.",
 						},
 						"eip_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the eip.",
+							Description: "Name of the EIP.",
 						},
 						"eip_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the eip.",
+							Description: "Type of the EIP.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The eip current status.",
+							Description: "The EIP current status.",
 						},
 						"public_ip": {
 							Type:        schema.TypeString,
@@ -86,22 +86,22 @@ func dataSourceTencentCloudEips() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The instance id to bind with the eip.",
+							Description: "The instance id to bind with the EIP.",
 						},
 						"eni_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The eni id to bind with the eip.",
+							Description: "The eni id to bind with the EIP.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time of the eip.",
+							Description: "Creation time of the EIP.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Tags of the eip.",
+							Description: "Tags of the EIP.",
 						},
 					},
 				},

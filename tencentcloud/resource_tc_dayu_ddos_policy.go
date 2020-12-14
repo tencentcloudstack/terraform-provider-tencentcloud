@@ -251,7 +251,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
-							Description:  "The type of forbidden port. Valid values: 0, 1, 2. 0 for destination ports make effect, 1 for source ports make effect. 2 for both destination and source ports.",
+							Description:  "The type of forbidden port. Valid values: `0`, `1`, `2`. `0` for destination ports make effect, `1` for source ports make effect. `2` for both destination and source ports.",
 						},
 					},
 				},
@@ -264,7 +264,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 					ValidateFunc: validateIp,
 				},
 				Optional:    true,
-				Description: "Black ip list.",
+				Description: "Black IP list.",
 			},
 			"white_ips": {
 				Type: schema.TypeSet,
@@ -273,7 +273,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 					ValidateFunc: validateIp,
 				},
 				Optional:    true,
-				Description: "White ip list.",
+				Description: "White IP list.",
 			},
 			"packet_filters": {
 				Type:     schema.TypeList,

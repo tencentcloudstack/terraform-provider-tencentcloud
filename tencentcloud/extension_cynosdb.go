@@ -175,7 +175,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue(CYNOSDB_PREPAID_PERIOD),
-			Description:  "The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.",
+			Description:  "The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.",
 		},
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,

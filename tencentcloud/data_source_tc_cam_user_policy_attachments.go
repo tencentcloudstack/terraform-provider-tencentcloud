@@ -37,18 +37,18 @@ func dataSourceTencentCloudCamUserPolicyAttachments() *schema.Resource {
 			"user_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the attached CAM user to be queried.",
+				Description: "ID of the attached CAM user to be queried.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of CAM policy to be queried.",
+				Description: "ID of CAM policy to be queried.",
 			},
 			"create_mode": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2}),
-				Description:  "Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+				Description:  "Mode of Creation of the CAM user policy attachment. `1` means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:         schema.TypeString,
@@ -70,7 +70,7 @@ func dataSourceTencentCloudCamUserPolicyAttachments() *schema.Resource {
 						"user_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of CAM user.",
+							Description: "ID of CAM user.",
 						},
 						"policy_id": {
 							Type:        schema.TypeString,
@@ -80,7 +80,7 @@ func dataSourceTencentCloudCamUserPolicyAttachments() *schema.Resource {
 						"create_mode": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+							Description: "Mode of Creation of the CAM user policy attachment. `1` means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 						},
 						"policy_type": {
 							Type:        schema.TypeString,

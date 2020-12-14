@@ -47,7 +47,7 @@ func resourceTencentCloudHaVipEipAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached HA VIP.",
+				Description: "ID of the attached HA VIP.",
 			},
 			"address_ip": {
 				Type:         schema.TypeString,

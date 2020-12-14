@@ -23,7 +23,7 @@ data "tencentcloud_tcr_instances" "name" {
 
 The following arguments are supported:
 
-* `instance_id` - (Optional) Id of the TCR instance to query.
+* `instance_id` - (Optional) ID of the TCR instance to query.
 * `name` - (Optional) Name of the TCR instance to query.
 * `result_output_file` - (Optional) Used to save results.
 
@@ -32,7 +32,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - Information list of the dedicated TCR instances.
-  * `id` - Id of the TCR instance.
+  * `id` - ID of the TCR instance.
   * `instance_type` - Instance type.
   * `internal_end_point` - Internal address for access of the TCR instance.
   * `name` - Name of TCR instance.

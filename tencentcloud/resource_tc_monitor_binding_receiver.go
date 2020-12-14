@@ -61,7 +61,7 @@ func resourceTencentMonitorBindingAlarmReceiver() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Policy group id for binding receivers.",
+				Description: "Policy group ID for binding receivers.",
 			},
 			"receivers": {
 				Type:        schema.TypeList,
@@ -101,13 +101,13 @@ func resourceTencentMonitorBindingAlarmReceiver() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Optional:    true,
-							Description: "Alarm receive group id list.",
+							Description: "Alarm receive group ID list.",
 						},
 						"receiver_user_list": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Optional:    true,
-							Description: "Alarm receiver id list.",
+							Description: "Alarm receiver ID list.",
 						},
 						"receive_language": {
 							Type:         schema.TypeString,

@@ -44,7 +44,7 @@ func dataSourceTencentCloudAuditKeyAlias() *schema.Resource {
 						"key_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Key id.",
+							Description: "Key ID.",
 						},
 						"key_alias": {
 							Type:        schema.TypeString,

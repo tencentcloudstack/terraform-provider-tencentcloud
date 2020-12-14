@@ -47,7 +47,7 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of CAM group.",
+				Description: "ID of CAM group.",
 			},
 			"user_ids": {
 				Type:     schema.TypeSet,
@@ -55,7 +55,7 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Id set of the CAM group members.",
+				Description: "ID set of the CAM group members.",
 			},
 		},
 	}

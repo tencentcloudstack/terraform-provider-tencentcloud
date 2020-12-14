@@ -55,7 +55,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - Information list of the DCG route entries.
-  * `as_path` - As_Path list of the BGP.
+  * `as_path` - As path list of the BGP.
   * `cidr_block` - A network address segment of IDC.
   * `dcg_id` - ID of the DCG.
   * `route_id` - ID of the DCG route.

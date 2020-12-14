@@ -35,7 +35,7 @@ func dataSourceTencentCloudCamRoles() *schema.Resource {
 			"role_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the CAM role to be queried.",
+				Description: "ID of the CAM role to be queried.",
 			},
 			"description": {
 				Type:        schema.TypeString,

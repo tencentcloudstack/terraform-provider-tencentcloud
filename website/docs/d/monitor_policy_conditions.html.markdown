@@ -33,7 +33,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list policy condition. Each element contains the following attributes:
   * `event_metrics` - A list of event condition metrics. Each element contains the following attributes:
-    * `event_id` - The id of this event metric.
+    * `event_id` - The ID of this event metric.
     * `event_show_name` - The name of this event metric.
     * `need_recovered` - Whether to recover.
   * `is_support_multi_region` - Whether to support multi region.
@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
     * `continue_time_default` - The default continue time(seconds) config for this metric.
     * `continue_time_keys` - The continue time(seconds) keys for this metric.
     * `continue_time_need` - Whether `continue_time` required in the configuration.
-    * `metric_id` - The id of this metric.
+    * `metric_id` - The ID of this metric.
     * `metric_show_name` - The name of this metric.
     * `metric_unit` - The unit of this metric.
     * `period_default` - The default data time(seconds) config for this metric.

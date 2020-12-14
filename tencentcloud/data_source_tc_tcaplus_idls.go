@@ -27,7 +27,7 @@ func dataSourceTencentCloudTcaplusIdls() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the TcaplusDB cluster to be query.",
+				Description: "ID of the TcaplusDB cluster to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -43,7 +43,7 @@ func dataSourceTencentCloudTcaplusIdls() *schema.Resource {
 						"idl_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the IDL.",
+							Description: "ID of the IDL.",
 						},
 					},
 				},

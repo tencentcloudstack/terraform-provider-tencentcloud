@@ -210,7 +210,7 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 			"scene_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the DDoS policy case.",
+				Description: "ID of the DDoS policy case.",
 			},
 		},
 	}

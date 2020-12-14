@@ -46,23 +46,23 @@ The following arguments are supported:
 * `resource_id` - (Required, ForceNew) ID of the resource that the layer 7 rule works for.
 * `resource_type` - (Required, ForceNew) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
 * `source_list` - (Required) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 16.
-* `source_type` - (Required) Source type, 1 for source of host, 2 for source of ip.
+* `source_type` - (Required) Source type, `1` for source of host, `2` for source of IP.
 * `switch` - (Required) Indicate the rule will take effect or not.
-* `health_check_code` - (Optional) HTTP Status Code. The default is 26. Valid value ranges: (1~31). 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.
-* `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.
-* `health_check_interval` - (Optional) Interval time of health check. Valid value ranges: (10~60)sec. The default is 15 sec.
+* `health_check_code` - (Optional) HTTP Status Code. The default is `26`. Valid value ranges: [1~31]. `1` means the return value '1xx' is health. `2` means the return value '2xx' is health. `4` means the return value '3xx' is health. `8` means the return value '4xx' is health. `16` means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.
+* `health_check_health_num` - (Optional) Health threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is [2-10].
+* `health_check_interval` - (Optional) Interval time of health check. Valid value ranges: [10~60]sec. The default is 15 sec.
 * `health_check_method` - (Optional) Methods of health check. The default is 'HEAD', the available value are 'HEAD' and 'GET'.
 * `health_check_path` - (Optional) Path of health check. The default is `/`.
 * `health_check_switch` - (Optional) Indicates whether health check is enabled. The default is `false`.
-* `health_check_unhealth_num` - (Optional) Unhealthy threshold of health check, and the default is 3. If the unhealth result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is 2-10.
-* `ssl_id` - (Optional) SSL id, when the `protocol` is `https`, the field should be set with valid SSL id.
+* `health_check_unhealth_num` - (Optional) Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].
+* `ssl_id` - (Optional) SSL ID, when the `protocol` is `https`, the field should be set with valid SSL id.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `rule_id` - Id of the layer 7 rule.
-* `status` - Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for delete failed, 6 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.
+* `rule_id` - ID of the layer 7 rule.
+* `status` - Status of the rule. `0` for create/modify success, `2` for create/modify fail, `3` for delete success, `5` for delete failed, `6` for waiting to be created/modified, `7` for waiting to be deleted and 8 for waiting to get SSL ID.
 
 

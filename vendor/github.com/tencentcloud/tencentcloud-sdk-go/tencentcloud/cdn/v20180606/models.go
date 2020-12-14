@@ -213,6 +213,185 @@ type AdvanceCacheRule struct {
 	CacheTime *int64 `json:"CacheTime,omitempty" name:"CacheTime"`
 }
 
+type AdvancedAuthentication struct {
+
+	// 防盗链配置开关，on或off，开启时必须且只能配置一种模式，其余模式为null。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 时间戳防盗链高级版模式A配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeA *AdvancedAuthenticationTypeA `json:"TypeA,omitempty" name:"TypeA"`
+
+	// 时间戳防盗链高级版模式B配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeB *AdvancedAuthenticationTypeB `json:"TypeB,omitempty" name:"TypeB"`
+
+	// 时间戳防盗链高级版模式C配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeC *AdvancedAuthenticationTypeC `json:"TypeC,omitempty" name:"TypeC"`
+
+	// 时间戳防盗链高级版模式D配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeD *AdvancedAuthenticationTypeD `json:"TypeD,omitempty" name:"TypeD"`
+
+	// 时间戳防盗链高级版模式E配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeE *AdvancedAuthenticationTypeE `json:"TypeE,omitempty" name:"TypeE"`
+
+	// 时间戳防盗链高级版模式F配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeF *AdvancedAuthenticationTypeF `json:"TypeF,omitempty" name:"TypeF"`
+}
+
+type AdvancedAuthenticationTypeA struct {
+
+	// 用于计算签名的密钥，只允许字母和数字，长度6-32字节。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+
+	// uri串中签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
+
+	// uri串中时间的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	TimeParam *string `json:"TimeParam,omitempty" name:"TimeParam"`
+
+	// 过期时间，单位秒。
+	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
+
+	// 是否必须提供过期时间参数。
+	ExpireTimeRequired *bool `json:"ExpireTimeRequired,omitempty" name:"ExpireTimeRequired"`
+
+	// Url组成格式，如：${private_key}${schema}${host}${full_uri。
+	Format *string `json:"Format,omitempty" name:"Format"`
+
+	// 时间格式，dec，hex分别表示十进制，十六进制。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
+
+	// 鉴权失败时返回的状态码。
+	FailCode *int64 `json:"FailCode,omitempty" name:"FailCode"`
+
+	// 链接过期时返回的状态码。
+	ExpireCode *int64 `json:"ExpireCode,omitempty" name:"ExpireCode"`
+
+	// 需要鉴权的url路径列表。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+
+	// 保留字段。
+	Transformation *int64 `json:"Transformation,omitempty" name:"Transformation"`
+}
+
+type AdvancedAuthenticationTypeB struct {
+
+	// alpha键名。
+	KeyAlpha *string `json:"KeyAlpha,omitempty" name:"KeyAlpha"`
+
+	// beta键名。
+	KeyBeta *string `json:"KeyBeta,omitempty" name:"KeyBeta"`
+
+	// gamma键名。
+	KeyGamma *string `json:"KeyGamma,omitempty" name:"KeyGamma"`
+
+	// uri串中签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
+
+	// uri串中时间的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	TimeParam *string `json:"TimeParam,omitempty" name:"TimeParam"`
+
+	// 过期时间，单位秒。
+	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
+
+	// 时间格式，dec，hex分别表示十进制，十六进制。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
+
+	// 鉴权失败时返回的状态码。
+	FailCode *int64 `json:"FailCode,omitempty" name:"FailCode"`
+
+	// 链接过期时返回的状态码。
+	ExpireCode *int64 `json:"ExpireCode,omitempty" name:"ExpireCode"`
+
+	// 需要鉴权的url路径列表。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+}
+
+type AdvancedAuthenticationTypeC struct {
+
+	// 访问密钥。
+	AccessKey *string `json:"AccessKey,omitempty" name:"AccessKey"`
+
+	// 鉴权密钥。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+}
+
+type AdvancedAuthenticationTypeD struct {
+
+	// 用于计算签名的密钥，只允许字母和数字，长度6-32字节。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+
+	// 备份密钥，当使用SecretKey鉴权失败时会使用该密钥重新鉴权。
+	BackupSecretKey *string `json:"BackupSecretKey,omitempty" name:"BackupSecretKey"`
+
+	// uri串中签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
+
+	// uri串中时间的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	TimeParam *string `json:"TimeParam,omitempty" name:"TimeParam"`
+
+	// 过期时间，单位秒。
+	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
+
+	// 时间格式，dec，hex分别表示十进制，十六进制。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
+}
+
+type AdvancedAuthenticationTypeE struct {
+
+	// 用于计算签名的密钥，只允许字母和数字，长度6-32字节。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+
+	// uri串中签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
+
+	// uri串中Acl签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AclSignParam *string `json:"AclSignParam,omitempty" name:"AclSignParam"`
+
+	// uri串中开始时间字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTimeParam *string `json:"StartTimeParam,omitempty" name:"StartTimeParam"`
+
+	// uri串中过期时间字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExpireTimeParam *string `json:"ExpireTimeParam,omitempty" name:"ExpireTimeParam"`
+
+	// 时间格式，dec
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
+}
+
+type AdvancedAuthenticationTypeF struct {
+
+	// uri串中签名的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
+
+	// uri串中时间的字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeParam *string `json:"TimeParam,omitempty" name:"TimeParam"`
+
+	// uri串中Transaction字段名，字母，数字或下划线构成，同时必须以字母开头。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TransactionParam *string `json:"TransactionParam,omitempty" name:"TransactionParam"`
+
+	// 用于计算签名的主密钥，只允许字母和数字，长度6-32字节。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+
+	// 用于计算签名的备选密钥，主密钥校验失败后再次尝试备选密钥，只允许字母和数字，长度6-32字节。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BackupSecretKey *string `json:"BackupSecretKey,omitempty" name:"BackupSecretKey"`
+}
+
 type AdvancedCache struct {
 
 	// 缓存过期规则
@@ -397,6 +576,52 @@ type BandwidthAlert struct {
 	// 上次触发带宽封顶阈值的时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LastTriggerTime *string `json:"LastTriggerTime,omitempty" name:"LastTriggerTime"`
+}
+
+type BotCookie struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 规则类型，当前只有all
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 规则值，['*']
+	RuleValue []*string `json:"RuleValue,omitempty" name:"RuleValue" list`
+
+	// 执行动作，monitor|intercept|redirect|captcha
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 重定向时设置的重定向页面
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+}
+
+type BotJavaScript struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 规则类型，当前只有file
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 规则值，['html', 'htm']
+	RuleValue []*string `json:"RuleValue,omitempty" name:"RuleValue" list`
+
+	// 执行动作，monitor|intercept|redirect|captcha
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 重定向时设置的重定向页面
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
 type BriefDomain struct {
@@ -1479,6 +1704,43 @@ func (r *DescribeCdnIpResponse) ToJsonString() string {
 }
 
 func (r *DescribeCdnIpResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCdnOriginIpRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeCdnOriginIpRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeCdnOriginIpRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCdnOriginIpResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 回源节点IP详情。
+		Ips []*OriginIp `json:"Ips,omitempty" name:"Ips" list`
+
+		// 回源节点IP总个数。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeCdnOriginIpResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeCdnOriginIpResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2715,7 +2977,7 @@ type DetailDomain struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxAge *MaxAge `json:"MaxAge,omitempty" name:"MaxAge"`
 
-	// Ipv6 配置（功能灰度中，敬请期待）
+	// Ipv6 回源配置（功能灰度中，敬请期待）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ipv6 *Ipv6 `json:"Ipv6,omitempty" name:"Ipv6"`
 
@@ -2783,6 +3045,14 @@ type DetailDomain struct {
 	// 标签配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tag []*Tag `json:"Tag,omitempty" name:"Tag" list`
+
+	// 时间戳防盗链高级配置，白名单功能
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AdvancedAuthentication *AdvancedAuthentication `json:"AdvancedAuthentication,omitempty" name:"AdvancedAuthentication"`
+
+	// 回源鉴权高级配置，白名单功能
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginAuthentication *OriginAuthentication `json:"OriginAuthentication,omitempty" name:"OriginAuthentication"`
 }
 
 type DiagnoseData struct {
@@ -2824,6 +3094,10 @@ type DiagnoseInfo struct {
 	// 访问诊断链接的客户端简易信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientList []*DiagnoseList `json:"ClientList,omitempty" name:"ClientList" list`
+
+	// 域名加速区域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DiagnoseList struct {
@@ -3420,6 +3694,10 @@ type Https struct {
 	// Hsts配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Hsts *Hsts `json:"Hsts,omitempty" name:"Hsts"`
+
+	// Tls版本设置，仅支持部分Advance域名，支持设置 TLSv1, TLSV1.1, TLSV1.2, TLSv1.3，修改时必须开启连续的版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TlsVersion []*string `json:"TlsVersion,omitempty" name:"TlsVersion" list`
 }
 
 type ImageOptimization struct {
@@ -4044,6 +4322,7 @@ type MaxAgeRule struct {
 	// file：指定文件后缀生效
 	// directory：指定路径生效
 	// path：指定绝对路径生效
+	// index: 指定主页生效
 	MaxAgeType *string `json:"MaxAgeType,omitempty" name:"MaxAgeType"`
 
 	// MaxAgeType 对应类型下的匹配内容：
@@ -4051,10 +4330,17 @@ type MaxAgeRule struct {
 	// file 时填充后缀名，如 jpg、txt
 	// directory 时填充路径，如 /xxx/test/
 	// path 时填充绝对路径，如 /xxx/test.html
+	// index 时填充 /
+	// 注意：all规则不可删除，默认遵循源站，可修改。
 	MaxAgeContents []*string `json:"MaxAgeContents,omitempty" name:"MaxAgeContents" list`
 
 	// MaxAge 时间设置，单位秒
+	// 注意：时间为0，即不缓存。
 	MaxAgeTime *int64 `json:"MaxAgeTime,omitempty" name:"MaxAgeTime"`
+
+	// 是否遵循源站，on或off，开启时忽略时间设置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FollowOrigin *string `json:"FollowOrigin,omitempty" name:"FollowOrigin"`
 }
 
 type Origin struct {
@@ -4119,6 +4405,30 @@ type Origin struct {
 	// 分路径回源配置规则
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PathRules []*PathRule `json:"PathRules,omitempty" name:"PathRules" list`
+}
+
+type OriginAuthentication struct {
+
+	// 鉴权开关，on或off
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 鉴权类型A配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeA *OriginAuthenticationTypeA `json:"TypeA,omitempty" name:"TypeA"`
+}
+
+type OriginAuthenticationTypeA struct {
+
+	// 用于计算签名的密钥，只允许字母和数字，长度6-32字节。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+}
+
+type OriginIp struct {
+
+	// 回源IP段/回源IP，默认返回IP段信息。
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
 }
 
 type OriginPullOptimization struct {
@@ -4247,27 +4557,32 @@ type OverseaConfig struct {
 
 type PathRule struct {
 
-	// 是否是正则匹配。
+	// 是否开启通配符“*”匹配：
+	// false：关闭
+	// true：开启
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Regex *bool `json:"Regex,omitempty" name:"Regex"`
 
-	// 匹配的URL路径。
+	// 匹配的URL路径，仅支持Url路径，不支持参数。默认完全匹配，开启通配符“*”匹配后，最多支持5个通配符，最大长度为1024个字符。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Path *string `json:"Path,omitempty" name:"Path"`
 
-	// 路径匹配时的回源源站。暂不支持开了私有读写的COS源。
+	// 路径匹配时的回源源站。暂不支持开了私有读写的COS源。不填写时沿用默认源站。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Origin *string `json:"Origin,omitempty" name:"Origin"`
 
-	// 路径匹配时回源的Host头部。
+	// 路径匹配时回源的Host头部。不填写时沿用默认ServerName。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServerName *string `json:"ServerName,omitempty" name:"ServerName"`
 
-	// 源站所属区域，支持CN，OV。分别表示国内或海外。
+	// 源站所属区域，支持CN，OV：
+	// CN：中国境内
+	// OV：中国境外
+	// 默认为CN。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginArea *string `json:"OriginArea,omitempty" name:"OriginArea"`
 
-	// 路径匹配时回源的URI路径。
+	// 路径匹配时回源的URI路径，必须以“/”开头，不包含参数部分。最大长度为1024个字符。可使用$1, $2, $3, $4, $5分别捕获匹配路径中的通配符号“*”，最多支持10个捕获值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ForwardUri *string `json:"ForwardUri,omitempty" name:"ForwardUri"`
 
@@ -4682,6 +4997,7 @@ type RuleCache struct {
 	// directory 时填充路径，如 /xxx/test
 	// path 时填充绝对路径，如 /xxx/test.html
 	// index 时填充 /
+	// default 时填充 "no max-age"
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
 
@@ -4691,6 +5007,7 @@ type RuleCache struct {
 	// directory：指定路径生效
 	// path：指定绝对路径生效
 	// index：首页
+	// default: 源站无max-age时生效
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
 
@@ -4727,6 +5044,127 @@ type RuleQueryString struct {
 	// 使用/排除的url参数数组，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type ScdnAclConfig struct {
+
+	// 是否开启，on | off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// Acl规则组，switch为on时必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScriptData []*ScdnAclGroup `json:"ScriptData,omitempty" name:"ScriptData" list`
+
+	// 错误页面配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrorPage *ScdnErrorPage `json:"ErrorPage,omitempty" name:"ErrorPage"`
+}
+
+type ScdnAclGroup struct {
+
+	// 规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 具体配置
+	Configure []*ScdnAclRule `json:"Configure,omitempty" name:"Configure" list`
+
+	// 规则行为，一般为refuse
+	Result *string `json:"Result,omitempty" name:"Result"`
+
+	// 规则是否生效中active|inactive
+	Status *string `json:"Status,omitempty" name:"Status"`
+}
+
+type ScdnAclRule struct {
+
+	// 匹配关键字, params | url | ip | referer | user-agent
+	MatchKey *string `json:"MatchKey,omitempty" name:"MatchKey"`
+
+	// 逻辑操作符，取值 exclude, include, notequal, equal, len-less, len-equal, len-more
+	LogiOperator *string `json:"LogiOperator,omitempty" name:"LogiOperator"`
+
+	// 匹配值
+	MatchValue *string `json:"MatchValue,omitempty" name:"MatchValue"`
+}
+
+type ScdnBotConfig struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// Bot cookie策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BotCookie []*BotCookie `json:"BotCookie,omitempty" name:"BotCookie" list`
+
+	// Bot Js策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BotJavaScript []*BotJavaScript `json:"BotJavaScript,omitempty" name:"BotJavaScript" list`
+}
+
+type ScdnCCRules struct {
+
+	// 规则类型：
+	// all：所有文件生效
+	// file：指定文件后缀生效
+	// directory：指定路径生效
+	// path：指定绝对路径生效
+	// index：首页
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 规则值
+	RuleValue []*string `json:"RuleValue,omitempty" name:"RuleValue" list`
+
+	// 规则限频
+	Qps *uint64 `json:"Qps,omitempty" name:"Qps"`
+
+	// 探测时长
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DetectionTime *uint64 `json:"DetectionTime,omitempty" name:"DetectionTime"`
+
+	// 限频阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FrequencyLimit *uint64 `json:"FrequencyLimit,omitempty" name:"FrequencyLimit"`
+
+	// IP 惩罚开关，可选on|off
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PunishmentSwitch *string `json:"PunishmentSwitch,omitempty" name:"PunishmentSwitch"`
+
+	// IP 惩罚时长
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PunishmentTime *uint64 `json:"PunishmentTime,omitempty" name:"PunishmentTime"`
+
+	// 执行动作，intercept|redirect
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 动作为 redirect 时，重定向的url
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+}
+
+type ScdnConfig struct {
+
+	// on | off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 自定义 cc 防护规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Rules []*ScdnCCRules `json:"Rules,omitempty" name:"Rules" list`
+}
+
+type ScdnDdosConfig struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
+type ScdnErrorPage struct {
+
+	// 状态码
+	RedirectCode *int64 `json:"RedirectCode,omitempty" name:"RedirectCode"`
+
+	// 重定向url
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
 }
 
 type ScdnLogTaskDetail struct {
@@ -4828,6 +5266,37 @@ type ScdnTypeData struct {
 
 	// 攻击值
 	Value *uint64 `json:"Value,omitempty" name:"Value"`
+}
+
+type ScdnWafConfig struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// intercept|observe，默认intercept
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Mode *string `json:"Mode,omitempty" name:"Mode"`
+
+	// 重定向的错误页面
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrorPage *ScdnErrorPage `json:"ErrorPage,omitempty" name:"ErrorPage"`
+
+	// webshell拦截开关，on|off，默认off
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WebShellSwitch *string `json:"WebShellSwitch,omitempty" name:"WebShellSwitch"`
+
+	// 类型拦截规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Rules []*ScdnWafRule `json:"Rules,omitempty" name:"Rules" list`
+}
+
+type ScdnWafRule struct {
+
+	// 攻击类型
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 防护措施，observe
+	Operate *string `json:"Operate,omitempty" name:"Operate"`
 }
 
 type SchemeKey struct {
@@ -5357,6 +5826,12 @@ type UpdateDomainConfigRequest struct {
 
 	// 访问端口配置
 	AccessPort []*int64 `json:"AccessPort,omitempty" name:"AccessPort" list`
+
+	// 时间戳防盗链高级版配置，白名单功能
+	AdvancedAuthentication *AdvancedAuthentication `json:"AdvancedAuthentication,omitempty" name:"AdvancedAuthentication"`
+
+	// 回源鉴权高级版配置，白名单功能
+	OriginAuthentication *OriginAuthentication `json:"OriginAuthentication,omitempty" name:"OriginAuthentication"`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {
@@ -5466,6 +5941,58 @@ func (r *UpdatePayTypeResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type UpdateScdnDomainRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// Web 攻击防护（WAF）配置
+	Waf *ScdnWafConfig `json:"Waf,omitempty" name:"Waf"`
+
+	// 自定义防护策略配置
+	Acl *ScdnAclConfig `json:"Acl,omitempty" name:"Acl"`
+
+	// CC 防护配置，目前 CC 防护默认开启
+	CC *ScdnConfig `json:"CC,omitempty" name:"CC"`
+
+	// DDOS 防护配置，目前 DDoS 防护默认开启
+	Ddos *ScdnDdosConfig `json:"Ddos,omitempty" name:"Ddos"`
+
+	// BOT 防护配置
+	Bot *ScdnBotConfig `json:"Bot,omitempty" name:"Bot"`
+}
+
+func (r *UpdateScdnDomainRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *UpdateScdnDomainRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateScdnDomainResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 提交结果，Success表示成功
+		Result *string `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateScdnDomainResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *UpdateScdnDomainResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type UrlRecord struct {
 
 	// 状态(disable表示封禁，enable表示解封)
@@ -5502,11 +6029,15 @@ type UrlRedirectRule struct {
 	// 重定向状态码，301 | 302
 	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitempty" name:"RedirectStatusCode"`
 
-	// 待匹配的Url模式，支持完全路径匹配和正则匹配，最大长度1024字符。
+	// 待匹配的Url，仅支持Url路径，不支持参数。默认完全匹配，支持通配符 *，最多支持5个通配符，最大长度1024字符。
 	Pattern *string `json:"Pattern,omitempty" name:"Pattern"`
 
-	// 目标URL，必须以“/”开头，最大长度1024字符。
+	// 目标URL，必须以“/”开头，不包含参数部分。最大长度1024字符。可使用$1, $2, $3, $4, $5分别捕获匹配路径中的通配符号，最多支持10个捕获值。
 	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+
+	// 目标host，必须以http://或https://开头，并填写标准格式域名，如果不填写，默认为http:// + 当前域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RedirectHost *string `json:"RedirectHost,omitempty" name:"RedirectHost"`
 }
 
 type UserAgentFilter struct {

@@ -55,13 +55,13 @@ func resourceTencentCloudHaVip() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "VPC id.",
+				Description: "VPC ID.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Subnet id.",
+				Description: "Subnet ID.",
 			},
 			"vip": {
 				Type:         schema.TypeString,
@@ -79,12 +79,12 @@ func resourceTencentCloudHaVip() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Instance id that is associated.",
+				Description: "Instance ID that is associated.",
 			},
 			"network_interface_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Network interface id that is associated.",
+				Description: "Network interface ID that is associated.",
 			},
 			"address_ip": {
 				Type:        schema.TypeString,

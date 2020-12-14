@@ -46,7 +46,7 @@ func resourceTencentCloudCkafkaUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the ckafka instance.",
+				Description: "ID of the ckafka instance.",
 			},
 			"account_name": {
 				Type:        schema.TypeString,

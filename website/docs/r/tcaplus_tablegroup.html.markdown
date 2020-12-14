@@ -33,7 +33,7 @@ resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) Id of the TcaplusDB cluster to which the table group belongs.
+* `cluster_id` - (Required, ForceNew) ID of the TcaplusDB cluster to which the table group belongs.
 * `tablegroup_name` - (Required) Name of the TcaplusDB table group. Name length should be between 1 and 30.
 
 ## Attributes Reference

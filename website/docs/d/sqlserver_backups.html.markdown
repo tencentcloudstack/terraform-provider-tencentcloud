@@ -44,8 +44,8 @@ In addition to all arguments above, the following attributes are exported:
   * `intranet_url` - URL for downloads internally.
   * `size` - The size of backup file. Unit is KB.
   * `start_time` - Start time of the backup.
-  * `status` - Status of the backup. 1 for creating, 2 for successfully created, 3 for failed.
-  * `strategy` - Strategy of the backup. 0 for instance backup, 1 for multi-databases backup.
-  * `trigger_model` - The way to trigger backup. 0 for timed trigger, 1 for manual trigger.
+  * `status` - Status of the backup. `1` for creating, `2` for successfully created, 3 for failed.
+  * `strategy` - Strategy of the backup. `0` for instance backup, `1` for multi-databases backup.
+  * `trigger_model` - The way to trigger backup. `0` for timed trigger, `1` for manual trigger.
 
 

@@ -36,7 +36,7 @@ func dataSourceTencentCloudReservedInstanceConfigs() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{31536000, 94608000}),
-				Description:  "Validity period of the reserved instance. Valid values are 31536000(1 year) and 94608000(3 years).",
+				Description:  "Validity period of the reserved instance. Valid values are `31536000`(1 year) and `94608000`(3 years).",
 			},
 			"instance_type": {
 				Type:        schema.TypeString,

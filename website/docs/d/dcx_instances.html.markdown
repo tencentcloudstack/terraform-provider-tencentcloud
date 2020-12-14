@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
   * `dcx_id` - ID of the dedicated tunnel.
   * `name` - Name of the dedicated tunnel.
   * `network_region` - The region of the dedicated tunnel.
-  * `network_type` - Type of the network. Valid values: VPC, BMVPC and CCN. The default value is VPC.
+  * `network_type` - Type of the network. Valid values: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.
   * `route_filter_prefixes` - Static route, the network address of the user IDC.
-  * `route_type` - Type of the route. Valid values: BGP and STATIC. The default value is BGP.
-  * `state` - State of the dedicated tunnels. Valid values: PENDING, ALLOCATING, ALLOCATED, ALTERING, DELETING, DELETED, COMFIRMING and REJECTED.
+  * `route_type` - Type of the route. Valid values: `BGP` and `STATIC`. The default value is `BGP`.
+  * `state` - State of the dedicated tunnels. Valid values: `PENDING`, `ALLOCATING`, `ALLOCATED`, `ALTERING`, `DELETING`, `DELETED`, `COMFIRMING` and `REJECTED`.
   * `tencent_address` - Interconnect IP of the DC within Tencent.
-  * `vlan` - Vlan of the dedicated tunnels.  Valid value ranges: [0-3000]. '0' means that only one tunnel can be created for the physical connect.
+  * `vlan` - Vlan of the dedicated tunnels.  Valid value ranges: [0-3000]. `0` means that only one tunnel can be created for the physical connect.
   * `vpc_id` - ID of the VPC or BMVPC.
 
 

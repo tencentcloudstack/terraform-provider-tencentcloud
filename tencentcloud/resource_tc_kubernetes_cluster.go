@@ -318,7 +318,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      1,
 			ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
-			Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+			Description:  "The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 		},
 		"instance_charge_type_prepaid_renew_flag": {
 			Type:         schema.TypeString,
@@ -349,7 +349,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      50,
 			ValidateFunc: validateIntegerInRange(50, 500),
-			Description:  "Volume of system disk in GB. Default is 50.",
+			Description:  "Volume of system disk in GB. Default is `50`.",
 		},
 		"data_disk": {
 			Type:        schema.TypeList,
@@ -372,7 +372,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						ForceNew:    true,
 						Optional:    true,
 						Default:     0,
-						Description: "Volume of disk in GB. Default is 0.",
+						Description: "Volume of disk in GB. Default is `0`.",
 					},
 					"snapshot_id": {
 						Type:        schema.TypeString,
@@ -460,13 +460,11 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 	schemaBody := map[string]*schema.Schema{
 		"cluster_name": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Name of the cluster.",
 		},
 		"cluster_desc": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Description of the cluster.",
 		},
@@ -628,7 +626,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"project_id": {
 			Type:        schema.TypeInt,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Project ID, default value is 0.",
 		},
@@ -1824,6 +1821,18 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	} else {
 		d.SetPartial("managed_cluster_internet_security_policies")
+	}
+
+	if d.HasChange("project_id") || d.HasChange("cluster_name") || d.HasChange("cluster_desc") {
+		projectId := int64(d.Get("project_id").(int))
+		clusterName := d.Get("cluster_name").(string)
+		clusterDesc := d.Get("cluster_desc").(string)
+		if err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc); err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
+		d.SetPartial("cluster_name")
+		d.SetPartial("cluster_desc")
 	}
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {

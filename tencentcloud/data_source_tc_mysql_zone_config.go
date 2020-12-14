@@ -67,23 +67,23 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 		"is_default": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether the current DC is the default DC for the region. Possible returned values: 0 - No; 1 - Yes.",
+			Description: "Indicates whether the current DC is the default DC for the region. Possible returned values: `0` - no; `1` - yes.",
 		},
 		"is_support_disaster_recovery": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether recovery is supported: 0 - No; 1 - Yes.",
+			Description: "Indicates whether recovery is supported: `0` - No; `1` - Yes.",
 		},
 		"is_support_vpc": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether VPC is supported: 0 - No; 1 - Yes.",
+			Description: "Indicates whether VPC is supported: `0` - No; `1` - Yes.",
 		},
 		"engine_versions": {
 			Type:        schema.TypeList,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Computed:    true,
-			Description: "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
+			Description: "The version number of the database engine to use. Supported versions include `5.5`/`5.6`/`5.7`.",
 		},
 		"pay_type": {
 			Type:        schema.TypeList,
@@ -100,7 +100,7 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Elem:        &schema.Schema{Type: schema.TypeInt},
 			Computed:    true,
-			Description: "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
+			Description: "Data replication mode. `0` - Async replication; `1` - Semisync replication; `2` - Strongsync replication.",
 		},
 		"disaster_recovery_zones": {
 			Type:        schema.TypeList,
@@ -112,7 +112,7 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Elem:        &schema.Schema{Type: schema.TypeInt},
 			Computed:    true,
-			Description: "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
+			Description: "Availability zone deployment method. Available values: `0` - Single availability zone; `1` - Multiple availability zones.",
 		},
 		"first_slave_zones": {
 			Type:        schema.TypeList,

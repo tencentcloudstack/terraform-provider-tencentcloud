@@ -47,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
   * `license_type` - License type.
   * `multi_zone_infos` - Details of AZs in multi-AZ deployment mode.
     * `availability_zone` - Availability zone.
-    * `subnet_id` - The id of a VPC subnetwork.
+    * `subnet_id` - The id of a VPC subnet.
   * `node_info_list` - Node information list, which describe the specification information of various types of nodes in the cluster.
     * `disk_size` - Node disk size.
     * `disk_type` - Node disk type.
@@ -55,9 +55,9 @@ In addition to all arguments above, the following attributes are exported:
     * `node_num` - Number of nodes.
     * `node_type` - Node specification.
     * `type` - Node type.
-  * `subnet_id` - The id of a VPC subnetwork.
+  * `subnet_id` - The ID of a VPC subnet.
   * `tags` - A mapping of tags to assign to the instance.
   * `version` - Version of the instance.
-  * `vpc_id` - The id of a VPC network.
+  * `vpc_id` - The ID of a VPC network.
 
 

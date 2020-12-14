@@ -87,7 +87,7 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 					s3.ObjectCannedACLPublicRead,
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
-				Description: "The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.",
+				Description: "The canned ACL to apply. Available values include `private`, `public-read`, and `public-read-write`. Defaults to `private`.",
 			},
 			"cache_control": {
 				Type:        schema.TypeString,
@@ -116,7 +116,7 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
-				Description:  "Object storage type, Available values include STANDARD, STANDARD_IA and ARCHIVE.",
+				Description:  "Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 			},
 			"etag": {
 				Type:        schema.TypeString,

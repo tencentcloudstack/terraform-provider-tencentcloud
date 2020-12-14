@@ -35,7 +35,7 @@ func dataSourceTencentCloudTCRInstances() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the TCR instance to query.",
+				Description: "ID of the TCR instance to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -53,7 +53,7 @@ func dataSourceTencentCloudTCRInstances() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the TCR instance.",
+							Description: "ID of the TCR instance.",
 						},
 						"name": {
 							Type:        schema.TypeString,

@@ -198,12 +198,12 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 						"public_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Public ip of the instance.",
+							Description: "Public IP of the instance.",
 						},
 						"private_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Private ip of the instance.",
+							Description: "Private IP of the instance.",
 						},
 						"security_groups": {
 							Type:        schema.TypeList,

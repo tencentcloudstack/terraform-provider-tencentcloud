@@ -25,7 +25,7 @@ data "tencentcloud_dayu_ddos_policy_cases" "id_test" {
 The following arguments are supported:
 
 * `resource_type` - (Required) Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `scene_id` - (Required) Id of the DDoS policy case to be query.
+* `scene_id` - (Required) ID of the DDoS policy case to be query.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
   * `peer_udp_port` - The port that actively initiates UDP requests.
   * `platform_types` - Platform set of the DDoS policy case.
   * `resource_type` - Type of the resource that the DDoS policy case works for.
-  * `scene_id` - Id of the DDoS policy case.
+  * `scene_id` - ID of the DDoS policy case.
   * `tcp_end_port` - End port of the TCP service.
   * `tcp_footprint` - The fixed signature of TCP protocol load.
   * `tcp_start_port` - Start port of the TCP service.

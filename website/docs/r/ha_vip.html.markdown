@@ -27,8 +27,8 @@ resource "tencentcloud_ha_vip" "foo" {
 The following arguments are supported:
 
 * `name` - (Required) Name of the HA VIP. The length of character is limited to 1-60.
-* `subnet_id` - (Required, ForceNew) Subnet id.
-* `vpc_id` - (Required, ForceNew) VPC id.
+* `subnet_id` - (Required, ForceNew) Subnet ID.
+* `vpc_id` - (Required, ForceNew) VPC ID.
 * `vip` - (Optional, ForceNew) Virtual IP address, it must not be occupied and in this VPC network segment. If not set, it will be assigned after resource created automatically.
 
 ## Attributes Reference
@@ -38,8 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `address_ip` - EIP that is associated.
 * `create_time` - Create time of the HA VIP.
-* `instance_id` - Instance id that is associated.
-* `network_interface_id` - Network interface id that is associated.
+* `instance_id` - Instance ID that is associated.
+* `network_interface_id` - Network interface ID that is associated.
 * `state` - State of the HA VIP. Valid value: `AVAILABLE`, `UNBIND`.
 
 

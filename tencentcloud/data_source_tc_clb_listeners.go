@@ -43,7 +43,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener, and available values are 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
+				Description:  "Type of protocol within the listener, and available values are `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
@@ -65,12 +65,12 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CLB.",
+							Description: "ID of the CLB.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the listener.",
+							Description: "ID of the listener.",
 						},
 						"listener_name": {
 							Type:        schema.TypeString,
@@ -80,7 +80,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"protocol": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Protocol of the listener. Available values are 'HTTP', 'HTTPS', 'TCP', 'UDP', 'TCP_SSL'.",
+							Description: "Protocol of the listener. Available values are `HTTP`, `HTTPS`, `TCP`, `UDP`, `TCP_SSL`.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
@@ -95,22 +95,22 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"health_check_time_out": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Response timeout of health check. The value range is 2-60 sec, and the default is 2 sec. Response timeout needs to be less than check interval. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration.",
+							Description: "Response timeout of health check. The value range is 2-60 sec, and the default is `2` sec. Response timeout needs to be less than check interval. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration.",
 						},
 						"health_check_interval_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Interval time of health check. The value range is 5-300 sec, and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Interval time of health check. The value range is 5-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_health_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Health threshold of health check, and the default is `3`. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_unhealth_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Unhealthy threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Unhealthy threshold of health check, and the default is `3`. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_type": {
 							Type:        schema.TypeString,
@@ -165,17 +165,17 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
+							Description: "Type of certificate, and available values inclue `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the server certificate. It must be set when protocol is 'HTTPS' or 'TCP_SSL'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
+							Description: "Id of the server certificate. It must be set when protocol is `HTTPS` or `TCP_SSL`. NOTES: only supported by listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.",
 						},
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the client certificate. It must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol.",
+							Description: "Id of the client certificate. It must be set when SSLMode is `mutual`. NOTES: only supported by listeners of `HTTPS` and `TCP_SSL` protocol.",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,
@@ -185,12 +185,12 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Scheduling method of the CLB listener, and available values are `WRR` and `LEAST_CONN`. The default is `WRR`. NOTES: The listener of 'HTTP' and `HTTPS` protocol additionally supports the `IP HASH` method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
+							Description: "Indicates whether SNI is enabled. NOTES: Only supported by `HTTPS` protocol.",
 						},
 					},
 				},

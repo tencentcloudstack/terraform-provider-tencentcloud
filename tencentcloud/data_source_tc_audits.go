@@ -47,7 +47,7 @@ func dataSourceTencentCloudAudits() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the audit.",
+							Description: "ID of the audit.",
 						},
 						"name": {
 							Type:        schema.TypeString,

@@ -66,7 +66,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "The available zone ID of an instance to be created, please refer to tencentcloud_redis_zone_config.list.",
+				Description: "The available zone ID of an instance to be created, please refer to `tencentcloud_redis_zone_config.list`.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -122,7 +122,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"mem_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The memory volume of an available instance(in MB), please refer to tencentcloud_redis_zone_config.list[zone].mem_sizes. When Redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
+				Description: "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].mem_sizes`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
@@ -198,13 +198,13 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue(REDIS_PREPAID_PERIOD),
-				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 			},
 			"force_delete": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for PREPAID instance.",
+				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.",
 			},
 		},
 	}

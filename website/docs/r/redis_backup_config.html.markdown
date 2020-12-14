@@ -25,9 +25,9 @@ resource "tencentcloud_redis_backup_config" "redislab" {
 
 The following arguments are supported:
 
-* `backup_period` - (Required) Specifys which day the backup action should take place. Valid values: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.
-* `backup_time` - (Required) Specifys what time the backup action should take place.
-* `redis_id` - (Required, ForceNew) ID of a Redis instance to which the policy will be applied.
+* `backup_period` - (Required) Specifys which day the backup action should take place. Valid values: `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday` and `Sunday`.
+* `backup_time` - (Required) Specifys what time the backup action should take place. And the time interval should be one hour.
+* `redis_id` - (Required, ForceNew) ID of a redis instance to which the policy will be applied.
 
 ## Attributes Reference
 

@@ -104,7 +104,7 @@ func dataSourceTencentCloudAsScalingPolicies() *schema.Resource {
 						"cooldown": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Cooldown time of the scaling rule.",
+							Description: "Cool down time of the scaling rule.",
 						},
 						"notification_user_group_ids": {
 							Type:        schema.TypeList,

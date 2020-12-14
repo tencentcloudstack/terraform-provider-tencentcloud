@@ -56,8 +56,8 @@ In addition to all arguments above, the following attributes are exported:
   * `id` - ID of the SQL Server basic instance.
   * `memory` - Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
   * `name` - Name of the SQL Server basic instance.
-  * `project_id` - Project ID, default value is 0.
-  * `status` - Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.
+  * `project_id` - Project ID, default value is `0`.
+  * `status` - Status of the SQL Server basic instance. `1` for applying, `2` for running, `3` for running with limit, `4` for isolated, `5` for recycling, `6` for recycled, `7` for running with task, `8` for off-line, `9` for expanding, `10` for migrating, `11` for readonly, `12` for rebooting.
   * `storage` - Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
   * `subnet_id` - ID of subnet.
   * `tags` - Tags of the SQL Server basic instance.

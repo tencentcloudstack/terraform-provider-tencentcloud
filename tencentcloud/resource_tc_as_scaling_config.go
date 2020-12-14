@@ -93,14 +93,14 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 				ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-				Description:  "Type of a CVM disk. Valid values: CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
+				Description:  "Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.",
 			},
 			"system_disk_size": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      50,
 				ValidateFunc: validateIntegerInRange(50, 500),
-				Description:  "Volume of system disk in GB. Default is 50.",
+				Description:  "Volume of system disk in GB. Default is `50`.",
 			},
 			"data_disk": {
 				Type:        schema.TypeList,
@@ -114,13 +114,13 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 							Optional:     true,
 							Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 							ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-							Description:  "Types of disk. Valid values: CLOUD_PREMIUM and CLOUD_SSD.",
+							Description:  "Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Default:     0,
-							Description: "Volume of disk in GB. Default is 0.",
+							Description: "Volume of disk in GB. Default is `0`.",
 						},
 						"snapshot_id": {
 							Type:        schema.TypeString,
@@ -141,7 +141,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
+				Description: "Max bandwidth of Internet access in Mbps. Default is `0`.",
 			},
 			"public_ip_assigned": {
 				Type:        schema.TypeBool,
@@ -179,13 +179,13 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "To specify whether to enable cloud security service. Default is TRUE.",
+				Description: "To specify whether to enable cloud security service. Default is `TRUE`.",
 			},
 			"enhanced_monitor_service": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
+				Description: "To specify whether to enable cloud monitor service. Default is `TRUE`.",
 			},
 			"user_data": {
 				Type:        schema.TypeString,

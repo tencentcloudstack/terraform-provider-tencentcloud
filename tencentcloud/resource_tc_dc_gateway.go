@@ -58,13 +58,13 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(DCG_NETWORK_TYPES),
-				Description:  "Type of associated network. Valid value: 'VPC' and 'CCN'.",
+				Description:  "Type of associated network. Valid value: `VPC` and `CCN`.",
 			},
 			"network_instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "If the 'network_type' value is 'VPC', the available value is VPC ID. But when the 'network_type' value is 'CCN', the available value is CCN instance ID.",
+				Description: "If the `network_type` value is `VPC`, the available value is VPC ID. But when the `network_type` value is `CCN`, the available value is CCN instance ID.",
 			},
 			"gateway_type": {
 				Type:         schema.TypeString,
@@ -72,14 +72,14 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      DCG_GATEWAY_TYPE_NORMAL,
 				ValidateFunc: validateAllowedStringValue(DCG_GATEWAY_TYPES),
-				Description:  "Type of the gateway. Valid value: 'NORMAL' and 'NAT'. Default is 'NORMAL'. NOTES: CCN only supports 'NORMAL' and a vpc can create two DCGs, the one is NAT type and the other is non-NAT type.",
+				Description:  "Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.",
 			},
 
 			//compute
 			"cnn_route_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Type of CCN route. Valid value: 'BGP' and 'STATIC'. The property is available when the DCG type is CCN gateway and BGP enabled.",
+				Description: "Type of CCN route. Valid value: `BGP` and `STATIC`. The property is available when the DCG type is CCN gateway and BGP enabled.",
 			},
 			"enable_bgp": {
 				Type:        schema.TypeBool,

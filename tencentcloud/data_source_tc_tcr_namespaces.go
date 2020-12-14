@@ -29,12 +29,12 @@ func dataSourceTencentCloudTCRNamespaces() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the instance that the namespace belongs to.",
+				Description: "ID of the instance that the namespace belongs to.",
 			},
 			"namespace_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the TCR namespace to query.",
+				Description: "ID of the TCR namespace to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

@@ -46,18 +46,18 @@ func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached CAM group.",
+				Description: "ID of the attached CAM group.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the policy.",
+				Description: "ID of the policy.",
 			},
 			"create_mode": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+				Description: "Mode of Creation of the CAM group policy attachment. `1` means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:        schema.TypeString,

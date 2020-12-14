@@ -40,12 +40,12 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the VPC.",
+				Description: "ID of the VPC.",
 			},
 			"nat_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the NAT gateway.",
+				Description: "ID of the NAT gateway.",
 			},
 			"elastic_ip": {
 				Type:         schema.TypeString,
@@ -92,12 +92,12 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the VPC.",
+							Description: "ID of the VPC.",
 						},
 						"nat_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the NAT.",
+							Description: "ID of the NAT.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,

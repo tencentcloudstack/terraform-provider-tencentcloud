@@ -101,7 +101,7 @@ func dataSourceTencentCloudAPIGatewayServices() *schema.Resource {
 						"internal_sub_domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Private network access subdomain name.",
+							Description: "Private network access sub-domain name.",
 						},
 						"outer_sub_domain": {
 							Type:        schema.TypeString,

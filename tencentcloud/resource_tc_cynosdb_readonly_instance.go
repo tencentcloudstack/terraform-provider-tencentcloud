@@ -53,7 +53,7 @@ func resourceTencentCloudCynosdbReadonlyInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "Cluster id which the readonly instance belongs to.",
+			Description: "Cluster ID which the readonly instance belongs to.",
 		},
 		"instance_name": {
 			Type:        schema.TypeString,

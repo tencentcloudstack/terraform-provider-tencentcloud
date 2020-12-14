@@ -30,7 +30,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the VPC.",
+				Description: "ID of the VPC.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -40,7 +40,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the NAT gateway.",
+				Description: "ID of the NAT gateway.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -58,12 +58,12 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the NAT gateway.",
+							Description: "ID of the NAT gateway.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the VPC.",
+							Description: "ID of the VPC.",
 						},
 						"name": {
 							Type:        schema.TypeString,

@@ -31,16 +31,16 @@ resource "tencentcloud_clb_attachment" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) Id of the CLB.
-* `listener_id` - (Required, ForceNew) Id of the CLB listener.
+* `clb_id` - (Required, ForceNew) ID of the CLB.
+* `listener_id` - (Required, ForceNew) ID of the CLB listener.
 * `targets` - (Required) Information of the backends to be attached.
-* `rule_id` - (Optional, ForceNew) Id of the CLB listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.
+* `rule_id` - (Optional, ForceNew) ID of the CLB listener rule. Only supports listeners of `HTTPS` and `HTTP` protocol.
 
 The `targets` object supports the following:
 
 * `instance_id` - (Required) Id of the backend server.
 * `port` - (Required) Port of the backend server. Valid value ranges: (0~65535).
-* `weight` - (Optional) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to 10.
+* `weight` - (Optional) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to `10`.
 
 ## Attributes Reference
 

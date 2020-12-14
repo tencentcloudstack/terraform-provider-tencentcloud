@@ -64,19 +64,19 @@ func dataSourceTencentCloudClbTargetGroups() *schema.Resource {
 				Optional:      true,
 				ConflictsWith: []string{"vpc_id", "target_group_name"},
 				AtLeastOneOf:  []string{"vpc_id", "target_group_name"},
-				Description:   "ID of Target group. Mutually exclusive with 'vpc_id' and 'target_group_name'. 'target_group_id' is preferred.",
+				Description:   "ID of Target group. Mutually exclusive with `vpc_id` and `target_group_name`. `target_group_id` is preferred.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				AtLeastOneOf: []string{"target_group_id", "target_group_name"},
-				Description:  "Target group VPC ID. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
+				Description:  "Target group VPC ID. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.",
 			},
 			"target_group_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				AtLeastOneOf: []string{"target_group_id", "vpc_id"},
-				Description:  "Name of target group. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
+				Description:  "Name of target group. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

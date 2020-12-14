@@ -88,14 +88,14 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAllowedIntValue(DAYU_L7_RULE_SOURCE_TYPE),
-				Description:  "Source type, 1 for source of host, 2 for source of ip.",
+				Description:  "Source type, `1` for source of host, `2` for source of IP.",
 			},
 			"source_list": {
 				Type:     schema.TypeSet,
 				Required: true,
 				Elem: &schema.Schema{
 					Type:        schema.TypeString,
-					Description: "Source ip or domain, valid format of ip is like `1.1.1.1:60` or `1.1.1.1` and valid format of host source is like `abc.com` or `abc.com:80`.",
+					Description: "Source IP or domain, valid format of ip is like `1.1.1.1:60` or `1.1.1.1` and valid format of host source is like `abc.com` or `abc.com:80`.",
 				},
 				MinItems:    1,
 				MaxItems:    16,
@@ -104,7 +104,7 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 			"ssl_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "SSL id, when the `protocol` is `https`, the field should be set with valid SSL id.",
+				Description: "SSL ID, when the `protocol` is `https`, the field should be set with valid SSL id.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -117,28 +117,28 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(10, 60),
-				Description:  "Interval time of health check. Valid value ranges: (10~60)sec. The default is 15 sec.",
+				Description:  "Interval time of health check. Valid value ranges: [10~60]sec. The default is 15 sec.",
 			},
 			"health_check_health_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.",
+				Description:  "Health threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is [2-10].",
 			},
 			"health_check_unhealth_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Unhealthy threshold of health check, and the default is 3. If the unhealth result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is 2-10.",
+				Description:  "Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].",
 			},
 			"health_check_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(1, 31),
-				Description:  "HTTP Status Code. The default is 26. Valid value ranges: (1~31). 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
+				Description:  "HTTP Status Code. The default is `26`. Valid value ranges: [1~31]. `1` means the return value '1xx' is health. `2` means the return value '2xx' is health. `4` means the return value '3xx' is health. `8` means the return value '4xx' is health. `16` means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
 			},
 			"health_check_path": {
 				Type:        schema.TypeString,
@@ -157,12 +157,12 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the layer 7 rule.",
+				Description: "ID of the layer 7 rule.",
 			},
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for delete failed, 6 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.",
+				Description: "Status of the rule. `0` for create/modify success, `2` for create/modify fail, `3` for delete success, `5` for delete failed, `6` for waiting to be created/modified, `7` for waiting to be deleted and 8 for waiting to get SSL ID.",
 			},
 		},
 	}

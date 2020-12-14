@@ -51,7 +51,7 @@ func dataSourceTencentCloudCfsFileSystems() *schema.Resource {
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of a vpc subnetwork.",
+				Description: "ID of a vpc subnet.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

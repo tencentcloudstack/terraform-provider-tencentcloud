@@ -43,10 +43,10 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of usage plans.
-  * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
-  * `max_request_num_pre_sec` - Limit of requests per second. Valid values: -1, [1,2000]. The default value is -1, which indicates no limit.
-  * `max_request_num` - Total number of requests allowed. Valid values: -1, [1,99999999]. The default value is -1, which indicates no limit.
-  * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
+  * `create_time` - Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
+  * `max_request_num_pre_sec` - Limit of requests per second. Valid values formats: `-1`, `[1,2000]`. The default value is -1, which indicates no limit.
+  * `max_request_num` - Total number of requests allowed. Valid value formats: `-1`, `[1,99999999]`. The default value is -1, which indicates no limit.
+  * `modify_time` - Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
   * `usage_plan_desc` - Custom usage plan description.
   * `usage_plan_id` - ID of the usage plan.
   * `usage_plan_name` - Name of the usage plan.

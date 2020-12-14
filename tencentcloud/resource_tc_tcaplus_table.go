@@ -109,7 +109,7 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_TYPES),
-				Description:  "Type of the TcaplusDB table. Valid values are GENERIC and LIST.",
+				Description:  "Type of the TcaplusDB table. Valid values are `GENERIC` and `LIST`.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -125,7 +125,7 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_IDL_TYPES),
-				Description:  "IDL type of the TcaplusDB table. Valid values: PROTO and TDR.",
+				Description:  "IDL type of the TcaplusDB table. Valid values: `PROTO` and `TDR`.",
 			},
 			"reserved_read_cu": {
 				Type:        schema.TypeInt,

@@ -28,7 +28,7 @@ data "tencentcloud_ha_vips" "havips" {
 The following arguments are supported:
 
 * `address_ip` - (Optional) EIP of the HA VIP to be queried.
-* `id` - (Optional) Id of the HA VIP to be queried.
+* `id` - (Optional) ID of the HA VIP to be queried.
 * `name` - (Optional) Name of the HA VIP. The length of character is limited to 1-60.
 * `result_output_file` - (Optional) Used to save results.
 * `subnet_id` - (Optional) Subnet id of the HA VIP to be queried.
@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 * `ha_vip_list` - Information list of the dedicated HA VIPs.
   * `address_ip` - EIP that is associated.
   * `create_time` - Create time of the HA VIP.
-  * `id` - Id of the HA VIP.
+  * `id` - ID of the HA VIP.
   * `instance_id` - Instance id that is associated.
   * `name` - Name of the HA VIP.
   * `network_interface_id` - Network interface id that is associated.

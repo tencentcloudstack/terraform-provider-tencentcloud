@@ -74,7 +74,7 @@ func dataSourceTencentMonitorPolicyConditions() *schema.Resource {
 									"event_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The id of this event metric.",
+										Description: "The ID of this event metric.",
 									},
 									"event_show_name": {
 										Type:        schema.TypeString,
@@ -98,7 +98,7 @@ func dataSourceTencentMonitorPolicyConditions() *schema.Resource {
 									"metric_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The id of this metric.",
+										Description: "The ID of this metric.",
 									},
 									"metric_show_name": {
 										Type:        schema.TypeString,

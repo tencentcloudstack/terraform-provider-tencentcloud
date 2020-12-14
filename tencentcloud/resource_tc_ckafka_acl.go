@@ -49,7 +49,7 @@ func resourceTencentCloudCkafkaAcl() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the ckafka instance.",
+				Description: "ID of the ckafka instance.",
 			},
 			"resource_type": {
 				Type:        schema.TypeString,

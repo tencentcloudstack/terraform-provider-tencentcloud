@@ -30,7 +30,7 @@ data "tencentcloud_tcaplus_clusters" "idname" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) Id of the TcaplusDB cluster to be query.
+* `cluster_id` - (Optional) ID of the TcaplusDB cluster to be query.
 * `cluster_name` - (Optional) Name of the TcaplusDB cluster to be query.
 * `result_output_file` - (Optional) File for saving results.
 
@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `api_access_id` - Access id of the TcaplusDB cluster.For TcaplusDB SDK connect.
   * `api_access_ip` - Access ip of the TcaplusDB cluster.For TcaplusDB SDK connect.
   * `api_access_port` - Access port of the TcaplusDB cluster.For TcaplusDB SDK connect.
-  * `cluster_id` - Id of the TcaplusDB cluster.
+  * `cluster_id` - ID of the TcaplusDB cluster.
   * `cluster_name` - Name of the TcaplusDB cluster.
   * `create_time` - Create time of the TcaplusDB cluster.
   * `idl_type` - IDL type of the TcaplusDB cluster.
@@ -50,7 +50,7 @@ In addition to all arguments above, the following attributes are exported:
   * `old_password_expire_time` - Expiration time of the old password. If `password_status` is `unmodifiable`, it means the old password has not yet expired.
   * `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable` means the password can not be changed in this moment; `modifiable` means the password can be changed in this moment.
   * `password` - Access password of the TcaplusDB cluster.
-  * `subnet_id` - Subnet id of the TcaplusDB cluster.
-  * `vpc_id` - VPC id of the TcaplusDB cluster.
+  * `subnet_id` - Subnet ID of the TcaplusDB cluster.
+  * `vpc_id` - VPC ID of the TcaplusDB cluster.
 
 
