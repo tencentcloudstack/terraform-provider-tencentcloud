@@ -33,27 +33,27 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"source_listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of source listener to be queried.",
+				Description: "ID of source listener to be queried.",
 			},
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of target listener to be queried.",
+				Description: "ID of target listener to be queried.",
 			},
 			"source_rule_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule id of source listener to be queried.",
+				Description: "Rule ID of source listener to be queried.",
 			},
 			"target_rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Rule id of target listener to be queried.",
+				Description: "Rule ID of target listener to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -69,27 +69,27 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CLB.",
+							Description: "ID of the CLB.",
 						},
 						"source_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of source listener.",
+							Description: "ID of source listener.",
 						},
 						"target_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of target listener.",
+							Description: "ID of target listener.",
 						},
 						"source_rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Rule id of source listener.",
+							Description: "Rule ID of source listener.",
 						},
 						"target_rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Rule id of target listener.",
+							Description: "Rule ID of target listener.",
 						},
 					},
 				},

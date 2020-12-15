@@ -23,7 +23,7 @@ data "tencentcloud_tcaplus_idls" "id_test" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) Id of the TcaplusDB cluster to be query.
+* `cluster_id` - (Required) ID of the TcaplusDB cluster to be query.
 * `result_output_file` - (Optional) File for saving results.
 
 ## Attributes Reference
@@ -31,6 +31,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of TcaplusDB table IDL. Each element contains the following attributes.
-  * `idl_id` - Id of the IDL.
+  * `idl_id` - ID of the IDL.
 
 

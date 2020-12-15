@@ -54,7 +54,7 @@ The following arguments are supported:
 * `resource_type` - (Required, ForceNew) Type of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.
 * `s_port` - (Required) The source port of the L4 rule.
 * `source_list` - (Required) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 20.
-* `source_type` - (Required, ForceNew) Source type, 1 for source of host, 2 for source of ip.
+* `source_type` - (Required, ForceNew) Source type, `1` for source of host, `2` for source of IP.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.
 * `health_check_interval` - (Optional) Interval time of health check. The value range is 10-60 sec, and the default is 15 sec.
 * `health_check_switch` - (Optional) Indicates whether health check is enabled. The default is `false`. Only valid when source list has more than one source item.
@@ -65,7 +65,7 @@ The following arguments are supported:
 
 The `source_list` object supports the following:
 
-* `source` - (Required) Source ip or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.
+* `source` - (Required) Source IP or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.
 * `weight` - (Required) Weight of the source, the valid value ranges from 0 to 100.
 
 ## Attributes Reference
@@ -73,7 +73,7 @@ The `source_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `lb_type` - LB type of the rule. Valid values: 1, 2.  1 for weight cycling and 2 for IP hash.
-* `rule_id` - Id of the layer 4 rule.
+* `lb_type` - LB type of the rule. Valid values: `1`, `2`. `1` for weight cycling and `2` for IP hash.
+* `rule_id` - ID of the layer 4 rule.
 
 

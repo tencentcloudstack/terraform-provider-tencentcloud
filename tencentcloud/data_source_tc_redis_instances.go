@@ -94,7 +94,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
-							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
+							Description: "Instance type. Available values: `master_slave_redis`, `master_slave_ckv`, `cluster_ckv`, `cluster_redis` and `standalone_redis`.",
 						},
 						"redis_shard_num": {
 							Type:        schema.TypeInt,
@@ -114,7 +114,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Current status of an instance, maybe: init, processing, online, isolate and todelete.",
+							Description: "Current status of an instance, maybe: `init`, `processing`, `online`, `isolate` and `todelete`.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -150,7 +150,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`. Default value is `POSTPAID`.",
+							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`.",
 						},
 					},
 				},

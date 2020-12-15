@@ -60,7 +60,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "ID of the project within the GAAP proxy, '0' means is default project.",
+				Description: "ID of the project within the GAAP proxy, `0` means is default project.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,

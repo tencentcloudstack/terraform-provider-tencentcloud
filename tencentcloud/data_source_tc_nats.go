@@ -66,12 +66,12 @@ func dataSourceTencentCloudNats() *schema.Resource {
 			"max_concurrent": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000.",
+				Description: "The upper limit of concurrent connection of NAT gateway, for example: `1000000`, `3000000`, `10000000`.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: 10, 20, 50, 100, 200, 500, 1000, 2000, 5000.",
+				Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`.",
 			},
 			"nats": {
 				Type:        schema.TypeList,
@@ -97,17 +97,17 @@ func dataSourceTencentCloudNats() *schema.Resource {
 						"state": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "NAT gateway status, 0: Running, 1: Unavailable, 2: Be in arrears and out of service.",
+							Description: "NAT gateway status, `0`: Running, `1`: Unavailable, `2`: Be in arrears and out of service.",
 						},
 						"max_concurrent": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000.",
+							Description: "The upper limit of concurrent connection of NAT gateway, for example: `1000000`, `3000000`, `10000000`.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: 10, 20, 50, 100, 200, 500, 1000, 2000, 5000.",
+							Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`.",
 						},
 						"assigned_eip_set": {
 							Type:        schema.TypeList,

@@ -32,7 +32,7 @@ The following arguments are supported:
 * `database_names` - (Required) List of specified database name.
 * `mysql_id` - (Required, ForceNew) Instance ID.
 * `account_host` - (Optional, ForceNew) Account host, default is `%`.
-* `privileges` - (Optional) Database permissions. Valid values: "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "REFERENCES", "INDEX", "ALTER", "CREATE TEMPORARY TABLES", "LOCK TABLES","EXECUTE", "CREATE VIEW", "SHOW VIEW", "CREATE ROUTINE", "ALTER ROUTINE", "EVENT", and "TRIGGER".
+* `privileges` - (Optional) Database permissions. Valid values: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `REFERENCES`, `INDEX`, `ALTER`, `CREATE TEMPORARY TABLES`, `LOCK TABLES`, `EXECUTE`, `CREATE VIEW`, `SHOW VIEW`, `CREATE ROUTINE`, `ALTER ROUTINE`, `EVENT` and `TRIGGER``.
 
 ## Attributes Reference
 

@@ -25,7 +25,7 @@ resource "tencentcloud_ha_vip_eip_attachment" "foo" {
 The following arguments are supported:
 
 * `address_ip` - (Required, ForceNew) Public address of the EIP.
-* `havip_id` - (Required, ForceNew) Id of the attached HA VIP.
+* `havip_id` - (Required, ForceNew) ID of the attached HA VIP.
 
 ## Attributes Reference
 

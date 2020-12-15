@@ -28,19 +28,19 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 			"mysql_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
+				Description: "Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.",
 			},
 			"instance_role": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"master", "ro", "dr"}),
-				Description:  "Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.",
+				Description:  "Instance type. Supported values include: `master` - master instance, `dr` - disaster recovery instance, and `ro` - read-only instance.",
 			},
 			"status": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1, 4, 5}),
-				Description:  "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
+				Description:  "Instance status. Available values: `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.",
 			},
 			"security_group_id": {
 				Type:        schema.TypeString,
@@ -52,7 +52,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Optional:     true,
 				Deprecated:   "It has been deprecated from version 1.36.0. Please use `charge_type` instead.",
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "Pay type of instance, 0: prepay, 1: postpay.",
+				Description:  "Pay type of instance, `0`: prepay, `1`: postpaid.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
@@ -75,7 +75,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.",
+				Description:  "Initialization mark. Available values: `0` - Uninitialized; `1` - Initialized.",
 			},
 			"with_dr": {
 				Type:         schema.TypeInt,
@@ -107,7 +107,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Optional:     true,
 				Default:      20,
 				ValidateFunc: validateIntegerInRange(1, 2000),
-				Description:  "Number of results returned for a single request. Default is 20, and maximum is 2000.",
+				Description:  "Number of results returned for a single request. Default is `20`, and maximum is 2000.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -124,7 +124,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"mysql_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
+							Description: "Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.",
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
@@ -134,17 +134,17 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"instance_role": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.",
+							Description: "Instance type. Supported values include: `master` - master instance, `dr` - disaster recovery instance, and `ro` - read-only instance.",
 						},
 						"init_flag": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.",
+							Description: "Initialization mark. Available values: `0` - Uninitialized; `1` - Initialized.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
+							Description: "Instance status. Available values: `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.",
 						},
 						"zone": {
 							Type:        schema.TypeString,
@@ -159,7 +159,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.",
+							Description: "The version number of the database engine to use. Supported versions include `5.5`/`5.6`/`5.7`/`8.0`.",
 						},
 						"cpu_core_count": {
 							Type:        schema.TypeInt,
@@ -219,17 +219,17 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"slave_sync_mode": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
+							Description: "Data replication mode. `0` - Async replication; `1` - Semisync replication; `2` - Strongsync replication.",
 						},
 						"device_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Supported instance model.HA - high available version; Basic - basic version.",
+							Description: "Supported instance model. `HA` - high available version; `Basic` - basic version.",
 						},
 						"pay_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
+							Description: "Pay type of instance, `0`: prepaid, `1`: postpaid.",
 						},
 						"charge_type": {
 							Type:        schema.TypeString,

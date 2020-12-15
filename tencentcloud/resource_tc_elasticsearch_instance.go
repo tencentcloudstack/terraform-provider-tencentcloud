@@ -80,13 +80,13 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The id of a VPC network.",
+				Description: "The ID of a VPC network.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The id of a VPC subnetwork.",
+				Description: "The ID of a VPC subnetwork.",
 			},
 			"password": {
 				Type:        schema.TypeString,
@@ -140,7 +140,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The id of a VPC subnetwork.",
+							Description: "The ID of a VPC subnetwork.",
 						},
 					},
 				},

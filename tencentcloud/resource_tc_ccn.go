@@ -60,13 +60,13 @@ func resourceTencentCloudCcn() *schema.Resource {
 				ForceNew:     true,
 				Default:      CNN_QOS_AU,
 				ValidateFunc: validateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
-				Description:  "Service quality of CCN. Valid values: 'PT', 'AU', 'AG'. The default is 'AU'.",
+				Description:  "Service quality of CCN. Valid values: `PT`, `AU`, `AG`. The default is `AU`.",
 			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "States of instance. Valid values: 'ISOLATED'(arrears) and 'AVAILABLE'.",
+				Description: "States of instance. Valid values: `ISOLATED`(arrears) and `AVAILABLE`.",
 			},
 			"instance_count": {
 				Type:        schema.TypeInt,

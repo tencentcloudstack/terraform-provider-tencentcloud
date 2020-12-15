@@ -51,7 +51,7 @@ func resourceTencentCloudAddressTemplate() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Required:    true,
-				Description: "Address list. IP(10.0.0.1), CIDR(10.0.1.0/24), IP range(10.0.0.1-10.0.0.100) format are supported.",
+				Description: "Address list. IP(`10.0.0.1`), CIDR(`10.0.1.0/24`), IP range(`10.0.0.1-10.0.0.100`) format are supported.",
 			},
 		},
 	}

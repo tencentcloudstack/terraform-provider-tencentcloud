@@ -89,7 +89,7 @@ func dataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Computed:    true,
-							Description: "Storage ids that the snapshot policy attached.",
+							Description: "Storage IDs that the snapshot policy attached.",
 						},
 					},
 				},

@@ -36,7 +36,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachments() *schema.Resource {
 			"resource_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the attached resource to be queried.",
+				Description: "ID of the attached resource to be queried.",
 			},
 			"resource_type": {
 				Type:         schema.TypeString,
@@ -63,7 +63,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachments() *schema.Resource {
 						"resource_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the attached resource.",
+							Description: "ID of the attached resource.",
 						},
 						"resource_type": {
 							Type:        schema.TypeString,
@@ -73,7 +73,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachments() *schema.Resource {
 						"policy_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the policy.",
+							Description: "ID of the policy.",
 						},
 					},
 				},

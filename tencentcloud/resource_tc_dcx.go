@@ -86,7 +86,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      DC_NETWORK_TYPE_VPC,
 				ValidateFunc: validateAllowedStringValue(DC_NETWORK_TYPES),
-				Description:  "Type of the network. Valid value:  VPC, BMVPC and CCN. The default value is VPC.",
+				Description:  "Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -100,7 +100,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      DC_ROUTE_TYPE_BGP,
 				ValidateFunc: validateAllowedStringValue(DC_ROUTE_TYPES),
-				Description:  "Type of the route, and available values include BGP and STATIC. The default value is BGP.",
+				Description:  "Type of the route, and available values include BGP and STATIC. The default value is `BGP`.",
 			},
 			"dcg_id": {
 				Type:        schema.TypeString,
@@ -136,7 +136,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "Vlan of the dedicated tunnels. Valid value ranges: (0~3000). '0' means that only one tunnel can be created for the physical connect.",
+				Description: "Vlan of the dedicated tunnels. Valid value ranges: (0~3000). `0` means that only one tunnel can be created for the physical connect.",
 			},
 			"tencent_address": {
 				Type:        schema.TypeString,
@@ -163,7 +163,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "State of the dedicated tunnels. Valid value: PENDING, ALLOCATING, ALLOCATED, ALTERING, DELETING, DELETED, COMFIRMING and REJECTED.",
+				Description: "State of the dedicated tunnels. Valid value: `PENDING`, `ALLOCATING`, `ALLOCATED`, `ALTERING`, `DELETING`, `DELETED`, `COMFIRMING` and `REJECTED`.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,

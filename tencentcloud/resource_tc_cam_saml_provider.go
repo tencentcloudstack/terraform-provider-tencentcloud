@@ -75,7 +75,7 @@ func resourceTencentCloudCamSAMLProvider() *schema.Resource {
 			"provider_arn": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The arn of the CAM SAML provider.",
+				Description: "The ARN of the CAM SAML provider.",
 			},
 		},
 	}

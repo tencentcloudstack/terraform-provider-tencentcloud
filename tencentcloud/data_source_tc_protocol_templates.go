@@ -34,7 +34,7 @@ func dataSourceTencentCloudProtocolTemplates() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the protocol template to query.",
+				Description: "ID of the protocol template to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -52,7 +52,7 @@ func dataSourceTencentCloudProtocolTemplates() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the protocol template.",
+							Description: "ID of the protocol template.",
 						},
 						"name": {
 							Type:        schema.TypeString,

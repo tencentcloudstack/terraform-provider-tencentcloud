@@ -60,9 +60,9 @@ In addition to all arguments above, the following attributes are exported:
     * `api_type` - API type. Valid values: `NORMAL`, `TSF`. `NORMAL` means common API, `TSF` means microservice API.
     * `auth_relation_api_id` - The unique ID of the associated authorization API, which takes effect when the authType is `OAUTH` and `ApiBusinessType` is normal. Identifies the unique ID of the oauth2.0 authorization API bound to the business API.
     * `auth_type` - API authentication type. Valid values: `SECRET`, `NONE`, `OAUTH`. `SECRET` means key pair authentication, `NONE` means no authentication.
-    * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
+    * `create_time` - Creation time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
     * `method` - API request method.
-    * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
+    * `modify_time` - Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
     * `oauth_config` - OAUTH configuration information. It takes effect when authType is `OAUTH`.
     * `path` - API path.
     * `protocol` - API protocol.

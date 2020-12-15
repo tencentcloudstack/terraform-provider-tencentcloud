@@ -67,7 +67,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 						"source_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Source type, 1 for source of host, 2 for source of ip.",
+							Description: "Source type, `1` for source of host, `2` for source of IP.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -97,7 +97,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 									"source": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Source ip or domain.",
+										Description: "Source IP or domain.",
 									},
 									"weight": {
 										Type:        schema.TypeInt,
@@ -131,7 +131,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 						"health_check_timeout": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "HTTP Status Code. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
+							Description: "HTTP Status Code. `1` means the return value `1xx` is health. `2` means the return value `2xx` is health. `4` means the return value `3xx` is health. `8` means the return value `4xx` is health. `16` means the return value `5xx` is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
 						},
 						"session_switch": {
 							Type:        schema.TypeBool,
@@ -146,12 +146,12 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the 4 layer rule.",
+							Description: "ID of the 4 layer rule.",
 						},
 						"lb_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "LB type of the rule, 1 for weight cycling and 2 for IP hash.",
+							Description: "LB type of the rule, `1` for weight cycling and `2` for IP hash.",
 						},
 					},
 				},

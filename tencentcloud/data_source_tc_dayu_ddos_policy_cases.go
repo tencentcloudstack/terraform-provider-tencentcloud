@@ -36,7 +36,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 			"scene_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the DDoS policy case to be query.",
+				Description: "ID of the DDoS policy case to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -179,7 +179,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 						"scene_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the DDoS policy case.",
+							Description: "ID of the DDoS policy case.",
 						},
 					},
 				},

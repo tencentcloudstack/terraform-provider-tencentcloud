@@ -35,7 +35,7 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerMin(2),
-				Description:  "Instance type id.",
+				Description:  "Instance type ID.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -63,12 +63,12 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
-							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
+							Description: "Instance type. Available values: `master_slave_redis`, `master_slave_ckv`, `cluster_ckv`, `cluster_redis` and `standalone_redis`.",
 						},
 						"version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version description of an available instance. Possible values: Redis 3.2, Redis 4.0.",
+							Description: "Version description of an available instance. Possible values: `Redis 3.2`, `Redis 4.0`.",
 						},
 						"mem_sizes": {
 							Type:        schema.TypeList,

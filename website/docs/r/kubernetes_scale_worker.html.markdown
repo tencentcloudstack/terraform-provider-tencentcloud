@@ -120,7 +120,7 @@ The following arguments are supported:
 
 The `data_disk` object supports the following:
 
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
+* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
@@ -134,7 +134,7 @@ The `worker_config` object supports the following:
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `instance_charge_type_prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
+* `instance_charge_type_prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, ForceNew) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
 * `instance_name` - (Optional, ForceNew) Name of the CVMs.
@@ -144,7 +144,7 @@ The `worker_config` object supports the following:
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
-* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
+* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 

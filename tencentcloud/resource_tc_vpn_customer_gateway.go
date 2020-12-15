@@ -58,7 +58,7 @@ func resourceTencentCloudVpnCustomerGateway() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIp,
-				Description:  "Public ip of the customer gateway.",
+				Description:  "Public IP of the customer gateway.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

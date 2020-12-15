@@ -31,7 +31,7 @@ resource "tencentcloud_ckafka_acl" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) Id of the ckafka instance.
+* `instance_id` - (Required, ForceNew) ID of the ckafka instance.
 * `operation_type` - (Required, ForceNew) ACL operation mode. Valid values: `UNKNOWN`, `ANY`, `ALL`, `READ`, `WRITE`, `CREATE`, `DELETE`, `ALTER`, `DESCRIBE`, `CLUSTER_ACTION`, `DESCRIBE_CONFIGS` and `ALTER_CONFIGS`.
 * `resource_name` - (Required, ForceNew) ACL resource name, which is related to `resource_type`. For example, if `resource_type` is `TOPIC`, this field indicates the topic name; if `resource_type` is `GROUP`, this field indicates the group name.
 * `host` - (Optional, ForceNew) IP address allowed to access. The default value is `*`, which means that any host can access.

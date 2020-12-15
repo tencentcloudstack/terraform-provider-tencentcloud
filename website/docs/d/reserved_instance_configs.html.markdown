@@ -24,7 +24,7 @@ data "tencentcloud_reserved_instance_configs" "config" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional) The available zone that the reserved instance locates at.
-* `duration` - (Optional) Validity period of the reserved instance. Valid values are 31536000(1 year) and 94608000(3 years).
+* `duration` - (Optional) Validity period of the reserved instance. Valid values are `31536000`(1 year) and `94608000`(3 years).
 * `instance_type` - (Optional) The type of reserved instance.
 * `result_output_file` - (Optional) Used to save results.
 

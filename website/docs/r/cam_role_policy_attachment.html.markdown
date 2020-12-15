@@ -24,18 +24,18 @@ resource "tencentcloud_cam_role_policy_attachment" "foo" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required, ForceNew) Id of the policy.
-* `role_id` - (Required, ForceNew) Id of the attached CAM role.
+* `policy_id` - (Required, ForceNew) ID of the policy.
+* `role_id` - (Required, ForceNew) ID of the attached CAM role.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_mode` - Mode of Creation of the CAM role policy attachment. 1 means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.
+* `create_mode` - Mode of Creation of the CAM role policy attachment. `1` means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.
 * `create_time` - The create time of the CAM role policy attachment.
 * `policy_name` - The name of the policy.
-* `policy_type` - Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
+* `policy_type` - Type of the policy strategy. `User` means customer strategy and `QCS` means preset strategy.
 
 
 ## Import

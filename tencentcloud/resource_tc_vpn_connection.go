@@ -169,13 +169,13 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ike_local_fqdn_name"},
-				Description:   "Local address of IKE operation specification, valid when ike_local_identity is `ADDRESS`, generally the value is public_ip_address of the related VPN gateway.",
+				Description:   "Local address of IKE operation specification, valid when ike_local_identity is `ADDRESS`, generally the value is `public_ip_address` of the related VPN gateway.",
 			},
 			"ike_remote_address": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ike_remote_fqdn_name"},
-				Description:   "Remote address of IKE operation specification, valid when ike_remote_identity is `ADDRESS`, generally the value is public_ip_address of the related customer gateway.",
+				Description:   "Remote address of IKE operation specification, valid when ike_remote_identity is `ADDRESS`, generally the value is `public_ip_address` of the related customer gateway.",
 			},
 			"ike_local_fqdn_name": {
 				Type:          schema.TypeString,
@@ -228,7 +228,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      3600,
 				ValidateFunc: validateIntegerInRange(180, 604800),
-				Description:  "SA lifetime of the IPSEC operation specification, unit is `second`. Valid value ranges: (180~604800). Default value is 3600 seconds.",
+				Description:  "SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.",
 			},
 			"ipsec_pfs_dh_group": {
 				Type:         schema.TypeString,
@@ -242,7 +242,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      1843200,
 				ValidateFunc: validateIntegerMin(2560),
-				Description:  "SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.",
+				Description:  "SA lifetime of the IPSEC operation specification, unit is KB. The value should not be less then 2560. Default value is 1843200.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

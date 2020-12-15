@@ -32,7 +32,7 @@ The following arguments are supported:
 * `description` - (Optional) The description of the CAM role to be queried.
 * `name` - (Optional) Name of the CAM policy to be queried.
 * `result_output_file` - (Optional) Used to save results.
-* `role_id` - (Optional) Id of the CAM role to be queried.
+* `role_id` - (Optional) ID of the CAM role to be queried.
 
 ## Attributes Reference
 

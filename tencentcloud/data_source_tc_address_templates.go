@@ -34,7 +34,7 @@ func dataSourceTencentCloudAddressTemplates() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the address template to query.",
+				Description: "ID of the address template to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -52,7 +52,7 @@ func dataSourceTencentCloudAddressTemplates() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the address template.",
+							Description: "ID of the address template.",
 						},
 						"name": {
 							Type:        schema.TypeString,

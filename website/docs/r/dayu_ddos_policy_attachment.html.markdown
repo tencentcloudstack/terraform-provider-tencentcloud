@@ -25,8 +25,8 @@ resource "tencentcloud_dayu_ddos_policy_attachment" "dayu_ddos_policy_attachment
 
 The following arguments are supported:
 
-* `policy_id` - (Required, ForceNew) Id of the policy.
-* `resource_id` - (Required, ForceNew) Id of the attached resource.
+* `policy_id` - (Required, ForceNew) ID of the policy.
+* `resource_id` - (Required, ForceNew) ID of the attached resource.
 * `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for. Valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
 
 ## Attributes Reference

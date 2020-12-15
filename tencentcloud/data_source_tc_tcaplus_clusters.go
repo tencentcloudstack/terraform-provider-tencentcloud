@@ -38,7 +38,7 @@ func dataSourceTencentCloudTcaplusClusters() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the TcaplusDB cluster to be query.",
+				Description: "ID of the TcaplusDB cluster to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -59,7 +59,7 @@ func dataSourceTencentCloudTcaplusClusters() *schema.Resource {
 						"cluster_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the TcaplusDB cluster.",
+							Description: "ID of the TcaplusDB cluster.",
 						},
 						"idl_type": {
 							Type:        schema.TypeString,
@@ -69,12 +69,12 @@ func dataSourceTencentCloudTcaplusClusters() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "VPC id of the TcaplusDB cluster.",
+							Description: "VPC ID of the TcaplusDB cluster.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Subnet id of the TcaplusDB cluster.",
+							Description: "Subnet ID of the TcaplusDB cluster.",
 						},
 						"password": {
 							Type:        schema.TypeString,

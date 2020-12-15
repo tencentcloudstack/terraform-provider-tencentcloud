@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `exclusive_set_name` - Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
   * `inner_http_port` - Port number for http access over private network.
   * `inner_https_port` - Port number for https access over private network.
-  * `internal_sub_domain` - Private network access subdomain name.
+  * `internal_sub_domain` - Private network access sub-domain name.
   * `ip_version` - IP version number.
   * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
   * `net_type` - Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.

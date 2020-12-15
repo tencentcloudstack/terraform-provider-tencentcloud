@@ -23,7 +23,7 @@ data "tencentcloud_address_templates" "name" {
 
 The following arguments are supported:
 
-* `id` - (Optional) Id of the address template to query.
+* `id` - (Optional) ID of the address template to query.
 * `name` - (Optional) Name of the address template to query.
 * `result_output_file` - (Optional) Used to save results.
 
@@ -33,7 +33,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `template_list` - Information list of the dedicated address templates.
   * `addresses` - Set of the addresses.
-  * `id` - Id of the address template.
+  * `id` - ID of the address template.
   * `name` - Name of address template.
 
 

@@ -32,6 +32,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `audit_key_alias_list` - List of available key alias supported by audit.
   * `key_alias` - Key alias.
-  * `key_id` - Key id.
+  * `key_id` - Key ID.
 
 

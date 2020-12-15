@@ -26,7 +26,7 @@ resource "tencentcloud_reserved_instance" "ri" {
 
 The following arguments are supported:
 
-* `config_id` - (Required) Configuration id of the reserved instance.
+* `config_id` - (Required) Configuration ID of the reserved instance.
 * `instance_count` - (Required) Number of reserved instances to be purchased.
 
 ## Attributes Reference

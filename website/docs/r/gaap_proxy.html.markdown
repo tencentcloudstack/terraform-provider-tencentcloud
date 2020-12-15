@@ -37,7 +37,7 @@ The following arguments are supported:
 * `name` - (Required) Name of the GAAP proxy, the maximum length is 30.
 * `realserver_region` - (Required, ForceNew) Region of the GAAP realserver. Valid value: `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
 * `enable` - (Optional) Indicates whether GAAP proxy is enabled, default value is `true`.
-* `project_id` - (Optional) ID of the project within the GAAP proxy, '0' means is default project.
+* `project_id` - (Optional) ID of the project within the GAAP proxy, `0` means is default project.
 * `tags` - (Optional) Tags of the GAAP proxy.
 
 ## Attributes Reference

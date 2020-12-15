@@ -63,7 +63,7 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of CLB instance.",
+				Description: "ID of CLB instance.",
 			},
 			"source_listener_id": {
 				Type:     schema.TypeString,
@@ -71,13 +71,13 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				Optional: true,
 				Computed: true,
 
-				Description: "Id of source listener.",
+				Description: "ID of source listener.",
 			},
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of source listener.",
+				Description: "ID of source listener.",
 			},
 			"source_rule_id": {
 				Type:     schema.TypeString,
@@ -85,25 +85,25 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				Optional: true,
 				Computed: true,
 
-				Description: "Rule id of source listener.",
+				Description: "Rule ID of source listener.",
 			},
 			"target_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Rule id of target listener.",
+				Description: "Rule ID of target listener.",
 			},
 			"is_auto_rewrite": {
 				Type:        schema.TypeBool,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Indicates whether automatic forwarding is enable, default is false. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.",
+				Description: "Indicates whether automatic forwarding is enable, default is `false`. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.",
 			},
 			"delete_all_auto_rewrite": {
 				Type:        schema.TypeBool,
 				Default:     false,
 				Optional:    true,
-				Description: "Indicates whether delete all auto redirection. Default is false. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.",
+				Description: "Indicates whether delete all auto redirection. Default is `false`. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.",
 			},
 		},
 	}

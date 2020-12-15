@@ -61,7 +61,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"topic_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CKafka topic.",
+							Description: "ID of the CKafka topic.",
 						},
 						"topic_name": {
 							Type:        schema.TypeString,
@@ -91,7 +91,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"enable_white_list": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether to open the IP Whitelist, true: open, false: close.",
+							Description: "Whether to open the IP Whitelist. `true`: open, `false`: close.",
 						},
 						"ip_white_list_count": {
 							Type:        schema.TypeInt,
@@ -111,12 +111,12 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"forward_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Data backup cos status. 1: do not open data backup, 0: open data backup.",
+							Description: "Data backup cos status. `1`: do not open data backup, `0`: open data backup.",
 						},
 						"retention": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Message can be selected. Retention time, unit ms.",
+							Description: "Message can be selected. Retention time(unit ms).",
 						},
 						"sync_replica_min_num": {
 							Type:        schema.TypeInt,

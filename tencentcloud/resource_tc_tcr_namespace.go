@@ -45,13 +45,13 @@ func resourceTencentCloudTcrNamespace() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the TCR instance.",
+				Description: "ID of the TCR instance.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of the TCR namespace. Valid length is 2~30. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`), and cannot start, end or continue with separators.",
+				Description: "Name of the TCR namespace. Valid length is [2~30]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`), and cannot start, end or continue with separators.",
 			},
 			"is_public": {
 				Type:        schema.TypeBool,

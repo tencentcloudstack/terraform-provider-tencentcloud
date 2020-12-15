@@ -421,12 +421,14 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_namespaces
 	tencentcloud_tcr_repositories
 	tencentcloud_tcr_tokens
+	tencentcloud_tcr_vpc_attachments
 
   Resource
 	tencentcloud_tcr_instance
 	tencentcloud_tcr_namespace
 	tencentcloud_tcr_repository
 	tencentcloud_tcr_token
+	tencentcloud_tcr_vpc_attachment
 
 Video on Demand(VOD)
   Data Source
@@ -753,6 +755,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_instances":                            dataSourceTencentCloudTCRInstances(),
 			"tencentcloud_tcr_namespaces":                           dataSourceTencentCloudTCRNamespaces(),
 			"tencentcloud_tcr_tokens":                               dataSourceTencentCloudTCRTokens(),
+			"tencentcloud_tcr_vpc_attachments":                      dataSourceTencentCloudTCRVPCAttachments(),
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
@@ -908,6 +911,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_namespace":                           resourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                          resourceTencentCloudTcrRepository(),
 			"tencentcloud_tcr_token":                               resourceTencentCloudTcrToken(),
+			"tencentcloud_tcr_vpc_attachment":                      resourceTencentCloudTcrVpcAttachment(),
 			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_address_template":                        resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                  resourceTencentCloudAddressTemplateGroup(),

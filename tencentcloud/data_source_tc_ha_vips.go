@@ -39,7 +39,7 @@ func dataSourceTencentCloudHaVips() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the HA VIP to be queried.",
+				Description: "ID of the HA VIP to be queried.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -73,7 +73,7 @@ func dataSourceTencentCloudHaVips() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the HA VIP.",
+							Description: "ID of the HA VIP.",
 						},
 						"name": {
 							Type:        schema.TypeString,

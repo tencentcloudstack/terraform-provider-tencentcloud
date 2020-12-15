@@ -33,13 +33,13 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_NETWORK_TYPE),
-				Description:  "Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.",
+				Description:  "Type of CLB instance, and available values include `OPEN` and `INTERNAL`.",
 			},
 			"clb_name": {
 				Type:        schema.TypeString,
@@ -49,7 +49,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Project id of the CLB.",
+				Description: "Project ID of the CLB.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -65,7 +65,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of CLB.",
+							Description: "ID of CLB.",
 						},
 						"clb_name": {
 							Type:        schema.TypeString,
@@ -80,7 +80,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Id of the project.",
+							Description: "ID of the project.",
 						},
 						"clb_vips": {
 							Type:        schema.TypeList,
@@ -96,7 +96,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time of the CLB.",
+							Description: "Create time of the CLB.",
 						},
 						"status_time": {
 							Type:        schema.TypeString,
@@ -106,18 +106,18 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the VPC.",
+							Description: "ID of the VPC.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the subnet.",
+							Description: "ID of the subnet.",
 						},
 						"security_groups": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Id set of the security groups.",
+							Description: "ID set of the security groups.",
 						},
 						"target_region_info_region": {
 							Type:        schema.TypeString,

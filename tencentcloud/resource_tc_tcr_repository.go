@@ -46,7 +46,7 @@ func resourceTencentCloudTcrRepository() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the TCR instance.",
+				Description: "ID of the TCR instance.",
 			},
 			"namespace_name": {
 				Type:        schema.TypeString,
@@ -58,17 +58,17 @@ func resourceTencentCloudTcrRepository() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of the TCR repository. Valid length is 2~200. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`, `/`), and cannot start, end or continue with separators. Support the use of multi-level address formats, such as `sub1/sub2/repo`.",
+				Description: "Name of the TCR repository. Valid length is [2~200]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`, `/`), and cannot start, end or continue with separators. Support the use of multi-level address formats, such as `sub1/sub2/repo`.",
 			},
 			"brief_desc": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Brief description of the repository. Valid length is 1~100.",
+				Description: "Brief description of the repository. Valid length is [1~100].",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Description of the repository. Valid length is 1~1000.",
+				Description: "Description of the repository. Valid length is [1~1000].",
 			},
 			//computed
 			"is_public": {

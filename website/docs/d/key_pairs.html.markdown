@@ -29,7 +29,7 @@ The following arguments are supported:
 
 * `key_id` - (Optional) ID of the key pair to be queried.
 * `key_name` - (Optional) Name of the key pair to be queried. Support regular expression search, only `^` and `$` are supported.
-* `project_id` - (Optional) Project id of the key pair to be queried.
+* `project_id` - (Optional) Project ID of the key pair to be queried.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
@@ -40,7 +40,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Creation time of the key pair.
   * `key_id` - ID of the key pair.
   * `key_name` - Name of the key pair.
-  * `project_id` - Project id of the key pair.
+  * `project_id` - Project ID of the key pair.
   * `public_key` - public key of the key pair.
 
 

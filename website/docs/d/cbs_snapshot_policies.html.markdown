@@ -33,7 +33,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `snapshot_policy_list` - A list of snapshot policy. Each element contains the following attributes:
-  * `attached_storage_ids` - Storage ids that the snapshot policy attached.
+  * `attached_storage_ids` - Storage IDs that the snapshot policy attached.
   * `create_time` - Create time of the snapshot policy.
   * `repeat_hours` - Trigger hours of periodic snapshot.
   * `repeat_weekdays` - Trigger days of periodic snapshot.

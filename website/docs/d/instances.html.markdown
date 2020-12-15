@@ -56,9 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `internet_charge_type` - The charge type of the instance.
   * `internet_max_bandwidth_out` - Public network maximum output bandwidth of the instance.
   * `memory` - Instance memory capacity, unit in GB.
-  * `private_ip` - Private ip of the instance.
+  * `private_ip` - Private IP of the instance.
   * `project_id` - The project CVM belongs to.
-  * `public_ip` - Public ip of the instance.
+  * `public_ip` - Public IP of the instance.
   * `security_groups` - Security groups of the instance.
   * `status` - Status of the instance.
   * `subnet_id` - ID of a vpc subnetwork.

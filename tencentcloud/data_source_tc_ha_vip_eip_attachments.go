@@ -30,7 +30,7 @@ func dataSourceTencentCloudHaVipEipAttachments() *schema.Resource {
 			"havip_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the attached HA VIP to be queried.",
+				Description: "ID of the attached HA VIP to be queried.",
 			},
 			"address_ip": {
 				Type:        schema.TypeString,
@@ -51,7 +51,7 @@ func dataSourceTencentCloudHaVipEipAttachments() *schema.Resource {
 						"havip_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the attached HA VIP.",
+							Description: "ID of the attached HA VIP.",
 						},
 						"address_ip": {
 							Type:        schema.TypeString,

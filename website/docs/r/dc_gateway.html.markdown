@@ -32,16 +32,16 @@ resource "tencentcloud_dc_gateway" "vpc_main" {
 The following arguments are supported:
 
 * `name` - (Required) Name of the DCG.
-* `network_instance_id` - (Required, ForceNew) If the 'network_type' value is 'VPC', the available value is VPC ID. But when the 'network_type' value is 'CCN', the available value is CCN instance ID.
-* `network_type` - (Required, ForceNew) Type of associated network. Valid value: 'VPC' and 'CCN'.
-* `gateway_type` - (Optional, ForceNew) Type of the gateway. Valid value: 'NORMAL' and 'NAT'. Default is 'NORMAL'. NOTES: CCN only supports 'NORMAL' and a vpc can create two DCGs, the one is NAT type and the other is non-NAT type.
+* `network_instance_id` - (Required, ForceNew) If the `network_type` value is `VPC`, the available value is VPC ID. But when the `network_type` value is `CCN`, the available value is CCN instance ID.
+* `network_type` - (Required, ForceNew) Type of associated network. Valid value: `VPC` and `CCN`.
+* `gateway_type` - (Optional, ForceNew) Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `cnn_route_type` - Type of CCN route. Valid value: 'BGP' and 'STATIC'. The property is available when the DCG type is CCN gateway and BGP enabled.
+* `cnn_route_type` - Type of CCN route. Valid value: `BGP` and `STATIC`. The property is available when the DCG type is CCN gateway and BGP enabled.
 * `create_time` - Creation time of resource.
 * `enable_bgp` - Indicates whether the BGP is enabled.
 

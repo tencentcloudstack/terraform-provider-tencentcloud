@@ -75,7 +75,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC, CNN_INSTANCE_TYPE_VPNGW}),
 				ForceNew:     true,
-				Description:  "Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW. Note: VPNGW type is only for whitelist customer now.",
+				Description:  "Type of attached instance network, and available values include `VPC`, `DIRECTCONNECT`, `BMVPC` and `VPNGW`. Note: `VPNGW` type is only for whitelist customer now.",
 			},
 			"instance_region": {
 				Type:        schema.TypeString,
@@ -100,7 +100,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "States of instance is attached. Valid values: PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED, ATTACHING, DETACHING and DETACHFAILED. FAILED means asynchronous forced disassociation after 2 hours. DETACHFAILED means asynchronous forced disassociation after 2 hours.",
+				Description: "States of instance is attached. Valid values: `PENDING`, `ACTIVE`, `EXPIRED`, `REJECTED`, `DELETED`, `FAILED`, `ATTACHING`, `DETACHING` and `DETACHFAILED`. `FAILED` means asynchronous forced disassociation after 2 hours. `DETACHFAILED` means asynchronous forced disassociation after 2 hours.",
 			},
 			"attached_time": {
 				Type:        schema.TypeString,

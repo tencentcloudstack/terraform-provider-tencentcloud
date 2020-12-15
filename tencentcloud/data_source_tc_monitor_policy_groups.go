@@ -92,7 +92,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 						"is_default": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "If is default policy group or not,0 represents the non-default policy, and 1 represents the default policy.",
+							Description: "If is default policy group or not, `0` represents the non-default policy, and `1` represents the default policy.",
 						},
 						"conditions": {
 							Type:        schema.TypeList,
@@ -113,12 +113,12 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"metric_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The id of this metric.",
+										Description: "The ID of this metric.",
 									},
 									"rule_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Threshold rule id.",
+										Description: "Threshold rule ID.",
 									},
 									"metric_unit": {
 										Type:        schema.TypeString,
@@ -128,17 +128,17 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"alarm_notify_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Alarm sending convergence type. 0 continuous alarm, 1 index alarm.",
+										Description: "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 									},
 									"alarm_notify_period": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Alarm sending cycle per second.<0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
+										Description: "Alarm sending cycle per second. `<0` does not fire, `0` only fires once, and `>0` fires every triggerTime second.",
 									},
 									"calc_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell.",
+										Description: "Compare type, `1` means more than, `2`  means greater than or equal, `3` means less than, `4` means less than or equal to, `5` means equal, `6` means not equal, `7` means days rose, `8` means days fell, `9` means weeks rose, `10` means weeks fell, `11` means period rise, `12` means period fell.",
 									},
 									"calc_value": {
 										Type:        schema.TypeString,
@@ -162,7 +162,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"event_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The id of this event metric.",
+										Description: "The ID of this event metric.",
 									},
 									"event_show_name": {
 										Type:        schema.TypeString,
@@ -172,17 +172,17 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"rule_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Threshold rule id.",
+										Description: "Threshold rule ID.",
 									},
 									"alarm_notify_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Alarm sending convergence type. 0 continuous alarm, 1 index alarm.",
+										Description: "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 									},
 									"alarm_notify_period": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Alarm sending cycle per second.<0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
+										Description: "Alarm sending cycle per second. `<0` does not fire, `0` only fires once, and `>0` fires every triggerTime second.",
 									},
 								},
 							},
@@ -197,13 +197,13 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 										Type:        schema.TypeList,
 										Elem:        &schema.Schema{Type: schema.TypeInt},
 										Computed:    true,
-										Description: "Alarm receive group id list.",
+										Description: "Alarm receive group ID list.",
 									},
 									"receiver_user_list": {
 										Type:        schema.TypeList,
 										Elem:        &schema.Schema{Type: schema.TypeInt},
 										Computed:    true,
-										Description: "Alarm receiver id list.",
+										Description: "Alarm receiver ID list.",
 									},
 									"uid_list": {
 										Type:        schema.TypeList,
@@ -256,7 +256,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 										Type:        schema.TypeList,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Computed:    true,
-										Description: `Telephone warning time.Option "OCCUR","RECOVER".`,
+										Description: `Telephone warning time.Option "OCCUR", "RECOVER".`,
 									},
 									"recover_notify": {
 										Type:        schema.TypeList,
@@ -280,7 +280,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 						"parent_group_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Parent policy group id.",
+							Description: "Parent policy group ID.",
 						},
 						"remark": {
 							Type:        schema.TypeString,
@@ -290,7 +290,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The project id to which the policy group belongs.",
+							Description: "The project ID to which the policy group belongs.",
 						},
 						"update_time": {
 							Type:        schema.TypeInt,

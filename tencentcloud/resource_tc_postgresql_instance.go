@@ -101,7 +101,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "Project id, default value is 0.",
+				Description: "Project id, default value is `0`.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,

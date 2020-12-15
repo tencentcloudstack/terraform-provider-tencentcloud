@@ -117,7 +117,7 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Project ID, default value is 0.",
+							Description: "Project ID, default value is `0`.",
 						},
 						"availability_zone": {
 							Type:        schema.TypeString,
@@ -147,7 +147,7 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
+							Description: "Status of the SQL Server basic instance. `1` for applying, `2` for running, `3` for running with limit, `4` for isolated, `5` for recycling, `6` for recycled, `7` for running with task, `8` for off-line, `9` for expanding, `10` for migrating, `11` for readonly, `12` for rebooting.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,

@@ -159,12 +159,12 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 									"next_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of next-hop, and available values include CVM, VPN, DIRECTCONNECT, PEERCONNECTION, SSLVPN, NAT, NORMAL_CVM, EIP and CCN.",
+										Description: "Type of next-hop, and available values include `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.",
 									},
 									"next_hub": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value '0'.",
+										Description: "ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value `0`.",
 									},
 								},
 							},

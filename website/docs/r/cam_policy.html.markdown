@@ -40,7 +40,7 @@ EOF
 
 The following arguments are supported:
 
-* `document` - (Required) Document of the CAM policy. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.
+* `document` - (Required) Document of the CAM policy. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.
 * `name` - (Required, ForceNew) Name of CAM policy.
 * `description` - (Optional) Description of the CAM policy.
 
@@ -50,7 +50,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the CAM policy.
-* `type` - Type of the policy strategy. Valid values: 1, 2.  1 means customer strategy and 2 means preset strategy.
+* `type` - Type of the policy strategy. Valid values: `1`, `2`.  `1` means customer strategy and `2` means preset strategy.
 * `update_time` - The last update time of the CAM policy.
 
 

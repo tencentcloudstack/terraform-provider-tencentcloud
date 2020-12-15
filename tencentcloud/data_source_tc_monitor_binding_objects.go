@@ -32,7 +32,7 @@ func dataSourceTencentMonitorBindingObjects() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Policy group id for query.",
+				Description: "Policy group ID for query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -49,7 +49,7 @@ func dataSourceTencentMonitorBindingObjects() *schema.Resource {
 						"unique_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Object unique id.",
+							Description: "Object unique ID.",
 						},
 						"dimensions_json": {
 							Type:        schema.TypeString,
@@ -59,7 +59,7 @@ func dataSourceTencentMonitorBindingObjects() *schema.Resource {
 						"is_shielded": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Whether the object is shielded or not, 0 means unshielded and 1 means shielded.",
+							Description: "Whether the object is shielded or not, `0` means unshielded and `1` means shielded.",
 						},
 						"region": {
 							Type:        schema.TypeString,

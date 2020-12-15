@@ -35,7 +35,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 			"policy_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the DDoS policy to be query.",
+				Description: "ID of the DDoS policy to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

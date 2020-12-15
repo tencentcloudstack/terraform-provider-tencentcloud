@@ -73,7 +73,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedIntValue(DAYU_L7_RULE_SOURCE_TYPE),
-				Description:  "Source type, 1 for source of host, 2 for source of ip.",
+				Description:  "Source type, `1` for source of host, `2` for source of IP.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -107,7 +107,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 						"source": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Source ip or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.",
+							Description: "Source IP or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.",
 						},
 						"weight": {
 							Type:         schema.TypeInt,
@@ -172,12 +172,12 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the layer 4 rule.",
+				Description: "ID of the layer 4 rule.",
 			},
 			"lb_type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "LB type of the rule. Valid values: 1, 2.  1 for weight cycling and 2 for IP hash.",
+				Description: "LB type of the rule. Valid values: `1`, `2`. `1` for weight cycling and `2` for IP hash.",
 			},
 		},
 	}

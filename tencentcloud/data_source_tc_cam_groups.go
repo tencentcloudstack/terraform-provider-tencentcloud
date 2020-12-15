@@ -41,7 +41,7 @@ func dataSourceTencentCloudCamGroups() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of CAM group to be queried.",
+				Description: "ID of CAM group to be queried.",
 			},
 			"remark": {
 				Type:        schema.TypeString,
@@ -77,7 +77,7 @@ func dataSourceTencentCloudCamGroups() *schema.Resource {
 						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CAM group.",
+							Description: "ID of the CAM group.",
 						},
 					},
 				},

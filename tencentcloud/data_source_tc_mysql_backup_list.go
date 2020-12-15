@@ -31,14 +31,14 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 			"mysql_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
+				Description: "Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.",
 			},
 			"max_number": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      10,
 				ValidateFunc: validateIntegerInRange(1, 10000),
-				Description:  "The latest files to list, rang from 1 to 10000. And the default value is 10.",
+				Description:  "The latest files to list, rang from 1 to 10000. And the default value is `10`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -55,7 +55,7 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 						"time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The earliest time at which the backup starts. For example, 2 indicates 2:00 am.",
+							Description: "The earliest time at which the backup starts. For example, `2` indicates 2:00 am.",
 						},
 						"finish_time": {
 							Type:        schema.TypeString,
@@ -75,7 +75,7 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 						"backup_model": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Backup method. Supported values include: physical - physical backup, and logical - logical backup.",
+							Description: "Backup method. Supported values include: `physical` - physical backup, and `logical` - logical backup.",
 						},
 						"intranet_url": {
 							Type:        schema.TypeString,

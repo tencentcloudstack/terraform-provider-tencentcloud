@@ -83,11 +83,11 @@ The following arguments are supported:
 * `drop_options` - (Required) Option list of abnormal check of the DDos policy, should set at least one policy.
 * `name` - (Required) Name of the DDoS policy. Length should between 1 and 32.
 * `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for. Valid values: `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `black_ips` - (Optional) Black ip list.
+* `black_ips` - (Optional) Black IP list.
 * `packet_filters` - (Optional) Message filter options list.
 * `port_filters` - (Optional) Port limits of abnormal check of the DDos policy.
 * `watermark_filters` - (Optional) Watermark policy options, and only support one watermark policy at most.
-* `white_ips` - (Optional) White ip list.
+* `white_ips` - (Optional) White IP list.
 
 The `drop_options` object supports the following:
 
@@ -132,7 +132,7 @@ The `port_filters` object supports the following:
 
 * `action` - (Optional) Action of port to take. Valid values: `drop`, `transmit`.
 * `end_port` - (Optional) End port. Valid value ranges: (0~65535). It must be greater than `start_port`.
-* `kind` - (Optional) The type of forbidden port. Valid values: 0, 1, 2. 0 for destination ports make effect, 1 for source ports make effect. 2 for both destination and source ports.
+* `kind` - (Optional) The type of forbidden port. Valid values: `0`, `1`, `2`. `0` for destination ports make effect, `1` for source ports make effect. `2` for both destination and source ports.
 * `protocol` - (Optional) Protocol. Valid values are `tcp`, `udp`, `icmp`, `all`.
 * `start_port` - (Optional) Start port. Valid value ranges: (0~65535).
 

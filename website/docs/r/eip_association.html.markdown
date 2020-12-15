@@ -36,8 +36,8 @@ resource "tencentcloud_eip_association" "bar" {
 
 The following arguments are supported:
 
-* `eip_id` - (Required, ForceNew) The id of eip.
-* `instance_id` - (Optional, ForceNew) The CVM or CLB instance id going to bind with the eip. This field is conflict with `network_interface_id` and `private_ip fields`.
+* `eip_id` - (Required, ForceNew) The ID of EIP.
+* `instance_id` - (Optional, ForceNew) The CVM or CLB instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.
 * `network_interface_id` - (Optional, ForceNew) Indicates the network interface id like `eni-xxxxxx`. This field is conflict with `instance_id`.
 * `private_ip` - (Optional, ForceNew) Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.
 

@@ -28,7 +28,7 @@ func dataSourceTencentCloudCamGroupMemberships() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of CAM group to be queried.",
+				Description: "ID of CAM group to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -44,7 +44,7 @@ func dataSourceTencentCloudCamGroupMemberships() *schema.Resource {
 						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of CAM group.",
+							Description: "ID of CAM group.",
 						},
 						"user_ids": {
 							Type:     schema.TypeSet,
@@ -52,7 +52,7 @@ func dataSourceTencentCloudCamGroupMemberships() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "Id set of the CAM group members.",
+							Description: "ID set of the CAM group members.",
 						},
 					},
 				},

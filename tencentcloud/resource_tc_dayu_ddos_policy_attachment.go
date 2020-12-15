@@ -35,13 +35,13 @@ func resourceTencentCloudDayuDdosPolicyAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached resource.",
+				Description: "ID of the attached resource.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the policy.",
+				Description: "ID of the policy.",
 			},
 			"resource_type": {
 				Type:         schema.TypeString,

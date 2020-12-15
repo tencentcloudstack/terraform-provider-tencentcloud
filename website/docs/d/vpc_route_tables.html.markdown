@@ -68,8 +68,8 @@ In addition to all arguments above, the following attributes are exported:
   * `route_entry_infos` - Detailed information of each entry of the route table.
     * `description` - Description information user defined for a route table rule.
     * `destination_cidr_block` - The destination address block.
-    * `next_hub` - ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value '0'.
-    * `next_type` - Type of next-hop, and available values include CVM, VPN, DIRECTCONNECT, PEERCONNECTION, SSLVPN, NAT, NORMAL_CVM, EIP and CCN.
+    * `next_hub` - ID of next-hop gateway. Note: when 'next_type' is EIP, GatewayId will fix the value `0`.
+    * `next_type` - Type of next-hop, and available values include `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.
     * `route_entry_id` - ID of a route table entry.
   * `route_table_id` - ID of the routing table.
   * `subnet_ids` - List of subnet IDs bound to the route table.

@@ -91,7 +91,7 @@ func dataSourceTencentCloudCamUsers() *schema.Resource {
 						"user_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of CAM user. Its value equals to `name` argument.",
+							Description: "ID of CAM user. Its value equals to `name` argument.",
 						},
 						"name": {
 							Type:        schema.TypeString,

@@ -65,7 +65,7 @@ EOF
 
 The following arguments are supported:
 
-* `document` - (Required) Document of the CAM role. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.
+* `document` - (Required) Document of the CAM role. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.
 * `name` - (Required, ForceNew) Name of CAM role.
 * `console_login` - (Optional, ForceNew) Indicade whether the CAM role can login or not.
 * `description` - (Optional) Description of the CAM role.

@@ -49,7 +49,7 @@ func dataSourceTencentCloudKeyPairs() *schema.Resource {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"key_id"},
-				Description:   "Project id of the key pair to be queried.",
+				Description:   "Project ID of the key pair to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -77,7 +77,7 @@ func dataSourceTencentCloudKeyPairs() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Project id of the key pair.",
+							Description: "Project ID of the key pair.",
 						},
 						"public_key": {
 							Type:        schema.TypeString,

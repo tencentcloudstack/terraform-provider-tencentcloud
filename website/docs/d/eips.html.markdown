@@ -23,25 +23,25 @@ data "tencentcloud_eips" "foo" {
 
 The following arguments are supported:
 
-* `eip_id` - (Optional) ID of the eip to be queried.
-* `eip_name` - (Optional) Name of the eip to be queried.
+* `eip_id` - (Optional) ID of the EIP to be queried.
+* `eip_name` - (Optional) Name of the EIP to be queried.
 * `public_ip` - (Optional) The elastic ip address.
 * `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) The tags of eip.
+* `tags` - (Optional) The tags of EIP.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `eip_list` - An information list of eip. Each element contains the following attributes:
-  * `create_time` - Creation time of the eip.
-  * `eip_id` - ID of the eip.
-  * `eip_name` - Name of the eip.
-  * `eip_type` - Type of the eip.
-  * `eni_id` - The eni id to bind with the eip.
-  * `instance_id` - The instance id to bind with the eip.
+* `eip_list` - An information list of EIP. Each element contains the following attributes:
+  * `create_time` - Creation time of the EIP.
+  * `eip_id` - ID of the EIP.
+  * `eip_name` - Name of the EIP.
+  * `eip_type` - Type of the EIP.
+  * `eni_id` - The eni id to bind with the EIP.
+  * `instance_id` - The instance id to bind with the EIP.
   * `public_ip` - The elastic ip address.
-  * `status` - The eip current status.
-  * `tags` - Tags of the eip.
+  * `status` - The EIP current status.
+  * `tags` - Tags of the EIP.
 
 

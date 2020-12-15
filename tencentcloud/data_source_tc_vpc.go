@@ -41,7 +41,7 @@ func dataSourceTencentCloudVpc() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The id of the specific VPC to retrieve.",
+				Description: "The ID of the specific VPC to retrieve.",
 			},
 			"name": {
 				Type:        schema.TypeString,

@@ -23,7 +23,7 @@ data "tencentcloud_cam_group_memberships" "foo" {
 
 The following arguments are supported:
 
-* `group_id` - (Optional) Id of CAM group to be queried.
+* `group_id` - (Optional) ID of CAM group to be queried.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
@@ -31,7 +31,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `membership_list` - A list of CAM group membership. Each element contains the following attributes:
-  * `group_id` - Id of CAM group.
-  * `user_ids` - Id set of the CAM group members.
+  * `group_id` - ID of CAM group.
+  * `user_ids` - ID set of the CAM group members.
 
 

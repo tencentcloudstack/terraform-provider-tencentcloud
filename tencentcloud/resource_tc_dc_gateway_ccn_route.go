@@ -66,7 +66,7 @@ func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "As_Path list of the BGP.",
+				Description: "As path list of the BGP.",
 			},
 		},
 	}

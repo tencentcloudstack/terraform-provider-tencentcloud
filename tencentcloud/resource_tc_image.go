@@ -76,7 +76,7 @@ func resourceTencentCloudImage() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Set whether to force shutdown during mirroring. The default value is false, when set to true, it means that the mirror will be made after shutdown.",
+				Description: "Set whether to force shutdown during mirroring. The default value is `false`, when set to true, it means that the mirror will be made after shutdown.",
 			},
 			"sysprep": {
 				Type:        schema.TypeBool,
@@ -91,7 +91,7 @@ func resourceTencentCloudImage() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Cloud disk id list, When creating a whole machine image based on an instance, specify the data disk Id contained in the image.",
+				Description: "Cloud disk ID list, When creating a whole machine image based on an instance, specify the data disk ID contained in the image.",
 			},
 		},
 	}

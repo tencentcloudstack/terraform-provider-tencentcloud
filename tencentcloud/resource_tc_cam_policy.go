@@ -87,7 +87,7 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 					flag := reflect.DeepEqual(oldJson, newJson)
 					return flag
 				},
-				Description: "Document of the CAM policy. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.",
+				Description: "Document of the CAM policy. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -97,7 +97,7 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 			"type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Type of the policy strategy. Valid values: 1, 2.  1 means customer strategy and 2 means preset strategy.",
+				Description: "Type of the policy strategy. Valid values: `1`, `2`.  `1` means customer strategy and `2` means preset strategy.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,

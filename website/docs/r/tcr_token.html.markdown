@@ -24,8 +24,8 @@ resource "tencentcloud_tcr_token" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) Id of the TCR instance.
-* `description` - (Optional, ForceNew) Description of the token. Valid length is 0~255.
+* `instance_id` - (Required, ForceNew) ID of the TCR instance.
+* `description` - (Optional, ForceNew) Description of the token. Valid length is [0~255].
 * `enable` - (Optional) Indicate to enable this token or not.
 
 ## Attributes Reference

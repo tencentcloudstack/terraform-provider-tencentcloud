@@ -128,7 +128,7 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"event_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Event id.",
+							Description: "Event ID.",
 						},
 						"event_name": {
 							Type:        schema.TypeString,
@@ -163,7 +163,7 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The instance id of this event.",
+							Description: "The instance ID of this event.",
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
@@ -178,7 +178,7 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Project id of this instance.",
+							Description: "Project ID of this instance.",
 						},
 						"status": {
 							Type:        schema.TypeString,
@@ -267,7 +267,7 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 									"group_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Policy group id.",
+										Description: "Policy group ID.",
 									},
 									"group_name": {
 										Type:        schema.TypeString,

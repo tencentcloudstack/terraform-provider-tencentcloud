@@ -24,15 +24,15 @@ resource "tencentcloud_cam_group_policy_attachment" "foo" {
 
 The following arguments are supported:
 
-* `group_id` - (Required, ForceNew) Id of the attached CAM group.
-* `policy_id` - (Required, ForceNew) Id of the policy.
+* `group_id` - (Required, ForceNew) ID of the attached CAM group.
+* `policy_id` - (Required, ForceNew) ID of the policy.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_mode` - Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
+* `create_mode` - Mode of Creation of the CAM group policy attachment. `1` means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
 * `create_time` - Create time of the CAM group policy attachment.
 * `policy_name` - Name of the policy.
 * `policy_type` - Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.

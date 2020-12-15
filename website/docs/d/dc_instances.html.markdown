@@ -49,12 +49,12 @@ In addition to all arguments above, the following attributes are exported:
   * `expired_time` - Expire date of resource.
   * `fault_report_contact_person` - Contact of reporting a faulty. Note: This field may return null, indicating that no valid values are taken.
   * `fault_report_contact_phone` - Phone number of reporting a faulty. Note: This field may return null, indicating that no valid values are taken.
-  * `line_operator` - Operator of the DC, and available values include ChinaTelecom, ChinaMobile, ChinaUnicom, In-houseWiring, ChinaOther and InternationalOperator.
+  * `line_operator` - Operator of the DC, and available values include `ChinaTelecom`, `ChinaMobile`, `ChinaUnicom`, `In-houseWiring`, `ChinaOther` and `InternationalOperator`.
   * `location` - The DC location where the connection is located.
   * `name` - Name of the DC.
-  * `port_type` - Port type of the DC in client, and available values include 100Base-T, 1000Base-T, 1000Base-LX, 10GBase-T and 10GBase-LR. The default value is 1000Base-LX.
+  * `port_type` - Port type of the DC in client, and available values include `100Base-T`, `1000Base-T`, `1000Base-LX`, `10GBase-T` and `10GBase-LR`. The default value is `1000Base-LX`.
   * `redundant_dc_id` - ID of the redundant DC.
-  * `state` - State of the DC, and available values include REJECTED, TOPAY, PAID, ALLOCATED, AVAILABLE, DELETING and DELETED.
+  * `state` - State of the DC, and available values include `REJECTED`, `TOPAY`, `PAID`, `ALLOCATED`, `AVAILABLE`, `DELETING` and `DELETED`.
   * `tencent_address` - Interconnect IP of the DC within Tencent. Note: This field may return null, indicating that no valid values are taken.
 
 

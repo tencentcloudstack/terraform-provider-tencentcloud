@@ -50,6 +50,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `as_path` - As_Path list of the BGP.
+* `as_path` - As path list of the BGP.
 
 

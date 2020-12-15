@@ -96,7 +96,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"public_ip_address": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Public ip of the VPN gateway.",
+				Description: "Public IP of the VPN gateway.",
 			},
 			"type": {
 				Type:        schema.TypeString,
@@ -120,7 +120,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid value:  1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,

@@ -49,17 +49,17 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the TcaplusDB cluster to be query.",
+				Description: "ID of the TcaplusDB cluster to be query.",
 			},
 			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the table group to be query.",
+				Description: "ID of the table group to be query.",
 			},
 			"table_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Table id to be query.",
+				Description: "Table ID to be query.",
 			},
 			"table_name": {
 				Type:        schema.TypeString,
@@ -85,12 +85,12 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 						"table_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the TcaplusDB table.",
+							Description: "ID of the TcaplusDB table.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of  the TcaplusDB table.",
+							Description: "Name of the TcaplusDB table.",
 						},
 						"table_type": {
 							Type:        schema.TypeString,

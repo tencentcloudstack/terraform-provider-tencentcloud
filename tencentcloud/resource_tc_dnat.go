@@ -56,13 +56,13 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the VPC.",
+				Description: "ID of the VPC.",
 			},
 			"nat_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the NAT gateway.",
+				Description: "ID of the NAT gateway.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,

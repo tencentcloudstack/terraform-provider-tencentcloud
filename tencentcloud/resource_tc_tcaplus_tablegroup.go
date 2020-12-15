@@ -41,7 +41,7 @@ func resourceTencentCloudTcaplusTableGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
+				Description: "ID of the TcaplusDB cluster to which the table group belongs.",
 			},
 			"tablegroup_name": {
 				Type:         schema.TypeString,

@@ -59,7 +59,7 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 						"image_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of available image, for example img-8toqc6s3.",
+							Description: "ID of available image, for example `img-8toqc6s3`.",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
@@ -96,7 +96,7 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 									"disk_size": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Volume of disk in GB. Default is 0.",
+										Description: "Volume of disk in GB. Default is `0`.",
 									},
 									"snapshot_id": {
 										Type:        schema.TypeString,
@@ -156,7 +156,7 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Current statues of a launch configuration.",
+							Description: "Current status of a launch configuration.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

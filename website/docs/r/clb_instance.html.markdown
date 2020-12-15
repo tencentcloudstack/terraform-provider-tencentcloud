@@ -52,14 +52,14 @@ resource "tencentcloud_clb_instance" "open_clb" {
 The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
-* `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: 'OPEN' and 'INTERNAL'.
-* `project_id` - (Optional, ForceNew) Id of the project within the CLB instance, '0' - Default Project.
-* `security_groups` - (Optional) Security groups of the CLB instance. Only supports 'OPEN' CLBs.
-* `subnet_id` - (Optional, ForceNew) Subnet id of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.
+* `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
+* `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
+* `security_groups` - (Optional) Security groups of the CLB instance. Only supports `OPEN` CLBs.
+* `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs.
 * `tags` - (Optional) The available tags within this CLB.
-* `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
-* `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
-* `vpc_id` - (Optional, ForceNew) VPC id of the CLB.
+* `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
+* `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
+* `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
 
 ## Attributes Reference
 

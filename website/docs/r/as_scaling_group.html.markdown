@@ -49,9 +49,9 @@ The following arguments are supported:
 * `min_size` - (Required) Minimum number of CVM instances. Valid value ranges: (0~2000).
 * `scaling_group_name` - (Required) Name of a scaling group.
 * `vpc_id` - (Required) ID of VPC network.
-* `default_cooldown` - (Optional) Default cooldown time in second, and default value is 300.
-* `desired_capacity` - (Optional) Desired volume of CVM instances, which is between max_size and min_size.
-* `forward_balancer_ids` - (Optional) List of application load balancers, which can't be specified with load_balancer_ids together.
+* `default_cooldown` - (Optional) Default cooldown time in second, and default value is `300`.
+* `desired_capacity` - (Optional) Desired volume of CVM instances, which is between `max_size` and `min_size`.
+* `forward_balancer_ids` - (Optional) List of application load balancers, which can't be specified with `load_balancer_ids` together.
 * `load_balancer_ids` - (Optional) ID list of traditional load balancers.
 * `project_id` - (Optional) Specifies to which project the scaling group belongs.
 * `retry_policy` - (Optional) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.

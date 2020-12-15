@@ -41,7 +41,7 @@ func dataSourceTencentCloudDayuCCHttpPolicies() *schema.Resource {
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the resource that the CC http policy works for.",
+				Description: "ID of the resource that the CC http policy works for.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -132,13 +132,13 @@ func dataSourceTencentCloudDayuCCHttpPolicies() *schema.Resource {
 						"policy_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the CC self-define http policy.",
+							Description: "ID of the CC self-define http policy.",
 						},
 						"ip_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Ip of the CC self-define http policy.",
+							Description: "IP of the CC self-define http policy.",
 						},
 					},
 				},

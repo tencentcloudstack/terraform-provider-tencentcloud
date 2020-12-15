@@ -72,12 +72,12 @@ func dataSourceTencentCloudElasticsearchInstances() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The id of a VPC network.",
+							Description: "The ID of a VPC network.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The id of a VPC subnetwork.",
+							Description: "The ID of a VPC subnet.",
 						},
 						"version": {
 							Type:        schema.TypeString,
@@ -108,7 +108,7 @@ func dataSourceTencentCloudElasticsearchInstances() *schema.Resource {
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The id of a VPC subnetwork.",
+										Description: "The id of a VPC subnet.",
 									},
 								},
 							},

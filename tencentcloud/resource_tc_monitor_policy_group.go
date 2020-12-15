@@ -97,14 +97,14 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "The project id to which the policy group belongs, default is 0.",
+				Description: "The project id to which the policy group belongs, default is `0`.",
 			},
 			"is_union_rule": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "The and or relation of indicator alarm rule. Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
+				Description:  "The and or relation of indicator alarm rule. Valid values: `0`, `1`. `0` represents or rule (if any rule is met, the alarm will be raised), `1` represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
 			},
 			"conditions": {
 				Type:        schema.TypeList,
@@ -121,19 +121,19 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-							Description:  "Alarm sending convergence type. 0 continuous alarm, 1 index alarm.",
+							Description:  "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 						},
 						"alarm_notify_period": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Alarm sending cycle per second. <0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
+							Description: "Alarm sending cycle per second. <0 does not fire, `0` only fires once, and >0 fires every triggerTime second.",
 						},
 						"calc_type": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(1, 12),
-							Description:  "Compare type. Valid value ranges: (1~12). 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
+							Description:  "Compare type. Valid value ranges: [1~12]. `1` means more than, `2` means greater than or equal, `3` means less than, `4` means less than or equal to, `5` means equal, `6` means not equal, `7` means days rose, `8` means days fell, `9` means weeks rose, `10` means weeks fell, `11` means period rise, `12` means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
 							Type:        schema.TypeFloat,
@@ -165,18 +165,18 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"event_id": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "The id of this event metric, refer to `data.tencentcloud_monitor_policy_conditions(event_id).",
+							Description: "The ID of this event metric, refer to `data.tencentcloud_monitor_policy_conditions(event_id).",
 						},
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-							Description:  "Alarm sending convergence type. 0 continuous alarm, 1 index alarm.",
+							Description:  "Alarm sending convergence type. `0` continuous alarm, `1` index alarm.",
 						},
 						"alarm_notify_period": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Alarm sending cycle per second.<0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
+							Description: "Alarm sending cycle per second. <0 does not fire, `0` only fires once, and >0 fires every triggerTime second.",
 						},
 					},
 				},
@@ -192,7 +192,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Computed:    true,
-							Description: "Alarm receive group id list.",
+							Description: "Alarm receive group ID list.",
 						},
 						"receiver_user_list": {
 							Type:        schema.TypeList,
@@ -245,7 +245,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"need_send_notice": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Do need a telephone alarm contact prompt.You don't need 0, you need 1.",
+							Description: "Do need a telephone alarm contact prompt. You don't need `0`, you need `1`.",
 						},
 						"send_for": {
 							Type:        schema.TypeList,

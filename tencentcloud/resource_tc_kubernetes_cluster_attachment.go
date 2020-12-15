@@ -137,14 +137,14 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Optional:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.",
+						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
 						ForceNew:    true,
 						Optional:    true,
 						Default:     0,
-						Description: "Volume of disk in GB. Default is 0.",
+						Description: "Volume of disk in GB. Default is `0`.",
 					},
 				},
 			},
@@ -210,13 +210,13 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Type:        schema.TypeSet,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Computed:    true,
-			Description: "A list of security group ids after attach to cluster.",
+			Description: "A list of security group IDs after attach to cluster.",
 		},
 		"labels": {
 			Type:        schema.TypeMap,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Labels of tke attachment exits cvm.",
+			Description: "Labels of tke attachment exits CVM.",
 		},
 	}
 

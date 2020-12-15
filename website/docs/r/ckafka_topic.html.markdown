@@ -40,13 +40,13 @@ The following arguments are supported:
 * `replica_num` - (Required) The number of replica, the maximum is 3.
 * `topic_name` - (Required, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.
 * `clean_up_policy` - (Optional) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
-* `enable_white_list` - (Optional) Whether to open the ip whitelist, true: open, false: close.
+* `enable_white_list` - (Optional) Whether to open the ip whitelist, `true`: open, `false`: close.
 * `ip_white_list` - (Optional) Ip whitelist, quota limit, required when enableWhileList=true.
 * `max_message_bytes` - (Optional) Max message bytes.
 * `note` - (Optional) The subject note is a string of no more than 64 characters. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
-* `retention` - (Optional) Message can be selected. Retention time, unit ms, the current minimum value is 60000ms.
+* `retention` - (Optional) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
 * `segment` - (Optional) Segment scrolling time, in ms, the current minimum is 3600000ms.
-* `sync_replica_min_num` - (Optional) Min number of sync replicas, Default is 1.
+* `sync_replica_min_num` - (Optional) Min number of sync replicas, Default is `1`.
 * `unclean_leader_election_enable` - (Optional) Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
 
 ## Attributes Reference
@@ -57,7 +57,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the CKafka topic.
 * `forward_cos_bucket` - Data backup cos bucket: the bucket address that is dumped to cos.
 * `forward_interval` - Periodic frequency of data backup to cos.
-* `forward_status` - Data backup cos status. Valid values: 0, 1. 1: do not open data backup, 0: open data backup.
+* `forward_status` - Data backup cos status. Valid values: `0`, `1`. `1`: do not open data backup, `0`: open data backup.
 * `message_storage_location` - Message storage location.
 * `segment_bytes` - Number of bytes rolled by shard.
 

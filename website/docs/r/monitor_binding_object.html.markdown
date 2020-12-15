@@ -46,7 +46,7 @@ resource "tencentcloud_monitor_binding_object" "binding" {
 The following arguments are supported:
 
 * `dimensions` - (Required, ForceNew) A list objects. Each element contains the following attributes:
-* `group_id` - (Required, ForceNew) Policy group id for binding objects.
+* `group_id` - (Required, ForceNew) Policy group ID for binding objects.
 
 The `dimensions` object supports the following:
 

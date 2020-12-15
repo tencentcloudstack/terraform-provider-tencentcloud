@@ -89,17 +89,17 @@ func dataSourceTencentCloudSqlserverBackups() *schema.Resource {
 						"strategy": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Strategy of the backup. 0 for instance backup, 1 for multi-databases backup.",
+							Description: "Strategy of the backup. `0` for instance backup, `1` for multi-databases backup.",
 						},
 						"trigger_model": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The way to trigger backup. 0 for timed trigger, 1 for manual trigger.",
+							Description: "The way to trigger backup. `0` for timed trigger, `1` for manual trigger.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of the backup. 1 for creating, 2 for successfully created, 3 for failed.",
+							Description: "Status of the backup. `1` for creating, `2` for successfully created, 3 for failed.",
 						},
 						"size": {
 							Type:        schema.TypeInt,
