@@ -6,6 +6,7 @@ FEATURES:
 * **New Data Source**: `tencentcloud_tcr_vpc_attachments` 
 
 ENHANCEMENTS:
+
 * Resource: `tencentcloud_kubernetes_cluster` support `name`, `project_id` and `description` modification.
 * Doc: optimize document.
 

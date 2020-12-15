@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tcr_vpc_attachment" "foo" {
-  instance_id		= ""
-  name              = "example"
-  is_public		 	= true
+  instance_id		= "cls-satg5125"
+  vpc_id			= "vpc-asg3sfa3"
+  subnet_id		 	= "subnet-1uwh63so"
 }
 ```
 
