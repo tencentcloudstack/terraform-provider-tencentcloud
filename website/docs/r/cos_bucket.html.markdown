@@ -116,7 +116,7 @@ The following arguments are supported:
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `encryption_algorithm` - (Optional) The server-side encryption algorithm to use. Valid value is `AES256`.
 * `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).
-* `log_enable` - (Optional) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://cloud.tencent.com/document/product/436/16920#.E5.90.AF.E7.94.A8.E6.97.A5.E5.BF.97.E7.AE.A1.E7.90.86).
+* `log_enable` - (Optional) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/zh/document/product/436/16920).
 * `log_prefix` - (Optional) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
 * `log_target_bucket` - (Optional) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
 * `tags` - (Optional) The tags of a bucket.

@@ -311,7 +311,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://cloud.tencent.com/document/product/436/16920#.E5.90.AF.E7.94.A8.E6.97.A5.E5.BF.97.E7.AE.A1.E7.90.86).",
+				Description: "Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/zh/document/product/436/16920).",
 			},
 			"log_target_bucket": {
 				Type:        schema.TypeString,
