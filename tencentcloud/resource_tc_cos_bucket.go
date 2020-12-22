@@ -313,11 +313,13 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 			"log_target_bucket": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.",
 			},
 			"log_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.",
 			},
 			//computed
@@ -520,12 +522,14 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		d.SetPartial("tags")
 	}
 
-	if d.HasChange("log_enabled") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
+	if d.HasChange("log_enable") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
 		err := resourceTencentCloudCosBucketLogStatusUpdate(ctx, client, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("log_enabled")
+		d.SetPartial("log_enable")
+		d.SetPartial("log_target_bucket")
+		d.SetPartial("log_prefix")
 	}
 
 	d.Partial(false)
@@ -879,7 +883,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 			logPrefix := d.Get("log_prefix").(string)
 			//check
 			if targetBucket == "" || logPrefix == "" {
-				return fmt.Errorf("log_target_bucket and log_prefix should set valid value when loog_enable is true")
+				return fmt.Errorf("log_target_bucket and log_prefix should set valid value when log_enable is true")
 			}
 
 			//set log target bucket and prefix
@@ -902,11 +906,14 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 			}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], resp[%s]\n",
 				logId, "cos enable log success", request.String(), resp.String())
-
-			d.SetPartial("log_target_bucket")
-			d.SetPartial("log_prefix")
 		}
 	} else {
+		targetBucket := d.Get("log_target_bucket").(string)
+		logPrefix := d.Get("log_prefix").(string)
+		//check
+		if targetBucket != "" || logPrefix != "" {
+			return fmt.Errorf("log_target_bucket and log_prefix should set null when log_enable is false")
+		}
 		// set disabled, put empty request
 		request := &s3.PutBucketLoggingInput{
 			Bucket:              aws.String(bucket),
