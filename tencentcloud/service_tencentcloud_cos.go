@@ -453,13 +453,6 @@ func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket string) (lo
 	ratelimit.Check("GetBucketVersioning")
 	response, err := me.client.UseCosClient().GetBucketLogging(&request)
 	if err != nil {
-		/*
-			awsError, ok := err.(awserr.Error)
-			if ok && awsError.Code() == "NoSuchVersioningConfiguration" {
-				return
-			}
-
-		*/
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "get bucket log status", request.String(), err.Error())
 		errRet = fmt.Errorf("cos get bucket log status error: %s, bucket: %s", err.Error(), bucket)
