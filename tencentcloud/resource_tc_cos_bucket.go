@@ -94,6 +94,9 @@ resource "tencentcloud_cos_bucket" "mylog" {
 resource "tencentcloud_cos_bucket" "mycos" {
   bucket = "mycos-1258798060"
   acl    = "private"
+  log_enable = true
+  log_target_bucket = "mylog-1258798060"
+  log_prefix = "MyLogPrefix"
 }
 ```
 
