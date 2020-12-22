@@ -385,7 +385,7 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 		}
 		instance, err := clbService.DescribeListenerById(ctx, listenerId, clbId)
 		if instance != nil && err == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Destroy] check: CLB listener still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB listener][Destroy] check: CLB listener still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -398,10 +398,10 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] check: CLB listener %s is not found", n)
+			return fmt.Errorf("[CHECK][CLB listener][Exists] check: CLB listener %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] check: CLB listener id is not set")
+			return fmt.Errorf("[CHECK][CLB listener][Exists] check: CLB listener id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -419,7 +419,7 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if instance == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] id %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB listener][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

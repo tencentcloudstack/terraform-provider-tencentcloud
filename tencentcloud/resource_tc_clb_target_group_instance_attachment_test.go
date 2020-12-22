@@ -74,7 +74,7 @@ func testAccCheckClbTGAttachmentInstanceDestroy(s *terraform.State) error {
 		}
 		for _, tgInstance := range targetGroupInstances {
 			if *tgInstance.Port == port {
-				return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group instance attachment][Destroy] check: CLB target group instance attachment still exists: %s", rs.Primary.ID)
+				return fmt.Errorf("[CHECK][CLB target group instance attachment][Destroy] check: CLB target group instance attachment still exists: %s", rs.Primary.ID)
 			}
 		}
 	}
@@ -88,10 +88,10 @@ func testAccCheckClbTGAttachmentInstanceExists(n string) resource.TestCheckFunc 
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group instance attachment][Exists] check: CLB target group %s is not found", n)
+			return fmt.Errorf("[CHECK][CLB target group instance attachment][Exists] check: CLB target group %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group instance attachment][Exists] check: CLB target group id is not set")
+			return fmt.Errorf("[CHECK][CLB target group instance attachment][Exists] check: CLB target group id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -119,7 +119,7 @@ func testAccCheckClbTGAttachmentInstanceExists(n string) resource.TestCheckFunc 
 				return nil
 			}
 		}
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group instance attachment][Exists] id %s is not exist", rs.Primary.ID)
+		return fmt.Errorf("[CHECK][CLB target group instance attachment][Exists] id %s is not exist", rs.Primary.ID)
 	}
 }
 

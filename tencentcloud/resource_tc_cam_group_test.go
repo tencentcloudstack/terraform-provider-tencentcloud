@@ -53,7 +53,7 @@ func testAccCheckCamGroupDestroy(s *terraform.State) error {
 
 		instance, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
 		if err == nil && instance != nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Destroy] check: CAM group still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CAM group][Destroy] check: CAM group still exists: %s", rs.Primary.ID)
 		}
 
 	}
@@ -67,10 +67,10 @@ func testAccCheckCamGroupExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Exists] check: CAM group %s is not found", n)
+			return fmt.Errorf("[CHECK][CAM group][Exists] check: CAM group %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Exists] check: CAM group id is not set")
+			return fmt.Errorf("[CHECK][CAM group][Exists] check: CAM group id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -80,7 +80,7 @@ func testAccCheckCamGroupExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if instance == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Exists] check: CAM group is not exist")
+			return fmt.Errorf("[CHECK][CAM group][Exists] check: CAM group is not exist")
 		}
 		return nil
 	}

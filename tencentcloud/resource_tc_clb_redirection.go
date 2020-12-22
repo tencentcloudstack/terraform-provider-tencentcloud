@@ -179,7 +179,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		}
 
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS && port != AUTO_TARGET_PORT {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: The target listener must be https:443 when applying auto rewrite")
+			return fmt.Errorf("[CHECK][CLB redirection][Create] check: The target listener must be https:443 when applying auto rewrite")
 		}
 
 		//get host array from location
@@ -200,7 +200,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		}
 
 		if len(instances) == 0 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: rule %s not found!", targetLocId)
+			return fmt.Errorf("[CHECK][CLB redirection][Create] check: rule %s not found!", targetLocId)
 		}
 		instance := instances[0]
 		domain := instance.Domain
@@ -208,7 +208,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		request.Domains = []*string{domain}
 		//check source listener is null
 		if sourceListenerId != "" || sourceLocId != "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: auto rewrite cannot specify source")
+			return fmt.Errorf("[CHECK][CLB redirection][Create] check: auto rewrite cannot specify source")
 		}
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().AutoRewrite(request)
@@ -248,7 +248,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 			return err
 		}
 		if len(listeners) == 0 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: listener not found!")
+			return fmt.Errorf("[CHECK][CLB redirection][Create] check: listener not found!")
 		}
 		listener := listeners[0]
 		sourceListenerId = *listener.ListenerId
@@ -272,7 +272,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 			return err
 		}
 		if len(rules) == 0 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Create] check: rule not found!")
+			return fmt.Errorf("[CHECK][CLB redirection][Create] check: rule not found!")
 		}
 
 		rule := rules[0]

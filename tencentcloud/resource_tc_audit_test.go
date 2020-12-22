@@ -108,7 +108,7 @@ func testAccCheckAuditDestroy(s *terraform.State) error {
 			return err
 		}
 		if has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][Audit][Exists] id %s still exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][Audit][Exists] id %s still exist", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -121,10 +121,10 @@ func testAccCheckAuditExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][Audit][Exists] check: Audit %s is not found", n)
+			return fmt.Errorf("[CHECK][Audit][Exists] check: Audit %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][Audit][Create] check: Audit id is not set")
+			return fmt.Errorf("[CHECK][Audit][Create] check: Audit id is not set")
 		}
 		auditService := AuditService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -134,7 +134,7 @@ func testAccCheckAuditExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if !has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][Audit][Exists] id %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][Audit][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

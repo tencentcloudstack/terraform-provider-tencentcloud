@@ -130,7 +130,7 @@ func testAccCheckClbInstanceDestroy(s *terraform.State) error {
 
 		instance, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
 		if instance != nil && err == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Destroy] check: CLB instance still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB instance][Destroy] check: CLB instance still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -143,10 +143,10 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] check: CLB instance %s is not found", n)
+			return fmt.Errorf("[CHECK][CLB instance][Exists] check: CLB instance %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] check: CLB instance id is not set")
+			return fmt.Errorf("[CHECK][CLB instance][Exists] check: CLB instance id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -156,7 +156,7 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if instance == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] id %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB instance][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

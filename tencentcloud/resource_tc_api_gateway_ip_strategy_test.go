@@ -67,7 +67,7 @@ func testApiIPStrategyDestroy(s *terraform.State) error {
 		}
 
 		if has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][IP strategy][Destroy] check: IP strategy still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][IP strategy][Destroy] check: IP strategy still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -81,10 +81,10 @@ func testApiIPStrategyExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][IP strategy][Exists] check:  %s is not found", n)
+			return fmt.Errorf("[CHECK][IP strategy][Exists] check:  %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][IP strategy][Exists] check: id is not set")
+			return fmt.Errorf("[CHECK][IP strategy][Exists] check: id is not set")
 		}
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(idSplit) != 2 {
@@ -98,7 +98,7 @@ func testApiIPStrategyExists(n string) resource.TestCheckFunc {
 		}
 
 		if !has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][IP strategy][Exists] check: not exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][IP strategy][Exists] check: not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}

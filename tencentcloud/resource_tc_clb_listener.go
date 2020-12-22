@@ -404,13 +404,13 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.Certificate = certificateInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS/TCPSSL")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS/TCPSSL")
 		}
 	}
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if v == CLB_LISTENER_SCHEDULER_IP_HASH {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
 		}
 		scheduler = v.(string)
 		request.Scheduler = helper.String(scheduler)
@@ -425,17 +425,17 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
 		}
 		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: session_expire_time can only be set when scheduler is WRR ")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: session_expire_time can only be set when scheduler is WRR ")
 		}
 		vv := int64(v.(int))
 		request.SessionExpireTime = &vv
 	}
 	if v, ok := d.GetOkExists("sni_switch"); ok {
 		if protocol != CLB_LISTENER_PROTOCOL_HTTPS {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: sni_switch can only be set with protocol HTTPS ")
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: sni_switch can only be set with protocol HTTPS ")
 		} else {
 			vv := v.(bool)
 			vvv := int64(0)
@@ -467,7 +467,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if len(response.Response.ListenerIds) < 1 {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: Response error, listener id is null")
+		return fmt.Errorf("[CHECK][CLB listener][Create] check: Response error, listener id is null")
 	}
 	listenerId := *response.Response.ListenerIds[0]
 
@@ -599,10 +599,10 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		scheduler = d.Get("scheduler").(string)
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", listenerId)
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler == CLB_LISTENER_SCHEDULER_IP_HASH {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)
 		}
 		request.Scheduler = helper.String(scheduler)
 	}
@@ -611,10 +611,10 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		sessionExpireTime = d.Get("session_expire_time").(int)
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS", listenerId)
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: session_expire_time can only be set when scheduler is WRR", listenerId)
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: session_expire_time can only be set when scheduler is WRR", listenerId)
 		}
 		sessionExpireTime64 := int64(sessionExpireTime)
 		request.SessionExpireTime = &sessionExpireTime64

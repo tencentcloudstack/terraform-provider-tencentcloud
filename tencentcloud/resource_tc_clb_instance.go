@@ -155,28 +155,28 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		return e
 	}
 	if flag {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: Same CLB name %s exists!", clbName)
+		return fmt.Errorf("[CHECK][CLB instance][Create] check: Same CLB name %s exists!", clbName)
 	}
 	targetRegionInfoRegion := ""
 	targetRegionInfoVpcId := ""
 	if v, ok := d.GetOk("target_region_info_region"); ok {
 		targetRegionInfoRegion = v.(string)
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
 		}
 	}
 	if v, ok := d.GetOk("target_region_info_vpc_id"); ok {
 		targetRegionInfoVpcId = v.(string)
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with target_region_info")
 		}
 	}
 	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: region and vpc_id must be set at same time")
+		return fmt.Errorf("[CHECK][CLB instance][Create] check: region and vpc_id must be set at same time")
 	}
 	if _, ok := d.GetOk("security_groups"); ok {
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with sercurity_groups")
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with sercurity_groups")
 		}
 	}
 	request := clb.NewCreateLoadBalancerRequest()
@@ -191,7 +191,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
 		if networkType == CLB_NETWORK_TYPE_OPEN {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: OPEN network_type do not support this operation with subnet_id")
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: OPEN network_type do not support this operation with subnet_id")
 		}
 		request.SubnetId = helper.String(v.(string))
 	}
@@ -218,7 +218,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if len(response.Response.LoadBalancerIds) < 1 {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: response error, load balancer id is nil")
+		return fmt.Errorf("[CHECK][CLB instance][Create] check: response error, load balancer id is nil")
 	}
 	d.SetId(*response.Response.LoadBalancerIds[0])
 	clbId = *response.Response.LoadBalancerIds[0]
@@ -369,13 +369,13 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 		if flag {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Update] check: Same CLB name %s exists!", clbName)
+			return fmt.Errorf("[CHECK][CLB instance][Update] check: Same CLB name %s exists!", clbName)
 		}
 	}
 
 	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
 		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with target_region_info", clbId)
+			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with target_region_info", clbId)
 		}
 		changed = true
 		region := d.Get("target_region_info_region").(string)
@@ -430,7 +430,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("security_groups") {
 		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with sercurity_groups", clbId)
+			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with sercurity_groups", clbId)
 		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = helper.String(clbId)
