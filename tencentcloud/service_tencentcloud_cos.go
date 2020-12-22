@@ -444,6 +444,42 @@ func (me *CosService) GetBucketVersioning(ctx context.Context, bucket string) (v
 	return
 }
 
+func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket string) (logEnable bool, logTargetBucket string, logPrefix string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.GetBucketLoggingInput{
+		Bucket: aws.String(bucket),
+	}
+	ratelimit.Check("GetBucketVersioning")
+	response, err := me.client.UseCosClient().GetBucketLogging(&request)
+	if err != nil {
+		/*
+			awsError, ok := err.(awserr.Error)
+			if ok && awsError.Code() == "NoSuchVersioningConfiguration" {
+				return
+			}
+
+		*/
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket log status", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket log status error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket log status", request.String(), response.String())
+
+	if response.LoggingEnabled == nil || response.LoggingEnabled.TargetBucket == nil || *response.LoggingEnabled.TargetBucket == "" || response.LoggingEnabled.TargetPrefix == nil || *response.LoggingEnabled.TargetPrefix == "" {
+		logEnable = false
+	} else {
+		logEnable = true
+		logTargetBucket = *response.LoggingEnabled.TargetBucket
+		logPrefix = *response.LoggingEnabled.TargetPrefix
+	}
+
+	return
+}
+
 func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, errRet error) {
 	logId := getLogId(ctx)
 
