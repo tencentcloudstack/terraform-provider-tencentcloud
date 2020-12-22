@@ -1,4 +1,5 @@
-## 1.51.1 (Unreleased)
+## 1.51.2 (Unreleased)
+## 1.51.1 (December 22, 2020)
 
 ENHANCEMENTS:
 
