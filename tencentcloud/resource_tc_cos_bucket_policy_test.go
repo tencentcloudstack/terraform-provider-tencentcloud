@@ -53,7 +53,7 @@ func testAccCheckCosBucketPolicyDestroy(s *terraform.State) error {
 
 		policy, err := cosService.DescribePolicyByBucket(ctx, rs.Primary.ID)
 		if err == nil && policy != "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][cos bucket policy][Desctroy] check: cos bucket policy still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][cos bucket policy][Desctroy] check: cos bucket policy still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -66,10 +66,10 @@ func testAccCheckCosBucketPolicyExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][cos bucket policy][Exists] check: cos bucket policy %s is not found", n)
+			return fmt.Errorf("[CHECK][cos bucket policy][Exists] check: cos bucket policy %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][cos bucket policy][Exists] check: cos bucket policy id is not set")
+			return fmt.Errorf("[CHECK][cos bucket policy][Exists] check: cos bucket policy id is not set")
 		}
 		cosService := CosService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -79,7 +79,7 @@ func testAccCheckCosBucketPolicyExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if policy == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][cos bucket policy][Exists] check: cos bucket policy %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][cos bucket policy][Exists] check: cos bucket policy %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

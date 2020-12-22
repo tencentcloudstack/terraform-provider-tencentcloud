@@ -257,7 +257,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
+		errRet = fmt.Errorf("[CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
 		return
 	}
 	request.LoadBalancerId = &clbId
@@ -345,7 +345,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 		}
 	}
 	if !findFlag {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: rule not found!")
+		errRet = fmt.Errorf("[CHECK][CLB rule][Describe] check: rule not found!")
 		errRet = errors.WithStack(errRet)
 		return
 	} else {
@@ -451,7 +451,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id and clb id can not be null")
+		errRet = fmt.Errorf("[CHECK][CLB attachment][Describe] check: Listener id and clb id can not be null")
 		errRet = errors.WithStack(errRet)
 		return
 	}
@@ -544,7 +544,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet = fmt.Errorf("[CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
 		errRet = errors.WithStack(errRet)
 		return
 	}
@@ -599,7 +599,7 @@ func (me *ClbService) DescribeAllAutoRedirections(ctx context.Context, rewriteId
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet = fmt.Errorf("[CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
 		errRet = errors.WithStack(errRet)
 		return
 	}
@@ -716,7 +716,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		errRet := fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet := fmt.Errorf("[CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
 		errRet = errors.WithStack(errRet)
 		return errRet
 	}

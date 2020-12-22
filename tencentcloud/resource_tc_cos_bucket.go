@@ -64,6 +64,42 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+Setting log status
+
+```hcl
+resource "tencentcloud_cam_role" "cosLogGrant" {
+  name          = "CLS_QcsRole"
+document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"service\":[\"cls.cloud.tencent.com\"]}}]}"
+
+  description   = "cos log enable grant"
+}
+
+
+data "tencentcloud_cam_policies" "cosAccess" {
+  name      = "QcloudCOSAccessForCLSRole"
+}
+
+
+resource "tencentcloud_cam_role_policy_attachment" "cosLogGrant" {
+  role_id   = tencentcloud_cam_role.cosLogGrant.id
+  policy_id = data.tencentcloud_cam_policies.cosAccess.policy_list.0.policy_id
+}
+
+
+resource "tencentcloud_cos_bucket" "mylog" {
+  bucket = "mylog-1258798060"
+  acl    = "private"
+}
+
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+  log_enable = true
+  log_target_bucket = "mylog-1258798060"
+  log_prefix = "MyLogPrefix"
+}
+```
+
 Import
 
 COS bucket can be imported, e.g.
@@ -271,6 +307,24 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional:    true,
 				Description: "The tags of a bucket.",
 			},
+			"log_enable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).",
+			},
+			"log_target_bucket": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.",
+			},
+			"log_prefix": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.",
+			},
 			//computed
 			"cos_bucket_url": {
 				Type:        schema.TypeString,
@@ -381,6 +435,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting versioning_enable error: %v", err)
 	}
 
+	//read the log
+	logEnable, logTargetBucket, logPrefix, err := cosService.GetBucketLogStatus(ctx, bucket)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("log_enable", logEnable)
+	_ = d.Set("log_target_bucket", logTargetBucket)
+	_ = d.Set("log_prefix", logPrefix)
+
 	// read the tags
 	tags, err := cosService.GetBucketTags(ctx, bucket)
 	if err != nil {
@@ -460,6 +523,16 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		}
 
 		d.SetPartial("tags")
+	}
+
+	if d.HasChange("log_enable") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
+		err := resourceTencentCloudCosBucketLogStatusUpdate(ctx, client, d)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("log_enable")
+		d.SetPartial("log_target_bucket")
+		d.SetPartial("log_prefix")
 	}
 
 	d.Partial(false)
@@ -796,6 +869,67 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, "put bucket website", request.String(), response.String())
+	}
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+
+	bucket := d.Id()
+
+	logSwitch := d.Get("log_enable").(bool)
+	if logSwitch {
+		if d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
+			targetBucket := d.Get("log_target_bucket").(string)
+			logPrefix := d.Get("log_prefix").(string)
+			//check
+			if targetBucket == "" || logPrefix == "" {
+				return fmt.Errorf("log_target_bucket and log_prefix should set valid value when log_enable is true")
+			}
+
+			//set log target bucket and prefix
+			//grant are solved by the tencentcloud_cam_role_attachment resource
+			request := &s3.PutBucketLoggingInput{
+				Bucket: aws.String(bucket),
+				BucketLoggingStatus: &s3.BucketLoggingStatus{
+					LoggingEnabled: &s3.LoggingEnabled{
+						TargetBucket: aws.String(targetBucket),
+						TargetPrefix: aws.String(logPrefix),
+					},
+				},
+			}
+
+			resp, err := client.PutBucketLogging(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, "cos enable log error", request.String(), err.Error())
+				return fmt.Errorf("cos enable log error: %s, bucket: %s", err.Error(), bucket)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], resp[%s]\n",
+				logId, "cos enable log success", request.String(), resp.String())
+		}
+	} else {
+		targetBucket := d.Get("log_target_bucket").(string)
+		logPrefix := d.Get("log_prefix").(string)
+		//check
+		if targetBucket != "" || logPrefix != "" {
+			return fmt.Errorf("log_target_bucket and log_prefix should set null when log_enable is false")
+		}
+		// set disabled, put empty request
+		request := &s3.PutBucketLoggingInput{
+			Bucket:              aws.String(bucket),
+			BucketLoggingStatus: &s3.BucketLoggingStatus{},
+		}
+
+		resp, err := client.PutBucketLogging(request)
+		if err != nil {
+			return fmt.Errorf("cos disable log error: %s, bucket: %s", err.Error(), bucket)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], resp[%s]\n",
+			logId, "cos enable log success", request.String(), resp.String())
 	}
 
 	return nil

@@ -150,14 +150,14 @@ The `auto_scaling_config` object supports the following:
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
 * `instance_tags` - (Optional, ForceNew) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
+* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, ForceNew) ID list of keys.
 * `password` - (Optional, ForceNew) Password to access.
 * `project_id` - (Optional, ForceNew) Specifys to which project the configuration belongs.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
-* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
-* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk. Valid value: CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
+* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
+* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
 The `auto_scaling_group` object supports the following:
 
@@ -178,8 +178,8 @@ The `auto_scaling_group` object supports the following:
 
 The `data_disk` object supports the following:
 
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk. Valid value: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, ForceNew) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `forward_balancer_ids` object supports the following:

@@ -120,6 +120,7 @@ The `worker_config` object supports the following:
 
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
 * `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
 * `user_data` - (Optional, ForceNew) Base64-encoded User Data text, the length limit is 16KB.

@@ -46,7 +46,7 @@ func testVpcAclAttachmentDestroy(s *terraform.State) error {
 		}
 
 		if has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Destroy] check: ACL attachment still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][ACL attachment][Destroy] check: ACL attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -60,10 +60,10 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check:  %s is not found", n)
+			return fmt.Errorf("[CHECK][ACL attachment][Exists] check:  %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: id is not set")
+			return fmt.Errorf("[CHECK][ACL attachment][Exists] check: id is not set")
 		}
 		has, err := service.DescribeByAclId(ctx, rs.Primary.ID)
 		if err != nil {
@@ -71,7 +71,7 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 		}
 
 		if !has {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: not exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][ACL attachment][Exists] check: not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}

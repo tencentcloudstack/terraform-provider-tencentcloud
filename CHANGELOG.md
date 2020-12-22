@@ -1,4 +1,10 @@
 ## 1.51.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `extra_args` to support node extra arguments setting.
+* Resource `tencentcloud_cos_bucket` add `log_enbale`, `log_target_bucket` and `log_prefix` to support log status setting.
+
 ## 1.51.0 (December 15, 2020)
 
 FEATURES:

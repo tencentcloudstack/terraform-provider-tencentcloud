@@ -149,6 +149,13 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 				},
 			},
 		},
+		"extra_args": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Custom parameter information related to the node. This is a white-list parameter.",
+		},
 		"user_data": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
@@ -261,6 +268,16 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 	if v, ok := dMap["docker_graph_path"]; ok {
 		setting.DockerGraphPath = helper.String(v.(string))
+	}
+
+	if temp, ok := dMap["extra_args"]; ok {
+		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
+		clusterExtraArgs := tke.InstanceExtraArgs{}
+		clusterExtraArgs.Kubelet = make([]*string, 0)
+		for _, extraArg := range extraArgs {
+			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArg)
+		}
+		setting.ExtraArgs = &clusterExtraArgs
 	}
 
 	return setting

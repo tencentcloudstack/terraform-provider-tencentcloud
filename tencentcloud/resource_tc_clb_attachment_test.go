@@ -79,14 +79,14 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 		time.Sleep(5 * time.Second)
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Destroy] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB attachment][Destroy] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
 		}
 		locationId := items[0]
 		listenerId := items[1]
 		clbId := items[2]
 		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 		if (instance != nil && !(len(instance.Targets) == 0 && locationId == "") && !(len(instance.Rules) == 0 && locationId != "")) && err == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Destroy] check: CLB Attachment still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB attachment][Destroy] check: CLB Attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -99,17 +99,17 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: CLB Attachment %s is not found", n)
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: CLB Attachment %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: CLB Attachment id is not set")
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: CLB Attachment id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
 		}
 		locationId := items[0]
 		listenerId := items[1]
@@ -119,7 +119,7 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if instance == nil || (len(instance.Targets) == 0 && locationId == "") || (len(instance.Rules) == 0 && locationId != "") {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] id %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

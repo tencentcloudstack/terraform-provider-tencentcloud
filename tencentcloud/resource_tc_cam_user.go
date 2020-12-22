@@ -212,7 +212,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if response.Response.Uid == nil {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM user][Create] check: CAM user id returns nil")
+		return fmt.Errorf("[CHECK][CAM user][Create] check: CAM user id returns nil")
 	}
 
 	d.SetId(*response.Response.Name)

@@ -54,7 +54,7 @@ func testAccCheckCamPolicyDestroy(s *terraform.State) error {
 
 		instance, err := camService.DescribePolicyById(ctx, rs.Primary.ID)
 		if err == nil && (instance != nil && instance.Response != nil && instance.Response.PolicyName != nil) {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM policy][Desctroy] check: CAM policy still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CAM policy][Desctroy] check: CAM policy still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -67,10 +67,10 @@ func testAccCheckCamPolicyExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM policy][Exists] check: CAM policy %s is not found", n)
+			return fmt.Errorf("[CHECK][CAM policy][Exists] check: CAM policy %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM policy][Exists] check: CAM policy id is not set")
+			return fmt.Errorf("[CHECK][CAM policy][Exists] check: CAM policy id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -80,7 +80,7 @@ func testAccCheckCamPolicyExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if instance == nil || instance.Response == nil || instance.Response.PolicyName == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM policy][Exists] check: CAM policy %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CAM policy][Exists] check: CAM policy %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

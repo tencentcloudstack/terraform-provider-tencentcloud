@@ -43,7 +43,7 @@ func testAccCheckClbTargetGroupDestroy(s *terraform.State) error {
 		filters := map[string]string{}
 		targetGroupInfos, err := clbService.DescribeTargetGroups(ctx, rs.Primary.ID, filters)
 		if len(targetGroupInfos) > 0 && err == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group][Destroy] check: CLB target group still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB target group][Destroy] check: CLB target group still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -56,10 +56,10 @@ func testAccCheckClbTargetGroupExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group][Exists] check: CLB target group %s is not found", n)
+			return fmt.Errorf("[CHECK][CLB target group][Exists] check: CLB target group %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group][Exists] check: CLB target group id is not set")
+			return fmt.Errorf("[CHECK][CLB target group][Exists] check: CLB target group id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -70,7 +70,7 @@ func testAccCheckClbTargetGroupExists(n string) resource.TestCheckFunc {
 			return err
 		}
 		if len(targetGroupInfos) == 0 {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB target group][Exists] id %s is not exist", rs.Primary.ID)
+			return fmt.Errorf("[CHECK][CLB target group][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}
