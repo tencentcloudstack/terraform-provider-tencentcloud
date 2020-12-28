@@ -379,6 +379,9 @@ type AllocateIp6AddressesBandwidthRequest struct {
 
 	// 网络计费模式。IPV6当前对标准账户类型支持"TRAFFIC_POSTPAID_BY_HOUR"，对传统账户类型支持"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
+
+	// 带宽包id，上移账号，申请带宽包计费模式的ipv6地址需要传入.
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
 }
 
 func (r *AllocateIp6AddressesBandwidthRequest) ToJsonString() string {
@@ -1364,6 +1367,56 @@ type ClassicLinkInstance struct {
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
+type CloneSecurityGroupRequest struct {
+	*tchttp.BaseRequest
+
+	// 安全组实例ID，例如sg-33ocnj9n，可通过DescribeSecurityGroups获取。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 安全组名称，可任意命名，但不得超过60个字符。未提供参数时，克隆后的安全组名称和SecurityGroupId对应的安全组名称相同。
+	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
+
+	// 安全组备注，最多100个字符。未提供参数时，克隆后的安全组备注和SecurityGroupId对应的安全组备注相同。
+	GroupDescription *string `json:"GroupDescription,omitempty" name:"GroupDescription"`
+
+	// 项目ID，默认0。可在qcloud控制台项目管理页面查询到。
+	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 源Region,跨地域克隆安全组时，需要传入源安全组所属地域信息，例如：克隆广州的安全组到上海，则这里需要传入广州安全的地域信息：ap-guangzhou。
+	RemoteRegion *string `json:"RemoteRegion,omitempty" name:"RemoteRegion"`
+}
+
+func (r *CloneSecurityGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CloneSecurityGroupRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CloneSecurityGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 安全组对象。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		SecurityGroup *SecurityGroup `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CloneSecurityGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CloneSecurityGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type ConflictItem struct {
 
 	// 冲突资源的ID
@@ -1760,10 +1813,10 @@ func (r *CreateDefaultSecurityGroupResponse) FromJsonString(s string) error {
 type CreateDefaultVpcRequest struct {
 	*tchttp.BaseRequest
 
-	// 子网所在的可用区ID，不指定将随机选择可用区
+	// 子网所在的可用区，该参数可通过[DescribeZones](https://cloud.tencent.com/document/product/213/15707)接口获取，例如ap-guangzhou-1，不指定时将随机选择可用区。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
-	// 是否强制返回默认VPC
+	// 是否强制返回默认VPC。
 	Force *bool `json:"Force,omitempty" name:"Force"`
 }
 
@@ -2738,19 +2791,19 @@ type CreateVpcRequest struct {
 	// vpc名称，最大长度不能超过60个字节。
 	VpcName *string `json:"VpcName,omitempty" name:"VpcName"`
 
-	// vpc的cidr，只能为10.0.0.0/16，172.16.0.0/16，192.168.0.0/16这三个内网网段内。
+	// vpc的cidr，仅能在10.0.0.0/16，172.16.0.0/16，192.168.0.0/16这三个内网网段内。
 	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
 
 	// 是否开启组播。true: 开启, false: 不开启。
 	EnableMulticast *string `json:"EnableMulticast,omitempty" name:"EnableMulticast"`
 
-	// DNS地址，最多支持4个
+	// DNS地址，最多支持4个。
 	DnsServers []*string `json:"DnsServers,omitempty" name:"DnsServers" list`
 
-	// 域名
+	// DHCP使用的域名。
 	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
 }
 
@@ -2848,7 +2901,7 @@ func (r *CreateVpnConnectionResponse) FromJsonString(s string) error {
 type CreateVpnGatewayRequest struct {
 	*tchttp.BaseRequest
 
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口返回值中的VpcId获取。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// VPN网关名称，最大长度不能超过60个字节。
@@ -5464,7 +5517,7 @@ func (r *DescribeIp6TranslatorsResponse) FromJsonString(s string) error {
 type DescribeIpGeolocationDatabaseUrlRequest struct {
 	*tchttp.BaseRequest
 
-	// ip地址库协议类型，目前支持"ipv4"和"ipv6"。
+	// IP地理位置库协议类型，目前支持"ipv4"和"ipv6"。
 	Type *string `json:"Type,omitempty" name:"Type"`
 }
 
@@ -5481,7 +5534,7 @@ type DescribeIpGeolocationDatabaseUrlResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// IP地址库下载链接地址
+		// IP地理位置库下载链接地址。
 		DownLoadUrl *string `json:"DownLoadUrl,omitempty" name:"DownLoadUrl"`
 
 		// 链接到期时间。按照`ISO8601`标准表示，并且使用`UTC`时间。
@@ -7221,10 +7274,10 @@ type DisableRoutesRequest struct {
 	// 路由表唯一ID。
 	RouteTableId *string `json:"RouteTableId,omitempty" name:"RouteTableId"`
 
-	// 路由策略ID。不能和RouteItemIds同时使用。
+	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteIds []*uint64 `json:"RouteIds,omitempty" name:"RouteIds" list`
 
-	// 路由策略唯一ID。不能和RouteIds同时使用。
+	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteItemIds []*string `json:"RouteItemIds,omitempty" name:"RouteItemIds" list`
 }
 
@@ -7606,10 +7659,10 @@ type EnableRoutesRequest struct {
 	// 路由表唯一ID。
 	RouteTableId *string `json:"RouteTableId,omitempty" name:"RouteTableId"`
 
-	// 路由策略ID。不能和RouteItemIds同时使用。
+	// 路由策略ID。不能和RouteItemIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteIds []*uint64 `json:"RouteIds,omitempty" name:"RouteIds" list`
 
-	// 路由策略唯一ID。不能和RouteIds同时使用。
+	// 路由策略唯一ID。不能和RouteIds同时使用，但至少输入一个。该参数取值可通过查询路由列表（[DescribeRouteTables](https://cloud.tencent.com/document/product/215/15763)）获取。
 	RouteItemIds []*string `json:"RouteItemIds,omitempty" name:"RouteItemIds" list`
 }
 
@@ -8611,10 +8664,10 @@ type ModifyAssistantCidrRequest struct {
 	// `VPC`实例`ID`。形如：`vpc-6v2ht8q5`
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 待添加的负载CIDR。CIDR数组，格式如["10.0.0.0/16", "172.16.0.0/16"]
+	// 待添加的负载CIDR。CIDR数组，格式如["10.0.0.0/16", "172.16.0.0/16"]，入参NewCidrBlocks和OldCidrBlocks至少需要其一。
 	NewCidrBlocks []*string `json:"NewCidrBlocks,omitempty" name:"NewCidrBlocks" list`
 
-	// 待删除的负载CIDR。CIDR数组，格式如["10.0.0.0/16", "172.16.0.0/16"]
+	// 待删除的负载CIDR。CIDR数组，格式如["10.0.0.0/16", "172.16.0.0/16"]，入参NewCidrBlocks和OldCidrBlocks至少需要其一。
 	OldCidrBlocks []*string `json:"OldCidrBlocks,omitempty" name:"OldCidrBlocks" list`
 }
 
@@ -9177,6 +9230,12 @@ type ModifyNatGatewayAttributeRequest struct {
 
 	// NAT网关最大外网出带宽(单位:Mbps)。
 	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 是否修改NAT网关绑定的安全组。
+	ModifySecurityGroup *bool `json:"ModifySecurityGroup,omitempty" name:"ModifySecurityGroup"`
+
+	// NAT网关绑定的安全组列表，最终状态，空列表表示删除所有安全组，形如: `['sg-1n232323', 'sg-o4242424']`
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
 }
 
 func (r *ModifyNatGatewayAttributeRequest) ToJsonString() string {
@@ -9915,6 +9974,10 @@ type NatGateway struct {
 
 	// 标签键值对。
 	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// NAT网关绑定的安全组列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroupSet []*string `json:"SecurityGroupSet,omitempty" name:"SecurityGroupSet" list`
 }
 
 type NatGatewayAddress struct {
@@ -11126,7 +11189,7 @@ type SecurityGroupAssociationStatistics struct {
 	// 云服务器实例数。
 	CVM *uint64 `json:"CVM,omitempty" name:"CVM"`
 
-	// 数据库实例数。
+	// MySQL数据库实例数。
 	CDB *uint64 `json:"CDB,omitempty" name:"CDB"`
 
 	// 弹性网卡实例数。

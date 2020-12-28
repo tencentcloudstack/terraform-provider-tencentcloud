@@ -2,6 +2,7 @@
 Provide a resource to create a kubernetes cluster.
 
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
+~> **NOTE:**  We recommend the usage of one cluster without worker config + node pool to manage cluster and nodes. It's a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
 
 Example Usage
 
@@ -500,7 +501,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:     true,
 			Default:      TKE_DEPLOY_TYPE_MANAGED,
 			ValidateFunc: validateAllowedStringValue(TKE_DEPLOY_TYPES),
-			Description:  "Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER', Default is 'MANAGED_CLUSTER'.",
+			Description:  "Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.",
 		},
 		"cluster_version": {
 			Type:        schema.TypeString,

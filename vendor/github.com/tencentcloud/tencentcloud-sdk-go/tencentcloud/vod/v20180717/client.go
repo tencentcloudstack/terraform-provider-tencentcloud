@@ -296,7 +296,7 @@ func NewCreateContentReviewTemplateResponse() (response *CreateContentReviewTemp
     return
 }
 
-// 创建用户自定义视频内容审核模板，数量上限：50。
+// 创建用户自定义视频内容智能识别模板，数量上限：50。
 func (c *Client) CreateContentReviewTemplate(request *CreateContentReviewTemplateRequest) (response *CreateContentReviewTemplateResponse, err error) {
     if request == nil {
         request = NewCreateContentReviewTemplateRequest()
@@ -371,7 +371,7 @@ func NewCreatePersonSampleResponse() (response *CreatePersonSampleResponse) {
     return
 }
 
-// 该接口用于创建人物样本，用于通过人脸识别等技术，进行内容识别、内容审核等视频处理。
+// 该接口用于创建素材样本，用于通过五官定位等技术，进行内容识别、不适宜视频识别等视频处理。
 func (c *Client) CreatePersonSample(request *CreatePersonSampleRequest) (response *CreatePersonSampleResponse, err error) {
     if request == nil {
         request = NewCreatePersonSampleRequest()
@@ -571,7 +571,7 @@ func NewCreateWordSamplesResponse() (response *CreateWordSamplesResponse) {
     return
 }
 
-// 该接口用于批量创建关键词样本，样本用于通过OCR、ASR技术，进行内容审核、内容识别等视频处理。
+// 该接口用于批量创建关键词样本，样本用于通过OCR、ASR技术，进行不适宜内容识别、内容识别等视频处理。
 func (c *Client) CreateWordSamples(request *CreateWordSamplesRequest) (response *CreateWordSamplesResponse, err error) {
     if request == nil {
         request = NewCreateWordSamplesRequest()
@@ -724,7 +724,7 @@ func NewDeleteContentReviewTemplateResponse() (response *DeleteContentReviewTemp
     return
 }
 
-// 删除用户自定义视频内容审核模板。
+// 删除用户自定义视频内容智能识别模板。
 func (c *Client) DeleteContentReviewTemplate(request *DeleteContentReviewTemplateRequest) (response *DeleteContentReviewTemplateResponse, err error) {
     if request == nil {
         request = NewDeleteContentReviewTemplateRequest()
@@ -825,7 +825,7 @@ func NewDeletePersonSampleResponse() (response *DeletePersonSampleResponse) {
     return
 }
 
-// 该接口用于根据人物 ID，删除人物样本。
+// 该接口用于根据人物 ID，删除素材样本。
 func (c *Client) DeletePersonSample(request *DeletePersonSampleRequest) (response *DeletePersonSampleResponse, err error) {
     if request == nil {
         request = NewDeletePersonSampleRequest()
@@ -1236,12 +1236,44 @@ func NewDescribeContentReviewTemplatesResponse() (response *DescribeContentRevie
     return
 }
 
-// 根据视频内容审核模板唯一标识，获取视频内容审核模板详情列表。返回结果包含符合条件的所有用户自定义模板及[系统预置内容审核模板](https://cloud.tencent.com/document/product/266/33476#.E9.A2.84.E7.BD.AE.E8.A7.86.E9.A2.91.E5.86.85.E5.AE.B9.E5.AE.A1.E6.A0.B8.E6.A8.A1.E6.9D.BF)。
+// 根据视频内容智能识别模板唯一标识，获取视频内容智能识别模板详情列表。返回结果包含符合条件的所有用户自定义模板及[系统预置内容智能识别模板](https://cloud.tencent.com/document/product/266/33476#.E9.A2.84.E7.BD.AE.E8.A7.86.E9.A2.91.E5.86.85.E5.AE.B9.E5.AE.A1.E6.A0.B8.E6.A8.A1.E6.9D.BF)。
 func (c *Client) DescribeContentReviewTemplates(request *DescribeContentReviewTemplatesRequest) (response *DescribeContentReviewTemplatesResponse, err error) {
     if request == nil {
         request = NewDescribeContentReviewTemplatesRequest()
     }
     response = NewDescribeContentReviewTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDailyPlayStatFileListRequest() (request *DescribeDailyPlayStatFileListRequest) {
+    request = &DescribeDailyPlayStatFileListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeDailyPlayStatFileList")
+    return
+}
+
+func NewDescribeDailyPlayStatFileListResponse() (response *DescribeDailyPlayStatFileListResponse) {
+    response = &DescribeDailyPlayStatFileListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口用于查询播放统计文件的下载地址。
+// * 可以查询最近30天的播放统计文件下载地址。
+// * 云点播每天对前一天的 CDN 请求日志进行分析处理，生成播放统计文件。
+// * 播放统计文件内容包含媒体文件的播放次数、播放流量等统计信息。
+// * 播放次数统计说明：
+//     1. HLS 文件：访问M3U8 文件时统计播放次数；访问TS 文件不统计播放次数。
+//     2. 其它文件文件（如 MP4 文件）：播放请求带有 range 参数且 range 的 start 参数不等于0时不统计播放次数，其它情况统计播放次数。
+// * 播放设备的统计：播放请求带了 UserAgent 参数，并且 UserAgent 包含 Android 或者 iPhone 等标识，会统计为移动端播放次数，否则统计为 PC 端播放次数。
+func (c *Client) DescribeDailyPlayStatFileList(request *DescribeDailyPlayStatFileListRequest) (response *DescribeDailyPlayStatFileListResponse, err error) {
+    if request == nil {
+        request = NewDescribeDailyPlayStatFileListRequest()
+    }
+    response = NewDescribeDailyPlayStatFileListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1398,7 +1430,7 @@ func NewDescribePersonSamplesResponse() (response *DescribePersonSamplesResponse
     return
 }
 
-// 该接口用于查询人物样本信息，支持根据人物 ID、名称、标签，分页查询。
+// 该接口用于查询素材样本信息，支持根据素材 ID、名称、标签，分页查询。
 func (c *Client) DescribePersonSamples(request *DescribePersonSamplesRequest) (response *DescribePersonSamplesResponse, err error) {
     if request == nil {
         request = NewDescribePersonSamplesRequest()
@@ -1450,9 +1482,9 @@ func NewDescribeReviewDetailsResponse() (response *DescribeReviewDetailsResponse
 
 // <b>本接口已不推荐使用，用 [DescribeMediaProcessUsageData](/document/product/266/41464) 替代</b>
 // 
-// 该接口返回查询时间范围内每天使用的视频内容审核时长数据，单位： 秒。
+// 该接口返回查询时间范围内每天使用的视频内容智能识别时长数据，单位： 秒。
 // 
-// 1. 可以查询最近365天内的视频内容审核时长统计数据。
+// 1. 可以查询最近365天内的视频内容智能识别时长统计数据。
 // 2. 查询时间跨度不超过90天。
 func (c *Client) DescribeReviewDetails(request *DescribeReviewDetailsRequest) (response *DescribeReviewDetailsResponse, err error) {
     if request == nil {
@@ -1882,6 +1914,31 @@ func (c *Client) LiveRealTimeClip(request *LiveRealTimeClipRequest) (response *L
     return
 }
 
+func NewManageTaskRequest() (request *ManageTaskRequest) {
+    request = &ManageTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "ManageTask")
+    return
+}
+
+func NewManageTaskResponse() (response *ManageTaskResponse) {
+    response = &ManageTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 对已发起的任务进行管理。
+func (c *Client) ManageTask(request *ManageTaskRequest) (response *ManageTaskResponse, err error) {
+    if request == nil {
+        request = NewManageTaskRequest()
+    }
+    response = NewManageTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAIAnalysisTemplateRequest() (request *ModifyAIAnalysisTemplateRequest) {
     request = &ModifyAIAnalysisTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2024,7 +2081,7 @@ func NewModifyContentReviewTemplateResponse() (response *ModifyContentReviewTemp
     return
 }
 
-// 修改用户自定义视频内容审核模板。
+// 修改用户自定义视频内容智能识别模板。
 func (c *Client) ModifyContentReviewTemplate(request *ModifyContentReviewTemplateRequest) (response *ModifyContentReviewTemplateResponse, err error) {
     if request == nil {
         request = NewModifyContentReviewTemplateRequest()
@@ -2099,7 +2156,7 @@ func NewModifyPersonSampleResponse() (response *ModifyPersonSampleResponse) {
     return
 }
 
-// 该接口用于根据人物 ID，修改人物样本信息，包括名称、描述的修改，以及人脸、标签的添加、删除、重置操作。人脸删除操作需保证至少剩余 1 张图片，否则，请使用重置操作。
+// 该接口用于根据素材 ID，修改素材样本信息，包括名称、描述的修改，以及五官、标签的添加、删除、重置操作。五官删除操作需保证至少剩余 1 张图片，否则，请使用重置操作。
 func (c *Client) ModifyPersonSample(request *ModifyPersonSampleRequest) (response *ModifyPersonSampleResponse, err error) {
     if request == nil {
         request = NewModifyPersonSampleRequest()
@@ -2632,6 +2689,31 @@ func (c *Client) SimpleHlsClip(request *SimpleHlsClipRequest) (response *SimpleH
         request = NewSimpleHlsClipRequest()
     }
     response = NewSimpleHlsClipResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSplitMediaRequest() (request *SplitMediaRequest) {
+    request = &SplitMediaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "SplitMedia")
+    return
+}
+
+func NewSplitMediaResponse() (response *SplitMediaResponse) {
+    response = &SplitMediaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 对点播视频进行拆条，生成多个新的点播视频。
+func (c *Client) SplitMedia(request *SplitMediaRequest) (response *SplitMediaResponse, err error) {
+    if request == nil {
+        request = NewSplitMediaRequest()
+    }
+    response = NewSplitMediaResponse()
     err = c.Send(request, response)
     return
 }

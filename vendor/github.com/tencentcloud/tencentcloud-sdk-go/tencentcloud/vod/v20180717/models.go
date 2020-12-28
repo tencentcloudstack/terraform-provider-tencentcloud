@@ -2608,24 +2608,24 @@ func (r *CreateClassResponse) FromJsonString(s string) error {
 type CreateContentReviewTemplateRequest struct {
 	*tchttp.BaseRequest
 
-	// 审核结果是否进入审核墙（对审核结果进行人工复核）的开关。
+	// 智能识别结果是否进入智能识别墙（对识别结果进行人工复核）的开关。
 	// <li>ON：是；</li>
 	// <li>OFF：否。</li>
 	ReviewWallSwitch *string `json:"ReviewWallSwitch,omitempty" name:"ReviewWallSwitch"`
 
-	// 内容审核模板名称，长度限制：64 个字符。
+	// 内容智能识别模板名称，长度限制：64 个字符。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 内容审核模板描述信息，长度限制：256 个字符。
+	// 内容智能识别模板描述信息，长度限制：256 个字符。
 	Comment *string `json:"Comment,omitempty" name:"Comment"`
 
-	// 鉴黄控制参数。
+	// 令人反感的信息的控制参数。
 	PornConfigure *PornConfigureInfo `json:"PornConfigure,omitempty" name:"PornConfigure"`
 
-	// 鉴恐控制参数。
+	// 令人不安全的信息的控制参数。
 	TerrorismConfigure *TerrorismConfigureInfo `json:"TerrorismConfigure,omitempty" name:"TerrorismConfigure"`
 
-	// 鉴政控制参数。
+	// 令人不适宜的控制参数。
 	PoliticalConfigure *PoliticalConfigureInfo `json:"PoliticalConfigure,omitempty" name:"PoliticalConfigure"`
 
 	// 违禁控制参数。违禁内容包括：
@@ -2633,7 +2633,7 @@ type CreateContentReviewTemplateRequest struct {
 	// <li>涉毒违法。</li>
 	ProhibitedConfigure *ProhibitedConfigureInfo `json:"ProhibitedConfigure,omitempty" name:"ProhibitedConfigure"`
 
-	// 用户自定义内容审核控制参数。
+	// 用户自定义内容智能识别控制参数。
 	UserDefineConfigure *UserDefineConfigureInfo `json:"UserDefineConfigure,omitempty" name:"UserDefineConfigure"`
 
 	// 截帧间隔，单位为秒。当不填时，默认截帧间隔为 1 秒，最小值为 0.5 秒。
@@ -2656,7 +2656,7 @@ type CreateContentReviewTemplateResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 内容审核模板唯一标识。
+		// 内容智能识别模板唯一标识。
 		Definition *int64 `json:"Definition,omitempty" name:"Definition"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2839,23 +2839,23 @@ func (r *CreateImageSpriteTemplateResponse) FromJsonString(s string) error {
 type CreatePersonSampleRequest struct {
 	*tchttp.BaseRequest
 
-	// 人物名称，长度限制：20 个字符。
+	// 素材名称，长度限制：20 个字符。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 人物应用场景，可选值：
+	// 素材应用场景，可选值：
 	// 1. Recognition：用于内容识别，等价于 Recognition.Face。
-	// 2. Review：用于内容审核，等价于 Review.Face。
-	// 3. All：用于内容识别、内容审核，等价于 1+2。
+	// 2. Review：用于内容不适宜，等价于 Review.Face。
+	// 3. All：包含以上全部，等价于 1+2。
 	Usages []*string `json:"Usages,omitempty" name:"Usages" list`
 
-	// 人物描述，长度限制：1024 个字符。
+	// 素材描述，长度限制：1024 个字符。
 	Description *string `json:"Description,omitempty" name:"Description"`
 
-	// 人脸图片 [Base64](https://tools.ietf.org/html/rfc4648) 编码后的字符串，仅支持 jpeg、png 图片格式。数组长度限制：5 张图片。
-	// 注意：图片必须是单人像正面人脸较清晰的照片，像素不低于 200*200。
+	// 素材图片 [Base64](https://tools.ietf.org/html/rfc4648) 编码后的字符串，仅支持 jpeg、png 图片格式。数组长度限制：5 张图片。
+	// 注意：图片必须是单人像五官较清晰的照片，像素不低于 200*200。
 	FaceContents []*string `json:"FaceContents,omitempty" name:"FaceContents" list`
 
-	// 人物标签
+	// 素材标签
 	// <li>数组长度限制：20 个标签；</li>
 	// <li>单个标签长度限制：128 个字符。</li>
 	Tags []*string `json:"Tags,omitempty" name:"Tags" list`
@@ -2877,10 +2877,10 @@ type CreatePersonSampleResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 人物信息。
+		// 素材信息。
 		Person *AiSamplePerson `json:"Person,omitempty" name:"Person"`
 
-		// 处理失败的人脸信息。
+		// 处理失败的五官定位信息。
 		FailFaceInfoSet []*AiSampleFailFaceInfo `json:"FailFaceInfoSet,omitempty" name:"FailFaceInfoSet" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3377,13 +3377,13 @@ type CreateWordSamplesRequest struct {
 
 	// <b>关键词应用场景，可选值：</b>
 	// 1. Recognition.Ocr：通过光学字符识别技术，进行内容识别；
-	// 2. Recognition.Asr：通过语音识别技术，进行内容识别；
-	// 3. Review.Ocr：通过光学字符识别技术，进行内容审核；
-	// 4. Review.Asr：通过语音识别技术，进行内容审核；
+	// 2. Recognition.Asr：通过音频识别技术，进行内容识别；
+	// 3. Review.Ocr：通过光学字符识别技术，进行不适宜内容识别；
+	// 4. Review.Asr：通过音频识别技术，进行不适宜内容识别；
 	// <b>可合并简写为：</b>
-	// 5. Recognition：通过光学字符识别技术、语音识别技术，进行内容识别，等价于 1+2；
-	// 6. Review：通过光学字符识别技术、语音识别技术，进行内容审核，等价于 3+4；
-	// 7. All：通过光学字符识别技术、语音识别技术，进行内容识别、内容审核，等价于 1+2+3+4。
+	// 5. Recognition：通过光学字符识别技术、音频识别技术，进行内容识别，等价于 1+2；
+	// 6. Review：通过光学字符识别技术、音频识别技术，进行不适宜内容识别，等价于 3+4；
+	// 7. All：通过光学字符识别技术、音频识别技术，进行内容识别、不适宜内容识别，等价于 1+2+3+4。
 	Usages []*string `json:"Usages,omitempty" name:"Usages" list`
 
 	// 关键词，数组长度限制：100。
@@ -3608,7 +3608,7 @@ func (r *DeleteClassResponse) FromJsonString(s string) error {
 type DeleteContentReviewTemplateRequest struct {
 	*tchttp.BaseRequest
 
-	// 内容审核模板唯一标识。
+	// 内容智能识别模板唯一标识。
 	Definition *int64 `json:"Definition,omitempty" name:"Definition"`
 
 	// 点播[子应用](/document/product/266/14574) ID。如果要访问子应用中的资源，则将该字段填写为子应用 ID；否则无需填写该字段。
@@ -3759,7 +3759,7 @@ func (r *DeleteMediaResponse) FromJsonString(s string) error {
 type DeletePersonSampleRequest struct {
 	*tchttp.BaseRequest
 
-	// 人物 ID。
+	// 素材 ID。
 	PersonId *string `json:"PersonId,omitempty" name:"PersonId"`
 
 	// 点播[子应用](/document/product/266/14574) ID。如果要访问子应用中的资源，则将该字段填写为子应用 ID；否则无需填写该字段。
@@ -4533,7 +4533,7 @@ func (r *DescribeCdnLogsResponse) FromJsonString(s string) error {
 type DescribeContentReviewTemplatesRequest struct {
 	*tchttp.BaseRequest
 
-	// 内容审核模板唯一标识过滤条件，数组长度限制：100。
+	// 内容智能识别模板唯一标识过滤条件，数组长度限制：100。
 	Definitions []*int64 `json:"Definitions,omitempty" name:"Definitions" list`
 
 	// 分页偏移量，默认值：0。
@@ -4562,7 +4562,7 @@ type DescribeContentReviewTemplatesResponse struct {
 		// 符合过滤条件的记录总数。
 		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-		// 内容审核模板详情列表。
+		// 内容智能识别模板详情列表。
 		ContentReviewTemplateSet []*ContentReviewTemplateItem `json:"ContentReviewTemplateSet,omitempty" name:"ContentReviewTemplateSet" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -4576,6 +4576,49 @@ func (r *DescribeContentReviewTemplatesResponse) ToJsonString() string {
 }
 
 func (r *DescribeContentReviewTemplatesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDailyPlayStatFileListRequest struct {
+	*tchttp.BaseRequest
+
+	// 起始日期，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束日期，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 点播[子应用](/document/product/266/14574) ID。如果要访问子应用中的资源，则将该字段填写为子应用 ID；否则无需填写该字段。
+	SubAppId *uint64 `json:"SubAppId,omitempty" name:"SubAppId"`
+}
+
+func (r *DescribeDailyPlayStatFileListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDailyPlayStatFileListRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDailyPlayStatFileListResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 播放统计文件列表。
+		PlayStatFileSet []*PlayStatFileInfo `json:"PlayStatFileSet,omitempty" name:"PlayStatFileSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDailyPlayStatFileListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDailyPlayStatFileListResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4835,21 +4878,21 @@ func (r *DescribeMediaProcessUsageDataResponse) FromJsonString(s string) error {
 type DescribePersonSamplesRequest struct {
 	*tchttp.BaseRequest
 
-	// 拉取的人物类型，可选值：
-	// <li>UserDefine：用户自定义人物库；</li>
-	// <li>Default：系统默认人物库。</li>
+	// 拉取的素材类型，可选值：
+	// <li>UserDefine：用户自定义素材库；</li>
+	// <li>Default：系统默认素材库。</li>
 	// 
-	// 默认值：UserDefine，拉取用户自定义人物库人物。
-	// 说明：如果是拉取系统默认人物库，只能使用人物名字或者人物 ID + 人物名字的方式进行拉取，且人脸图片只返回一张。
+	// 默认值：UserDefine，拉取用户自定义素材库素材。
+	// 说明：如果是拉取系统默认素材库，只能使用素材名字或者素材 ID + 素材名字的方式进行拉取，且五官图片只返回一张。
 	Type *string `json:"Type,omitempty" name:"Type"`
 
-	// 人物 ID，数组长度限制：100。
+	// 素材 ID，数组长度限制：100。
 	PersonIds []*string `json:"PersonIds,omitempty" name:"PersonIds" list`
 
-	// 人物名称，数组长度限制：20。
+	// 素材名称，数组长度限制：20。
 	Names []*string `json:"Names,omitempty" name:"Names" list`
 
-	// 人物标签，数组长度限制：20。
+	// 素材标签，数组长度限制：20。
 	Tags []*string `json:"Tags,omitempty" name:"Tags" list`
 
 	// 分页偏移量，默认值：0。
@@ -4975,13 +5018,13 @@ type DescribeReviewDetailsResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 发起内容审核次数。
+		// 发起内容智能识别次数。
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-		// 内容审核总时长。
+		// 内容智能识别总时长。
 		TotalDuration *int64 `json:"TotalDuration,omitempty" name:"TotalDuration"`
 
-		// 内容审核时长统计数据，每天一个数据。
+		// 内容智能识别时长统计数据，每天一个数据。
 		Data []*StatDataItem `json:"Data,omitempty" name:"Data" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -5221,6 +5264,12 @@ func (r *DescribeStorageDetailsResponse) FromJsonString(s string) error {
 type DescribeSubAppIdsRequest struct {
 	*tchttp.BaseRequest
 
+	// 分页拉取的最大返回结果数。默认值：200；最大值：200。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页拉取的起始偏移量。默认值：0。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
 	// 标签信息，查询指定标签的子应用列表。
 	Tags []*ResourceTag `json:"Tags,omitempty" name:"Tags" list`
 }
@@ -5240,6 +5289,9 @@ type DescribeSubAppIdsResponse struct {
 
 		// 子应用信息集合。
 		SubAppIdInfoSet []*SubAppIdInfo `json:"SubAppIdInfoSet,omitempty" name:"SubAppIdInfoSet" list`
+
+		// 子应用总数量。
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -5335,9 +5387,10 @@ type DescribeTaskDetailResponse struct {
 		// 任务类型，取值：
 	// <li>Procedure：视频处理任务；</li>
 	// <li>EditMedia：视频编辑任务；</li>
+	// <li>SplitMedia：视频拆条任务；</li>
+	// <li>ComposeMedia：制作媒体文件任务；</li>
 	// <li>WechatPublish：微信发布任务；</li>
 	// <li>WechatMiniProgramPublish：微信小程序视频发布任务；</li>
-	// <li>ComposeMedia：制作媒体文件任务；</li>
 	// <li>PullUpload：拉取上传媒体文件任务。</li>
 	// 
 	// 兼容 2017 版的任务类型：
@@ -5379,6 +5432,14 @@ type DescribeTaskDetailResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		ComposeMediaTask *ComposeMediaTask `json:"ComposeMediaTask,omitempty" name:"ComposeMediaTask"`
 
+		// 视频拆条任务信息，仅当 TaskType 为 SplitMedia，该字段有值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		SplitMediaTask *SplitMediaTask `json:"SplitMediaTask,omitempty" name:"SplitMediaTask"`
+
+		// 微信小程序发布任务信息，仅当 TaskType 为 WechatMiniProgramPublish，该字段有值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		WechatMiniProgramPublishTask *WechatMiniProgramPublishTask `json:"WechatMiniProgramPublishTask,omitempty" name:"WechatMiniProgramPublishTask"`
+
 		// 拉取上传媒体文件任务信息，仅当 TaskType 为 PullUpload，该字段有值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		PullUploadTask *PullUploadTask `json:"PullUploadTask,omitempty" name:"PullUploadTask"`
@@ -5386,10 +5447,6 @@ type DescribeTaskDetailResponse struct {
 		// 视频转码任务信息，仅当 TaskType 为 Transcode，该字段有值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		TranscodeTask *TranscodeTask2017 `json:"TranscodeTask,omitempty" name:"TranscodeTask"`
-
-		// 视频指定时间点截图任务信息，仅当 TaskType 为 SnapshotByTimeOffset，该字段有值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-		SnapshotByTimeOffsetTask *SnapshotByTimeOffsetTask2017 `json:"SnapshotByTimeOffsetTask,omitempty" name:"SnapshotByTimeOffsetTask"`
 
 		// 视频拼接任务信息，仅当 TaskType 为 Concat，该字段有值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -5403,9 +5460,9 @@ type DescribeTaskDetailResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		CreateImageSpriteTask *CreateImageSpriteTask2017 `json:"CreateImageSpriteTask,omitempty" name:"CreateImageSpriteTask"`
 
-		// 微信小程序发布任务信息，仅当 TaskType 为 WechatMiniProgramPublish，该字段有值。
+		// 视频指定时间点截图任务信息，仅当 TaskType 为 SnapshotByTimeOffset，该字段有值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		WechatMiniProgramPublishTask *WechatMiniProgramPublishTask `json:"WechatMiniProgramPublishTask,omitempty" name:"WechatMiniProgramPublishTask"`
+		SnapshotByTimeOffsetTask *SnapshotByTimeOffsetTask2017 `json:"SnapshotByTimeOffsetTask,omitempty" name:"SnapshotByTimeOffsetTask"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -5601,12 +5658,12 @@ type DescribeWordSamplesRequest struct {
 
 	// <b>关键词应用场景过滤条件，可选值：</b>
 	// 1. Recognition.Ocr：通过光学字符识别技术，进行内容识别；
-	// 2. Recognition.Asr：通过语音识别技术，进行内容识别；
-	// 3. Review.Ocr：通过光学字符识别技术，进行内容审核；
-	// 4. Review.Asr：通过语音识别技术，进行内容审核；
+	// 2. Recognition.Asr：通过音频识别技术，进行内容识别；
+	// 3. Review.Ocr：通过光学字符识别技术，进行不适宜的内容识别；
+	// 4. Review.Asr：通过音频识别技术，进行不适宜的内容识别；
 	// <b>可合并简写为：</b>
-	// 5. Recognition：通过光学字符识别技术、语音识别技术，进行内容识别，等价于 1+2；
-	// 6. Review：通过光学字符识别技术、语音识别技术，进行内容审核，等价于 3+4；
+	// 5. Recognition：通过光学字符识别技术、音频识别技术，进行内容识别，等价于 1+2；
+	// 6. Review：通过光学字符识别技术、音频识别技术，进行不适宜的内容识别，等价于 3+4；
 	// 可多选，元素间关系为 or，即关键词的应用场景包含该字段集合中任意元素的记录，均符合该条件。
 	Usages []*string `json:"Usages,omitempty" name:"Usages" list`
 
@@ -5868,6 +5925,7 @@ type EventContent struct {
 	// <li>FileDeleted：视频删除完成；</li>
 	// <li>PullComplete：视频转拉完成；</li>
 	// <li>EditMediaComplete：视频编辑完成；</li>
+	// <li>SplitMediaComplete：视频拆分完成；</li>
 	// <li>WechatPublishComplete：微信发布完成；</li>
 	// <li>ComposeMediaComplete：制作媒体文件完成；</li>
 	// <li>WechatMiniProgramPublishComplete：微信小程序发布完成。</li>
@@ -5899,33 +5957,37 @@ type EventContent struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EditMediaCompleteEvent *EditMediaTask `json:"EditMediaCompleteEvent,omitempty" name:"EditMediaCompleteEvent"`
 
-	// 微信发布完成事件，当事件类型为 WechatPublishComplete 时有效。
+	// 视频拆条完成事件，当事件类型为 SplitMediaComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WechatPublishCompleteEvent *WechatPublishTask `json:"WechatPublishCompleteEvent,omitempty" name:"WechatPublishCompleteEvent"`
+	SplitMediaCompleteEvent *SplitMediaTask `json:"SplitMediaCompleteEvent,omitempty" name:"SplitMediaCompleteEvent"`
 
-	// 视频转码完成事件，当事件类型为 TranscodeComplete 时有效。
+	// 制作媒体文件任务完成事件，当事件类型为 ComposeMediaComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TranscodeCompleteEvent *TranscodeTask2017 `json:"TranscodeCompleteEvent,omitempty" name:"TranscodeCompleteEvent"`
-
-	// 视频拼接完成事件，当事件类型为 ConcatComplete 时有效。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConcatCompleteEvent *ConcatTask2017 `json:"ConcatCompleteEvent,omitempty" name:"ConcatCompleteEvent"`
+	ComposeMediaCompleteEvent *ComposeMediaTask `json:"ComposeMediaCompleteEvent,omitempty" name:"ComposeMediaCompleteEvent"`
 
 	// 视频剪辑完成事件，当事件类型为 ClipComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClipCompleteEvent *ClipTask2017 `json:"ClipCompleteEvent,omitempty" name:"ClipCompleteEvent"`
 
+	// 视频转码完成事件，当事件类型为 TranscodeComplete 时有效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TranscodeCompleteEvent *TranscodeTask2017 `json:"TranscodeCompleteEvent,omitempty" name:"TranscodeCompleteEvent"`
+
 	// 视频截取雪碧图完成事件，当事件类型为 CreateImageSpriteComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateImageSpriteCompleteEvent *CreateImageSpriteTask2017 `json:"CreateImageSpriteCompleteEvent,omitempty" name:"CreateImageSpriteCompleteEvent"`
+
+	// 视频拼接完成事件，当事件类型为 ConcatComplete 时有效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConcatCompleteEvent *ConcatTask2017 `json:"ConcatCompleteEvent,omitempty" name:"ConcatCompleteEvent"`
 
 	// 视频按时间点截图完成事件，当事件类型为 CreateSnapshotByTimeOffsetComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotByTimeOffsetCompleteEvent *SnapshotByTimeOffsetTask2017 `json:"SnapshotByTimeOffsetCompleteEvent,omitempty" name:"SnapshotByTimeOffsetCompleteEvent"`
 
-	// 制作媒体文件任务完成事件，当事件类型为 ComposeMediaComplete 时有效。
+	// 微信发布完成事件，当事件类型为 WechatPublishComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ComposeMediaCompleteEvent *ComposeMediaTask `json:"ComposeMediaCompleteEvent,omitempty" name:"ComposeMediaCompleteEvent"`
+	WechatPublishCompleteEvent *WechatPublishTask `json:"WechatPublishCompleteEvent,omitempty" name:"WechatPublishCompleteEvent"`
 
 	// 微信小程序发布任务完成事件，当事件类型为 WechatMiniProgramPublishComplete 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -6453,6 +6515,47 @@ func (r *LiveRealTimeClipResponse) ToJsonString() string {
 }
 
 func (r *LiveRealTimeClipResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ManageTaskRequest struct {
+	*tchttp.BaseRequest
+
+	// 视频处理的任务 ID。
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 操作类型，取值范围：
+	// <li>Abort：终止任务。只能终止已发起且状态为等待中（WAITING）的任务。</li>
+	OperationType *string `json:"OperationType,omitempty" name:"OperationType"`
+
+	// 点播[子应用](/document/product/266/14574) ID。如果要访问子应用中的资源，则将该字段填写为子应用 ID；否则无需填写该字段。
+	SubAppId *uint64 `json:"SubAppId,omitempty" name:"SubAppId"`
+}
+
+func (r *ManageTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ManageTaskRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ManageTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ManageTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ManageTaskResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7227,6 +7330,9 @@ type MediaProcessTaskTranscodeResult struct {
 	// 转码任务的输出。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Output *MediaTranscodeItem `json:"Output,omitempty" name:"Output"`
+
+	// 转码进度，取值范围 [0-100] 。
+	Progress *int64 `json:"Progress,omitempty" name:"Progress"`
 }
 
 type MediaSampleSnapshotInfo struct {
@@ -7718,22 +7824,22 @@ func (r *ModifyClassResponse) FromJsonString(s string) error {
 type ModifyContentReviewTemplateRequest struct {
 	*tchttp.BaseRequest
 
-	// 内容审核模板唯一标识。
+	// 内容智能识别模板唯一标识。
 	Definition *int64 `json:"Definition,omitempty" name:"Definition"`
 
-	// 内容审核模板名称，长度限制：64 个字符。
+	// 内容智能识别模板名称，长度限制：64 个字符。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 内容审核模板描述信息，长度限制：256 个字符。
+	// 内容智能识别模板描述信息，长度限制：256 个字符。
 	Comment *string `json:"Comment,omitempty" name:"Comment"`
 
-	// 鉴黄控制参数。
-	PornConfigure *PornConfigureInfoForUpdate `json:"PornConfigure,omitempty" name:"PornConfigure"`
-
-	// 鉴恐控制参数。
+	// 令人不安全的信息的控制参数。
 	TerrorismConfigure *TerrorismConfigureInfoForUpdate `json:"TerrorismConfigure,omitempty" name:"TerrorismConfigure"`
 
-	// 鉴政控制参数。
+	// 令人反感的信息的控制参数。
+	PornConfigure *PornConfigureInfoForUpdate `json:"PornConfigure,omitempty" name:"PornConfigure"`
+
+	// 令人不适宜的信息控制参数。
 	PoliticalConfigure *PoliticalConfigureInfoForUpdate `json:"PoliticalConfigure,omitempty" name:"PoliticalConfigure"`
 
 	// 违禁控制参数。违禁内容包括：
@@ -7741,13 +7847,13 @@ type ModifyContentReviewTemplateRequest struct {
 	// <li>涉毒违法。</li>
 	ProhibitedConfigure *ProhibitedConfigureInfoForUpdate `json:"ProhibitedConfigure,omitempty" name:"ProhibitedConfigure"`
 
-	// 用户自定义内容审核控制参数。
+	// 用户自定义内容智能识别控制参数。
 	UserDefineConfigure *UserDefineConfigureInfoForUpdate `json:"UserDefineConfigure,omitempty" name:"UserDefineConfigure"`
 
 	// 截帧间隔，单位为秒，最小值为 0.5 秒。
 	ScreenshotInterval *float64 `json:"ScreenshotInterval,omitempty" name:"ScreenshotInterval"`
 
-	// 审核结果是否进入审核墙（对审核结果进行人工复核）的开关。
+	// 智能识别结果是否进入智能识别墙（对智能识别结果进行人工识别）的开关。
 	// <li>ON：是；</li>
 	// <li>OFF：否。</li>
 	ReviewWallSwitch *string `json:"ReviewWallSwitch,omitempty" name:"ReviewWallSwitch"`
@@ -7939,7 +8045,7 @@ func (r *ModifyMediaInfoResponse) FromJsonString(s string) error {
 type ModifyPersonSampleRequest struct {
 	*tchttp.BaseRequest
 
-	// 人物 ID。
+	// 素材 ID。
 	PersonId *string `json:"PersonId,omitempty" name:"PersonId"`
 
 	// 名称，长度限制：128 个字符。
@@ -7948,13 +8054,13 @@ type ModifyPersonSampleRequest struct {
 	// 描述，长度限制：1024 个字符。
 	Description *string `json:"Description,omitempty" name:"Description"`
 
-	// 人物应用场景，可选值：
+	// 素材应用场景，可选值：
 	// 1. Recognition：用于内容识别，等价于 Recognition.Face。
-	// 2. Review：用于内容审核，等价于 Review.Face。
-	// 3. All：用于内容识别、内容审核，等价于 1+2。
+	// 2. Review：用于不适宜的内容识别，等价于 Review.Face。
+	// 3. All：用于内容识别、不适宜的内容识别，等价于 1+2。
 	Usages []*string `json:"Usages,omitempty" name:"Usages" list`
 
-	// 人脸操作信息。
+	// 五官操作信息。
 	FaceOperationInfo *AiSampleFaceOperation `json:"FaceOperationInfo,omitempty" name:"FaceOperationInfo"`
 
 	// 标签操作信息。
@@ -7977,10 +8083,10 @@ type ModifyPersonSampleResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 人物信息。
+		// 素材信息。
 		Person *AiSamplePerson `json:"Person,omitempty" name:"Person"`
 
-		// 处理失败的人脸信息。
+		// 处理失败的五官信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		FailFaceInfoSet []*AiSampleFailFaceInfo `json:"FailFaceInfoSet,omitempty" name:"FailFaceInfoSet" list`
 
@@ -8452,13 +8558,13 @@ type ModifyWordSampleRequest struct {
 
 	// <b>关键词应用场景，可选值：</b>
 	// 1. Recognition.Ocr：通过光学字符识别技术，进行内容识别；
-	// 2. Recognition.Asr：通过语音识别技术，进行内容识别；
-	// 3. Review.Ocr：通过光学字符识别技术，进行内容审核；
-	// 4. Review.Asr：通过语音识别技术，进行内容审核；
+	// 2. Recognition.Asr：通过音频识别技术，进行内容识别；
+	// 3. Review.Ocr：通过光学字符识别技术，进行不适宜的内容识别；
+	// 4. Review.Asr：通过音频识别技术，进行不适宜的内容识别；
 	// <b>可合并简写为：</b>
-	// 5. Recognition：通过光学字符识别技术、语音识别技术，进行内容识别，等价于 1+2；
-	// 6. Review：通过光学字符识别技术、语音识别技术，进行内容审核，等价于 3+4；
-	// 7. All：通过光学字符识别技术、语音识别技术，进行内容识别、内容审核，等价于 1+2+3+4。
+	// 5. Recognition：通过光学字符识别技术、音频识别技术，进行内容识别，等价于 1+2；
+	// 6. Review：通过光学字符识别技术、音频识别技术，进行不适宜的内容识别，等价于 3+4；
+	// 7. All：包含以上全部，等价于 1+2+3+4。
 	Usages []*string `json:"Usages,omitempty" name:"Usages" list`
 
 	// 标签操作信息。
@@ -8683,6 +8789,25 @@ func (r *ParseStreamingManifestResponse) ToJsonString() string {
 
 func (r *ParseStreamingManifestResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type PlayStatFileInfo struct {
+
+	// 播放统计数据所属日期，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	Date *string `json:"Date,omitempty" name:"Date"`
+
+	// 播放统计文件的 URL 地址。播放统计文件内容为：
+	// <li> date：播放日期。</li>
+	// <li> file_id：视频文件 ID。</li>
+	// <li> ip_count：去重后的客户端 IP 数。</li>
+	// <li> flux：播放流量，单位：字节。</li>
+	// <li> play_times：总的播放次数。</li>
+	// <li> pc_play_times：PC 端播放次数。</li>
+	// <li> mobile_play_times：移动端播放次数。</li>
+	// <li> iphone_play_times：iPhone 端播放次数。</li>
+	// <li> android_play_times：Android 端播放次数。</li>
+	// <li> host_name	域名。</li>
+	Url *string `json:"Url,omitempty" name:"Url"`
 }
 
 type PlayerConfig struct {
@@ -10029,6 +10154,161 @@ type SpecificationDataItem struct {
 	Data []*TaskStatDataItem `json:"Data,omitempty" name:"Data" list`
 }
 
+type SplitMediaOutputConfig struct {
+
+	// 输出文件名，最长 64 个字符。缺省由系统指定生成文件名。
+	MediaName *string `json:"MediaName,omitempty" name:"MediaName"`
+
+	// 输出文件格式，可选值：mp4、hls。默认是 mp4。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 分类ID，用于对媒体进行分类管理，可通过 [创建分类](/document/product/266/7812) 接口，创建分类，获得分类 ID。
+	// <li>默认值：0，表示其他分类。</li>
+	ClassId *int64 `json:"ClassId,omitempty" name:"ClassId"`
+
+	// 输出文件的过期时间，超过该时间文件将被删除，默认为永久不过期，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
+	ExpireTime *string `json:"ExpireTime,omitempty" name:"ExpireTime"`
+}
+
+type SplitMediaRequest struct {
+	*tchttp.BaseRequest
+
+	// 视频的 ID。
+	FileId *string `json:"FileId,omitempty" name:"FileId"`
+
+	// 视频拆条任务信息列表，最多同时支持100个拆条信息。
+	Segments []*SplitMediaTaskConfig `json:"Segments,omitempty" name:"Segments" list`
+
+	// 标识来源上下文，用于透传用户请求信息，在 SplitMediaComplete 回调和任务流状态变更回调将返回该字段值，最长 1000个字符。
+	SessionContext *string `json:"SessionContext,omitempty" name:"SessionContext"`
+
+	// 用于任务去重的识别码，如果三天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	SessionId *string `json:"SessionId,omitempty" name:"SessionId"`
+
+	// 任务的优先级，数值越大优先级越高，取值范围是 -10 到 10，不填代表 0。
+	TasksPriority *int64 `json:"TasksPriority,omitempty" name:"TasksPriority"`
+
+	// 点播[子应用](/document/product/266/14574) ID。如果要访问子应用中的资源，则将该字段填写为子应用 ID；否则无需填写该字段。
+	SubAppId *uint64 `json:"SubAppId,omitempty" name:"SubAppId"`
+}
+
+func (r *SplitMediaRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SplitMediaRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SplitMediaResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 视频拆条的任务 ID，可以通过该 ID 查询拆条任务（任务类型为 SplitMedia）的状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *SplitMediaResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SplitMediaResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SplitMediaTask struct {
+
+	// 任务 ID。
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 任务流状态，取值：
+	// <li>PROCESSING：处理中；</li>
+	// <li>FINISH：已完成。</li>
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 错误码，空字符串表示成功，其他值表示失败，取值请参考 [视频处理类错误码](https://cloud.tencent.com/document/product/266/50368#.E8.A7.86.E9.A2.91.E5.A4.84.E7.90.86.E7.B1.BB.E9.94.99.E8.AF.AF.E7.A0.81) 列表。
+	ErrCodeExt *string `json:"ErrCodeExt,omitempty" name:"ErrCodeExt"`
+
+	// 错误码，0 表示成功，其他值表示失败（该字段已不推荐使用，建议使用新的错误码字段 ErrCodeExt）。
+	ErrCode *int64 `json:"ErrCode,omitempty" name:"ErrCode"`
+
+	// 错误信息。
+	Message *string `json:"Message,omitempty" name:"Message"`
+
+	// 视频拆条任务详细信息列表。
+	FileInfoSet []*SplitMediaTaskSegmentInfo `json:"FileInfoSet,omitempty" name:"FileInfoSet" list`
+
+	// 来源上下文，用于透传用户请求信息，任务流状态变更回调将返回该字段值，最长 1000 个字符。
+	SessionContext *string `json:"SessionContext,omitempty" name:"SessionContext"`
+
+	// 用于去重的识别码，如果七天内曾有过相同的识别码的请求，则本次的请求会返回错误。最长 50 个字符，不带或者带空字符串表示不做去重。
+	SessionId *string `json:"SessionId,omitempty" name:"SessionId"`
+}
+
+type SplitMediaTaskConfig struct {
+
+	// 视频拆条起始的偏移时间，单位：秒。
+	// <li>不填或填0，表示转码后的视频从原始视频的起始位置开始；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频从原始视频的第 n 秒位置开始；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频从原始视频结束 n 秒前的位置开始。</li>
+	StartTimeOffset *float64 `json:"StartTimeOffset,omitempty" name:"StartTimeOffset"`
+
+	// 视频拆条结束的偏移时间，单位：秒。
+	// <li>不填或填0，表示转码后的视频持续到原始视频的末尾终止；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频持续到原始视频第 n 秒时终止；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频持续到原始视频结束 n 秒前终止。</li>
+	EndTimeOffset *float64 `json:"EndTimeOffset,omitempty" name:"EndTimeOffset"`
+
+	// [任务流模板](/document/product/266/11700#.E4.BB.BB.E5.8A.A1.E6.B5.81.E6.A8.A1.E6.9D.BF)名字，如果要对生成的新视频执行任务流时填写。
+	ProcedureName *string `json:"ProcedureName,omitempty" name:"ProcedureName"`
+
+	// 视频拆条输出信息。
+	OutputConfig *SplitMediaOutputConfig `json:"OutputConfig,omitempty" name:"OutputConfig"`
+}
+
+type SplitMediaTaskInput struct {
+
+	// 视频的 ID。
+	FileId *string `json:"FileId,omitempty" name:"FileId"`
+
+	// 视频拆条起始的偏移时间，单位：秒。
+	// <li>不填或填0，表示转码后的视频从原始视频的起始位置开始；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频从原始视频的第 n 秒位置开始；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频从原始视频结束 n 秒前的位置开始。</li>
+	StartTimeOffset *float64 `json:"StartTimeOffset,omitempty" name:"StartTimeOffset"`
+
+	// 视频拆条结束的偏移时间，单位：秒。
+	// <li>不填或填0，表示转码后的视频持续到原始视频的末尾终止；</li>
+	// <li>当数值大于0时（假设为 n），表示转码后的视频持续到原始视频第 n 秒时终止；</li>
+	// <li>当数值小于0时（假设为 -n），表示转码后的视频持续到原始视频结束 n 秒前终止。</li>
+	EndTimeOffset *float64 `json:"EndTimeOffset,omitempty" name:"EndTimeOffset"`
+
+	// [任务流模板](/document/product/266/11700#.E4.BB.BB.E5.8A.A1.E6.B5.81.E6.A8.A1.E6.9D.BF)名字，如果要对生成的新视频执行任务流时填写。
+	ProcedureName *string `json:"ProcedureName,omitempty" name:"ProcedureName"`
+
+	// 视频拆条输出信息。
+	OutputConfig *SplitMediaOutputConfig `json:"OutputConfig,omitempty" name:"OutputConfig"`
+}
+
+type SplitMediaTaskSegmentInfo struct {
+
+	// 视频拆条任务输入信息。
+	Input *SplitMediaTaskInput `json:"Input,omitempty" name:"Input"`
+
+	// 视频拆条任务输出信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Output *TaskOutputMediaInfo `json:"Output,omitempty" name:"Output"`
+
+	// 若发起视频拆条任务时指定了视频处理流程，则该字段为流程任务 ID。
+	ProcedureTaskId *string `json:"ProcedureTaskId,omitempty" name:"ProcedureTaskId"`
+}
+
 type StatDataItem struct {
 
 	// 数据所在时间区间的开始时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。如：当时间粒度为天，2018-12-01T00:00:00+08:00，表示2018年12月1日（含）到2018年12月2日（不含）区间。
@@ -10228,6 +10508,15 @@ type TagConfigureInfoForUpdate struct {
 	// <li>ON：开启智能标签任务；</li>
 	// <li>OFF：关闭智能标签任务。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
+type TaskOutputMediaInfo struct {
+
+	// 媒体文件 ID。
+	FileId *string `json:"FileId,omitempty" name:"FileId"`
+
+	// 转拉完成后生成的媒体文件基础信息。
+	MediaBasicInfo *MediaBasicInfo `json:"MediaBasicInfo,omitempty" name:"MediaBasicInfo"`
 }
 
 type TaskSimpleInfo struct {
