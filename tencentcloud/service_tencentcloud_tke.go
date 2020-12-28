@@ -1025,12 +1025,12 @@ func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, no
 	logId := getLogId(ctx)
 	//the error code of cluster not exist is InternalError
 	//check cluster exist first
-	_, has, err := me.DescribeCluster(ctx, clusterId)
+	_, clusterHas, err := me.DescribeCluster(ctx, clusterId)
 	if err != nil {
 		errRet = err
 		return
 	}
-	if !has {
+	if !clusterHas {
 		return
 	}
 

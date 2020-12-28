@@ -374,7 +374,7 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 
 	request := as.NewCreateAutoScalingGroupRequest()
 
-	//this is an emtpy string
+	//this is an empty string
 	request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
 	request.MinSize = helper.IntUint64(d.Get("min_size").(int))
 
