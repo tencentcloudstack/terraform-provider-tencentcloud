@@ -158,6 +158,9 @@ type AddCdnDomainRequest struct {
 
 	// 标签配置
 	Tag []*Tag `json:"Tag,omitempty" name:"Tag" list`
+
+	// Ipv6 访问配置
+	Ipv6Access *Ipv6Access `json:"Ipv6Access,omitempty" name:"Ipv6Access"`
 }
 
 func (r *AddCdnDomainRequest) ToJsonString() string {
@@ -211,6 +214,19 @@ type AdvanceCacheRule struct {
 	// 单位为秒，最大可设置为 365 天
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheTime *int64 `json:"CacheTime,omitempty" name:"CacheTime"`
+}
+
+type AdvanceConfig struct {
+
+	// 高级配置名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 是否支持高级配置，
+	// on：支持
+	// off：不支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type AdvancedAuthentication struct {
@@ -1214,6 +1230,12 @@ type CreateScdnLogTaskRequest struct {
 
 	// 指定域名查询, 与 Domain 参数同时有值时使用 Domains 参数，不填默认查询全部域名，指定域名查询时最多支持同时选择 5 个域名查询
 	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
+
+	// 指定攻击类型查询, 与 AttackType 参数同时有值时使用 AttackTypes 参数，不填默认查询全部攻击类型
+	AttackTypes []*string `json:"AttackTypes,omitempty" name:"AttackTypes" list`
+
+	// 查询条件
+	Conditions []*ScdnEventLogConditions `json:"Conditions,omitempty" name:"Conditions" list`
 }
 
 func (r *CreateScdnLogTaskRequest) ToJsonString() string {
@@ -2645,6 +2667,59 @@ func (r *DescribeReportDataResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeScdnConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *DescribeScdnConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeScdnConfigRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeScdnConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 自定义防护策略配置
+		Acl *ScdnAclConfig `json:"Acl,omitempty" name:"Acl"`
+
+		// Web 攻击防护（WAF）配置
+		Waf *ScdnWafConfig `json:"Waf,omitempty" name:"Waf"`
+
+		// CC 防护配置
+		CC *ScdnConfig `json:"CC,omitempty" name:"CC"`
+
+		// DDOS 防护配置
+		Ddos *ScdnDdosConfig `json:"Ddos,omitempty" name:"Ddos"`
+
+		// BOT 防护配置
+		Bot *ScdnBotConfig `json:"Bot,omitempty" name:"Bot"`
+
+		// 当前状态，取值online | offline
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Status *string `json:"Status,omitempty" name:"Status"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeScdnConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeScdnConfigResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeScdnTopDataRequest struct {
 	*tchttp.BaseRequest
 
@@ -3053,6 +3128,14 @@ type DetailDomain struct {
 	// 回源鉴权高级配置，白名单功能
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginAuthentication *OriginAuthentication `json:"OriginAuthentication,omitempty" name:"OriginAuthentication"`
+
+	// Ipv6访问配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6Access *Ipv6Access `json:"Ipv6Access,omitempty" name:"Ipv6Access"`
+
+	// 高级配置集合。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AdvanceSet []*AdvanceConfig `json:"AdvanceSet,omitempty" name:"AdvanceSet" list`
 }
 
 type DiagnoseData struct {
@@ -3499,6 +3582,10 @@ type ForceRedirect struct {
 	// 支持 301、302
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitempty" name:"RedirectStatusCode"`
+
+	// 强制跳转时是否返回增加的头部。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CarryHeaders *string `json:"CarryHeaders,omitempty" name:"CarryHeaders"`
 }
 
 type GetDisableRecordsRequest struct {
@@ -3810,6 +3897,13 @@ type Ipv6 struct {
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
+type Ipv6Access struct {
+
+	// 域名是否开启ipv6访问功能，on或off。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
 type KeyRule struct {
 
 	// CacheType 对应类型下的匹配内容：
@@ -3987,6 +4081,54 @@ func (r *ListDiagnoseReportResponse) ToJsonString() string {
 }
 
 func (r *ListDiagnoseReportResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ListScdnDomainsRequest struct {
+	*tchttp.BaseRequest
+
+	// 分页起始地址
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 列表分页记录条数，最大1000
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 域名信息
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *ListScdnDomainsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ListScdnDomainsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ListScdnDomainsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 域名列表信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		DomainList []*ScdnDomain `json:"DomainList,omitempty" name:"DomainList" list`
+
+		// 域名的总条数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ListScdnDomainsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ListScdnDomainsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4402,7 +4544,7 @@ type Origin struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BasePath *string `json:"BasePath,omitempty" name:"BasePath"`
 
-	// 分路径回源配置规则
+	// 回源路径重写规则配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PathRules []*PathRule `json:"PathRules,omitempty" name:"PathRules" list`
 }
@@ -4761,6 +4903,13 @@ type PushUrlsCacheRequest struct {
 
 	// 填写"middle"或不填充时预热至中间层节点
 	Layer *string `json:"Layer,omitempty" name:"Layer"`
+
+	// 是否递归解析m3u8文件中的ts分片预热
+	// 注意事项：
+	// 1. 该功能要求m3u8索引文件能直接请求获取
+	// 2. 当前只支持递归解析一级索引和子索引中的ts分片，递归深度不超过3层
+	// 3. 解析获取的ts分片会正常累加每日预热用量，当用量超出配额时，会静默处理，不再执行预热
+	ParseM3U8 *bool `json:"ParseM3U8,omitempty" name:"ParseM3U8"`
 }
 
 func (r *PushUrlsCacheRequest) ToJsonString() string {
@@ -5158,6 +5307,36 @@ type ScdnDdosConfig struct {
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
+type ScdnDomain struct {
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 当前状态，取值online | offline | process
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// Waf 状态默认为‘/’，取值 close | intercept | observe
+	Waf *string `json:"Waf,omitempty" name:"Waf"`
+
+	// Acl 状态默认为‘/’，取值 close | open
+	Acl *string `json:"Acl,omitempty" name:"Acl"`
+
+	// CC 状态默认为‘/’，取值 close | open
+	CC *string `json:"CC,omitempty" name:"CC"`
+
+	// Ddos 状态默认为‘/’，取值 close | open
+	Ddos *string `json:"Ddos,omitempty" name:"Ddos"`
+
+	// 项目ID
+	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// Acl 规则数
+	AclRuleNumbers *uint64 `json:"AclRuleNumbers,omitempty" name:"AclRuleNumbers"`
+
+	// Bot 状态默认为‘/’，取值 close | open
+	Bot *string `json:"Bot,omitempty" name:"Bot"`
+}
+
 type ScdnErrorPage struct {
 
 	// 状态码
@@ -5165,6 +5344,18 @@ type ScdnErrorPage struct {
 
 	// 重定向url
 	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+}
+
+type ScdnEventLogConditions struct {
+
+	// 匹配关键字，ip, attack_location
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 逻辑操作符，取值 exclude, include
+	Operator *string `json:"Operator,omitempty" name:"Operator"`
+
+	// 匹配值，允许使用通配符(*)查询，匹配零个、单个、多个字符，例如 1.2.*
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type ScdnLogTaskDetail struct {
@@ -5227,6 +5418,10 @@ type ScdnLogTaskDetail struct {
 	//   observe = '观察模式'
 	//   intercept = '防御模式'
 	DefenceMode *string `json:"DefenceMode,omitempty" name:"DefenceMode"`
+
+	// 查询条件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Conditions []*ScdnEventLogConditions `json:"Conditions,omitempty" name:"Conditions" list`
 }
 
 type ScdnTopData struct {
@@ -5257,6 +5452,10 @@ type ScdnTopUrlData struct {
 
 	// 时间
 	Time *string `json:"Time,omitempty" name:"Time"`
+
+	// 域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
 }
 
 type ScdnTypeData struct {
@@ -5540,6 +5739,43 @@ func (r *StartCdnDomainResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type StartScdnDomainRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *StartScdnDomainRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *StartScdnDomainRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type StartScdnDomainResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 开启结果，Success表示成功
+		Result *string `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *StartScdnDomainResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *StartScdnDomainResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type StatusCodeCache struct {
 
 	// 状态码缓存过期配置开关
@@ -5595,6 +5831,43 @@ func (r *StopCdnDomainResponse) ToJsonString() string {
 }
 
 func (r *StopCdnDomainResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type StopScdnDomainRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *StopScdnDomainRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *StopScdnDomainRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type StopScdnDomainResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 关闭结果，Success表示成功
+		Result *string `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *StopScdnDomainResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *StopScdnDomainResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5832,6 +6105,9 @@ type UpdateDomainConfigRequest struct {
 
 	// 回源鉴权高级版配置，白名单功能
 	OriginAuthentication *OriginAuthentication `json:"OriginAuthentication,omitempty" name:"OriginAuthentication"`
+
+	// Ipv6 访问配置
+	Ipv6Access *Ipv6Access `json:"Ipv6Access,omitempty" name:"Ipv6Access"`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {

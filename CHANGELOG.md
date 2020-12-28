@@ -1,4 +1,10 @@
-## 1.51.2 (Unreleased)
+## 1.52.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_kubernetes_node_pool` to support node management.
+
+
 ## 1.51.1 (December 22, 2020)
 
 ENHANCEMENTS:

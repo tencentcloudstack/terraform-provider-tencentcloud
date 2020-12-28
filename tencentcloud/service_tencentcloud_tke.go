@@ -861,6 +861,17 @@ func GetTkeLabels(d *schema.ResourceData, k string) []*tke.Label {
 	return labels
 }
 
+func GetTkeTaints(d *schema.ResourceData, k string) []*tke.Taint {
+	taints := make([]*tke.Taint, 0)
+	if raw, ok := d.GetOk(k); ok {
+		for _, v := range raw.([]interface{}) {
+			vv := v.(map[string]interface{})
+			taints = append(taints, &tke.Taint{Key: helper.String(vv["key"].(string)), Value: helper.String(vv["value"].(string)), Effect: helper.String(vv["effect"].(string))})
+		}
+	}
+	return taints
+}
+
 func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asGroupId string, maxSize, minSize int64) (errRet error) {
 
 	logId := getLogId(ctx)
@@ -885,5 +896,170 @@ func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asG
 	if err != nil {
 		errRet = err
 	}
+	return
+}
+
+func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings) (asGroupId string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewCreateClusterNodePoolRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.Name = &name
+	request.AutoScalingGroupPara = &groupPara
+	request.LaunchConfigurePara = &configPara
+	request.InstanceAdvancedSettings = &iAdvanced
+	request.EnableAutoscale = &enableAutoScale
+
+	if len(labels) > 0 {
+		request.Labels = labels
+	}
+
+	if len(taints) > 0 {
+		request.Taints = taints
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateClusterNodePool(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.NodePoolId == nil {
+		errRet = fmt.Errorf("CreateClusterNodePool return nil response")
+		return
+	}
+
+	asGroupId = *response.Response.NodePoolId
+	return
+}
+
+func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterNodePoolRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.NodePoolId = &nodePoolId
+	request.Taints = taints
+	request.Labels = labels
+	request.EnableAutoscale = &enableAutoScale
+	request.MaxNodesNum = &maxSize
+	request.MinNodesNum = &minSize
+	request.Name = &name
+	request.OsName = &nodeOs
+	request.OsCustomizeType = &nodeOsType
+
+	if len(labels) > 0 {
+		request.Labels = labels
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterNodePool(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) ModifyClusterNodePoolDesiredCapacity(ctx context.Context, clusterId, nodePoolId string, desiredCapacity int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyNodePoolDesiredCapacityAboutAsgRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.NodePoolId = &nodePoolId
+	request.DesiredCapacity = &desiredCapacity
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyNodePoolDesiredCapacityAboutAsg(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) DeleteClusterNodePool(ctx context.Context, id, nodePoolId string, deleteKeepInstance bool) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDeleteClusterNodePoolRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.NodePoolIds = []*string{&nodePoolId}
+	request.KeepInstance = &deleteKeepInstance
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().DeleteClusterNodePool(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, nodePoolId string) (
+	nodePool *tke.NodePool,
+	has bool,
+	errRet error,
+) {
+
+	logId := getLogId(ctx)
+	//the error code of cluster not exist is InternalError
+	//check cluster exist first
+	_, has, err := me.DescribeCluster(ctx, clusterId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if !has {
+		return
+	}
+
+	request := tke.NewDescribeClusterNodePoolDetailRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = helper.String(clusterId)
+	request.NodePoolId = helper.String(nodePoolId)
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterNodePoolDetail(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.NodePool == nil {
+		return
+	}
+
+	has = true
+	nodePool = response.Response.NodePool
+
 	return
 }

@@ -214,6 +214,10 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
     "test1" = "test1",
     "test2" = "test2",
   }
+
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
 }
 `
 }

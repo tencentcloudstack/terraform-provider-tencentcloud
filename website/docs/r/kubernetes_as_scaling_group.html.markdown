@@ -5,12 +5,14 @@ page_title: "TencentCloud: tencentcloud_kubernetes_as_scaling_group"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_as_scaling_group"
 description: |-
   Provide a resource to create an auto scaling group for kubernetes cluster.
+~> **NOTE:**  It has been deprecated and replaced by `tencentcloud_cluster_node_pool`.
+~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 ---
 
 # tencentcloud_kubernetes_as_scaling_group
 
 Provide a resource to create an auto scaling group for kubernetes cluster.
-
+~> **NOTE:**  It has been deprecated and replaced by `tencentcloud_cluster_node_pool`.
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 
 ## Example Usage
