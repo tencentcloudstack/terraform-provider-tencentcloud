@@ -402,6 +402,7 @@ SSL Certificates
 
   Resource
     tencentcloud_ssl_certificate
+    tencentcloud_ssl_pay_certificate
 
 TcaplusDB
   Data Source
@@ -858,6 +859,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_gaap_security_rule":                      resourceTencentCloudGaapSecurityRule(),
 			"tencentcloud_gaap_domain_error_page":                  resourceTencentCloudGaapDomainErrorPageInfo(),
 			"tencentcloud_ssl_certificate":                         resourceTencentCloudSslCertificate(),
+			"tencentcloud_ssl_pay_certificate":                     resourceTencentCloudSSLInstance(),
 			"tencentcloud_cam_role":                                resourceTencentCloudCamRole(),
 			"tencentcloud_cam_user":                                resourceTencentCloudCamUser(),
 			"tencentcloud_cam_policy":                              resourceTencentCloudCamPolicy(),

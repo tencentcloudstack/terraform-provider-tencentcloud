@@ -32,6 +32,7 @@ import (
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
+	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
@@ -49,37 +50,38 @@ type TencentCloudClient struct {
 	Protocol   string
 	Domain     string
 
-	cosConn        *s3.S3
-	mysqlConn      *cdb.Client
-	redisConn      *redis.Client
-	asConn         *as.Client
-	vpcConn        *vpc.Client
-	cbsConn        *cbs.Client
-	cvmConn        *cvm.Client
-	clbConn        *clb.Client
-	dayuConn       *dayu.Client
-	dcConn         *dc.Client
-	tagConn        *tag.Client
-	mongodbConn    *mongodb.Client
-	tkeConn        *tke.Client
-	tcrConn        *tcr.Client
-	camConn        *cam.Client
-	stsConn        *sts.Client
-	gaapConn       *gaap.Client
-	sslConn        *ssl.Client
-	cfsConn        *cfs.Client
-	scfConn        *scf.Client
-	tcaplusConn    *tcaplusdb.Client
-	cdnConn        *cdn.Client
-	monitorConn    *monitor.Client
-	esConn         *es.Client
-	sqlserverConn  *sqlserver.Client
-	postgreConn    *postgre.Client
-	ckafkaConn     *ckafka.Client
-	auditConn      *audit.Client
-	cynosConn      *cynosdb.Client
-	vodConn        *vod.Client
-	apiGatewayConn *apigateway.Client
+	cosConn            *s3.S3
+	mysqlConn          *cdb.Client
+	redisConn          *redis.Client
+	asConn             *as.Client
+	vpcConn            *vpc.Client
+	cbsConn            *cbs.Client
+	cvmConn            *cvm.Client
+	clbConn            *clb.Client
+	dayuConn           *dayu.Client
+	dcConn             *dc.Client
+	tagConn            *tag.Client
+	mongodbConn        *mongodb.Client
+	tkeConn            *tke.Client
+	tcrConn            *tcr.Client
+	camConn            *cam.Client
+	stsConn            *sts.Client
+	gaapConn           *gaap.Client
+	sslConn            *ssl.Client
+	cfsConn            *cfs.Client
+	scfConn            *scf.Client
+	tcaplusConn        *tcaplusdb.Client
+	cdnConn            *cdn.Client
+	monitorConn        *monitor.Client
+	esConn             *es.Client
+	sqlserverConn      *sqlserver.Client
+	postgreConn        *postgre.Client
+	ckafkaConn         *ckafka.Client
+	auditConn          *audit.Client
+	cynosConn          *cynosdb.Client
+	vodConn            *vod.Client
+	apiGatewayConn     *apigateway.Client
+	sslCertificateConn *sslCertificate.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -517,4 +519,17 @@ func (me *TencentCloudClient) UseTCRClient() *tcr.Client {
 	me.tcrConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcrConn
+}
+
+// UseSSLCertificateClient returns SSL Certificate client for service
+func (me *TencentCloudClient) UseSSLCertificateClient() *sslCertificate.Client {
+	if me.sslCertificateConn != nil {
+		return me.sslCertificateConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.sslCertificateConn, _ = sslCertificate.NewClient(me.Credential, me.Region, cpf)
+	me.sslCertificateConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sslCertificateConn
 }
