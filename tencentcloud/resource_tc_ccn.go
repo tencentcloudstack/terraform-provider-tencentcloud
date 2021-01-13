@@ -3,11 +3,39 @@ Provides a resource to create a CCN instance.
 
 Example Usage
 
+Create a prepaid CCN
+
 ```hcl
 resource "tencentcloud_ccn" "main" {
-  name        = "ci-temp-test-ccn"
-  description = "ci-temp-test-ccn-des"
-  qos         = "AG"
+  name                 = "ci-temp-test-ccn"
+  description          = "ci-temp-test-ccn-des"
+  qos                  = "AG"
+  charge_type          = "PREPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
+}
+```
+
+Create a post-paid regional export speed limit type CCN
+
+```hcl
+resource "tencentcloud_ccn" "main" {
+  name                 = "ci-temp-test-ccn"
+  description          = "ci-temp-test-ccn-des"
+  qos                  = "AG"
+  charge_type          = "POSTPAID"
+  bandwidth_limit_type = "OUTER_REGION_LIMIT"
+}
+```
+
+Create a post-paid inter-regional rate limit type CNN
+
+```hcl
+resource "tencentcloud_ccn" "main" {
+  name                 = "ci-temp-test-ccn"
+  description          = "ci-temp-test-ccn-des"
+  qos                  = "AG"
+  charge_type          = "POSTPAID"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 ```
 
@@ -62,6 +90,28 @@ func resourceTencentCloudCcn() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
 				Description:  "Service quality of CCN. Valid values: `PT`, `AU`, `AG`. The default is `AU`.",
 			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      POSTPAID,
+				ValidateFunc: validateAllowedStringValue([]string{POSTPAID, PREPAID}),
+				Description: "Billing mode. Valid values: `PREPAID`, `POSTPAID`. " +
+					"`PREPAID` means prepaid, which means annual and monthly subscription, " +
+					"`POSTPAID` means post-payment, which means billing by volume. " +
+					"The default is `POSTPAID`. The prepaid model only supports inter-regional speed limit, " +
+					"and the post-paid model supports inter-regional speed limit and regional export speed limit.",
+			},
+			"bandwidth_limit_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      OuterRegionLimit,
+				ValidateFunc: validateAllowedStringValue([]string{OuterRegionLimit, InterRegionLimit}),
+				Description: "The speed limit type. Valid values: `INTER_REGION_LIMIT`, `OUTER_REGION_LIMIT`. " +
+					"`OUTER_REGION_LIMIT` represents the regional export speed limit, " +
+					"`INTER_REGION_LIMIT` is the inter-regional speed limit. " +
+					"The default is `OUTER_REGION_LIMIT`.",
+			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -96,14 +146,16 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        = d.Get("name").(string)
-		description = ""
-		qos         = d.Get("qos").(string)
+		name               = d.Get("name").(string)
+		description        = ""
+		qos                = d.Get("qos").(string)
+		chargeType         = d.Get("charge_type").(string)
+		bandwidthLimitType = d.Get("bandwidth_limit_type").(string)
 	)
 	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
 	}
-	info, err := service.CreateCcn(ctx, name, description, qos)
+	info, err := service.CreateCcn(ctx, name, description, qos, chargeType, bandwidthLimitType)
 	if err != nil {
 		return err
 	}
@@ -146,6 +198,8 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("state", strings.ToUpper(info.state))
 		_ = d.Set("instance_count", info.instanceCount)
 		_ = d.Set("create_time", info.createTime)
+		_ = d.Set("charge_type", info.chargeType)
+		_ = d.Set("bandwidth_limit_type", info.bandWithLimitType)
 
 		return nil
 	})
@@ -202,6 +256,19 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		for _, val := range changeList {
 			d.SetPartial(val)
 		}
+	}
+	// modify band width limit type
+	if d.HasChange("bandwidth_limit_type") {
+		_, news := d.GetChange("bandwidth_limit_type")
+		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if err := service.ModifyCcnRegionBandwidthLimitsType(ctx, d.Id(), news.(string)); err != nil {
+				return retryError(err)
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+		d.SetPartial("bandwidth_limit_type")
 	}
 
 	if d.HasChange("tags") {

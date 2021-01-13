@@ -8,6 +8,14 @@ DEPRECATED:
 
 * Resource: `tencentcloud_kubernetes_as_scaling_group` replaced by `tencentcloud_kubernetes_node_pool`.
 
+ENHANCEMENTS:
+
+* Resource `tencentcloud_ccn` add `charge_type` to support billing mode setting.
+* Resource `tencentcloud_ccn` add `bandwidth_limit_type` to support the speed limit type setting.
+* Resource `tencentcloud_ccn_bandwidth_limit` add `dst_region` to support destination area restriction setting.
+* Data Source `tencentcloud_ccn_instances` add `charge_type` to support billing mode.
+* Data Source `tencentcloud_ccn_instances` add `bandwidth_limit_type` to support the speed limit type.
+* Data Source `tencentcloud_ccn_bandwidth_limit` add `dst_region` to support destination area restriction.
 
 ## 1.51.1 (December 22, 2020)
 

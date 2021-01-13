@@ -49,7 +49,9 @@ In addition to all arguments above, the following attributes are exported:
     * `instance_region` - The region that the instance locates at.
     * `instance_type` - Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW.
     * `state` - States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).
+  * `bandwidth_limit_type` - The speed limit type.
   * `ccn_id` - ID of the CCN.
+  * `charge_type` - Billing mode.
   * `create_time` - Creation time of resource.
   * `description` - Description of the CCN.
   * `name` - Name of the CCN.

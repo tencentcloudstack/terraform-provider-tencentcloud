@@ -25,6 +25,8 @@ func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.ccn_id"),
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.qos"),
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.state"),
+					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.charge_type"),
+					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.bandwidth_limit_type"),
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.attachment_list.#"),
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.create_time"),
 
@@ -36,6 +38,8 @@ func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.ccn_id"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.qos"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.state"),
+					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.charge_type"),
+					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.bandwidth_limit_type"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.attachment_list.#"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.create_time"),
 				),
