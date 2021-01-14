@@ -11,6 +11,12 @@ description: |-
 
 Provide a resource to create a payment SSL.
 
+~> **NOTE:** Provides the creation of a paid certificate, including the submission of certificate information and order functions;
+currently, it does not support re-issuing certificates, revoking certificates, and deleting certificates; the certificate remarks
+and belonging items can be updated. The Destroy operation will only cancel the certificate order, and will not delete the
+certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
+as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
+
 ## Example Usage
 
 ```hcl
