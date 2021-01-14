@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudCdnDomains(t *testing.T) {
+func TestAccTencentCloudCdnDomainDataSources(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -26,12 +26,25 @@ func TestAccTencentCloudCdnDomains(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.https_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.http2_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.ocsp_stapling_switch", "on"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.spdy_switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.spdy_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.verify_client", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.message", "test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.deploy_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "https_config.0.server_certificate_config.0.expire_time"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "tags.test", "world"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "range_origin_switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.cache_time", "10000"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.rule_paths.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.rule_type", "default"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.compare_max_age", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.ignore_cache_control", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.ignore_set_cookie", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.no_cache_switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.re_validate", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.follow_origin_switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.header_rules.#", "1"),
 				),
 			},
 		},
@@ -44,6 +57,25 @@ resource "tencentcloud_cdn_domain" "foo" {
   service_type = "web"
   area = "mainland"
   full_url_cache = false
+  range_origin_switch = "off"
+
+  rule_cache{
+	cache_time = 10000
+	no_cache_switch="on"
+	re_validate="on"
+  }
+
+  request_header{
+	switch = "on"
+
+	header_rules {
+		header_mode = "add"
+		header_name = "tf-header-name"
+		header_value = "tf-header-value"
+		rule_type = "all"
+		rule_paths = ["*"]
+	}
+  }
 
   origin {
 	origin_type = "ip"
@@ -56,7 +88,7 @@ resource "tencentcloud_cdn_domain" "foo" {
     https_switch = "on"
     http2_switch = "on"
     ocsp_stapling_switch = "on"
-    spdy_switch = "on"
+    spdy_switch = "off"
 	verify_client = "off"
 
 	server_certificate_config {

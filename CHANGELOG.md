@@ -8,6 +8,14 @@ DEPRECATED:
 
 * Resource: `tencentcloud_kubernetes_as_scaling_group` replaced by `tencentcloud_kubernetes_node_pool`.
 
+ENHANCEMENTS:
+
+* Resource `tencentcloud_cdn_domain` add `range_origin_switch` to support range back to source configuration.
+* Resource `tencentcloud_cdn_domain` add `rule_cache` to support advanced path cache configuration.
+* Resource `tencentcloud_cdn_domain` add `request_header` to support request header configuration.
+* Data Source `tencentcloud_cdn_domains` add `range_origin_switch` to support range back to source configuration.
+* Data Source `tencentcloud_cdn_domains` add `rule_cache` to support advanced path cache configuration.
+* Data Source `tencentcloud_cdn_domains` add `request_header` to support request header configuration.
 
 ## 1.51.1 (December 22, 2020)
 

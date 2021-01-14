@@ -30,7 +30,17 @@ const (
 	CDN_RESOURCE_NAME_DOMAIN = "domain"
 
 	CDN_HOST_NOT_FOUND      = "ResourceNotFound.CdnHostNotExists"
+	CDN_HOST_EXISTS         = "ResourceInUse.CdnHostExists"
 	CDN_DOMAIN_CONFIG_ERROE = "FailedOperation.CdnConfigError"
+
+	CDN_RULE_TYPE_ALL       = "all"
+	CDN_RULE_TYPE_FILE      = "file"
+	CDN_RULE_TYPE_DIRECTORY = "directory"
+	CDN_RULE_TYPE_PATH      = "path"
+	CDN_RULE_TYPE_INDEX     = "index"
+	CDN_RULE_TYPE_DEFAULT   = "default"
+
+	CDN_RULE_PATH = "no max-age"
 )
 
 var CDN_SERVICE_TYPE = []string{
@@ -78,4 +88,20 @@ var CDN_HTTPS_SWITCH = []string{
 	CDN_DOMAIN_STATUS_ONLINE,
 	CDN_DOMAIN_STATUS_OFFLINE,
 	CDN_DOMAIN_STATUS_PROCESSING,
+}
+
+var CDN_RULE_TYPE = []string{
+	CDN_RULE_TYPE_ALL,
+	CDN_RULE_TYPE_FILE,
+	CDN_RULE_TYPE_DIRECTORY,
+	CDN_RULE_TYPE_PATH,
+	CDN_RULE_TYPE_INDEX,
+	CDN_RULE_TYPE_DEFAULT,
+}
+
+var CDN_HEADER_RULE = []string{
+	CDN_RULE_TYPE_ALL,
+	CDN_RULE_TYPE_FILE,
+	CDN_RULE_TYPE_DIRECTORY,
+	CDN_RULE_TYPE_PATH,
 }
