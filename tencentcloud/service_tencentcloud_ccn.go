@@ -13,13 +13,15 @@ import (
 
 //Ccn basic information
 type CcnBasicInfo struct {
-	ccnId         string
-	name          string
-	description   string
-	state         string
-	qos           string
-	instanceCount int64
-	createTime    string
+	ccnId             string
+	name              string
+	description       string
+	state             string
+	qos               string
+	chargeType        string
+	bandWithLimitType string
+	instanceCount     int64
+	createTime        string
 }
 
 type CcnAttachedInstanceInfo struct {
@@ -126,11 +128,12 @@ getMoreData:
 		basicInfo.ccnId = *item.CcnId
 		basicInfo.name = *item.CcnName
 		basicInfo.createTime = *item.CreateTime
-
 		basicInfo.description = *item.CcnDescription
 		basicInfo.instanceCount = int64(*item.InstanceCount)
 		basicInfo.qos = *item.QosLevel
 		basicInfo.state = *item.State
+		basicInfo.chargeType = *item.InstanceChargeType
+		basicInfo.bandWithLimitType = *item.BandwidthLimitType
 
 		if has[basicInfo.ccnId] {
 			errRet = fmt.Errorf("get repeated ccn_id[%s] when doing DescribeCcns", basicInfo.ccnId)
@@ -189,7 +192,8 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnI
 	return
 }
 
-func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos string) (basicInfo CcnBasicInfo, errRet error) {
+func (me *VpcService) CreateCcn(ctx context.Context, name, description,
+	qos, chargeType, bandWithLimitType string) (basicInfo CcnBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewCreateCcnRequest()
@@ -197,6 +201,8 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos stri
 	request.CcnName = &name
 	request.CcnDescription = &description
 	request.QosLevel = &qos
+	request.InstanceChargeType = &chargeType
+	request.BandwidthLimitType = &bandWithLimitType
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateCcn(request)
 
@@ -530,7 +536,8 @@ func (me *VpcService) DetachCcnInstances(ctx context.Context, ccnId, instanceReg
 
 }
 
-func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, ccnId, region string) (bandwidth int64, errRet error) {
+func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, ccnId,
+	region string) (bandwidth int64, errRet error) {
 
 	infos, err := me.DescribeCcnRegionBandwidthLimits(ctx, ccnId)
 	if err != nil {
@@ -546,17 +553,83 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, ccnId
 	return
 }
 
-func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, region string, bandwidth int64) (errRet error) {
+func (me *VpcService) GetCcnRegionBandwidthLimit(ctx context.Context, ccnId,
+	region, dstRegion, limitType string) (int64, error) {
+	infos, err := me.GetCcnRegionBandwidthLimits(ctx, ccnId)
+	if err != nil {
+		return 0, err
+	}
+	for _, v := range infos {
+		if v.Region != nil {
+			switch limitType {
+			case OuterRegionLimit:
+				if *v.Region == region {
+					return int64(*v.BandwidthLimit), nil
+				}
+			case InterRegionLimit:
+				if v.DstRegion != nil && *v.DstRegion == dstRegion && *v.Region == region {
+					return int64(*v.BandwidthLimit), nil
+				}
+			default:
+				return 0, fmt.Errorf("unknown type of band with limit type")
+			}
+		}
+	}
+	return 0, nil
+}
+
+func (me *VpcService) GetCcnRegionBandwidthLimits(ctx context.Context,
+	ccnID string) (infos []vpc.CcnRegionBandwidthLimit, errRet error) {
+	var (
+		request  = vpc.NewGetCcnRegionBandwidthLimitsRequest()
+		response *vpc.GetCcnRegionBandwidthLimitsResponse
+		err      error
+		limit    uint64 = 100
+		offset   uint64 = 0
+	)
+	request.CcnId = &ccnID
+	request.Limit = &limit
+	request.Offset = &offset
+
+	ratelimit.Check(request.GetAction())
+	for {
+		response, err = me.client.UseVpcClient().GetCcnRegionBandwidthLimits(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response.Response == nil || response.Response.CcnBandwidthSet == nil {
+			errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+			return
+		}
+
+		for _, item := range response.Response.CcnBandwidthSet {
+			if item.CcnRegionBandwidthLimit != nil {
+				infos = append(infos, *item.CcnRegionBandwidthLimit)
+			}
+		}
+		if len(response.Response.CcnBandwidthSet) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+	return
+}
+
+func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, region, dstRegion string,
+	bandwidth int64) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewSetCcnRegionBandwidthLimitsRequest()
 	request.CcnId = &ccnId
 
 	var uint64bandwidth = uint64(bandwidth)
-
 	var ccnRegionBandwidthLimit vpc.CcnRegionBandwidthLimit
 	ccnRegionBandwidthLimit.BandwidthLimit = &uint64bandwidth
 	ccnRegionBandwidthLimit.Region = &region
+	if dstRegion != "" {
+		ccnRegionBandwidthLimit.DstRegion = &dstRegion
+	}
 
 	request.CcnRegionBandwidthLimits = []*vpc.CcnRegionBandwidthLimit{&ccnRegionBandwidthLimit}
 	ratelimit.Check(request.GetAction())
@@ -587,4 +660,15 @@ func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, re
 		request.ToJsonString(),
 		response.ToJsonString())
 	return
+}
+
+func (me *VpcService) ModifyCcnRegionBandwidthLimitsType(ctx context.Context, ccnID, limitType string) error {
+	request := vpc.NewModifyCcnRegionBandwidthLimitsTypeRequest()
+	request.CcnId = &ccnID
+	request.BandwidthLimitType = &limitType
+	_, err := me.client.UseVpcClient().ModifyCcnRegionBandwidthLimitsType(request)
+	if err != nil {
+		return err
+	}
+	return nil
 }

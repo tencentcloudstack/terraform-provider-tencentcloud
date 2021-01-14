@@ -84,6 +84,16 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 							Computed:    true,
 							Description: "States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.",
 						},
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Billing mode.",
+						},
+						"bandwidth_limit_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The speed limit type.",
+						},
 						"attachment_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -178,6 +188,8 @@ func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["qos"] = item.qos
 		infoMap["state"] = strings.ToUpper(item.state)
 		infoMap["create_time"] = item.createTime
+		infoMap["charge_type"] = item.chargeType
+		infoMap["bandwidth_limit_type"] = item.bandWithLimitType
 		infoList = append(infoList, infoMap)
 
 		instances, err := service.DescribeCcnAttachedInstances(ctx, item.ccnId)
