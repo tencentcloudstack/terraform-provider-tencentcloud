@@ -36,6 +36,60 @@ resource "tencentcloud_cdn_domain" "foo" {
 }
 ```
 
+Example Usage of cdn uses cache and request headers
+
+```hcl
+resource "tencentcloud_cdn_domain" "foo" {
+  domain         = "xxxx.com"
+  service_type   = "web"
+  area           = "mainland"
+  full_url_cache = false
+  range_origin_switch = "off"
+
+  rule_cache{
+  	cache_time = 10000
+  	no_cache_switch="on"
+  	re_validate="on"
+  }
+
+  request_header{
+  	switch = "on"
+
+  	header_rules {
+  		header_mode = "add"
+  		header_name = "tf-header-name"
+  		header_value = "tf-header-value"
+  		rule_type = "all"
+  		rule_paths = ["*"]
+  	}
+  }
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+  }
+
+  https_config {
+    https_switch         = "off"
+    http2_switch         = "off"
+    ocsp_stapling_switch = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
+
+    force_redirect {
+      switch               = "on"
+      redirect_type        = "http"
+      redirect_status_code = 302
+    }
+  }
+
+  tags = {
+    hello = "world"
+  }
+}
+```
+
 Example Usage of COS bucket url as origin
 
 ```hcl
@@ -83,7 +137,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -158,6 +211,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 						"server_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.",
 						},
 						"cos_private_access": {
@@ -226,7 +280,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
 							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
-							Description:  "Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`.",
+							Description:  "Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.",
 						},
 						"verify_client": {
 							Type:         schema.TypeString,
@@ -347,6 +401,154 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
+			"range_origin_switch": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CDN_SWITCH_ON,
+				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				Description:  "Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.",
+			},
+			"rule_cache": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Advanced path cache configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_paths": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, " +
+								"`directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.",
+						},
+						"rule_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_RULE_TYPE_DEFAULT,
+							ValidateFunc: validateAllowedStringValue(CDN_RULE_TYPE),
+							Description: "Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, " +
+								"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.",
+						},
+						"switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Cache configuration switch. Valid values are `on` and `off`.",
+						},
+						"cache_time": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Cache expiration time setting, the unit is second, the maximum can be set to 365 days.",
+						},
+						"compare_max_age": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description: "Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, " +
+								"and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.",
+						},
+						"ignore_cache_control": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description: "Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules " +
+								"rules. Valid values are `on` and `off`. Default value is `off`.",
+						},
+						"ignore_set_cookie": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.",
+						},
+						"no_cache_switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Cache configuration switch. Valid values are `on` and `off`.",
+						},
+						"re_validate": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Always check back to origin. Valid values are `on` and `off`. Default value is `off`.",
+						},
+						"follow_origin_switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Follow the source station configuration switch. Valid values are `on` and `off`.",
+						},
+					},
+				},
+			},
+			"request_header": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Request header configuration. It's a list and consist of at most one item.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.",
+						},
+						"header_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Custom request header configuration rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"header_mode": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.",
+									},
+									"header_name": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validateStringLengthInRange(1, 100),
+										Description:  "Http header name.",
+									},
+									"header_value": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validateStringLengthInRange(1, 1000),
+										Description:  "Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.",
+									},
+									"rule_type": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validateAllowedStringValue(CDN_HEADER_RULE),
+										Description: "Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, " +
+											"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect.",
+									},
+									"rule_paths": {
+										Type:     schema.TypeList,
+										Required: true,
+										Elem:     &schema.Schema{Type: schema.TypeString},
+										Description: "Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, " +
+											"`directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -395,6 +597,87 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
 	} else {
 		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+	}
+	// Range Origin Pull
+	request.RangeOriginPull = &cdn.RangeOriginPull{}
+	request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
+
+	// rule_cache
+	if v, ok := d.GetOk("rule_cache"); ok {
+		ruleCache := v.([]interface{})
+		var ruleCaches []*cdn.RuleCache
+		for _, v := range ruleCache {
+			re := &cdn.RuleCache{}
+			ruleCacheMap := v.(map[string]interface{})
+			rulePaths := ruleCacheMap["rule_paths"].([]interface{})
+			rulePathList := make([]*string, 0, len(rulePaths))
+			ruleType := ruleCacheMap["rule_type"].(string)
+			if ruleType == CDN_RULE_TYPE_DEFAULT {
+				rulePathList = append(rulePathList, helper.String(CDN_RULE_PATH))
+			} else {
+				for _, value := range rulePaths {
+					rulePathList = append(rulePathList, helper.String(value.(string)))
+				}
+			}
+			switchFlag := ruleCacheMap["switch"].(string)
+			cacheTime := ruleCacheMap["cache_time"].(int)
+			compareMaxAge := ruleCacheMap["compare_max_age"].(string)
+			ignoreCacheControl := ruleCacheMap["ignore_cache_control"].(string)
+			ignoreSetCookie := ruleCacheMap["ignore_set_cookie"].(string)
+			noCacheSwitch := ruleCacheMap["no_cache_switch"].(string)
+			reValidate := ruleCacheMap["re_validate"].(string)
+			followOriginSwitch := ruleCacheMap["follow_origin_switch"].(string)
+			ruleCacheConfig := &cdn.RuleCacheConfig{}
+			cache := &cdn.CacheConfigCache{}
+			noCache := &cdn.CacheConfigNoCache{}
+			followOrigin := &cdn.CacheConfigFollowOrigin{}
+			ruleCacheConfig.Cache = cache
+			ruleCacheConfig.NoCache = noCache
+			ruleCacheConfig.FollowOrigin = followOrigin
+			re.CacheConfig = ruleCacheConfig
+			re.RulePaths = rulePathList
+			re.RuleType = &ruleType
+			re.CacheConfig.Cache.Switch = &switchFlag
+			re.CacheConfig.Cache.CacheTime = helper.IntInt64(cacheTime)
+			re.CacheConfig.Cache.CompareMaxAge = &compareMaxAge
+			re.CacheConfig.Cache.IgnoreCacheControl = &ignoreCacheControl
+			re.CacheConfig.Cache.IgnoreSetCookie = &ignoreSetCookie
+			re.CacheConfig.NoCache.Switch = &noCacheSwitch
+			re.CacheConfig.NoCache.Revalidate = &reValidate
+			re.CacheConfig.FollowOrigin.Switch = &followOriginSwitch
+			ruleCaches = append(ruleCaches, re)
+		}
+		request.Cache = &cdn.Cache{}
+		request.Cache.RuleCache = ruleCaches
+	}
+
+	if v, ok := d.GetOk("request_header"); ok {
+		requestHeaders := v.([]interface{})
+		requestHeader := requestHeaders[0].(map[string]interface{})
+		headerRule := requestHeader["header_rules"].([]interface{})
+		var headerRules []*cdn.HttpHeaderPathRule
+		for _, value := range headerRule {
+			hr := &cdn.HttpHeaderPathRule{}
+			headerRuleMap := value.(map[string]interface{})
+			headerMode := headerRuleMap["header_mode"].(string)
+			headerName := headerRuleMap["header_name"].(string)
+			headerValue := headerRuleMap["header_value"].(string)
+			ruleType := headerRuleMap["rule_type"].(string)
+			rulePaths := headerRuleMap["rule_paths"].([]interface{})
+			rulePathList := make([]*string, 0, len(rulePaths))
+			for _, value := range rulePaths {
+				rulePathList = append(rulePathList, helper.String(value.(string)))
+			}
+			hr.HeaderMode = &headerMode
+			hr.HeaderName = &headerName
+			hr.HeaderValue = &headerValue
+			hr.RuleType = &ruleType
+			hr.RulePaths = rulePathList
+			headerRules = append(headerRules, hr)
+		}
+		request.RequestHeader = &cdn.RequestHeader{}
+		request.RequestHeader.Switch = helper.String(requestHeader["switch"].(string))
+		request.RequestHeader.HeaderRules = headerRules
 	}
 
 	// origin
@@ -500,7 +783,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().AddCdnDomain(request)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE {
+				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE || sdkErr.Code == CDN_HOST_EXISTS {
 					return resource.NonRetryableError(err)
 				}
 			}
@@ -579,6 +862,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
 	_ = d.Set("cname", domainConfig.Cname)
+	_ = d.Set("range_origin_switch", domainConfig.RangeOriginPull.Switch)
 	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
 		_ = d.Set("full_url_cache", false)
 	} else {
@@ -597,6 +881,47 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
+
+	if len(domainConfig.Cache.RuleCache) > 0 {
+		ruleCaches := make([]map[string]interface{}, len(domainConfig.Cache.RuleCache))
+		for index, value := range domainConfig.Cache.RuleCache {
+			ruleCache := make(map[string]interface{})
+			ruleCache["rule_paths"] = value.RulePaths
+			ruleCache["rule_type"] = value.RuleType
+			ruleCache["switch"] = value.CacheConfig.Cache.Switch
+			ruleCache["cache_time"] = value.CacheConfig.Cache.CacheTime
+			ruleCache["compare_max_age"] = value.CacheConfig.Cache.CompareMaxAge
+			ruleCache["ignore_cache_control"] = value.CacheConfig.Cache.IgnoreCacheControl
+			ruleCache["ignore_set_cookie"] = value.CacheConfig.Cache.IgnoreSetCookie
+			ruleCache["no_cache_switch"] = value.CacheConfig.NoCache.Switch
+			ruleCache["re_validate"] = value.CacheConfig.NoCache.Revalidate
+			ruleCache["follow_origin_switch"] = value.CacheConfig.FollowOrigin.Switch
+			ruleCaches[index] = ruleCache
+		}
+		_ = d.Set("rule_cache", ruleCaches)
+	}
+
+	requestHeaders := make([]map[string]interface{}, 1)
+	requestHeader := make(map[string]interface{})
+	if domainConfig.RequestHeader != nil {
+		requestHeader["switch"] = domainConfig.RequestHeader.Switch
+		if len(domainConfig.RequestHeader.HeaderRules) > 0 {
+			headerRules := make([]map[string]interface{}, len(domainConfig.RequestHeader.HeaderRules))
+			headerRuleList := domainConfig.RequestHeader.HeaderRules
+			for index, value := range headerRuleList {
+				headerRule := make(map[string]interface{})
+				headerRule["header_mode"] = value.HeaderMode
+				headerRule["header_name"] = value.HeaderName
+				headerRule["header_value"] = value.HeaderValue
+				headerRule["rule_type"] = value.RuleType
+				headerRule["rule_paths"] = value.RulePaths
+				headerRules[index] = headerRule
+			}
+			requestHeader["header_rules"] = headerRules
+		}
+		requestHeaders[0] = requestHeader
+		_ = d.Set("request_header", requestHeaders)
+	}
 
 	httpsConfigs := make([]map[string]interface{}, 0, 1)
 	httpsConfig := make(map[string]interface{}, 8)
@@ -711,6 +1036,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		updateAttrs = append(updateAttrs, "full_url_cache")
 	}
+	if d.HasChange("range_origin_switch") {
+		request.RangeOriginPull = &cdn.RangeOriginPull{}
+		request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
+		updateAttrs = append(updateAttrs, "range_origin_switch")
+	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
 		origins := d.Get("origin").([]interface{})
@@ -747,6 +1077,83 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 				request.Origin.BackupOrigins = append(request.Origin.BackupOrigins, helper.String(item.(string)))
 			}
 		}
+	}
+	if d.HasChange("request_header") {
+		updateAttrs = append(updateAttrs, "request_header")
+		requestHeaders := d.Get("request_header").([]interface{})
+		requestHeader := requestHeaders[0].(map[string]interface{})
+		headerRule := requestHeader["header_rules"].([]interface{})
+		var headerRules []*cdn.HttpHeaderPathRule
+		for _, value := range headerRule {
+			hr := &cdn.HttpHeaderPathRule{}
+			headerRuleMap := value.(map[string]interface{})
+			headerMode := headerRuleMap["header_mode"].(string)
+			headerName := headerRuleMap["header_name"].(string)
+			headerValue := headerRuleMap["header_value"].(string)
+			ruleType := headerRuleMap["rule_type"].(string)
+			rulePaths := headerRuleMap["rule_paths"].([]interface{})
+			rulePathList := make([]*string, 0, len(rulePaths))
+			for _, value := range rulePaths {
+				rulePathList = append(rulePathList, helper.String(value.(string)))
+			}
+			hr.HeaderMode = &headerMode
+			hr.HeaderName = &headerName
+			hr.HeaderValue = &headerValue
+			hr.RuleType = &ruleType
+			hr.RulePaths = rulePathList
+			headerRules = append(headerRules, hr)
+		}
+		request.RequestHeader = &cdn.RequestHeader{}
+		request.RequestHeader.Switch = helper.String(requestHeader["switch"].(string))
+		request.RequestHeader.HeaderRules = headerRules
+	}
+	if d.HasChange("rule_cache") {
+		updateAttrs = append(updateAttrs, "rule_cache")
+		ruleCache := d.Get("rule_cache").([]interface{})
+		var ruleCaches []*cdn.RuleCache
+		for _, v := range ruleCache {
+			re := &cdn.RuleCache{}
+			ruleCacheMap := v.(map[string]interface{})
+			rulePaths := ruleCacheMap["rule_paths"].([]interface{})
+			rulePathList := make([]*string, 0, len(rulePaths))
+			ruleType := ruleCacheMap["rule_type"].(string)
+			if ruleType == CDN_RULE_TYPE_DEFAULT {
+				rulePathList = append(rulePathList, helper.String(CDN_RULE_PATH))
+			} else {
+				for _, value := range rulePaths {
+					rulePathList = append(rulePathList, helper.String(value.(string)))
+				}
+			}
+			switchFlag := ruleCacheMap["switch"].(string)
+			cacheTime := ruleCacheMap["cache_time"].(int)
+			compareMaxAge := ruleCacheMap["compare_max_age"].(string)
+			ignoreCacheControl := ruleCacheMap["ignore_cache_control"].(string)
+			ignoreSetCookie := ruleCacheMap["ignore_set_cookie"].(string)
+			noCacheSwitch := ruleCacheMap["no_cache_switch"].(string)
+			reValidate := ruleCacheMap["re_validate"].(string)
+			followOriginSwitch := ruleCacheMap["follow_origin_switch"].(string)
+			ruleCacheConfig := &cdn.RuleCacheConfig{}
+			cache := &cdn.CacheConfigCache{}
+			noCache := &cdn.CacheConfigNoCache{}
+			followOrigin := &cdn.CacheConfigFollowOrigin{}
+			ruleCacheConfig.Cache = cache
+			ruleCacheConfig.NoCache = noCache
+			ruleCacheConfig.FollowOrigin = followOrigin
+			re.CacheConfig = ruleCacheConfig
+			re.RulePaths = rulePathList
+			re.RuleType = &ruleType
+			re.CacheConfig.Cache.Switch = &switchFlag
+			re.CacheConfig.Cache.CacheTime = helper.IntInt64(cacheTime)
+			re.CacheConfig.Cache.CompareMaxAge = &compareMaxAge
+			re.CacheConfig.Cache.IgnoreCacheControl = &ignoreCacheControl
+			re.CacheConfig.Cache.IgnoreSetCookie = &ignoreSetCookie
+			re.CacheConfig.NoCache.Switch = &noCacheSwitch
+			re.CacheConfig.NoCache.Revalidate = &reValidate
+			re.CacheConfig.FollowOrigin.Switch = &followOriginSwitch
+			ruleCaches = append(ruleCaches, re)
+		}
+		request.Cache = &cdn.Cache{}
+		request.Cache.RuleCache = ruleCaches
 	}
 	if d.HasChange("https_config") {
 		updateAttrs = append(updateAttrs, "https_config")
@@ -815,8 +1222,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			ratelimit.Check(request.GetAction())
 			_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().UpdateDomainConfig(request)
 			if err != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE {
+						return resource.NonRetryableError(err)
+					}
+				}
 				return retryError(err)
 			}
 			return nil

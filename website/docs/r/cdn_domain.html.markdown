@@ -46,6 +46,60 @@ resource "tencentcloud_cdn_domain" "foo" {
 }
 ```
 
+Example Usage of cdn uses cache and request headers
+
+```hcl
+resource "tencentcloud_cdn_domain" "foo" {
+  domain              = "xxxx.com"
+  service_type        = "web"
+  area                = "mainland"
+  full_url_cache      = false
+  range_origin_switch = "off"
+
+  rule_cache {
+    cache_time      = 10000
+    no_cache_switch = "on"
+    re_validate     = "on"
+  }
+
+  request_header {
+    switch = "on"
+
+    header_rules {
+      header_mode  = "add"
+      header_name  = "tf-header-name"
+      header_value = "tf-header-value"
+      rule_type    = "all"
+      rule_paths   = ["*"]
+    }
+  }
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+  }
+
+  https_config {
+    https_switch         = "off"
+    http2_switch         = "off"
+    ocsp_stapling_switch = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
+
+    force_redirect {
+      switch               = "on"
+      redirect_type        = "http"
+      redirect_status_code = 302
+    }
+  }
+
+  tags = {
+    hello = "world"
+  }
+}
+```
+
 Example Usage of COS bucket url as origin
 
 ```hcl
@@ -91,6 +145,9 @@ The following arguments are supported:
 * `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
+* `range_origin_switch` - (Optional) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
+* `request_header` - (Optional) Request header configuration. It's a list and consist of at most one item.
+* `rule_cache` - (Optional) Advanced path cache configuration.
 * `tags` - (Optional) Tags of cdn domain.
 
 The `client_certificate_config` object supports the following:
@@ -103,6 +160,14 @@ The `force_redirect` object supports the following:
 * `redirect_type` - (Optional) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
 * `switch` - (Optional) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
 
+The `header_rules` object supports the following:
+
+* `header_mode` - (Required) Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.
+* `header_name` - (Required) Http header name.
+* `header_value` - (Required) Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.
+* `rule_paths` - (Required) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.
+* `rule_type` - (Required) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect.
+
 The `https_config` object supports the following:
 
 * `https_switch` - (Required) HTTPS configuration switch. Valid values are `on` and `off`.
@@ -111,7 +176,7 @@ The `https_config` object supports the following:
 * `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional) Server certificate configuration information.
-* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.
 * `verify_client` - (Optional) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
 
 The `origin` object supports the following:
@@ -124,6 +189,24 @@ The `origin` object supports the following:
 * `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
 * `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
 * `server_name` - (Optional) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
+
+The `request_header` object supports the following:
+
+* `header_rules` - (Optional) Custom request header configuration rules.
+* `switch` - (Optional) Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.
+
+The `rule_cache` object supports the following:
+
+* `cache_time` - (Required) Cache expiration time setting, the unit is second, the maximum can be set to 365 days.
+* `compare_max_age` - (Optional) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
+* `follow_origin_switch` - (Optional) Follow the source station configuration switch. Valid values are `on` and `off`.
+* `ignore_cache_control` - (Optional) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
+* `ignore_set_cookie` - (Optional) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
+* `no_cache_switch` - (Optional) Cache configuration switch. Valid values are `on` and `off`.
+* `re_validate` - (Optional) Always check back to origin. Valid values are `on` and `off`. Default value is `off`.
+* `rule_paths` - (Optional) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.
+* `rule_type` - (Optional) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
+* `switch` - (Optional) Cache configuration switch. Valid values are `on` and `off`.
 
 The `server_certificate_config` object supports the following:
 

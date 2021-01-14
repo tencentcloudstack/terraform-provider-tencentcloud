@@ -24,7 +24,6 @@ func TestAccTencentCloudCcnV3Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn"),
 					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des"),
 					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
-
 					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
 					resource.TestCheckResourceAttrSet(keyName, "state"),
 					resource.TestCheckResourceAttrSet(keyName, "create_time"),
@@ -78,7 +77,6 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn"),
 					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des"),
 					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
-
 					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
 					resource.TestCheckResourceAttrSet(keyName, "state"),
 					resource.TestCheckResourceAttrSet(keyName, "create_time"),
@@ -87,12 +85,10 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 			{
 				Config: testAccCcnConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-
 					testAccCheckCcnExists(keyName),
 					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn-update"),
 					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des-update"),
 					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
-
 					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
 					resource.TestCheckResourceAttrSet(keyName, "state"),
 					resource.TestCheckResourceAttrSet(keyName, "create_time"),
@@ -147,14 +143,6 @@ func testAccCheckCcnDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCcnConfig = `
-resource tencentcloud_ccn main {
-  name        = "ci-temp-test-ccn"
-  description = "ci-temp-test-ccn-des"
-  qos         = "AG"
-}
-`
-
 func testAccCcn_multiTags(value string) string {
 	return fmt.Sprintf(
 		`
@@ -169,10 +157,18 @@ resource tencentcloud_ccn main {
 `, value)
 }
 
+const testAccCcnConfig = `
+resource tencentcloud_ccn main {
+  name                 = "ci-temp-test-ccn"
+  description          = "ci-temp-test-ccn-des"
+  qos                  = "AG"
+}
+`
+
 const testAccCcnConfigUpdate = `
 resource tencentcloud_ccn main {
-  name        = "ci-temp-test-ccn-update"
-  description = "ci-temp-test-ccn-des-update"
-  qos         = "AG"
+  name                 = "ci-temp-test-ccn-update"
+  description          = "ci-temp-test-ccn-des-update"
+  qos                  = "AG"
 }
 `
