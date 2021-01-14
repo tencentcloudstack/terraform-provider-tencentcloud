@@ -220,8 +220,10 @@ resource "tencentcloud_cdn_domain" "foo" {
 	no_cache_switch="on"
 	re_validate="on"
   }
+
   request_header{
 	switch = "on"
+
 	header_rules {
 		header_mode = "add"
 		header_name = "tf-header-name"
@@ -230,6 +232,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 		rule_paths = ["*"]
 	}
   }
+
   origin {
 	origin_type          = "ip"
 	origin_list          = ["139.199.199.140"]
@@ -322,6 +325,7 @@ resource "tencentcloud_cdn_domain" "foo" {
   area           = "mainland"
   full_url_cache = false
   range_origin_switch = "on"
+
   rule_cache {
 	cache_time = 20000
 	rule_paths=["*"]
@@ -334,9 +338,11 @@ resource "tencentcloud_cdn_domain" "foo" {
 	re_validate="off"
 	follow_origin_switch="off"
   }
+
   request_header{
 	switch = "off"
   }
+
   origin {
 	origin_type          = "ip"
 	origin_list          = ["139.199.199.140"]

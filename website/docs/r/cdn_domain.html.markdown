@@ -55,13 +55,16 @@ resource "tencentcloud_cdn_domain" "foo" {
   area                = "mainland"
   full_url_cache      = false
   range_origin_switch = "off"
+
   rule_cache {
     cache_time      = 10000
     no_cache_switch = "on"
     re_validate     = "on"
   }
+
   request_header {
     switch = "on"
+
     header_rules {
       header_mode  = "add"
       header_name  = "tf-header-name"
@@ -173,7 +176,7 @@ The `https_config` object supports the following:
 * `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional) Server certificate configuration information.
-* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. The current version does not support `on`.
+* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.
 * `verify_client` - (Optional) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
 
 The `origin` object supports the following:

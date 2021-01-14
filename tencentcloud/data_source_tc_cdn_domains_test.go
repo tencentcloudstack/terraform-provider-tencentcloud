@@ -58,13 +58,16 @@ resource "tencentcloud_cdn_domain" "foo" {
   area = "mainland"
   full_url_cache = false
   range_origin_switch = "off"
+
   rule_cache{
 	cache_time = 10000
 	no_cache_switch="on"
 	re_validate="on"
   }
+
   request_header{
 	switch = "on"
+
 	header_rules {
 		header_mode = "add"
 		header_name = "tf-header-name"
@@ -73,6 +76,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 		rule_paths = ["*"]
 	}
   }
+
   origin {
 	origin_type = "ip"
 	origin_list = ["172.199.199.140"]

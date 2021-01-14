@@ -45,13 +45,16 @@ resource "tencentcloud_cdn_domain" "foo" {
   area           = "mainland"
   full_url_cache = false
   range_origin_switch = "off"
+
   rule_cache{
   	cache_time = 10000
   	no_cache_switch="on"
   	re_validate="on"
   }
+
   request_header{
   	switch = "on"
+
   	header_rules {
   		header_mode = "add"
   		header_name = "tf-header-name"
@@ -277,7 +280,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
 							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
-							Description:  "Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. The current version does not support `on`.",
+							Description:  "Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.",
 						},
 						"verify_client": {
 							Type:         schema.TypeString,
