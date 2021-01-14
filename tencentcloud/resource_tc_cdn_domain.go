@@ -465,7 +465,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
 							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
-							Description:  "Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. The current version does not support `on`.",
+							Description:  "Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.",
 						},
 						"no_cache_switch": {
 							Type:         schema.TypeString,

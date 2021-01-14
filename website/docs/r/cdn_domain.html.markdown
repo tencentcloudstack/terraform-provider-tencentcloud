@@ -201,7 +201,7 @@ The `rule_cache` object supports the following:
 * `compare_max_age` - (Optional) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
 * `follow_origin_switch` - (Optional) Follow the source station configuration switch. Valid values are `on` and `off`.
 * `ignore_cache_control` - (Optional) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
-* `ignore_set_cookie` - (Optional) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. The current version does not support `on`.
+* `ignore_set_cookie` - (Optional) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
 * `no_cache_switch` - (Optional) Cache configuration switch. Valid values are `on` and `off`.
 * `re_validate` - (Optional) Always check back to origin. Valid values are `on` and `off`. Default value is `off`.
 * `rule_paths` - (Optional) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.
