@@ -3,6 +3,7 @@
 FEATURES:
 
 * **New Resource**: `tencentcloud_kubernetes_node_pool` to support node management.
+* **New Resource**: `tencentcloud_ssl_pay_certificate` to support ssl pay certificate.
 
 DEPRECATED:
 
