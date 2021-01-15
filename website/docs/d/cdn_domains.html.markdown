@@ -61,6 +61,23 @@ In addition to all arguments above, the following attributes are exported:
     * `origin_type` - Master origin server type.
     * `server_name` - Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
   * `project_id` - The project CDN belongs to.
+  * `range_origin_switch` - Sharding back to source configuration switch.
+  * `request_header` - Request header configuration.
+    * `header_rules` - Custom request header configuration rules.
+      * `header_mode` - Http header setting method.
+      * `header_name` - Http header name.
+      * `header_value` - Http header value.
+      * `rule_paths` - Rule paths.
+      * `rule_type` - Rule type.
+    * `switch` - Custom request header configuration switch.
+  * `rule_cache` - Advanced path cache configuration.
+    * `follow_origin_switch` - Follow the source station configuration switch.
+    * `ignore_set_cookie` - Ignore the Set-Cookie header of the origin site.
+    * `no_cache_switch` - Cache configuration switch.
+    * `re_validate` - Always check back to origin.
+    * `rule_paths` - Rule paths.
+    * `rule_type` - Rule type.
+    * `switch` - Cache configuration switch.
   * `service_type` - Service type of acceleration domain name.
   * `status` - Acceleration service status.
   * `tags` - Tags of cdn domain.

@@ -66,6 +66,11 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 							Computed:    true,
 							Description: "Limitation of bandwidth.",
 						},
+						"dst_region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Destination area restriction.",
+						},
 					},
 				},
 			},
@@ -85,7 +90,7 @@ func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta i
 		ccnId = d.Get("ccn_id").(string)
 	)
 
-	var infos, err = service.DescribeCcnRegionBandwidthLimits(ctx, ccnId)
+	var infos, err = service.GetCcnRegionBandwidthLimits(ctx, ccnId)
 	if err != nil {
 		return err
 	}
@@ -94,8 +99,9 @@ func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta i
 
 	for _, item := range infos {
 		var infoMap = make(map[string]interface{})
-		infoMap["region"] = item.region
-		infoMap["bandwidth_limit"] = item.limit
+		infoMap["region"] = item.Region
+		infoMap["bandwidth_limit"] = item.BandwidthLimit
+		infoMap["dst_region"] = item.DstRegion
 		infoList = append(infoList, infoMap)
 	}
 	if err := d.Set("limits", infoList); err != nil {

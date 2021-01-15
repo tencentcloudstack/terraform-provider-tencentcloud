@@ -48,6 +48,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `limits` - The bandwidth limits of regions:
   * `bandwidth_limit` - Limitation of bandwidth.
+  * `dst_region` - Destination area restriction.
   * `region` - Limitation of region.
 
 

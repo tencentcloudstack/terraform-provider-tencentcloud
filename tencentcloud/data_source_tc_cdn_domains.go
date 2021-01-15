@@ -117,6 +117,122 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 							Computed:    true,
 							Description: "Whether to enable full-path cache.",
 						},
+						"range_origin_switch": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Sharding back to source configuration switch.",
+						},
+						"request_header": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Request header configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Custom request header configuration switch.",
+									},
+									"header_rules": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Custom request header configuration rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"header_mode": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Http header setting method.",
+												},
+												"header_name": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Http header name.",
+												},
+												"header_value": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Http header value.",
+												},
+												"rule_type": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Rule type.",
+												},
+												"rule_paths": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Elem:        &schema.Schema{Type: schema.TypeString},
+													Description: "Rule paths.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"rule_cache": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Advanced path cache configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_paths": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Description: "Rule paths.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Rule type.",
+									},
+									"switch": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Cache configuration switch.",
+									},
+									"cache_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Cache expiration time setting, the unit is second.",
+									},
+									"compare_max_age": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Advanced cache expiration configuration.",
+									},
+									"ignore_cache_control": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules.",
+									},
+									"ignore_set_cookie": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Ignore the Set-Cookie header of the origin site.",
+									},
+									"no_cache_switch": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Cache configuration switch.",
+									},
+									"re_validate": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Always check back to origin.",
+									},
+									"follow_origin_switch": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Follow the source station configuration switch.",
+									},
+								},
+							},
+						},
 						"origin": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -266,6 +382,41 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 			fullUrlCache = true
 		}
 
+		requestHeaders := make([]map[string]interface{}, 0, 1)
+		requestHeader := make(map[string]interface{})
+		requestHeader["switch"] = detailDomain.RequestHeader.Switch
+		if len(detailDomain.RequestHeader.HeaderRules) > 0 {
+			headerRules := make([]map[string]interface{}, len(detailDomain.RequestHeader.HeaderRules))
+			headerRuleList := detailDomain.RequestHeader.HeaderRules
+			for index, value := range headerRuleList {
+				headerRule := make(map[string]interface{})
+				headerRule["header_mode"] = value.HeaderMode
+				headerRule["header_name"] = value.HeaderName
+				headerRule["header_value"] = value.HeaderValue
+				headerRule["rule_type"] = value.RuleType
+				headerRule["rule_paths"] = value.RulePaths
+				headerRules[index] = headerRule
+			}
+			requestHeader["header_rules"] = headerRules
+		}
+		requestHeaders = append(requestHeaders, requestHeader)
+
+		ruleCaches := make([]map[string]interface{}, len(detailDomain.Cache.RuleCache))
+		for index, value := range detailDomain.Cache.RuleCache {
+			ruleCache := make(map[string]interface{})
+			ruleCache["rule_paths"] = value.RulePaths
+			ruleCache["rule_type"] = value.RuleType
+			ruleCache["switch"] = value.CacheConfig.Cache.Switch
+			ruleCache["cache_time"] = value.CacheConfig.Cache.CacheTime
+			ruleCache["compare_max_age"] = value.CacheConfig.Cache.CompareMaxAge
+			ruleCache["ignore_cache_control"] = value.CacheConfig.Cache.IgnoreCacheControl
+			ruleCache["ignore_set_cookie"] = value.CacheConfig.Cache.IgnoreSetCookie
+			ruleCache["no_cache_switch"] = value.CacheConfig.NoCache.Switch
+			ruleCache["re_validate"] = value.CacheConfig.NoCache.Revalidate
+			ruleCache["follow_origin_switch"] = value.CacheConfig.FollowOrigin.Switch
+			ruleCaches[index] = ruleCache
+		}
+
 		origins := make([]map[string]interface{}, 0, 1)
 		origin := make(map[string]interface{}, 8)
 		origin["origin_type"] = detailDomain.Origin.OriginType
@@ -295,19 +446,22 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		}
 
 		mapping := map[string]interface{}{
-			"id":             detailDomain.ResourceId,
-			"domain":         detailDomain.Domain,
-			"cname":          detailDomain.Cname,
-			"status":         detailDomain.Status,
-			"create_time":    detailDomain.CreateTime,
-			"update_time":    detailDomain.UpdateTime,
-			"service_type":   detailDomain.ServiceType,
-			"area":           detailDomain.Area,
-			"project_id":     detailDomain.ProjectId,
-			"full_url_cache": fullUrlCache,
-			"origin":         origins,
-			"https_config":   httpsconfigs,
-			"tags":           tags,
+			"id":                  detailDomain.ResourceId,
+			"domain":              detailDomain.Domain,
+			"cname":               detailDomain.Cname,
+			"status":              detailDomain.Status,
+			"create_time":         detailDomain.CreateTime,
+			"update_time":         detailDomain.UpdateTime,
+			"service_type":        detailDomain.ServiceType,
+			"area":                detailDomain.Area,
+			"project_id":          detailDomain.ProjectId,
+			"full_url_cache":      fullUrlCache,
+			"range_origin_switch": detailDomain.RangeOriginPull.Switch,
+			"request_header":      requestHeaders,
+			"rule_cache":          ruleCaches,
+			"origin":              origins,
+			"https_config":        httpsconfigs,
+			"tags":                tags,
 		}
 
 		cdnDomainList = append(cdnDomainList, mapping)
