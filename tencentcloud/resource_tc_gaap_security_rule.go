@@ -144,7 +144,6 @@ func resourceTencentCloudGaapSecurityRuleCreate(d *schema.ResourceData, m interf
 
 func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.read")()
-
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

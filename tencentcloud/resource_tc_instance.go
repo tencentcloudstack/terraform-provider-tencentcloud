@@ -270,10 +270,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"data_disk_type": {
-							Type:     schema.TypeString,
-							Required: true,
-							ForceNew: true,
-							//ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
 							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
@@ -314,7 +313,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Optional:    true,
 							Default:     0,
 							ForceNew:    true,
-							Description: "This parameter used to make extra performance of the data disk. It's only supported with `CLOUD_TSSD` and `CLOUD_HSSD` disk type.",
+							Description: "Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.",
 						},
 					},
 				},

@@ -147,8 +147,6 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 
 func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.create")()
-	//gaapActionMu.Lock()
-	//defer gaapActionMu.Unlock()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -295,8 +293,6 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 
 func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.update")()
-	//gaapActionMu.Lock()
-	//defer gaapActionMu.Unlock()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

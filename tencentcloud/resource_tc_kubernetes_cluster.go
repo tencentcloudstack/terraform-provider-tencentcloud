@@ -1843,7 +1843,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		if !isOk {
-			return fmt.Errorf("This version %s is not supported", newVersion)
+			return fmt.Errorf("version %s is unsupported", newVersion)
 		}
 
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

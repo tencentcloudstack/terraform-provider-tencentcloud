@@ -151,14 +151,14 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						ForceNew:    true,
 						Optional:    true,
 						Default:     "",
-						Description: "File system. E.g.(`ext3/ext4/xfs`).",
+						Description: "File system, e.g. `ext3/ext4/xfs`.",
 					},
 					"auto_format_and_mount": {
 						Type:        schema.TypeBool,
 						Optional:    true,
 						ForceNew:    true,
 						Default:     false,
-						Description: "Indicate to auto format and mount or not. Default is `false`.",
+						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
 					},
 					"mount_target": {
 						Type:        schema.TypeString,
