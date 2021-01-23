@@ -1539,10 +1539,16 @@ type AnimatedGraphicTaskInput struct {
 	// 视频转动图模板 ID
 	Definition *uint64 `json:"Definition,omitempty" name:"Definition"`
 
-	// 动图在视频中的开始时间，单位为秒。
+	// 动图在视频中的起始时间偏移，单位为秒。
+	// <li>不填或填0，表示从视频的起始位置开始；</li>
+	// <li>当数值大于0时（假设为 n），表示从视频的第 n 秒位置开始；</li>
+	// <li>当数值小于0时（假设为 -n），表示从视频结束 n 秒前的位置开始。</li>
 	StartTimeOffset *float64 `json:"StartTimeOffset,omitempty" name:"StartTimeOffset"`
 
-	// 动图在视频中的结束时间，单位为秒。
+	// 动图在视频中的终止时间偏移，单位为秒。
+	// <li>不填或填0，表示持续到视频的末尾终止；</li>
+	// <li>当数值大于0时（假设为 n），表示持续到视频第 n 秒时终止；</li>
+	// <li>当数值小于0时（假设为 -n），表示持续到视频结束 n 秒前终止。</li>
 	EndTimeOffset *float64 `json:"EndTimeOffset,omitempty" name:"EndTimeOffset"`
 }
 
@@ -4328,7 +4334,7 @@ type DescribeCDNStatDetailsRequest struct {
 
 	// 用户所在地区，Area 为 Chinese Mainland 时，取值为以下地区信息，当 Area 为其它值时， 忽略 Districts 参数。
 	// <li>Beijing：北京。</li>
-	// <li>Inner Mongoria：内蒙古。</li>
+	// <li>Inner Mongolia：内蒙古。</li>
 	// <li>Shanxi：山西。</li>
 	// <li>Hebei：河北。</li>
 	// <li>Tianjin：天津。</li>
@@ -4359,7 +4365,7 @@ type DescribeCDNStatDetailsRequest struct {
 	// <li>Guangxi：广西。</li>
 	// <li>Hainan：海南。</li>
 	// <li>Hong Kong, Macao and Taiwan：港澳台。</li>
-	// <li>outside Chinese Mainland：海外。</li>
+	// <li>Outside Chinese Mainland：海外。</li>
 	// <li>Other：其他 。</li>
 	Districts []*string `json:"Districts,omitempty" name:"Districts" list`
 
@@ -4369,7 +4375,7 @@ type DescribeCDNStatDetailsRequest struct {
 	// <li>CERNET：教育网。</li>
 	// <li>Great Wall Broadband Network：长城宽带。</li>
 	// <li>China Mobile：中国移动。</li>
-	// <li>China Mobile Tieton：中国铁通。</li>
+	// <li>China Mobile Tietong：中国铁通。</li>
 	// <li>ISPs outside Chinese Mainland：海外运营商。</li>
 	// <li>Other ISPs：其他运营商。</li>
 	Isps []*string `json:"Isps,omitempty" name:"Isps" list`
@@ -5226,7 +5232,7 @@ type DescribeStorageDetailsRequest struct {
 
 	// 查询的存储区域，有效值：
 	// <li>Chinese Mainland：中国境内（不包含港澳台）。</li>
-	// <li>outside Chinese Mainland：中国境外。</li>
+	// <li>Outside Chinese Mainland：中国境外。</li>
 	// 默认值为 Chinese Mainland。
 	Area *string `json:"Area,omitempty" name:"Area"`
 }
@@ -5264,14 +5270,17 @@ func (r *DescribeStorageDetailsResponse) FromJsonString(s string) error {
 type DescribeSubAppIdsRequest struct {
 	*tchttp.BaseRequest
 
-	// 分页拉取的最大返回结果数。默认值：200；最大值：200。
-	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+	// 子应用名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 标签信息，查询指定标签的子应用列表。
+	Tags []*ResourceTag `json:"Tags,omitempty" name:"Tags" list`
 
 	// 分页拉取的起始偏移量。默认值：0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 标签信息，查询指定标签的子应用列表。
-	Tags []*ResourceTag `json:"Tags,omitempty" name:"Tags" list`
+	// 分页拉取的最大返回结果数。默认值：200；最大值：200。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
 func (r *DescribeSubAppIdsRequest) ToJsonString() string {
@@ -6282,6 +6291,9 @@ type ImageProcessingTemplate struct {
 	// 图片处理操作数组，操作将以数组顺序执行。
 	// <li>长度限制：3。</li>
 	Operations []*ImageOperation `json:"Operations,omitempty" name:"Operations" list`
+
+	// 模板创建时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/266/11732#I)。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
 type ImageScale struct {
@@ -6409,6 +6421,12 @@ type ImageWatermarkInput struct {
 	// <li>当字符串以 px 结尾，表示水印 Height 单位为像素，如 100px 表示 Height 为 100 像素。取值范围为0或[8, 4096]。</li>
 	// 默认值：0px，表示 Height 按照原始水印图片的宽高比缩放。
 	Height *string `json:"Height,omitempty" name:"Height"`
+
+	// 水印重复类型。使用场景：水印为动态图像。取值范围：
+	// <li>once：动态水印播放完后，不再出现；</li>
+	// <li>repeat_last_frame：水印播放完后，停留在最后一帧；</li>
+	// <li>repeat：水印循环播放，直到视频结束（默认值）。</li>
+	RepeatType *string `json:"RepeatType,omitempty" name:"RepeatType"`
 }
 
 type ImageWatermarkInputForUpdate struct {
@@ -6425,6 +6443,12 @@ type ImageWatermarkInputForUpdate struct {
 	// <li>当字符串以 % 结尾，表示水印 Height 为视频高度的百分比大小，如 10% 表示 Height 为视频高度的 10%；</li>
 	// <li>当字符串以 px 结尾，表示水印 Height 单位为像素，如 100px 表示 Height 为 100 像素。取值范围为0或[8, 4096]。</li>
 	Height *string `json:"Height,omitempty" name:"Height"`
+
+	// 水印重复类型。使用场景：水印为动态图像。取值范围：
+	// <li>once：动态水印播放完后，不再出现；</li>
+	// <li>repeat_last_frame：水印播放完后，停留在最后一帧；</li>
+	// <li>repeat：水印循环播放，直到视频结束。</li>
+	RepeatType *string `json:"RepeatType,omitempty" name:"RepeatType"`
 }
 
 type ImageWatermarkTemplate struct {
@@ -6442,6 +6466,12 @@ type ImageWatermarkTemplate struct {
 	// <li>当字符串以 px 结尾，表示水印 Height 单位为像素，如 100px 表示 Height 为 100 像素；</li>
 	// 0px：表示 Height 按照 Width 对视频宽度的比例缩放。
 	Height *string `json:"Height,omitempty" name:"Height"`
+
+	// 水印重复类型。使用场景：水印为动态图像。取值范围：
+	// <li>once：动态水印播放完后，不再出现；</li>
+	// <li>repeat_last_frame：水印播放完后，停留在最后一帧；</li>
+	// <li>repeat：水印循环播放，直到视频结束。</li>
+	RepeatType *string `json:"RepeatType,omitempty" name:"RepeatType"`
 }
 
 type LiveRealTimeClipRequest struct {
@@ -10378,7 +10408,7 @@ type StorageStatData struct {
 
 	// 点播存储的计费区域，可能值：
 	// <li>Chinese Mainland：中国境内（不包含港澳台）。</li>
-	// <li>outside Chinese Mainland：中国境外。</li>
+	// <li>Outside Chinese Mainland：中国境外。</li>
 	Area *string `json:"Area,omitempty" name:"Area"`
 
 	// 当前总存储量，单位是字节。

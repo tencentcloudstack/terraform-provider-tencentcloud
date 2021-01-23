@@ -270,11 +270,10 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"data_disk_type": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ForceNew:     true,
-							ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
-							Description:  "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
 							Type:         schema.TypeInt,
@@ -308,6 +307,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Default:     false,
 							ForceNew:    true,
 							Description: "Decides whether the disk is encrypted. Default is `false`.",
+						},
+						"throughput_performance": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							ForceNew:    true,
+							Description: "Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.",
 						},
 					},
 				},
@@ -520,9 +526,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			value := d.(map[string]interface{})
 			diskType := value["data_disk_type"].(string)
 			diskSize := int64(value["data_disk_size"].(int))
+			throughputPerformance := int64(value["throughput_performance"].(int))
 			dataDisk := cvm.DataDisk{
-				DiskType: &diskType,
-				DiskSize: &diskSize,
+				DiskType:              &diskType,
+				DiskSize:              &diskSize,
+				ThroughputPerformance: &throughputPerformance,
 			}
 			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
 				snapshotId := v.(string)
@@ -754,6 +762,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 				snapshotId, diskId     string
 				deleteWithInstanceBool bool
 				encryptBool            bool
+				throughputPerformance  int
 			)
 			diskType := value["data_disk_type"].(string)
 			diskSize := int64(value["data_disk_size"].(int))
@@ -765,6 +774,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			}
 			if encrypt, ok := value["encrypt"]; ok {
 				encryptBool = encrypt.(bool)
+			}
+
+			if tp, ok := value["throughput_performance"]; ok && tp != 0 {
+				//this value is not in the resp
+				throughputPerformance = tp.(int)
 			}
 			// find the disk id value
 			for _, disk := range instance.DataDisks {
@@ -784,6 +798,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			dataDisk["data_disk_id"] = diskId
 			dataDisk["delete_with_instance"] = deleteWithInstanceBool
 			dataDisk["encrypt"] = encryptBool
+			dataDisk["throughput_performance"] = throughputPerformance
 			dataDiskList = append(dataDiskList, dataDisk)
 		}
 	}

@@ -1,4 +1,17 @@
 ## 1.53.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_instance` add `throughput_performance` to support adding extra performance to the data disks.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `file_system`, `auto_format_and_mount` and `mount_target` to support advanced instance setting.
+* Resource `tencentcloud_kubernetes_node_pool` add `file_system`, `auto_format_and_mount` and `mount_target` to support advanced instance setting.
+* Resource `tencentcloud_kubernetes_node_pool` add `scaling_mode` to support scaling mode setting.
+* Resource `tencentcloud_kubernetes` support version upgrade.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_rule` fix bug that exception happens when create more than one rule.
+
 ## 1.53.0 (January 15, 2021)
 
 FEATURES:
@@ -25,26 +38,10 @@ ENHANCEMENTS:
 FEATURES:
 
 * **New Resource**: `tencentcloud_kubernetes_node_pool` to support node management.
-* **New Resource**: `tencentcloud_ssl_pay_certificate` to support ssl pay certificate.
 
 DEPRECATED:
 
 * Resource: `tencentcloud_kubernetes_as_scaling_group` replaced by `tencentcloud_kubernetes_node_pool`.
-
-ENHANCEMENTS:
-
-* Resource `tencentcloud_ccn` add `charge_type` to support billing mode setting.
-* Resource `tencentcloud_ccn` add `bandwidth_limit_type` to support the speed limit type setting.
-* Resource `tencentcloud_ccn_bandwidth_limit` add `dst_region` to support destination area restriction setting.
-* Resource `tencentcloud_cdn_domain` add `range_origin_switch` to support range back to source configuration.
-* Resource `tencentcloud_cdn_domain` add `rule_cache` to support advanced path cache configuration.
-* Resource `tencentcloud_cdn_domain` add `request_header` to support request header configuration.
-* Data Source `tencentcloud_ccn_instances` add `charge_type` to support billing mode.
-* Data Source `tencentcloud_ccn_instances` add `bandwidth_limit_type` to support the speed limit type.
-* Data Source `tencentcloud_ccn_bandwidth_limit` add `dst_region` to support destination area restriction.
-* Data Source `tencentcloud_cdn_domains` add `range_origin_switch` to support range back to source configuration.
-* Data Source `tencentcloud_cdn_domains` add `rule_cache` to support advanced path cache configuration.
-* Data Source `tencentcloud_cdn_domains` add `request_header` to support request header configuration.
 
 ## 1.51.1 (December 22, 2020)
 

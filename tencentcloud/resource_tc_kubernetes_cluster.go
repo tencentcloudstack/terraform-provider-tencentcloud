@@ -505,7 +505,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_version": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Default:     "1.10.5",
 			Description: "Version of the cluster, Default is '1.10.5'.",
@@ -1835,6 +1834,48 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("cluster_name")
 		d.SetPartial("cluster_desc")
 	}
+
+	//upgrate k8s version
+	if d.HasChange("cluster_version") {
+		newVersion := d.Get("cluster_version").(string)
+		isOk, err := tkeService.CheckClusterVersion(ctx, id, newVersion)
+		if err != nil {
+			return err
+		}
+		if !isOk {
+			return fmt.Errorf("version %s is unsupported", newVersion)
+		}
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := tkeService.ModifyClusterVersion(ctx, id, newVersion)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		//check status
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ins, has, inErr := tkeService.DescribeCluster(ctx, id)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if !has {
+				return resource.NonRetryableError(fmt.Errorf("Cluster %s is not exist", id))
+			}
+			if ins.ClusterStatus == "Running" {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("cluster %s status %s, retry...", id, ins.ClusterStatus))
+			}
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())

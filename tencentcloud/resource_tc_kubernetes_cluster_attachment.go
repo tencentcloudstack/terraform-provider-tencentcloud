@@ -146,6 +146,27 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Default:     0,
 						Description: "Volume of disk in GB. Default is `0`.",
 					},
+					"file_system": {
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
+						Default:     "",
+						Description: "File system, e.g. `ext3/ext4/xfs`.",
+					},
+					"auto_format_and_mount": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						ForceNew:    true,
+						Default:     false,
+						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+					},
+					"mount_target": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Default:     "",
+						Description: "Mount target.",
+					},
 				},
 			},
 		},
@@ -248,12 +269,18 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 		for _, d := range dataDisks {
 			var (
-				value    = d.(map[string]interface{})
-				diskType = value["disk_type"].(string)
-				diskSize = int64(value["disk_size"].(int))
-				dataDisk = tke.DataDisk{
-					DiskType: &diskType,
-					DiskSize: &diskSize,
+				value              = d.(map[string]interface{})
+				diskType           = value["disk_type"].(string)
+				diskSize           = int64(value["disk_size"].(int))
+				fileSystem         = value["file_system"].(string)
+				autoFormatAndMount = value["auto_format_and_mount"].(bool)
+				mountTarget        = value["mount_target"].(string)
+				dataDisk           = tke.DataDisk{
+					DiskType:           &diskType,
+					DiskSize:           &diskSize,
+					FileSystem:         &fileSystem,
+					AutoFormatAndMount: &autoFormatAndMount,
+					MountTarget:        &mountTarget,
 				}
 			)
 			setting.DataDisks = append(setting.DataDisks, &dataDisk)

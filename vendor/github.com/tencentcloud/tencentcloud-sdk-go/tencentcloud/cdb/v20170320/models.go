@@ -968,7 +968,7 @@ type CreateDBInstanceHourRequest struct {
 	// 备库 1 的可用区信息，默认为 Zone 的值，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
 	SlaveZone *string `json:"SlaveZone,omitempty" name:"SlaveZone"`
 
-	// 备库 2 的可用区信息，默认为空，购买强同步主实例时可指定该参数，购买其他类型实例时指定该参数无意义。
+	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
 	BackupZone *string `json:"BackupZone,omitempty" name:"BackupZone"`
 
 	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
@@ -1089,7 +1089,7 @@ type CreateDBInstanceRequest struct {
 	// 参数列表，参数格式如 ParamList.0.Name=auto_increment&ParamList.0.Value=1。可通过 [查询默认的可设置参数列表](https://cloud.tencent.com/document/api/236/32662) 查询支持设置的参数。
 	ParamList []*ParamInfo `json:"ParamList,omitempty" name:"ParamList" list`
 
-	// 备库 2 的可用区信息，默认为空，购买强同步主实例时可指定该参数，购买其他类型实例时指定该参数无意义。
+	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
 	BackupZone *string `json:"BackupZone,omitempty" name:"BackupZone"`
 
 	// 自动续费标记，可选值为：0 - 不自动续费；1 - 自动续费。
@@ -3254,6 +3254,9 @@ type DescribeErrorLogDataRequest struct {
 
 	// 偏移量，默认为0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 仅在实例为主实例或者灾备实例时生效，可选值：slave，代表拉取从机的日志。
+	InstType *string `json:"InstType,omitempty" name:"InstType"`
 }
 
 func (r *DescribeErrorLogDataRequest) ToJsonString() string {
@@ -3701,6 +3704,9 @@ type DescribeSlowLogDataRequest struct {
 
 	// 一次性返回的记录数量，默认为100，最大为400。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 仅在实例为主实例或者灾备实例时生效，可选值：slave，代表拉取从机的日志。
+	InstType *string `json:"InstType,omitempty" name:"InstType"`
 }
 
 func (r *DescribeSlowLogDataRequest) ToJsonString() string {
@@ -6484,6 +6490,52 @@ func (r *StopRollbackResponse) ToJsonString() string {
 }
 
 func (r *StopRollbackResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SwitchDBInstanceMasterSlaveRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 模板从实例。可选值："first" - 第一备机；"second" - 第二备机。默认值为 "first"，仅多可用区实例支持设置为 "second"。
+	DstSlave *string `json:"DstSlave,omitempty" name:"DstSlave"`
+
+	// 是否强制切换。默认为 False。注意，若设置强制切换为 True，实例存在丢失数据的风险，请谨慎使用。
+	ForceSwitch *bool `json:"ForceSwitch,omitempty" name:"ForceSwitch"`
+
+	// 是否时间窗内切换。默认为 False，即不在时间窗内切换。注意，如果设置了 ForceSwitch 参数为 True，则该参数不生效。
+	WaitSwitch *bool `json:"WaitSwitch,omitempty" name:"WaitSwitch"`
+}
+
+func (r *SwitchDBInstanceMasterSlaveRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SwitchDBInstanceMasterSlaveRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SwitchDBInstanceMasterSlaveResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务 ID。
+		AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *SwitchDBInstanceMasterSlaveResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SwitchDBInstanceMasterSlaveResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 

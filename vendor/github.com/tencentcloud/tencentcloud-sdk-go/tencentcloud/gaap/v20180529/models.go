@@ -2780,6 +2780,12 @@ type DescribeRuleRealServersRequest struct {
 
 	// 转发规则ID
 	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为1000。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
 func (r *DescribeRuleRealServersRequest) ToJsonString() string {
@@ -3307,6 +3313,13 @@ type DomainRuleSet struct {
 	// 多源站证书时，返回多个证书的id和别名
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolyRealServerCertificateAliasInfo []*CertificateAliasInfo `json:"PolyRealServerCertificateAliasInfo,omitempty" name:"PolyRealServerCertificateAliasInfo" list`
+
+	// 域名的状态。
+	// 0表示运行中，
+	// 1表示变更中，
+	// 2表示删除中。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DomainStatus *uint64 `json:"DomainStatus,omitempty" name:"DomainStatus"`
 }
 
 type Filter struct {
@@ -4083,6 +4096,22 @@ type ModifySecurityRuleRequest struct {
 
 	// 安全策略ID
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 安全规则动作
+	RuleAction *string `json:"RuleAction,omitempty" name:"RuleAction"`
+
+	// 规则关联地址，格式需要满足CIDR网络地址规范
+	SourceCidr *string `json:"SourceCidr,omitempty" name:"SourceCidr"`
+
+	// 协议类型
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 端口范围，支持以下格式
+	// 单个端口: 80
+	// 多个端口: 80,443
+	// 连续端口: 3306-20000
+	// 所有端口: ALL
+	DestPortRange *string `json:"DestPortRange,omitempty" name:"DestPortRange"`
 }
 
 func (r *ModifySecurityRuleRequest) ToJsonString() string {
@@ -4566,7 +4595,7 @@ type ProxyInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyConfigTime *uint64 `json:"ModifyConfigTime,omitempty" name:"ModifyConfigTime"`
 
-	// 通道类型
+	// 通道类型，104表示新的银牌质量通道类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyType *uint64 `json:"ProxyType,omitempty" name:"ProxyType"`
 
@@ -4712,6 +4741,18 @@ type RuleCheckParams struct {
 	// 健康检查的检查域名。
 	// 当调用ModifyRuleAttribute时，不支持修改该参数。
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 源站服务失败统计频率
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailedCountInter *uint64 `json:"FailedCountInter,omitempty" name:"FailedCountInter"`
+
+	// 源站健康性检查阀值，超过该阀值会屏蔽服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailedThreshold *uint64 `json:"FailedThreshold,omitempty" name:"FailedThreshold"`
+
+	// 源站健康性检测超出阀值后，屏蔽的时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BlockInter *uint64 `json:"BlockInter,omitempty" name:"BlockInter"`
 }
 
 type RuleInfo struct {

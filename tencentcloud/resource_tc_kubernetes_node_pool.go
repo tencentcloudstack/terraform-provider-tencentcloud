@@ -1,7 +1,7 @@
 /*
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
-~> **NOTE:**  We recommend the usage of one cluster without worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+~> **NOTE:**  We recommend the usage of one cluster with essential worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
 
 Example Usage
 
@@ -74,6 +74,12 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   taints {
 	key = "test_taint"
     value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+	key = "test_taint2"
+    value = "taint_value2"
     effect = "PreferNoSchedule"
   }
 
@@ -273,9 +279,18 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "ID list of subnet, and for VPC it is required.",
 			},
+			"scaling_mode": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: "Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), " +
+					"`WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance." +
+					" If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking)" +
+					".",
+			},
 			"node_config": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: TkeInstanceAdvancedSetting(),
@@ -404,6 +419,10 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 			subnetId := subnetIds[i].(string)
 			request.SubnetIds = append(request.SubnetIds, &subnetId)
 		}
+	}
+
+	if v, ok := d.GetOk("scaling_mode"); ok {
+		request.ServiceSettings = &as.ServiceSettings{ScalingMode: helper.String(v.(string))}
 	}
 
 	result = request.ToJsonString()
@@ -621,7 +640,7 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("need only one auto_scaling_config")
 	}
 
-	if len(nodeConfig) != 1 {
+	if len(nodeConfig) > 1 {
 		return fmt.Errorf("need only one node_config")
 	}
 
