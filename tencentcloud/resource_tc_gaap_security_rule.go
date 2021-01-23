@@ -113,6 +113,9 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 
 func resourceTencentCloudGaapSecurityRuleCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.create")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -141,6 +144,7 @@ func resourceTencentCloudGaapSecurityRuleCreate(d *schema.ResourceData, m interf
 
 func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.read")()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -170,6 +174,9 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.update")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -192,6 +199,9 @@ func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interf
 
 func resourceTencentCloudGaapSecurityRuleDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.delete")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

@@ -99,6 +99,9 @@ func resourceTencentCloudGaapDomainErrorPageInfo() *schema.Resource {
 
 func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.create")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -183,6 +186,9 @@ func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m i
 
 func resourceTencentCloudGaapDomainErrorPageInfoDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.delete")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

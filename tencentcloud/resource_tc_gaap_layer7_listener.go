@@ -131,6 +131,9 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 
 func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.create")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -352,6 +355,9 @@ LOOP:
 
 func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer7_listener.update")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

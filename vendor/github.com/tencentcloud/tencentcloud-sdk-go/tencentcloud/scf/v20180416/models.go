@@ -1743,7 +1743,7 @@ type ListTriggersRequest struct {
 	// 返回数据长度，默认值为 20
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 根据哪个字段进行返回结果排序,支持以下字段：AddTime, ModTime，默认ModTime
+	// 根据哪个字段进行返回结果排序,支持以下字段：add_time，mod_time，默认mod_time
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
 	// 以升序还是降序的方式返回结果，可选值 ASC 和 DESC，默认DESC
@@ -2231,6 +2231,9 @@ type Trigger struct {
 
 	// 触发器类型，双向表示两侧控制台均可操作，单向表示SCF控制台单向创建
 	TriggerAttribute *string `json:"TriggerAttribute,omitempty" name:"TriggerAttribute"`
+
+	// 触发器绑定的别名或版本
+	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
 }
 
 type TriggerInfo struct {

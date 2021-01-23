@@ -222,7 +222,7 @@ The following arguments are supported:
 * `cluster_name` - (Optional) Name of the cluster.
 * `cluster_os_type` - (Optional, ForceNew) Image type of the cluster os, the available values include: 'DOCKER_CUSTOMIZE','GENERAL'. Default is 'GENERAL'. 'DOCKER_CUSTOMIZE' means 'TKE-Optimized'. Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now.
 * `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64','tlinux2.4x86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
-* `cluster_version` - (Optional, ForceNew) Version of the cluster, Default is '1.10.5'.
+* `cluster_version` - (Optional) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.

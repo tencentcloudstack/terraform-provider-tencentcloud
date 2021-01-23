@@ -122,6 +122,7 @@ The `data_disks` object supports the following:
 * `data_disk_snapshot_id` - (Optional, ForceNew) Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.
 * `delete_with_instance` - (Optional, ForceNew) Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.
 * `encrypt` - (Optional, ForceNew) Decides whether the disk is encrypted. Default is `false`.
+* `throughput_performance` - (Optional, ForceNew) This parameter used to make extra performance of the data disk. It's only supported with `CLOUD_TSSD` and `CLOUD_HSSD` disk type.
 
 ## Attributes Reference
 

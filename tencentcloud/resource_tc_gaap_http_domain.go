@@ -153,6 +153,9 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 
 func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.create")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -388,6 +391,9 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 
 func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.update")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -600,6 +606,9 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudGaapHttpDomainDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.delete")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

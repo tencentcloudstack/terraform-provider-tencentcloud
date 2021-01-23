@@ -161,6 +161,9 @@ type AddCdnDomainRequest struct {
 
 	// Ipv6 访问配置
 	Ipv6Access *Ipv6Access `json:"Ipv6Access,omitempty" name:"Ipv6Access"`
+
+	// 离线缓存
+	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
 }
 
 func (r *AddCdnDomainRequest) ToJsonString() string {
@@ -3136,6 +3139,14 @@ type DetailDomain struct {
 	// 高级配置集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AdvanceSet []*AdvanceConfig `json:"AdvanceSet,omitempty" name:"AdvanceSet" list`
+
+	// 离线缓存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
+
+	// 合并回源
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginCombine *OriginCombine `json:"OriginCombine,omitempty" name:"OriginCombine"`
 }
 
 type DiagnoseData struct {
@@ -4485,6 +4496,12 @@ type MaxAgeRule struct {
 	FollowOrigin *string `json:"FollowOrigin,omitempty" name:"FollowOrigin"`
 }
 
+type OfflineCache struct {
+
+	// on | off, 离线缓存是否开启
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
 type Origin struct {
 
 	// 主源站列表
@@ -4547,6 +4564,10 @@ type Origin struct {
 	// 回源路径重写规则配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PathRules []*PathRule `json:"PathRules,omitempty" name:"PathRules" list`
+
+	// 分路径回源配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PathBasedOrigin []*PathBasedOriginRule `json:"PathBasedOrigin,omitempty" name:"PathBasedOrigin" list`
 }
 
 type OriginAuthentication struct {
@@ -4565,6 +4586,12 @@ type OriginAuthenticationTypeA struct {
 	// 用于计算签名的密钥，只允许字母和数字，长度6-32字节。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
+}
+
+type OriginCombine struct {
+
+	// on|off 是否开启合并回源
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type OriginIp struct {
@@ -4695,6 +4722,26 @@ type OverseaConfig struct {
 	// 视频拖拽配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VideoSeek *VideoSeek `json:"VideoSeek,omitempty" name:"VideoSeek"`
+}
+
+type PathBasedOriginRule struct {
+
+	// 规则类型：
+	// file：指定文件后缀生效
+	// directory：指定路径生效
+	// path：指定绝对路径生效
+	// index: 指定主页生效
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// RuleType 对应类型下的匹配内容：
+	// file 时填充后缀名，如 jpg、txt
+	// directory 时填充路径，如 /xxx/test/
+	// path 时填充绝对路径，如 /xxx/test.html
+	// index 时填充 /
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+
+	// 源站列表，支持域名或ipv4地址
+	Origin []*string `json:"Origin,omitempty" name:"Origin" list`
 }
 
 type PathRule struct {
@@ -5986,6 +6033,18 @@ type TrafficPackage struct {
 
 	// 流量包来源
 	Channel *string `json:"Channel,omitempty" name:"Channel"`
+
+	// 流量包生效区域，目前仅支持mainland
+	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 流量包生命周期月数
+	LifeTimeMonth *int64 `json:"LifeTimeMonth,omitempty" name:"LifeTimeMonth"`
+
+	// 流量包是否支持续订
+	ExtensionAvailable *bool `json:"ExtensionAvailable,omitempty" name:"ExtensionAvailable"`
+
+	// 流量包是否支持退费
+	RefundAvailable *bool `json:"RefundAvailable,omitempty" name:"RefundAvailable"`
 }
 
 type UpdateDomainConfigRequest struct {
@@ -6108,6 +6167,12 @@ type UpdateDomainConfigRequest struct {
 
 	// Ipv6 访问配置
 	Ipv6Access *Ipv6Access `json:"Ipv6Access,omitempty" name:"Ipv6Access"`
+
+	// 离线缓存
+	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
+
+	// 合并回源
+	OriginCombine *OriginCombine `json:"OriginCombine,omitempty" name:"OriginCombine"`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {

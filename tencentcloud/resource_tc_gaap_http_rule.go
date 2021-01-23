@@ -226,6 +226,9 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 
 func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.create")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -356,6 +359,9 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 
 func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.update")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -482,6 +488,9 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 func resourceTencentCloudGaapHttpRuleDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.delete")()
+	gaapActionMu.Lock()
+	defer gaapActionMu.Unlock()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

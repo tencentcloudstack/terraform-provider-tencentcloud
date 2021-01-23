@@ -829,6 +829,58 @@ func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, pro
 	return
 }
 
+func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clusterVersion string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewUpdateClusterVersionRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.DstVersion = &clusterVersion
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().UpdateClusterVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) CheckClusterVersion(ctx context.Context, id string, clusterVersion string) (isOk bool, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeAvailableClusterVersionRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	ratelimit.Check(request.GetAction())
+
+	resp, err := me.client.UseTkeClient().DescribeAvailableClusterVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if resp == nil || resp.Response == nil || resp.Response.Versions == nil {
+		return
+	}
+	versions := resp.Response.Versions
+	for _, v := range versions {
+		if *v == clusterVersion {
+			isOk = true
+			return
+		}
+	}
+
+	return
+}
+
 func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeImagesRequest()
@@ -1060,6 +1112,76 @@ func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, no
 
 	has = true
 	nodePool = response.Response.NodePool
+
+	return
+}
+
+//node pool global config
+func (me *TkeService) ModifyClusterNodePoolGlobalConfig(ctx context.Context, clusterId string, isScaleDown bool, expanderStrategy string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterAsGroupOptionAttributeRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.ClusterAsGroupOption = &tke.ClusterAsGroupOption{
+		IsScaleDownEnabled: &isScaleDown,
+		Expander:           &expanderStrategy,
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterAsGroupOptionAttribute(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, clusterId string) (
+	npGlobalConfig *tke.ClusterAsGroupOption,
+	errRet error,
+) {
+
+	logId := getLogId(ctx)
+	//the error code of cluster not exist is InternalError
+	//check cluster exist first
+	_, clusterHas, err := me.DescribeCluster(ctx, clusterId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if !clusterHas {
+		return
+	}
+
+	request := tke.NewDescribeClusterAsGroupOptionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = helper.String(clusterId)
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterAsGroupOption(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.ClusterAsGroupOption == nil {
+		return
+	}
+
+	npGlobalConfig = response.Response.ClusterAsGroupOption
 
 	return
 }
