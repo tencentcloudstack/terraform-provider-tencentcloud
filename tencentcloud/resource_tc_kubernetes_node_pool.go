@@ -283,11 +283,10 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default:  "CLASSIC_SCALING",
 				Description: "Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/detroy instances), " +
 					"`WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance." +
 					" If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking)" +
-					". Default is `CLASSIC_SCALING`.",
+					".",
 			},
 			"node_config": {
 				Type:     schema.TypeList,
