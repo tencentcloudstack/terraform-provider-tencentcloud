@@ -1,4 +1,16 @@
-## 1.53.1 (Unreleased)
+## 1.53.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_sbs_storage` add `throughput_performance` to support adding extra performance to the cbs resources.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix bug that error happens when applying unsupported logging region.
+* Resource: `tencentcloud_as_scaling_policy` fix bug that missing required parameters error happened when update metric parameters.
+
+
+## 1.53.1 (January 23, 2021)
 
 ENHANCEMENTS:
 
