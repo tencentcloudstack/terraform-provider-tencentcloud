@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 
-* Resource `tencentcloud_sbs_storage` add `throughput_performance` to support adding extra performance to the cbs resources.
+* Resource `tencentcloud_cbs_storage` add `throughput_performance` to support adding extra performance to the cbs resources.
 
 BUG FIXES:
 
