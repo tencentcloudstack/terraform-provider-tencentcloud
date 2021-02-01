@@ -135,6 +135,23 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 	return nil
 }
 
+func (me *CbsService) ModifyThroughputPerformance(ctx context.Context, diskId string, throughputPerformance int) error {
+	logId := getLogId(ctx)
+	request := cbs.NewModifyDiskExtraPerformanceRequest()
+	request.DiskId = &diskId
+	request.ThroughputPerformance = helper.IntUint64(throughputPerformance)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCbsClient().ModifyDiskExtraPerformance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
+}
+
 func (me *CbsService) ApplySnapshot(ctx context.Context, diskId, snapshotId string) error {
 	logId := getLogId(ctx)
 	request := cbs.NewApplySnapshotRequest()

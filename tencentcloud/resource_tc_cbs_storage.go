@@ -51,11 +51,10 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"storage_type": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
-				Description:  "Type of CBS medium. Valid values: CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Type of CBS medium. Valid values: CLOUD_BASIC, CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.",
 			},
 			"storage_size": {
 				Type:         schema.TypeInt,
@@ -132,7 +131,12 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
 			},
-
+			"throughput_performance": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.",
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -173,7 +177,13 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	if _, ok := d.GetOk("encrypt"); ok {
 		request.Encrypt = helper.String("ENCRYPT")
 	}
+
+	if v, ok := d.GetOk("throughput_performance"); ok {
+		request.ThroughputPerformance = helper.IntUint64(v.(int))
+	}
+
 	chargeType := d.Get("charge_type").(string)
+
 	request.DiskChargeType = &chargeType
 
 	if chargeType == CBS_CHARGE_TYPE_PREPAID {
@@ -279,6 +289,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("attached", storage.Attached)
 	_ = d.Set("charge_type", storage.DiskChargeType)
 	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
+	_ = d.Set("throughput_performance", storage.ThroughputPerformance)
 
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
 		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
@@ -418,6 +429,23 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		}
 
 		d.SetPartial("snapshot_id")
+	}
+
+	if d.HasChange("throughput_performance") {
+		throughputPerformance := d.Get("throughput_performance").(int)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ModifyThroughputPerformance(ctx, storageId, throughputPerformance)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+		d.SetPartial("throughput_performance")
 	}
 
 	if d.HasChange("tags") {

@@ -1,0 +1,447 @@
+provider "tencentcloud" {
+	region = "ap-guangzhou"
+}
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "172.16.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+resource "tencentcloud_cbs_storage" "storage_full" {
+	storage_type      = "CLOUD_HSSD"
+	storage_name      = "tf-storage-update"
+	storage_size      = 460
+	availability_zone = "ap-guangzhou-3"
+	project_id = 0
+	encrypt = false
+	throughput_performance = 80
+	tags = {
+		test = "tf-test"
+	}
+}
+
+/*
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
+}
+
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["SA2"]
+  }
+
+  cpu_core_count = 8
+  memory_size    = 16
+}
+
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+
+resource "tencentcloud_gaap_realserver" "bar" {
+  ip   = "119.29.29.29"
+  name = "ci-test-gaap-realserver2"
+}
+
+resource "tencentcloud_gaap_layer4_listener" "foo" {
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 80
+  realserver_type = "IP"
+  proxy_id        = tencentcloud_gaap_proxy.foo.id
+  health_check    = true
+
+  realserver_bind_set {
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
+    port = 80
+  }
+
+  realserver_bind_set {
+    id   = tencentcloud_gaap_realserver.bar.id
+    ip   = tencentcloud_gaap_realserver.bar.ip
+    port = 80
+  }
+}
+
+resource "tencentcloud_gaap_layer4_listener" "foo1" {
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener2"
+  port            = 8080
+  realserver_type = "IP"
+  proxy_id        = tencentcloud_gaap_proxy.foo.id
+  health_check    = true
+
+  realserver_bind_set {
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
+    port = 80
+  }
+
+  realserver_bind_set {
+    id   = tencentcloud_gaap_realserver.bar.id
+    ip   = tencentcloud_gaap_realserver.bar.ip
+    port = 80
+  }
+}
+*/
+
+/*
+resource "tencentcloud_instance" "qsh4_rec_dgl_gcn_1" {
+  hostname = "qsh4-rec-dgl-gcn-1"
+
+  data_disks {
+    delete_with_instance = true
+    encrypt              = false
+    data_disk_type       = "CLOUD_PREMIUM"
+    data_disk_size       = 500
+  }
+
+ // key_name  = "skey-pyjfpxbz"
+  subnet_id = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+  tags = {
+    env   = "prod"
+    from  = "workflow"
+    owner = "sucan"
+  }
+  availability_zone                       = "ap-guangzhou-3"
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
+  internet_max_bandwidth_out              = 100
+  instance_name                           = "qsh4-rec-dgl-gcn-1"
+  instance_type                           = var.default_instance_type
+  //security_groups                         = ["sg-6ipb3qf4"]
+  running_flag                            = true
+  instance_charge_type_prepaid_period     = 1
+  vpc_id                                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  system_disk_type                        = "CLOUD_PREMIUM"
+  image_id                                = data.tencentcloud_images.default.images.0.image_id
+  system_disk_size                        = 50
+  instance_charge_type                    = "PREPAID"
+}
+
+
+resource "tencentcloud_instance" "foo" {
+vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+  instance_name     = "tf-auto-test-1-1"
+  availability_zone = var.availability_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = var.default_instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  system_disk_size  = 50
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "keep"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_version = "1.12.4"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+}
+
+resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
+  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
+  instance_id = tencentcloud_instance.foo.id
+  password    = "Lo4wbdit"
+
+worker_config {
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      file_system = "ext4"
+      auto_format_and_mount = true
+      mount_target = "/data"
+    }
+
+    }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+
+resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
+  name = "mynodepool"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size = 6
+  min_size = 1
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 4
+  enable_auto_scale    = true
+
+  auto_scaling_config {
+    instance_type      = var.default_instance_type
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+    security_group_ids = ["sg-24vswocp"]
+
+    
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+	key = "test_taint"
+    value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+	key = "test_taint2"
+    value = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
+  node_config {
+        }
+}
+
+resource "tencentcloud_kubernetes_node_pool" "mynodepool2" {
+  name = "mynodepool"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size = 6
+  min_size = 1
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 4
+  enable_auto_scale    = true
+scaling_mode = "WAKE_UP_STOPPED_SCALING"
+
+  auto_scaling_config {
+    instance_type      = var.default_instance_type
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+    security_group_ids = ["sg-24vswocp"]
+    
+    
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+	key = "test_taint"
+    value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+	key = "test_taint2"
+    value = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+}
+*/
+
+/*
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "172.16.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
+}
+
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["SA2"]
+  }
+
+  cpu_core_count = 8
+  memory_size    = 16
+}
+
+resource "tencentcloud_instance" "iaas-test-demo-2" {
+  //hostname  = "iaas-test-demo-1"
+  //key_name  = "skey-aigk3luj"
+  subnet_id = "subnet-1uwh63so"
+  tags = {
+    owner = "kaiji"
+  }
+  availability_zone          = "ap-guangzhou-3"
+  internet_max_bandwidth_out = 0
+  instance_name              = "iaas-test-demo-1"
+  instance_type              = var.default_instance_type
+  //security_groups            = ["sg-1ssu66co", "sg-9kp3ikkk", "sg-anyiazty", "sg-fxwci31e", "sg-lq1nbd2a"]
+  running_flag               = true
+  vpc_id                     = "vpc-h70b6b49"
+  system_disk_type           = "CLOUD_PREMIUM"
+  image_id                   = "img-oikl1tzv"
+  system_disk_size           = 50
+  instance_charge_type       = "POSTPAID_BY_HOUR"
+}
+*/
+/*
+resource "tencentcloud_kubernetes_cluster_attachment" "iaas-test-demo-1" {
+  password    = "Lo4wbdit"
+  worker_config {
+      }
+
+  labels = {
+    test1 = "test1"
+    test2 = "test2"
+  }
+  cluster_id  = "cls-3k36pfjq"
+  instance_id = "ins-ovun4lok"
+}
+*/
+/*
+resource "tencentcloud_instance" "foo" {
+
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id = "subnet-1uwh63so"
+  instance_name     = "tf-auto-test-1-1"
+  availability_zone = var.availability_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = var.default_instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  system_disk_size  = 50
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "keep"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_version = "1.10.4"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+}
+
+resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
+  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
+  instance_id = tencentcloud_instance.foo.id
+  password    = "Lo4wbdit"
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  worker_config{
+docker_graph_path = "/var/lib/docker"
+
+  }
+}
+*/
