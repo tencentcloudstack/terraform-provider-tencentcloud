@@ -122,6 +122,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -438,11 +439,16 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	//read the log
 	logEnable, logTargetBucket, logPrefix, err := cosService.GetBucketLogStatus(ctx, bucket)
 	if err != nil {
-		return err
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() != "UnSupportedLoggingRegion" {
+				return err
+			}
+		}
+	} else {
+		_ = d.Set("log_enable", logEnable)
+		_ = d.Set("log_target_bucket", logTargetBucket)
+		_ = d.Set("log_prefix", logPrefix)
 	}
-	_ = d.Set("log_enable", logEnable)
-	_ = d.Set("log_target_bucket", logTargetBucket)
-	_ = d.Set("log_prefix", logPrefix)
 
 	// read the tags
 	tags, err := cosService.GetBucketTags(ctx, bucket)

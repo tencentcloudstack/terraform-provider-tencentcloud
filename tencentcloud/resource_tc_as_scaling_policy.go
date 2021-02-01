@@ -223,24 +223,17 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 		request.AdjustmentValue = &adjustmentValue
 	}
 	request.MetricAlarm = &as.MetricAlarm{}
-	if d.HasChange("comparison_operator") {
+	if d.HasChange("comparison_operator") || d.HasChange("threshold") || d.HasChange("metric_name") || d.HasChange("period") ||
+		d.HasChange("continuous_time") || d.HasChange("statistic") {
+		//these two parameter must pass together
 		request.MetricAlarm.ComparisonOperator = helper.String(d.Get("comparison_operator").(string))
-	}
-	if d.HasChange("metric_name") {
-		request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
-	}
-	if d.HasChange("threshold") {
 		request.MetricAlarm.Threshold = helper.IntUint64(d.Get("threshold").(int))
-	}
-	if d.HasChange("period") {
+		request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
 		request.MetricAlarm.Period = helper.IntUint64(d.Get("period").(int))
-	}
-	if d.HasChange("continuous_time") {
 		request.MetricAlarm.ContinuousTime = helper.IntUint64(d.Get("continuous_time").(int))
-	}
-	if d.HasChange("statistic") {
 		request.MetricAlarm.Statistic = helper.String(d.Get("statistic").(string))
 	}
+
 	if d.HasChange("cooldown") {
 		request.Cooldown = helper.IntUint64(d.Get("cooldown").(int))
 	}
