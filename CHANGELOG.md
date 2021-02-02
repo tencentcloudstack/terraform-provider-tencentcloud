@@ -1,4 +1,11 @@
-## 1.53.2 (Unreleased)
+## 1.53.3 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source `tencentcloud_cbs_storages` add `throughput_performance` to support adding extra performance to the cbs resources.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `hostname` to support setting hostname with the attached instance.
+
+## 1.53.2 (February 01, 2021)
 
 ENHANCEMENTS:
 
@@ -8,7 +15,6 @@ BUG FIXES:
 
 * Resource: `tencentcloud_cos_bucket` fix bug that error happens when applying unsupported logging region.
 * Resource: `tencentcloud_as_scaling_policy` fix bug that missing required parameters error happened when update metric parameters.
-
 
 ## 1.53.1 (January 23, 2021)
 

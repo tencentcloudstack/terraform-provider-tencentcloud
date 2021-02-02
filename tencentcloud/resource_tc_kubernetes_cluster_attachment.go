@@ -223,6 +223,15 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.",
 		},
+		"hostname": {
+			Type:     schema.TypeString,
+			ForceNew: true,
+			Optional: true,
+			Description: "The host name of the attached instance. " +
+				"Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. " +
+				"Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. " +
+				"Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).",
+		},
 		"worker_config": {
 			Type:     schema.TypeList,
 			ForceNew: true,
@@ -392,6 +401,7 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 	if len(instance.LoginSettings.KeyIds) > 0 {
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	}
+
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
 	return nil
 }
@@ -439,6 +449,10 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	}
 
 	request.InstanceAdvancedSettings.Labels = GetTkeLabels(d, "labels")
+	if hostName, ok := d.GetOk("hostname"); ok {
+		hostNameStr := hostName.(string)
+		request.HostName = &hostNameStr
+	}
 
 	/*cvm has been  attached*/
 	var err error
