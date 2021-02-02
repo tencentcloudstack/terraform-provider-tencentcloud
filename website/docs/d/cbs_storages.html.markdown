@@ -52,5 +52,6 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_type` - Types of storage medium.
   * `storage_usage` - Types of CBS.
   * `tags` - The available tags within this CBS.
+  * `throughput_performance` - Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
 
 

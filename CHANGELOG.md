@@ -1,4 +1,10 @@
 ## 1.53.3 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source `tencentcloud_cbs_storages` add `throughput_performance` to support adding extra performance to the cbs resources.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `hostname` to support setting hostname with the attached instance.
+
 ## 1.53.2 (February 01, 2021)
 
 ENHANCEMENTS:
