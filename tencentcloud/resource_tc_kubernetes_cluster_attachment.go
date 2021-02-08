@@ -295,8 +295,9 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 			setting.DataDisks = append(setting.DataDisks, &dataDisk)
 		}
 	}
-
-	setting.Unschedulable = helper.BoolToInt64Ptr(!dMap["is_schedule"].(bool))
+	if v, ok := dMap["is_schedule"]; ok {
+		setting.Unschedulable = helper.BoolToInt64Ptr(!v.(bool))
+	}
 
 	if v, ok := dMap["user_data"]; ok {
 		setting.UserScript = helper.String(v.(string))
@@ -310,8 +311,8 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
 		clusterExtraArgs := tke.InstanceExtraArgs{}
 		clusterExtraArgs.Kubelet = make([]*string, 0)
-		for _, extraArg := range extraArgs {
-			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArg)
+		for i := range extraArgs {
+			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
 		}
 		setting.ExtraArgs = &clusterExtraArgs
 	}

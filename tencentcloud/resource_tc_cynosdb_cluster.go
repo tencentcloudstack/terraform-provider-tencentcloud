@@ -60,6 +60,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -133,6 +134,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().CreateClusters(request)
 		if err != nil {
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InvalidParameterValue.DealNameNotFound" {
+					return resource.RetryableError(fmt.Errorf("waiting billing status, retry..."))
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
 			return retryError(err)
 		}
@@ -141,11 +147,33 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	if response != nil && response.Response != nil && len(response.Response.ClusterIds) != 1 {
+	if response != nil && response.Response != nil && len(response.Response.DealNames) != 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
-	d.SetId(*response.Response.ClusterIds[0])
-	id := d.Id()
+	//after 1.53.3 the response is async
+	dealName := response.Response.DealNames[0]
+	dealReq := cynosdb.NewDescribeResourcesByDealNameRequest()
+	dealRes := cynosdb.NewDescribeResourcesByDealNameResponse()
+	dealReq.DealName = dealName
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		dealRes, err = meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().DescribeResourcesByDealName(dealReq)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 {
+		return fmt.Errorf("cynosdb cluster id count isn't 1")
+	}
+
+	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
+	d.SetId(id)
 
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {

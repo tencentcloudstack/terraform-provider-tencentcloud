@@ -111,7 +111,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
 func resourceTencentCloudTkeScaleWorker() *schema.Resource {
@@ -137,6 +137,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				},
 				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
 			},
+			//advanced instance settings
 			"labels": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -149,6 +150,65 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Custom parameter information related to the node.",
+			},
+			"docker_graph_path": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: "Docker graph path. Default is `/var/lib/docker`.",
+			},
+			"mount_target": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Mount target. Default is not mounting.",
+			},
+			"data_disk": {
+				Type:        schema.TypeList,
+				ForceNew:    true,
+				Optional:    true,
+				MaxItems:    11,
+				Description: "Configurations of data disk.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disk_type": {
+							Type:         schema.TypeString,
+							ForceNew:     true,
+							Optional:     true,
+							Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
+							ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+							Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+						},
+						"disk_size": {
+							Type:        schema.TypeInt,
+							ForceNew:    true,
+							Optional:    true,
+							Default:     0,
+							Description: "Volume of disk in GB. Default is `0`.",
+						},
+						"file_system": {
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
+							Default:     "",
+							Description: "File system, e.g. `ext3/ext4/xfs`.",
+						},
+						"auto_format_and_mount": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     false,
+							Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+						},
+						"mount_target": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Default:     "",
+							Description: "Mount target.",
+						},
+					},
+				},
 			},
 			// Computed values
 			"worker_instances_list": {
@@ -169,7 +229,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var cvms RunInstancesForNode
-	var iAdvanced InstanceAdvancedSettings
+	var iAdvanced tke.InstanceAdvancedSettings
 	cvms.Work = []string{}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -198,6 +258,18 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
 	}
 
+	dMap := make(map[string]interface{}, 4)
+	//mount_target, docker_graph_path, data_disk, extra_args
+	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk"}
+	for _, k := range iAdvancedParas {
+		if v, ok := d.GetOk(k); ok {
+			dMap[k] = v
+		}
+	}
+	iAdvanced = tkeGetInstanceAdvancedPara(dMap, meta)
+
+	iAdvanced.Labels = GetTkeLabels(d, "labels")
+
 	if workers, ok := d.GetOk("worker_config"); ok {
 		workerList := workers.([]interface{})
 		for index := range workerList {
@@ -209,16 +281,6 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 			cvms.Work = append(cvms.Work, paraJson)
 		}
 	}
-
-	iAdvanced.Labels = GetTkeLabels(d, "labels")
-
-	if temp, ok := d.GetOk("extra_args"); ok {
-		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
-		for _, extraArg := range extraArgs {
-			iAdvanced.ExtraArgs.Kubelet = append(iAdvanced.ExtraArgs.Kubelet, &extraArg)
-		}
-	}
-
 	if len(cvms.Work) != 1 {
 		return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
 			"so len(cvms.Work) should be 1")

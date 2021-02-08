@@ -435,6 +435,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		instanceChargeType := v.(string)
 		request.InstanceChargeType = &instanceChargeType
@@ -617,6 +618,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	d.SetId(instanceId)
 
 	// wait for status
+	//get system disk ID and data disk ID
+	var systemDiskId string
+	var dataDiskIds []string
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
@@ -624,6 +628,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 		if instance != nil && (*instance.InstanceState == CVM_STATUS_RUNNING ||
 			*instance.InstanceState == CVM_STATUS_LAUNCH_FAILED) {
+			//get system disk ID
+			if instance.SystemDisk != nil && instance.SystemDisk.DiskId != nil {
+				systemDiskId = *instance.SystemDisk.DiskId
+			}
+			if instance.DataDisks != nil {
+				for _, dataDisk := range instance.DataDisks {
+					if dataDisk != nil && dataDisk.DiskId != nil {
+						dataDiskIds = append(dataDiskIds, *dataDisk.DiskId)
+					}
+				}
+			}
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -641,6 +656,27 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
 			return err
+		}
+
+		//except instance ,system disk and data disk will be tagged
+		//keep logical consistence with the console
+		//tag system disk
+		if systemDiskId != "" {
+			resourceName = BuildTagResourceName("cvm", "volume", tcClient.Region, systemDiskId)
+			if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+				// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+				return err
+			}
+		}
+		//tag disk ids
+		for _, diskId := range dataDiskIds {
+			if diskId != "" {
+				resourceName = BuildTagResourceName("cvm", "volume", tcClient.Region, diskId)
+				if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+					// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+					return err
+				}
+			}
 		}
 	}
 
@@ -1014,9 +1050,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		old, new := d.GetChange("key_name")
 		oldKeyId := old.(string)
 		keyId := new.(string)
-		err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
-		if err != nil {
-			return err
+		if oldKeyId != "" {
+			err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
+			if err != nil {
+				return err
+			}
 		}
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
@@ -1085,6 +1123,28 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
+		}
+		//except instance ,system disk and data disk will be tagged
+		//keep logical consistence with the console
+		//tag system disk
+		if systemDiskId, ok := d.GetOk("system_disk_id"); ok {
+			if systemDiskId.(string) != "" {
+				resourceName = BuildTagResourceName("cvm", "volume", region, systemDiskId.(string))
+				if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+					return err
+				}
+			}
+		}
+		//tag disk ids
+		if dataDisks, ok := d.GetOk("date_disk"); ok {
+			dataDiskList := dataDisks.([]map[string]interface{})
+			for _, disk := range dataDiskList {
+				dataDiskId := disk["data_disk_id"].(string)
+				resourceName = BuildTagResourceName("cvm", "volume", region, dataDiskId)
+				if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+					return err
+				}
+			}
 		}
 		d.SetPartial("tags")
 	}
