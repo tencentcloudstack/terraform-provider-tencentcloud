@@ -172,9 +172,8 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
 
-	clusterId := *dealRes.Response.BillingResourceInfos[0].ClusterId
-	d.SetId(clusterId)
-	id := d.Id()
+	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
+	d.SetId(id)
 
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
