@@ -39,6 +39,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -323,7 +324,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 	runInstancesPara.Placement = &place
 	runInstancesPara.InstanceCount = common.Int64Ptr(1)
 
-	var iAdvanced InstanceAdvancedSettings
+	var iAdvanced tke.InstanceAdvancedSettings
 	var cvms RunInstancesForNode
 
 	if v, ok := d.GetOkExists("vpc_id"); ok {
@@ -445,19 +446,19 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 	}
 
 	if v, ok := d.GetOkExists("mount_target"); ok {
-		iAdvanced.MountTarget = v.(string)
+		iAdvanced.MountTarget = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("docker_graph_path"); ok {
-		iAdvanced.DockerGraphPath = v.(string)
+		iAdvanced.DockerGraphPath = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("user_script"); ok {
-		iAdvanced.UserScript = v.(string)
+		iAdvanced.UserScript = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("unschedulable"); ok {
-		iAdvanced.Unschedulable = int64(v.(int))
+		iAdvanced.Unschedulable = helper.IntInt64(v.(int))
 	}
 
 	runInstancesParas := runInstancesPara.ToJsonString()

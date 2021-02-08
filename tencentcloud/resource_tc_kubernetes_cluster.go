@@ -810,6 +810,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			Description: "An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
 		},
+		//advanced instance setting
 		"labels": {
 			Type:        schema.TypeMap,
 			Optional:    true,
@@ -843,6 +844,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Custom parameter information related to the node.",
 		},
+
 		"kube_config": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -1264,8 +1266,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	if temp, ok := d.GetOk("extra_args"); ok {
 		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
-		for _, extraArg := range extraArgs {
-			iAdvanced.ExtraArgs.Kubelet = append(iAdvanced.ExtraArgs.Kubelet, &extraArg)
+		for i := range extraArgs {
+			iAdvanced.ExtraArgs.Kubelet = append(iAdvanced.ExtraArgs.Kubelet, &extraArgs[i])
 		}
 	}
 

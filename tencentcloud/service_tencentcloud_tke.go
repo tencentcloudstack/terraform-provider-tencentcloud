@@ -444,7 +444,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 
 func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	id string, runInstancePara string,
-	iAdvanced InstanceAdvancedSettings) (instanceIds []string, errRet error) {
+	iAdvanced tke.InstanceAdvancedSettings) (instanceIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterInstancesRequest()
 
@@ -457,15 +457,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	request.ClusterId = &id
 	request.RunInstancePara = &runInstancePara
 
-	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
-	request.InstanceAdvancedSettings.MountTarget = &iAdvanced.MountTarget
-	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
-	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
-	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
-	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
-		request.InstanceAdvancedSettings.ExtraArgs = &iAdvanced.ExtraArgs
-	}
-	request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
+	request.InstanceAdvancedSettings = &iAdvanced
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterInstances(request)

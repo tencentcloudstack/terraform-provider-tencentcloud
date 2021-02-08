@@ -1,4 +1,17 @@
-## 1.53.3 (Unreleased)
+## 1.53.4 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_scale_worker` add `data_disk`, `docker_graph_path` to support advanced instance setting.
+* Resource `tencentcloud_instance` add tags to the disks created with the instance.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_kubernetes_cluster_attachment` fix bug that only one extra argument set successfully.
+* Resource: `tencentcloud_as_scaling_policy` fix bug that missing required parameters error happened when update metric parameters.
+
+
+## 1.53.3 (February 02, 2021)
 
 ENHANCEMENTS:
 
