@@ -1,4 +1,5 @@
-## 1.53.4 (Unreleased)
+## 1.53.5 (Unreleased)
+## 1.53.4 (February 08, 2021)
 
 ENHANCEMENTS:
 
@@ -9,7 +10,6 @@ BUG FIXES:
 
 * Resource: `tencentcloud_kubernetes_cluster_attachment` fix bug that only one extra argument set successfully.
 * Resource: `tencentcloud_as_scaling_policy` fix bug that missing required parameters error happened when update metric parameters.
-
 
 ## 1.53.3 (February 02, 2021)
 
