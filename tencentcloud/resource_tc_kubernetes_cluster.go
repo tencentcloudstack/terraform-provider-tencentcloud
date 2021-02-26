@@ -232,6 +232,11 @@ func tkeCvmState() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Information of the cvm when it is failed.",
 		},
+		"lan_ip": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "LAN IP of the cvm.",
+		},
 	}
 }
 
@@ -1501,6 +1506,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		tempMap["instance_role"] = worker.InstanceRole
 		tempMap["instance_state"] = worker.InstanceState
 		tempMap["failed_reason"] = worker.FailedReason
+		tempMap["lan_ip"] = worker.LanIp
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
 

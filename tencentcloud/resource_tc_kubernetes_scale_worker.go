@@ -152,9 +152,9 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Description: "Custom parameter information related to the node.",
 			},
 			"docker_graph_path": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Docker graph path. Default is `/var/lib/docker`.",
 			},
 			"mount_target": {
@@ -416,6 +416,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		tempMap["instance_role"] = cvm.InstanceRole
 		tempMap["instance_state"] = cvm.InstanceState
 		tempMap["failed_reason"] = cvm.FailedReason
+		tempMap["lan_ip"] = cvm.LanIp
 		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
 
 		labels := cvm.InstanceAdvancedSettings.Labels

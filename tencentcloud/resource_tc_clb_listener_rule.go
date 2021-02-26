@@ -74,13 +74,11 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Domain name of the listener rule.",
 			},
 			"url": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Url of the listener rule.",
 			},
 			"health_check_switch": {
@@ -146,13 +144,11 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 			"certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.",
 			},
 			"certificate_ca_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.",
 			},
 			"session_expire_time": {
@@ -160,6 +156,12 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(30, 3600),
 				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+			},
+			"http2_switch": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Indicate to apply HTTP2.0 protocol or not.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
@@ -324,6 +326,34 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	//this ID style changes since terraform 1.47.0
 	d.SetId(clbId + FILED_SP + listenerId + FILED_SP + locationId)
 
+	// set http2
+	if v, ok := d.GetOkExists("http2_switch"); ok {
+		http2Switch := v.(bool)
+		domainRequest := clb.NewModifyDomainAttributesRequest()
+		domainRequest.Http2 = &http2Switch
+		domainRequest.LoadBalancerId = &clbId
+		domainRequest.ListenerId = &listenerId
+		domainRequest.Domain = &domain
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyDomainAttributes(domainRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId := *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(errors.WithStack(retryErr))
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update CLB listener rule failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 	return resourceTencentCloudClbListenerRuleRead(d, meta)
 }
 
@@ -391,6 +421,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	_ = d.Set("session_expire_time", instance.SessionExpireTime)
 	_ = d.Set("target_type", instance.TargetType)
 	_ = d.Set("forward_type", instance.ForwardType)
+	_ = d.Set("http2_switch", instance.Http2)
 
 	//health check
 	if instance.HealthCheck != nil {
@@ -528,6 +559,67 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+
+	//modify domain and ssl
+	domainChanged := false
+	domainRequest := clb.NewModifyDomainAttributesRequest()
+	if d.HasChange("domain") {
+		new, old := d.GetChange("domain")
+		domainChanged = true
+		domainRequest.Domain = helper.String(old.(string))
+		domainRequest.NewDomain = helper.String(new.(string))
+	} else {
+		domainRequest.Domain = helper.String(d.Get("domain").(string))
+	}
+
+	if d.HasChange("certificate_id") || d.HasChange("certificate_ca_id ") || d.HasChange("certificate_ssl_mode") {
+		domainChanged = true
+		certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d, meta)
+		if certErr != nil {
+			return certErr
+		}
+		if certificateSetFlag {
+			if !(protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+				return fmt.Errorf("[CHECK][CLB listener rule][Create] check: certificate para can only be set with rule of linstener with protocol 'HTTPS'")
+			}
+			domainRequest.Certificate = certificateInput
+		}
+	}
+
+	if d.HasChange("http2_switch") {
+		if v, ok := d.GetOkExists("http2_switch"); ok {
+			if !(protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+				return fmt.Errorf("[CHECK][CLB listener rule][Create] check: certificate para can only be set with rule of linstener with protocol 'HTTPS'")
+			}
+			domainChanged = true
+			domainRequest.Http2 = helper.Bool(v.(bool))
+		}
+	}
+
+	if domainChanged {
+		domainRequest.ListenerId = &listenerId
+		domainRequest.LoadBalancerId = &clbId
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyDomainAttributes(domainRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId := *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(errors.WithStack(retryErr))
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update CLB listener rule failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return nil
 }
 

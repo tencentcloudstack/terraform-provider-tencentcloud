@@ -53,9 +53,12 @@ The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
 * `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
+* `address_ip_version` - (Optional) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
+* `internet_bandwidth_max_out` - (Optional) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
+* `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Only supports `OPEN` CLBs.
-* `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs.
+* `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
 * `tags` - (Optional) The available tags within this CLB.
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
@@ -67,6 +70,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `clb_vips` - The virtual service address table of the CLB.
+* `vip_isp` - Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
 
 
 ## Import

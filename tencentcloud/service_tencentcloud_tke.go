@@ -84,6 +84,7 @@ type InstanceInfo struct {
 	InstanceState            string
 	FailedReason             string
 	InstanceAdvancedSettings *tke.InstanceAdvancedSettings
+	LanIp                    string
 }
 
 type TkeService struct {
@@ -144,6 +145,9 @@ getMoreData:
 			InstanceState:            *item.InstanceState,
 			FailedReason:             *item.FailedReason,
 			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+		}
+		if item.LanIP != nil {
+			instanceInfo.LanIp = *item.LanIP
 		}
 		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
 			workers = append(workers, instanceInfo)

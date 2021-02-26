@@ -135,5 +135,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `security_groups` - A list of security group IDs after attach to cluster.
+* `state` - State of the node.
 
 

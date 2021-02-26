@@ -134,6 +134,26 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "The available tags within this CLB.",
 						},
+						"address_ip_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IP version, only applicable to open CLB. Valid values are `IPV4`, `IPV6` and `IPv6FullChain`.",
+						},
+						"vip_isp": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
+						},
+						"internet_charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+						},
+						"internet_bandwidth_max_out": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.",
+						},
 					},
 				},
 			},
@@ -181,19 +201,25 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	ids := make([]string, 0, len(clbs))
 	for _, clbInstance := range clbs {
 		mapping := map[string]interface{}{
-			"clb_id":                    *clbInstance.LoadBalancerId,
-			"clb_name":                  *clbInstance.LoadBalancerName,
-			"network_type":              *clbInstance.LoadBalancerType,
-			"status":                    *clbInstance.Status,
-			"create_time":               *clbInstance.CreateTime,
-			"status_time":               *clbInstance.StatusTime,
-			"project_id":                *clbInstance.ProjectId,
-			"vpc_id":                    *clbInstance.VpcId,
-			"subnet_id":                 *clbInstance.SubnetId,
+			"clb_id":                    clbInstance.LoadBalancerId,
+			"clb_name":                  clbInstance.LoadBalancerName,
+			"network_type":              clbInstance.LoadBalancerType,
+			"status":                    clbInstance.Status,
+			"create_time":               clbInstance.CreateTime,
+			"status_time":               clbInstance.StatusTime,
+			"project_id":                clbInstance.ProjectId,
+			"vpc_id":                    clbInstance.VpcId,
+			"subnet_id":                 clbInstance.SubnetId,
 			"clb_vips":                  helper.StringsInterfaces(clbInstance.LoadBalancerVips),
-			"target_region_info_region": *clbInstance.TargetRegionInfo.Region,
-			"target_region_info_vpc_id": *clbInstance.TargetRegionInfo.VpcId,
+			"target_region_info_region": clbInstance.TargetRegionInfo.Region,
+			"target_region_info_vpc_id": clbInstance.TargetRegionInfo.VpcId,
+			"address_ip_version":        clbInstance.AddressIPVersion,
+			"vip_isp":                   clbInstance.VipIsp,
 			"security_groups":           helper.StringsInterfaces(clbInstance.SecureGroups),
+		}
+		if clbInstance.NetworkAttributes != nil {
+			mapping["internet_charge_type"] = *clbInstance.NetworkAttributes.InternetChargeType
+			mapping["internet_bandwidth_max_out"] = *clbInstance.NetworkAttributes.InternetMaxBandwidthOut
 		}
 		if clbInstance.Tags != nil {
 			tags := make(map[string]interface{}, len(clbInstance.Tags))

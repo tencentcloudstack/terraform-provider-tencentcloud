@@ -1,4 +1,21 @@
-## 1.53.4 (Unreleased)
+## 1.53.5 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_clb_instance` add `internet_charge_type`, `internet_bandwidth_max_out` to support internet traffic setting with OPEN CLB instance.
+* Resource `tencentcloud_clb_rule` add `http2_switch` to support HTTP2 protocol setting.
+* Resource `tencentcloud_kubernetes_cluster` add `lan_ip` to show node LAN IP.
+* Resource `tencentcloud_kubernetes_scale_worker` add `lan_ip` to show node LAN IP.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `state` to show node state.
+* Resource `tencentcloud_clb_rule` support certificate modifying.
+* Data Source `tencentcloud_clb_instances` add `internet_charge_type`, `internet_bandwidth_max_out`.
+* Data Source `tencentcloud_clb_rules` add `http2_switch`.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_clb_attachment` fix bug that attach more than 20 targets will failed.
+
+## 1.53.4 (February 08, 2021)
 
 ENHANCEMENTS:
 
@@ -9,7 +26,6 @@ BUG FIXES:
 
 * Resource: `tencentcloud_kubernetes_cluster_attachment` fix bug that only one extra argument set successfully.
 * Resource: `tencentcloud_as_scaling_policy` fix bug that missing required parameters error happened when update metric parameters.
-
 
 ## 1.53.3 (February 02, 2021)
 

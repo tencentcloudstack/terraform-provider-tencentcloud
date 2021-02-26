@@ -38,10 +38,13 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `clb_list` - A list of cloud load balancers. Each element contains the following attributes:
+  * `address_ip_version` - IP version, only applicable to open CLB. Valid values are `IPV4`, `IPV6` and `IPv6FullChain`.
   * `clb_id` - ID of CLB.
   * `clb_name` - Name of CLB.
   * `clb_vips` - The virtual service address table of the CLB.
   * `create_time` - Create time of the CLB.
+  * `internet_bandwidth_max_out` - Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
+  * `internet_charge_type` - Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
   * `network_type` - Types of CLB.
   * `project_id` - ID of the project.
   * `security_groups` - ID set of the security groups.
@@ -51,6 +54,7 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - The available tags within this CLB.
   * `target_region_info_region` - Region information of backend service are attached the CLB.
   * `target_region_info_vpc_id` - VpcId information of backend service are attached the CLB.
+  * `vip_isp` - Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
   * `vpc_id` - ID of the VPC.
 
 

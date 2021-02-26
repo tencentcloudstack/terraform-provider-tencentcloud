@@ -40,6 +40,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -565,6 +566,11 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 		if inErr != nil {
+			//ResourceNotFound.InstanceNotFoundError
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				return nil
+			}
 			return retryError(inErr)
 		}
 		return nil
@@ -583,6 +589,11 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
 			if inErr != nil {
+				//ResourceNotFound.InstanceNotFoundError
+				ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+				if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+					return nil
+				}
 				return retryError(inErr)
 			}
 			return nil
@@ -596,6 +607,11 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 		if inErr != nil {
+			//ResourceNotFound.InstanceNotFoundError
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				return nil
+			}
 			return retryError(inErr)
 		}
 		if has {

@@ -42,11 +42,11 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 The following arguments are supported:
 
 * `clb_id` - (Required) ID of CLB instance.
-* `domain` - (Required, ForceNew) Domain name of the listener rule.
+* `domain` - (Required) Domain name of the listener rule.
 * `listener_id` - (Required, ForceNew) ID of CLB listener.
-* `url` - (Required, ForceNew) Url of the listener rule.
-* `certificate_ca_id` - (Optional, ForceNew) ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.
-* `certificate_id` - (Optional, ForceNew) ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.
+* `url` - (Required) Url of the listener rule.
+* `certificate_ca_id` - (Optional) ID of the client certificate. NOTES: Only supports listeners of HTTPS protocol.
+* `certificate_id` - (Optional) ID of the server certificate. NOTES: Only supports listeners of HTTPS protocol.
 * `certificate_ssl_mode` - (Optional, ForceNew) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of HTTPS protocol.
 * `forward_type` - (Optional) Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is `3`. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is [2-10]. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
@@ -57,6 +57,7 @@ The following arguments are supported:
 * `health_check_interval_time` - (Optional) Interval time of health check. Valid value ranges: (5~300) sec. and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_check_switch` - (Optional) Indicates whether health check is enabled.
 * `health_check_unhealth_num` - (Optional) Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
+* `http2_switch` - (Optional) Indicate to apply HTTP2.0 protocol or not.
 * `scheduler` - (Optional) Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `session_expire_time` - (Optional) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `target_type` - (Optional, ForceNew) Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.
