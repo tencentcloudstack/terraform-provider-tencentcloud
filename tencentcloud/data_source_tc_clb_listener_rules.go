@@ -160,9 +160,13 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						},
 						"scheduler": {
 							Type:        schema.TypeString,
-							Optional:    true,
 							Computed:    true,
 							Description: "Scheduling method of the CLB listener, and available values include 'WRR', 'IP_HASH' and 'LEAST_CONN'. The default is 'WRR'. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+						},
+						"http2_switch": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicate to set HTTP2 protocol or not.",
 						},
 					},
 				},
@@ -228,11 +232,12 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 		mapping := map[string]interface{}{
 			"clb_id":              clbId,
 			"listener_id":         listenerId,
-			"rule_id":             *rule.LocationId,
-			"domain":              *rule.Domain,
-			"url":                 *rule.Url,
-			"session_expire_time": *rule.SessionExpireTime,
-			"scheduler":           *rule.Scheduler,
+			"rule_id":             rule.LocationId,
+			"domain":              rule.Domain,
+			"url":                 rule.Url,
+			"session_expire_time": rule.SessionExpireTime,
+			"scheduler":           rule.Scheduler,
+			"http2_switch":        rule.Http2,
 		}
 		if rule.HealthCheck != nil {
 			healthCheckSwitch := false

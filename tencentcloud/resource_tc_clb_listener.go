@@ -403,8 +403,8 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if certificateSetFlag {
 		request.Certificate = certificateInput
 	} else {
-		if protocol == CLB_LISTENER_PROTOCOL_HTTPS || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS/TCPSSL")
+		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
 		}
 	}
 	scheduler := ""
@@ -441,6 +441,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			vvv := int64(0)
 			if vv {
 				vvv = 1
+			} else {
+				if !certificateSetFlag {
+					return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS")
+				}
 			}
 			request.SniSwitch = &vvv
 		}

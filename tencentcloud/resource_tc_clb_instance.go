@@ -111,7 +111,25 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs.",
+				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.",
+			},
+			"address_ip_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.",
+			},
+			"internet_charge_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+			},
+			"internet_bandwidth_max_out": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
@@ -135,6 +153,11 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "The available tags within this CLB.",
+			},
+			"vip_isp": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
 			},
 		},
 	}
@@ -195,6 +218,40 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 		request.SubnetId = helper.String(v.(string))
 	}
+
+	//vip
+	if v, ok := d.GetOk("vip_isp"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip ISP setting")
+		}
+		request.VipIsp = helper.String(v.(string))
+	}
+
+	//ip version
+	if v, ok := d.GetOk("address_ip_version"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support IP version setting")
+		}
+		request.AddressIPVersion = helper.String(v.(string))
+	}
+
+	v, ok := d.GetOk("internet_charge_type")
+	bv, bok := d.GetOk("internet_bandwidth_max_out")
+
+	//internet charge type
+	if ok || bok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support internet charge type setting")
+		}
+		request.InternetAccessible = &clb.InternetAccessible{}
+		if ok {
+			request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+		}
+		if bok {
+			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
+		}
+	}
+
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -334,6 +391,16 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
+	if instance.VipIsp != nil {
+		_ = d.Set("vip_isp", instance.VipIsp)
+	}
+	if instance.AddressIPVersion != nil {
+		_ = d.Set("address_ip_version", instance.AddressIPVersion)
+	}
+	if instance.NetworkAttributes != nil {
+		_ = d.Set("internet_bandwidth_max_out", instance.NetworkAttributes.InternetMaxBandwidthOut)
+		_ = d.Set("internet_charge_type", instance.NetworkAttributes.InternetChargeType)
+	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -359,6 +426,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	clbId := d.Id()
 	clbName := ""
 	targetRegionInfo := clb.TargetRegionInfo{}
+	internet := clb.InternetAccessible{}
 	changed := false
 
 	if d.HasChange("clb_name") {
@@ -386,6 +454,21 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
+		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with internet setting", clbId)
+		}
+		changed = true
+		chargeType := d.Get("internet_charge_type").(string)
+		bandwidth := d.Get("internet_bandwidth_max_out").(int)
+		if chargeType != "" {
+			internet.InternetChargeType = &chargeType
+		}
+		if bandwidth > 0 {
+			internet.InternetMaxBandwidthOut = helper.IntInt64(bandwidth)
+		}
+	}
+
 	if changed {
 		request := clb.NewModifyLoadBalancerAttributesRequest()
 		request.LoadBalancerId = helper.String(clbId)
@@ -394,6 +477,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
 			request.TargetRegionInfo = &targetRegionInfo
+		}
+		if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
+			request.InternetChargeInfo = &internet
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
@@ -494,6 +580,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteLoadBalancerById(ctx, clbId)
 		if e != nil {

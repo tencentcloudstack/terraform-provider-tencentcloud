@@ -242,6 +242,12 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			},
 			Description: "Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.",
 		},
+		"labels": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Labels of tke attachment exits CVM.",
+		},
 		//compute
 		"security_groups": {
 			Type:        schema.TypeSet,
@@ -249,11 +255,10 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Computed:    true,
 			Description: "A list of security group IDs after attach to cluster.",
 		},
-		"labels": {
-			Type:        schema.TypeMap,
-			Optional:    true,
-			ForceNew:    true,
-			Description: "Labels of tke attachment exits CVM.",
+		"state": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "State of the node.",
 		},
 	}
 
@@ -372,26 +377,36 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
+	instanceState := ""
+	has = false
 	/*attachment has been  deleted*/
-	_, workers, err := tkeService.DescribeClusterInstances(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, workers, err = tkeService.DescribeClusterInstances(ctx, clusterId)
-			if err != nil {
-				return retryError(err, InternalError)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, workers, err := tkeService.DescribeClusterInstances(ctx, clusterId)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		for _, worker := range workers {
+			if worker.InstanceId == instanceId {
+				has = true
+				instanceState = worker.InstanceState
+				if worker.InstanceState == "failed" {
+					return resource.NonRetryableError(fmt.Errorf("cvm instance %s attach to cluster %s fail,reason:%s",
+						worker.InstanceId, clusterId, worker.FailedReason))
+				}
+
+				if worker.InstanceState != "running" {
+					return resource.RetryableError(fmt.Errorf("cvm instance  %s in tke status is %s, retry...",
+						worker.InstanceId, worker.InstanceState))
+				}
 			}
-			return nil
-		})
-	}
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		return err
-	}
-
-	has = false
-	for _, worker := range workers {
-		if worker.InstanceId == instanceId {
-			has = true
-		}
 	}
 
 	if !has {
@@ -404,6 +419,7 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
+	_ = d.Set("state", instanceState)
 	return nil
 }
 
