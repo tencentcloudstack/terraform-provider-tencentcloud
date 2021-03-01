@@ -1,4 +1,10 @@
-## 1.53.6 (Unreleased)
+## 1.53.7 (Unreleased)
+## 1.53.6 (March 01, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_node_pool` add `internet_max_bandwidth_out`, `public_ip_assigned` to support internet traffic setting.
+
 ## 1.53.5 (March 01, 2021)
 
 ENHANCEMENTS:
