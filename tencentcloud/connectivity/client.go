@@ -3,6 +3,8 @@ package connectivity
 import (
 	"fmt"
 
+	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
@@ -82,6 +84,7 @@ type TencentCloudClient struct {
 	vodConn            *vod.Client
 	apiGatewayConn     *apigateway.Client
 	sslCertificateConn *sslCertificate.Client
+	kmsConn            *kms.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -532,4 +535,16 @@ func (me *TencentCloudClient) UseSSLCertificateClient() *sslCertificate.Client {
 	me.sslCertificateConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sslCertificateConn
+}
+
+func (me *TencentCloudClient) UseKmsClient() *kms.Client {
+	if me.kmsConn != nil {
+		return me.kmsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.kmsConn, _ = kms.NewClient(me.Credential, me.Region, cpf)
+	me.kmsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.kmsConn
 }
