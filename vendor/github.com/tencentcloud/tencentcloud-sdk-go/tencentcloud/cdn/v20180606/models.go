@@ -164,6 +164,9 @@ type AddCdnDomainRequest struct {
 
 	// 离线缓存
 	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
+
+	// QUIC正在内测中，请先提交内测申请，详情请前往QUIC产品文档。
+	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 }
 
 func (r *AddCdnDomainRequest) ToJsonString() string {
@@ -425,9 +428,9 @@ type AdvancedCache struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCacheControl *string `json:"IgnoreCacheControl,omitempty" name:"IgnoreCacheControl"`
 
-	// 忽略源站的 Set-Cookie 头部
-	// on：开启
-	// off：关闭
+	// 当源站返回Set-Cookie头部时，节点是否缓存该头部及body
+	// on：开启，不缓存该头部及body
+	// off：关闭，遵循用户自定义的节点缓存规则
 	// 默认为关闭状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreSetCookie *string `json:"IgnoreSetCookie,omitempty" name:"IgnoreSetCookie"`
@@ -2611,9 +2614,15 @@ type DescribeReportDataRequest struct {
 	*tchttp.BaseRequest
 
 	// 查询起始时间：yyyy-MM-dd
+	// 当报表类型为daily，起始时间和结束时间必须为同一天
+	// 当报表类型为weekly，起始时间须为周一，结束时间须为同一周的周日
+	// 当报表类型为monthly，起始时间须为自然月第一天，即1号，结束时间须为该自然月最后一天
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
 	// 查询结束时间：yyyy-MM-dd
+	// 当报表类型为daily，起始时间和结束时间必须为同一天
+	// 当报表类型为weekly，起始时间须为周一，结束时间须为同一周的周日
+	// 当报表类型为monthly，起始时间须为自然月第一天，即1号，结束时间须为该自然月最后一天
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 报表类型
@@ -3147,6 +3156,14 @@ type DetailDomain struct {
 	// 合并回源
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginCombine *OriginCombine `json:"OriginCombine,omitempty" name:"OriginCombine"`
+
+	// POST上传配置项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PostMaxSize *PostSize `json:"PostMaxSize,omitempty" name:"PostMaxSize"`
+
+	// Quic配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 }
 
 type DiagnoseData struct {
@@ -3244,7 +3261,7 @@ type DiagnoseUnit struct {
 type DisableCachesRequest struct {
 	*tchttp.BaseRequest
 
-	// 需要禁用的 URL 列表
+	// 禁用的 URL 列表（分协议生效，必须包含http://或https://）
 	// 每次最多可提交 100 条，每日最多可提交 3000 条
 	Urls []*string `json:"Urls,omitempty" name:"Urls" list`
 }
@@ -4196,8 +4213,7 @@ type ListTopDataRequest struct {
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 排序对象，支持以下几种形式：
-	// url：访问 URL 排序，带参数统计，支持的 Filter 为 flux、request
-	// path：访问 URL 排序，不带参数统计，支持的 Filter 为 flux、request（白名单功能）
+	// url：访问 URL 排序（无参数的URL），支持的 Filter 为 flux、request
 	// district：省份、国家/地区排序，支持的 Filter 为 flux、request
 	// isp：运营商排序，支持的 Filter 为 flux、request
 	// host：域名访问数据排序，支持的 Filter 为：flux、request、bandwidth、fluxHitRate、2XX、3XX、4XX、5XX、statusCode
@@ -4780,6 +4796,17 @@ type PathRule struct {
 	RequestHeaders []*HttpHeaderRule `json:"RequestHeaders,omitempty" name:"RequestHeaders" list`
 }
 
+type PostSize struct {
+
+	// 是调整POST请求限制，平台默认为32MB。
+	// 关闭：off，
+	// 开启：on。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 最大限制，取值在1MB和200MB之间。
+	MaxSize *int64 `json:"MaxSize,omitempty" name:"MaxSize"`
+}
+
 type PurgePathCacheRequest struct {
 	*tchttp.BaseRequest
 
@@ -5006,6 +5033,12 @@ type QueryStringKey struct {
 	// 使用/排除的url参数数组，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type Quic struct {
+
+	// 是否启动Quic配置
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type Quota struct {
@@ -6173,6 +6206,9 @@ type UpdateDomainConfigRequest struct {
 
 	// 合并回源
 	OriginCombine *OriginCombine `json:"OriginCombine,omitempty" name:"OriginCombine"`
+
+	// QUIC正在内测中，请先提交内测申请，详情请前往QUIC产品文档。
+	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {
