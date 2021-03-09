@@ -498,7 +498,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:      TKE_CLUSTER_OS_TYPE_GENERAL,
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS_TYPES),
 			Description: "Image type of the cluster os, the available values include: '" + strings.Join(TKE_CLUSTER_OS_TYPES, "','") +
-				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL,
+				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL + "'.",
 		},
 		"container_runtime": {
 			Type:         schema.TypeString,
