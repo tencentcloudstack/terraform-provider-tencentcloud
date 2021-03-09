@@ -200,6 +200,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     }
 
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
@@ -252,6 +254,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     }
 
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
