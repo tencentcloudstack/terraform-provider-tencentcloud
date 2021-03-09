@@ -87,7 +87,7 @@ func resourceTencentCloudKmsExternalKey() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "The base64-encoded key material encrypted with the public_key.For regions using the national secret version, the length of the imported key material is required to be 128 bits, and for regions using the FIPS version, the length of the imported key material is required to be 256 bits。",
+				Description: "The base64-encoded key material encrypted with the public_key.For regions using the national secret version, the length of the imported key material is required to be 128 bits, and for regions using the FIPS version, the length of the imported key material is required to be 256 bits.",
 			},
 			"valid_to": {
 				Type:        schema.TypeInt,

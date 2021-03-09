@@ -502,6 +502,14 @@ VPN
     tencentcloud_vpn_customer_gateway
     tencentcloud_vpn_gateway
     tencentcloud_vpn_connection
+
+KMS
+  Data Source
+    tencentcloud_kms_key
+
+  Resource
+    tencentcloud_kms_key
+    tencentcloud_kms_external_key
 */
 package tencentcloud
 

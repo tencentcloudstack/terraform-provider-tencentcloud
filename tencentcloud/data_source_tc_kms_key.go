@@ -74,6 +74,11 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 				Optional:    true,
 				Description: "Tags to filter CMK.",
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
 			"key_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -133,7 +138,7 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 						"deletion_date": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Delete time of CMK.`1970-01-01T12:00:00Z` means it does not delete.",
+							Description: "Delete time of CMK.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
@@ -143,7 +148,7 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 						"valid_to": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Valid when Origin is EXTERNAL, it means the effective date of the key material.`1970-01-01T12:00:00Z` means it does not expire.",
+							Description: "Valid when Origin is EXTERNAL, it means the effective date of the key material.",
 						},
 					},
 				},
@@ -211,12 +216,20 @@ func dataSourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) 
 			"creator_uin":          key.CreatorUin,
 			"key_rotation_enabled": key.KeyRotationEnabled,
 			"owner":                key.Owner,
-			"deletion_date":        helper.FormatUnixTime(*key.DeletionDate),
 			"origin":               key.Origin,
-			"valid_to":             helper.FormatUnixTime(*key.ValidTo),
 		}
 		if *key.KeyRotationEnabled {
 			mapping["next_rotate_time"] = helper.FormatUnixTime(*key.NextRotateTime)
+		}
+		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
+			mapping["deletion_date"] = helper.FormatUnixTime(*key.DeletionDate)
+		}
+		if *key.Origin == KMS_ORIGIN_EXTERNAL {
+			if *key.ValidTo != 0 {
+				mapping["valid_to"] = helper.FormatUnixTime(*key.ValidTo)
+			} else {
+				mapping["valid_to"] = "never expire"
+			}
 		}
 		keyList = append(keyList, mapping)
 		ids = append(ids, *key.KeyId)

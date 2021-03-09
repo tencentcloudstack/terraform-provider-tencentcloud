@@ -22,7 +22,6 @@ KMS keys can be imported using the id, e.g.
 $ terraform import tencentcloud_kms_key.foo 287e8f40-7cbb-11eb-9a3a-5254004f7f94
 ```
 */
-
 package tencentcloud
 
 import (
@@ -77,7 +76,7 @@ func resourceTencentCloudKmsKey() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(KMS_KEY_USAGE),
-				Description:  "Usage of CMK.Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`.",
+				Description:  "Usage of CMK.Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`.Default value is `ENCRYPT_DECRYPT`.",
 			},
 			"key_rotation_enabled": {
 				Type:        schema.TypeBool,
