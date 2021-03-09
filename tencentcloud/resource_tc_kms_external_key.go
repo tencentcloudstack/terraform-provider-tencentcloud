@@ -320,6 +320,20 @@ func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta inter
 
 	keyId := d.Id()
 	pendingDeleteWindowInDays := d.Get("pending_delete_window_in_days").(int)
+	keyState := d.Get("key_state").(string)
+	if keyState == KMS_KEY_STATE_ENABLED {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := kmsService.DisableKey(ctx, keyId)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := kmsService.DeleteKey(ctx, keyId, uint64(pendingDeleteWindowInDays))
 		if e != nil {
