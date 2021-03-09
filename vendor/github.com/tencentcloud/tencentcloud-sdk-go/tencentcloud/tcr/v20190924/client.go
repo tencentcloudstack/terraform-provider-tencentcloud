@@ -93,6 +93,31 @@ func (c *Client) BatchDeleteRepositoryPersonal(request *BatchDeleteRepositoryPer
     return
 }
 
+func NewCheckInstanceNameRequest() (request *CheckInstanceNameRequest) {
+    request = &CheckInstanceNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CheckInstanceName")
+    return
+}
+
+func NewCheckInstanceNameResponse() (response *CheckInstanceNameResponse) {
+    response = &CheckInstanceNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 检查待创建的实例名称是否符合规范
+func (c *Client) CheckInstanceName(request *CheckInstanceNameRequest) (response *CheckInstanceNameResponse, err error) {
+    if request == nil {
+        request = NewCheckInstanceNameRequest()
+    }
+    response = NewCheckInstanceNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateApplicationTriggerPersonalRequest() (request *CreateApplicationTriggerPersonalRequest) {
     request = &CreateApplicationTriggerPersonalRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -189,6 +214,31 @@ func (c *Client) CreateInstanceToken(request *CreateInstanceTokenRequest) (respo
         request = NewCreateInstanceTokenRequest()
     }
     response = NewCreateInstanceTokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateInternalEndpointDnsRequest() (request *CreateInternalEndpointDnsRequest) {
+    request = &CreateInternalEndpointDnsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateInternalEndpointDns")
+    return
+}
+
+func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDnsResponse) {
+    response = &CreateInternalEndpointDnsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建tcr内网私有域名解析
+func (c *Client) CreateInternalEndpointDns(request *CreateInternalEndpointDnsRequest) (response *CreateInternalEndpointDnsResponse, err error) {
+    if request == nil {
+        request = NewCreateInternalEndpointDnsRequest()
+    }
+    response = NewCreateInternalEndpointDnsResponse()
     err = c.Send(request, response)
     return
 }
@@ -514,6 +564,31 @@ func (c *Client) DeleteInstanceToken(request *DeleteInstanceTokenRequest) (respo
         request = NewDeleteInstanceTokenRequest()
     }
     response = NewDeleteInstanceTokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteInternalEndpointDnsRequest() (request *DeleteInternalEndpointDnsRequest) {
+    request = &DeleteInternalEndpointDnsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteInternalEndpointDns")
+    return
+}
+
+func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDnsResponse) {
+    response = &DeleteInternalEndpointDnsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除tcr内网私有域名解析
+func (c *Client) DeleteInternalEndpointDns(request *DeleteInternalEndpointDnsRequest) (response *DeleteInternalEndpointDnsResponse, err error) {
+    if request == nil {
+        request = NewDeleteInternalEndpointDnsRequest()
+    }
+    response = NewDeleteInternalEndpointDnsResponse()
     err = c.Send(request, response)
     return
 }
@@ -939,6 +1014,31 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
         request = NewDescribeInstancesRequest()
     }
     response = NewDescribeInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInternalEndpointDnsStatusRequest() (request *DescribeInternalEndpointDnsStatusRequest) {
+    request = &DescribeInternalEndpointDnsStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInternalEndpointDnsStatus")
+    return
+}
+
+func NewDescribeInternalEndpointDnsStatusResponse() (response *DescribeInternalEndpointDnsStatusResponse) {
+    response = &DescribeInternalEndpointDnsStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 批量查询vpc是否已经添加私有域名解析
+func (c *Client) DescribeInternalEndpointDnsStatus(request *DescribeInternalEndpointDnsStatusRequest) (response *DescribeInternalEndpointDnsStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeInternalEndpointDnsStatusRequest()
+    }
+    response = NewDescribeInternalEndpointDnsStatusResponse()
     err = c.Send(request, response)
     return
 }

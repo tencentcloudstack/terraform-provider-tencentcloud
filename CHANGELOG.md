@@ -1,4 +1,10 @@
 ## 1.53.6 (Unreleased)
+
+ENHANCEMENTS:
+* Resource `tencentcloud_eip` support `internet_max_bandwidth_out` modification.
+* Resource `tencentcloud_kubernetes_cluster` add `hostname` to support node hostname setting.
+* Resource `tencentcloud_kubernetes_scale_worker` add `hostname` to support node hostname setting.
+
 ## 1.53.5 (March 01, 2021)
 
 ENHANCEMENTS:

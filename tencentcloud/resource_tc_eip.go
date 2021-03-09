@@ -87,7 +87,6 @@ func resourceTencentCloudEip() *schema.Resource {
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The bandwidth limit of EIP, unit is Mbps.",
 			},
 			"tags": {
@@ -271,6 +270,17 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		d.SetPartial("name")
 	}
 
+	if d.HasChange("internet_max_bandwidth_out") {
+		if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+			bandwidthOut := v.(int)
+			err := vpcService.ModifyEipBandwidthOut(ctx, eipId, bandwidthOut)
+			if err != nil {
+				return err
+			}
+			d.SetPartial("internet_max_bandwidth_out")
+		}
+	}
+
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -282,6 +292,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 		d.SetPartial("tags")
 	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudEipRead(d, meta)

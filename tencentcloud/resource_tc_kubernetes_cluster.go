@@ -459,6 +459,15 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "CAM role name authorized to access.",
 		},
+		"hostname": {
+			Type:     schema.TypeString,
+			ForceNew: true,
+			Optional: true,
+			Description: "The host name of the attached instance. " +
+				"Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. " +
+				"Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. " +
+				"Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).",
+		},
 	}
 }
 
@@ -1068,6 +1077,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		count = 1
 	}
 	request.InstanceCount = &count
+
+	if v, ok := dMap["hostname"]; ok {
+		request.HostName = helper.String(v.(string))
+	}
 
 	cvmJson = request.ToJsonString()
 
