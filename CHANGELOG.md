@@ -1,4 +1,5 @@
-## 1.53.6 (Unreleased)
+## 1.53.7 (Unreleased)
+## 1.53.6 (March 09, 2021)
 
 ENHANCEMENTS:
 * Resource `tencentcloud_eip` support `internet_max_bandwidth_out` modification.
