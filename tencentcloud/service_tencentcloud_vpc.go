@@ -1922,6 +1922,25 @@ func (me *VpcService) ModifyEipName(ctx context.Context, eipId, eipName string) 
 	return nil
 }
 
+func (me *VpcService) ModifyEipBandwidthOut(ctx context.Context, eipId string, bandwidthOut int) error {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyAddressesBandwidthRequest()
+	request.AddressIds = []*string{&eipId}
+	request.InternetMaxBandwidthOut = helper.IntInt64(bandwidthOut)
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ModifyAddressesBandwidth(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *VpcService) DeleteEip(ctx context.Context, eipId string) error {
 	logId := getLogId(ctx)
 	request := vpc.NewReleaseAddressesRequest()

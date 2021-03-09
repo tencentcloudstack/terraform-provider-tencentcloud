@@ -459,6 +459,15 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "CAM role name authorized to access.",
 		},
+		"hostname": {
+			Type:     schema.TypeString,
+			ForceNew: true,
+			Optional: true,
+			Description: "The host name of the attached instance. " +
+				"Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. " +
+				"Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. " +
+				"Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).",
+		},
 	}
 }
 
@@ -489,8 +498,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:      TKE_CLUSTER_OS_TYPE_GENERAL,
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS_TYPES),
 			Description: "Image type of the cluster os, the available values include: '" + strings.Join(TKE_CLUSTER_OS_TYPES, "','") +
-				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL + "'. 'DOCKER_CUSTOMIZE' means 'TKE-Optimized'. " +
-				"Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now.",
+				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL,
 		},
 		"container_runtime": {
 			Type:         schema.TypeString,
@@ -594,7 +602,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional: true,
 			Default:  "",
 			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
-				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.",
+				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
@@ -1068,6 +1076,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		count = 1
 	}
 	request.InstanceCount = &count
+
+	if v, ok := dMap["hostname"]; ok {
+		request.HostName = helper.String(v.(string))
+	}
 
 	cvmJson = request.ToJsonString()
 

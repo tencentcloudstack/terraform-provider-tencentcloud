@@ -374,6 +374,10 @@ type DataDisk struct {
 	// 云硬盘性能，单位：MB/s
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ThroughputPerformance *int64 `json:"ThroughputPerformance,omitempty" name:"ThroughputPerformance"`
+
+	// 所属的独享集群ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CdcId *string `json:"CdcId,omitempty" name:"CdcId"`
 }
 
 type DeleteDisasterRecoverGroupsRequest struct {
@@ -4049,6 +4053,9 @@ type SystemDisk struct {
 
 	// 系统盘大小，单位：GB。默认值为 50
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 所属的独享集群ID。
+	CdcId *string `json:"CdcId,omitempty" name:"CdcId"`
 }
 
 type Tag struct {
@@ -4160,6 +4167,8 @@ type ZoneInfo struct {
 	// <li> ap-beijing-3 </li>
 	// <li> ap-beijing-4 </li>
 	// <li> ap-beijing-5 </li>
+	// <li> ap-beijing-6 </li>
+	// <li> ap-beijing-7 </li>
 	// <li> na-siliconvalley-1 </li>
 	// <li> na-siliconvalley-2 </li>
 	// <li> eu-frankfurt-1 </li>

@@ -310,6 +310,18 @@ type ApiInfo struct {
 	// API已发布的环境信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Environments []*string `json:"Environments,omitempty" name:"Environments" list`
+
+	// 是否开启Base64编码，只有后端为scf时才会生效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsBase64Encoded *bool `json:"IsBase64Encoded,omitempty" name:"IsBase64Encoded"`
+
+	// 是否开启Base64编码的header触发，只有后端为scf时才会生效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsBase64Trigger *bool `json:"IsBase64Trigger,omitempty" name:"IsBase64Trigger"`
+
+	// Header触发规则，总规则数量不超过10。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Base64EncodedTriggerRules []*Base64EncodedTriggerRule `json:"Base64EncodedTriggerRules,omitempty" name:"Base64EncodedTriggerRules" list`
 }
 
 type ApiKey struct {
@@ -437,6 +449,51 @@ type ApisStatus struct {
 
 	// API 接口列表。
 	ApiIdStatusSet []*DesApisStatus `json:"ApiIdStatusSet,omitempty" name:"ApiIdStatusSet" list`
+}
+
+type AttachedApiInfo struct {
+
+	// API所在服务ID。
+	ServiceId *string `json:"ServiceId,omitempty" name:"ServiceId"`
+
+	// API所在服务名称。
+	ServiceName *string `json:"ServiceName,omitempty" name:"ServiceName"`
+
+	// API所在服务描述信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceDesc *string `json:"ServiceDesc,omitempty" name:"ServiceDesc"`
+
+	// API ID。
+	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
+
+	// API名称。
+	ApiName *string `json:"ApiName,omitempty" name:"ApiName"`
+
+	// API描述。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiDesc *string `json:"ApiDesc,omitempty" name:"ApiDesc"`
+
+	// 插件绑定API的环境。
+	Environment *string `json:"Environment,omitempty" name:"Environment"`
+
+	// 插件和API绑定时间。
+	AttachedTime *string `json:"AttachedTime,omitempty" name:"AttachedTime"`
+}
+
+type Base64EncodedTriggerRule struct {
+
+	// 进行编码触发的header，可选值 "Accept"和"Content_Type" 对应实际数据流请求header中的Accept和 Content-Type。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 进行编码触发的header的可选值数组, 数组元素的字符串最大长度为40，元素可以包括数字，英文字母以及特殊字符，特殊字符的可选值为： `.`    `+`    `*`   `-`   `/`  `_` 
+	// 
+	// 例如 [
+	//     "application/x-vpeg005",
+	//     "application/xhtml+xml",
+	//     "application/vnd.ms-project",
+	//     "application/vnd.rn-rn_music_package"
+	// ] 等都是合法的。
+	Value []*string `json:"Value,omitempty" name:"Value" list`
 }
 
 type BindEnvironmentRequest struct {
@@ -838,6 +895,9 @@ type CreateApiRequest struct {
 
 	// 用户类型。
 	UserType *string `json:"UserType,omitempty" name:"UserType"`
+
+	// 是否打开Base64编码，只有后端是scf时才会生效。
+	IsBase64Encoded *bool `json:"IsBase64Encoded,omitempty" name:"IsBase64Encoded"`
 }
 
 func (r *CreateApiRequest) ToJsonString() string {
@@ -902,7 +962,7 @@ type CreateIPStrategyRequest struct {
 	// 策略类型。支持WHITE（白名单）和BLACK（黑名单）。
 	StrategyType *string `json:"StrategyType,omitempty" name:"StrategyType"`
 
-	// 策略详情。
+	// 策略详情，多个ip 使用\n 分隔符分开。
 	StrategyData *string `json:"StrategyData,omitempty" name:"StrategyData"`
 }
 
@@ -1937,6 +1997,58 @@ func (r *DescribeLogSearchResponse) ToJsonString() string {
 }
 
 func (r *DescribeLogSearchResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePluginsRequest struct {
+	*tchttp.BaseRequest
+
+	// 要查询的插件列表。
+	PluginIds []*string `json:"PluginIds,omitempty" name:"PluginIds" list`
+
+	// 要查询的插件名称。
+	PluginName *string `json:"PluginName,omitempty" name:"PluginName"`
+
+	// 要查询的插件类型。
+	PluginType *string `json:"PluginType,omitempty" name:"PluginType"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 过滤条件。预留字段，目前不支持过滤。
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
+}
+
+func (r *DescribePluginsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePluginsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePluginsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 插件详情。
+		Result *PluginSummary `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribePluginsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePluginsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3147,6 +3259,15 @@ type ModifyApiRequest struct {
 
 	// 用户自定义错误码配置。
 	ResponseErrorCodes []*ResponseErrorCodeReq `json:"ResponseErrorCodes,omitempty" name:"ResponseErrorCodes" list`
+
+	// 是否开启Base64编码，只有后端为scf时才会生效。
+	IsBase64Encoded *bool `json:"IsBase64Encoded,omitempty" name:"IsBase64Encoded"`
+
+	// 是否开启Base64编码的header触发，只有后端为scf时才会生效。
+	IsBase64Trigger *bool `json:"IsBase64Trigger,omitempty" name:"IsBase64Trigger"`
+
+	// Header触发规则，总规则数不能超过10。
+	Base64EncodedTriggerRules []*Base64EncodedTriggerRule `json:"Base64EncodedTriggerRules,omitempty" name:"Base64EncodedTriggerRules" list`
 }
 
 func (r *ModifyApiRequest) ToJsonString() string {
@@ -3437,6 +3558,48 @@ type PathMapping struct {
 
 	// 发布环境，可选值为“test”、 ”prepub“、”release“。
 	Environment *string `json:"Environment,omitempty" name:"Environment"`
+}
+
+type Plugin struct {
+
+	// 插件ID。
+	PluginId *string `json:"PluginId,omitempty" name:"PluginId"`
+
+	// 插件名称。
+	PluginName *string `json:"PluginName,omitempty" name:"PluginName"`
+
+	// 插件类型。
+	PluginType *string `json:"PluginType,omitempty" name:"PluginType"`
+
+	// 插件定义语句。
+	PluginData *string `json:"PluginData,omitempty" name:"PluginData"`
+
+	// 插件描述。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 插件创建时间。按照 ISO8601 标准表示，并且使用 UTC 时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 插件修改时间。按照 ISO8601 标准表示，并且使用 UTC 时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+	ModifiedTime *string `json:"ModifiedTime,omitempty" name:"ModifiedTime"`
+
+	// 插件绑定的API总数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AttachedApiTotalCount *int64 `json:"AttachedApiTotalCount,omitempty" name:"AttachedApiTotalCount"`
+
+	// 插件绑定的API信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AttachedApis []*AttachedApiInfo `json:"AttachedApis,omitempty" name:"AttachedApis" list`
+}
+
+type PluginSummary struct {
+
+	// 插件个数。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 插件详情。
+	PluginSet []*Plugin `json:"PluginSet,omitempty" name:"PluginSet" list`
 }
 
 type ReleaseService struct {

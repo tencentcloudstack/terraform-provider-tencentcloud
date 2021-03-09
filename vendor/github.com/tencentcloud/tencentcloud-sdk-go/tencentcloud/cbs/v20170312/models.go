@@ -851,10 +851,10 @@ func (r *DescribeSnapshotsResponse) FromJsonString(s string) error {
 type DetachDisksRequest struct {
 	*tchttp.BaseRequest
 
-	// 将要解挂的云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询，单次请求最多可解挂10块弹性云盘。
+	// 将要卸载的云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询，单次请求最多可卸载10块弹性云盘。
 	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds" list`
 
-	// 对于非共享型云盘，会忽略该参数；对于共享型云盘，该参数表示要从哪个CVM实例上解挂云盘。
+	// 对于非共享型云盘，会忽略该参数；对于共享型云盘，该参数表示要从哪个CVM实例上卸载云盘。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -994,7 +994,7 @@ type Disk struct {
 	// 云盘拥有的快照总容量，单位为MB。
 	SnapshotSize *uint64 `json:"SnapshotSize,omitempty" name:"SnapshotSize"`
 
-	// 云盘因欠费销毁或者期销毁时， 是否使用快照备份数据的标识。True， 销毁时创建快照进行数据备份。False 表示直接销毁，不进行数据备份。
+	// 云硬盘因欠费销毁或者到期销毁时， 是否使用快照备份数据的标识。true表示销毁时创建快照进行数据备份。false表示直接销毁，不进行数据备份。
 	BackupDisk *bool `json:"BackupDisk,omitempty" name:"BackupDisk"`
 
 	// 云硬盘额外性能值，单位MB/s。
@@ -1649,20 +1649,24 @@ type Policy struct {
 type PrepayPrice struct {
 
 	// 预付费云盘或快照预支费用的原价，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginalPrice *float64 `json:"OriginalPrice,omitempty" name:"OriginalPrice"`
 
 	// 预付费云盘或快照预支费用的折扣价，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiscountPrice *float64 `json:"DiscountPrice,omitempty" name:"DiscountPrice"`
 
 	// 高精度预付费云盘或快照预支费用的原价，单位：元
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginalPriceHigh *string `json:"OriginalPriceHigh,omitempty" name:"OriginalPriceHigh"`
 
 	// 高精度预付费云盘或快照预支费用的折扣价，单位：元
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiscountPriceHigh *string `json:"DiscountPriceHigh,omitempty" name:"DiscountPriceHigh"`
 
 	// 后付费云盘原单价，单位：元。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnitPrice *string `json:"UnitPrice,omitempty" name:"UnitPrice"`
+	UnitPrice *float64 `json:"UnitPrice,omitempty" name:"UnitPrice"`
 
 	// 后付费云盘的计价单元，取值范围：<br><li>HOUR：表示后付费云盘的计价单元是按小时计算。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -1670,7 +1674,7 @@ type PrepayPrice struct {
 
 	// 后付费云盘折扣单价，单位：元。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnitPriceDiscount *string `json:"UnitPriceDiscount,omitempty" name:"UnitPriceDiscount"`
+	UnitPriceDiscount *float64 `json:"UnitPriceDiscount,omitempty" name:"UnitPriceDiscount"`
 
 	// 高精度后付费云盘原单价, 单位：元
 	// 注意：此字段可能返回 null，表示取不到有效值。

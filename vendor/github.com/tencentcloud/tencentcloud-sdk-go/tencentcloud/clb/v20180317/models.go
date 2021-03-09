@@ -706,6 +706,9 @@ type CreateListenerRequest struct {
 
 	// 是否开启长连接，此参数仅适用于HTTP/HTTPS监听器，0:关闭；1:开启， 默认关闭
 	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
+
+	// 创建端口段监听器时必须传入此参数，用以标识结束端口。同时，入参Ports只允许传入一个成员，用以标识开始端口。【如果您需要体验端口段功能，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)】。
+	EndPort *uint64 `json:"EndPort,omitempty" name:"EndPort"`
 }
 
 func (r *CreateListenerRequest) ToJsonString() string {
@@ -2040,7 +2043,7 @@ type DescribeLoadBalancersRequest struct {
 	// <li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li>
 	// <li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li>
 	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li>
-	// <li> tag-value - String - 是否必填：否 - （过滤条件）按照 CLB 标签的值过滤。</li>
+	// <li> tag:tag-key - String - 是否必填：否 - （过滤条件）按照CLB标签键值对进行过滤，tag-key使用具体的标签键进行替换。</li>
 	// <li> function-name - String - 是否必填：否 - （过滤条件）按照 CLB 后端绑定的SCF云函数的函数名称过滤。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
 }
@@ -2642,9 +2645,13 @@ type Listener struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SessionType *string `json:"SessionType,omitempty" name:"SessionType"`
 
-	// 是否开启长连接（本参数仅对于HTTP/HTTPS监听器有意义）
+	// 是否开启长连接，1开启，0关闭，（本参数仅对于HTTP/HTTPS监听器有意义）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
+
+	// 仅支持Nat64 CLB TCP监听器
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Toa *bool `json:"Toa,omitempty" name:"Toa"`
 }
 
 type ListenerBackend struct {
@@ -2881,6 +2888,10 @@ type LoadBalancer struct {
 	// 私有网络内网负载均衡，就近接入模式下规则所落在的可用区
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Zones []*string `json:"Zones,omitempty" name:"Zones" list`
+
+	// CLB是否为NFV，空：不是，l7nfv：七层是NFV。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NfvInfo *string `json:"NfvInfo,omitempty" name:"NfvInfo"`
 }
 
 type LoadBalancerDetail struct {
@@ -3004,6 +3015,14 @@ type LoadBalancerDetail struct {
 	// 0：表示未被隔离，1：表示被隔离。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Isolation *uint64 `json:"Isolation,omitempty" name:"Isolation"`
+
+	// 负载均衡绑定的安全组列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup" list`
+
+	// 负载均衡安全组上移特性是否开启标识。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LoadBalancerPassToTarget *uint64 `json:"LoadBalancerPassToTarget,omitempty" name:"LoadBalancerPassToTarget"`
 }
 
 type LoadBalancerHealth struct {
