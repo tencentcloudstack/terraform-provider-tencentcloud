@@ -498,8 +498,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:      TKE_CLUSTER_OS_TYPE_GENERAL,
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS_TYPES),
 			Description: "Image type of the cluster os, the available values include: '" + strings.Join(TKE_CLUSTER_OS_TYPES, "','") +
-				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL + "'. 'DOCKER_CUSTOMIZE' means 'TKE-Optimized'. " +
-				"Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now.",
+				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL + ".",
 		},
 		"container_runtime": {
 			Type:         schema.TypeString,
@@ -603,7 +602,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional: true,
 			Default:  "",
 			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
-				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.",
+				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,

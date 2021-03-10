@@ -60,6 +60,8 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     }
 
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
@@ -169,6 +171,19 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
 			Description:  "Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+		},
+		"internet_max_bandwidth_out": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "Max bandwidth of Internet access in Mbps. Default is `0`.",
+		},
+		"public_ip_assigned": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Specify whether to assign an Internet IP address.",
 		},
 		"password": {
 			Type:          schema.TypeString,
@@ -473,6 +488,13 @@ func comosedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, met
 	request.InternetAccessible = &as.InternetAccessible{}
 	if v, ok := dMap["internet_charge_type"]; ok {
 		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+	}
+	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))
+	}
+	if v, ok := dMap["public_ip_assigned"]; ok {
+		publicIpAssigned := v.(bool)
+		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
 	}
 
 	request.LoginSettings = &as.LoginSettings{}
