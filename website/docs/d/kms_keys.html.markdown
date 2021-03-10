@@ -16,7 +16,7 @@ Use this data source to query detailed information of KMS key
 ```hcl
 data "tencentcloud_kms_keys" "foo" {
   search_key_alias = "test"
-  key_state        = "All"
+  key_state        = 0
   origin           = "TENCENT_KMS"
   key_usage        = "ALL"
 }
