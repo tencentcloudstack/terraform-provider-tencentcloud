@@ -56,7 +56,7 @@ const (
 	TKE_CLUSTER_OS_TYPE_GENERAL          = "GENERAL"
 )
 
-var TKE_CLUSTER_OS_TYPES = []string{ TKE_CLUSTER_OS_TYPE_GENERAL}
+var TKE_CLUSTER_OS_TYPES = []string{TKE_CLUSTER_OS_TYPE_GENERAL}
 
 const (
 	TkeInternetStatusCreating      = "Creating"

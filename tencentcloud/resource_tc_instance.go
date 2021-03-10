@@ -276,11 +276,10 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
-							Type:         schema.TypeInt,
-							Required:     true,
-							ForceNew:     true,
-							ValidateFunc: validateIntegerInRange(10, 16000),
-							Description:  "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
+							Type:        schema.TypeInt,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
 						"data_disk_snapshot_id": {
 							Type:        schema.TypeString,
