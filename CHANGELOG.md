@@ -1,15 +1,9 @@
-## 1.53.8 (Unreleased)
-
-ENHANCEMENTS:
-
-* Resource `tencentcloud_instance` remove limit of `data_disk_size`.
-
-
-## 1.53.7 (March 09, 2021)
+## 1.53.7 (Unreleased)
 
 ENHANCEMENTS:
 
 * Resource `tencentcloud_kubernetes_node_pool` add `internet_max_bandwidth_out`, `public_ip_assigned` to support internet traffic setting.
+* Resource `tencentcloud_instance` remove limit of `data_disk_size`.
 
 ## 1.53.6 (March 09, 2021)
 
