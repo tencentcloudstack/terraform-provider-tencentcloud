@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -71,7 +70,7 @@ func TestAccKmsKey_basic(t *testing.T) {
 				Config: testAccKmsKey_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "key_state", "Enabled"),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "key_rotation_enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "key_usage", "ENCRYPT_DECRYPT"),
 					resource.TestCheckResourceAttr(resourceName, "tags.test-tag", "unit-test"),
@@ -81,7 +80,7 @@ func TestAccKmsKey_basic(t *testing.T) {
 				Config: testAccKmsKey_disabled(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "key_state", "Disabled"),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "key_rotation_enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "key_usage", "ENCRYPT_DECRYPT"),
 				),
@@ -90,7 +89,7 @@ func TestAccKmsKey_basic(t *testing.T) {
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"pending_delete_window_in_days"},
+				ImportStateVerifyIgnore: []string{"pending_delete_window_in_days", "is_enabled", "is_archived"},
 			},
 		},
 	})
@@ -109,7 +108,7 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 				Config: testAccKmsKey_asymmetric(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "key_state", "Disabled"),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "key_usage", "ASYMMETRIC_DECRYPT_RSA_2048"),
 				),
 			},
@@ -173,6 +172,7 @@ resource "tencentcloud_kms_key" "test" {
 	alias = %[1]q
 	description = %[1]q
   	key_rotation_enabled = true
+
 	tags = {
     "test-tag" = "unit-test"
   }
@@ -186,7 +186,7 @@ resource "tencentcloud_kms_key" "test" {
 	alias = %[1]q
 	description = %[1]q
 	key_usage = "ASYMMETRIC_DECRYPT_RSA_2048"
-  	key_state = "Disabled"
+  	is_enabled = false
 }
 `, rName)
 }
@@ -196,11 +196,12 @@ func testAccKmsKey_disabled(rName string) string {
 resource "tencentcloud_kms_key" "test" {
  	alias = %[1]q
 	description = %[1]q
+	key_rotation_enabled = false
+  	is_enabled = false
+
 	tags = {
     "test-tag" = "unit-test"
   	}
-  	key_rotation_enabled = false
-  	key_state = "Disabled"
 }
 `, rName)
 }

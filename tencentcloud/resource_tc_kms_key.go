@@ -8,6 +8,7 @@ resource "tencentcloud_kms_key" "foo" {
 	alias = "test"
 	description = "describe key test message."
 	key_rotation_enabled = true
+
 	tags = {
 		"test-tag":"key-test"
 	}
@@ -26,7 +27,7 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -35,7 +36,66 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+func TencentKmsBasicInfo() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"alias": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of CMK. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of CMK. The maximum is 1024 bytes.",
+		},
+		"is_enabled": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "Specify whether to enable key. Default value is `true`.",
+		},
+		"is_archived": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Specify whether to archive key. Default value is `false`.",
+		},
+		"pending_delete_window_in_days": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Default:     7,
+			Description: "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.",
+		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Tags of CMK.",
+		},
+	}
+}
+
 func resourceTencentCloudKmsKey() *schema.Resource {
+	specialInfo := map[string]*schema.Schema{
+		"key_usage": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     KMS_KEY_USAGE_ENCRYPT_DECRYPT,
+			Description: "Usage of CMK. Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`. Default value is `ENCRYPT_DECRYPT`.",
+		},
+		"key_rotation_enabled": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Specify whether to enable key rotation, valid when key_usage is `ENCRYPT_DECRYPT`. Default value is `false`.",
+		},
+	}
+
+	basic := TencentKmsBasicInfo()
+	for k, v := range basic {
+		specialInfo[k] = v
+	}
+
 	return &schema.Resource{
 		Create: resourceTencentCloudKmsKeyCreate,
 		Read:   resourceTencentCloudKmsKeyRead,
@@ -45,59 +105,7 @@ func resourceTencentCloudKmsKey() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"key_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "ID of CMK.",
-			},
-			"alias": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of CMK.The name can only contain English letters, numbers, underscore and hyphen '-'.The first character must be a letter or number.",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Description of CMK.The maximum is 1024 bytes.",
-			},
-			"key_state": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue([]string{KMS_KEY_STATE_ENABLED, KMS_KEY_STATE_DISABLED, KMS_KEY_STATE_PENDINGDELETE, KMS_KEY_STATE_ARCHIVED}),
-				Computed:     true,
-				Description:  "State of CMK.Available values include `Enabled`, `Disabled`, `PendingDelete`, `Archived`.",
-			},
-			"key_usage": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validateAllowedStringValue(KMS_KEY_USAGE),
-				Description:  "Usage of CMK.Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`.Default value is `ENCRYPT_DECRYPT`.",
-			},
-			"key_rotation_enabled": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Computed:    true,
-				Description: "Specify whether to enable key rotation.",
-			},
-			"pending_delete_window_in_days": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      7,
-				ValidateFunc: validateIntegerInRange(7, 30),
-				Description:  "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.",
-			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Computed:    true,
-				Description: "Tags of CMK.",
-			},
-		},
+		Schema: specialInfo,
 	}
 }
 
@@ -135,7 +143,20 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		return outErr
 	}
 	d.SetId(keyId)
-	_ = d.Set("key_id", helper.String(keyId))
+
+	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := kmsService.DisableKey(ctx, d.Id())
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 
 	if keyRotationEnabled := d.Get("key_rotation_enabled").(bool); keyRotationEnabled {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -151,16 +172,16 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	if keyState := d.Get("key_state").(string); keyState == KMS_KEY_STATE_DISABLED {
+	if isArchived := d.Get("is_archived").(bool); isArchived {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.DisableKey(ctx, d.Id())
+			e := kmsService.ArchiveKey(ctx, d.Id())
 			if e != nil {
 				return retryError(e)
 			}
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
 		}
 	}
@@ -212,10 +233,8 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 		return nil
 	}
 
-	_ = d.Set("key_id", key.KeyId)
 	_ = d.Set("alias", key.Alias)
 	_ = d.Set("description", key.Description)
-	_ = d.Set("key_state", key.KeyState)
 	_ = d.Set("key_usage", key.KeyUsage)
 	_ = d.Set("key_rotation_enabled", key.KeyRotationEnabled)
 
@@ -238,6 +257,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 	kmsService := KmsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	d.Partial(true)
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
@@ -252,6 +272,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			log.Printf("[CRITAL]%s modify KMS key description failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("description")
 	}
 
 	if d.HasChange("alias") {
@@ -267,25 +288,37 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			log.Printf("[CRITAL]%s modify KMS key alias failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("alias")
 	}
 
-	if d.HasChange("key_state") {
-		oldKeyState, newKeyState := d.GetChange("key_state")
-		err := updateKeyState(ctx, kmsService, keyId, oldKeyState.(string), newKeyState.(string))
+	if d.HasChange("is_enabled") {
+		isEnabled := d.Get("is_enabled").(bool)
+		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
 		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("is_enabled")
 	}
 
-	keyState := d.Get("key_state")
-	if d.HasChange("key_rotation_enabled") && (keyState == KMS_KEY_STATE_ENABLED || keyState == KMS_KEY_STATE_DISABLED) {
+	if d.HasChange("is_archived") {
+		isArchived := d.Get("is_archived").(bool)
+		err := updateIsArchived(ctx, kmsService, keyId, isArchived)
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+		d.SetPartial("is_archived")
+	}
+
+	if d.HasChange("key_rotation_enabled") {
 		keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
 		err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled)
 		if err != nil {
 			log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("key_rotation_enabled")
 	}
 
 	if d.HasChange("tags") {
@@ -302,7 +335,10 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+		d.SetPartial("tags")
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudKmsKeyRead(d, meta)
 }
@@ -318,8 +354,8 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 
 	keyId := d.Id()
 	pendingDeleteWindowInDays := d.Get("pending_delete_window_in_days").(int)
-	keyState := d.Get("key_state").(string)
-	if keyState == KMS_KEY_STATE_ENABLED {
+	isEnabled := d.Get("is_enabled").(bool)
+	if isEnabled {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, keyId)
 			if e != nil {
@@ -344,7 +380,16 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	return resourceTencentCloudKmsKeyRead(d, meta)
+	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		key, e := kmsService.DescribeKeyById(ctx, keyId)
+		if e != nil {
+			return retryError(e)
+		}
+		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("delete fail"))
+	})
 }
 
 func updateKeyRotationStatus(ctx context.Context, kmsService KmsService, keyId string, keyRotationEnabled bool) error {
@@ -369,60 +414,18 @@ func updateKeyRotationStatus(ctx context.Context, kmsService KmsService, keyId s
 	return err
 }
 
-func updateKeyState(ctx context.Context, kmsService KmsService, keyId, oldKeyState, newKeyState string) error {
-	if newKeyState != KMS_KEY_STATE_ENABLED && newKeyState != KMS_KEY_STATE_DISABLED && newKeyState != KMS_KEY_STATE_ARCHIVED {
-		return errors.New("key_state only support to be set as `Enabled`, `Disabled` and `Archived`")
-	}
+func updateIsEnabled(ctx context.Context, kmsService KmsService, keyId string, isEnabled bool) error {
 	var err error
-	if oldKeyState == KMS_KEY_STATE_ARCHIVED {
-		err = handleArchivedState(ctx, kmsService, keyId, newKeyState)
-	} else if oldKeyState == KMS_KEY_STATE_PENDINGDELETE {
-		err = handlePendingDeleteState(ctx, kmsService, keyId, newKeyState)
+	if isEnabled {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := kmsService.EnableKey(ctx, keyId)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 	} else {
-		if oldKeyState != KMS_KEY_STATE_ENABLED && newKeyState == KMS_KEY_STATE_ENABLED {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				e := kmsService.EnableKey(ctx, keyId)
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-		} else if oldKeyState != KMS_KEY_STATE_DISABLED && newKeyState == KMS_KEY_STATE_DISABLED {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				e := kmsService.DisableKey(ctx, keyId)
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-
-		} else if oldKeyState != KMS_KEY_STATE_ARCHIVED && newKeyState == KMS_KEY_STATE_ARCHIVED {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				e := kmsService.ArchiveKey(ctx, keyId)
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-		}
-
-	}
-	return err
-}
-
-func handleArchivedState(ctx context.Context, kmsService KmsService, keyId, newKeyState string) error {
-	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := kmsService.CancelKeyArchive(ctx, keyId)
-		if e != nil {
-			return retryError(e)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	if newKeyState == KMS_KEY_STATE_DISABLED {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, keyId)
 			if e != nil {
@@ -434,29 +437,19 @@ func handleArchivedState(ctx context.Context, kmsService KmsService, keyId, newK
 	return err
 }
 
-func handlePendingDeleteState(ctx context.Context, kmsService KmsService, keyId, newKeyState string) error {
+func updateIsArchived(ctx context.Context, kmsService KmsService, keyId string, isArchived bool) error {
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := kmsService.CancelKeyDeletion(ctx, keyId)
-		if e != nil {
-			return retryError(e)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	if newKeyState == KMS_KEY_STATE_ENABLED {
+	if isArchived {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.EnableKey(ctx, keyId)
+			e := kmsService.ArchiveKey(ctx, keyId)
 			if e != nil {
 				return retryError(e)
 			}
 			return nil
 		})
-	} else if newKeyState == KMS_KEY_STATE_ARCHIVED {
+	} else {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.ArchiveKey(ctx, keyId)
+			e := kmsService.CancelKeyArchive(ctx, keyId)
 			if e != nil {
 				return retryError(e)
 			}

@@ -4,7 +4,7 @@ Use this data source to query detailed information of KMS key
 Example Usage
 
 ```hcl
-data "tencentcloud_kms_key" "foo" {
+data "tencentcloud_kms_keys" "foo" {
 	search_key_alias = "test"
 	key_state = "All"
 	origin = "TENCENT_KMS"
@@ -18,56 +18,50 @@ import (
 	"context"
 	"log"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsKey() *schema.Resource {
+func dataSourceTencentCloudKmsKeys() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudKmsKeyRead,
+		Read: dataSourceTencentCloudKmsKeysRead,
 		Schema: map[string]*schema.Schema{
 			"role": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Default:      0,
-				Description:  "Role of the CMK creator.`0` - created by user, `1` - created by cloud product.Default value is `0`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Filter by role of the CMK creator. `0` - created by user, `1` - created by cloud product. Default value is `0`.",
 			},
 			"order_type": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Default:      0,
-				Description:  "Order to sort the CMK create time.`0` - desc, `1` - asc.Default value is `0`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Order to sort the CMK create time. `0` - desc, `1` - asc. Default value is `0`.",
 			},
 			"key_state": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(KMS_KEY_STATE_FILTER),
-				Default:      KMS_KEY_STATE_ALL,
-				Description:  "State of CMK.Available values include `All`, `Enabled`, `Disabled`, `PendingDelete`, `PendingImport`, `Archived`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Filter by state of CMK. `0` - all CMKs are queried, `1` - only Enabled CMKs are queried, `2` - only Disabled CMKs are queried, `3` - only PendingDelete CMKs are queried, `4` - only PendingImport CMKs are queried, `5` - only Archived CMKs are queried.",
 			},
 			"search_key_alias": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Words used to match the results,and the words can be: key_id and alias.",
+				Description: "Words used to match the results, and the words can be: key_id and alias.",
 			},
 			"origin": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(KMS_ORIGIN_FILTER),
-				Default:      KMS_ORIGIN_ALL,
-				Description:  "Origin of CMK.`TENCENT_KMS` - CMK created by KMS, `EXTERNAL` - CMK imported by user, `ALL` - All CMK.Default value is `ALL`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     KMS_ORIGIN_ALL,
+				Description: "Filter by origin of CMK. `TENCENT_KMS` - CMK created by KMS, `EXTERNAL` - CMK imported by user, `ALL` - all CMKs. Default value is `ALL`.",
 			},
 			"key_usage": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(KMS_KEY_USAGE_FILTER),
-				Default:      KMS_KEY_USAGE_ENCRYPT_DECRYPT,
-				Description:  "Usage of CMK.Available values include `ALL`, `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`.Default value is `ENCRYPT_DECRYPT`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     KMS_KEY_USAGE_ENCRYPT_DECRYPT,
+				Description: "Filter by usage of CMK. Available values include `ALL`, `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`. Default value is `ENCRYPT_DECRYPT`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -96,7 +90,7 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 							Description: "Name of CMK.",
 						},
 						"create_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Create time of CMK.",
 						},
@@ -108,12 +102,12 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 						"key_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "State of CMK.Available values include `Enabled`, `Disabled`, `PendingDelete`, `PendingImport`, `Archived`.",
+							Description: "State of CMK.",
 						},
 						"key_usage": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Usage of CMK.Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`.",
+							Description: "Usage of CMK.",
 						},
 						"creator_uin": {
 							Type:        schema.TypeInt,
@@ -131,24 +125,24 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 							Description: "Creator of CMK.",
 						},
 						"next_rotate_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Next rotate time of CMK when key_rotation_enabled is true.",
 						},
 						"deletion_date": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Delete time of CMK.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Origin of CMK.`TENCENT_KMS` - CMK created by KMS, `EXTERNAL` - CMK imported by user.",
+							Description: "Origin of CMK. `TENCENT_KMS` - CMK created by KMS, `EXTERNAL` - CMK imported by user.",
 						},
 						"valid_to": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Valid when Origin is EXTERNAL, it means the effective date of the key material.",
+							Description: "Valid when origin is `EXTERNAL`, it means the effective date of the key material.",
 						},
 					},
 				},
@@ -157,8 +151,8 @@ func dataSourceTencentCloudKmsKey() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_key.read")()
+func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_kms_keys.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -171,8 +165,8 @@ func dataSourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) 
 		param["order_type"] = v.(int)
 	}
 	if v, ok := d.GetOk("key_state"); ok {
-		keyState := v.(string)
-		param["key_state"] = KMS_KEY_STATE_MAP[keyState]
+		keyState := v.(int)
+		param["key_state"] = uint64(keyState)
 	}
 	if v, ok := d.GetOk("search_key_alias"); ok {
 		param["search_key_alias"] = v.(string)
@@ -209,28 +203,19 @@ func dataSourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) 
 		mapping := map[string]interface{}{
 			"key_id":               key.KeyId,
 			"alias":                key.Alias,
-			"create_time":          helper.FormatUnixTime(*key.CreateTime),
+			"create_time":          key.CreateTime,
 			"description":          key.Description,
 			"key_state":            key.KeyState,
 			"key_usage":            key.KeyUsage,
 			"creator_uin":          key.CreatorUin,
 			"key_rotation_enabled": key.KeyRotationEnabled,
 			"owner":                key.Owner,
+			"next_rotate_time":     key.NextRotateTime,
+			"deletion_date":        key.DeletionDate,
 			"origin":               key.Origin,
+			"valid_to":             key.ValidTo,
 		}
-		if *key.KeyRotationEnabled {
-			mapping["next_rotate_time"] = helper.FormatUnixTime(*key.NextRotateTime)
-		}
-		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
-			mapping["deletion_date"] = helper.FormatUnixTime(*key.DeletionDate)
-		}
-		if *key.Origin == KMS_ORIGIN_EXTERNAL {
-			if *key.ValidTo != 0 {
-				mapping["valid_to"] = helper.FormatUnixTime(*key.ValidTo)
-			} else {
-				mapping["valid_to"] = "never expire"
-			}
-		}
+
 		keyList = append(keyList, mapping)
 		ids = append(ids, *key.KeyId)
 	}
@@ -239,6 +224,9 @@ func dataSourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) 
 	if e := d.Set("key_list", keyList); e != nil {
 		log.Printf("[CRITAL]%s provider set KMS key list fail, reason:%+v", logId, e)
 		return e
+	}
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		return writeToFile(output.(string), keyList)
 	}
 	return nil
 }

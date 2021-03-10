@@ -298,6 +298,14 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
 
+KMS
+  Data Source
+    tencentcloud_kms_keys
+
+  Resource
+    tencentcloud_kms_key
+    tencentcloud_kms_external_key
+
 Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
@@ -502,14 +510,6 @@ VPN
     tencentcloud_vpn_customer_gateway
     tencentcloud_vpn_gateway
     tencentcloud_vpn_connection
-
-KMS
-  Data Source
-    tencentcloud_kms_key
-
-  Resource
-    tencentcloud_kms_key
-    tencentcloud_kms_external_key
 */
 package tencentcloud
 
@@ -771,7 +771,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                 dataSourceTencentCloudProtocolTemplateGroups(),
-			"tencentcloud_kms_key":                                  dataSourceTencentCloudKmsKey(),
+			"tencentcloud_kms_keys":                                 dataSourceTencentCloudKmsKeys(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

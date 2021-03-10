@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
@@ -22,7 +21,7 @@ func TestAccKmsExternalKey_basic(t *testing.T) {
 				Config: testAccKmsExternalKey_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "key_state", "Enabled"),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "tags.test-tag", "unit-test"),
 				),
 			},
@@ -30,14 +29,14 @@ func TestAccKmsExternalKey_basic(t *testing.T) {
 				Config: testAccKmsExternalKey_disabled(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "key_state", "Disabled"),
+					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
 				),
 			},
 			{
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"pending_delete_window_in_days", "key_material_base64", "wrapping_algorithm"},
+				ImportStateVerifyIgnore: []string{"pending_delete_window_in_days", "key_material_base64", "wrapping_algorithm", "is_enabled", "is_archived"},
 			},
 		},
 	})
@@ -50,6 +49,7 @@ resource "tencentcloud_kms_external_key" "test" {
 	description = %[1]q
 	wrapping_algorithm = "RSAES_PKCS1_V1_5"
 	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
+
 	tags = {
     "test-tag" = "unit-test"
   }
@@ -64,10 +64,11 @@ resource "tencentcloud_kms_external_key" "test" {
 	description = %[1]q
 	wrapping_algorithm = "RSAES_PKCS1_V1_5"
 	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
+  	is_enabled = false
+
 	tags = {
     "test-tag" = "unit-test"
   }
-  	key_state = "Disabled"
 }
 `, rName)
 }

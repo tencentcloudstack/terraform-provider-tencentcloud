@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a KMS external import key.
+Provide a resource to create a KMS external key.
 
 Example Usage
 
@@ -25,6 +25,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -34,6 +35,31 @@ import (
 )
 
 func resourceTencentCloudKmsExternalKey() *schema.Resource {
+	specialInfo := map[string]*schema.Schema{
+		"wrapping_algorithm": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     KMS_WRAPPING_ALGORITHM_RSAES_PKCS1_V1_5,
+			Description: "The algorithm for encrypting key material. Available values include `RSAES_PKCS1_V1_5`, `RSAES_OAEP_SHA_1` and `RSAES_OAEP_SHA_256`.",
+		},
+		"key_material_base64": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "The base64-encoded key material encrypted with the public_key. For regions using the national secret version, the length of the imported key material is required to be 128 bits, and for regions using the FIPS version, the length of the imported key material is required to be 256 bits.",
+		},
+		"valid_to": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "This value means the effective timestamp of the key material, 0 means it does not expire. Need to be greater than the current timestamp, the maximum support is 2147443200.",
+		},
+	}
+
+	basic := TencentKmsBasicInfo()
+	for k, v := range basic {
+		specialInfo[k] = v
+	}
+
 	return &schema.Resource{
 		Create: resourceTencentCloudKmsExternalKeyCreate,
 		Read:   resourceTencentCloudKmsExternalKeyRead,
@@ -43,65 +69,7 @@ func resourceTencentCloudKmsExternalKey() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"key_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "ID of CMK.",
-			},
-			"alias": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of CMK.The name can only contain English letters, numbers, underscore and hyphen '-'.The first character must be a letter or number.",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Description of CMK.The maximum is 1024 bytes.",
-			},
-			"key_state": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(KMS_KEY_STATE),
-				Computed:     true,
-				Description:  "State of CMK.Available values include `Enabled`, `Disabled`, `PendingDelete`, `PendingImport`, `Archived`.",
-			},
-			"pending_delete_window_in_days": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      7,
-				ValidateFunc: validateIntegerInRange(7, 30),
-				Description:  "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.",
-			},
-			"wrapping_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      KMS_WRAPPING_ALGORITHM_RSAES_PKCS1_V1_5,
-				ValidateFunc: validateAllowedStringValue(KMS_WRAPPING_ALGORITHM),
-				Description:  "The algorithm for encrypting key material.Available values include `RSAES_PKCS1_V1_5`, `RSAES_OAEP_SHA_1` and `RSAES_OAEP_SHA_256`.",
-			},
-			"key_material_base64": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "The base64-encoded key material encrypted with the public_key.For regions using the national secret version, the length of the imported key material is required to be 128 bits, and for regions using the FIPS version, the length of the imported key material is required to be 256 bits.",
-			},
-			"valid_to": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "this value means the effective timestamp of the key material, 0 means it does not expire.Need to be greater than the current time point, the maximum support is 2147443200.",
-			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Computed:    true,
-				Description: "Tags of CMK.",
-			},
-		},
+		Schema: specialInfo,
 	}
 }
 
@@ -136,7 +104,6 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 		return outErr
 	}
 	d.SetId(keyId)
-	_ = d.Set("key_id", helper.String(keyId))
 
 	if v, ok := d.GetOk("key_material_base64"); ok {
 		param := make(map[string]interface{})
@@ -159,7 +126,7 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if keyState := d.Get("key_state").(string); keyState == KMS_KEY_STATE_DISABLED {
+	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, d.Id())
 			if e != nil {
@@ -168,7 +135,21 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if isArchived := d.Get("is_archived").(bool); isArchived {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := kmsService.ArchiveKey(ctx, d.Id())
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
 		}
 	}
@@ -219,10 +200,8 @@ func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	_ = d.Set("key_id", key.KeyId)
 	_ = d.Set("alias", key.Alias)
 	_ = d.Set("description", key.Description)
-	_ = d.Set("key_state", key.KeyState)
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "kms", "key", tcClient.Region, *key.ResourceId)
@@ -242,6 +221,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 	kmsService := KmsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	d.Partial(true)
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
@@ -256,6 +236,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key description failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("description")
 	}
 
 	if d.HasChange("alias") {
@@ -271,6 +252,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key alias failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("alias")
 	}
 
 	if d.HasChange("key_material_base64") || d.HasChange("valid_to") {
@@ -279,15 +261,32 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s import KMS external key material key failed, reason:%+v", logId, err)
 			return err
 		}
+		if d.HasChange("key_material_base64") {
+			d.SetPartial("key_material_base64")
+		}
+		if d.HasChange("valid_to") {
+			d.SetPartial("valid_to")
+		}
 	}
 
-	if d.HasChange("key_state") {
-		oldKeyState, newKeyState := d.GetChange("key_state")
-		err := updateKeyState(ctx, kmsService, keyId, oldKeyState.(string), newKeyState.(string))
+	if d.HasChange("is_enabled") {
+		isEnabled := d.Get("is_enabled").(bool)
+		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
 		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
 		}
+		d.SetPartial("is_enabled")
+	}
+
+	if d.HasChange("is_archived") {
+		isArchived := d.Get("is_archived").(bool)
+		err := updateIsArchived(ctx, kmsService, keyId, isArchived)
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+		d.SetPartial("is_archived")
 	}
 
 	if d.HasChange("tags") {
@@ -304,7 +303,10 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+		d.SetPartial("tags")
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudKmsKeyRead(d, meta)
 }
@@ -320,8 +322,8 @@ func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta inter
 
 	keyId := d.Id()
 	pendingDeleteWindowInDays := d.Get("pending_delete_window_in_days").(int)
-	keyState := d.Get("key_state").(string)
-	if keyState == KMS_KEY_STATE_ENABLED {
+	isEnabled := d.Get("is_enabled").(bool)
+	if isEnabled {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, keyId)
 			if e != nil {
@@ -346,7 +348,16 @@ func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	return resourceTencentCloudKmsKeyRead(d, meta)
+	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		key, e := kmsService.DescribeKeyById(ctx, keyId)
+		if e != nil {
+			return retryError(e)
+		}
+		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("delete fail"))
+	})
 }
 
 func updateKeyMaterial(ctx context.Context, kmsService KmsService, d *schema.ResourceData) error {
