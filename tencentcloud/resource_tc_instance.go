@@ -53,6 +53,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   subnet_id                  = tencentcloud_subnet.app.id
   internet_max_bandwidth_out = 20
   count                      = 2
+  cam_role_name              = "CVM_QcsRole"
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -383,6 +384,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			// role
+			"cam_role_name": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "CAM role name authorized to access.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -433,6 +441,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("cam_role_name"); ok {
+		request.CamRoleName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
