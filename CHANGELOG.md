@@ -1,4 +1,5 @@
-## 1.53.7 (Unreleased)
+## 1.53.8 (Unreleased)
+## 1.53.7 (March 10, 2021)
 
 ENHANCEMENTS:
 
