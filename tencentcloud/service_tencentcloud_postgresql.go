@@ -227,7 +227,7 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 			errRet = err
 			return
 		}
-		if ee.Code == "InvalidParameter" {
+		if ee.Code == "InvalidParameter" || ee.Code == "ResourceNotFound.InstanceNotFoundError" {
 			errRet = nil
 		} else {
 			errRet = err
