@@ -1,4 +1,9 @@
 ## 1.53.8 (Unreleased)
+
+BUG FIXES:
+
+* Resource `tencentcloud_instance` fix bug that waiting 5 minutes when cloud disk sold out.
+
 ## 1.53.7 (March 10, 2021)
 
 ENHANCEMENTS:
