@@ -1,11 +1,4 @@
-## 1.53.8 (Unreleased)
-
-ENHANCEMENTS:
-
-* Resource `tencentcloud_instance` remove limit of `data_disk_size`.
-
-
-## 1.53.7 (March 09, 2021)
+## 1.53.7 (Unreleased)
 
 ENHANCEMENTS:
 
