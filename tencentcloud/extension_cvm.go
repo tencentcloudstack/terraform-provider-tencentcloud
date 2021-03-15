@@ -48,7 +48,8 @@ const (
 	CVM_IMAGE_LOGIN     = "TRUE"
 	CVM_IMAGE_LOGIN_NOT = "FALSE"
 
-	CVM_ZONE_NOT_SUPPORT_ERROR = "InvalidParameterValue.ZoneNotSupported"
+	CVM_ZONE_NOT_SUPPORT_ERROR    = "InvalidParameterValue.ZoneNotSupported"
+	CVM_CLOUD_DISK_SOLD_OUT_ERROR = "ResourceInsufficient.CloudDiskSoldOut"
 )
 
 var CVM_CHARGE_TYPE = []string{
