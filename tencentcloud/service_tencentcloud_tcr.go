@@ -30,7 +30,8 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 	if len(tags) > 0 {
 		tagSpec := tcr.TagSpecification{ResourceType: helper.String("instance"), Tags: make([]*tcr.Tag, 0)}
 		for k, v := range tags {
-			tag := tcr.Tag{Value: &v, Key: &k}
+			key, value := k, v
+			tag := tcr.Tag{Value: &value, Key: &key}
 			tagSpec.Tags = append(tagSpec.Tags, &tag)
 		}
 		request.TagSpecification = &tagSpec

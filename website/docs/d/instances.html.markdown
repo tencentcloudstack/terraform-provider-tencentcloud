@@ -39,6 +39,7 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_list` - An information list of cvm instance. Each element contains the following attributes:
   * `allocate_public_ip` - Indicates whether public ip is assigned.
   * `availability_zone` - The available zone that the CVM instance locates at.
+  * `cam_role_name` - CAM role name authorized to access.
   * `cpu` - The number of CPU cores of the instance.
   * `create_time` - Creation time of the instance.
   * `data_disks` - An information list of data disk. Each element contains the following attributes:
