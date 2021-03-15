@@ -278,7 +278,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 	//check init status
-
+	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	if checkErr != nil {
+		return checkErr
+	}
 	//set open public access
 	public_access_switch := false
 	if v, ok := d.GetOkExists("public_access_switch"); ok {
@@ -298,6 +301,11 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
+	//check creation done
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	if checkErr != nil {
+		return checkErr
+	}
 	//set name
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, name)
@@ -311,7 +319,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	//check creation done
-	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 	if checkErr != nil {
 		return checkErr
 	}
@@ -483,6 +491,10 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 			if inErr != nil {
+				ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+				if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+					return nil
+				}
 				return retryError(inErr)
 			}
 			return nil
