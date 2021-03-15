@@ -1,4 +1,14 @@
 ## 1.53.8 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_instance` add `cam_role_name` to support binding role to cvm instance.
+
+BUG FIXES:
+
+* Resource `tencentcloud_instance` fix bug that waiting 5 minutes when cloud disk sold out.
+* Resource: `tencentcloud_tcr_instance` fix bug that only one tag is effective when setting multiple tags.
+
 ## 1.53.7 (March 10, 2021)
 
 ENHANCEMENTS:
