@@ -786,6 +786,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
+	_ = d.Set("cam_role_name", instance.CamRoleName)
 
 	if _, ok := d.GetOkExists("allocate_public_ip"); !ok {
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
