@@ -1078,7 +1078,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	request.InstanceCount = &count
 
 	if v, ok := dMap["hostname"]; ok {
-		request.HostName = helper.String(v.(string))
+		hostname := v.(string)
+		if hostname != "" {
+			request.HostName = &hostname
+		}
 	}
 
 	cvmJson = request.ToJsonString()

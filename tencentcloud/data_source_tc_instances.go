@@ -231,6 +231,11 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "The way that CVM instance will be renew automatically or not when it reach the end of the prepaid tenancy.",
 						},
+						"cam_role_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CAM role name authorized to access.",
+						},
 					},
 				},
 			},
@@ -311,6 +316,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"create_time":                instance.CreatedTime,
 			"expired_time":               instance.ExpiredTime,
 			"instance_charge_type_prepaid_renew_flag": instance.RenewFlag,
+			"cam_role_name": instance.CamRoleName,
 		}
 		if len(instance.PublicIpAddresses) > 0 {
 			mapping["public_ip"] = *instance.PublicIpAddresses[0]

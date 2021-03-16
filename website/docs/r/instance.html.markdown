@@ -63,6 +63,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   subnet_id                  = tencentcloud_subnet.app.id
   internet_max_bandwidth_out = 20
   count                      = 2
+  cam_role_name              = "CVM_QcsRole"
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -83,6 +84,7 @@ The following arguments are supported:
 * `availability_zone` - (Required, ForceNew) The available zone for the CVM instance.
 * `image_id` - (Required, ForceNew) The image to use for the instance. Changing `image_id` will cause the instance to be destroyed and re-created.
 * `allocate_public_ip` - (Optional, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
+* `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `data_disks` - (Optional, ForceNew) Settings for data disks.
 * `disable_monitor_service` - (Optional) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed.
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.

@@ -53,6 +53,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   subnet_id                  = tencentcloud_subnet.app.id
   internet_max_bandwidth_out = 20
   count                      = 2
+  cam_role_name              = "CVM_QcsRole"
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -87,6 +88,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -383,6 +385,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			// role
+			"cam_role_name": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "CAM role name authorized to access.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -433,6 +442,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("cam_role_name"); ok {
+		request.CamRoleName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
@@ -599,6 +611,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && e.Code == CVM_CLOUD_DISK_SOLD_OUT_ERROR {
+				return resource.NonRetryableError(e)
+			}
 			return retryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -775,6 +791,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
+	_ = d.Set("cam_role_name", instance.CamRoleName)
 
 	if _, ok := d.GetOkExists("allocate_public_ip"); !ok {
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
