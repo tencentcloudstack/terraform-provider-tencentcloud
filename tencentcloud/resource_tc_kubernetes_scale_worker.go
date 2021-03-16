@@ -107,6 +107,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -322,7 +323,9 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 
 	d.SetId(id)
 
-	return nil
+	//wait for LANIP
+	time.Sleep(readRetryTimeout)
+	return resourceTencentCloudTkeScaleWorkerRead(d, meta)
 }
 
 func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
