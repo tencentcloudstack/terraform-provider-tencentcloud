@@ -172,6 +172,7 @@ resource "tencentcloud_kms_key" "test" {
 	alias = %[1]q
 	description = %[1]q
   	key_rotation_enabled = true
+	is_enabled = true
 
 	tags = {
     "test-tag" = "unit-test"

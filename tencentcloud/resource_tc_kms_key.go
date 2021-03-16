@@ -8,6 +8,7 @@ resource "tencentcloud_kms_key" "foo" {
 	alias = "test"
 	description = "describe key test message."
 	key_rotation_enabled = true
+	is_enabled = true
 
 	tags = {
 		"test-tag":"key-test"
@@ -49,16 +50,16 @@ func TencentKmsBasicInfo() map[string]*schema.Schema {
 			Description: "Description of CMK. The maximum is 1024 bytes.",
 		},
 		"is_enabled": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Default:     true,
-			Description: "Specify whether to enable key. Default value is `true`.",
+			Type:          schema.TypeBool,
+			Optional:      true,
+			ConflictsWith: []string{"is_archived"},
+			Description:   "Specify whether to enable key. Default value is `false`.",
 		},
 		"is_archived": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Default:     false,
-			Description: "Specify whether to archive key. Default value is `false`.",
+			Type:          schema.TypeBool,
+			Optional:      true,
+			ConflictsWith: []string{"is_enabled"},
+			Description:   "Specify whether to archive key. Default value is `false`.",
 		},
 		"pending_delete_window_in_days": {
 			Type:        schema.TypeInt,
@@ -70,6 +71,11 @@ func TencentKmsBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeMap,
 			Optional:    true,
 			Description: "Tags of CMK.",
+		},
+		"key_state": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "State of CMK.",
 		},
 	}
 }
@@ -235,8 +241,10 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 
 	_ = d.Set("alias", key.Alias)
 	_ = d.Set("description", key.Description)
+	_ = d.Set("key_state", key.KeyState)
 	_ = d.Set("key_usage", key.KeyUsage)
 	_ = d.Set("key_rotation_enabled", key.KeyRotationEnabled)
+	transformKeyState(d)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -291,7 +299,14 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("alias")
 	}
 
-	if d.HasChange("is_enabled") {
+	if isArchived, ok := d.GetOk("is_archived"); ok {
+		err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+		d.SetPartial("is_archived")
+	} else {
 		isEnabled := d.Get("is_enabled").(bool)
 		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
 		if err != nil {
@@ -299,16 +314,6 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 		d.SetPartial("is_enabled")
-	}
-
-	if d.HasChange("is_archived") {
-		isArchived := d.Get("is_archived").(bool)
-		err := updateIsArchived(ctx, kmsService, keyId, isArchived)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
-		}
-		d.SetPartial("is_archived")
 	}
 
 	if d.HasChange("key_rotation_enabled") {
@@ -457,4 +462,16 @@ func updateIsArchived(ctx context.Context, kmsService KmsService, keyId string, 
 		})
 	}
 	return err
+}
+
+func transformKeyState(d *schema.ResourceData) {
+	keyState := d.Get("key_state").(string)
+	switch keyState {
+	case KMS_KEY_STATE_ENABLED:
+		_ = d.Set("is_enabled", true)
+	case KMS_KEY_STATE_DISABLED:
+		_ = d.Set("is_enabled", false)
+	case KMS_KEY_STATE_ARCHIVED:
+		_ = d.Set("is_archived", true)
+	}
 }

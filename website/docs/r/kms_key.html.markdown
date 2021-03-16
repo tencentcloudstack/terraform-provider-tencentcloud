@@ -18,6 +18,7 @@ resource "tencentcloud_kms_key" "foo" {
   alias                = "test"
   description          = "describe key test message."
   key_rotation_enabled = true
+  is_enabled           = true
 
   tags = {
     "test-tag" : "key-test"
@@ -32,7 +33,7 @@ The following arguments are supported:
 * `alias` - (Required) Name of CMK. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
 * `description` - (Optional) Description of CMK. The maximum is 1024 bytes.
 * `is_archived` - (Optional) Specify whether to archive key. Default value is `false`.
-* `is_enabled` - (Optional) Specify whether to enable key. Default value is `true`.
+* `is_enabled` - (Optional) Specify whether to enable key. Default value is `false`.
 * `key_rotation_enabled` - (Optional) Specify whether to enable key rotation, valid when key_usage is `ENCRYPT_DECRYPT`. Default value is `false`.
 * `key_usage` - (Optional, ForceNew) Usage of CMK. Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`. Default value is `ENCRYPT_DECRYPT`.
 * `pending_delete_window_in_days` - (Optional) Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.
@@ -43,7 +44,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `key_state` - State of CMK.
 
 
 ## Import

@@ -49,6 +49,7 @@ resource "tencentcloud_kms_external_key" "test" {
 	description = %[1]q
 	wrapping_algorithm = "RSAES_PKCS1_V1_5"
 	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
+	is_enabled = true
 
 	tags = {
     "test-tag" = "unit-test"

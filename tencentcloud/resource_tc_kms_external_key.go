@@ -10,6 +10,7 @@ resource "tencentcloud_kms_external_key" "foo" {
 	wrapping_algorithm = "RSAES_PKCS1_V1_5"
 	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
 	valid_to = 2147443200
+	is_enabled = true
 }
 ```
 
@@ -124,33 +125,33 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s Create KMS external key failed, reason:%+v", logId, err)
 			return err
 		}
-	}
 
-	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.DisableKey(ctx, d.Id())
-			if e != nil {
-				return retryError(e)
+		if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				e := kmsService.DisableKey(ctx, d.Id())
+				if e != nil {
+					return retryError(e)
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
 		}
-	}
 
-	if isArchived := d.Get("is_archived").(bool); isArchived {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.ArchiveKey(ctx, d.Id())
-			if e != nil {
-				return retryError(e)
+		if isArchived := d.Get("is_archived").(bool); isArchived {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				e := kmsService.ArchiveKey(ctx, d.Id())
+				if e != nil {
+					return retryError(e)
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
 		}
 	}
 
@@ -202,6 +203,10 @@ func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("alias", key.Alias)
 	_ = d.Set("description", key.Description)
+	_ = d.Set("valid_to", key.ValidTo)
+	_ = d.Set("key_state", key.KeyState)
+	transformKeyState(d)
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "kms", "key", tcClient.Region, *key.ResourceId)
@@ -269,7 +274,14 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if d.HasChange("is_enabled") {
+	if isArchived, ok := d.GetOk("is_archived"); ok {
+		err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
+		if err != nil {
+			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+			return err
+		}
+		d.SetPartial("is_archived")
+	} else {
 		isEnabled := d.Get("is_enabled").(bool)
 		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
 		if err != nil {
@@ -277,16 +289,6 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 		d.SetPartial("is_enabled")
-	}
-
-	if d.HasChange("is_archived") {
-		isArchived := d.Get("is_archived").(bool)
-		err := updateIsArchived(ctx, kmsService, keyId, isArchived)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
-		}
-		d.SetPartial("is_archived")
 	}
 
 	if d.HasChange("tags") {
