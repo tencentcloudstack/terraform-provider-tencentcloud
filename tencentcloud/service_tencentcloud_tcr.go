@@ -51,6 +51,59 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 	return
 }
 
+func (me *TCRService) ManageTCRExternalEndpoint(ctx context.Context, instanceId, operation string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewManageExternalEndpointRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Operation = &operation
+	request.RegistryId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().ManageExternalEndpoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.RegistryId == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	return
+}
+
+func (me *TCRService) DescribeExternalEndpointStatus(ctx context.Context, instanceId string) (status string, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewDescribeExternalEndpointStatusRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DescribeExternalEndpointStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	if response.Response.Status == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return more than one instances, instanceId %s, %s", instanceId, request.GetAction())
+		return
+	}
+	has = true
+	status = *response.Response.Status
+	return
+}
+
 func (me *TCRService) DescribeTCRInstanceById(ctx context.Context, instanceId string) (instance *tcr.Registry, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewDescribeInstancesRequest()
