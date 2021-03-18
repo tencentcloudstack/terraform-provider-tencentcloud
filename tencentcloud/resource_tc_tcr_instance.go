@@ -63,10 +63,11 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 				Description: "The available tags within this TCR instance.",
 			},
 			"public_operation": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Control public network access. Valid values are:`Create`, `Delete`.",
+				Default:     false,
+				Description: "Control public network access.",
 			},
 			//Computed values
 			"status": {
@@ -108,11 +109,13 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name                  = d.Get("name").(string)
-		insType               = d.Get("instance_type").(string)
-		tags                  = helper.GetTags(d, "tags")
-		outErr, inErr         error
-		instanceId, operation string
+		name           = d.Get("name").(string)
+		insType        = d.Get("instance_type").(string)
+		tags           = helper.GetTags(d, "tags")
+		outErr, inErr  error
+		instanceId     string
+		instanceStatus string
+		operation      bool
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -134,6 +137,7 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return retryError(err)
 		} else if has && *instance.Status == "Running" {
+			instanceStatus = "Running"
 			return nil
 		} else if !has {
 			return resource.NonRetryableError(fmt.Errorf("create tcr instance fail"))
@@ -145,33 +149,24 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if v, ok := d.GetOk("public_operation"); ok {
-			operation = v.(string)
-			inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, operation)
-			if inErr != nil {
-				return retryError(inErr)
+	if instanceStatus == "Running" {
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if v, ok := d.GetOk("public_operation"); ok {
+				operation = v.(bool)
+				if operation {
+					inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, "Create")
+				} else {
+					inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, "Delete")
+				}
+				if inErr != nil {
+					return retryError(inErr)
+				}
 			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
 		}
-		return nil
-	})
-	if outErr != nil {
-		return outErr
-	}
-
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if v, ok := d.GetOk("public_operation"); ok {
-			operation = v.(string)
-			inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, operation)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-		}
-		return nil
-	})
-	if outErr != nil {
-		return outErr
 	}
 
 	return resourceTencentCloudTcrInstanceRead(d, meta)
@@ -221,9 +216,9 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 	if publicStatus == "Opening" || publicStatus == "Opened" {
-		_ = d.Set("public_operation", "Create")
+		_ = d.Set("public_operation", true)
 	} else if publicStatus == "Closed" {
-		_ = d.Set("public_operation", "Delete")
+		_ = d.Set("public_operation", false)
 	}
 
 	_ = d.Set("name", instance.RegistryName)

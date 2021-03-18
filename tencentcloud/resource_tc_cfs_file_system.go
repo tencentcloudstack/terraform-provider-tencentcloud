@@ -73,12 +73,11 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Description:  "File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.",
 			},
 			"storage_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      CFS_STORAGETYPE_SD,
-				ValidateFunc: validateAllowedStringValue(CFS_STORAGETYPE),
-				ForceNew:     true,
-				Description:  "File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     CFS_STORAGETYPE_SD,
+				ForceNew:    true,
+				Description: "File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.",
 			},
 
 			"vpc_id": {
