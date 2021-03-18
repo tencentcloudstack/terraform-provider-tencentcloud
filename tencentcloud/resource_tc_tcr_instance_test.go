@@ -18,7 +18,7 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "delete_bucket", "true"),
@@ -93,9 +93,10 @@ func testAccCheckTCRInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccTCRInstance_basic = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
+  name        = "testacctcrinstance1"
   instance_type = "basic"
   delete_bucket = true
+  public_operation = "Create"
 
   tags ={
 	test = "test"
@@ -104,10 +105,10 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
 
 const testAccTCRInstance_basic_update_remark = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
+  name        = "testacctcrinstance2"
   instance_type = "basic"
   delete_bucket = true
-
+  public_operation = "Create"
   tags ={
 	tf = "tf"
   }

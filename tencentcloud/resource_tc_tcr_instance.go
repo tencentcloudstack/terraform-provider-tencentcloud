@@ -62,11 +62,22 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "The available tags within this TCR instance.",
 			},
+			"public_operation": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Control public network access. Valid values are:`Create`, `Delete`.",
+			},
 			//Computed values
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Status of the TCR instance.",
+			},
+			"public_status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of the TCR instance public network access.",
 			},
 			"public_domain": {
 				Type:        schema.TypeString,
@@ -97,11 +108,11 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name          = d.Get("name").(string)
-		insType       = d.Get("instance_type").(string)
-		tags          = helper.GetTags(d, "tags")
-		outErr, inErr error
-		instanceId    string
+		name                  = d.Get("name").(string)
+		insType               = d.Get("instance_type").(string)
+		tags                  = helper.GetTags(d, "tags")
+		outErr, inErr         error
+		instanceId, operation string
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -135,6 +146,34 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if v, ok := d.GetOk("public_operation"); ok {
+			operation = v.(string)
+			inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, operation)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
+
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if v, ok := d.GetOk("public_operation"); ok {
+			operation = v.(string)
+			inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, operation)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
+
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }
 
@@ -164,11 +203,35 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
+	publicStatus, has, outErr := tcrService.DescribeExternalEndpointStatus(ctx, d.Id())
+	if outErr != nil {
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			publicStatus, has, inErr = tcrService.DescribeExternalEndpointStatus(ctx, d.Id())
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+	}
+	if outErr != nil {
+		return outErr
+	}
+	if !has {
+		d.SetId("")
+		return nil
+	}
+	if publicStatus == "Opening" || publicStatus == "Opened" {
+		_ = d.Set("public_operation", "Create")
+	} else if publicStatus == "Closed" {
+		_ = d.Set("public_operation", "Delete")
+	}
+
 	_ = d.Set("name", instance.RegistryName)
 	_ = d.Set("instance_type", instance.RegistryType)
 	_ = d.Set("status", instance.Status)
 	_ = d.Set("public_domain", instance.PublicDomain)
 	_ = d.Set("internal_end_point", instance.InternalEndpoint)
+	_ = d.Set("public_status", publicStatus)
 
 	tags := make(map[string]string, len(instance.TagSpecification.Tags))
 	for _, tag := range instance.TagSpecification.Tags {

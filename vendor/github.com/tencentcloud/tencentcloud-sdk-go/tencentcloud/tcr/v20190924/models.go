@@ -1252,6 +1252,47 @@ func (r *DescribeApplicationTriggerPersonalResponse) FromJsonString(s string) er
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeExternalEndpointStatusRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+}
+
+func (r *DescribeExternalEndpointStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeExternalEndpointStatusRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeExternalEndpointStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 开启公网访问状态，包括开启中，开启成功以及关闭和更新失败等
+		Status *string `json:"Status,omitempty" name:"Status"`
+
+		// 原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Reason *string `json:"Reason,omitempty" name:"Reason"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeExternalEndpointStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeExternalEndpointStatusResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeFavorRepositoryPersonalRequest struct {
 	*tchttp.BaseRequest
 
@@ -2397,6 +2438,46 @@ type Limit struct {
 
 	// 配置的值
 	Value *int64 `json:"Value,omitempty" name:"Value"`
+}
+
+type ManageExternalEndpointRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 操作（Create/Delete）
+	Operation *string `json:"Operation,omitempty" name:"Operation"`
+}
+
+func (r *ManageExternalEndpointRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ManageExternalEndpointRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ManageExternalEndpointResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 实例Id
+		RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ManageExternalEndpointResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ManageExternalEndpointResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type ManageImageLifecycleGlobalPersonalRequest struct {

@@ -350,6 +350,31 @@ func (c *Client) DeleteTrigger(request *DeleteTriggerRequest) (response *DeleteT
     return
 }
 
+func NewGetAccountRequest() (request *GetAccountRequest) {
+    request = &GetAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "GetAccount")
+    return
+}
+
+func NewGetAccountResponse() (response *GetAccountResponse) {
+    response = &GetAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取账户信息
+func (c *Client) GetAccount(request *GetAccountRequest) (response *GetAccountResponse, err error) {
+    if request == nil {
+        request = NewGetAccountRequest()
+    }
+    response = NewGetAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetAliasRequest() (request *GetAliasRequest) {
     request = &GetAliasRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -421,6 +446,31 @@ func (c *Client) GetFunctionAddress(request *GetFunctionAddressRequest) (respons
         request = NewGetFunctionAddressRequest()
     }
     response = NewGetFunctionAddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetFunctionEventInvokeConfigRequest() (request *GetFunctionEventInvokeConfigRequest) {
+    request = &GetFunctionEventInvokeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "GetFunctionEventInvokeConfig")
+    return
+}
+
+func NewGetFunctionEventInvokeConfigResponse() (response *GetFunctionEventInvokeConfigResponse) {
+    response = &GetFunctionEventInvokeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取函数异步重试配置，包括重试次数和消息保留时间
+func (c *Client) GetFunctionEventInvokeConfig(request *GetFunctionEventInvokeConfigRequest) (response *GetFunctionEventInvokeConfigResponse, err error) {
+    if request == nil {
+        request = NewGetFunctionEventInvokeConfigRequest()
+    }
+    response = NewGetFunctionEventInvokeConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -971,6 +1021,31 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
         request = NewUpdateFunctionConfigurationRequest()
     }
     response = NewUpdateFunctionConfigurationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateFunctionEventInvokeConfigRequest() (request *UpdateFunctionEventInvokeConfigRequest) {
+    request = &UpdateFunctionEventInvokeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "UpdateFunctionEventInvokeConfig")
+    return
+}
+
+func NewUpdateFunctionEventInvokeConfigResponse() (response *UpdateFunctionEventInvokeConfigResponse) {
+    response = &UpdateFunctionEventInvokeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 更新函数的异步重试配置，包括重试次数和消息保留时间
+func (c *Client) UpdateFunctionEventInvokeConfig(request *UpdateFunctionEventInvokeConfigRequest) (response *UpdateFunctionEventInvokeConfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateFunctionEventInvokeConfigRequest()
+    }
+    response = NewUpdateFunctionEventInvokeConfigResponse()
     err = c.Send(request, response)
     return
 }

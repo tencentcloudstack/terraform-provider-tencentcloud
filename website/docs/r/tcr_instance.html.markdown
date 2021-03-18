@@ -31,6 +31,7 @@ The following arguments are supported:
 * `instance_type` - (Required, ForceNew) TCR types. Valid values are: `standard`, `basic`, `premium`.
 * `name` - (Required, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional) Indicate to delete the COS bucket which is auto-created with the instance or not.
+* `public_operation` - (Optional, ForceNew) Control public network access. Valid values are:`Create`, `Delete`.
 * `tags` - (Optional, ForceNew) The available tags within this TCR instance.
 
 ## Attributes Reference
@@ -40,6 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `internal_end_point` - Internal address for access of the TCR instance.
 * `public_domain` - Public address for access of the TCR instance.
+* `public_status` - Status of the TCR instance public network access.
 * `status` - Status of the TCR instance.
 
 
