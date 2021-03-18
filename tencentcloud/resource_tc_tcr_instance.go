@@ -62,7 +62,7 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "The available tags within this TCR instance.",
 			},
-			"public_operation": {
+			"open_public_operation": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
@@ -151,7 +151,7 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if instanceStatus == "Running" {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			if v, ok := d.GetOk("public_operation"); ok {
+			if v, ok := d.GetOk("open_public_operation"); ok {
 				operation = v.(bool)
 				if operation {
 					inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, "Create")
@@ -216,9 +216,9 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 	if publicStatus == "Opening" || publicStatus == "Opened" {
-		_ = d.Set("public_operation", true)
+		_ = d.Set("open_public_operation", true)
 	} else if publicStatus == "Closed" {
-		_ = d.Set("public_operation", false)
+		_ = d.Set("open_public_operation", false)
 	}
 
 	_ = d.Set("name", instance.RegistryName)

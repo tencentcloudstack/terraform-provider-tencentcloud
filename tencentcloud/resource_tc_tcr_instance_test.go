@@ -96,7 +96,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "testacctcrinstance1"
   instance_type = "basic"
   delete_bucket = true
-  public_operation = false
+  open_public_operation = false
 
   tags ={
 	test = "test"
@@ -108,7 +108,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "testacctcrinstance2"
   instance_type = "basic"
   delete_bucket = true
-  public_operation = true
+  open_public_operation = true
   tags ={
 	tf = "tf"
   }
