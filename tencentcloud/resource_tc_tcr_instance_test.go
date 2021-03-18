@@ -18,7 +18,7 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "delete_bucket", "true"),
@@ -38,9 +38,8 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 				Config: testAccTCRInstance_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "tags.tf", "tf"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "delete_bucket", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "open_public_operation", "true"),
 				),
 			},
 		},
@@ -94,7 +93,7 @@ func testAccCheckTCRInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccTCRInstance_basic = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance1"
+  name        = "testacctcrinstance"
   instance_type = "basic"
   delete_bucket = true
 
@@ -105,11 +104,11 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
 
 const testAccTCRInstance_basic_update_remark = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance1"
+  name        = "testacctcrinstance"
   instance_type = "basic"
   delete_bucket = true
-  open_public_operation = true
+
   tags ={
-	test = "test"
+	tf = "tf"
   }
 }`
