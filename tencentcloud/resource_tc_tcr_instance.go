@@ -65,7 +65,6 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 			"open_public_operation": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     false,
 				Description: "Control public network access.",
 			},
@@ -240,6 +239,36 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tcr_instance.update")()
 	//delete_bucket
+	var (
+		outErr, inErr error
+		instanceId    string
+		operation     bool
+	)
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	instanceId = d.Id()
+	if d.HasChange("open_public_operation") {
+		operation = d.Get("open_public_operation").(bool)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if v, ok := d.GetOk("open_public_operation"); ok {
+				operation = v.(bool)
+				if operation {
+					inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, "Create")
+				} else {
+					inErr = tcrService.ManageTCRExternalEndpoint(ctx, instanceId, "Delete")
+				}
+				if inErr != nil {
+					return retryError(inErr)
+				}
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
+		}
+	}
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }
 
