@@ -1,3 +1,29 @@
+/*
+Provide a resource to create a SSM secret.
+Example Usage
+```hcl
+resource "tencentcloud_ssm_secret" "foo" {
+  secret_name = "test"
+  description = "test secret"
+  recovery_window_in_days = 0
+  is_enabled = true
+
+  init_secret {
+    version_id = "v1"
+    secret_string = "123456"
+  }
+
+  tags = {
+    test-tag = "test"
+  }
+}
+```
+Import
+SSM secret can be imported using the secretName, e.g.
+```
+$ terraform import tencentcloud_ssm_secret.foo test
+```
+*/
 package tencentcloud
 
 import (

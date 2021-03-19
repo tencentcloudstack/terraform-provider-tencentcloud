@@ -412,6 +412,15 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 
+SSM
+  Data Source
+    tencentcloud_ssm_secrets
+	tencentcloud_ssm_secret_versions
+
+  Resource
+    tencentcloud_ssm_secret
+    tencentcloud_ssm_secret_version
+
 TcaplusDB
   Data Source
     tencentcloud_tcaplus_clusters
