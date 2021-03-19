@@ -6,11 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
