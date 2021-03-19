@@ -26,6 +26,7 @@ import (
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -82,6 +83,7 @@ type TencentCloudClient struct {
 	vodConn            *vod.Client
 	apiGatewayConn     *apigateway.Client
 	sslCertificateConn *sslCertificate.Client
+	kmsConn            *kms.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -532,4 +534,16 @@ func (me *TencentCloudClient) UseSSLCertificateClient() *sslCertificate.Client {
 	me.sslCertificateConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sslCertificateConn
+}
+
+func (me *TencentCloudClient) UseKmsClient() *kms.Client {
+	if me.kmsConn != nil {
+		return me.kmsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.kmsConn, _ = kms.NewClient(me.Credential, me.Region, cpf)
+	me.kmsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.kmsConn
 }

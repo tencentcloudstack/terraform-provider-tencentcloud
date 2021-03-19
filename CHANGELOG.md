@@ -1,4 +1,11 @@
-## 1.53.10 (Unreleased)
+## 1.54.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_kms_key`
+* **New Resource**: `tencentcloud_kms_external_key`
+* **New Data Source**: `tencentcloud_kms_keys` 
+
 ## 1.53.9 (March 19, 2021)
 
 ENHANCEMENTS:
