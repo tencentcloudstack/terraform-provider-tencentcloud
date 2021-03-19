@@ -252,7 +252,8 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Sets whether the joining node participates in the schedule.",
+			Default:     0,
+			Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
 		},
 		//compute
 		"security_groups": {
