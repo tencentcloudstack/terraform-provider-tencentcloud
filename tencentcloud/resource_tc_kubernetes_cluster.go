@@ -830,6 +830,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Description: "Labels of tke cluster nodes.",
 		},
+		"unschedulable": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Sets whether the joining node participates in the schedule.",
+		},
 		"mount_target": {
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -1291,6 +1297,9 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if temp, ok := d.GetOk("unschedulable"); ok {
+		iAdvanced.Unschedulable = temp.(int64)
+	}
 	if temp, ok := d.GetOk("docker_graph_path"); ok {
 		iAdvanced.DockerGraphPath = temp.(string)
 	}

@@ -240,6 +240,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Project ID, default value is 0.
 * `service_cidr` - (Optional, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional) The tags of the cluster.
+* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
 
 The `cluster_extra_args` object supports the following:

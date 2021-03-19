@@ -109,6 +109,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -151,6 +153,12 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Custom parameter information related to the node.",
+			},
+			"unschedulable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Sets whether the joining node participates in the schedule.",
 			},
 			"docker_graph_path": {
 				Type:        schema.TypeString,
@@ -270,6 +278,9 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	iAdvanced = tkeGetInstanceAdvancedPara(dMap, meta)
 
 	iAdvanced.Labels = GetTkeLabels(d, "labels")
+	if temp, ok := d.GetOk("unschedulable"); ok {
+		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
+	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
 		workerList := workers.([]interface{})

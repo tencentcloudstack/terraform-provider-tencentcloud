@@ -28,7 +28,9 @@ func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_config.#"),
 					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role")),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "unschedulable"),
+				),
 			},
 		},
 	})
@@ -193,6 +195,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     "test1" = "test1",
     "test2" = "test2",
   }
+  unschedulable = 0
 
   worker_config {
     count                      				= 1
