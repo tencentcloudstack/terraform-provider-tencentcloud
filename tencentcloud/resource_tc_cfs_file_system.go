@@ -72,6 +72,14 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				ForceNew:     true,
 				Description:  "File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.",
 			},
+			"storage_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     CFS_STORAGETYPE_SD,
+				ForceNew:    true,
+				Description: "File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.",
+			},
+
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -121,6 +129,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	request.Protocol = helper.String(d.Get("protocol").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
 	request.SubnetId = helper.String(d.Get("subnet_id").(string))
+	request.StorageType = helper.String(d.Get("storage_type").(string))
 	if v, ok := d.GetOk("name"); ok {
 		request.FsName = helper.String(v.(string))
 	}
@@ -128,7 +137,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 		request.MountIP = helper.String(v.(string))
 	}
 	request.NetInterface = helper.String("VPC")
-	request.StorageType = helper.String("SD")
+	request.StorageType = helper.String(d.Get("storage_type").(string))
 
 	fsId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -218,6 +227,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("access_group_id", fileSystem.PGroup.PGroupId)
 	_ = d.Set("protocol", fileSystem.Protocol)
 	_ = d.Set("create_time", fileSystem.CreationTime)
+	_ = d.Set("storage_type", fileSystem.StorageType)
 
 	var mountTarget *cfs.MountInfo
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

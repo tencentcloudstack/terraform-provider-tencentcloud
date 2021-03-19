@@ -1,4 +1,10 @@
 ## 1.53.9 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_tcr_instance` add `open_public_network` to control public network access.
+* Resource `tencentcloud_cfs_file_system` add `storage_type` to change file service StorageType.
+
 ## 1.53.8 (March 15, 2021)
 
 ENHANCEMENTS:
