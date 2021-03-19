@@ -298,6 +298,14 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
 
+KMS
+  Data Source
+    tencentcloud_kms_keys
+
+  Resource
+    tencentcloud_kms_key
+    tencentcloud_kms_external_key
+
 Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
@@ -763,6 +771,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                 dataSourceTencentCloudProtocolTemplateGroups(),
+			"tencentcloud_kms_keys":                                 dataSourceTencentCloudKmsKeys(),
 			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 		},
@@ -923,6 +932,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_address_template_group":                  resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                       resourceTencentCloudProtocolTemplate(),
 			"tencentcloud_protocol_template_group":                 resourceTencentCloudProtocolTemplateGroup(),
+			"tencentcloud_kms_key":                                 resourceTencentCloudKmsKey(),
+			"tencentcloud_kms_external_key":                        resourceTencentCloudKmsExternalKey(),
 			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 		},

@@ -544,6 +544,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312

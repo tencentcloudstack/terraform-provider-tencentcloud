@@ -297,7 +297,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("is_enabled") {
 		isEnabled := d.Get("is_enabled").(bool)
-		err := updateIsEnabled(ctx, ssmService, secretName, isEnabled)
+		err := updateSecretIsEnabled(ctx, ssmService, secretName, isEnabled)
 		if err != nil {
 			log.Printf("[CRITAL]%s modify SSM secret status failed, reason:%+v", logId, err)
 			return err
@@ -403,7 +403,7 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 	})
 }
 
-func updateIsEnabled(ctx context.Context, ssmService SsmService, secretName string, isEnabled bool) error {
+func updateSecretIsEnabled(ctx context.Context, ssmService SsmService, secretName string, isEnabled bool) error {
 	var err error
 	if isEnabled {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
