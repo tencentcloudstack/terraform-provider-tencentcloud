@@ -763,6 +763,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                 dataSourceTencentCloudProtocolTemplateGroups(),
+			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
+			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -921,6 +923,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_address_template_group":                  resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                       resourceTencentCloudProtocolTemplate(),
 			"tencentcloud_protocol_template_group":                 resourceTencentCloudProtocolTemplateGroup(),
+			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
+			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 		},
 
 		ConfigureFunc: providerConfigure,

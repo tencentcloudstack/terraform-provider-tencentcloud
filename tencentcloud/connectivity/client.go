@@ -33,6 +33,7 @@ import (
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
+	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
@@ -82,6 +83,7 @@ type TencentCloudClient struct {
 	vodConn            *vod.Client
 	apiGatewayConn     *apigateway.Client
 	sslCertificateConn *sslCertificate.Client
+	ssmConn            *ssm.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -532,4 +534,17 @@ func (me *TencentCloudClient) UseSSLCertificateClient() *sslCertificate.Client {
 	me.sslCertificateConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sslCertificateConn
+}
+
+// UseSsmClient returns SSM client for service
+func (me *TencentCloudClient) UseSsmClient() *ssm.Client {
+	if me.ssmConn != nil {
+		return me.ssmConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.ssmConn, _ = ssm.NewClient(me.Credential, me.Region, cpf)
+	me.ssmConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ssmConn
 }
