@@ -6,6 +6,13 @@ FEATURES:
 * **New Resource**: `tencentcloud_kms_external_key`
 * **New Data Source**: `tencentcloud_kms_keys` 
 
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_cluster` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to sets whether the joining node participates in the schedule.
+
 ## 1.53.9 (March 19, 2021)
 
 ENHANCEMENTS:
