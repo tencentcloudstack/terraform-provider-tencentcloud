@@ -6,6 +6,15 @@ FEATURES:
 * **New Resource**: `tencentcloud_kms_external_key`
 * **New Data Source**: `tencentcloud_kms_keys` 
 
+## 1.53.9 (March 19, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_tcr_instance` add `open_public_network` to control public network access.
+* Resource `tencentcloud_cfs_file_system` add `storage_type` to change file service StorageType.
+
+## 1.53.8 (March 15, 2021)
+
 ENHANCEMENTS:
 
 * Resource `tencentcloud_instance` add `cam_role_name` to support binding role to cvm instance.
