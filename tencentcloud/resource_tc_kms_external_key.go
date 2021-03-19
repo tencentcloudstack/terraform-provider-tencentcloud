@@ -41,7 +41,7 @@ func resourceTencentCloudKmsExternalKey() *schema.Resource {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Default:     KMS_WRAPPING_ALGORITHM_RSAES_PKCS1_V1_5,
-			Description: "The algorithm for encrypting key material. Available values include `RSAES_PKCS1_V1_5`, `RSAES_OAEP_SHA_1` and `RSAES_OAEP_SHA_256`.",
+			Description: "The algorithm for encrypting key material. Available values include `RSAES_PKCS1_V1_5`, `RSAES_OAEP_SHA_1` and `RSAES_OAEP_SHA_256`. Default value is `RSAES_PKCS1_V1_5`.",
 		},
 		"key_material_base64": {
 			Type:        schema.TypeString,
@@ -274,21 +274,37 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if isArchived, ok := d.GetOk("is_archived"); ok {
-		err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
+	var key *kms.KeyMetadata
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := kmsService.DescribeKeyById(ctx, keyId)
+		if e != nil {
+			return retryError(e)
 		}
-		d.SetPartial("is_archived")
-	} else {
-		isEnabled := d.Get("is_enabled").(bool)
-		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
+		key = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read KMS external key failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if *key.KeyState == KMS_KEY_STATE_ENABLED || *key.KeyState == KMS_KEY_STATE_DISABLED || *key.KeyState == KMS_KEY_STATE_ARCHIVED {
+		if isArchived, ok := d.GetOk("is_archived"); ok {
+			err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
+			}
+			d.SetPartial("is_archived")
+		} else {
+			isEnabled := d.Get("is_enabled").(bool)
+			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
+			}
+			d.SetPartial("is_enabled")
 		}
-		d.SetPartial("is_enabled")
 	}
 
 	if d.HasChange("tags") {
@@ -367,11 +383,11 @@ func updateKeyMaterial(ctx context.Context, kmsService KmsService, d *schema.Res
 	param["key_id"] = d.Id()
 	param["algorithm"] = d.Get("wrapping_algorithm").(string)
 	param["key_spec"] = KMS_WRAPPING_KEY_SPEC_RSA_2048
-	param["key_material_base64"] = d.Get("key_material_base64")
+	param["key_material_base64"] = d.Get("key_material_base64").(string)
 	param["valid_to"] = d.Get("valid_to").(int)
 
 	var err error
-	if param["key_material_base64"] == "" {
+	if d.HasChange("key_material_base64") && param["key_material_base64"] == "" {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DeleteImportKeyMaterial(ctx, d.Id())
 			if e != nil {

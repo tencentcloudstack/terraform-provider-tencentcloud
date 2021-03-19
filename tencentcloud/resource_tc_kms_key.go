@@ -53,13 +53,13 @@ func TencentKmsBasicInfo() map[string]*schema.Schema {
 			Type:          schema.TypeBool,
 			Optional:      true,
 			ConflictsWith: []string{"is_archived"},
-			Description:   "Specify whether to enable key. Default value is `false`.",
+			Description:   "Specify whether to enable key. Default value is `false`. This field is conflict with `is_archived`, valid when key_state is `Enabled`, `Disabled`, `Archived`.",
 		},
 		"is_archived": {
 			Type:          schema.TypeBool,
 			Optional:      true,
 			ConflictsWith: []string{"is_enabled"},
-			Description:   "Specify whether to archive key. Default value is `false`.",
+			Description:   "Specify whether to archive key. Default value is `false`. This field is conflict with `is_enabled`, valid when key_state is `Enabled`, `Disabled`, `Archived`.",
 		},
 		"pending_delete_window_in_days": {
 			Type:        schema.TypeInt,
@@ -164,17 +164,19 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	if keyRotationEnabled := d.Get("key_rotation_enabled").(bool); keyRotationEnabled {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := kmsService.EnableKeyRotation(ctx, d.Id())
-			if e != nil {
-				return retryError(e)
+	if keyUsage == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
+		if keyRotationEnabled := d.Get("key_rotation_enabled").(bool); keyRotationEnabled {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				e := kmsService.EnableKeyRotation(ctx, d.Id())
+				if e != nil {
+					return retryError(e)
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
+				return err
 			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
-			return err
 		}
 	}
 
@@ -299,31 +301,35 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("alias")
 	}
 
-	if isArchived, ok := d.GetOk("is_archived"); ok {
-		err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
+	if keyState := d.Get("key_state").(string); keyState == KMS_KEY_STATE_ENABLED || keyState == KMS_KEY_STATE_DISABLED || keyState == KMS_KEY_STATE_ARCHIVED {
+		if isArchived, ok := d.GetOk("is_archived"); ok {
+			err := updateIsArchived(ctx, kmsService, keyId, isArchived.(bool))
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
+			}
+			d.SetPartial("is_archived")
+		} else {
+			isEnabled := d.Get("is_enabled").(bool)
+			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
+			if err != nil {
+				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
+				return err
+			}
+			d.SetPartial("is_enabled")
 		}
-		d.SetPartial("is_archived")
-	} else {
-		isEnabled := d.Get("is_enabled").(bool)
-		err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
-			return err
-		}
-		d.SetPartial("is_enabled")
 	}
 
-	if d.HasChange("key_rotation_enabled") {
-		keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
-		err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
-			return err
+	if v := d.Get("key_usage").(string); v == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
+		if d.HasChange("key_rotation_enabled") {
+			keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
+			err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled)
+			if err != nil {
+				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
+				return err
+			}
+			d.SetPartial("key_rotation_enabled")
 		}
-		d.SetPartial("key_rotation_enabled")
 	}
 
 	if d.HasChange("tags") {

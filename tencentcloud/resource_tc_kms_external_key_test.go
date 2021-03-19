@@ -21,8 +21,17 @@ func TestAccKmsExternalKey_basic(t *testing.T) {
 				Config: testAccKmsExternalKey_basic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
+					resource.TestCheckResourceAttrSet(resourceName, "alias"),
+					resource.TestCheckResourceAttrSet(resourceName, "description"),
+					resource.TestCheckResourceAttr(resourceName, "key_state", "PendingImport"),
 					resource.TestCheckResourceAttr(resourceName, "tags.test-tag", "unit-test"),
+				),
+			},
+			{
+				Config: testAccKmsExternalKey_import(rName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKmsKeyExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "key_state", "Enabled"),
 				),
 			},
 			{
@@ -47,9 +56,22 @@ func testAccKmsExternalKey_basic(rName string) string {
 resource "tencentcloud_kms_external_key" "test" {
 	alias = %[1]q
 	description = %[1]q
+
+	tags = {
+    "test-tag" = "unit-test"
+  }
+}
+`, rName)
+}
+
+func testAccKmsExternalKey_import(rName string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_kms_external_key" "test" {
+ 	alias = %[1]q
+	description = %[1]q
 	wrapping_algorithm = "RSAES_PKCS1_V1_5"
 	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
-	is_enabled = true
+  	is_enabled = true
 
 	tags = {
     "test-tag" = "unit-test"
