@@ -38,6 +38,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "unschedulable", "0"),
 				),
 			},
 			{
@@ -190,6 +191,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   tags = {
     "%s" = "%s"
   }
+
+  unschedulable = 0
 
   labels = {
     "test1" = "test1",

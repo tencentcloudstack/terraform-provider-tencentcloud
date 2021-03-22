@@ -120,6 +120,7 @@ The following arguments are supported:
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `labels` - (Optional, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
+* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 
 The `data_disk` object supports the following:
 
