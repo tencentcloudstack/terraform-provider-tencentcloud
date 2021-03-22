@@ -13,6 +13,10 @@ ENHANCEMENTS:
 * Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to sets whether the joining node participates in the schedule.
 * Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to sets whether the joining node participates in the schedule.
 
+BUG FIXES:
+
+* Resource `tencentcloud_ssl_certificate` fix bug when trying to destroy a certificate associated with multiple resources.
+
 ## 1.53.9 (March 19, 2021)
 
 ENHANCEMENTS:

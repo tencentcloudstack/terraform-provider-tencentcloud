@@ -26,10 +26,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -254,7 +257,25 @@ func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interfac
 
 	id := d.Id()
 
-	service := SslService{client: m.(*TencentCloudClient).apiV3Conn}
+	service := SSLService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	return service.DeleteCertificate(ctx, id)
+	request := sslCertificate.NewDeleteCertificateRequest()
+	request.CertificateId = helper.String(id)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		deleteResult, e := service.DeleteCertificate(ctx, request)
+		if e != nil {
+			return retryError(e)
+		}
+		if !deleteResult {
+			return resource.NonRetryableError(errors.New("failed to delete certificate"))
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete SSL certificate failed, reason:%+v", logId, err)
+		return err
+	}
+	return nil
 }
