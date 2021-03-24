@@ -28,6 +28,8 @@ The following arguments are supported:
 * `instance_id` - (Required, ForceNew) ID of the TCR instance.
 * `subnet_id` - (Required, ForceNew) ID of subnet.
 * `vpc_id` - (Required, ForceNew) ID of VPC.
+* `enable_public_domain_dns` - (Optional) Whether to enable public domain dns. Default value is `false`.
+* `enable_vpc_domain_dns` - (Optional) Whether to enable vpc domain dns. Default value is `false`.
 
 ## Attributes Reference
 

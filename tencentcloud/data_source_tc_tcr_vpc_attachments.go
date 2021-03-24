@@ -72,6 +72,16 @@ func dataSourceTencentCloudTCRVPCAttachments() *schema.Resource {
 							Computed:    true,
 							Description: "IP address of this VPC access.",
 						},
+						"enable_public_domain_dns": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to enable public domain dns.",
+						},
+						"enable_vpc_domain_dns": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to enable vpc domain dns.",
+						},
 					},
 				},
 			},
@@ -119,6 +129,19 @@ func dataSourceTencentCloudTCRVPCAttachmentsRead(d *schema.ResourceData, meta in
 			"subnet_id": vpcAccess.SubnetId,
 			"status":    vpcAccess.Status,
 			"access_ip": vpcAccess.AccessIp,
+		}
+		if *vpcAccess.AccessIp != "" {
+			publicDomainDnsStatus, err := GetDnsStatus(ctx, tcrService, instanceId, *vpcAccess.VpcId, *vpcAccess.AccessIp, true)
+			if err != nil {
+				return err
+			}
+			mapping["enable_public_domain_dns"] = *publicDomainDnsStatus.Status == TCR_VPC_DNS_STATUS_ENABLED
+
+			vpcDomainDnsStatus, err := GetDnsStatus(ctx, tcrService, instanceId, *vpcAccess.VpcId, *vpcAccess.AccessIp, false)
+			if err != nil {
+				return err
+			}
+			mapping["enable_vpc_domain_dns"] = *vpcDomainDnsStatus.Status == TCR_VPC_DNS_STATUS_ENABLED
 		}
 
 		vpcAccessList = append(vpcAccessList, mapping)
