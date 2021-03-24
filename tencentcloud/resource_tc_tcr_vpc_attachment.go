@@ -313,9 +313,8 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 	return nil
 }
 
-func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool) error {
-	var vpcAccess *tcr.AccessVpc
-	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+func WaitForAccessIpExists(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string) (accessIp string, errRet error) {
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, has, inErr := tcrService.DescribeTCRVPCAttachmentById(ctx, instanceId, vpcId, subnetId)
 		if inErr != nil {
 			return retryError(inErr)
@@ -329,15 +328,20 @@ func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId stri
 			inErr = fmt.Errorf("%s get tcr accessIp fail, accessIp is not exists from SDK DescribeTcrVpcAttachmentById", vpcId)
 			return resource.RetryableError(inErr)
 		}
-		vpcAccess = result
+		accessIp = *result.AccessIp
 		return nil
 	})
-	if outErr != nil {
-		return outErr
+	return
+}
+
+func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool) error {
+	accessIp, err := WaitForAccessIpExists(ctx, tcrService, instanceId, vpcId, subnetId)
+	if err != nil {
+		return err
 	}
 
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := tcrService.CreateTcrVpcDns(ctx, instanceId, vpcId, *vpcAccess.AccessIp, usePublicDomain)
+	outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr := tcrService.CreateTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -348,30 +352,13 @@ func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId stri
 }
 
 func DisableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool) error {
-	var vpcAccess *tcr.AccessVpc
-	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, has, inErr := tcrService.DescribeTCRVPCAttachmentById(ctx, instanceId, vpcId, subnetId)
-		if inErr != nil {
-			return retryError(inErr)
-		}
-		if !has {
-			inErr = fmt.Errorf("%s create tcr vpcAccess %s fail, vpcAccess is not exists from SDK DescribeTcrVpcAttachmentById", instanceId, vpcId)
-			return resource.RetryableError(inErr)
-		}
-
-		if *result.AccessIp == "" {
-			inErr = fmt.Errorf("%s get tcr accessIp fail, accessIp is not exists from SDK DescribeTcrVpcAttachmentById", vpcId)
-			return resource.RetryableError(inErr)
-		}
-		vpcAccess = result
-		return nil
-	})
-	if outErr != nil {
-		return outErr
+	accessIp, err := WaitForAccessIpExists(ctx, tcrService, instanceId, vpcId, subnetId)
+	if err != nil {
+		return err
 	}
 
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := tcrService.DeleteTcrVpcDns(ctx, instanceId, vpcId, *vpcAccess.AccessIp, usePublicDomain)
+	outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr := tcrService.DeleteTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain)
 		if inErr != nil {
 			return retryError(inErr)
 		}
