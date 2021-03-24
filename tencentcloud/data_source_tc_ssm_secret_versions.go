@@ -43,7 +43,7 @@ func dataSourceTencentCloudSsmSecretVersions() *schema.Resource {
 			"secret_version_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of SSM secret versions.",
+				Description: "A list of SSM secret versions. When secret status is `Disabled`, this field will not update anymore.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"version_id": {

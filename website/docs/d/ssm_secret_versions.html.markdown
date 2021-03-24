@@ -32,7 +32,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `secret_version_list` - A list of SSM secret versions.
+* `secret_version_list` - A list of SSM secret versions. When secret status is `Disabled`, this field will not update anymore.
   * `secret_binary` - The base64-encoded binary secret.
   * `secret_string` - The string text of secret.
   * `version_id` - Version of secret.
