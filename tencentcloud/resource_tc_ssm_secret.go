@@ -8,11 +8,6 @@ resource "tencentcloud_ssm_secret" "foo" {
   recovery_window_in_days = 0
   is_enabled = true
 
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456"
-  }
-
   tags = {
     test-tag = "test"
   }
@@ -53,34 +48,6 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				ForceNew:    true,
 				Required:    true,
 				Description: "Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.",
-			},
-			"init_secret": {
-				Type:        schema.TypeList,
-				Required:    true,
-				MinItems:    1,
-				MaxItems:    1,
-				Description: "The secret of initial version.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"version_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Version of secret. The maximum length is 64 bytes. The version_id can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.",
-						},
-						"secret_binary": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ExactlyOneOf: []string{"init_secret.0.secret_string"},
-							Description:  "The base64-encoded binary secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.",
-						},
-						"secret_string": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ExactlyOneOf: []string{"init_secret.0.secret_binary"},
-							Description:  "The string text of secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.",
-						},
-					},
-				},
 			},
 			"is_enabled": {
 				Type:        schema.TypeBool,
@@ -136,16 +103,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("kms_key_id"); ok {
 		param["kms_key_id"] = v.(string)
 	}
-
-	initSecret := d.Get("init_secret").([]interface{})
-	versionInfo := initSecret[0].(map[string]interface{})
-	param["version_id"] = versionInfo["version_id"].(string)
-	if v, ok := versionInfo["secret_binary"]; ok {
-		param["secret_binary"] = v.(string)
-	}
-	if v, ok := versionInfo["secret_string"]; ok {
-		param["secret_string"] = v.(string)
-	}
+	//use a default version info, after create secret will delete this version
+	//because sdk do not support create secret without version
+	param["version_id"] = "default"
+	param["secret_string"] = "default"
 
 	var outErr, inErr error
 	var secretName string
@@ -160,6 +121,18 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		return outErr
 	}
 	d.SetId(secretName)
+
+	//delete default version info
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr = ssmService.DeleteSecretVersion(ctx, secretName, "default")
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -231,55 +204,6 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 
 	if secretInfo.status == SSM_STATUS_ENABLED {
 		_ = d.Set("is_enabled", true)
-
-		secret := d.Get("init_secret").([]interface{})
-		var versionId string
-
-		// import secret will import the first version as init_secret
-		if len(secret) == 0 {
-			var versionIds []string
-			outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				versionIds, inErr = ssmService.DescribeSecretVersionIdsByName(ctx, secretName)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if outErr != nil {
-				log.Printf("[CRITAL]%s read SSM secret versionId list failed, reason:%+v", logId, outErr)
-				return outErr
-			}
-			if len(versionIds) != 0 {
-				versionId = versionIds[0]
-			}
-		} else {
-			versionInfo := secret[0].(map[string]interface{})
-			versionId = versionInfo["version_id"].(string)
-		}
-
-		if versionId != "" {
-			var secretVersionInfo *SecretVersionInfo
-			outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				secretVersionInfo, inErr = ssmService.DescribeSecretVersion(ctx, secretName, versionId)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if outErr != nil {
-				return outErr
-			}
-
-			initSecret := make(map[string]interface{})
-			initSecret["version_id"] = secretVersionInfo.versionId
-			if secretVersionInfo.secretBinary != "" {
-				initSecret["secret_binary"] = secretVersionInfo.secretBinary
-			}
-			if secretVersionInfo.secretString != "" {
-				initSecret["secret_string"] = secretVersionInfo.secretString
-			}
-			_ = d.Set("init_secret", []map[string]interface{}{initSecret})
-		}
 	} else {
 		_ = d.Set("is_enabled", false)
 	}
@@ -329,30 +253,6 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 		d.SetPartial("is_enabled")
-	}
-
-	var outErr, inErr error
-	var secretInfo *SecretInfo
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
-		if inErr != nil {
-			return retryError(inErr)
-		}
-		return nil
-	})
-	if outErr != nil {
-		return outErr
-	}
-
-	if secretInfo.status == SSM_STATUS_ENABLED {
-		err := updateSecretVersionInfo(ctx, d, ssmService)
-		if err != nil {
-			log.Printf("[CRITAL]%s modify SSM secret version failed, reason:%+v", logId, err)
-			return err
-		}
-		d.SetPartial("init_secret.0.version_id")
-		d.SetPartial("init_secret.0.secret_binary")
-		d.SetPartial("init_secret.0.secret_string")
 	}
 
 	if d.HasChange("tags") {
@@ -450,64 +350,4 @@ func updateSecretIsEnabled(ctx context.Context, ssmService SsmService, secretNam
 		})
 	}
 	return err
-}
-
-func updateSecretVersionInfo(ctx context.Context, d *schema.ResourceData, ssmService SsmService) error {
-	logId := getLogId(ctx)
-
-	param := make(map[string]interface{})
-	param["secret_name"] = d.Get("secret_name").(string)
-	param["version_id"] = d.Get("init_secret.0.version_id").(string)
-	if v, ok := d.GetOk("init_secret.0.secret_binary"); ok {
-		param["secret_binary"] = v.(string)
-	}
-	if v, ok := d.GetOk("init_secret.0.secret_string"); ok {
-		param["secret_string"] = v.(string)
-	}
-	if d.HasChange("init_secret.0.version_id") {
-		oldVersionId, newVersionId := d.GetChange("init_secret.0.version_id")
-		if oldVersionId.(string) != "" {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				e := ssmService.DeleteSecretVersion(ctx, d.Get("secret_name").(string), oldVersionId.(string))
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s delete SSM secret version failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-
-		if newVersionId.(string) != "" {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				_, _, e := ssmService.PutSecretValue(ctx, param)
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s add SSM secret version failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	} else if d.HasChange("init_secret.0.secret_binary") || d.HasChange("init_secret.0.secret_string") {
-		versionId := d.Get("init_secret.0.version_id").(string)
-		if versionId != "" {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				e := ssmService.UpdateSecret(ctx, param)
-				if e != nil {
-					return retryError(e)
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-	return nil
 }

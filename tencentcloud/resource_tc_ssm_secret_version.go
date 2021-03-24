@@ -8,26 +8,21 @@ resource "tencentcloud_ssm_secret" "foo" {
   recovery_window_in_days = 0
   is_enabled = true
 
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456"
-  }
-
   tags = {
     test-tag = "test"
   }
 }
 
-resource "tencentcloud_ssm_secret_version" "v2" {
+resource "tencentcloud_ssm_secret_version" "v1" {
   secret_name = tencentcloud_ssm_secret.foo.secret_name
-  version_id = "v2"
+  version_id = "v1"
   secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
 }
 ```
 Import
 SSM secret version can be imported using the secretName#versionId, e.g.
 ```
-$ terraform import tencentcloud_ssm_secret_version.v2 test#v2
+$ terraform import tencentcloud_ssm_secret_version.v1 test#v1
 ```
 */
 package tencentcloud
@@ -143,6 +138,30 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 	})
 	if outErr != nil {
 		return outErr
+	}
+
+	var versionIds []string
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		versionIds, inErr = ssmService.DescribeSecretVersionIdsByName(ctx, secretName)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
+
+	var hasVersionId bool
+	for _, id := range versionIds {
+		if id == versionId {
+			hasVersionId = true
+			break
+		}
+	}
+	if !hasVersionId {
+		d.SetId("")
+		return nil
 	}
 
 	if secretInfo.status == SSM_STATUS_ENABLED {

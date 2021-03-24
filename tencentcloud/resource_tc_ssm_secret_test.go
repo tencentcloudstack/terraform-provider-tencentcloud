@@ -25,8 +25,6 @@ func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "description", "test secret"),
-					resource.TestCheckResourceAttr(resourceName, "init_secret.0.version_id", "v1"),
-					resource.TestCheckResourceAttr(resourceName, "init_secret.0.secret_string", "123456789"),
 					resource.TestCheckResourceAttrSet(resourceName, "kms_key_id"),
 					resource.TestCheckResourceAttrSet(resourceName, "status"),
 				),
@@ -37,8 +35,6 @@ func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 					testAccCheckSsmSecretExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "description", "test description modify"),
-					resource.TestCheckResourceAttr(resourceName, "init_secret.0.version_id", "v2"),
-					resource.TestCheckResourceAttr(resourceName, "init_secret.0.secret_string", "12345"),
 				),
 			},
 			{
@@ -111,11 +107,6 @@ resource "tencentcloud_ssm_secret" "secret" {
   description = "test secret"
   is_enabled = false
 
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456789"
-  }
-
   tags = {
     test-tag = "test"
   }
@@ -127,11 +118,6 @@ resource "tencentcloud_ssm_secret" "secret" {
   secret_name = "unit-test"
   description = "test description modify"
   is_enabled = true
-
-  init_secret {
-    version_id = "v2"
-    secret_string = "12345"
-  }
 
   tags = {
     test-tag = "test"

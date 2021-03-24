@@ -33,10 +33,6 @@ const TestAccTencentCloudSsmSecretsDataSourceConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
   secret_name = "unit-test"
   description = "test secret"
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456789"
-  }
 
   tags = {
     test-tag = "test"

@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
-	resourceName := "tencentcloud_ssm_secret_version.v2"
+	resourceName := "tencentcloud_ssm_secret_version.v1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,7 +24,7 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretVersionExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
-					resource.TestCheckResourceAttr(resourceName, "version_id", "v2"),
+					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
 					resource.TestCheckResourceAttr(resourceName, "secret_binary", "MTIzMTIzMTIzMTIzMTIzQQ=="),
 				),
 			},
@@ -33,7 +33,7 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretVersionExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
-					resource.TestCheckResourceAttr(resourceName, "version_id", "v2"),
+					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
 					resource.TestCheckResourceAttr(resourceName, "secret_string", "123456"),
 				),
 			},
@@ -119,19 +119,15 @@ const TestAccTencentCloudSsmSecretVersion_basicConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
   secret_name = "unit-test"
   description = "test secret"
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456789"
-  }
 
   tags = {
     test-tag = "test"
   }
 }
 
-resource "tencentcloud_ssm_secret_version" "v2" {
+resource "tencentcloud_ssm_secret_version" "v1" {
   secret_name = tencentcloud_ssm_secret.secret.secret_name
-  version_id = "v2"
+  version_id = "v1"
   secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
 }
 `
@@ -140,19 +136,15 @@ const TestAccTencentCloudSsmSecretVersion_secretStringConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
   secret_name = "unit-test"
   description = "test secret"
-  init_secret {
-    version_id = "v1"
-    secret_string = "123456789"
-  }
 
   tags = {
     test-tag = "test"
   }
 }
 
-resource "tencentcloud_ssm_secret_version" "v2" {
+resource "tencentcloud_ssm_secret_version" "v1" {
   secret_name = tencentcloud_ssm_secret.secret.secret_name
-  version_id = "v2"
+  version_id = "v1"
   secret_string = "123456"
 }
 `

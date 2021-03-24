@@ -415,7 +415,7 @@ SSL Certificates
 SSM
   Data Source
     tencentcloud_ssm_secrets
-	tencentcloud_ssm_secret_versions
+    tencentcloud_ssm_secret_versions
 
   Resource
     tencentcloud_ssm_secret
