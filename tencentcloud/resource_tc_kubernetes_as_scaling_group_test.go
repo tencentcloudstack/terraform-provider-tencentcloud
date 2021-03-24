@@ -212,7 +212,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
     }
 
   }
-
+  unschedulable = 0
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -271,7 +271,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
     }
 
   }
-
+  unschedulable = 1
   labels = {
     "test1" = "test1",
     "test2" = "test2",

@@ -1,4 +1,12 @@
-## 1.54.0 (Unreleased)
+## 1.54.2 (Unreleased)
+## 1.54.1 (March 24, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_tcr_vpc_attachment` add `enable_public_domain_dns`, `enable_vpc_domain_dns` to set whether to enable dns.
+* Data Source `tencentcloud_tcr_vpc_attachments` add `enable_public_domain_dns`, `enable_vpc_domain_dns`.
+
+## 1.54.0 (March 22, 2021)
 
 FEATURES:
 
@@ -9,6 +17,13 @@ FEATURES:
 * **New Resource**: `tencentcloud_ssm_secret_version`
 * **New Data Source**: `tencentcloud_ssm_secrets` 
 * **New Data Source**: `tencentcloud_ssm_secret_versions` 
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_cluster` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to sets whether the joining node participates in the schedule.
 
 ## 1.53.9 (March 19, 2021)
 

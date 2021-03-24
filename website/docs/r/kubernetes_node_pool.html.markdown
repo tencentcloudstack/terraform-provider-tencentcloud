@@ -123,6 +123,7 @@ The following arguments are supported:
 * `scaling_mode` - (Optional, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
 * `subnet_ids` - (Optional, ForceNew) ID list of subnet, and for VPC it is required.
 * `taints` - (Optional) Taints of kubernetes node pool created nodes.
+* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 
 The `auto_scaling_config` object supports the following:
 

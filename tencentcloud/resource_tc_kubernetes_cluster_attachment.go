@@ -248,6 +248,13 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			ForceNew:    true,
 			Description: "Labels of tke attachment exits CVM.",
 		},
+		"unschedulable": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+		},
 		//compute
 		"security_groups": {
 			Type:        schema.TypeSet,
@@ -399,6 +406,7 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 					return resource.RetryableError(fmt.Errorf("cvm instance  %s in tke status is %s, retry...",
 						worker.InstanceId, worker.InstanceState))
 				}
+				_ = d.Set("unschedulable", worker.InstanceAdvancedSettings.Unschedulable)
 			}
 		}
 
@@ -469,6 +477,10 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	if hostName, ok := d.GetOk("hostname"); ok {
 		hostNameStr := hostName.(string)
 		request.HostName = &hostNameStr
+	}
+
+	if v, ok := d.GetOk("unschedulable"); ok {
+		request.InstanceAdvancedSettings.Unschedulable = helper.Int64(v.(int64))
 	}
 
 	/*cvm has been  attached*/

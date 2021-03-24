@@ -33,6 +33,7 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepool"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
 				),
 			},
 			{
@@ -48,6 +49,7 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", "ubuntu18.04.1x86_64"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "1"),
 				),
 			},
 		},
@@ -207,7 +209,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     enhanced_monitor_service   = false
 
   }
-
+  unschedulable = 0
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -261,7 +263,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     enhanced_monitor_service   = false
 
   }
-
+  unschedulable = 1
   labels = {
     "test3" = "test3",
     "test2" = "test2",

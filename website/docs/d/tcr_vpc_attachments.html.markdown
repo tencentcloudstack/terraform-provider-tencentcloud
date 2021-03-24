@@ -34,6 +34,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `vpc_attachment_list` - Information list of the dedicated TCR namespaces.
   * `access_ip` - IP address of this VPC access.
+  * `enable_public_domain_dns` - Whether to enable public domain dns.
+  * `enable_vpc_domain_dns` - Whether to enable vpc domain dns.
   * `status` - Status of this VPC access.
   * `subnet_id` - ID of subnet.
   * `vpc_id` - ID of VPC.

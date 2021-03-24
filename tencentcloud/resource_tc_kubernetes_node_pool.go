@@ -327,6 +327,13 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Optional:    true,
 				Description: "Labels of kubernetes node pool created nodes. The label key name does not exceed 63 characters, only supports English, numbers,'/','-', and does not allow beginning with ('/').",
 			},
+			"unschedulable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     0,
+				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+			},
 			"taints": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -694,6 +701,9 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		for _, extraArg := range extraArgs {
 			iAdvanced.ExtraArgs.Kubelet = append(iAdvanced.ExtraArgs.Kubelet, &extraArg)
 		}
+	}
+	if temp, ok := d.GetOk("unschedulable"); ok {
+		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}

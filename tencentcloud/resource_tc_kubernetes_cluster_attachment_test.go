@@ -22,6 +22,7 @@ func TestAccTencentCloudTkeAttachResource(t *testing.T) {
 					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "unschedulable"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test1", "test1"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test2", "test2"),
 				),
@@ -209,15 +210,13 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
+  unschedulable = 0
 
   labels = {
     "test1" = "test1",
     "test2" = "test2",
   }
 
-  extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]
 }
 `
 }

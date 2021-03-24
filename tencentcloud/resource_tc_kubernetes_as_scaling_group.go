@@ -186,6 +186,13 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Custom parameter information related to the node.",
 			},
+			"unschedulable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     0,
+				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
+			},
 		},
 	}
 }
@@ -844,7 +851,9 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	}
 
 	labels := GetTkeLabels(d, "labels")
-
+	if temp, ok := d.GetOk("unschedulable"); ok {
+		iAdvanced.Unschedulable = int64(temp.(int))
+	}
 	if temp, ok := d.GetOk("extra_args"); ok {
 		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
 		for _, extraArg := range extraArgs {

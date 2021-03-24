@@ -110,6 +110,7 @@ The following arguments are supported:
 * `key_ids` - (Optional, ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
 * `labels` - (Optional, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
+* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
 
 The `data_disk` object supports the following:

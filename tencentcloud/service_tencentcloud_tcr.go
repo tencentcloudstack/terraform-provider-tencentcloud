@@ -687,3 +687,89 @@ func (me *TCRService) DescribeTCRVPCAttachmentById(ctx context.Context, instance
 	has = true
 	return
 }
+
+func (me *TCRService) CreateTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewCreateInternalEndpointDnsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.VpcId = &vpcId
+	request.EniLBIp = &accessIp
+	request.UsePublicDomain = &usePublicDomain
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().CreateInternalEndpointDns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return
+}
+
+func (me *TCRService) DeleteTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewDeleteInternalEndpointDnsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.VpcId = &vpcId
+	request.EniLBIp = &accessIp
+	request.UsePublicDomain = &usePublicDomain
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DeleteInternalEndpointDns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return
+}
+
+func (me *TCRService) DescribeTcrVpcDnsById(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool) (vpcPrivateDomainStatus *tcr.VpcPrivateDomainStatus, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewDescribeInternalEndpointDnsStatusRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpcSet = append(request.VpcSet, &tcr.VpcAndDomainInfo{
+		InstanceId:      &instanceId,
+		VpcId:           &vpcId,
+		EniLBIp:         &accessIp,
+		UsePublicDomain: &usePublicDomain,
+	})
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DescribeInternalEndpointDnsStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	if len(response.Response.VpcSet) == 0 {
+		return nil, has, nil
+	} else if len(response.Response.VpcSet) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return more than 1 vpcPrivateDomainStatus, %s %s %s %t", instanceId, vpcId, accessIp, usePublicDomain)
+		return
+	}
+
+	vpcPrivateDomainStatus = response.Response.VpcSet[0]
+	has = true
+	return
+}
