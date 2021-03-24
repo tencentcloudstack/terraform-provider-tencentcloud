@@ -1,4 +1,12 @@
-## 1.54.2 (Unreleased)
+## 1.55.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_ssm_secret`
+* **New Resource**: `tencentcloud_ssm_secret_version`
+* **New Data Source**: `tencentcloud_ssm_secrets` 
+* **New Data Source**: `tencentcloud_ssm_secret_versions` 
+
 ## 1.54.1 (March 24, 2021)
 
 ENHANCEMENTS:
@@ -13,10 +21,6 @@ FEATURES:
 * **New Resource**: `tencentcloud_kms_key`
 * **New Resource**: `tencentcloud_kms_external_key`
 * **New Data Source**: `tencentcloud_kms_keys` 
-* **New Resource**: `tencentcloud_ssm_secret`
-* **New Resource**: `tencentcloud_ssm_secret_version`
-* **New Data Source**: `tencentcloud_ssm_secrets` 
-* **New Data Source**: `tencentcloud_ssm_secret_versions` 
 
 ENHANCEMENTS:
 
