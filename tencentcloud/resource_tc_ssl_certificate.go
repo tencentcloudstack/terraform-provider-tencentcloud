@@ -32,8 +32,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
-	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -41,6 +41,7 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslCertificateCreate,
 		Read:   resourceTencentCloudSslCertificateRead,
+		Update: resourceTencentCloudSslCertificateUpdate,
 		Delete: resourceTencentCloudSslCertificateDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -50,9 +51,8 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     "",
-				Description: "Name of the SSL certificate.",
+				Description: "Alia name of the SSL certificate.",
 			},
 			"type": {
 				Type:         schema.TypeString,
@@ -65,7 +65,6 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				ForceNew:    true,
 				Description: "Project ID of the SSL certificate. Default is `0`.",
 			},
 			"cert": {
@@ -149,30 +148,66 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 
 func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	name := d.Get("name").(string)
-	certType := d.Get("type").(string)
-	projectId := d.Get("project_id").(int)
-	cert := d.Get("cert").(string)
+	var (
+		logId            = getLogId(contextNil)
+		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
+		sslService       = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr    error
+		id               string
+		describeResponse *ssl.DescribeCertificateDetailResponse
+	)
 
-	var key *string
+	request := ssl.NewUploadCertificateRequest()
+	request.CertificatePublicKey = helper.String(d.Get("cert").(string))
+	request.CertificateType = helper.String(d.Get("type").(string))
+	request.ProjectId = helper.Uint64(uint64(d.Get("project_id").(int)))
+	request.Alias = helper.String(d.Get("name").(string))
 	if raw, ok := d.GetOk("key"); ok {
-		key = helper.String(raw.(string))
+		request.CertificatePrivateKey = helper.String(raw.(string))
 	}
-
-	if certType == "SVR" && (key == nil || *key == "") {
+	if *request.CertificateType == "SVR" && (request.CertificatePrivateKey == nil || *request.CertificatePrivateKey == "") {
 		return errors.New("when type is SVR, key can't be empty")
 	}
 
-	service := SslService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	id, err := service.CreateCertificate(ctx, certType, cert, name, projectId, key)
-	if err != nil {
-		return err
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		id, inErr = sslService.UploadCertificate(ctx, request)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		log.Printf("[CRITAL]%s create certificate failed, reason: %v", logId, outErr)
+		return outErr
 	}
 
+	describeRequest := ssl.NewDescribeCertificateDetailRequest()
+	describeRequest.CertificateId = &id
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		describeResponse, inErr = sslService.DescribeCertificateDetail(ctx, describeRequest)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		if describeResponse == nil || describeResponse.Response == nil {
+			err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
+			return retryError(err)
+		}
+		if describeResponse.Response.Status == nil {
+			err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
+			return resource.NonRetryableError(err)
+		}
+
+		if *describeResponse.Response.Status != SSL_STATUS_AVAILABLE {
+			err := fmt.Errorf("certificate is not available, status is %d", *describeResponse.Response.Status)
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if outErr != nil {
+		log.Printf("[CRITAL]%s create certificate failed, reason: %v", logId, outErr)
+		return outErr
+	}
 	d.SetId(id)
 
 	return resourceTencentCloudSslCertificateRead(d, m)
@@ -182,58 +217,63 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 	defer logElapsed("resource.tencentcloud_ssl_certificate.read")()
 	defer inconsistentCheck(d, m)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId            = getLogId(contextNil)
+		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
+		sslService       = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr    error
+		id               = d.Id()
+		describeResponse *ssl.DescribeCertificateDetailResponse
+	)
 
-	id := d.Id()
-
-	service := SslService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	certificates, err := service.DescribeCertificates(ctx, &id, nil, nil)
-	if err != nil {
-		return err
+	describeRequest := ssl.NewDescribeCertificateDetailRequest()
+	describeRequest.CertificateId = &id
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		describeResponse, inErr = sslService.DescribeCertificateDetail(ctx, describeRequest)
+		if inErr != nil {
+			if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == CertificateNotFound {
+					return nil
+				}
+			}
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		log.Printf("[CRITAL]%s read certificate failed, reason: %v", logId, outErr)
+		return outErr
 	}
 
-	var certificate *ssl.SSLCertificate
-	for _, c := range certificates {
-		if c.Id == nil {
-			return errors.New("certificate id is nil")
-		}
-
-		if *c.Id == id {
-			certificate = c
-			break
-		}
-	}
-
-	if certificate == nil {
+	if describeResponse == nil || describeResponse.Response == nil || describeResponse.Response.CertificateId == nil {
 		d.SetId("")
 		return nil
 	}
 
+	certificate := describeResponse.Response
 	if nilNames := CheckNil(certificate, map[string]string{
-		"Alias":         "name",
-		"CertType":      "type",
-		"ProjectId":     "project id",
-		"Cert":          "cert",
-		"ProductZhName": "product zh name",
-		"Domain":        "domain",
-		"Status":        "status",
-		"CertBeginTime": "begin time",
-		"CertEndTime":   "end time",
-		"InsertTime":    "create time",
+		"Alias":                "name",
+		"CertificateType":      "type",
+		"ProjectId":            "project id",
+		"CertificatePublicKey": "cert",
+		"ProductZhName":        "product zh name",
+		"Domain":               "domain",
+		"Status":               "status",
+		"CertBeginTime":        "begin time",
+		"CertEndTime":          "end time",
+		"InsertTime":           "create time",
 	}); len(nilNames) > 0 {
 		return fmt.Errorf("certificate %v are nil", nilNames)
 	}
 
 	_ = d.Set("name", certificate.Alias)
-	_ = d.Set("type", certificate.CertType)
+	_ = d.Set("type", certificate.CertificateType)
 	projectId, err := strconv.Atoi(*certificate.ProjectId)
 	if err != nil {
 		return err
 	}
 	_ = d.Set("project_id", projectId)
-	_ = d.Set("cert", strings.TrimRight(*certificate.Cert, "\n"))
+	_ = d.Set("cert", strings.TrimRight(*certificate.CertificatePublicKey, "\n"))
 	_ = d.Set("product_zh_name", certificate.ProductZhName)
 	_ = d.Set("domain", certificate.Domain)
 	_ = d.Set("status", certificate.Status)
@@ -250,22 +290,84 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 	return nil
 }
 
+func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_ssl_certificate.update")()
+
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		id         = d.Id()
+		sslService = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
+	)
+
+	d.Partial(true)
+	if d.HasChange("name") {
+		aliasRequest := ssl.NewModifyCertificateAliasRequest()
+		aliasRequest.CertificateId = helper.String(id)
+		_, alias := d.GetChange("name")
+		aliasRequest.Alias = helper.String(alias.(string))
+
+		if outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if inErr := sslService.ModifyCertificateAlias(ctx, aliasRequest); inErr != nil {
+				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+					code := sdkErr.GetCode()
+					if code == InvalidParam || code == CertificateNotFound {
+						return resource.NonRetryableError(sdkErr)
+					}
+				}
+				return retryError(inErr)
+			}
+			return nil
+		}); outErr != nil {
+			return outErr
+		}
+		d.SetPartial("name")
+	}
+	if d.HasChange("project_id") {
+		projectRequest := ssl.NewModifyCertificateProjectRequest()
+		projectRequest.CertificateIdList = []*string{
+			helper.String(id),
+		}
+		_, projectId := d.GetChange("project_id")
+		projectRequest.ProjectId = helper.Uint64(uint64(projectId.(int)))
+
+		if outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if inErr := sslService.ModifyCertificateProject(ctx, projectRequest); inErr != nil {
+				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+					code := sdkErr.GetCode()
+					if code == InvalidParam || code == CertificateNotFound {
+						return resource.NonRetryableError(sdkErr)
+					}
+				}
+				return retryError(inErr)
+			}
+			return nil
+		}); outErr != nil {
+			return outErr
+		}
+		d.SetPartial("project_id")
+	}
+	d.Partial(false)
+	return resourceTencentCloudSslCertificateRead(d, m)
+}
+
 func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	id := d.Id()
-
-	service := SSLService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	request := sslCertificate.NewDeleteCertificateRequest()
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		sslService    = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr error
+		id            = d.Id()
+		deleteResult  bool
+	)
+	request := ssl.NewDeleteCertificateRequest()
 	request.CertificateId = helper.String(id)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		deleteResult, e := service.DeleteCertificate(ctx, request)
-		if e != nil {
-			return retryError(e)
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		deleteResult, inErr = sslService.DeleteCertificate(ctx, request)
+		if inErr != nil {
+			return retryError(inErr)
 		}
 		if !deleteResult {
 			return resource.NonRetryableError(errors.New("failed to delete certificate"))
@@ -273,9 +375,9 @@ func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interfac
 		return nil
 	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s delete SSL certificate failed, reason:%+v", logId, err)
-		return err
+	if outErr != nil {
+		log.Printf("[CRITAL]%s delete SSL certificate failed, reason:%+v", logId, outErr)
+		return outErr
 	}
 	return nil
 }

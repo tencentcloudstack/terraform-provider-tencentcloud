@@ -29,8 +29,8 @@ The following arguments are supported:
 * `cert` - (Required, ForceNew) Content of the SSL certificate. Not allowed newline at the start and end.
 * `type` - (Required, ForceNew) Type of the SSL certificate. Valid values: `CA` and `SVR`.
 * `key` - (Optional, ForceNew) Key of the SSL certificate and required when certificate type is `SVR`. Not allowed newline at the start and end.
-* `name` - (Optional, ForceNew) Name of the SSL certificate.
-* `project_id` - (Optional, ForceNew) Project ID of the SSL certificate. Default is `0`.
+* `name` - (Optional) Alia name of the SSL certificate.
+* `project_id` - (Optional) Project ID of the SSL certificate. Default is `0`.
 
 ## Attributes Reference
 
