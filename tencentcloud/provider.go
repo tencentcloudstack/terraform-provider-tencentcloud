@@ -412,6 +412,15 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 
+SSM
+  Data Source
+    tencentcloud_ssm_secrets
+    tencentcloud_ssm_secret_versions
+
+  Resource
+    tencentcloud_ssm_secret
+    tencentcloud_ssm_secret_version
+
 TcaplusDB
   Data Source
     tencentcloud_tcaplus_clusters
@@ -772,6 +781,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                 dataSourceTencentCloudProtocolTemplateGroups(),
 			"tencentcloud_kms_keys":                                 dataSourceTencentCloudKmsKeys(),
+			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
+			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -932,6 +943,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_protocol_template_group":                 resourceTencentCloudProtocolTemplateGroup(),
 			"tencentcloud_kms_key":                                 resourceTencentCloudKmsKey(),
 			"tencentcloud_kms_external_key":                        resourceTencentCloudKmsExternalKey(),
+			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
+			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 		},
 
 		ConfigureFunc: providerConfigure,
