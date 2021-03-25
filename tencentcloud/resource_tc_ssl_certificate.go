@@ -52,7 +52,7 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
-				Description: "Alia name of the SSL certificate.",
+				Description: "Name of the SSL certificate.",
 			},
 			"type": {
 				Type:         schema.TypeString,
