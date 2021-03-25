@@ -7,6 +7,11 @@ FEATURES:
 * **New Data Source**: `tencentcloud_ssm_secrets` 
 * **New Data Source**: `tencentcloud_ssm_secret_versions` 
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_ssl_certificate` refactor logic with api3.0 .
+* Data Source: `tencentcloud_ssl_certificates` refactor logic with api3.0 .
+
 ## 1.54.1 (March 24, 2021)
 
 ENHANCEMENTS:
@@ -28,10 +33,6 @@ ENHANCEMENTS:
 * Resource `tencentcloud_kubernetes_cluster` add `unschedulable` to sets whether the joining node participates in the schedule.
 * Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to sets whether the joining node participates in the schedule.
 * Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to sets whether the joining node participates in the schedule.
-
-BUG FIXES:
-
-* Resource `tencentcloud_ssl_certificate` fix bug when trying to destroy a certificate associated with multiple resources.
 
 ## 1.53.9 (March 19, 2021)
 

@@ -244,3 +244,25 @@ func (me *SSLService) DescribeCertificates(ctx context.Context, request *ssl.Des
 
 	return
 }
+
+func (me *SSLService) checkCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
+
+	//get certificate by id
+
+	request := ssl.NewDescribeCertificateDetailRequest()
+	request.CertificateId = helper.String(certId)
+	certificate, err := me.DescribeCertificateDetail(ctx, request)
+	if err != nil {
+		return false, err
+	}
+
+	if certificate != nil && certificate.Response != nil && *certificate.Response.CertificateType == checkType {
+		return true, nil
+	} else {
+		if certificate == nil || certificate.Response == nil || certificate.Response.CertificateId == nil {
+			return false, fmt.Errorf("certificate id %s is not found", certId)
+		}
+		return false, nil
+	}
+
+}
