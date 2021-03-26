@@ -314,7 +314,7 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 }
 
 func WaitForAccessIpExists(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string) (accessIp string, errRet error) {
-	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		result, has, inErr := tcrService.DescribeTCRVPCAttachmentById(ctx, instanceId, vpcId, subnetId)
 		if inErr != nil {
 			return retryError(inErr)

@@ -151,7 +151,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if len(response.Response.AddressSet) < 1 {
-			return resource.NonRetryableError(fmt.Errorf("eip id is nil"))
+			return resource.RetryableError(fmt.Errorf("eip id is nil"))
 		}
 		eipId = *response.Response.AddressSet[0]
 		return nil
