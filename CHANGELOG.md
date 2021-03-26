@@ -1,4 +1,5 @@
-## 1.55.1 (Unreleased)
+## 1.55.2 (Unreleased)
+## 1.55.1 (March 26, 2021)
 
 ENHANCEMENTS:
 * Resource: `tencentcloud_tcr_vpc_attachment` add more time for retry.
