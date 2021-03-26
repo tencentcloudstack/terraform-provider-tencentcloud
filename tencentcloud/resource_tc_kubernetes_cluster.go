@@ -469,6 +469,14 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 				"Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. " +
 				"Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).",
 		},
+		"disaster_recover_group_ids": {
+			Type:        schema.TypeList,
+			ForceNew:    true,
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
+		},
 	}
 }
 
@@ -1102,6 +1110,15 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		for i := range securityGroups {
 			securityGroup := securityGroups[i].(string)
 			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
+		}
+	}
+
+	if v, ok := dMap["disaster_recover_group_ids"]; ok {
+		disasterGroups := v.([]interface{})
+		request.DisasterRecoverGroupIds = make([]*string, 0, len(disasterGroups))
+		for i := range disasterGroups {
+			disasterGroup := disasterGroups[i].(string)
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterGroup)
 		}
 	}
 

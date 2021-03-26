@@ -1,4 +1,5 @@
-## 1.55.0 (Unreleased)
+## 1.55.1 (Unreleased)
+## 1.55.0 (March 26, 2021)
 
 FEATURES:
 
@@ -6,6 +7,13 @@ FEATURES:
 * **New Resource**: `tencentcloud_ssm_secret_version`
 * **New Data Source**: `tencentcloud_ssm_secrets` 
 * **New Data Source**: `tencentcloud_ssm_secret_versions` 
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_ssl_certificate` refactor logic with api3.0 .
+* Data Source: `tencentcloud_ssl_certificates` refactor logic with api3.0 .
+* Resource `tencentcloud_kubernetes_cluster` add `disaster_recover_group_ids` to set disaster recover group ID.
+* Resource `tencentcloud_kubernetes_scale_worker` add `disaster_recover_group_ids` to set disaster recover group ID.
 
 ## 1.54.1 (March 24, 2021)
 
@@ -24,10 +32,10 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Resource `tencentcloud_kubernetes_cluster_attachment` add `unschedulable` to sets whether the joining node participates in the schedule.
-* Resource `tencentcloud_kubernetes_cluster` add `unschedulable` to sets whether the joining node participates in the schedule.
-* Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to sets whether the joining node participates in the schedule.
-* Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to sets whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `unschedulable` to set whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_cluster` add `unschedulable` to set whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_node_pool` add `unschedulable` to set whether the joining node participates in the schedule.
+* Resource `tencentcloud_kubernetes_scale_worker` add `unschedulable` to set whether the joining node participates in the schedule.
 
 ## 1.53.9 (March 19, 2021)
 

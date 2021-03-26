@@ -946,7 +946,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 	certPara = &certificateInput
 
 	//check type valid
-	sslService := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
+	sslService := SSLService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	if certificateInput.CertCaId != nil {
 		check, err := sslService.checkCertificateType(ctx, *certificateInput.CertCaId, SSL_CERT_TYPE_CA)
