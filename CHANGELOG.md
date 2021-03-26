@@ -14,7 +14,6 @@ ENHANCEMENTS:
 * Resource `tencentcloud_kubernetes_cluster` add `disaster_recover_group_ids` to set disaster recover group ID.
 * Resource `tencentcloud_kubernetes_scale_worker` add `disaster_recover_group_ids` to set disaster recover group ID.
 
-
 ## 1.54.1 (March 24, 2021)
 
 ENHANCEMENTS:
