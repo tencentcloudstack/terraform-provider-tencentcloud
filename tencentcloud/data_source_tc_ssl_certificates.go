@@ -17,7 +17,9 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -144,34 +146,31 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		id = helper.String(raw.(string))
 	}
 
-	service := SslService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	respCertificates, err := service.DescribeCertificates(ctx, id, name, certType)
+	sslService := SSLService{client: m.(*TencentCloudClient).apiV3Conn}
+	certificateList, err := GetCertificateList(ctx, sslService, id, name, certType)
 	if err != nil {
 		return err
 	}
 
-	certificates := make([]map[string]interface{}, 0, len(respCertificates))
-	ids := make([]string, 0, len(respCertificates))
-
-	for _, certificate := range respCertificates {
+	certificates := make([]map[string]interface{}, 0, len(certificateList))
+	ids := make([]string, 0, len(certificateList))
+	for _, certificate := range certificateList {
 		if nilNames := CheckNil(certificate, map[string]string{
-			"Id":            "id",
-			"Alias":         "name",
-			"CertType":      "type",
-			"ProjectId":     "project id",
-			"Cert":          "cert",
-			"ProductZhName": "product zh name",
-			"Domain":        "domain",
-			"Status":        "status",
-			"CertBeginTime": "begin time",
-			"CertEndTime":   "end time",
-			"InsertTime":    "create time",
+			"CertificateId":   "id",
+			"Alias":           "name",
+			"CertificateType": "type",
+			"ProjectId":       "project id",
+			"ProductZhName":   "product zh name",
+			"Domain":          "domain",
+			"Status":          "status",
+			"CertBeginTime":   "begin time",
+			"CertEndTime":     "end time",
+			"InsertTime":      "create time",
 		}); len(nilNames) > 0 {
 			return fmt.Errorf("certificate %v are nil", nilNames)
 		}
 
-		ids = append(ids, *certificate.Id)
+		ids = append(ids, *certificate.CertificateId)
 
 		projectId, err := strconv.Atoi(*certificate.ProjectId)
 		if err != nil {
@@ -179,11 +178,10 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		}
 
 		m := map[string]interface{}{
-			"id":              *certificate.Id,
+			"id":              *certificate.CertificateId,
 			"name":            *certificate.Alias,
-			"type":            *certificate.CertType,
+			"type":            *certificate.CertificateType,
 			"project_id":      projectId,
-			"cert":            *certificate.Cert,
 			"product_zh_name": *certificate.ProductZhName,
 			"domain":          *certificate.Domain,
 			"status":          *certificate.Status,
@@ -198,6 +196,26 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 				subjectAltNames = append(subjectAltNames, *name)
 			}
 			m["subject_names"] = subjectAltNames
+		}
+
+		describeRequest := ssl.NewDescribeCertificateDetailRequest()
+		describeRequest.CertificateId = certificate.CertificateId
+		var outErr, inErr error
+		var describeResponse *ssl.DescribeCertificateDetailResponse
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			describeResponse, inErr = sslService.DescribeCertificateDetail(ctx, describeRequest)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			log.Printf("[CRITAL]%s read certificate failed, reason: %v", logId, outErr)
+			return outErr
+		}
+
+		if describeResponse != nil && describeResponse.Response != nil {
+			m["cert"] = *describeResponse.Response.CertificatePublicKey
 		}
 
 		certificates = append(certificates, m)
@@ -215,4 +233,91 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 	}
 
 	return nil
+}
+
+func GetCertificateList(ctx context.Context, sslService SSLService, id, name, certType *string) (certificateList []*ssl.Certificates, errRet error) {
+	logId := getLogId(contextNil)
+
+	var (
+		outErr, inErr                        error
+		certificatesById, certificatesByName []*ssl.Certificates
+	)
+
+	if id == nil && name == nil {
+		describeRequest := ssl.NewDescribeCertificatesRequest()
+		describeRequest.CertificateType = certType
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			certificateList, inErr = sslService.DescribeCertificates(ctx, describeRequest)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			log.Printf("[CRITAL]%s read certificates failed, reason: %v", logId, outErr)
+			errRet = outErr
+			return
+		}
+		return
+	}
+
+	if id != nil {
+		describeRequest := ssl.NewDescribeCertificatesRequest()
+		describeRequest.CertificateType = certType
+		describeRequest.SearchKey = id
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			certificatesById, inErr = sslService.DescribeCertificates(ctx, describeRequest)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			log.Printf("[CRITAL]%s read certificates failed, reason: %v", logId, outErr)
+			errRet = outErr
+			return
+		}
+	}
+	if name != nil {
+		describeRequest := ssl.NewDescribeCertificatesRequest()
+		describeRequest.CertificateType = certType
+		describeRequest.SearchKey = name
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			certificatesByName, inErr = sslService.DescribeCertificates(ctx, describeRequest)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			log.Printf("[CRITAL]%s read certificates failed, reason: %v", logId, outErr)
+			errRet = outErr
+			return
+		}
+	}
+
+	certificateList = GetCommonCertificates(certificatesById, certificatesByName)
+	return
+}
+
+func GetCommonCertificates(certificatesById, certificatesByName []*ssl.Certificates) (result []*ssl.Certificates) {
+	if len(certificatesById) == 0 {
+		return certificatesByName
+	} else if len(certificatesByName) == 0 {
+		return certificatesById
+	}
+	certificateMap := make(map[string]bool)
+	for _, certificate := range certificatesById {
+		if _, ok := certificateMap[*certificate.CertificateId]; ok {
+			continue
+		}
+		certificateMap[*certificate.CertificateId] = true
+	}
+
+	for _, certificate := range certificatesByName {
+		if _, ok := certificateMap[*certificate.CertificateId]; ok {
+			result = append(result, certificate)
+		}
+	}
+	return
 }

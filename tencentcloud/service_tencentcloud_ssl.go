@@ -212,7 +212,7 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 	return nil
 }
 
-func (me *SslService) checkCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
+func (me *SslService) CheckCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
 
 	//get certificate by id
 

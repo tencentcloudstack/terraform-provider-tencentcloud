@@ -6,23 +6,25 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 )
 
 func TestAccTencentCloudSslCertificate_basic(t *testing.T) {
-	var id string
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSslCertificateDestroy(&id),
+		CheckDestroy: testAccCheckSslCertificateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslCertificate("CA", testAccSslCertificateCA, "CA", ""),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.foo", &id),
+					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "name", "CA"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "type", "CA"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "project_id", "0"),
@@ -47,17 +49,15 @@ func TestAccTencentCloudSslCertificate_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudSslCertificate_svr(t *testing.T) {
-	var id string
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSslCertificateDestroy(&id),
+		CheckDestroy: testAccCheckSslCertificateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslCertificate("SVR", testAccSslCertificateCA, "server", testAccSslCertificateKey),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.foo", &id),
+					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "name", "server"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "type", "SVR"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "project_id", "0"),
@@ -76,58 +76,88 @@ func TestAccTencentCloudSslCertificate_svr(t *testing.T) {
 	})
 }
 
-func testAccCheckSslCertificateDestroy(id *string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		service := SslService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+func testAccCheckSslCertificateDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-		certificates, err := service.DescribeCertificates(context.TODO(), id, nil, nil)
-		if err != nil {
-			return err
+	sslService := SSLService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_ssl_certificate" {
+			continue
+		}
+		resourceId := rs.Primary.ID
+		describeRequest := ssl.NewDescribeCertificateDetailRequest()
+		describeRequest.CertificateId = helper.String(resourceId)
+		var (
+			describeResponse *ssl.DescribeCertificateDetailResponse
+			outErr, inErr    error
+		)
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			describeResponse, inErr = sslService.DescribeCertificateDetail(ctx, describeRequest)
+			if inErr != nil {
+				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+					if sdkErr.Code == CertificateNotFound {
+						return nil
+					}
+				}
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
 		}
 
-		if len(certificates) > 0 {
+		if describeResponse != nil && describeResponse.Response != nil && describeResponse.Response.CertificateId != nil {
 			return errors.New("certificate still exists")
 		}
-
-		return nil
 	}
+	return nil
 }
 
-func testAccCheckSslCertificateExists(n string, id *string) resource.TestCheckFunc {
+func testAccCheckSslCertificateExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		sslService := SSLService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("not found: %s", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][SSL certificate][Exists] check: SSL certificate %s is not found", n)
 		}
-
 		if rs.Primary.ID == "" {
-			return errors.New("no certificate id is set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][SSL certificate][Exists] check: SSL certificate certificateId is not set")
 		}
-
-		service := SslService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-
-		certificates, err := service.DescribeCertificates(context.TODO(), &rs.Primary.ID, nil, nil)
-		if err != nil {
-			return err
-		}
-
-		var certificate *ssl.SSLCertificate
-		for _, c := range certificates {
-			if c.Id == nil {
-				return errors.New("certificate id is nil")
+		resourceId := rs.Primary.ID
+		describeRequest := ssl.NewDescribeCertificateDetailRequest()
+		describeRequest.CertificateId = helper.String(resourceId)
+		var (
+			describeResponse *ssl.DescribeCertificateDetailResponse
+			outErr, inErr    error
+		)
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			describeResponse, inErr = sslService.DescribeCertificateDetail(ctx, describeRequest)
+			if inErr != nil {
+				if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+					if sdkErr.Code == CertificateNotFound {
+						return nil
+					}
+				}
+				return retryError(inErr)
 			}
-
-			if rs.Primary.ID == *c.Id {
-				certificate = c
-				break
-			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
 		}
 
-		if certificate == nil {
-			return errors.New("certificate not found")
+		if describeResponse == nil || describeResponse.Response == nil || describeResponse.Response.CertificateId == nil {
+			return fmt.Errorf("certificateId %s does not exist", resourceId)
 		}
-
-		*id = rs.Primary.ID
 
 		return nil
 	}

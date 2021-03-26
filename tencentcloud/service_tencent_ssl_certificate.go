@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -179,4 +181,88 @@ func (me *SSLService) SubmitCertificateInformation(ctx context.Context, request 
 		return
 	}
 	return
+}
+
+func (me *SSLService) UploadCertificate(ctx context.Context, request *ssl.UploadCertificateRequest) (id string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+	ratelimit.Check(request.GetAction())
+
+	var response *ssl.UploadCertificateResponse
+	response, err = client.UploadCertificate(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		err = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+
+	if response.Response.CertificateId == nil {
+		err = fmt.Errorf("api[%s] return id is nil", request.GetAction())
+		log.Printf("[CRITAL]%s %v", logId, err)
+		return
+	}
+
+	id = *response.Response.CertificateId
+	return
+}
+
+func (me *SSLService) DescribeCertificates(ctx context.Context, request *ssl.DescribeCertificatesRequest) (certificateList []*ssl.Certificates, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+
+	offset := 0
+	pageSize := 100
+	certificateList = make([]*ssl.Certificates, 0)
+	var response *ssl.DescribeCertificatesResponse
+	for {
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
+		ratelimit.Check(request.GetAction())
+		response, err = client.DescribeCertificates(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Certificates) == 0 {
+			break
+		}
+		certificateList = append(certificateList, response.Response.Certificates...)
+		if len(response.Response.Certificates) < pageSize {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *SSLService) checkCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
+
+	//get certificate by id
+
+	request := ssl.NewDescribeCertificateDetailRequest()
+	request.CertificateId = helper.String(certId)
+	certificate, err := me.DescribeCertificateDetail(ctx, request)
+	if err != nil {
+		return false, err
+	}
+
+	if certificate != nil && certificate.Response != nil && *certificate.Response.CertificateType == checkType {
+		return true, nil
+	} else {
+		if certificate == nil || certificate.Response == nil || certificate.Response.CertificateId == nil {
+			return false, fmt.Errorf("certificate id %s is not found", certId)
+		}
+		return false, nil
+	}
+
 }

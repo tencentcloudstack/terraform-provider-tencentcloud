@@ -7,6 +7,11 @@ FEATURES:
 * **New Data Source**: `tencentcloud_ssm_secrets` 
 * **New Data Source**: `tencentcloud_ssm_secret_versions` 
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_ssl_certificate` refactor logic with api3.0 .
+* Data Source: `tencentcloud_ssl_certificates` refactor logic with api3.0 .
+
 ## 1.54.1 (March 24, 2021)
 
 ENHANCEMENTS:
