@@ -1189,31 +1189,31 @@ func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGrou
 	request.ClusterId = helper.String(d.Id())
 
 	clusterAsGroupOption := &tke.ClusterAsGroupOption{}
-	if v, ok := d.GetOk("node_pool_global_config.0.is_scale_in_enabled"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.is_scale_in_enabled"); ok {
 		clusterAsGroupOption.IsScaleDownEnabled = helper.Bool(v.(bool))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.expander"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.expander"); ok {
 		clusterAsGroupOption.Expander = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.max_concurrent_scale_in"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.max_concurrent_scale_in"); ok {
 		clusterAsGroupOption.MaxEmptyBulkDelete = helper.IntInt64(v.(int))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.scale_in_delay"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_delay"); ok {
 		clusterAsGroupOption.ScaleDownDelay = helper.IntInt64(v.(int))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.scale_in_unneeded_time"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_unneeded_time"); ok {
 		clusterAsGroupOption.ScaleDownUnneededTime = helper.IntInt64(v.(int))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.scale_in_utilization_threshold"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_utilization_threshold"); ok {
 		clusterAsGroupOption.ScaleDownUtilizationThreshold = helper.IntInt64(v.(int))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.ignore_daemon_sets_utilization"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.ignore_daemon_sets_utilization"); ok {
 		clusterAsGroupOption.IgnoreDaemonSetsUtilization = helper.Bool(v.(bool))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.skip_nodes_with_local_storage"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.skip_nodes_with_local_storage"); ok {
 		clusterAsGroupOption.SkipNodesWithLocalStorage = helper.Bool(v.(bool))
 	}
-	if v, ok := d.GetOk("node_pool_global_config.0.skip_nodes_with_system_pods"); ok {
+	if v, ok := d.GetOkExists("node_pool_global_config.0.skip_nodes_with_system_pods"); ok {
 		clusterAsGroupOption.SkipNodesWithSystemPods = helper.Bool(v.(bool))
 	}
 
