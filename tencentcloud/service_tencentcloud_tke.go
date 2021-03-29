@@ -947,7 +947,7 @@ func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asG
 	return
 }
 
-func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings) (asGroupId string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterNodePoolRequest()
 
@@ -962,6 +962,8 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	request.LaunchConfigurePara = &configPara
 	request.InstanceAdvancedSettings = &iAdvanced
 	request.EnableAutoscale = &enableAutoScale
+	request.NodePoolOs = &nodeOs
+	request.OsCustomizeType = &nodeOsType
 
 	if len(labels) > 0 {
 		request.Labels = labels
