@@ -1,8 +1,14 @@
-## 1.55.1 (Unreleased)
+## 1.55.2 (Unreleased)
 
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add `node_pool_global_config` to support node pool global config setting.
+
+## 1.55.1 (March 26, 2021)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_tcr_vpc_attachment` add more time for retry.
 
 ## 1.55.0 (March 26, 2021)
 
