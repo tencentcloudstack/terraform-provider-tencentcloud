@@ -611,7 +611,14 @@ func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 			return retryError(e)
 		}
 		if len(clbs) > 0 {
-			flag = true
+			//this describe function is a fuzzy query
+			// so take a further check
+			for _, clb := range clbs {
+				if *clb.LoadBalancerName == name {
+					flag = true
+					return nil
+				}
+			}
 		}
 		return nil
 	})

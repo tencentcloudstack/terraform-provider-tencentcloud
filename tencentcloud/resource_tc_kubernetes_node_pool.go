@@ -706,9 +706,12 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		iAdvanced.Unschedulable = helper.Int64(int64(temp.(int)))
 	}
 
+	nodeOs := d.Get("node_os").(string)
+	nodeOsType := d.Get("node_os_type").(string)
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, labels, taints, iAdvanced)
+	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced)
 	if err != nil {
 		return err
 	}
