@@ -237,6 +237,7 @@ The following arguments are supported:
 * `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
 * `network_type` - (Optional, ForceNew) Cluster network type, GR or VPC-CNI. Default is GR.
 * `node_name_type` - (Optional, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
+* `node_pool_global_config` - (Optional) Global config effective for all node pools.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `service_cidr` - (Optional, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional) The tags of the cluster.
@@ -280,6 +281,18 @@ The `master_config` object supports the following:
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
+
+The `node_pool_global_config` object supports the following:
+
+* `expander` - (Optional) Indicates which scale-out method will be used when there are multiple scaling groups. Valid values: `random` - select a random scaling group, `most-pods` - select the scaling group that can schedule the most pods, `least-waste` - select the scaling group that can ensure the fewest remaining resources after Pod scheduling.
+* `ignore_daemon_sets_utilization` - (Optional) Whether to ignore DaemonSet pods by default when calculating resource usage.
+* `is_scale_in_enabled` - (Optional) Indicates whether to enable scale-in.
+* `max_concurrent_scale_in` - (Optional) Max concurrent scale-in volume.
+* `scale_in_delay` - (Optional) Number of minutes after cluster scale-out when the system starts judging whether to perform scale-in.
+* `scale_in_unneeded_time` - (Optional) Number of consecutive minutes of idleness after which the node is subject to scale-in.
+* `scale_in_utilization_threshold` - (Optional) Percentage of node resource usage below which the node is considered to be idle.
+* `skip_nodes_with_local_storage` - (Optional) During scale-in, ignore nodes with local storage pods.
+* `skip_nodes_with_system_pods` - (Optional) During scale-in, ignore nodes with pods in the kube-system namespace that are not managed by DaemonSet.
 
 The `worker_config` object supports the following:
 

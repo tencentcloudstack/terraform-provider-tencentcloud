@@ -1115,21 +1115,13 @@ func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, no
 }
 
 //node pool global config
-func (me *TkeService) ModifyClusterNodePoolGlobalConfig(ctx context.Context, clusterId string, isScaleDown bool, expanderStrategy string) (errRet error) {
-
+func (me *TkeService) ModifyClusterNodePoolGlobalConfig(ctx context.Context, request *tke.ModifyClusterAsGroupOptionAttributeRequest) (errRet error) {
 	logId := getLogId(ctx)
-	request := tke.NewModifyClusterAsGroupOptionAttributeRequest()
-
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ClusterId = &clusterId
-	request.ClusterAsGroupOption = &tke.ClusterAsGroupOption{
-		IsScaleDownEnabled: &isScaleDown,
-		Expander:           &expanderStrategy,
-	}
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().ModifyClusterAsGroupOptionAttribute(request)

@@ -207,6 +207,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -479,6 +480,65 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 	}
 }
 
+func TkeNodePoolGlobalConfig() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"is_scale_in_enabled": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Indicates whether to enable scale-in.",
+		},
+		"expander": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Indicates which scale-out method will be used when there are multiple scaling groups. Valid values: `random` - select a random scaling group, `most-pods` - select the scaling group that can schedule the most pods, `least-waste` - select the scaling group that can ensure the fewest remaining resources after Pod scheduling.",
+		},
+		"max_concurrent_scale_in": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Max concurrent scale-in volume.",
+		},
+		"scale_in_delay": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Number of minutes after cluster scale-out when the system starts judging whether to perform scale-in.",
+		},
+		"scale_in_unneeded_time": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Number of consecutive minutes of idleness after which the node is subject to scale-in.",
+		},
+		"scale_in_utilization_threshold": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Percentage of node resource usage below which the node is considered to be idle.",
+		},
+		"ignore_daemon_sets_utilization": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Whether to ignore DaemonSet pods by default when calculating resource usage.",
+		},
+		"skip_nodes_with_local_storage": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "During scale-in, ignore nodes with local storage pods.",
+		},
+		"skip_nodes_with_system_pods": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "During scale-in, ignore nodes with pods in the kube-system namespace that are not managed by DaemonSet.",
+		},
+	}
+}
+
 func resourceTencentCloudTkeCluster() *schema.Resource {
 	schemaBody := map[string]*schema.Schema{
 		"cluster_name": {
@@ -543,6 +603,15 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:    true,
 			Default:     false,
 			Description: "Indicates whether to enable cluster node auto scaler.",
+		},
+		"node_pool_global_config": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: TkeNodePoolGlobalConfig(),
+			},
+			Description: "Global config effective for all node pools.",
 		},
 		"cluster_extra_args": {
 			Type:     schema.TypeList,
@@ -1115,6 +1184,43 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	return
 }
 
+func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGroupOptionAttributeRequest {
+	request := tke.NewModifyClusterAsGroupOptionAttributeRequest()
+	request.ClusterId = helper.String(d.Id())
+
+	clusterAsGroupOption := &tke.ClusterAsGroupOption{}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.is_scale_in_enabled"); ok {
+		clusterAsGroupOption.IsScaleDownEnabled = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.expander"); ok {
+		clusterAsGroupOption.Expander = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.max_concurrent_scale_in"); ok {
+		clusterAsGroupOption.MaxEmptyBulkDelete = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_delay"); ok {
+		clusterAsGroupOption.ScaleDownDelay = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_unneeded_time"); ok {
+		clusterAsGroupOption.ScaleDownUnneededTime = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.scale_in_utilization_threshold"); ok {
+		clusterAsGroupOption.ScaleDownUtilizationThreshold = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.ignore_daemon_sets_utilization"); ok {
+		clusterAsGroupOption.IgnoreDaemonSetsUtilization = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.skip_nodes_with_local_storage"); ok {
+		clusterAsGroupOption.SkipNodesWithLocalStorage = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOkExists("node_pool_global_config.0.skip_nodes_with_system_pods"); ok {
+		clusterAsGroupOption.SkipNodesWithSystemPods = helper.Bool(v.(bool))
+	}
+
+	request.ClusterAsGroupOption = clusterAsGroupOption
+	return request
+}
+
 func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.create")()
 
@@ -1453,6 +1559,21 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	//Modify node pool global config
+	if _, ok := d.GetOk("node_pool_global_config"); ok {
+		request := tkeGetNodePoolGlobalConfig(d)
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := service.ModifyClusterNodePoolGlobalConfig(ctx, request)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	if err = resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after create fail , %s", logId, err.Error())
 		return err
@@ -1605,6 +1726,37 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("cluster_intranet", true)
 	}
 
+	var globalConfig *tke.ClusterAsGroupOption
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		globalConfig, err = service.DescribeClusterNodePoolGlobalConfig(ctx, d.Id())
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if globalConfig != nil {
+		temp := make(map[string]interface{})
+		temp["is_scale_in_enabled"] = globalConfig.IsScaleDownEnabled
+		temp["expander"] = globalConfig.Expander
+		temp["max_concurrent_scale_in"] = globalConfig.MaxEmptyBulkDelete
+		temp["scale_in_delay"] = globalConfig.ScaleDownDelay
+		temp["scale_in_unneeded_time"] = globalConfig.ScaleDownUnneededTime
+		temp["scale_in_utilization_threshold"] = globalConfig.ScaleDownUtilizationThreshold
+		temp["ignore_daemon_sets_utilization"] = globalConfig.IgnoreDaemonSetsUtilization
+		temp["skip_nodes_with_local_storage"] = globalConfig.SkipNodesWithLocalStorage
+		temp["skip_nodes_with_system_pods"] = globalConfig.SkipNodesWithSystemPods
+
+		_ = d.Set("node_pool_global_config", []map[string]interface{}{temp})
+	}
 	return nil
 }
 
@@ -1923,6 +2075,22 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
+	}
+
+	// update node pool global config
+	if d.HasChange("node_pool_global_config") {
+		request := tkeGetNodePoolGlobalConfig(d)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := tkeService.ModifyClusterNodePoolGlobalConfig(ctx, request)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		d.SetPartial("node_pool_global_config")
 	}
 
 	d.Partial(false)
