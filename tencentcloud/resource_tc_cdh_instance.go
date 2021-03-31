@@ -34,11 +34,9 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCdhInstance() *schema.Resource {
@@ -68,7 +66,6 @@ func resourceTencentCloudCdhInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Computed:    true,
 				Description: "The type of the CDH instance.",
 			},
 			"host_name": {
