@@ -162,7 +162,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      CVM_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue(CVM_CHARGE_TYPE),
-				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID` and `CDHPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR` and `CDHPAID`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time. `CDHPAID` instance must set `cdh_instance_type`.",
 			},
 			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
@@ -189,6 +189,17 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validateStringNumber,
 				Description:  "Max price of a spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
+			},
+			"cdh_instance_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateStringPrefix("CDH_"),
+				Description:  "Type of instance based on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.",
+			},
+			"cdh_host_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.",
 			},
 			// network
 			"internet_charge_type": {
@@ -476,6 +487,18 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
+			}
+		}
+		if instanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
+			if v, ok := d.GetOk("cdh_instance_type"); ok {
+				request.InstanceType = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("cdh_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
+			}
+			if v, ok := d.GetOk("cdh_host_id"); ok {
+				request.Placement.HostIds = append(request.Placement.HostIds, helper.String(v.(string)))
+			} else {
+				return fmt.Errorf("cdh_host_id can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 		}
 	}
