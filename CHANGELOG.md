@@ -1,4 +1,14 @@
-## 1.55.3 (Unreleased)
+## 1.56.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_cdh_instance`
+* **New Data Source**: `tencentcloud_cdh_instances` 
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_instance` add `cdh_instance_type` and `cdh_host_id` to support create instance based on cdh.
+
 ## 1.55.2 (March 29, 2021)
 
 ENHANCEMENTS:
