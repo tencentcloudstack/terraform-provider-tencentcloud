@@ -167,6 +167,13 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_attachment
     tencentcloud_ccn_bandwidth_limit
 
+CVM Dedicated Host(CDH)
+  Data Source
+    tencentcloud_cdh_instances
+
+  Resource
+    tencentcloud_cdh_instance
+
 Cloud File Storage(CFS)
   Data Source
     tencentcloud_cfs_access_groups
@@ -783,6 +790,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kms_keys":                                 dataSourceTencentCloudKmsKeys(),
 			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
+			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -945,6 +953,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kms_external_key":                        resourceTencentCloudKmsExternalKey(),
 			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
+			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
