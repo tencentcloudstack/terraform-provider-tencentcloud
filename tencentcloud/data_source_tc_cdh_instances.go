@@ -151,22 +151,22 @@ func dataSourceTencentCloudCdhInstances() *schema.Resource {
 									"memory_total_size": {
 										Type:        schema.TypeFloat,
 										Computed:    true,
-										Description: "Instance memory total capacity, unit in GiB.",
+										Description: "Instance memory total capacity, unit in GB.",
 									},
 									"memory_available_size": {
 										Type:        schema.TypeFloat,
 										Computed:    true,
-										Description: "Instance memory available capacity, unit in GiB.",
+										Description: "Instance memory available capacity, unit in GB.",
 									},
 									"disk_total_size": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Instance disk total capacity, unit in GiB.",
+										Description: "Instance disk total capacity, unit in GB.",
 									},
 									"disk_available_size": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Instance disk available capacity, unit in GiB.",
+										Description: "Instance disk available capacity, unit in GB.",
 									},
 									"disk_type": {
 										Type:        schema.TypeString,

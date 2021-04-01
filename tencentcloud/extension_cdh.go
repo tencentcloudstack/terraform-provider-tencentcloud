@@ -11,6 +11,8 @@ const (
 	CDH_HOST_STATE_LAUNCH_FAILURE = "LAUNCH_FAILURE"
 	CDH_HOST_RUNNING              = "RUNNING"
 	CDH_HOST_EXPIRED              = "EXPIRED"
+
+	CDH_ZONE_SOLD_OUT_FOR_SPECIFIED_INSTANCE_ERROR = "ResourceInsufficient.ZoneSoldOutForSpecifiedInstance"
 )
 
 var CDH_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}

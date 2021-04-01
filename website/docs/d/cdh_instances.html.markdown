@@ -50,11 +50,11 @@ In addition to all arguments above, the following attributes are exported:
   * `host_resource` - An information list of host resource. Each element contains the following attributes:
     * `cpu_available_num` - The number of available CPU cores of the instance.
     * `cpu_total_num` - The number of total CPU cores of the instance.
-    * `disk_available_size` - Instance disk available capacity, unit in GiB.
-    * `disk_total_size` - Instance disk total capacity, unit in GiB.
+    * `disk_available_size` - Instance disk available capacity, unit in GB.
+    * `disk_total_size` - Instance disk total capacity, unit in GB.
     * `disk_type` - Type of the disk.
-    * `memory_available_size` - Instance memory available capacity, unit in GiB.
-    * `memory_total_size` - Instance memory total capacity, unit in GiB.
+    * `memory_available_size` - Instance memory available capacity, unit in GB.
+    * `memory_total_size` - Instance memory total capacity, unit in GB.
   * `host_state` - State of the CDH instance.
   * `host_type` - Type of the CDH instance.
   * `prepaid_renew_flag` - Auto renewal flag.

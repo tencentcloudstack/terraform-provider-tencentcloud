@@ -35,6 +35,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -138,22 +139,22 @@ func resourceTencentCloudCdhInstance() *schema.Resource {
 						"memory_total_size": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Instance memory total capacity, unit in GiB.",
+							Description: "Instance memory total capacity, unit in GB.",
 						},
 						"memory_available_size": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Instance memory available capacity, unit in GiB.",
+							Description: "Instance memory available capacity, unit in GB.",
 						},
 						"disk_total_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Instance disk total capacity, unit in GiB.",
+							Description: "Instance disk total capacity, unit in GB.",
 						},
 						"disk_available_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Instance disk available capacity, unit in GiB.",
+							Description: "Instance disk available capacity, unit in GB.",
 						},
 						"disk_type": {
 							Type:        schema.TypeString,
@@ -202,6 +203,9 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		hostId, inErr = cdhService.CreateCdhInstance(ctx, &placement, &hostChargePrepaid, chargeType, hostType)
 		if inErr != nil {
+			if sdkErr, ok := inErr.(*sdkErrors.TencentCloudSDKError); ok && sdkErr.Code == CDH_ZONE_SOLD_OUT_FOR_SPECIFIED_INSTANCE_ERROR {
+				return resource.NonRetryableError(inErr)
+			}
 			return retryError(inErr)
 		}
 		return nil
