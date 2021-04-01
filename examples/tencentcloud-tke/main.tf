@@ -237,3 +237,55 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
     "test2" = "test2",
   }
 }
+
+#example for node pool global config
+resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
+  vpc_id                                     = var.vpc
+  cluster_cidr                               = "10.1.0.0/16"
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = var.subnet
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  node_pool_global_config {
+    is_scale_in_enabled = true
+    expander = "random"
+    ignore_daemon_sets_utilization = true
+    max_concurrent_scale_in = 5
+    scale_in_delay = 15
+    scale_in_unneeded_time = 15
+    scale_in_utilization_threshold = 30
+    skip_nodes_with_local_storage = false
+    skip_nodes_with_system_pods = true
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
