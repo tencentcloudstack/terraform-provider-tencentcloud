@@ -7,6 +7,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   availability_zone = var.availability_zone
   host_type = "HC20"
   charge_type = "PREPAID"
+  prepaid_period = 1
   host_name = "test"
   prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
