@@ -911,6 +911,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			ForceNew:    true,
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if new == "0" && old == ""{
+					return true
+				} else {
+					return old == new
+				}
+			},
 			Default:     0,
 			Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
 		},
