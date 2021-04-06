@@ -1,5 +1,11 @@
-## 1.56.1 (unreleased)
-## 1.56.0 (April 2， 2021)
+## 1.56.2 (Unreleased)
+## 1.56.1 (April 6，2021)
+
+BUG FIXES:
+
+* Fix release permission denied.
+
+## 1.56.0 (April 2，2021)
 
 FEATURES:
 

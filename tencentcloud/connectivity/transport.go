@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const ReqClient = "Terraform-v1.55.2"
+const ReqClient = "Terraform-v1.56.1"
 
 type LogRoundTripper struct {
 }
