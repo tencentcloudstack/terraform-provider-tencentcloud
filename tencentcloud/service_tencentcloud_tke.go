@@ -825,7 +825,7 @@ func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, pro
 	return
 }
 
-func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clusterVersion string) (errRet error) {
+func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clusterVersion string, extraArgs interface{}) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewUpdateClusterVersionRequest()
 	defer func() {
@@ -833,6 +833,44 @@ func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clust
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
 		}
 	}()
+
+	if extraArgs != nil && len(extraArgs.([]interface{})) > 0 {
+		// the first elem is in use
+		extraInterface := extraArgs.([]interface{})
+		extraMap := extraInterface[0].(map[string]interface{})
+
+		kas := make([]*string, 0)
+		if kaArgs, exist := extraMap["kube_apiserver"]; exist {
+			args := kaArgs.([]interface{})
+			for index := range args {
+				str := args[index].(string)
+				kas = append(kas, &str)
+			}
+		}
+		kcms := make([]*string, 0)
+		if kcmArgs, exist := extraMap["kube_controller_manager"]; exist {
+			args := kcmArgs.([]interface{})
+			for index := range args {
+				str := args[index].(string)
+				kcms = append(kcms, &str)
+			}
+		}
+		kss := make([]*string, 0)
+		if ksArgs, exist := extraMap["kube_scheduler"]; exist {
+			args := ksArgs.([]interface{})
+			for index := range args {
+				str := args[index].(string)
+				kss = append(kss, &str)
+			}
+		}
+
+		request.ExtraArgs = &tke.ClusterExtraArgs{
+			KubeAPIServer: kas,
+			KubeControllerManager: kcms,
+			KubeScheduler: kss,
+		}
+	}
+
 	request.ClusterId = &id
 	request.DstVersion = &clusterVersion
 
