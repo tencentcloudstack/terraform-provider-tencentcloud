@@ -2124,9 +2124,12 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if !isOk {
 			return fmt.Errorf("version %s is unsupported", newVersion)
 		}
-
+		extraArgs, ok := d.GetOk("cluster_extra_args")
+		if !ok {
+			extraArgs = nil
+		}
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr := tkeService.ModifyClusterVersion(ctx, id, newVersion)
+			inErr := tkeService.ModifyClusterVersion(ctx, id, newVersion, extraArgs)
 			if inErr != nil {
 				return retryError(inErr)
 			}

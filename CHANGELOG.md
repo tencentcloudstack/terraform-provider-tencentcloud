@@ -1,4 +1,13 @@
-## 1.56.2 (Unreleased)
+## 1.56.3 (Unreleased)
+## 1.56.2 (April 19, 2021)
+BUG FIXES:
+
+* Remove `ResourceInsufficient` from `retryableErrorCode`.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` upgrade `cluster_version` will send old `cluster_extra_args` to tke.
+
 ## 1.56.1 (April 6，2021)
 
 BUG FIXES:

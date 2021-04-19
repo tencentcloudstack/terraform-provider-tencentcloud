@@ -50,7 +50,7 @@ var retryableErrorCode = []string{
 	"TradeUnknownError",
 	"RequestLimitExceeded",
 	"ResourceInUse",
-	"ResourceInsufficient",
+	//"ResourceInsufficient",
 	"ResourceUnavailable",
 	// cbs
 	"ResourceBusy",
