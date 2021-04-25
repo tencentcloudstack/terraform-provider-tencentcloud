@@ -661,6 +661,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:     "1.10.5",
 			Description: "Version of the cluster, Default is '1.10.5'.",
 		},
+		"upgrade_instances_follow_cluster": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicates whether upgrade all instances when cluster_version change. Default is false.",
+		},
 		"cluster_ipvs": {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
@@ -673,7 +679,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     false,
-			Description: "Indicates whether to enable cluster node auto scaler.",
+			Description: "Indicates whether to enable cluster node auto scaler. Default is false.",
 		},
 		"node_pool_global_config": {
 			Type:     schema.TypeList,
@@ -979,11 +985,11 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Labels of tke cluster nodes.",
 		},
 		"unschedulable": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			ForceNew:    true,
+			Type:     schema.TypeInt,
+			Optional: true,
+			ForceNew: true,
 			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-				if new == "0" && old == ""{
+				if new == "0" && old == "" {
 					return true
 				} else {
 					return old == new
@@ -1297,6 +1303,57 @@ func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGrou
 
 	request.ClusterAsGroupOption = clusterAsGroupOption
 	return request
+}
+
+// upgradeClusterInstances upgrade instances, upgrade type try seq:major, hot.
+func upgradeClusterInstances(tkeService TkeService, ctx context.Context, id string) error {
+	// get all available instances for upgrade
+	upgradeType := "major"
+	instanceIds, err := tkeService.CheckInstancesUpgradeAble(ctx, id, upgradeType)
+	if err != nil {
+		return err
+	}
+	if len(instanceIds) == 0 {
+		upgradeType = "hot"
+		instanceIds, err = tkeService.CheckInstancesUpgradeAble(ctx, id, upgradeType)
+		if err != nil {
+			return err
+		}
+	}
+	log.Println("instancesIds for upgrade:", instanceIds)
+	if len(instanceIds) == 0 {
+		return nil
+	}
+
+	// upgrade instances
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr := tkeService.UpgradeClusterInstances(ctx, id, upgradeType, instanceIds)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	// check update status
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		done, inErr := tkeService.GetUpgradeInstanceResult(ctx, id)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		if done {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("cluster %s, retry...", id))
+		}
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface{}) error {
@@ -2114,7 +2171,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("cluster_desc")
 	}
 
-	//upgrate k8s version
+	//upgrade k8s cluster version
 	if d.HasChange("cluster_version") {
 		newVersion := d.Get("cluster_version").(string)
 		isOk, err := tkeService.CheckClusterVersion(ctx, id, newVersion)
@@ -2155,6 +2212,18 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		})
 		if err != nil {
 			return err
+		}
+
+		// upgrade instances version
+		upgrade := false
+		if v, ok := d.GetOk("upgrade_instances_follow_cluster"); ok {
+			upgrade = v.(bool)
+		}
+		if upgrade {
+			err := upgradeClusterInstances(tkeService, ctx, id)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

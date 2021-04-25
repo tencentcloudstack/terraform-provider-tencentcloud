@@ -328,6 +328,61 @@ func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string) (con
 	return
 }
 
+func (me *TkeService) GetUpgradeInstanceResult(ctx context.Context, id string) (
+	done bool,
+	errRet error,
+) {
+
+	logId := getLogId(ctx)
+	request := tke.NewGetUpgradeInstanceProgressRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().GetUpgradeInstanceProgress(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	lifeState := *response.Response.LifeState
+
+	// all instances success, lifeState=done
+	if lifeState == "done" {
+		return true, nil
+	} else if lifeState != "process" {
+		return false, fmt.Errorf("upgrade instances failed, tke response lifeState is:%s", lifeState)
+	}
+
+	// parent lifeState=process, check whether all instances in processing.
+	for _, inst := range response.Response.Instances {
+		if *inst.LifeState == "done" || *inst.LifeState == "pending" {
+			continue
+		}
+		if *inst.LifeState != "process" {
+			return false, fmt.Errorf("upgrade instances failed, " +
+				"instanceId:%s, lifeState is:%s", *inst.InstanceID, *inst.LifeState)
+		}
+		// instance lifeState=process, check whether failed or not.
+		for _, detail := range inst.Detail {
+			if *detail.LifeState == "failed" {
+				return false, fmt.Errorf("upgrade instances failed, " +
+					"instanceId:%s, detail.lifeState is:%s", *inst.InstanceID, *detail.LifeState)
+			}
+		}
+	}
+
+	return
+}
+
 func (me *TkeService) CreateCluster(ctx context.Context,
 	basic ClusterBasicSetting,
 	advanced ClusterAdvancedSettings,
@@ -910,6 +965,58 @@ func (me *TkeService) CheckClusterVersion(ctx context.Context, id string, cluste
 			isOk = true
 			return
 		}
+	}
+
+	return
+}
+
+func (me *TkeService) CheckInstancesUpgradeAble(ctx context.Context, id string, upgradeType string) (instanceIds []string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewCheckInstancesUpgradeAbleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.UpgradeType = &upgradeType
+	ratelimit.Check(request.GetAction())
+
+	resp, err := me.client.UseTkeClient().CheckInstancesUpgradeAble(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if resp == nil || resp.Response == nil || resp.Response.UpgradeAbleInstances == nil {
+		return
+	}
+	for _, inst := range resp.Response.UpgradeAbleInstances {
+		instanceIds = append(instanceIds, *inst.InstanceId)
+	}
+
+	return
+}
+
+func (me *TkeService) UpgradeClusterInstances(ctx context.Context, id string, upgradeType string, instanceIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewUpgradeClusterInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	op := "create"
+	request.Operation = &op
+	request.ClusterId = &id
+	request.UpgradeType = &upgradeType
+	request.InstanceIds = helper.Strings(instanceIds)
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().UpgradeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
 	}
 
 	return
