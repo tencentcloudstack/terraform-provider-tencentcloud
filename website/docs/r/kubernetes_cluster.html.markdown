@@ -279,7 +279,7 @@ The following arguments are supported:
 
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
 * `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
-* `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler.
+* `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler. Default is false.
 * `cluster_cidr` - (Optional, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional) Description of the cluster.
@@ -313,6 +313,7 @@ The following arguments are supported:
 * `service_cidr` - (Optional, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional) The tags of the cluster.
 * `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `upgrade_instances_follow_cluster` - (Optional) Indicates whether upgrade all instances when cluster_version change. Default is false.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
 
 The `cluster_extra_args` object supports the following:
