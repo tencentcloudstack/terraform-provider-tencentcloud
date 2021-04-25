@@ -1,4 +1,10 @@
-## 1.56.3 (Unreleased)
+## 1.56.4 (Unreleased)
+## 1.56.3 (April 25, 2021)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add `upgrade_instances_follow_cluster` for upgrade all instances of cluster.
+
 ## 1.56.2 (April 19, 2021)
 
 BUG FIXES:
