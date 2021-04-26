@@ -1,4 +1,10 @@
-## 1.56.5 (Unreleased)
+## 1.56.6 (Unreleased)
+## 1.56.5 (April 26, 2021)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_kubernetes_cluster` upgrade cluster timeout from 3 to 9 minutes.
+
 ## 1.56.4 (April 26, 2021)
 
 BUG FIXES:

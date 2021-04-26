@@ -2199,7 +2199,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		//check status
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			ins, has, inErr := tkeService.DescribeCluster(ctx, id)
 			if inErr != nil {
 				return retryError(inErr)
