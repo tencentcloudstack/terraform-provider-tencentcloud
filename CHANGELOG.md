@@ -1,4 +1,10 @@
-## 1.56.4 (Unreleased)
+## 1.56.5 (Unreleased)
+## 1.56.4 (April 26, 2021)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_kubernetes_cluster` upgrade instances timeout depend on instance number.
+
 ## 1.56.3 (April 25, 2021)
 
 ENHANCEMENTS:
