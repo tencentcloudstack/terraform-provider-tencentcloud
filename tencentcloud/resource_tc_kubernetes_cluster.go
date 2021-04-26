@@ -273,6 +273,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -1321,7 +1322,8 @@ func upgradeClusterInstances(tkeService TkeService, ctx context.Context, id stri
 		}
 	}
 	log.Println("instancesIds for upgrade:", instanceIds)
-	if len(instanceIds) == 0 {
+	instNum := len(instanceIds)
+	if instNum == 0 {
 		return nil
 	}
 
@@ -1337,8 +1339,9 @@ func upgradeClusterInstances(tkeService TkeService, ctx context.Context, id stri
 		return err
 	}
 
-	// check update status
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	// check update status: upgrade instance one by one, so timeout depend on instance number.
+	timeout := readRetryTimeout * time.Duration(instNum)
+	err = resource.Retry(timeout, func() *resource.RetryError {
 		done, inErr := tkeService.GetUpgradeInstanceResult(ctx, id)
 		if inErr != nil {
 			return retryError(inErr)
