@@ -170,11 +170,13 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"cls_logset_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "cls logset id of the SCF function.",
 			},
 			"cls_topic_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "cls topic id of the SCF function.",
 			},
 			"l5_enable": {
