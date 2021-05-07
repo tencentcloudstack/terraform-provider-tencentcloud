@@ -1,4 +1,10 @@
-## 1.56.6 (Unreleased)
+## 1.56.7 (Unreleased)
+## 1.56.6 (May 7, 2021)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_scf_function` filed `cls_logset_id` and `cls_logset_id` change to Computed.
+
 ## 1.56.5 (April 26, 2021)
 
 BUG FIXES:
