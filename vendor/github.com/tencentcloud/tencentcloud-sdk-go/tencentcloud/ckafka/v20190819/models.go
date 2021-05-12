@@ -16,6 +16,7 @@ package v20190819
 
 import (
     "encoding/json"
+    "errors"
 
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
@@ -71,6 +72,39 @@ type Assignment struct {
 	// topic信息列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Topics []*GroupInfoTopics `json:"Topics,omitempty" name:"Topics" list`
+}
+
+type ClusterInfo struct {
+
+	// 集群Id
+	ClusterId *int64 `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 集群名称
+	ClusterName *string `json:"ClusterName,omitempty" name:"ClusterName"`
+
+	// 集群最大磁盘 单位GB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxDiskSize *int64 `json:"MaxDiskSize,omitempty" name:"MaxDiskSize"`
+
+	// 集群最大带宽 单位MB/s
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxBandWidth *int64 `json:"MaxBandWidth,omitempty" name:"MaxBandWidth"`
+
+	// 集群当前可用磁盘  单位GB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AvailableDiskSize *int64 `json:"AvailableDiskSize,omitempty" name:"AvailableDiskSize"`
+
+	// 集群当前可用带宽 单位MB/s
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AvailableBandWidth *int64 `json:"AvailableBandWidth,omitempty" name:"AvailableBandWidth"`
+
+	// 集群所属可用区，表明集群归属的可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneId *int64 `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 集群节点所在的可用区，若该集群为跨可用区集群，则包含该集群节点所在的多个可用区。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneIds []*int64 `json:"ZoneIds,omitempty" name:"ZoneIds" list`
 }
 
 type Config struct {
@@ -166,19 +200,19 @@ type CreateAclRequest struct {
 	// Acl资源类型，(0:UNKNOWN，1:ANY，2:TOPIC，3:GROUP，4:CLUSTER，5:TRANSACTIONAL_ID)，当前只有TOPIC，其它字段用于后续兼容开源kafka的acl时使用
 	ResourceType *int64 `json:"ResourceType,omitempty" name:"ResourceType"`
 
-	// 资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称
-	ResourceName *string `json:"ResourceName,omitempty" name:"ResourceName"`
-
 	// Acl操作方式，(0:UNKNOWN，1:ANY，2:ALL，3:READ，4:WRITE，5:CREATE，6:DELETE，7:ALTER，8:DESCRIBE，9:CLUSTER_ACTION，10:DESCRIBE_CONFIGS，11:ALTER_CONFIGS)
 	Operation *int64 `json:"Operation,omitempty" name:"Operation"`
 
 	// 权限类型，(0:UNKNOWN，1:ANY，2:DENY，3:ALLOW)，当前ckakfa支持ALLOW(相当于白名单)，其它用于后续兼容开源kafka的acl时使用
 	PermissionType *int64 `json:"PermissionType,omitempty" name:"PermissionType"`
 
+	// 资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称
+	ResourceName *string `json:"ResourceName,omitempty" name:"ResourceName"`
+
 	// 默认为\*，表示任何host都可以访问，当前ckafka不支持host为\*，但是后面开源kafka的产品化会直接支持
 	Host *string `json:"Host,omitempty" name:"Host"`
 
-	// 用户列表，默认为*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户
+	// 用户列表，默认为User:*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户。传入时需要加 User: 前缀,如用户A则传入User:A。
 	Principal *string `json:"Principal,omitempty" name:"Principal"`
 }
 
@@ -187,8 +221,24 @@ func (r *CreateAclRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAclRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ResourceType")
+	delete(f, "Operation")
+	delete(f, "PermissionType")
+	delete(f, "ResourceName")
+	delete(f, "Host")
+	delete(f, "Principal")
+	if len(f) > 0 {
+		return errors.New("CreateAclRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateAclResponse struct {
@@ -208,8 +258,10 @@ func (r *CreateAclResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAclResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateInstancePreData struct {
@@ -259,8 +311,26 @@ func (r *CreateInstancePreRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateInstancePreRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceName")
+	delete(f, "ZoneId")
+	delete(f, "Period")
+	delete(f, "InstanceType")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "MsgRetentionTime")
+	delete(f, "ClusterId")
+	delete(f, "RenewFlag")
+	if len(f) > 0 {
+		return errors.New("CreateInstancePreRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateInstancePreResponse struct {
@@ -284,8 +354,10 @@ func (r *CreateInstancePreResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateInstancePreResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreatePartitionRequest struct {
@@ -306,8 +378,20 @@ func (r *CreatePartitionRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreatePartitionRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	delete(f, "PartitionNum")
+	if len(f) > 0 {
+		return errors.New("CreatePartitionRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreatePartitionResponse struct {
@@ -327,8 +411,10 @@ func (r *CreatePartitionResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreatePartitionResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateTopicIpWhiteListRequest struct {
@@ -349,8 +435,20 @@ func (r *CreateTopicIpWhiteListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateTopicIpWhiteListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	delete(f, "IpWhiteList")
+	if len(f) > 0 {
+		return errors.New("CreateTopicIpWhiteListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateTopicIpWhiteListResponse struct {
@@ -370,8 +468,10 @@ func (r *CreateTopicIpWhiteListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateTopicIpWhiteListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateTopicRequest struct {
@@ -419,8 +519,29 @@ func (r *CreateTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	delete(f, "PartitionNum")
+	delete(f, "ReplicaNum")
+	delete(f, "EnableWhiteList")
+	delete(f, "IpWhiteList")
+	delete(f, "CleanUpPolicy")
+	delete(f, "Note")
+	delete(f, "MinInsyncReplicas")
+	delete(f, "UncleanLeaderElectionEnable")
+	delete(f, "RetentionMs")
+	delete(f, "SegmentMs")
+	if len(f) > 0 {
+		return errors.New("CreateTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateTopicResp struct {
@@ -446,8 +567,10 @@ func (r *CreateTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateUserRequest struct {
@@ -468,8 +591,20 @@ func (r *CreateUserRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateUserRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Name")
+	delete(f, "Password")
+	if len(f) > 0 {
+		return errors.New("CreateUserRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateUserResponse struct {
@@ -489,8 +624,10 @@ func (r *CreateUserResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateUserResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteAclRequest struct {
@@ -523,8 +660,24 @@ func (r *DeleteAclRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAclRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ResourceType")
+	delete(f, "ResourceName")
+	delete(f, "Operation")
+	delete(f, "PermissionType")
+	delete(f, "Host")
+	delete(f, "Principal")
+	if len(f) > 0 {
+		return errors.New("DeleteAclRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteAclResponse struct {
@@ -544,8 +697,63 @@ func (r *DeleteAclResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAclResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteAclRuleRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例id信息
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// acl规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+}
+
+func (r *DeleteAclRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAclRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RuleName")
+	if len(f) > 0 {
+		return errors.New("DeleteAclRuleRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteAclRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回被删除的规则的ID
+		Result *int64 `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteAclRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAclRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteTopicIpWhiteListRequest struct {
@@ -566,8 +774,20 @@ func (r *DeleteTopicIpWhiteListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteTopicIpWhiteListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	delete(f, "IpWhiteList")
+	if len(f) > 0 {
+		return errors.New("DeleteTopicIpWhiteListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteTopicIpWhiteListResponse struct {
@@ -587,8 +807,10 @@ func (r *DeleteTopicIpWhiteListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteTopicIpWhiteListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteTopicRequest struct {
@@ -606,8 +828,19 @@ func (r *DeleteTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	if len(f) > 0 {
+		return errors.New("DeleteTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteTopicResponse struct {
@@ -627,8 +860,10 @@ func (r *DeleteTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteUserRequest struct {
@@ -646,8 +881,19 @@ func (r *DeleteUserRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteUserRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Name")
+	if len(f) > 0 {
+		return errors.New("DeleteUserRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteUserResponse struct {
@@ -667,8 +913,10 @@ func (r *DeleteUserResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteUserResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeACLRequest struct {
@@ -698,8 +946,23 @@ func (r *DescribeACLRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeACLRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ResourceType")
+	delete(f, "ResourceName")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SearchWord")
+	if len(f) > 0 {
+		return errors.New("DescribeACLRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeACLResponse struct {
@@ -719,8 +982,10 @@ func (r *DescribeACLResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeACLResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAppInfoRequest struct {
@@ -738,8 +1003,19 @@ func (r *DescribeAppInfoRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAppInfoRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeAppInfoRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAppInfoResponse struct {
@@ -759,8 +1035,55 @@ func (r *DescribeAppInfoResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAppInfoResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCkafkaZoneRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeCkafkaZoneRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCkafkaZoneRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribeCkafkaZoneRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCkafkaZoneResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 查询结果复杂对象实体
+		Result *ZoneResponse `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeCkafkaZoneResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCkafkaZoneResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeConsumerGroupRequest struct {
@@ -787,8 +1110,22 @@ func (r *DescribeConsumerGroupRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeConsumerGroupRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GroupName")
+	delete(f, "TopicName")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return errors.New("DescribeConsumerGroupRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeConsumerGroupResponse struct {
@@ -808,8 +1145,10 @@ func (r *DescribeConsumerGroupResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeConsumerGroupResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroup struct {
@@ -836,8 +1175,19 @@ func (r *DescribeGroupInfoRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupInfoRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GroupList")
+	if len(f) > 0 {
+		return errors.New("DescribeGroupInfoRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroupInfoResponse struct {
@@ -858,8 +1208,10 @@ func (r *DescribeGroupInfoResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupInfoResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroupOffsetsRequest struct {
@@ -889,8 +1241,23 @@ func (r *DescribeGroupOffsetsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupOffsetsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Group")
+	delete(f, "Topics")
+	delete(f, "SearchWord")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeGroupOffsetsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroupOffsetsResponse struct {
@@ -910,8 +1277,10 @@ func (r *DescribeGroupOffsetsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupOffsetsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroupRequest struct {
@@ -935,8 +1304,21 @@ func (r *DescribeGroupRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeGroupRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeGroupResponse struct {
@@ -956,8 +1338,10 @@ func (r *DescribeGroupResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeGroupResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstanceAttributesRequest struct {
@@ -972,8 +1356,18 @@ func (r *DescribeInstanceAttributesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstanceAttributesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("DescribeInstanceAttributesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstanceAttributesResponse struct {
@@ -993,8 +1387,10 @@ func (r *DescribeInstanceAttributesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstanceAttributesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstancesDetailRequest struct {
@@ -1027,8 +1423,24 @@ func (r *DescribeInstancesDetailRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstancesDetailRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Status")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "TagKey")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return errors.New("DescribeInstancesDetailRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstancesDetailResponse struct {
@@ -1048,8 +1460,10 @@ func (r *DescribeInstancesDetailResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstancesDetailResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstancesRequest struct {
@@ -1079,8 +1493,23 @@ func (r *DescribeInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstancesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Status")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "TagKey")
+	if len(f) > 0 {
+		return errors.New("DescribeInstancesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInstancesResponse struct {
@@ -1100,8 +1529,68 @@ func (r *DescribeInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInstancesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeRegionRequest struct {
+	*tchttp.BaseRequest
+
+	// 偏移量
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回最大结果数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 业务字段，可忽略
+	Business *string `json:"Business,omitempty" name:"Business"`
+}
+
+func (r *DescribeRegionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRegionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Business")
+	if len(f) > 0 {
+		return errors.New("DescribeRegionRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeRegionResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回地域枚举结果列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Result []*Region `json:"Result,omitempty" name:"Result" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeRegionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeRegionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeRouteRequest struct {
@@ -1116,8 +1605,18 @@ func (r *DescribeRouteRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeRouteRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("DescribeRouteRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeRouteResponse struct {
@@ -1137,8 +1636,10 @@ func (r *DescribeRouteResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeRouteResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicAttributesRequest struct {
@@ -1156,8 +1657,19 @@ func (r *DescribeTopicAttributesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicAttributesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	if len(f) > 0 {
+		return errors.New("DescribeTopicAttributesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicAttributesResponse struct {
@@ -1177,8 +1689,10 @@ func (r *DescribeTopicAttributesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicAttributesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicDetailRequest struct {
@@ -1202,8 +1716,21 @@ func (r *DescribeTopicDetailRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicDetailRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeTopicDetailRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicDetailResponse struct {
@@ -1223,8 +1750,10 @@ func (r *DescribeTopicDetailResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicDetailResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicRequest struct {
@@ -1248,8 +1777,21 @@ func (r *DescribeTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTopicResponse struct {
@@ -1270,8 +1812,10 @@ func (r *DescribeTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeUserRequest struct {
@@ -1295,8 +1839,21 @@ func (r *DescribeUserRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeUserRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeUserRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeUserResponse struct {
@@ -1316,8 +1873,10 @@ func (r *DescribeUserResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeUserResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DynamicRetentionTime struct {
@@ -1743,8 +2302,25 @@ func (r *ModifyGroupOffsetsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyGroupOffsetsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Group")
+	delete(f, "Strategy")
+	delete(f, "Topics")
+	delete(f, "Shift")
+	delete(f, "ShiftTimestamp")
+	delete(f, "Offset")
+	delete(f, "Partitions")
+	if len(f) > 0 {
+		return errors.New("ModifyGroupOffsetsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyGroupOffsetsResponse struct {
@@ -1764,8 +2340,10 @@ func (r *ModifyGroupOffsetsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyGroupOffsetsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyInstanceAttributesConfig struct {
@@ -1807,8 +2385,23 @@ func (r *ModifyInstanceAttributesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyInstanceAttributesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "MsgRetentionTime")
+	delete(f, "InstanceName")
+	delete(f, "Config")
+	delete(f, "DynamicRetentionConfig")
+	delete(f, "RebalanceTime")
+	if len(f) > 0 {
+		return errors.New("ModifyInstanceAttributesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyInstanceAttributesResponse struct {
@@ -1828,8 +2421,10 @@ func (r *ModifyInstanceAttributesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyInstanceAttributesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyPasswordRequest struct {
@@ -1853,8 +2448,21 @@ func (r *ModifyPasswordRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyPasswordRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Name")
+	delete(f, "Password")
+	delete(f, "PasswordNew")
+	if len(f) > 0 {
+		return errors.New("ModifyPasswordRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyPasswordResponse struct {
@@ -1874,8 +2482,10 @@ func (r *ModifyPasswordResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyPasswordResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyTopicAttributesRequest struct {
@@ -1917,8 +2527,27 @@ func (r *ModifyTopicAttributesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyTopicAttributesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TopicName")
+	delete(f, "Note")
+	delete(f, "EnableWhiteList")
+	delete(f, "MinInsyncReplicas")
+	delete(f, "UncleanLeaderElectionEnable")
+	delete(f, "RetentionMs")
+	delete(f, "SegmentMs")
+	delete(f, "MaxMessageBytes")
+	delete(f, "CleanUpPolicy")
+	if len(f) > 0 {
+		return errors.New("ModifyTopicAttributesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyTopicAttributesResponse struct {
@@ -1938,8 +2567,10 @@ func (r *ModifyTopicAttributesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyTopicAttributesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type OperateResponseData struct {
@@ -1964,6 +2595,47 @@ type PartitionOffset struct {
 	// Offset,例如100
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+type Price struct {
+
+	// 折扣价
+	RealTotalCost *float64 `json:"RealTotalCost,omitempty" name:"RealTotalCost"`
+
+	// 原价
+	TotalCost *float64 `json:"TotalCost,omitempty" name:"TotalCost"`
+}
+
+type Region struct {
+
+	// 地域ID
+	RegionId *int64 `json:"RegionId,omitempty" name:"RegionId"`
+
+	// 地域名称
+	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
+
+	// 区域名称
+	AreaName *string `json:"AreaName,omitempty" name:"AreaName"`
+
+	// 地域代码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionCode *string `json:"RegionCode,omitempty" name:"RegionCode"`
+
+	// 地域代码（V3版本）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionCodeV3 *string `json:"RegionCodeV3,omitempty" name:"RegionCodeV3"`
+
+	// NONE:默认值不支持任何特殊机型\nCVM:支持CVM类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Support *string `json:"Support,omitempty" name:"Support"`
+
+	// 是否支持ipv6, 0：表示不支持，1：表示支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6 *int64 `json:"Ipv6,omitempty" name:"Ipv6"`
+
+	// 是否支持跨可用区, 0：表示不支持，1：表示支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MultiZone *int64 `json:"MultiZone,omitempty" name:"MultiZone"`
 }
 
 type Route struct {
@@ -2197,4 +2869,69 @@ type VipEntity struct {
 
 	// 虚拟端口
 	Vport *string `json:"Vport,omitempty" name:"Vport"`
+}
+
+type ZoneInfo struct {
+
+	// zone的id
+	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 是否内部APP
+	IsInternalApp *int64 `json:"IsInternalApp,omitempty" name:"IsInternalApp"`
+
+	// app id
+	AppId *int64 `json:"AppId,omitempty" name:"AppId"`
+
+	// 标识
+	Flag *bool `json:"Flag,omitempty" name:"Flag"`
+
+	// zone名称
+	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
+
+	// zone状态
+	ZoneStatus *int64 `json:"ZoneStatus,omitempty" name:"ZoneStatus"`
+
+	// 额外标识
+	Exflag *string `json:"Exflag,omitempty" name:"Exflag"`
+
+	// json对象，key为机型，value true为售罄，false为未售罄
+	SoldOut *string `json:"SoldOut,omitempty" name:"SoldOut"`
+}
+
+type ZoneResponse struct {
+
+	// zone列表
+	ZoneList []*ZoneInfo `json:"ZoneList,omitempty" name:"ZoneList" list`
+
+	// 最大购买实例个数
+	MaxBuyInstanceNum *int64 `json:"MaxBuyInstanceNum,omitempty" name:"MaxBuyInstanceNum"`
+
+	// 最大购买带宽 单位Mb/s
+	MaxBandwidth *int64 `json:"MaxBandwidth,omitempty" name:"MaxBandwidth"`
+
+	// 后付费单位价格
+	UnitPrice *Price `json:"UnitPrice,omitempty" name:"UnitPrice"`
+
+	// 后付费消息单价
+	MessagePrice *Price `json:"MessagePrice,omitempty" name:"MessagePrice"`
+
+	// 用户独占集群信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterInfo []*ClusterInfo `json:"ClusterInfo,omitempty" name:"ClusterInfo" list`
+
+	// 购买标准版配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Standard *string `json:"Standard,omitempty" name:"Standard"`
+
+	// 购买标准版S2配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StandardS2 *string `json:"StandardS2,omitempty" name:"StandardS2"`
+
+	// 购买专业版配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Profession *string `json:"Profession,omitempty" name:"Profession"`
+
+	// 购买物理独占版配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Physical *string `json:"Physical,omitempty" name:"Physical"`
 }

@@ -49,6 +49,7 @@ The following arguments are supported:
 * `image_id` - (Required) An available image ID for a cvm instance.
 * `instance_types` - (Required) Specified types of CVM instances.
 * `data_disk` - (Optional) Configurations of data disk.
+* `disk_type_policy` - (Optional) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_monitor_service` - (Optional) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is `TRUE`.
 * `instance_tags` - (Optional) A list of tags used to associate different resources.
@@ -61,13 +62,13 @@ The following arguments are supported:
 * `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
+* `system_disk_type` - (Optional) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
 * `user_data` - (Optional) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `disk_type` - (Optional) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
 * `snapshot_id` - (Optional) Data disk snapshot ID.
 
 ## Attributes Reference

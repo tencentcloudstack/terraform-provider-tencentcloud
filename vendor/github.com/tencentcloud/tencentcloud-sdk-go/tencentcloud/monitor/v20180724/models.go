@@ -16,6 +16,7 @@ package v20180724
 
 import (
     "encoding/json"
+    "errors"
 
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
@@ -85,7 +86,7 @@ type AlarmHistory struct {
 	// 告警渠道列表 SMS=短信 EMAIL=邮件 CALL=电话 WECHAT=微信
 	NoticeWays []*string `json:"NoticeWays,omitempty" name:"NoticeWays" list`
 
-	// 兼容告警1.0策略组 Id
+	// 可用于实例、实例组的绑定和解绑接口（[BindingPolicyObject](https://cloud.tencent.com/document/product/248/40421)、[UnBindingAllPolicyObject](https://cloud.tencent.com/document/product/248/40568)、[UnBindingPolicyObject](https://cloud.tencent.com/document/product/248/40567)）的策略 ID
 	OriginId *string `json:"OriginId,omitempty" name:"OriginId"`
 
 	// 告警类型
@@ -319,11 +320,11 @@ type AlarmPolicyFilter struct {
 
 type AlarmPolicyRule struct {
 
-	// 指标名
+	// 指标名或事件名，支持的指标可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询，支持的事件可以从 [DescribeAlarmEvents](https://cloud.tencent.com/document/product/248/51284) 查询 。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 秒数 统计周期
+	// 秒数 统计周期，支持的值可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
@@ -345,14 +346,15 @@ type AlarmPolicyRule struct {
 	// cycle_decrease=环比下降
 	// cycle_wave=环比波动
 	// re=正则匹配
+	// 支持的值可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Operator *string `json:"Operator,omitempty" name:"Operator"`
 
-	// 阈值
+	// 阈值，支持的范围可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
 
-	// 周期数 持续通知周期 1=持续1个周期 2=持续2个周期...
+	// 周期数 持续通知周期 1=持续1个周期 2=持续2个周期...，支持的值可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ContinuePeriod *int64 `json:"ContinuePeriod,omitempty" name:"ContinuePeriod"`
 
@@ -376,7 +378,7 @@ type AlarmPolicyRule struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Unit *string `json:"Unit,omitempty" name:"Unit"`
 
-	// 触发条件类型 STATIC=静态阈值 DYNAMIC=动态阈值
+	// 触发条件类型 STATIC=静态阈值 DYNAMIC=动态阈值。创建或编辑策略时，如不填则默认为 STATIC。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
 }
@@ -412,7 +414,7 @@ type BindingPolicyObjectDimension struct {
 type BindingPolicyObjectRequest struct {
 	*tchttp.BaseRequest
 
-	// 策略组id，如传入PolicyId则该字段可传入任意值
+	// 策略组id，如传入 PolicyId 则该字段会被忽略可传入任意值如 0
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
 	// 必填。固定值"monitor"
@@ -424,7 +426,7 @@ type BindingPolicyObjectRequest struct {
 	// 需要绑定的对象维度信息
 	Dimensions []*BindingPolicyObjectDimension `json:"Dimensions,omitempty" name:"Dimensions" list`
 
-	// 告警策略ID，使用此字段时GroupId可传入任意值
+	// 告警策略ID，使用此字段时 GroupId 会被忽略
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
@@ -433,8 +435,22 @@ func (r *BindingPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *BindingPolicyObjectRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupId")
+	delete(f, "Module")
+	delete(f, "InstanceGroupId")
+	delete(f, "Dimensions")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return errors.New("BindingPolicyObjectRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type BindingPolicyObjectResponse struct {
@@ -451,8 +467,10 @@ func (r *BindingPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *BindingPolicyObjectResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CommonNamespace struct {
@@ -524,8 +542,23 @@ func (r *CreateAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Name")
+	delete(f, "NoticeType")
+	delete(f, "NoticeLanguage")
+	delete(f, "UserNotices")
+	delete(f, "URLNotices")
+	if len(f) > 0 {
+		return errors.New("CreateAlarmNoticeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateAlarmNoticeResponse struct {
@@ -545,8 +578,10 @@ func (r *CreateAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAlarmNoticeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateAlarmPolicyRequest struct {
@@ -561,7 +596,7 @@ type CreateAlarmPolicyRequest struct {
 	// 监控类型 MT_QCE=云产品监控
 	MonitorType *string `json:"MonitorType,omitempty" name:"MonitorType"`
 
-	// 告警策略类型，由 DescribeAllNamespaces 获得，例如 cvm_device
+	// 告警策略类型，由 [DescribeAllNamespaces](https://cloud.tencent.com/document/product/248/48683) 获得，例如 cvm_device
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
 	// 备注，不超过100字符，仅支持中英文、数字、下划线、-
@@ -570,16 +605,19 @@ type CreateAlarmPolicyRequest struct {
 	// 是否启用 0=停用 1=启用，可不传 默认为1
 	Enable *int64 `json:"Enable,omitempty" name:"Enable"`
 
-	// 项目 Id -1=无项目 0=默认项目，可不传 默认为-1
+	// 项目 Id，对于区分项目的产品必须传入非 -1 的值。 -1=无项目 0=默认项目，如不传 默认为 -1。支持的项目 Id 可以在控制台 [账号中心-项目管理](https://console.cloud.tencent.com/project) 中查看。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 指标触发条件
+	// 触发条件模板 Id ，可不传
+	ConditionTemplateId *int64 `json:"ConditionTemplateId,omitempty" name:"ConditionTemplateId"`
+
+	// 指标触发条件，支持的指标可以从 [DescribeAlarmMetrics](https://cloud.tencent.com/document/product/248/51283) 查询。
 	Condition *AlarmPolicyCondition `json:"Condition,omitempty" name:"Condition"`
 
-	// 事件触发条件
+	// 事件触发条件，支持的事件可以从 [DescribeAlarmEvents](https://cloud.tencent.com/document/product/248/51284) 查询。
 	EventCondition *AlarmPolicyEventCondition `json:"EventCondition,omitempty" name:"EventCondition"`
 
-	// 通知规则 Id 列表，由 DescribeAlarmNotices 获得
+	// 通知规则 Id 列表，由 [DescribeAlarmNotices](https://cloud.tencent.com/document/product/248/51280) 获得
 	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
 
 	// 触发任务列表
@@ -591,8 +629,29 @@ func (r *CreateAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAlarmPolicyRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyName")
+	delete(f, "MonitorType")
+	delete(f, "Namespace")
+	delete(f, "Remark")
+	delete(f, "Enable")
+	delete(f, "ProjectId")
+	delete(f, "ConditionTemplateId")
+	delete(f, "Condition")
+	delete(f, "EventCondition")
+	delete(f, "NoticeIds")
+	delete(f, "TriggerTasks")
+	if len(f) > 0 {
+		return errors.New("CreateAlarmPolicyRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateAlarmPolicyResponse struct {
@@ -602,7 +661,7 @@ type CreateAlarmPolicyResponse struct {
 		// 告警策略 ID
 		PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
-		// 用于实例、实例组绑定和解绑接口（BindingPolicyObject、UnBindingAllPolicyObject、UnBindingPolicyObject）的策略 ID
+		// 可用于实例、实例组的绑定和解绑接口（[BindingPolicyObject](https://cloud.tencent.com/document/product/248/40421)、[UnBindingAllPolicyObject](https://cloud.tencent.com/document/product/248/40568)、[UnBindingPolicyObject](https://cloud.tencent.com/document/product/248/40567)）的策略 ID
 		OriginId *string `json:"OriginId,omitempty" name:"OriginId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -615,8 +674,94 @@ func (r *CreateAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateAlarmPolicyResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAlertRuleRequest struct {
+	*tchttp.BaseRequest
+
+	// Prometheus 实例 ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 规则表达式
+	Expr *string `json:"Expr,omitempty" name:"Expr"`
+
+	// 告警通知模板 ID 列表
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+
+	// 规则状态码，取值如下：
+	// <li>2=RuleEnabled</li>
+	// <li>3=RuleDisabled</li>
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
+
+	// 规则报警持续时间
+	Duration *string `json:"Duration,omitempty" name:"Duration"`
+
+	// 标签列表
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+
+	// 注释列表
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+
+	// 报警策略模板分类
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
+func (r *CreateAlertRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAlertRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RuleName")
+	delete(f, "Expr")
+	delete(f, "Receivers")
+	delete(f, "RuleState")
+	delete(f, "Duration")
+	delete(f, "Labels")
+	delete(f, "Annotations")
+	delete(f, "Type")
+	if len(f) > 0 {
+		return errors.New("CreateAlertRuleRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateAlertRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 规则 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateAlertRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateAlertRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreatePolicyGroupCondition struct {
@@ -706,8 +851,29 @@ func (r *CreatePolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreatePolicyGroupRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupName")
+	delete(f, "Module")
+	delete(f, "ViewName")
+	delete(f, "ProjectId")
+	delete(f, "ConditionTempGroupId")
+	delete(f, "IsShielded")
+	delete(f, "Remark")
+	delete(f, "InsertTime")
+	delete(f, "Conditions")
+	delete(f, "EventConditions")
+	delete(f, "BackEndCall")
+	delete(f, "IsUnionRule")
+	if len(f) > 0 {
+		return errors.New("CreatePolicyGroupRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreatePolicyGroupResponse struct {
@@ -727,8 +893,10 @@ func (r *CreatePolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreatePolicyGroupResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateServiceDiscoveryRequest struct {
@@ -759,8 +927,22 @@ func (r *CreateServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateServiceDiscoveryRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "KubeClusterId")
+	delete(f, "KubeType")
+	delete(f, "Type")
+	delete(f, "Yaml")
+	if len(f) > 0 {
+		return errors.New("CreateServiceDiscoveryRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateServiceDiscoveryResponse struct {
@@ -780,8 +962,10 @@ func (r *CreateServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateServiceDiscoveryResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DataPoint struct {
@@ -811,8 +995,19 @@ func (r *DeleteAlarmNoticesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAlarmNoticesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "NoticeIds")
+	if len(f) > 0 {
+		return errors.New("DeleteAlarmNoticesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteAlarmNoticesResponse struct {
@@ -829,8 +1024,10 @@ func (r *DeleteAlarmNoticesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAlarmNoticesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteAlarmPolicyRequest struct {
@@ -848,8 +1045,19 @@ func (r *DeleteAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAlarmPolicyRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyIds")
+	if len(f) > 0 {
+		return errors.New("DeleteAlarmPolicyRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteAlarmPolicyResponse struct {
@@ -866,8 +1074,60 @@ func (r *DeleteAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteAlarmPolicyResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteAlertRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// 规则 ID 列表
+	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds" list`
+
+	// Prometheus 实例 ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DeleteAlertRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAlertRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RuleIds")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("DeleteAlertRulesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteAlertRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteAlertRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAlertRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeletePolicyGroupRequest struct {
@@ -885,8 +1145,19 @@ func (r *DeletePolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeletePolicyGroupRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return errors.New("DeletePolicyGroupRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeletePolicyGroupResponse struct {
@@ -903,8 +1174,10 @@ func (r *DeletePolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeletePolicyGroupResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteServiceDiscoveryRequest struct {
@@ -935,8 +1208,22 @@ func (r *DeleteServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteServiceDiscoveryRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "KubeClusterId")
+	delete(f, "KubeType")
+	delete(f, "Type")
+	delete(f, "Yaml")
+	if len(f) > 0 {
+		return errors.New("DeleteServiceDiscoveryRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteServiceDiscoveryResponse struct {
@@ -953,8 +1240,10 @@ func (r *DeleteServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteServiceDiscoveryResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAccidentEventListAlarms struct {
@@ -1037,8 +1326,29 @@ func (r *DescribeAccidentEventListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAccidentEventListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "UpdateTimeOrder")
+	delete(f, "OccurTimeOrder")
+	delete(f, "AccidentType")
+	delete(f, "AccidentEvent")
+	delete(f, "AccidentStatus")
+	delete(f, "AccidentRegion")
+	delete(f, "AffectResource")
+	if len(f) > 0 {
+		return errors.New("DescribeAccidentEventListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAccidentEventListResponse struct {
@@ -1063,8 +1373,10 @@ func (r *DescribeAccidentEventListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAccidentEventListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmEventsRequest struct {
@@ -1082,8 +1394,19 @@ func (r *DescribeAlarmEventsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmEventsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Namespace")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmEventsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmEventsResponse struct {
@@ -1103,8 +1426,10 @@ func (r *DescribeAlarmEventsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmEventsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmHistoriesRequest struct {
@@ -1122,13 +1447,13 @@ type DescribeAlarmHistoriesRequest struct {
 	// 默认按首次出现时间倒序排列 "ASC"=正序 "DESC"=逆序
 	Order *string `json:"Order,omitempty" name:"Order"`
 
-	// 起始时间，默认一天前的时间戳
+	// 起始时间，默认一天前的时间戳。对应 `FirstOccurTime` 告警首次出现时间，告警历史的 `FirstOccurTime` 晚于 `StartTime` 才可能被搜索到。
 	StartTime *int64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间，默认当前时间戳
+	// 结束时间，默认当前时间戳。对应 `FirstOccurTime` 告警首次出现时间，告警历史的 `FirstOccurTime` 早于 `EndTime` 才可能被搜索到。
 	EndTime *int64 `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 根据监控类型过滤 不选默认查所有类型 "MT_QCE"=云产品监控 "
+	// 根据监控类型过滤 不选默认查所有类型 "MT_QCE"=云产品监控
 	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes" list`
 
 	// 根据告警对象过滤 字符串模糊搜索
@@ -1138,12 +1463,14 @@ type DescribeAlarmHistoriesRequest struct {
 	AlarmStatus []*string `json:"AlarmStatus,omitempty" name:"AlarmStatus" list`
 
 	// 根据项目ID过滤，-1=无项目 0=默认项目
+	// 可在此页面查询 [项目管理](https://console.cloud.tencent.com/project)
 	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
 
 	// 根据实例组ID过滤
 	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds" list`
 
-	// 根据策略类型过滤
+	// 根据策略类型过滤，策略类型是监控类型之下的概念，在这里两者都需要传入，例如 `[{"MonitorType": "MT_QCE", "Namespace": "cvm_device"}]`
+	// 可使用 [查询所有名字空间 DescribeAllNamespaces](https://cloud.tencent.com/document/product/248/48683) 接口查询
 	Namespaces []*MonitorTypeNamespace `json:"Namespaces,omitempty" name:"Namespaces" list`
 
 	// 根据指标名过滤
@@ -1155,10 +1482,10 @@ type DescribeAlarmHistoriesRequest struct {
 	// 根据告警内容模糊搜索
 	Content *string `json:"Content,omitempty" name:"Content"`
 
-	// 根据接收人搜索
+	// 根据接收人搜索，可以使用“访问管理”的 [拉取子用户 ListUsers](https://cloud.tencent.com/document/product/598/34587) 接口获取用户列表 或 [查询子用户 GetUser](https://cloud.tencent.com/document/product/598/34590) 接口查询子用户详情，此处填入返回结果中的 `Uid` 字段
 	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids" list`
 
-	// 根据接收组搜索
+	// 根据接收组搜索，可以使用“访问管理”的 [查询用户组列表 ListGroups](https://cloud.tencent.com/document/product/598/34589) 接口获取用户组列表 或 [列出用户关联的用户组 ListGroupsForUser](https://cloud.tencent.com/document/product/598/34588) 查询某个子用户所在的用户组列表 ，此处填入返回结果中的 `GroupId ` 字段
 	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups" list`
 
 	// 根据告警策略 Id 列表搜索
@@ -1170,8 +1497,35 @@ func (r *DescribeAlarmHistoriesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmHistoriesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PageNumber")
+	delete(f, "PageSize")
+	delete(f, "Order")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MonitorTypes")
+	delete(f, "AlarmObject")
+	delete(f, "AlarmStatus")
+	delete(f, "ProjectIds")
+	delete(f, "InstanceGroupIds")
+	delete(f, "Namespaces")
+	delete(f, "MetricNames")
+	delete(f, "PolicyName")
+	delete(f, "Content")
+	delete(f, "ReceiverUids")
+	delete(f, "ReceiverGroups")
+	delete(f, "PolicyIds")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmHistoriesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmHistoriesResponse struct {
@@ -1194,8 +1548,10 @@ func (r *DescribeAlarmHistoriesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmHistoriesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmMetricsRequest struct {
@@ -1216,8 +1572,20 @@ func (r *DescribeAlarmMetricsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmMetricsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "MonitorType")
+	delete(f, "Namespace")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmMetricsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmMetricsResponse struct {
@@ -1237,8 +1605,10 @@ func (r *DescribeAlarmMetricsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmMetricsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticeCallbacksRequest struct {
@@ -1253,8 +1623,18 @@ func (r *DescribeAlarmNoticeCallbacksRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeCallbacksRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmNoticeCallbacksRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticeCallbacksResponse struct {
@@ -1275,8 +1655,10 @@ func (r *DescribeAlarmNoticeCallbacksResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeCallbacksResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticeRequest struct {
@@ -1294,8 +1676,19 @@ func (r *DescribeAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "NoticeId")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmNoticeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticeResponse struct {
@@ -1315,8 +1708,10 @@ func (r *DescribeAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticesRequest struct {
@@ -1355,8 +1750,26 @@ func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PageNumber")
+	delete(f, "PageSize")
+	delete(f, "Order")
+	delete(f, "OwnerUid")
+	delete(f, "Name")
+	delete(f, "ReceiverType")
+	delete(f, "UserIds")
+	delete(f, "GroupIds")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmNoticesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmNoticesResponse struct {
@@ -1379,8 +1792,10 @@ func (r *DescribeAlarmNoticesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmPoliciesRequest struct {
@@ -1405,23 +1820,17 @@ type DescribeAlarmPoliciesRequest struct {
 	// [策略类型列表](https://cloud.tencent.com/document/product/248/50397)
 	Namespaces []*string `json:"Namespaces,omitempty" name:"Namespaces" list`
 
-	// 告警对象列表，外层数组，对应多个实例
-	// 内层数组，每个数组对应一个实例，里面的object对应的是这个实例的维度信息。格式为
-	// [
-	// 	[{"name":"unInstanceId","value":"ins-qr888845g"}],
-	// 	[{"name":"unInstanceId","value":"ins-qr8d555g"}]
-	// 	...
-	// ]
-	// 不同云产品参数示例详见
-	// [维度信息Dimensions列表](https://cloud.tencent.com/document/product/248/50397)
+	// 告警对象列表，JSON 字符串。外层数组，对应多个实例，内层为对象的维度。例如“云服务器-基础监控”可写为：
+	// `[ {"Dimensions": {"unInstanceId": "ins-qr8d555g"}}, {"Dimensions": {"unInstanceId": "ins-qr8d555h"}} ]`
+	// 具体也可以参考下方的示例 2。
+	// 
+	// 不同云产品参数示例详见 [维度信息Dimensions列表](https://cloud.tencent.com/document/product/248/50397)
 	Dimensions *string `json:"Dimensions,omitempty" name:"Dimensions"`
 
-	// 根据接收人的uid搜索，需要调用访问管理的api查询。详见
-	// [拉取子用户](https://cloud.tencent.com/document/product/598/34587)
+	// 根据接收人搜索，可以使用“访问管理”的 [拉取子用户 ListUsers](https://cloud.tencent.com/document/product/598/34587) 接口获取用户列表 或 [查询子用户 GetUser](https://cloud.tencent.com/document/product/598/34590) 接口查询子用户详情，此处填入返回结果中的 `Uid` 字段
 	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids" list`
 
-	// 根据接收组的uid搜索，需要调用访问管理的api查询，详见
-	// [查询用户组列表](https://cloud.tencent.com/document/product/598/34589)
+	// 根据接收组搜索，可以使用“访问管理”的 [查询用户组列表 ListGroups](https://cloud.tencent.com/document/product/598/34589) 接口获取用户组列表 或 [列出用户关联的用户组 ListGroupsForUser](https://cloud.tencent.com/document/product/598/34588) 查询某个子用户所在的用户组列表 ，此处填入返回结果中的 `GroupId ` 字段
 	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups" list`
 
 	// 根据默认策略筛选 不传展示全部策略 DEFAULT=展示默认策略 NOT_DEFAULT=展示非默认策略
@@ -1438,7 +1847,7 @@ type DescribeAlarmPoliciesRequest struct {
 	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
 
 	// 通知模版的id列表，可查询通知模版列表获取。
-	// [查询通知模板列表](https://cloud.tencent.com/document/product/248/51280)
+	// 可使用 [查询通知模板列表](https://cloud.tencent.com/document/product/248/51280) 接口查询。
 	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
 
 	// 根据触发条件筛选 不传展示全部策略 STATIC=展示静态阈值策略 DYNAMIC=展示动态阈值策略
@@ -1447,7 +1856,7 @@ type DescribeAlarmPoliciesRequest struct {
 	// 告警启停筛选，[1]：启用   [0]：停止，全部[0, 1]
 	Enable []*int64 `json:"Enable,omitempty" name:"Enable" list`
 
-	// 是否未配置通知规则，1：未配置，0：配置
+	// 传 1 查询未配置通知规则的告警策略；不传或传其他数值，查询所有策略。
 	NotBindingNoticeRule *int64 `json:"NotBindingNoticeRule,omitempty" name:"NotBindingNoticeRule"`
 }
 
@@ -1456,8 +1865,34 @@ func (r *DescribeAlarmPoliciesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmPoliciesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PageNumber")
+	delete(f, "PageSize")
+	delete(f, "PolicyName")
+	delete(f, "MonitorTypes")
+	delete(f, "Namespaces")
+	delete(f, "Dimensions")
+	delete(f, "ReceiverUids")
+	delete(f, "ReceiverGroups")
+	delete(f, "PolicyType")
+	delete(f, "Field")
+	delete(f, "Order")
+	delete(f, "ProjectIds")
+	delete(f, "NoticeIds")
+	delete(f, "RuleTypes")
+	delete(f, "Enable")
+	delete(f, "NotBindingNoticeRule")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmPoliciesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmPoliciesResponse struct {
@@ -1480,8 +1915,10 @@ func (r *DescribeAlarmPoliciesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmPoliciesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmPolicyRequest struct {
@@ -1499,8 +1936,19 @@ func (r *DescribeAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmPolicyRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return errors.New("DescribeAlarmPolicyRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAlarmPolicyResponse struct {
@@ -1520,8 +1968,89 @@ func (r *DescribeAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAlarmPolicyResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeAlertRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// Prometheus 实例 ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 返回数量，默认为 20，最大值为 100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 规则 ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 规则状态码，取值如下：
+	// <li>2=RuleEnabled</li>
+	// <li>3=RuleDisabled</li>
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
+
+	// 规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 报警策略模板分类
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
+func (r *DescribeAlertRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAlertRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "RuleId")
+	delete(f, "RuleState")
+	delete(f, "RuleName")
+	delete(f, "Type")
+	if len(f) > 0 {
+		return errors.New("DescribeAlertRulesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeAlertRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 报警规则数量
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 报警规则详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		AlertRuleSet []*PrometheusRuleSet `json:"AlertRuleSet,omitempty" name:"AlertRuleSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeAlertRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAlertRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAllNamespacesRequest struct {
@@ -1545,8 +2074,21 @@ func (r *DescribeAllNamespacesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAllNamespacesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SceneType")
+	delete(f, "Module")
+	delete(f, "MonitorTypes")
+	delete(f, "Ids")
+	if len(f) > 0 {
+		return errors.New("DescribeAllNamespacesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAllNamespacesResponse struct {
@@ -1575,8 +2117,10 @@ func (r *DescribeAllNamespacesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAllNamespacesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBaseMetricsRequest struct {
@@ -1594,8 +2138,19 @@ func (r *DescribeBaseMetricsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBaseMetricsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Namespace")
+	delete(f, "MetricName")
+	if len(f) > 0 {
+		return errors.New("DescribeBaseMetricsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBaseMetricsResponse struct {
@@ -1615,8 +2170,10 @@ func (r *DescribeBaseMetricsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBaseMetricsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBasicAlarmListAlarms struct {
@@ -1754,8 +2311,29 @@ func (r *DescribeBasicAlarmListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBasicAlarmListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "OccurTimeOrder")
+	delete(f, "ProjectIds")
+	delete(f, "ViewNames")
+	delete(f, "AlarmStatus")
+	delete(f, "ObjLike")
+	delete(f, "InstanceGroupIds")
+	delete(f, "MetricNames")
+	if len(f) > 0 {
+		return errors.New("DescribeBasicAlarmListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBasicAlarmListResponse struct {
@@ -1780,8 +2358,10 @@ func (r *DescribeBasicAlarmListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBasicAlarmListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBindingPolicyObjectListDimension struct {
@@ -1866,8 +2446,22 @@ func (r *DescribeBindingPolicyObjectListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBindingPolicyObjectListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Dimensions")
+	if len(f) > 0 {
+		return errors.New("DescribeBindingPolicyObjectListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBindingPolicyObjectListResponse struct {
@@ -1898,8 +2492,10 @@ func (r *DescribeBindingPolicyObjectListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBindingPolicyObjectListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeMonitorTypesRequest struct {
@@ -1914,8 +2510,18 @@ func (r *DescribeMonitorTypesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeMonitorTypesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	if len(f) > 0 {
+		return errors.New("DescribeMonitorTypesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeMonitorTypesResponse struct {
@@ -1935,8 +2541,10 @@ func (r *DescribeMonitorTypesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeMonitorTypesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyConditionListCondition struct {
@@ -2148,8 +2756,18 @@ func (r *DescribePolicyConditionListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyConditionListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	if len(f) > 0 {
+		return errors.New("DescribePolicyConditionListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyConditionListResponse struct {
@@ -2169,8 +2787,10 @@ func (r *DescribePolicyConditionListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyConditionListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyGroupInfoCallback struct {
@@ -2335,8 +2955,19 @@ func (r *DescribePolicyGroupInfoRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyGroupInfoRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return errors.New("DescribePolicyGroupInfoRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyGroupInfoResponse struct {
@@ -2410,8 +3041,10 @@ func (r *DescribePolicyGroupInfoResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyGroupInfoResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyGroupListGroup struct {
@@ -2561,8 +3194,32 @@ func (r *DescribePolicyGroupListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyGroupListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Like")
+	delete(f, "InstanceGroupId")
+	delete(f, "UpdateTimeOrder")
+	delete(f, "ProjectIds")
+	delete(f, "ViewNames")
+	delete(f, "FilterUnuseReceiver")
+	delete(f, "Receivers")
+	delete(f, "ReceiverUserList")
+	delete(f, "Dimensions")
+	delete(f, "ConditionTempGroupId")
+	delete(f, "ReceiverType")
+	delete(f, "IsOpen")
+	if len(f) > 0 {
+		return errors.New("DescribePolicyGroupListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePolicyGroupListResponse struct {
@@ -2586,8 +3243,10 @@ func (r *DescribePolicyGroupListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePolicyGroupListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeProductEventListDimensions struct {
@@ -2785,8 +3444,32 @@ func (r *DescribeProductEventListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeProductEventListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "ProductName")
+	delete(f, "EventName")
+	delete(f, "InstanceId")
+	delete(f, "Dimensions")
+	delete(f, "RegionList")
+	delete(f, "Type")
+	delete(f, "Status")
+	delete(f, "Project")
+	delete(f, "IsAlarmConfig")
+	delete(f, "TimeOrder")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeProductEventListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeProductEventListResponse struct {
@@ -2814,8 +3497,10 @@ func (r *DescribeProductEventListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeProductEventListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeProductListRequest struct {
@@ -2839,8 +3524,21 @@ func (r *DescribeProductListRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeProductListRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Order")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeProductListRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeProductListResponse struct {
@@ -2865,8 +3563,10 @@ func (r *DescribeProductListResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeProductListResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeServiceDiscoveryRequest struct {
@@ -2888,8 +3588,20 @@ func (r *DescribeServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeServiceDiscoveryRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "KubeClusterId")
+	delete(f, "KubeType")
+	if len(f) > 0 {
+		return errors.New("DescribeServiceDiscoveryRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeServiceDiscoveryResponse struct {
@@ -2910,8 +3622,10 @@ func (r *DescribeServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeServiceDiscoveryResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeStatisticDataRequest struct {
@@ -2947,8 +3661,25 @@ func (r *DescribeStatisticDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeStatisticDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Namespace")
+	delete(f, "MetricNames")
+	delete(f, "Conditions")
+	delete(f, "Period")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "GroupBys")
+	if len(f) > 0 {
+		return errors.New("DescribeStatisticDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeStatisticDataResponse struct {
@@ -2977,8 +3708,10 @@ func (r *DescribeStatisticDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeStatisticDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Dimension struct {
@@ -3002,7 +3735,7 @@ type GetMonitorDataRequest struct {
 	// 命名空间，如QCE/CVM。各个云产品的详细命名空间说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
-	// 指标名称，如CPUUsage。各个云产品的详细指标说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的指标英文名即为MetricName
+	// 指标名称，如CPUUsage，仅支持单指标拉取。各个云产品的详细指标说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的指标英文名即为MetricName
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
 	// 实例对象的维度组合，格式为key-value键值对形式的集合。如[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key,value为key对应的值
@@ -3023,8 +3756,23 @@ func (r *GetMonitorDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *GetMonitorDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Namespace")
+	delete(f, "MetricName")
+	delete(f, "Instances")
+	delete(f, "Period")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return errors.New("GetMonitorDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type GetMonitorDataResponse struct {
@@ -3056,8 +3804,10 @@ func (r *GetMonitorDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *GetMonitorDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Instance struct {
@@ -3231,8 +3981,24 @@ func (r *ModifyAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "Name")
+	delete(f, "NoticeType")
+	delete(f, "NoticeLanguage")
+	delete(f, "NoticeId")
+	delete(f, "UserNotices")
+	delete(f, "URLNotices")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmNoticeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmNoticeResponse struct {
@@ -3249,8 +4015,10 @@ func (r *ModifyAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmNoticeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyConditionRequest struct {
@@ -3261,6 +4029,9 @@ type ModifyAlarmPolicyConditionRequest struct {
 
 	// 告警策略 ID
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 触发条件模板 Id，可不传
+	ConditionTemplateId *int64 `json:"ConditionTemplateId,omitempty" name:"ConditionTemplateId"`
 
 	// 指标触发条件
 	Condition *AlarmPolicyCondition `json:"Condition,omitempty" name:"Condition"`
@@ -3274,8 +4045,22 @@ func (r *ModifyAlarmPolicyConditionRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyConditionRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "ConditionTemplateId")
+	delete(f, "Condition")
+	delete(f, "EventCondition")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmPolicyConditionRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyConditionResponse struct {
@@ -3292,8 +4077,10 @@ func (r *ModifyAlarmPolicyConditionResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyConditionResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyInfoRequest struct {
@@ -3317,8 +4104,21 @@ func (r *ModifyAlarmPolicyInfoRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyInfoRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "Key")
+	delete(f, "Value")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmPolicyInfoRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyInfoResponse struct {
@@ -3335,8 +4135,10 @@ func (r *ModifyAlarmPolicyInfoResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyInfoResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyNoticeRequest struct {
@@ -3357,8 +4159,20 @@ func (r *ModifyAlarmPolicyNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyNoticeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "NoticeIds")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmPolicyNoticeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyNoticeResponse struct {
@@ -3375,8 +4189,10 @@ func (r *ModifyAlarmPolicyNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyNoticeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyStatusRequest struct {
@@ -3397,8 +4213,20 @@ func (r *ModifyAlarmPolicyStatusRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyStatusRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "Enable")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmPolicyStatusRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyStatusResponse struct {
@@ -3415,8 +4243,10 @@ func (r *ModifyAlarmPolicyStatusResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyStatusResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyTasksRequest struct {
@@ -3437,8 +4267,20 @@ func (r *ModifyAlarmPolicyTasksRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyTasksRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "TriggerTasks")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmPolicyTasksRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmPolicyTasksResponse struct {
@@ -3455,8 +4297,10 @@ func (r *ModifyAlarmPolicyTasksResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyTasksResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmReceiversRequest struct {
@@ -3477,8 +4321,20 @@ func (r *ModifyAlarmReceiversRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmReceiversRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupId")
+	delete(f, "Module")
+	delete(f, "ReceiverInfos")
+	if len(f) > 0 {
+		return errors.New("ModifyAlarmReceiversRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyAlarmReceiversResponse struct {
@@ -3495,8 +4351,10 @@ func (r *ModifyAlarmReceiversResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyAlarmReceiversResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyPolicyGroupCondition struct {
@@ -3574,8 +4432,25 @@ func (r *ModifyPolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyPolicyGroupRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	delete(f, "ViewName")
+	delete(f, "GroupName")
+	delete(f, "IsUnionRule")
+	delete(f, "Conditions")
+	delete(f, "EventConditions")
+	delete(f, "ConditionTempGroupId")
+	if len(f) > 0 {
+		return errors.New("ModifyPolicyGroupRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyPolicyGroupResponse struct {
@@ -3595,8 +4470,10 @@ func (r *ModifyPolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyPolicyGroupResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type MonitorTypeNamespace struct {
@@ -3640,6 +4517,66 @@ type ProductSimple struct {
 	ProductEnName *string `json:"ProductEnName,omitempty" name:"ProductEnName"`
 }
 
+type PrometheusRuleKV struct {
+
+	// 键
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 值
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type PrometheusRuleSet struct {
+
+	// 规则 ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 规则状态码
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
+
+	// 规则类别
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 规则标签列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+
+	// 规则注释列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+
+	// 规则表达式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Expr *string `json:"Expr,omitempty" name:"Expr"`
+
+	// 规则报警持续时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Duration *string `json:"Duration,omitempty" name:"Duration"`
+
+	// 报警接收组列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+
+	// 规则运行健康状态，取值如下：
+	// <li>unknown 未知状态</li>
+	// <li>pending 加载中</li>
+	// <li>ok 运行正常</li>
+	// <li>err 运行错误</li>
+	Health *string `json:"Health,omitempty" name:"Health"`
+
+	// 规则创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedAt *string `json:"CreatedAt,omitempty" name:"CreatedAt"`
+
+	// 规则更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedAt *string `json:"UpdatedAt,omitempty" name:"UpdatedAt"`
+}
+
 type PutMonitorDataRequest struct {
 	*tchttp.BaseRequest
 
@@ -3661,8 +4598,21 @@ func (r *PutMonitorDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PutMonitorDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Metrics")
+	delete(f, "AnnounceIp")
+	delete(f, "AnnounceTimestamp")
+	delete(f, "AnnounceInstance")
+	if len(f) > 0 {
+		return errors.New("PutMonitorDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PutMonitorDataResponse struct {
@@ -3679,8 +4629,10 @@ func (r *PutMonitorDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PutMonitorDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ReceiverInfo struct {
@@ -3749,8 +4701,20 @@ func (r *SendCustomAlarmMsgRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SendCustomAlarmMsgRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	delete(f, "Msg")
+	if len(f) > 0 {
+		return errors.New("SendCustomAlarmMsgRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SendCustomAlarmMsgResponse struct {
@@ -3767,8 +4731,10 @@ func (r *SendCustomAlarmMsgResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SendCustomAlarmMsgResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ServiceDiscoveryItem struct {
@@ -3813,8 +4779,19 @@ func (r *SetDefaultAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SetDefaultAlarmPolicyRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return errors.New("SetDefaultAlarmPolicyRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SetDefaultAlarmPolicyResponse struct {
@@ -3831,8 +4808,10 @@ func (r *SetDefaultAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SetDefaultAlarmPolicyResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type TagInstance struct {
@@ -3887,10 +4866,10 @@ type UnBindingAllPolicyObjectRequest struct {
 	// 固定值，为"monitor"
 	Module *string `json:"Module,omitempty" name:"Module"`
 
-	// 策略组id，如传入PolicyId则该字段可传入任意值
+	// 策略组id，如传入 PolicyId 则该字段被忽略可传入任意值如 0
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 告警策略ID，使用此字段时GroupId可传入任意值
+	// 告警策略ID，使用此字段时 GroupId 会被忽略
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
@@ -3899,8 +4878,20 @@ func (r *UnBindingAllPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UnBindingAllPolicyObjectRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return errors.New("UnBindingAllPolicyObjectRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UnBindingAllPolicyObjectResponse struct {
@@ -3917,8 +4908,10 @@ func (r *UnBindingAllPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UnBindingAllPolicyObjectResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UnBindingPolicyObjectRequest struct {
@@ -3927,16 +4920,16 @@ type UnBindingPolicyObjectRequest struct {
 	// 固定值，为"monitor"
 	Module *string `json:"Module,omitempty" name:"Module"`
 
-	// 策略组id，如传入PolicyId则该字段可传入任意值
+	// 策略组id，如传入 PolicyId 则该字段被忽略可传入任意值如 0
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
 	// 待删除对象实例的唯一id列表，UniqueId从调用[获取已绑定对象列表接口](https://cloud.tencent.com/document/api/248/40570)的出参的List中得到
 	UniqueId []*string `json:"UniqueId,omitempty" name:"UniqueId" list`
 
-	// 实例分组id, 如果按实例分组删除的话UniqueId参数是无效的
+	// 实例分组id，如果按实例分组删除的话UniqueId参数是无效的
 	InstanceGroupId *int64 `json:"InstanceGroupId,omitempty" name:"InstanceGroupId"`
 
-	// 告警策略ID，使用此字段时GroupId可传入任意值
+	// 告警策略ID，使用此字段时 GroupId 会被忽略
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
@@ -3945,8 +4938,22 @@ func (r *UnBindingPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UnBindingPolicyObjectRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Module")
+	delete(f, "GroupId")
+	delete(f, "UniqueId")
+	delete(f, "InstanceGroupId")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return errors.New("UnBindingPolicyObjectRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UnBindingPolicyObjectResponse struct {
@@ -3963,8 +4970,156 @@ func (r *UnBindingPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UnBindingPolicyObjectResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateAlertRuleRequest struct {
+	*tchttp.BaseRequest
+
+	// Prometheus 报警规则 ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// Prometheus 实例 ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 规则状态码，取值如下：
+	// <li>1=RuleDeleted</li>
+	// <li>2=RuleEnabled</li>
+	// <li>3=RuleDisabled</li>
+	// 默认状态码为 2 启用。
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
+
+	// 报警规则名称
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 报警规则表达式
+	Expr *string `json:"Expr,omitempty" name:"Expr"`
+
+	// 报警规则持续时间
+	Duration *string `json:"Duration,omitempty" name:"Duration"`
+
+	// 报警规则接收组列表
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+
+	// 报警规则标签列表
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+
+	// 报警规则注释列表
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+
+	// 报警策略模板分类
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
+func (r *UpdateAlertRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAlertRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RuleId")
+	delete(f, "InstanceId")
+	delete(f, "RuleState")
+	delete(f, "RuleName")
+	delete(f, "Expr")
+	delete(f, "Duration")
+	delete(f, "Receivers")
+	delete(f, "Labels")
+	delete(f, "Annotations")
+	delete(f, "Type")
+	if len(f) > 0 {
+		return errors.New("UpdateAlertRuleRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateAlertRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 规则 ID
+		RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateAlertRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAlertRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateAlertRuleStateRequest struct {
+	*tchttp.BaseRequest
+
+	// 规则 ID 列表
+	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds" list`
+
+	// Prometheus 实例 ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 规则状态码，取值如下：
+	// <li>2=RuleEnabled</li>
+	// <li>3=RuleDisabled</li>
+	// 默认状态码为 2 启用。
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
+}
+
+func (r *UpdateAlertRuleStateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAlertRuleStateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RuleIds")
+	delete(f, "InstanceId")
+	delete(f, "RuleState")
+	if len(f) > 0 {
+		return errors.New("UpdateAlertRuleStateRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateAlertRuleStateResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateAlertRuleStateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAlertRuleStateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateServiceDiscoveryRequest struct {
@@ -3995,8 +5150,22 @@ func (r *UpdateServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateServiceDiscoveryRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "KubeClusterId")
+	delete(f, "KubeType")
+	delete(f, "Type")
+	delete(f, "Yaml")
+	if len(f) > 0 {
+		return errors.New("UpdateServiceDiscoveryRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateServiceDiscoveryResponse struct {
@@ -4016,8 +5185,10 @@ func (r *UpdateServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateServiceDiscoveryResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UserNotice struct {

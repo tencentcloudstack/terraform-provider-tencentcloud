@@ -70,6 +70,31 @@ func (c *Client) ApplyUpload(request *ApplyUploadRequest) (response *ApplyUpload
     return
 }
 
+func NewAttachMediaSubtitlesRequest() (request *AttachMediaSubtitlesRequest) {
+    request = &AttachMediaSubtitlesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "AttachMediaSubtitles")
+    return
+}
+
+func NewAttachMediaSubtitlesResponse() (response *AttachMediaSubtitlesResponse) {
+    response = &AttachMediaSubtitlesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 关联媒资字幕，将指定的字幕关联到转自适应码流模板号对应的媒体输出文件中（或解除关联）。
+func (c *Client) AttachMediaSubtitles(request *AttachMediaSubtitlesRequest) (response *AttachMediaSubtitlesResponse, err error) {
+    if request == nil {
+        request = NewAttachMediaSubtitlesRequest()
+    }
+    response = NewAttachMediaSubtitlesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCommitUploadRequest() (request *CommitUploadRequest) {
     request = &CommitUploadRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -302,6 +327,31 @@ func (c *Client) CreateContentReviewTemplate(request *CreateContentReviewTemplat
         request = NewCreateContentReviewTemplateRequest()
     }
     response = NewCreateContentReviewTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateHeadTailTemplateRequest() (request *CreateHeadTailTemplateRequest) {
+    request = &CreateHeadTailTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "CreateHeadTailTemplate")
+    return
+}
+
+func NewCreateHeadTailTemplateResponse() (response *CreateHeadTailTemplateResponse) {
+    response = &CreateHeadTailTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建片头片尾模板。
+func (c *Client) CreateHeadTailTemplate(request *CreateHeadTailTemplateRequest) (response *CreateHeadTailTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateHeadTailTemplateRequest()
+    }
+    response = NewCreateHeadTailTemplateResponse()
     err = c.Send(request, response)
     return
 }
@@ -730,6 +780,31 @@ func (c *Client) DeleteContentReviewTemplate(request *DeleteContentReviewTemplat
         request = NewDeleteContentReviewTemplateRequest()
     }
     response = NewDeleteContentReviewTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteHeadTailTemplateRequest() (request *DeleteHeadTailTemplateRequest) {
+    request = &DeleteHeadTailTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DeleteHeadTailTemplate")
+    return
+}
+
+func NewDeleteHeadTailTemplateResponse() (response *DeleteHeadTailTemplateResponse) {
+    response = &DeleteHeadTailTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除片头片尾模板。
+func (c *Client) DeleteHeadTailTemplate(request *DeleteHeadTailTemplateRequest) (response *DeleteHeadTailTemplateResponse, err error) {
+    if request == nil {
+        request = NewDeleteHeadTailTemplateRequest()
+    }
+    response = NewDeleteHeadTailTemplateResponse()
     err = c.Send(request, response)
     return
 }
@@ -1334,6 +1409,61 @@ func (c *Client) DescribeDailyPlayStatFileList(request *DescribeDailyPlayStatFil
     return
 }
 
+func NewDescribeDrmDataKeyRequest() (request *DescribeDrmDataKeyRequest) {
+    request = &DescribeDrmDataKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeDrmDataKey")
+    return
+}
+
+func NewDescribeDrmDataKeyResponse() (response *DescribeDrmDataKeyResponse) {
+    response = &DescribeDrmDataKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本 API 是 [旧版本加密](https://cloud.tencent.com/document/product/266/9638) 中[DescribeDrmDataKey 的 API 2017 接口](https://cloud.tencent.com/document/product/266/9643)的升级版本。
+// 如果您是新接入点播加密的用户，不要使用该 API。请参考[视频加密综述](https://cloud.tencent.com/document/product/266/45552)使用。
+func (c *Client) DescribeDrmDataKey(request *DescribeDrmDataKeyRequest) (response *DescribeDrmDataKeyResponse, err error) {
+    if request == nil {
+        request = NewDescribeDrmDataKeyRequest()
+    }
+    response = NewDescribeDrmDataKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEventConfigRequest() (request *DescribeEventConfigRequest) {
+    request = &DescribeEventConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeEventConfig")
+    return
+}
+
+func NewDescribeEventConfigResponse() (response *DescribeEventConfigResponse) {
+    response = &DescribeEventConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 腾讯云点播为客户提供了媒体上传、媒体管理、媒体处理等等服务，在这些服务执行过程或执行结束时，腾讯云点播也提供各种对应的事件通知，方便开发者感知服务处理状态，并做下一步的业务操作。
+// 
+// 开发者可以通过本接口来查询当前配置事件通知的接收方式、接收地址以及哪些事件开启了接收回调通知。
+// 
+// 默认接口请求频率限制：100次/秒。
+func (c *Client) DescribeEventConfig(request *DescribeEventConfigRequest) (response *DescribeEventConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeEventConfigRequest()
+    }
+    response = NewDescribeEventConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEventsStateRequest() (request *DescribeEventsStateRequest) {
     request = &DescribeEventsStateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1355,6 +1485,31 @@ func (c *Client) DescribeEventsState(request *DescribeEventsStateRequest) (respo
         request = NewDescribeEventsStateRequest()
     }
     response = NewDescribeEventsStateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeHeadTailTemplatesRequest() (request *DescribeHeadTailTemplatesRequest) {
+    request = &DescribeHeadTailTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeHeadTailTemplates")
+    return
+}
+
+func NewDescribeHeadTailTemplatesResponse() (response *DescribeHeadTailTemplatesResponse) {
+    response = &DescribeHeadTailTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取片头片尾模板列表。
+func (c *Client) DescribeHeadTailTemplates(request *DescribeHeadTailTemplatesRequest) (response *DescribeHeadTailTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeHeadTailTemplatesRequest()
+    }
+    response = NewDescribeHeadTailTemplatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1492,6 +1647,33 @@ func (c *Client) DescribePersonSamples(request *DescribePersonSamplesRequest) (r
         request = NewDescribePersonSamplesRequest()
     }
     response = NewDescribePersonSamplesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePrepaidProductsRequest() (request *DescribePrepaidProductsRequest) {
+    request = &DescribePrepaidProductsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribePrepaidProducts")
+    return
+}
+
+func NewDescribePrepaidProductsResponse() (response *DescribePrepaidProductsResponse) {
+    response = &DescribePrepaidProductsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口可以查询用户已经购买的预付费商品的信息，包括：
+//     1. 商品的类型、生效和失效日期。
+//     2. 商品中每种资源的额度和剩余额度。
+func (c *Client) DescribePrepaidProducts(request *DescribePrepaidProductsRequest) (response *DescribePrepaidProductsResponse, err error) {
+    if request == nil {
+        request = NewDescribePrepaidProductsRequest()
+    }
+    response = NewDescribePrepaidProductsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1778,6 +1960,31 @@ func (c *Client) DescribeTranscodeTemplates(request *DescribeTranscodeTemplatesR
         request = NewDescribeTranscodeTemplatesRequest()
     }
     response = NewDescribeTranscodeTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeVodDomainsRequest() (request *DescribeVodDomainsRequest) {
+    request = &DescribeVodDomainsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeVodDomains")
+    return
+}
+
+func NewDescribeVodDomainsResponse() (response *DescribeVodDomainsResponse) {
+    response = &DescribeVodDomainsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口用于查询点播域名信息列表。
+func (c *Client) DescribeVodDomains(request *DescribeVodDomainsRequest) (response *DescribeVodDomainsResponse, err error) {
+    if request == nil {
+        request = NewDescribeVodDomainsRequest()
+    }
+    response = NewDescribeVodDomainsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2147,6 +2354,61 @@ func (c *Client) ModifyContentReviewTemplate(request *ModifyContentReviewTemplat
     return
 }
 
+func NewModifyEventConfigRequest() (request *ModifyEventConfigRequest) {
+    request = &ModifyEventConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "ModifyEventConfig")
+    return
+}
+
+func NewModifyEventConfigResponse() (response *ModifyEventConfigResponse) {
+    response = &ModifyEventConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 腾讯云点播为客户提供了媒体上传、媒体管理、媒体处理等等服务，在这些服务执行过程或执行结束时，腾讯云点播也提供各种对应的事件通知，方便开发者感知服务处理状态，并做下一步的业务操作。
+// 
+// 开发者可以通过调用本接口来实现：
+// - 设置接收回调通知的类型，目前有[ HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779) 和 [基于消息队列的可靠通知](https://cloud.tencent.com/document/product/266/33779) 两种类型。
+// - 对于[ HTTP 回调通知](https://cloud.tencent.com/document/product/266/33779)，可设置 3.0 格式回调的地址。3.0 格式回调的说明参见 [历史格式回调](https://cloud.tencent.com/document/product/266/33796)。
+// - 对具体事件服务的通知事件选择设置接收或者忽略。
+func (c *Client) ModifyEventConfig(request *ModifyEventConfigRequest) (response *ModifyEventConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyEventConfigRequest()
+    }
+    response = NewModifyEventConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyHeadTailTemplateRequest() (request *ModifyHeadTailTemplateRequest) {
+    request = &ModifyHeadTailTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "ModifyHeadTailTemplate")
+    return
+}
+
+func NewModifyHeadTailTemplateResponse() (response *ModifyHeadTailTemplateResponse) {
+    response = &ModifyHeadTailTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改片头片尾模板。
+func (c *Client) ModifyHeadTailTemplate(request *ModifyHeadTailTemplateRequest) (response *ModifyHeadTailTemplateResponse, err error) {
+    if request == nil {
+        request = NewModifyHeadTailTemplateRequest()
+    }
+    response = NewModifyHeadTailTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyImageSpriteTemplateRequest() (request *ModifyImageSpriteTemplateRequest) {
     request = &ModifyImageSpriteTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2187,7 +2449,7 @@ func NewModifyMediaInfoResponse() (response *ModifyMediaInfoResponse) {
     return
 }
 
-// 修改媒体文件的属性，包括分类、名称、描述、标签、过期时间、打点信息、视频封面等。
+// 修改媒体文件的属性，包括分类、名称、描述、标签、过期时间、打点信息、视频封面、字幕信息等。
 func (c *Client) ModifyMediaInfo(request *ModifyMediaInfoRequest) (response *ModifyMediaInfoResponse, err error) {
     if request == nil {
         request = NewModifyMediaInfoRequest()
