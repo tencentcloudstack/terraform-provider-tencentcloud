@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
     * `disk_size` - Volume of disk in GB. Default is `0`.
     * `disk_type` - Type of disk.
     * `snapshot_id` - Data disk snapshot ID.
+  * `disk_type_policy` - Policy of cloud disk type.
   * `enhanced_monitor_service` - Whether to activate cloud monitor service.
   * `enhanced_security_service` - Whether to activate cloud security service.
   * `image_id` - ID of available image, for example `img-8toqc6s3`.

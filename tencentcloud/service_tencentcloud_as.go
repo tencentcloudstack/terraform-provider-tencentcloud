@@ -526,8 +526,10 @@ func flattenDataDiskMappings(list []*as.DataDisk) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(list))
 	for _, v := range list {
 		disk := map[string]interface{}{
-			"disk_type": *v.DiskType,
 			"disk_size": *v.DiskSize,
+		}
+		if v.DiskType != nil {
+			disk["disk_type"] = *v.DiskType
 		}
 		result = append(result, disk)
 	}

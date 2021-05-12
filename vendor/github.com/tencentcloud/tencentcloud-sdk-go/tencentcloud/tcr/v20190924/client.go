@@ -293,6 +293,31 @@ func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest
     return
 }
 
+func NewCreateReplicationInstanceRequest() (request *CreateReplicationInstanceRequest) {
+    request = &CreateReplicationInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateReplicationInstance")
+    return
+}
+
+func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstanceResponse) {
+    response = &CreateReplicationInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建从实例
+func (c *Client) CreateReplicationInstance(request *CreateReplicationInstanceRequest) (response *CreateReplicationInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateReplicationInstanceRequest()
+    }
+    response = NewCreateReplicationInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRepositoryRequest() (request *CreateRepositoryRequest) {
     request = &CreateRepositoryRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -364,6 +389,56 @@ func (c *Client) CreateSecurityPolicy(request *CreateSecurityPolicyRequest) (res
         request = NewCreateSecurityPolicyRequest()
     }
     response = NewCreateSecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTagRetentionExecutionRequest() (request *CreateTagRetentionExecutionRequest) {
+    request = &CreateTagRetentionExecutionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionExecution")
+    return
+}
+
+func NewCreateTagRetentionExecutionResponse() (response *CreateTagRetentionExecutionResponse) {
+    response = &CreateTagRetentionExecutionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 手动执行版本保留
+func (c *Client) CreateTagRetentionExecution(request *CreateTagRetentionExecutionRequest) (response *CreateTagRetentionExecutionResponse, err error) {
+    if request == nil {
+        request = NewCreateTagRetentionExecutionRequest()
+    }
+    response = NewCreateTagRetentionExecutionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTagRetentionRuleRequest() (request *CreateTagRetentionRuleRequest) {
+    request = &CreateTagRetentionRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionRule")
+    return
+}
+
+func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleResponse) {
+    response = &CreateTagRetentionRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建版本保留规则
+func (c *Client) CreateTagRetentionRule(request *CreateTagRetentionRuleRequest) (response *CreateTagRetentionRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateTagRetentionRuleRequest()
+    }
+    response = NewCreateTagRetentionRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -739,6 +814,31 @@ func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (res
         request = NewDeleteSecurityPolicyRequest()
     }
     response = NewDeleteSecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteTagRetentionRuleRequest() (request *DeleteTagRetentionRuleRequest) {
+    request = &DeleteTagRetentionRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteTagRetentionRule")
+    return
+}
+
+func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleResponse) {
+    response = &DeleteTagRetentionRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除版本保留规则
+func (c *Client) DeleteTagRetentionRule(request *DeleteTagRetentionRuleRequest) (response *DeleteTagRetentionRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteTagRetentionRuleRequest()
+    }
+    response = NewDeleteTagRetentionRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -1218,6 +1318,31 @@ func (c *Client) DescribeReplicationInstanceCreateTasks(request *DescribeReplica
     return
 }
 
+func NewDescribeReplicationInstanceSyncStatusRequest() (request *DescribeReplicationInstanceSyncStatusRequest) {
+    request = &DescribeReplicationInstanceSyncStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstanceSyncStatus")
+    return
+}
+
+func NewDescribeReplicationInstanceSyncStatusResponse() (response *DescribeReplicationInstanceSyncStatusResponse) {
+    response = &DescribeReplicationInstanceSyncStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询从实例同步状态
+func (c *Client) DescribeReplicationInstanceSyncStatus(request *DescribeReplicationInstanceSyncStatusRequest) (response *DescribeReplicationInstanceSyncStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeReplicationInstanceSyncStatusRequest()
+    }
+    response = NewDescribeReplicationInstanceSyncStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeReplicationInstancesRequest() (request *DescribeReplicationInstancesRequest) {
     request = &DescribeReplicationInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1368,6 +1493,81 @@ func (c *Client) DescribeSecurityPolicies(request *DescribeSecurityPoliciesReque
     return
 }
 
+func NewDescribeTagRetentionExecutionRequest() (request *DescribeTagRetentionExecutionRequest) {
+    request = &DescribeTagRetentionExecutionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecution")
+    return
+}
+
+func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionExecutionResponse) {
+    response = &DescribeTagRetentionExecutionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询版本保留执行记录
+func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExecutionRequest) (response *DescribeTagRetentionExecutionResponse, err error) {
+    if request == nil {
+        request = NewDescribeTagRetentionExecutionRequest()
+    }
+    response = NewDescribeTagRetentionExecutionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTagRetentionExecutionTaskRequest() (request *DescribeTagRetentionExecutionTaskRequest) {
+    request = &DescribeTagRetentionExecutionTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecutionTask")
+    return
+}
+
+func NewDescribeTagRetentionExecutionTaskResponse() (response *DescribeTagRetentionExecutionTaskResponse) {
+    response = &DescribeTagRetentionExecutionTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询版本保留执行任务
+func (c *Client) DescribeTagRetentionExecutionTask(request *DescribeTagRetentionExecutionTaskRequest) (response *DescribeTagRetentionExecutionTaskResponse, err error) {
+    if request == nil {
+        request = NewDescribeTagRetentionExecutionTaskRequest()
+    }
+    response = NewDescribeTagRetentionExecutionTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTagRetentionRulesRequest() (request *DescribeTagRetentionRulesRequest) {
+    request = &DescribeTagRetentionRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionRules")
+    return
+}
+
+func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRulesResponse) {
+    response = &DescribeTagRetentionRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询版本保留规则
+func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesRequest) (response *DescribeTagRetentionRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeTagRetentionRulesRequest()
+    }
+    response = NewDescribeTagRetentionRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeUserQuotaPersonalRequest() (request *DescribeUserQuotaPersonalRequest) {
     request = &DescribeUserQuotaPersonalRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1439,6 +1639,31 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
         request = NewDescribeWebhookTriggerLogRequest()
     }
     response = NewDescribeWebhookTriggerLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDownloadHelmChartRequest() (request *DownloadHelmChartRequest) {
+    request = &DownloadHelmChartRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DownloadHelmChart")
+    return
+}
+
+func NewDownloadHelmChartResponse() (response *DownloadHelmChartResponse) {
+    response = &DownloadHelmChartResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 用于在TCR中下载helm chart
+func (c *Client) DownloadHelmChart(request *DownloadHelmChartRequest) (response *DownloadHelmChartResponse, err error) {
+    if request == nil {
+        request = NewDownloadHelmChartRequest()
+    }
+    response = NewDownloadHelmChartResponse()
     err = c.Send(request, response)
     return
 }
@@ -1539,6 +1764,31 @@ func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) 
         request = NewManageInternalEndpointRequest()
     }
     response = NewManageInternalEndpointResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewManageReplicationRequest() (request *ManageReplicationRequest) {
+    request = &ManageReplicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "ManageReplication")
+    return
+}
+
+func NewManageReplicationResponse() (response *ManageReplicationResponse) {
+    response = &ManageReplicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 管理实例同步
+func (c *Client) ManageReplication(request *ManageReplicationRequest) (response *ManageReplicationResponse, err error) {
+    if request == nil {
+        request = NewManageReplicationRequest()
+    }
+    response = NewManageReplicationResponse()
     err = c.Send(request, response)
     return
 }
@@ -1714,6 +1964,31 @@ func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (res
         request = NewModifySecurityPolicyRequest()
     }
     response = NewModifySecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTagRetentionRuleRequest() (request *ModifyTagRetentionRuleRequest) {
+    request = &ModifyTagRetentionRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyTagRetentionRule")
+    return
+}
+
+func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleResponse) {
+    response = &ModifyTagRetentionRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 更新版本保留规则
+func (c *Client) ModifyTagRetentionRule(request *ModifyTagRetentionRuleRequest) (response *ModifyTagRetentionRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyTagRetentionRuleRequest()
+    }
+    response = NewModifyTagRetentionRuleResponse()
     err = c.Send(request, response)
     return
 }

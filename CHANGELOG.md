@@ -1,4 +1,11 @@
-## 1.56.7 (Unreleased)
+## 1.56.8 (Unreleased)
+## 1.56.7 (May 12, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_as_scaling_config` add `disk_type_policy`.
+* Data Source `tencentcloud_as_scaling_configs` add `disk_type_policy` as result.
+
 ## 1.56.6 (May 7, 2021)
 
 BUG FIXES:

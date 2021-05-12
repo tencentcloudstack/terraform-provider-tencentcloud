@@ -16,6 +16,7 @@ package v20180606
 
 import (
     "encoding/json"
+    "errors"
 
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
@@ -174,8 +175,51 @@ func (r *AddCdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *AddCdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "ServiceType")
+	delete(f, "Origin")
+	delete(f, "ProjectId")
+	delete(f, "IpFilter")
+	delete(f, "IpFreqLimit")
+	delete(f, "StatusCodeCache")
+	delete(f, "Compression")
+	delete(f, "BandwidthAlert")
+	delete(f, "RangeOriginPull")
+	delete(f, "FollowRedirect")
+	delete(f, "ErrorPage")
+	delete(f, "RequestHeader")
+	delete(f, "ResponseHeader")
+	delete(f, "DownstreamCapping")
+	delete(f, "CacheKey")
+	delete(f, "ResponseHeaderCache")
+	delete(f, "VideoSeek")
+	delete(f, "Cache")
+	delete(f, "OriginPullOptimization")
+	delete(f, "Https")
+	delete(f, "Authentication")
+	delete(f, "Seo")
+	delete(f, "ForceRedirect")
+	delete(f, "Referer")
+	delete(f, "MaxAge")
+	delete(f, "Ipv6")
+	delete(f, "SpecificConfig")
+	delete(f, "Area")
+	delete(f, "OriginPullTimeout")
+	delete(f, "Tag")
+	delete(f, "Ipv6Access")
+	delete(f, "OfflineCache")
+	delete(f, "Quic")
+	if len(f) > 0 {
+		return errors.New("AddCdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type AddCdnDomainResponse struct {
@@ -192,8 +236,10 @@ func (r *AddCdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *AddCdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type AdvanceCacheRule struct {
@@ -473,7 +519,7 @@ type AuthenticationTypeA struct {
 	SignParam *string `json:"SignParam,omitempty" name:"SignParam"`
 
 	// 签名过期时间设置
-	// 单位为秒，最大可设置为 31536000
+	// 单位为秒，最大可设置为 630720000
 	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
 
 	// 鉴权/不做鉴权的文件扩展名列表设置
@@ -493,7 +539,7 @@ type AuthenticationTypeB struct {
 	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
 
 	// 签名过期时间设置
-	// 单位为秒，最大可设置为 31536000
+	// 单位为秒，最大可设置为 630720000
 	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
 
 	// 鉴权/不做鉴权的文件扩展名列表设置
@@ -513,7 +559,7 @@ type AuthenticationTypeC struct {
 	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
 
 	// 签名过期时间设置
-	// 单位为秒，最大可设置为 31536000
+	// 单位为秒，最大可设置为 630720000
 	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
 
 	// 鉴权/不做鉴权的文件扩展名列表设置
@@ -539,7 +585,7 @@ type AuthenticationTypeD struct {
 	SecretKey *string `json:"SecretKey,omitempty" name:"SecretKey"`
 
 	// 签名过期时间设置
-	// 单位为秒，最大可设置为 31536000
+	// 单位为秒，最大可设置为 630720000
 	ExpireTime *int64 `json:"ExpireTime,omitempty" name:"ExpireTime"`
 
 	// 鉴权/不做鉴权的文件扩展名列表设置
@@ -752,9 +798,9 @@ type CacheConfigCache struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCacheControl *string `json:"IgnoreCacheControl,omitempty" name:"IgnoreCacheControl"`
 
-	// 忽略源站的 Set-Cookie 头部
-	// on：开启
-	// off：关闭
+	// 当源站返回Set-Cookie头部时，节点是否缓存该头部及body
+	// on：开启，不缓存该头部及body
+	// off：关闭，遵循用户自定义的节点缓存规则
 	// 默认为关闭状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreSetCookie *string `json:"IgnoreSetCookie,omitempty" name:"IgnoreSetCookie"`
@@ -1077,8 +1123,21 @@ func (r *CreateClsLogTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateClsLogTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TopicName")
+	delete(f, "LogsetId")
+	delete(f, "Channel")
+	delete(f, "DomainAreaConfigs")
+	if len(f) > 0 {
+		return errors.New("CreateClsLogTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateClsLogTopicResponse struct {
@@ -1099,8 +1158,10 @@ func (r *CreateClsLogTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateClsLogTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateDiagnoseUrlRequest struct {
@@ -1115,8 +1176,18 @@ func (r *CreateDiagnoseUrlRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDiagnoseUrlRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Url")
+	if len(f) > 0 {
+		return errors.New("CreateDiagnoseUrlRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateDiagnoseUrlResponse struct {
@@ -1136,8 +1207,10 @@ func (r *CreateDiagnoseUrlResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDiagnoseUrlResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateEdgePackTaskRequest struct {
@@ -1149,11 +1222,11 @@ type CreateEdgePackTaskRequest struct {
 	// apk 源文件的存储路径, 如 /apk/xxxx.apk
 	CosUriFrom *string `json:"CosUriFrom,omitempty" name:"CosUriFrom"`
 
-	// 拓展之后的 apk 目标存储路径,如 /out/xxxx.apk
-	CosUriTo *string `json:"CosUriTo,omitempty" name:"CosUriTo"`
-
 	// BlockID 的值, WALLE为1903654775(0x71777777)，VasDolly为2282837503(0x881155ff),传0或不传时默认为 WALLE 方案
 	BlockID *uint64 `json:"BlockID,omitempty" name:"BlockID"`
+
+	// 拓展之后的 apk 目标存储路径,如 /out/xxxx.apk
+	CosUriTo *string `json:"CosUriTo,omitempty" name:"CosUriTo"`
 }
 
 func (r *CreateEdgePackTaskRequest) ToJsonString() string {
@@ -1161,8 +1234,21 @@ func (r *CreateEdgePackTaskRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateEdgePackTaskRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CosBucket")
+	delete(f, "CosUriFrom")
+	delete(f, "BlockID")
+	delete(f, "CosUriTo")
+	if len(f) > 0 {
+		return errors.New("CreateEdgePackTaskRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateEdgePackTaskResponse struct {
@@ -1179,8 +1265,10 @@ func (r *CreateEdgePackTaskResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateEdgePackTaskResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateScdnFailedLogTaskRequest struct {
@@ -1198,8 +1286,19 @@ func (r *CreateScdnFailedLogTaskRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateScdnFailedLogTaskRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("CreateScdnFailedLogTaskRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateScdnFailedLogTaskResponse struct {
@@ -1220,8 +1319,10 @@ func (r *CreateScdnFailedLogTaskResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateScdnFailedLogTaskResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateScdnLogTaskRequest struct {
@@ -1296,8 +1397,29 @@ func (r *CreateScdnLogTaskRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateScdnLogTaskRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Mode")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Domain")
+	delete(f, "AttackType")
+	delete(f, "DefenceMode")
+	delete(f, "Ip")
+	delete(f, "Domains")
+	delete(f, "AttackTypes")
+	delete(f, "Conditions")
+	delete(f, "Source")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("CreateScdnLogTaskRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateScdnLogTaskResponse struct {
@@ -1318,8 +1440,10 @@ func (r *CreateScdnLogTaskResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateScdnLogTaskResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateVerifyRecordRequest struct {
@@ -1334,8 +1458,18 @@ func (r *CreateVerifyRecordRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateVerifyRecordRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("CreateVerifyRecordRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateVerifyRecordResponse struct {
@@ -1361,8 +1495,10 @@ func (r *CreateVerifyRecordResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateVerifyRecordResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteCdnDomainRequest struct {
@@ -1378,8 +1514,18 @@ func (r *DeleteCdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteCdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("DeleteCdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteCdnDomainResponse struct {
@@ -1396,8 +1542,10 @@ func (r *DeleteCdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteCdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteClsLogTopicRequest struct {
@@ -1418,8 +1566,20 @@ func (r *DeleteClsLogTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteClsLogTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TopicId")
+	delete(f, "LogsetId")
+	delete(f, "Channel")
+	if len(f) > 0 {
+		return errors.New("DeleteClsLogTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteClsLogTopicResponse struct {
@@ -1436,8 +1596,10 @@ func (r *DeleteClsLogTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteClsLogTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteScdnDomainRequest struct {
@@ -1452,8 +1614,18 @@ func (r *DeleteScdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteScdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("DeleteScdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteScdnDomainResponse struct {
@@ -1473,8 +1645,10 @@ func (r *DeleteScdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteScdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBillingDataRequest struct {
@@ -1529,8 +1703,25 @@ func (r *DescribeBillingDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBillingDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Interval")
+	delete(f, "Domain")
+	delete(f, "Project")
+	delete(f, "Area")
+	delete(f, "District")
+	delete(f, "Metric")
+	if len(f) > 0 {
+		return errors.New("DescribeBillingDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeBillingDataResponse struct {
@@ -1557,8 +1748,10 @@ func (r *DescribeBillingDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeBillingDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnDataRequest struct {
@@ -1578,7 +1771,10 @@ type DescribeCdnDataRequest struct {
 	// flux：流量，单位为 byte
 	// bandwidth：带宽，单位为 bps
 	// request：请求数，单位为 次
-	// fluxHitRate：流量命中率，单位为 %
+	// hitRequest：命中请求数，单位为 次
+	// requestHitRate：请求命中率，单位为 %，保留小数点后两位
+	// hitFlux：命中流量，单位为byte
+	// fluxHitRate：流量命中率，单位为 %，保留小数点后两位
 	// statusCode：状态码，返回 2xx、3xx、4xx、5xx 汇总数据，单位为 个
 	// 2xx：返回 2xx 状态码汇总及各 2 开头状态码数据，单位为 个
 	// 3xx：返回 3xx 状态码汇总及各 3 开头状态码数据，单位为 个
@@ -1650,8 +1846,31 @@ func (r *DescribeCdnDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Metric")
+	delete(f, "Domains")
+	delete(f, "Project")
+	delete(f, "Interval")
+	delete(f, "Detail")
+	delete(f, "Isp")
+	delete(f, "District")
+	delete(f, "Protocol")
+	delete(f, "DataSource")
+	delete(f, "IpProtocol")
+	delete(f, "Area")
+	delete(f, "AreaType")
+	if len(f) > 0 {
+		return errors.New("DescribeCdnDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnDataResponse struct {
@@ -1678,8 +1897,10 @@ func (r *DescribeCdnDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnDomainLogsRequest struct {
@@ -1717,8 +1938,24 @@ func (r *DescribeCdnDomainLogsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnDomainLogsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Area")
+	delete(f, "LogType")
+	if len(f) > 0 {
+		return errors.New("DescribeCdnDomainLogsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnDomainLogsResponse struct {
@@ -1741,8 +1978,10 @@ func (r *DescribeCdnDomainLogsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnDomainLogsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnIpRequest struct {
@@ -1757,8 +1996,18 @@ func (r *DescribeCdnIpRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnIpRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Ips")
+	if len(f) > 0 {
+		return errors.New("DescribeCdnIpRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnIpResponse struct {
@@ -1778,8 +2027,10 @@ func (r *DescribeCdnIpResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnIpResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnOriginIpRequest struct {
@@ -1791,8 +2042,17 @@ func (r *DescribeCdnOriginIpRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnOriginIpRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribeCdnOriginIpRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCdnOriginIpResponse struct {
@@ -1815,8 +2075,10 @@ func (r *DescribeCdnOriginIpResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCdnOriginIpResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCertDomainsRequest struct {
@@ -1831,8 +2093,18 @@ func (r *DescribeCertDomainsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCertDomainsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Cert")
+	if len(f) > 0 {
+		return errors.New("DescribeCertDomainsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeCertDomainsResponse struct {
@@ -1857,8 +2129,10 @@ func (r *DescribeCertDomainsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeCertDomainsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDiagnoseReportRequest struct {
@@ -1873,8 +2147,18 @@ func (r *DescribeDiagnoseReportRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDiagnoseReportRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ReportId")
+	if len(f) > 0 {
+		return errors.New("DescribeDiagnoseReportRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDiagnoseReportResponse struct {
@@ -1915,8 +2199,10 @@ func (r *DescribeDiagnoseReportResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDiagnoseReportResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDistrictIspDataRequest struct {
@@ -1958,6 +2244,11 @@ type DescribeDistrictIspDataRequest struct {
 	// ipv6：指定查询 ipv6 对应指标
 	// 指定IP协议查询时，不可同时指定省份、运营商查询
 	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 时间粒度，支持以下几种模式（默认5min）：
+	// min：1 分钟粒度，支持近 60 天内的数据查询，每次查询时间区间不超过10分钟，可返回 1 分钟粒度明细数据
+	// 5min：5 分钟粒度，支持近 60 天内的数据查询，每次查询时间区间不超过3 小时，可返回 5 分钟粒度明细数据
+	Interval *string `json:"Interval,omitempty" name:"Interval"`
 }
 
 func (r *DescribeDistrictIspDataRequest) ToJsonString() string {
@@ -1965,8 +2256,26 @@ func (r *DescribeDistrictIspDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDistrictIspDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domains")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Metric")
+	delete(f, "Districts")
+	delete(f, "Isps")
+	delete(f, "Protocol")
+	delete(f, "IpProtocol")
+	delete(f, "Interval")
+	if len(f) > 0 {
+		return errors.New("DescribeDistrictIspDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDistrictIspDataResponse struct {
@@ -1987,8 +2296,10 @@ func (r *DescribeDistrictIspDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDistrictIspDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDomainsConfigRequest struct {
@@ -2012,8 +2323,21 @@ func (r *DescribeDomainsConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDomainsConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	delete(f, "Sort")
+	if len(f) > 0 {
+		return errors.New("DescribeDomainsConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDomainsConfigResponse struct {
@@ -2037,8 +2361,10 @@ func (r *DescribeDomainsConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDomainsConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDomainsRequest struct {
@@ -2059,8 +2385,20 @@ func (r *DescribeDomainsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDomainsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return errors.New("DescribeDomainsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDomainsResponse struct {
@@ -2084,8 +2422,10 @@ func (r *DescribeDomainsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDomainsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeImageConfigRequest struct {
@@ -2100,8 +2440,18 @@ func (r *DescribeImageConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeImageConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("DescribeImageConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeImageConfigResponse struct {
@@ -2130,8 +2480,10 @@ func (r *DescribeImageConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeImageConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeIpStatusRequest struct {
@@ -2158,8 +2510,20 @@ func (r *DescribeIpStatusRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeIpStatusRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Layer")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("DescribeIpStatusRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeIpStatusResponse struct {
@@ -2182,8 +2546,10 @@ func (r *DescribeIpStatusResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeIpStatusResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeIpVisitRequest struct {
@@ -2215,8 +2581,22 @@ func (r *DescribeIpVisitRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeIpVisitRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Domains")
+	delete(f, "Project")
+	delete(f, "Interval")
+	if len(f) > 0 {
+		return errors.New("DescribeIpVisitRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeIpVisitResponse struct {
@@ -2239,8 +2619,10 @@ func (r *DescribeIpVisitResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeIpVisitResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeMapInfoRequest struct {
@@ -2257,8 +2639,18 @@ func (r *DescribeMapInfoRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeMapInfoRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	if len(f) > 0 {
+		return errors.New("DescribeMapInfoRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeMapInfoResponse struct {
@@ -2286,8 +2678,10 @@ func (r *DescribeMapInfoResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeMapInfoResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeOriginDataRequest struct {
@@ -2347,8 +2741,25 @@ func (r *DescribeOriginDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeOriginDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Metric")
+	delete(f, "Domains")
+	delete(f, "Project")
+	delete(f, "Interval")
+	delete(f, "Detail")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("DescribeOriginDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeOriginDataResponse struct {
@@ -2371,8 +2782,10 @@ func (r *DescribeOriginDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeOriginDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePayTypeRequest struct {
@@ -2390,8 +2803,18 @@ func (r *DescribePayTypeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePayTypeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("DescribePayTypeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePayTypeResponse struct {
@@ -2437,8 +2860,10 @@ func (r *DescribePayTypeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePayTypeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePurgeQuotaRequest struct {
@@ -2450,8 +2875,17 @@ func (r *DescribePurgeQuotaRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePurgeQuotaRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribePurgeQuotaRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePurgeQuotaResponse struct {
@@ -2474,8 +2908,10 @@ func (r *DescribePurgeQuotaResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePurgeQuotaResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePurgeTasksRequest struct {
@@ -2523,8 +2959,26 @@ func (r *DescribePurgeTasksRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePurgeTasksRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PurgeType")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "TaskId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Keyword")
+	delete(f, "Status")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("DescribePurgeTasksRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePurgeTasksResponse struct {
@@ -2549,8 +3003,10 @@ func (r *DescribePurgeTasksResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePurgeTasksResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePushQuotaRequest struct {
@@ -2562,8 +3018,17 @@ func (r *DescribePushQuotaRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePushQuotaRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribePushQuotaRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePushQuotaResponse struct {
@@ -2583,8 +3048,10 @@ func (r *DescribePushQuotaResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePushQuotaResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePushTasksRequest struct {
@@ -2627,8 +3094,25 @@ func (r *DescribePushTasksRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePushTasksRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "TaskId")
+	delete(f, "Keyword")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Area")
+	delete(f, "Status")
+	if len(f) > 0 {
+		return errors.New("DescribePushTasksRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePushTasksResponse struct {
@@ -2653,8 +3137,10 @@ func (r *DescribePushTasksResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePushTasksResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeReportDataRequest struct {
@@ -2698,8 +3184,24 @@ func (r *DescribeReportDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeReportDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "ReportType")
+	delete(f, "Area")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Project")
+	if len(f) > 0 {
+		return errors.New("DescribeReportDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeReportDataResponse struct {
@@ -2722,8 +3224,10 @@ func (r *DescribeReportDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeReportDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeScdnConfigRequest struct {
@@ -2738,8 +3242,18 @@ func (r *DescribeScdnConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeScdnConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("DescribeScdnConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeScdnConfigResponse struct {
@@ -2775,8 +3289,10 @@ func (r *DescribeScdnConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeScdnConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeScdnTopDataRequest struct {
@@ -2838,8 +3354,25 @@ func (r *DescribeScdnTopDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeScdnTopDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Mode")
+	delete(f, "Metric")
+	delete(f, "Filter")
+	delete(f, "Domain")
+	delete(f, "AttackType")
+	delete(f, "DefenceMode")
+	if len(f) > 0 {
+		return errors.New("DescribeScdnTopDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeScdnTopDataResponse struct {
@@ -2871,8 +3404,10 @@ func (r *DescribeScdnTopDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeScdnTopDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTrafficPackagesRequest struct {
@@ -2890,8 +3425,19 @@ func (r *DescribeTrafficPackagesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTrafficPackagesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeTrafficPackagesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeTrafficPackagesResponse struct {
@@ -2920,8 +3466,10 @@ func (r *DescribeTrafficPackagesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeTrafficPackagesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeUrlViolationsRequest struct {
@@ -2942,8 +3490,20 @@ func (r *DescribeUrlViolationsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeUrlViolationsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Domains")
+	if len(f) > 0 {
+		return errors.New("DescribeUrlViolationsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeUrlViolationsResponse struct {
@@ -2967,8 +3527,10 @@ func (r *DescribeUrlViolationsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeUrlViolationsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DetailDomain struct {
@@ -3318,8 +3880,18 @@ func (r *DisableCachesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableCachesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Urls")
+	if len(f) > 0 {
+		return errors.New("DisableCachesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DisableCachesResponse struct {
@@ -3340,8 +3912,10 @@ func (r *DisableCachesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableCachesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DisableClsLogTopicRequest struct {
@@ -3362,8 +3936,20 @@ func (r *DisableClsLogTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableClsLogTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "Channel")
+	if len(f) > 0 {
+		return errors.New("DisableClsLogTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DisableClsLogTopicResponse struct {
@@ -3380,8 +3966,10 @@ func (r *DisableClsLogTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableClsLogTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DistrictIspInfo struct {
@@ -3503,8 +4091,19 @@ func (r *DuplicateDomainConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DuplicateDomainConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "ReferenceDomain")
+	if len(f) > 0 {
+		return errors.New("DuplicateDomainConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DuplicateDomainConfigResponse struct {
@@ -3521,8 +4120,10 @@ func (r *DuplicateDomainConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DuplicateDomainConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableCachesRequest struct {
@@ -3537,8 +4138,18 @@ func (r *EnableCachesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableCachesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Urls")
+	if len(f) > 0 {
+		return errors.New("EnableCachesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableCachesResponse struct {
@@ -3559,8 +4170,10 @@ func (r *EnableCachesResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableCachesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableClsLogTopicRequest struct {
@@ -3581,8 +4194,20 @@ func (r *EnableClsLogTopicRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableClsLogTopicRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "Channel")
+	if len(f) > 0 {
+		return errors.New("EnableClsLogTopicRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableClsLogTopicResponse struct {
@@ -3599,8 +4224,10 @@ func (r *EnableClsLogTopicResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableClsLogTopicResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ErrorPage struct {
@@ -3692,8 +4319,23 @@ func (r *GetDisableRecordsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *GetDisableRecordsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Url")
+	delete(f, "Status")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("GetDisableRecordsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type GetDisableRecordsResponse struct {
@@ -3718,8 +4360,10 @@ func (r *GetDisableRecordsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *GetDisableRecordsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type GuetzliAdapter struct {
@@ -3757,8 +4401,9 @@ type Hsts struct {
 type HttpHeaderPathRule struct {
 
 	// http 头部设置方式
-	// add：添加头部，若已存在头部，则会存在重复头部
-	// del：删除头部
+	// set：设置。变更指定头部参数的取值为设置后的值；若设置的头部不存在，则会增加该头部；若存在多个重复的头部参数，则会全部变更，同时合并为一个头部。
+	// del：删除。删除指定的头部参数
+	// add：增加。增加指定的头部参数，默认允许重复添加，即重复添加相同的头部（注：重复添加可能会影响浏览器响应，请优先使用set操作）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HeaderMode *string `json:"HeaderMode,omitempty" name:"HeaderMode"`
 
@@ -4028,8 +4673,18 @@ func (r *ListClsLogTopicsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListClsLogTopicsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Channel")
+	if len(f) > 0 {
+		return errors.New("ListClsLogTopicsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListClsLogTopicsResponse struct {
@@ -4053,8 +4708,10 @@ func (r *ListClsLogTopicsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListClsLogTopicsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListClsTopicDomainsRequest struct {
@@ -4075,8 +4732,20 @@ func (r *ListClsTopicDomainsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListClsTopicDomainsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "Channel")
+	if len(f) > 0 {
+		return errors.New("ListClsTopicDomainsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListClsTopicDomainsResponse struct {
@@ -4115,8 +4784,10 @@ func (r *ListClsTopicDomainsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListClsTopicDomainsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListDiagnoseReportRequest struct {
@@ -4134,8 +4805,19 @@ func (r *ListDiagnoseReportRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListDiagnoseReportRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "KeyWords")
+	delete(f, "DiagnoseLink")
+	if len(f) > 0 {
+		return errors.New("ListDiagnoseReportRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListDiagnoseReportResponse struct {
@@ -4155,8 +4837,10 @@ func (r *ListDiagnoseReportResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListDiagnoseReportResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListScdnDomainsRequest struct {
@@ -4177,8 +4861,20 @@ func (r *ListScdnDomainsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListScdnDomainsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("ListScdnDomainsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListScdnDomainsResponse struct {
@@ -4203,8 +4899,10 @@ func (r *ListScdnDomainsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListScdnDomainsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListScdnLogTasksRequest struct {
@@ -4222,8 +4920,19 @@ func (r *ListScdnLogTasksRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListScdnLogTasksRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Source")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return errors.New("ListScdnLogTasksRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListScdnLogTasksResponse struct {
@@ -4246,8 +4955,10 @@ func (r *ListScdnLogTasksResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListScdnLogTasksResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListTopDataRequest struct {
@@ -4320,8 +5031,27 @@ func (r *ListTopDataRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListTopDataRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Metric")
+	delete(f, "Filter")
+	delete(f, "Domains")
+	delete(f, "Project")
+	delete(f, "Detail")
+	delete(f, "Code")
+	delete(f, "Area")
+	delete(f, "AreaType")
+	if len(f) > 0 {
+		return errors.New("ListTopDataRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ListTopDataResponse struct {
@@ -4341,8 +5071,10 @@ func (r *ListTopDataResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ListTopDataResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type LogSetInfo struct {
@@ -4493,8 +5225,21 @@ func (r *ManageClsTopicDomainsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ManageClsTopicDomainsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogsetId")
+	delete(f, "TopicId")
+	delete(f, "Channel")
+	delete(f, "DomainAreaConfigs")
+	if len(f) > 0 {
+		return errors.New("ManageClsTopicDomainsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ManageClsTopicDomainsResponse struct {
@@ -4511,8 +5256,10 @@ func (r *ManageClsTopicDomainsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ManageClsTopicDomainsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type MapInfo struct {
@@ -4880,8 +5627,20 @@ func (r *PurgePathCacheRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PurgePathCacheRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Paths")
+	delete(f, "FlushType")
+	delete(f, "UrlEncode")
+	if len(f) > 0 {
+		return errors.New("PurgePathCacheRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PurgePathCacheResponse struct {
@@ -4901,8 +5660,10 @@ func (r *PurgePathCacheResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PurgePathCacheResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PurgeTask struct {
@@ -4955,8 +5716,20 @@ func (r *PurgeUrlsCacheRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PurgeUrlsCacheRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Urls")
+	delete(f, "Area")
+	delete(f, "UrlEncode")
+	if len(f) > 0 {
+		return errors.New("PurgeUrlsCacheRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PurgeUrlsCacheResponse struct {
@@ -4976,8 +5749,10 @@ func (r *PurgeUrlsCacheResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PurgeUrlsCacheResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PushTask struct {
@@ -5044,8 +5819,22 @@ func (r *PushUrlsCacheRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PushUrlsCacheRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Urls")
+	delete(f, "UserAgent")
+	delete(f, "Area")
+	delete(f, "Layer")
+	delete(f, "ParseM3U8")
+	if len(f) > 0 {
+		return errors.New("PushUrlsCacheRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PushUrlsCacheResponse struct {
@@ -5065,8 +5854,10 @@ func (r *PushUrlsCacheResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *PushUrlsCacheResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type QueryStringKey struct {
@@ -5279,7 +6070,6 @@ type RuleCache struct {
 	// directory 时填充路径，如 /xxx/test
 	// path 时填充绝对路径，如 /xxx/test.html
 	// index 时填充 /
-	// default 时填充 "no max-age"
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
 
@@ -5289,7 +6079,6 @@ type RuleCache struct {
 	// directory：指定路径生效
 	// path：指定绝对路径生效
 	// index：首页
-	// default: 源站无max-age时生效
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
 
@@ -5690,8 +6479,26 @@ func (r *SearchClsLogRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SearchClsLogRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LogsetId")
+	delete(f, "TopicIds")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Limit")
+	delete(f, "Channel")
+	delete(f, "Query")
+	delete(f, "Context")
+	delete(f, "Sort")
+	if len(f) > 0 {
+		return errors.New("SearchClsLogRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SearchClsLogResponse struct {
@@ -5711,8 +6518,10 @@ func (r *SearchClsLogResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *SearchClsLogResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SecurityConfig struct {
@@ -5866,8 +6675,18 @@ func (r *StartCdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StartCdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("StartCdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StartCdnDomainResponse struct {
@@ -5884,8 +6703,10 @@ func (r *StartCdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StartCdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StartScdnDomainRequest struct {
@@ -5900,8 +6721,18 @@ func (r *StartScdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StartScdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("StartScdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StartScdnDomainResponse struct {
@@ -5921,8 +6752,10 @@ func (r *StartScdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StartScdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StatusCodeCache struct {
@@ -5961,8 +6794,18 @@ func (r *StopCdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StopCdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("StopCdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StopCdnDomainResponse struct {
@@ -5979,8 +6822,10 @@ func (r *StopCdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StopCdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StopScdnDomainRequest struct {
@@ -5995,8 +6840,18 @@ func (r *StopScdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StopScdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("StopScdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type StopScdnDomainResponse struct {
@@ -6016,8 +6871,10 @@ func (r *StopScdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *StopScdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SummarizedData struct {
@@ -6285,8 +7142,57 @@ func (r *UpdateDomainConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateDomainConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "ProjectId")
+	delete(f, "Origin")
+	delete(f, "IpFilter")
+	delete(f, "IpFreqLimit")
+	delete(f, "StatusCodeCache")
+	delete(f, "Compression")
+	delete(f, "BandwidthAlert")
+	delete(f, "RangeOriginPull")
+	delete(f, "FollowRedirect")
+	delete(f, "ErrorPage")
+	delete(f, "RequestHeader")
+	delete(f, "ResponseHeader")
+	delete(f, "DownstreamCapping")
+	delete(f, "CacheKey")
+	delete(f, "ResponseHeaderCache")
+	delete(f, "VideoSeek")
+	delete(f, "Cache")
+	delete(f, "OriginPullOptimization")
+	delete(f, "Https")
+	delete(f, "Authentication")
+	delete(f, "Seo")
+	delete(f, "ForceRedirect")
+	delete(f, "Referer")
+	delete(f, "MaxAge")
+	delete(f, "ServiceType")
+	delete(f, "SpecificConfig")
+	delete(f, "Area")
+	delete(f, "OriginPullTimeout")
+	delete(f, "AwsPrivateAccess")
+	delete(f, "UserAgentFilter")
+	delete(f, "AccessControl")
+	delete(f, "UrlRedirect")
+	delete(f, "AccessPort")
+	delete(f, "AdvancedAuthentication")
+	delete(f, "OriginAuthentication")
+	delete(f, "Ipv6Access")
+	delete(f, "OfflineCache")
+	delete(f, "OriginCombine")
+	delete(f, "Quic")
+	if len(f) > 0 {
+		return errors.New("UpdateDomainConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateDomainConfigResponse struct {
@@ -6303,8 +7209,10 @@ func (r *UpdateDomainConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateDomainConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateImageConfigRequest struct {
@@ -6328,8 +7236,21 @@ func (r *UpdateImageConfigRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateImageConfigRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "WebpAdapter")
+	delete(f, "TpgAdapter")
+	delete(f, "GuetzliAdapter")
+	if len(f) > 0 {
+		return errors.New("UpdateImageConfigRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateImageConfigResponse struct {
@@ -6346,8 +7267,10 @@ func (r *UpdateImageConfigResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateImageConfigResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdatePayTypeRequest struct {
@@ -6365,8 +7288,19 @@ func (r *UpdatePayTypeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdatePayTypeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Area")
+	delete(f, "PayType")
+	if len(f) > 0 {
+		return errors.New("UpdatePayTypeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdatePayTypeResponse struct {
@@ -6383,8 +7317,10 @@ func (r *UpdatePayTypeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdatePayTypeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateScdnDomainRequest struct {
@@ -6414,8 +7350,23 @@ func (r *UpdateScdnDomainRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateScdnDomainRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Waf")
+	delete(f, "Acl")
+	delete(f, "CC")
+	delete(f, "Ddos")
+	delete(f, "Bot")
+	if len(f) > 0 {
+		return errors.New("UpdateScdnDomainRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UpdateScdnDomainResponse struct {
@@ -6435,8 +7386,10 @@ func (r *UpdateScdnDomainResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *UpdateScdnDomainResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type UrlRecord struct {
@@ -6532,8 +7485,18 @@ func (r *VerifyDomainRecordRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *VerifyDomainRecordRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return errors.New("VerifyDomainRecordRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type VerifyDomainRecordResponse struct {
@@ -6553,8 +7516,10 @@ func (r *VerifyDomainRecordResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *VerifyDomainRecordResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type VideoSeek struct {

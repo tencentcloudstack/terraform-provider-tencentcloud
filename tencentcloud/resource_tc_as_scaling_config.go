@@ -93,7 +93,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 				ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-				Description:  "Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.",
+				Description:  "Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.",
 			},
 			"system_disk_size": {
 				Type:         schema.TypeInt,
@@ -114,7 +114,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 							Optional:     true,
 							Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 							ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-							Description:  "Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+							Description:  "Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
@@ -196,6 +196,13 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "A list of tags used to associate different resources.",
+			},
+			"disk_type_policy": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      SCALING_DISK_TYPE_POLICY_ORIGINAL,
+				ValidateFunc: validateAllowedStringValue(SCALING_DISK_TYPE_ALLOW_POLICY),
+				Description:  "Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.",
 			},
 
 			// Computed values
@@ -343,6 +350,10 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
+	if v, ok := d.GetOk("disk_type_policy"); ok {
+		request.DiskTypePolicy = helper.String(v.(string))
+	}
+
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().CreateLaunchConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -385,7 +396,6 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("image_id", *config.ImageId)
 		_ = d.Set("project_id", *config.ProjectId)
 		_ = d.Set("instance_types", helper.StringsInterfaces(config.InstanceTypes))
-		_ = d.Set("system_disk_type", *config.SystemDisk.DiskType)
 		_ = d.Set("system_disk_size", *config.SystemDisk.DiskSize)
 		_ = d.Set("data_disk", flattenDataDiskMappings(config.DataDisks))
 		_ = d.Set("internet_charge_type", *config.InternetAccessible.InternetChargeType)
@@ -397,6 +407,10 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
 		_ = d.Set("user_data", helper.PString(config.UserData))
 		_ = d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
+		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
+		if config.SystemDisk.DiskType != nil {
+			_ = d.Set("system_disk_type", *config.SystemDisk.DiskType)
+		}
 		return nil
 	})
 	if err != nil {
@@ -537,6 +551,10 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 			}
 			request.InstanceTags = append(request.InstanceTags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOk("disk_type_policy"); ok {
+		request.DiskTypePolicy = helper.String(v.(string))
 	}
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().UpgradeLaunchConfiguration(request)

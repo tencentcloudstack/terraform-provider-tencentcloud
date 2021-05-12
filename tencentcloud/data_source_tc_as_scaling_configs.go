@@ -163,6 +163,11 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 							Computed:    true,
 							Description: "The time when the launch configuration was created.",
 						},
+						"disk_type_policy": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Policy of cloud disk type.",
+						},
 					},
 				},
 			},
@@ -201,7 +206,6 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 			"image_id":                   *config.ImageId,
 			"project_id":                 *config.ProjectId,
 			"instance_types":             helper.StringsInterfaces(config.InstanceTypes),
-			"system_disk_type":           *config.SystemDisk.DiskType,
 			"system_disk_size":           *config.SystemDisk.DiskSize,
 			"data_disk":                  flattenDataDiskMappings(config.DataDisks),
 			"internet_charge_type":       *config.InternetAccessible.InternetChargeType,
@@ -215,6 +219,10 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 			"instance_tags":              flattenInstanceTagsMapping(config.InstanceTags),
 			"status":                     *config.LaunchConfigurationStatus,
 			"create_time":                *config.CreatedTime,
+			"disk_type_policy":           *config.DiskTypePolicy,
+		}
+		if config.SystemDisk.DiskType != nil {
+			mapping["system_disk_type"] = *config.SystemDisk.DiskType
 		}
 		configurationList = append(configurationList, mapping)
 	}

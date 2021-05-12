@@ -16,6 +16,7 @@ package v20180410
 
 import (
     "encoding/json"
+    "errors"
 
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
@@ -32,8 +33,18 @@ func (r *AcceptDirectConnectTunnelRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *AcceptDirectConnectTunnelRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	if len(f) > 0 {
+		return errors.New("AcceptDirectConnectTunnelRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type AcceptDirectConnectTunnelResponse struct {
@@ -50,8 +61,10 @@ func (r *AcceptDirectConnectTunnelResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *AcceptDirectConnectTunnelResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type AccessPoint struct {
@@ -113,8 +126,20 @@ func (r *ApplyInternetAddressRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ApplyInternetAddressRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MaskLen")
+	delete(f, "AddrType")
+	delete(f, "AddrProto")
+	if len(f) > 0 {
+		return errors.New("ApplyInternetAddressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ApplyInternetAddressResponse struct {
@@ -135,8 +160,10 @@ func (r *ApplyInternetAddressResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ApplyInternetAddressResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type BFDInfo struct {
@@ -236,8 +263,34 @@ func (r *CreateDirectConnectRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDirectConnectRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectName")
+	delete(f, "AccessPointId")
+	delete(f, "LineOperator")
+	delete(f, "PortType")
+	delete(f, "CircuitCode")
+	delete(f, "Location")
+	delete(f, "Bandwidth")
+	delete(f, "RedundantDirectConnectId")
+	delete(f, "Vlan")
+	delete(f, "TencentAddress")
+	delete(f, "CustomerAddress")
+	delete(f, "CustomerName")
+	delete(f, "CustomerContactMail")
+	delete(f, "CustomerContactNumber")
+	delete(f, "FaultReportContactPerson")
+	delete(f, "FaultReportContactNumber")
+	delete(f, "SignLaw")
+	if len(f) > 0 {
+		return errors.New("CreateDirectConnectRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateDirectConnectResponse struct {
@@ -257,8 +310,10 @@ func (r *CreateDirectConnectResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDirectConnectResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateDirectConnectTunnelRequest struct {
@@ -327,8 +382,33 @@ func (r *CreateDirectConnectTunnelRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDirectConnectTunnelRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectId")
+	delete(f, "DirectConnectTunnelName")
+	delete(f, "DirectConnectOwnerAccount")
+	delete(f, "NetworkType")
+	delete(f, "NetworkRegion")
+	delete(f, "VpcId")
+	delete(f, "DirectConnectGatewayId")
+	delete(f, "Bandwidth")
+	delete(f, "RouteType")
+	delete(f, "BgpPeer")
+	delete(f, "RouteFilterPrefixes")
+	delete(f, "Vlan")
+	delete(f, "TencentAddress")
+	delete(f, "CustomerAddress")
+	delete(f, "TencentBackupAddress")
+	delete(f, "CloudAttachId")
+	if len(f) > 0 {
+		return errors.New("CreateDirectConnectTunnelRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateDirectConnectTunnelResponse struct {
@@ -348,8 +428,10 @@ func (r *CreateDirectConnectTunnelResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *CreateDirectConnectTunnelResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteDirectConnectRequest struct {
@@ -364,8 +446,18 @@ func (r *DeleteDirectConnectRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteDirectConnectRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectId")
+	if len(f) > 0 {
+		return errors.New("DeleteDirectConnectRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteDirectConnectResponse struct {
@@ -382,8 +474,10 @@ func (r *DeleteDirectConnectResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteDirectConnectResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteDirectConnectTunnelRequest struct {
@@ -398,8 +492,18 @@ func (r *DeleteDirectConnectTunnelRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteDirectConnectTunnelRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	if len(f) > 0 {
+		return errors.New("DeleteDirectConnectTunnelRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteDirectConnectTunnelResponse struct {
@@ -416,8 +520,10 @@ func (r *DeleteDirectConnectTunnelResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DeleteDirectConnectTunnelResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAccessPointsRequest struct {
@@ -440,8 +546,20 @@ func (r *DescribeAccessPointsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAccessPointsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegionId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeAccessPointsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeAccessPointsResponse struct {
@@ -464,8 +582,10 @@ func (r *DescribeAccessPointsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeAccessPointsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectTunnelExtraRequest struct {
@@ -480,8 +600,18 @@ func (r *DescribeDirectConnectTunnelExtraRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectTunnelExtraRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	if len(f) > 0 {
+		return errors.New("DescribeDirectConnectTunnelExtraRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectTunnelExtraResponse struct {
@@ -501,8 +631,10 @@ func (r *DescribeDirectConnectTunnelExtraResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectTunnelExtraResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectTunnelsRequest struct {
@@ -530,8 +662,21 @@ func (r *DescribeDirectConnectTunnelsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectTunnelsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "DirectConnectTunnelIds")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeDirectConnectTunnelsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectTunnelsResponse struct {
@@ -554,8 +699,10 @@ func (r *DescribeDirectConnectTunnelsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectTunnelsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectsRequest struct {
@@ -579,8 +726,21 @@ func (r *DescribeDirectConnectsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "DirectConnectIds")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribeDirectConnectsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeDirectConnectsResponse struct {
@@ -607,8 +767,10 @@ func (r *DescribeDirectConnectsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeDirectConnectsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressQuotaRequest struct {
@@ -620,8 +782,17 @@ func (r *DescribeInternetAddressQuotaRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressQuotaRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribeInternetAddressQuotaRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressQuotaResponse struct {
@@ -658,8 +829,10 @@ func (r *DescribeInternetAddressQuotaResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressQuotaResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressRequest struct {
@@ -685,8 +858,20 @@ func (r *DescribeInternetAddressRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return errors.New("DescribeInternetAddressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressResponse struct {
@@ -710,8 +895,10 @@ func (r *DescribeInternetAddressResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressStatisticsRequest struct {
@@ -723,8 +910,17 @@ func (r *DescribeInternetAddressStatisticsRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressStatisticsRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return errors.New("DescribeInternetAddressStatisticsRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribeInternetAddressStatisticsResponse struct {
@@ -748,8 +944,10 @@ func (r *DescribeInternetAddressStatisticsResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribeInternetAddressStatisticsResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePublicDirectConnectTunnelRoutesRequest struct {
@@ -775,8 +973,21 @@ func (r *DescribePublicDirectConnectTunnelRoutesRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePublicDirectConnectTunnelRoutesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return errors.New("DescribePublicDirectConnectTunnelRoutesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DescribePublicDirectConnectTunnelRoutesResponse struct {
@@ -799,8 +1010,10 @@ func (r *DescribePublicDirectConnectTunnelRoutesResponse) ToJsonString() string 
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DescribePublicDirectConnectTunnelRoutesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DirectConnect struct {
@@ -912,6 +1125,22 @@ type DirectConnect struct {
 	// 物理专线是否已签署用户协议
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+
+	// 物理专线是否为LocalZone
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalZone *bool `json:"LocalZone,omitempty" name:"LocalZone"`
+
+	// 该物理专线下vlan 0的专线通道数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VlanZeroDirectConnectTunnelCount *uint64 `json:"VlanZeroDirectConnectTunnelCount,omitempty" name:"VlanZeroDirectConnectTunnelCount"`
+
+	// 该物理专线下非vlan 0的专线通道数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OtherVlanDirectConnectTunnelCount *uint64 `json:"OtherVlanDirectConnectTunnelCount,omitempty" name:"OtherVlanDirectConnectTunnelCount"`
+
+	// 物理专线最小带宽
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MinBandwidth *uint64 `json:"MinBandwidth,omitempty" name:"MinBandwidth"`
 }
 
 type DirectConnectTunnel struct {
@@ -1193,8 +1422,18 @@ func (r *DisableInternetAddressRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableInternetAddressRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("DisableInternetAddressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DisableInternetAddressResponse struct {
@@ -1211,8 +1450,10 @@ func (r *DisableInternetAddressResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *DisableInternetAddressResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableInternetAddressRequest struct {
@@ -1227,8 +1468,18 @@ func (r *EnableInternetAddressRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableInternetAddressRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("EnableInternetAddressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnableInternetAddressResponse struct {
@@ -1245,8 +1496,10 @@ func (r *EnableInternetAddressResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *EnableInternetAddressResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Filter struct {
@@ -1362,6 +1615,9 @@ type ModifyDirectConnectAttributeRequest struct {
 
 	// 物理专线申请者补签用户使用协议
 	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+
+	// 物理专线带宽
+	Bandwidth *uint64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
 }
 
 func (r *ModifyDirectConnectAttributeRequest) ToJsonString() string {
@@ -1369,8 +1625,30 @@ func (r *ModifyDirectConnectAttributeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectAttributeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectId")
+	delete(f, "DirectConnectName")
+	delete(f, "CircuitCode")
+	delete(f, "Vlan")
+	delete(f, "TencentAddress")
+	delete(f, "CustomerAddress")
+	delete(f, "CustomerName")
+	delete(f, "CustomerContactMail")
+	delete(f, "CustomerContactNumber")
+	delete(f, "FaultReportContactPerson")
+	delete(f, "FaultReportContactNumber")
+	delete(f, "SignLaw")
+	delete(f, "Bandwidth")
+	if len(f) > 0 {
+		return errors.New("ModifyDirectConnectAttributeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyDirectConnectAttributeResponse struct {
@@ -1387,8 +1665,10 @@ func (r *ModifyDirectConnectAttributeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectAttributeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyDirectConnectTunnelAttributeRequest struct {
@@ -1424,8 +1704,25 @@ func (r *ModifyDirectConnectTunnelAttributeRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectTunnelAttributeRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	delete(f, "DirectConnectTunnelName")
+	delete(f, "BgpPeer")
+	delete(f, "RouteFilterPrefixes")
+	delete(f, "TencentAddress")
+	delete(f, "CustomerAddress")
+	delete(f, "Bandwidth")
+	delete(f, "TencentBackupAddress")
+	if len(f) > 0 {
+		return errors.New("ModifyDirectConnectTunnelAttributeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyDirectConnectTunnelAttributeResponse struct {
@@ -1442,8 +1739,10 @@ func (r *ModifyDirectConnectTunnelAttributeResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectTunnelAttributeResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyDirectConnectTunnelExtraRequest struct {
@@ -1494,6 +1793,11 @@ type ModifyDirectConnectTunnelExtraRequest struct {
 
 	// 去往用户侧的路由信息
 	CustomerIDCRoutes []*RouteFilterPrefix `json:"CustomerIDCRoutes,omitempty" name:"CustomerIDCRoutes" list`
+
+	// 是否开启巨帧
+	// 1：开启
+	// 0：不开启
+	JumboEnable *int64 `json:"JumboEnable,omitempty" name:"JumboEnable"`
 }
 
 func (r *ModifyDirectConnectTunnelExtraRequest) ToJsonString() string {
@@ -1501,8 +1805,33 @@ func (r *ModifyDirectConnectTunnelExtraRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectTunnelExtraRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	delete(f, "Vlan")
+	delete(f, "BgpPeer")
+	delete(f, "RouteFilterPrefixes")
+	delete(f, "TencentAddress")
+	delete(f, "TencentBackupAddress")
+	delete(f, "CustomerAddress")
+	delete(f, "Bandwidth")
+	delete(f, "EnableBGPCommunity")
+	delete(f, "BfdEnable")
+	delete(f, "NqaEnable")
+	delete(f, "BfdInfo")
+	delete(f, "NqaInfo")
+	delete(f, "IPv6Enable")
+	delete(f, "CustomerIDCRoutes")
+	delete(f, "JumboEnable")
+	if len(f) > 0 {
+		return errors.New("ModifyDirectConnectTunnelExtraRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ModifyDirectConnectTunnelExtraResponse struct {
@@ -1519,8 +1848,10 @@ func (r *ModifyDirectConnectTunnelExtraResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ModifyDirectConnectTunnelExtraResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type NQAInfo struct {
@@ -1547,8 +1878,18 @@ func (r *RejectDirectConnectTunnelRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *RejectDirectConnectTunnelRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DirectConnectTunnelId")
+	if len(f) > 0 {
+		return errors.New("RejectDirectConnectTunnelRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type RejectDirectConnectTunnelResponse struct {
@@ -1565,8 +1906,10 @@ func (r *RejectDirectConnectTunnelResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *RejectDirectConnectTunnelResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ReleaseInternetAddressRequest struct {
@@ -1581,8 +1924,18 @@ func (r *ReleaseInternetAddressRequest) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ReleaseInternetAddressRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return errors.New("ReleaseInternetAddressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ReleaseInternetAddressResponse struct {
@@ -1599,8 +1952,10 @@ func (r *ReleaseInternetAddressResponse) ToJsonString() string {
     return string(b)
 }
 
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
 func (r *ReleaseInternetAddressResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type RouteFilterPrefix struct {

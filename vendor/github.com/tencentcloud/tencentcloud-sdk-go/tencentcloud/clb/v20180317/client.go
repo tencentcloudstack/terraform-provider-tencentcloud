@@ -922,7 +922,7 @@ func NewDescribeLoadBalancersResponse() (response *DescribeLoadBalancersResponse
     return
 }
 
-// 查询一个地域的负载均衡实例列表
+// 查询一个地域的负载均衡实例列表。
 func (c *Client) DescribeLoadBalancers(request *DescribeLoadBalancersRequest) (response *DescribeLoadBalancersResponse, err error) {
     if request == nil {
         request = NewDescribeLoadBalancersRequest()
@@ -1613,7 +1613,7 @@ func NewSetLoadBalancerClsLogResponse() (response *SetLoadBalancerClsLogResponse
     return
 }
 
-// 增加、删除、更新负载均衡的日志服务(CLS)主题
+// 增加、删除、更新负载均衡的日志服务(CLS)主题。
 func (c *Client) SetLoadBalancerClsLog(request *SetLoadBalancerClsLogRequest) (response *SetLoadBalancerClsLogResponse, err error) {
     if request == nil {
         request = NewSetLoadBalancerClsLogRequest()
