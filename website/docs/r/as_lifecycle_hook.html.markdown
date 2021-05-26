@@ -34,7 +34,7 @@ The following arguments are supported:
 * `lifecycle_transition` - (Required) The instance state to which you want to attach the lifecycle hook. Valid values: `INSTANCE_LAUNCHING` and `INSTANCE_TERMINATING`.
 * `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
 * `default_result` - (Optional) Defines the action the AS group should take when the lifecycle hook timeout elapses or if an unexpected failure occurs. Valid values: `CONTINUE` and `ABANDON`. The default value is `CONTINUE`.
-* `heartbeat_timeout` - (Optional) Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~3600). and default value is `300`.
+* `heartbeat_timeout` - (Optional) Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~7200). and default value is `300`.
 * `notification_metadata` - (Optional) Contains additional information that you want to include any time AS sends a message to the notification target.
 * `notification_queue_name` - (Optional) For CMQ_QUEUE type, a name of queue must be set.
 * `notification_target_type` - (Optional) Target type. Valid values: `CMQ_QUEUE`, `CMQ_TOPIC`.

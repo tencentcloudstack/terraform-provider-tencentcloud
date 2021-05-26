@@ -97,6 +97,10 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
     "test1" = "test1",
     "test2" = "test2",
   }
+
+  worker_config_overrides {
+    desired_pod_num = 8
+  }
 }
 ```
 
@@ -111,6 +115,7 @@ The following arguments are supported:
 * `labels` - (Optional, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 * `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `worker_config_overrides` - (Optional, ForceNew) Override variable worker_config, commonly used to attach existing instances.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
 
 The `data_disk` object supports the following:
@@ -121,9 +126,20 @@ The `data_disk` object supports the following:
 * `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, ForceNew) Mount target.
 
+The `worker_config_overrides` object supports the following:
+
+* `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
+* `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
+* `user_data` - (Optional, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+
 The `worker_config` object supports the following:
 
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
 * `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.

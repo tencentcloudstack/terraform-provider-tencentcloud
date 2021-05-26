@@ -549,8 +549,55 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
 		},
+		// InstanceAdvancedSettingsOverrides
+		"desired_pod_num": {
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     -1,
+			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, " +
+				"and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
+		},
 	}
 }
+
+func TkeExistCvmCreateInfo() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"node_role": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			ValidateFunc: validateAllowedStringValue([]string{TKE_ROLE_WORKER, TKE_ROLE_MASTER_ETCD}),
+			Description: "Role of existed node. value:MASTER_ETCD or WORKER.",
+		},
+		"instances_para": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"instance_ids": {
+						Type:        schema.TypeList,
+						ForceNew:    true,
+						Required:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Cluster IDs.",
+					},
+				},
+			},
+			Description: "Reinstallation parameters of an existing instance.",
+		},
+		"desired_pod_numbers": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeInt},
+			Description: "Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.",
+		},
+	}
+}
+
 
 func TkeNodePoolGlobalConfig() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -627,9 +674,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:     schema.TypeString,
 			ForceNew: true,
 			Optional: true,
-			Default:  TKE_CLUSTER_OS_UBUNTU16,
+			Default:  TKE_CLUSTER_OS_LINUX24,
 			Description: "Operating system of the cluster, the available values include: '" + strings.Join(TKE_CLUSTER_OS, "','") +
-				"'. Default is '" + TKE_CLUSTER_OS_UBUNTU16 + "'.",
+				"'. Default is '" + TKE_CLUSTER_OS_LINUX24 + "'.",
 		},
 		"cluster_os_type": {
 			Type:         schema.TypeString,
@@ -738,6 +785,19 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:      "GR",
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_NETWORK_TYPE),
 			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
+		},
+		"enable_customized_pod_cidr": {
+			Type:         schema.TypeBool,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      false,
+			Description:  "Whether to enable the custom mode of node podCIDR size. Default is false.",
+		},
+		"base_pod_num": {
+			Type:         schema.TypeInt,
+			ForceNew:     true,
+			Optional:     true,
+			Description:  "The number of basic pods. valid when enable_customized_pod_cidr=true.",
 		},
 		"is_non_static_ip_mode": {
 			Type:        schema.TypeBool,
@@ -958,6 +1018,15 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
 		},
+		"exist_instance": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: TkeExistCvmCreateInfo(),
+			},
+			Description: "create tke cluster by existed instances.",
+		},
 		"tags": {
 			Type:        schema.TypeMap,
 			Optional:    true,
@@ -1004,6 +1073,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:    true,
 			ForceNew:    true,
 			Description: "Mount target. Default is not mounting.",
+		},
+		"globe_desired_pod_num": {
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.",
 		},
 		"docker_graph_path": {
 			Type:     schema.TypeString,
@@ -1269,6 +1344,37 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	return
 }
 
+func tkeGetCvmExistInstancesPara(dMap map[string]interface{}) (tke.ExistedInstancesForNode, error) {
+
+	inst := tke.ExistedInstancesForNode{}
+
+	if temp, ok := dMap["instances_para"]; ok {
+		paras := temp.([]interface{})
+		if len(paras) > 0 {
+			paraMap := paras[0].(map[string]interface{})
+			instanceIds := paraMap["instance_ids"].([]interface{})
+			inst.ExistedInstancesPara = &tke.ExistedInstancesPara{}
+			inst.ExistedInstancesPara.InstanceIds = make([]*string, 0)
+			for _, v := range instanceIds {
+				inst.ExistedInstancesPara.InstanceIds = append(inst.ExistedInstancesPara.InstanceIds, helper.String(v.(string)))
+			}
+		}
+	}
+	if temp, ok := dMap["desired_pod_numbers"]; ok {
+		inst.DesiredPodNumbers = make([]*int64, 0)
+		podNums := temp.([]interface{})
+		for _, v := range podNums {
+			inst.DesiredPodNumbers = append(inst.DesiredPodNumbers, helper.Int64(int64(v.(int))))
+		}
+	}
+	if temp, ok := dMap["node_role"]; ok {
+		nodeRole := temp.(string)
+		inst.NodeRole = &nodeRole
+	}
+
+	return inst, nil
+}
+
 func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGroupOptionAttributeRequest {
 	request := tke.NewModifyClusterAsGroupOptionAttributeRequest()
 	request.ClusterId = helper.String(d.Id())
@@ -1424,12 +1530,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	basic.ClusterOsType = d.Get("cluster_os_type").(string)
 
-	if basic.ClusterOsType == TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE {
-		if cluster_os != TKE_CLUSTER_OS_UBUNTU18 && cluster_os != TKE_CLUSTER_OS_CENTOS76 {
-			return fmt.Errorf("Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now, can not be " + basic.ClusterOs)
-		}
-	}
-
 	basic.ClusterVersion = d.Get("cluster_version").(string)
 	if v, ok := d.GetOk("cluster_name"); ok {
 		basic.ClusterName = v.(string)
@@ -1446,6 +1546,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	advanced.IsNonStaticIpMode = d.Get("is_non_static_ip_mode").(bool)
 	advanced.DeletionProtection = d.Get("deletion_protection").(bool)
 	advanced.KubeProxyMode = d.Get("kube_proxy_mode").(string)
+	advanced.EnableCustomizedPodCIDR = d.Get("enable_customized_pod_cidr").(bool)
+	if v, ok := d.GetOk("base_pod_num"); ok {
+		advanced.BasePodNumber = int64(v.(int))
+	}
 
 	if extraArgs, ok := d.GetOk("cluster_extra_args"); ok {
 		extraArgList := extraArgs.([]interface{})
@@ -1509,6 +1613,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	overrideSettings := make([]tke.InstanceAdvancedSettings, 0)
 	if masters, ok := d.GetOk("master_config"); ok {
 		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
 			return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
@@ -1524,6 +1629,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 			cvms.Master = append(cvms.Master, paraJson)
 			masterCount += count
+
+			if v, ok := master["desired_pod_num"]; ok {
+				dpNum := int64(v.(int))
+				if dpNum != -1 {
+					overrideSettings = append(overrideSettings, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+				}
+			}
 		}
 		if masterCount < 3 {
 			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
@@ -1540,11 +1652,17 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		for index := range workerList {
 			worker := workerList[index].(map[string]interface{})
 			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, basic.ProjectId)
-
 			if err != nil {
 				return err
 			}
 			cvms.Work = append(cvms.Work, paraJson)
+
+			if v, ok := worker["desired_pod_num"]; ok {
+				dpNum := int64(v.(int))
+				if dpNum != -1 {
+					overrideSettings = append(overrideSettings, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+				}
+			}
 		}
 	}
 
@@ -1567,10 +1685,28 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	if temp, ok := d.GetOk("mount_target"); ok {
 		iAdvanced.MountTarget = temp.(string)
 	}
+	if temp, ok := d.GetOk("globe_desired_pod_num"); ok {
+		iAdvanced.DesiredPodNum = int64(temp.(int))
+	}
+
+	// ExistedInstancesForNode
+	existIntances := make([]*tke.ExistedInstancesForNode, 0)
+	if instances, ok := d.GetOk("exist_instance"); ok {
+		instanceList := instances.([]interface{})
+		for index := range instanceList {
+			instance := instanceList[index].(map[string]interface{})
+			existedInstance, _ := tkeGetCvmExistInstancesPara(instance)
+			existIntances = append(existIntances, &existedInstance)
+		}
+	}
+
+	// RunInstancesForNode（master_config+worker_config) 和 ExistedInstancesForNode 不能同时存在
+	if len(cvms.Master)+len(cvms.Work) > 0 && len(existIntances) > 0 {
+		return fmt.Errorf("master_config+worker_config and exist_instance can not exist at the same time")
+	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existIntances, overrideSettings)
 	if err != nil {
 		return err
 	}

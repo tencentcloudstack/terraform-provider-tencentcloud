@@ -1,4 +1,15 @@
-## 1.56.8 (Unreleased)
+## 1.56.9 (Unreleased)
+## 1.56.8 (May 26, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_kubernetes_cluster_attachment.worker_config` add `desired_pod_num`.
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `worker_config_overrides`.
+* Resource `tencentcloud_kubernetes_scale_worker` add `desired_pod_num`.
+* Resource `tencentcloud_kubernetes_cluster` add `enable_customized_pod_cidr`, `base_pod_num`, `globe_desired_pod_num`, and `exist_instance`.
+* Resource `tencentcloud_kubernetes_cluster` update available value of `cluster_os`.
+* Resource `tencentcloud_as_lifecycle_hook` update `heartbeat_timeout` value ranges.
+
 ## 1.56.7 (May 12, 2021)
 
 ENHANCEMENTS:

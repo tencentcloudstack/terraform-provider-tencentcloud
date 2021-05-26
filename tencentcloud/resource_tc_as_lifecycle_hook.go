@@ -65,8 +65,8 @@ func resourceTencentCloudAsLifecycleHook() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      300,
-				ValidateFunc: validateIntegerInRange(30, 3600),
-				Description:  "Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~3600). and default value is `300`.",
+				ValidateFunc: validateIntegerInRange(30, 7200),
+				Description:  "Defines the amount of time, in seconds, that can elapse before the lifecycle hook times out. Valid value ranges: (30~7200). and default value is `300`.",
 			},
 			"notification_metadata": {
 				Type:        schema.TypeString,

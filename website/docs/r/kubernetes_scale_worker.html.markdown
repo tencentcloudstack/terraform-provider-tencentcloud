@@ -29,7 +29,8 @@ variable "scale_instance_type" {
 }
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = "cls-godovr32"
+  cluster_id      = "cls-godovr32"
+  desired_pod_num = 16
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -116,6 +117,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `labels` - (Optional, ForceNew) Labels of kubernetes scale worker created nodes.
@@ -144,6 +146,7 @@ The `worker_config` object supports the following:
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.
 * `disaster_recover_group_ids` - (Optional, ForceNew) Disaster recover groups to which a CVM instance belongs. Only support maximum 1.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.

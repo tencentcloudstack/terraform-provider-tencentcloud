@@ -29,15 +29,17 @@ type ClusterBasicSetting struct {
 }
 
 type ClusterAdvancedSettings struct {
-	Ipvs               bool
-	AsEnabled          bool
-	ContainerRuntime   string
-	NodeNameType       string
-	ExtraArgs          ClusterExtraArgs
-	NetworkType        string
-	IsNonStaticIpMode  bool
-	DeletionProtection bool
-	KubeProxyMode      string
+	Ipvs                    bool
+	AsEnabled               bool
+	EnableCustomizedPodCIDR	bool
+	BasePodNumber           int64
+	ContainerRuntime        string
+	NodeNameType            string
+	ExtraArgs               ClusterExtraArgs
+	NetworkType             string
+	IsNonStaticIpMode       bool
+	DeletionProtection      bool
+	KubeProxyMode           string
 }
 
 type ClusterExtraArgs struct {
@@ -56,6 +58,7 @@ type InstanceAdvancedSettings struct {
 	DockerGraphPath string
 	UserScript      string
 	Unschedulable   int64
+	DesiredPodNum   int64
 	Labels          []*tke.Label
 	ExtraArgs       tke.InstanceExtraArgs
 }
@@ -390,6 +393,8 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	iAdvanced InstanceAdvancedSettings,
 	cidrSetting ClusterCidrSettings,
 	tags map[string]string,
+	existedInstance []*tke.ExistedInstancesForNode,
+	overrideSettings []tke.InstanceAdvancedSettings,
 ) (id string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -428,6 +433,8 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterAdvancedSettings.AsEnabled = &advanced.AsEnabled
 	request.ClusterAdvancedSettings.ContainerRuntime = &advanced.ContainerRuntime
 	request.ClusterAdvancedSettings.NodeNameType = &advanced.NodeNameType
+	request.ClusterAdvancedSettings.EnableCustomizedPodCIDR = &advanced.EnableCustomizedPodCIDR
+	request.ClusterAdvancedSettings.BasePodNumber = &advanced.BasePodNumber
 	request.ClusterAdvancedSettings.ExtraArgs = &tke.ClusterExtraArgs{
 		KubeAPIServer:         common.StringPtrs(advanced.ExtraArgs.KubeAPIServer),
 		KubeControllerManager: common.StringPtrs(advanced.ExtraArgs.KubeControllerManager),
@@ -443,12 +450,17 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
+	request.InstanceAdvancedSettings.DesiredPodNumber = &iAdvanced.DesiredPodNum
 	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
 		request.InstanceAdvancedSettings.ExtraArgs = &iAdvanced.ExtraArgs
 	}
 
 	if len(iAdvanced.Labels) > 0 {
 		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
+	}
+
+	if len(overrideSettings) > 0 && len(overrideSettings) != (len(cvms.Master)+len(cvms.Work)) {
+		return "", fmt.Errorf("len(overrideSettings) != (len(cvms.Master)+len(cvms.Work))")
 	}
 
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
@@ -461,6 +473,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_INDEPENDENT)
 		for v := range cvms.Master {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Master[v])
+			node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings[v])
 		}
 		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 
@@ -468,13 +481,16 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_MANAGED)
 	}
 
-	var node tke.RunInstancesForNode
-	node.NodeRole = helper.String(TKE_ROLE_WORKER)
-	node.RunInstancesPara = []*string{}
-	for v := range cvms.Work {
-		node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
+	if len(cvms.Work) != 0 {
+		var node tke.RunInstancesForNode
+		node.NodeRole = helper.String(TKE_ROLE_WORKER)
+		node.RunInstancesPara = []*string{}
+		for v := range cvms.Work {
+			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
+			node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings[v])
+		}
+		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 	}
-	request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 
 	request.ClusterCIDRSettings = &tke.ClusterCIDRSettings{}
 
@@ -488,6 +504,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterCIDRSettings.ServiceCIDR = &cidrSetting.ServiceCIDR
 	request.ClusterCIDRSettings.EniSubnetIds = common.StringPtrs(cidrSetting.EniSubnetIds)
 	request.ClusterCIDRSettings.ClaimExpiredSeconds = &cidrSetting.ClaimExpiredSeconds
+
+	if len(existedInstance) > 0 {
+		request.ExistedInstancesForNode = existedInstance
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateCluster(request)
