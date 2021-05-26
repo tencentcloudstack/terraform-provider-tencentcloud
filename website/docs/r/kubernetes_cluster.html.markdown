@@ -278,6 +278,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
 The following arguments are supported:
 
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
+* `base_pod_num` - (Optional, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
 * `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler. Default is false.
 * `cluster_cidr` - (Optional, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
@@ -292,13 +293,16 @@ The following arguments are supported:
 * `cluster_max_service_num` - (Optional, ForceNew) The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.
 * `cluster_name` - (Optional) Name of the cluster.
 * `cluster_os_type` - (Optional, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
-* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64','tlinux2.4x86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
+* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.
 * `cluster_version` - (Optional) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `enable_customized_pod_cidr` - (Optional, ForceNew) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
+* `exist_instance` - (Optional, ForceNew) create tke cluster by existed instances.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
+* `globe_desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `is_non_static_ip_mode` - (Optional, ForceNew) Indicates whether static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
@@ -328,6 +332,16 @@ The `data_disk` object supports the following:
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
+The `exist_instance` object supports the following:
+
+* `desired_pod_numbers` - (Optional, ForceNew) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
+* `instances_para` - (Optional, ForceNew) Reinstallation parameters of an existing instance.
+* `node_role` - (Optional, ForceNew) Role of existed node. value:MASTER_ETCD or WORKER.
+
+The `instances_para` object supports the following:
+
+* `instance_ids` - (Required, ForceNew) Cluster IDs.
+
 The `master_config` object supports the following:
 
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
@@ -336,6 +350,7 @@ The `master_config` object supports the following:
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.
 * `disaster_recover_group_ids` - (Optional, ForceNew) Disaster recover groups to which a CVM instance belongs. Only support maximum 1.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
@@ -374,6 +389,7 @@ The `worker_config` object supports the following:
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.
 * `disaster_recover_group_ids` - (Optional, ForceNew) Disaster recover groups to which a CVM instance belongs. Only support maximum 1.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.

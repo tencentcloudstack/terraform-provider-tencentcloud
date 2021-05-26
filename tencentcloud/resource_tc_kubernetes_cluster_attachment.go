@@ -89,6 +89,10 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
     "test1" = "test1",
     "test2" = "test2",
   }
+
+  worker_config_overrides {
+    desired_pod_num = 8
+  }
 }
 ```
 */
@@ -190,6 +194,12 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			Default:     true,
 			Description: "Indicate to schedule the adding node or not. Default is true.",
 		},
+		"desired_pod_num": {
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
+		},
 	}
 }
 
@@ -241,6 +251,16 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 				Schema: TkeInstanceAdvancedSetting(),
 			},
 			Description: "Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.",
+		},
+		"worker_config_overrides": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: TkeInstanceAdvancedSetting(),
+			},
+			Description: "Override variable worker_config, commonly used to attach existing instances.",
 		},
 		"labels": {
 			Type:        schema.TypeMap,
@@ -317,6 +337,10 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 	if v, ok := dMap["docker_graph_path"]; ok {
 		setting.DockerGraphPath = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["desired_pod_num"]; ok {
+		setting.DesiredPodNumber = helper.Int64(int64(v.(int)))
 	}
 
 	if temp, ok := dMap["extra_args"]; ok {
@@ -481,6 +505,16 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("unschedulable"); ok {
 		request.InstanceAdvancedSettings.Unschedulable = helper.Int64(v.(int64))
+	}
+
+	if workConfigOverrides, ok := d.GetOk("worker_config_overrides"); ok {
+		workConfigOverrideList := workConfigOverrides.([]interface{})
+		request.InstanceAdvancedSettingsOverrides = make([]*tke.InstanceAdvancedSettings, 0, len(workConfigOverrideList))
+		for _, conf := range workConfigOverrideList {
+			workConfigPara := conf.(map[string]interface{})
+			setting := tkeGetInstanceAdvancedPara(workConfigPara, meta)
+			request.InstanceAdvancedSettingsOverrides = append(request.InstanceAdvancedSettingsOverrides, &setting)
+		}
 	}
 
 	/*cvm has been  attached*/
