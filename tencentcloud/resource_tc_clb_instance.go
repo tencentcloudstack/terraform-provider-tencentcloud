@@ -135,7 +135,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Security groups of the CLB instance. Only supports `OPEN` CLBs.",
+				Description: "Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.",
 			},
 			"target_region_info_region": {
 				Type:        schema.TypeString,
@@ -158,6 +158,27 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
+			},
+			"load_balancer_pass_to_target": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.",
+			},
+			"master_zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.",
+			},
+			"zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Available zone id, only applicable to open CLB.",
+			},
+			"slave_zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down",
 			},
 		},
 	}
@@ -197,11 +218,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: region and vpc_id must be set at same time")
 	}
-	if _, ok := d.GetOk("security_groups"); ok {
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with sercurity_groups")
-		}
-	}
+
 	request := clb.NewCreateLoadBalancerRequest()
 	request.LoadBalancerType = helper.String(networkType)
 	request.LoadBalancerName = helper.String(clbName)
@@ -252,6 +269,26 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if v, ok := d.GetOk("master_zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support master zone id setting")
+		}
+		request.MasterZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support zone id setting")
+		}
+		request.ZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("slave_zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support slave zone id setting")
+		}
+		request.SlaveZoneId = helper.String(v.(string))
+	}
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -312,6 +349,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 
 	if targetRegionInfoRegion != "" {
+		isLoadBalancePassToTgt := d.Get("load_balancer_pass_to_target").(bool)
 		targetRegionInfo := clb.TargetRegionInfo{
 			Region: &targetRegionInfoRegion,
 			VpcId:  &targetRegionInfoVpcId,
@@ -319,6 +357,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
+		mRequest.LoadBalancerPassToTarget = &isLoadBalancePassToTgt
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			mResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(mRequest)
 			if e != nil {
@@ -402,6 +441,11 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("internet_charge_type", instance.NetworkAttributes.InternetChargeType)
 	}
 
+	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
+	_ = d.Set("master_zone_id", instance.MasterZone)
+	_ = d.Set("zone_id", instance.MasterZone)
+	_ = d.Set("slave_zone_id", instance.MasterZone)
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
@@ -428,6 +472,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	targetRegionInfo := clb.TargetRegionInfo{}
 	internet := clb.InternetAccessible{}
 	changed := false
+	isLoadBalancerPassToTgt := false
 
 	if d.HasChange("clb_name") {
 		changed = true
@@ -469,6 +514,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if d.HasChange("load_balancer_pass_to_target") {
+		changed = true
+		isLoadBalancerPassToTgt = d.Get("load_balancer_pass_to_target").(bool)
+	}
+
 	if changed {
 		request := clb.NewModifyLoadBalancerAttributesRequest()
 		request.LoadBalancerId = helper.String(clbId)
@@ -480,6 +530,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 		if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
 			request.InternetChargeInfo = &internet
+		}
+		if d.HasChange("load_balancer_pass_to_target") {
+			request.LoadBalancerPassToTarget = &isLoadBalancerPassToTgt
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
@@ -515,9 +568,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("security_groups") {
-		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with sercurity_groups", clbId)
-		}
+
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = helper.String(clbId)
 		securityGroups := d.Get("security_groups").([]interface{})

@@ -65,6 +65,14 @@ func validateIp(v interface{}, k string) (ws []string, errors []error) {
 	return
 }
 
+func validateImageID(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if !strings.HasPrefix(value, "img-") {
+		errors = append(errors, fmt.Errorf("the format of %q is invalid: %s, it should begin with `img-`", k, value))
+	}
+	return
+}
+
 // NOTE not exactly strict, but ok for now
 func validateIntegerInRange(min, max int64) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {

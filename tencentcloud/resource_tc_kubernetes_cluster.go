@@ -549,6 +549,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
 		},
+<<<<<<< HEAD
 		// InstanceAdvancedSettingsOverrides
 		"desired_pod_num": {
 			Type:        schema.TypeInt,
@@ -594,6 +595,13 @@ func TkeExistCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Elem:        &schema.Schema{Type: schema.TypeInt},
 			Description: "Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.",
+=======
+		"os": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateImageID,
+			Description:  "The valid image id, format of img-xxx.",
+>>>>>>> 37314e6e... 添加调用 CreateClusterInstances时，传入imageId参数来指定镜像，以及对镜像的验证，满足 img-xxx 的格式
 		},
 	}
 }
@@ -1335,6 +1343,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		if hostname != "" {
 			request.HostName = &hostname
 		}
+	}
+
+	if v, ok := dMap["os"]; ok {
+		request.ImageId = helper.String(v.(string))
 	}
 
 	cvmJson = request.ToJsonString()
