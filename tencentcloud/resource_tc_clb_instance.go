@@ -159,6 +159,12 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
 			},
+			"load_balancer_pass_to_target": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.",
+			},
 		},
 	}
 }
@@ -308,6 +314,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 
 	if targetRegionInfoRegion != "" {
+		isLoadBalancePassToTgt := d.Get("load_balancer_pass_to_target").(bool)
 		targetRegionInfo := clb.TargetRegionInfo{
 			Region: &targetRegionInfoRegion,
 			VpcId:  &targetRegionInfoVpcId,
@@ -315,6 +322,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
+		mRequest.LoadBalancerPassToTarget = &isLoadBalancePassToTgt
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			mResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(mRequest)
 			if e != nil {
@@ -476,6 +484,10 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 		if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
 			request.InternetChargeInfo = &internet
+		}
+		if d.HasChange("load_balancer_pass_to_target") {
+			isLoadBalancerPassToTgt := d.Get("load_balancer_pass_to_target").(bool)
+			request.LoadBalancerPassToTarget = &isLoadBalancerPassToTgt
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
