@@ -24,7 +24,6 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbTargetGroup() *schema.Resource {
@@ -60,7 +59,7 @@ func resourceTencentCloudClbTargetGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "The backend server of target group bind.",
-				Elem: schema.Resource{
+				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bind_ip": {
 							Type:         schema.TypeString,
@@ -112,14 +111,14 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		for _, v1 := range targetGroupInstances {
 			value := v1.(map[string]interface{})
 			bindIP := value["bind_ip"].(string)
-			port := helper.Uint64(uint64(value["port"].(int)))
-			weight := helper.Uint64(uint64(value["weight"].(int)))
-			newPort := helper.Uint64(uint64(value["new_port"].(int)))
+			port := uint64(value["port"].(int))
+			weight := uint64(value["weight"].(int))
+			newPort := uint64(value["new_port"].(int))
 			tgtGrp := &clb.TargetGroupInstance{
 				BindIP:  &bindIP,
-				Port:    port,
-				Weight:  weight,
-				NewPort: newPort,
+				Port:    &port,
+				Weight:  &weight,
+				NewPort: &newPort,
 			}
 			insAttachments = append(insAttachments, tgtGrp)
 		}
