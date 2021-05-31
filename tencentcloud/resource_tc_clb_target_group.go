@@ -22,9 +22,9 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbTargetGroup() *schema.Resource {
@@ -50,6 +50,44 @@ func resourceTencentCloudClbTargetGroup() *schema.Resource {
 				ForceNew:    true,
 				Description: "VPC ID, default is based on the network.",
 			},
+			"port": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validatePort,
+				Description:  "The default port of target group, add server after can use it.",
+			},
+			"target_group_instances": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "The backend server of target group bind.",
+				Elem: schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bind_ip": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validateIp,
+							Description:  "The internal ip of target group instance.",
+						},
+						"port": {
+							Type:         schema.TypeInt,
+							Required:     true,
+							ValidateFunc: validatePort,
+							Description:  "The port of target group instance.",
+						},
+						"weight": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The weight of target group instance.",
+						},
+						"new_port": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ValidateFunc: validatePort,
+							Description:  "The new port of target group instance.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -63,12 +101,31 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		clbService      = ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 		vpcId           = d.Get("vpc_id").(string)
 		targetGroupName = d.Get("target_group_name").(string)
+		port            = uint64(d.Get("port").(int))
 		insAttachments  = make([]*clb.TargetGroupInstance, 0)
 		targetGroupId   string
 		err             error
 	)
 
-	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, insAttachments)
+	if v, ok := d.GetOk("target_group_instance"); ok {
+		targetGroupInstances := v.([]interface{})
+		for _, v1 := range targetGroupInstances {
+			value := v1.(map[string]interface{})
+			bindIP := value["bind_ip"].(string)
+			port := helper.Uint64(uint64(value["port"].(int)))
+			weight := helper.Uint64(uint64(value["weight"].(int)))
+			newPort := helper.Uint64(uint64(value["new_port"].(int)))
+			tgtGrp := &clb.TargetGroupInstance{
+				BindIP:  &bindIP,
+				Port:    port,
+				Weight:  weight,
+				NewPort: newPort,
+			}
+			insAttachments = append(insAttachments, tgtGrp)
+		}
+	}
+
+	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, port, insAttachments)
 	if err != nil {
 		return err
 	}

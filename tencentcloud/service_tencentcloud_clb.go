@@ -1025,13 +1025,14 @@ func clbNewTarget(instanceId, port, weight interface{}) *clb.Target {
 	return &bk
 }
 
-func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string,
+func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string, port uint64,
 	targetGroupInstances []*clb.TargetGroupInstance) (targetGroupId string, err error) {
 	var response *clb.CreateTargetGroupResponse
 
 	request := clb.NewCreateTargetGroupRequest()
 	request.TargetGroupName = &targetGroupName
 	request.TargetGroupInstances = targetGroupInstances
+	request.Port = &port
 	if vpcId != "" {
 		request.VpcId = &vpcId
 	}
