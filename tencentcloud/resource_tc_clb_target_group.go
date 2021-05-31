@@ -155,6 +155,7 @@ func resourceTencentCloudClbTargetRead(d *schema.ResourceData, meta interface{})
 	}
 	_ = d.Set("target_group_name", targetGroupInfos[0].TargetGroupName)
 	_ = d.Set("vpc_id", targetGroupInfos[0].VpcId)
+	_ = d.Set("port", targetGroupInfos[0].Port)
 
 	return nil
 }
