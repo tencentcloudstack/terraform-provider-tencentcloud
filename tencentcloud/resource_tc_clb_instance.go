@@ -165,6 +165,21 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Default:     true,
 				Description: "Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.",
 			},
+			"master_zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.",
+			},
+			"zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Available zone id, only applicable to open CLB.",
+			},
+			"slave_zone_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down",
+			},
 		},
 	}
 }
@@ -254,6 +269,26 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if v, ok := d.GetOk("master_zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support master zone id setting")
+		}
+		request.MasterZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support zone id setting")
+		}
+		request.ZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("slave_zone_id"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support slave zone id setting")
+		}
+		request.SlaveZoneId = helper.String(v.(string))
+	}
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -405,6 +440,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("internet_bandwidth_max_out", instance.NetworkAttributes.InternetMaxBandwidthOut)
 		_ = d.Set("internet_charge_type", instance.NetworkAttributes.InternetChargeType)
 	}
+
+	_ = d.Set("master_zone_id", instance.MasterZone)
+	_ = d.Set("zone_id", instance.MasterZone)
+	_ = d.Set("slave_zone_id", instance.MasterZone)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
