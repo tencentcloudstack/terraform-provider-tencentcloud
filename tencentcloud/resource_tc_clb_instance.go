@@ -441,6 +441,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("internet_charge_type", instance.NetworkAttributes.InternetChargeType)
 	}
 
+	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
 	_ = d.Set("master_zone_id", instance.MasterZone)
 	_ = d.Set("zone_id", instance.MasterZone)
 	_ = d.Set("slave_zone_id", instance.MasterZone)
