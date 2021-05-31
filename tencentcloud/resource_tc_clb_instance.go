@@ -197,11 +197,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
 		return fmt.Errorf("[CHECK][CLB instance][Create] check: region and vpc_id must be set at same time")
 	}
-	if _, ok := d.GetOk("security_groups"); ok {
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support this operation with sercurity_groups")
-		}
-	}
+
 	request := clb.NewCreateLoadBalancerRequest()
 	request.LoadBalancerType = helper.String(networkType)
 	request.LoadBalancerName = helper.String(clbName)
@@ -515,9 +511,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("security_groups") {
-		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("[CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with sercurity_groups", clbId)
-		}
+
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = helper.String(clbId)
 		securityGroups := d.Get("security_groups").([]interface{})
