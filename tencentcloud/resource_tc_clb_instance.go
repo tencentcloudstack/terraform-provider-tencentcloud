@@ -472,6 +472,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	targetRegionInfo := clb.TargetRegionInfo{}
 	internet := clb.InternetAccessible{}
 	changed := false
+	isLoadBalancerPassToTgt := false
 
 	if d.HasChange("clb_name") {
 		changed = true
@@ -513,6 +514,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if d.HasChange("load_balancer_pass_to_target") {
+		changed = true
+		isLoadBalancerPassToTgt = d.Get("load_balancer_pass_to_target").(bool)
+	}
+
 	if changed {
 		request := clb.NewModifyLoadBalancerAttributesRequest()
 		request.LoadBalancerId = helper.String(clbId)
@@ -526,7 +532,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			request.InternetChargeInfo = &internet
 		}
 		if d.HasChange("load_balancer_pass_to_target") {
-			isLoadBalancerPassToTgt := d.Get("load_balancer_pass_to_target").(bool)
 			request.LoadBalancerPassToTarget = &isLoadBalancerPassToTgt
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
