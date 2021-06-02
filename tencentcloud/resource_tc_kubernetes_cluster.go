@@ -750,7 +750,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     false,
-			Description: "Indicates whether static ip mode is enabled. Default is false.",
+			Description: "Indicates whether non-static ip mode is enabled. Default is false.",
 		},
 		"deletion_protection": {
 			Type:        schema.TypeBool,
