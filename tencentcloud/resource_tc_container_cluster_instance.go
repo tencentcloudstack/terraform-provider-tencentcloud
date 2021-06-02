@@ -199,6 +199,12 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Describe the lan ip of the node.",
 			},
+			"os": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateImageID,
+				Description:  "The valid image id, format of img-xxx.",
+			},
 		},
 	}
 }
@@ -459,6 +465,10 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 
 	if v, ok := d.GetOkExists("unschedulable"); ok {
 		iAdvanced.Unschedulable = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("os"); ok {
+		runInstancesPara.ImageId = helper.String(v.(string))
 	}
 
 	runInstancesParas := runInstancesPara.ToJsonString()
