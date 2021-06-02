@@ -549,7 +549,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
 		},
-		"os": {
+		"img_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validateImageID,
@@ -1268,7 +1268,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 
-	if v, ok := dMap["os"]; ok {
+	if v, ok := dMap["img_id"]; ok {
 		request.ImageId = helper.String(v.(string))
 	}
 
