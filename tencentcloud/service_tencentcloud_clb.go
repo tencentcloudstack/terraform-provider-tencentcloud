@@ -78,6 +78,9 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 			projectId := int64(v.(int))
 			request.ProjectId = &projectId
 		}
+		if k == "master_zone" {
+			request.MasterZone = helper.String(v.(string))
+		}
 	}
 
 	offset := int64(0)
