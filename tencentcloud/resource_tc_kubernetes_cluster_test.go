@@ -173,6 +173,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    img_id                     = "img-rkiynh11"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
