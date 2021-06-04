@@ -37,6 +37,19 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+Create target group
+
+```hcl
+resource "tencentcloud_clb_target_group" "test"{
+  target_group_name = "hello1"
+  port = 18082
+  target_group_instances {
+    bind_ip = "10.0.0.4"
+    port = 18080
+  }
+}
+```
+
 Import
 
 CLB instance can be imported using the id, e.g.
