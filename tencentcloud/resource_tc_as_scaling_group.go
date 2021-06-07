@@ -216,6 +216,13 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Computed:    true,
 				Description: "The time when the AS group was created.",
 			},
+			"multi_zone_subnet_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validateAllowedStringValue([]string{MultiZoneSubnetPolicyPriority,
+					MultiZoneSubnetPolicyEquality}),
+				Description: "Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.",
+			},
 		},
 	}
 }
@@ -301,6 +308,10 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 			terminationPolicy := terminationPolicies[i].(string)
 			request.TerminationPolicies = append(request.TerminationPolicies, &terminationPolicy)
 		}
+	}
+
+	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok {
+		request.MultiZoneSubnetPolicy = helper.String(v.(string))
 	}
 
 	var id string
@@ -408,6 +419,7 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("termination_policies", helper.StringsInterfaces(scalingGroup.TerminationPolicySet))
 	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
 	_ = d.Set("create_time", scalingGroup.CreatedTime)
+	_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
 
 	if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
 		forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
@@ -519,6 +531,11 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 			terminationPolicy := terminationPolicies[i].(string)
 			request.TerminationPolicies = append(request.TerminationPolicies, &terminationPolicy)
 		}
+	}
+
+	if d.HasChange("multi_zone_subnet_policy") {
+		updateAttrs = append(updateAttrs, "multi_zone_subnet_policy")
+		request.MultiZoneSubnetPolicy = helper.String(d.Get("multi_zone_subnet_policy").(string))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
