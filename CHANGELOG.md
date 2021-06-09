@@ -1,4 +1,20 @@
-## 1.56.9 (Unreleased)
+## 1.56.10 (Unreleased)
+## 1.56.9 (Jun 09, 2021)
+
+BUG FIXES:
+
+* Resource `tencentcloud_instance` fix words spell, in tencendcloud/resource_tc_instance.go L45, data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name change to data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name".
+* Resource `tencentcloud_kubernetes_clusters` fix the description of is_non_static_ip_mode
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_clb_target_group` add create target group.
+* Resource `tencentcloud_clb_instance` add internal CLB supports security group. 
+* Resource `tencentcloud_clb_instance` add supports open and close CLB security group, default is open.
+* Resource `tencentcloud_clb_instance` add external CLB create multi AZ instance.
+* Resource `tencentcloud_kubernetes_cluster` add supports params of img_id to assign image.
+* Resource `tencentcloud_as_scaling_group` add MultiZoneSubnetPolicy.
+
 ## 1.56.8 (May 26, 2021)
 
 ENHANCEMENTS:

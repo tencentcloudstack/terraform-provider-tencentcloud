@@ -137,7 +137,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"is_non_static_ip_mode": {
 			Type:        schema.TypeBool,
 			Computed:    true,
-			Description: "Indicates whether static ip mode is enabled.",
+			Description: "Indicates whether non-static ip mode is enabled.",
 		},
 		"kube_proxy_mode": {
 			Type:        schema.TypeString,

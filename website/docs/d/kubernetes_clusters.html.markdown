@@ -60,7 +60,7 @@ In addition to all arguments above, the following attributes are exported:
   * `domain` - Domain name for access.
   * `eni_subnet_ids` - Subnet IDs for cluster with VPC-CNI network mode.
   * `ignore_cluster_cidr_conflict` - Indicates whether to ignore the cluster cidr conflict error.
-  * `is_non_static_ip_mode` - Indicates whether static ip mode is enabled.
+  * `is_non_static_ip_mode` - Indicates whether non-static ip mode is enabled.
   * `kube_config` - kubernetes config.
   * `kube_proxy_mode` - Cluster kube-proxy mode.
   * `network_type` - Cluster network type.

@@ -28,6 +28,38 @@ func TestAccTencentCloudClbTargetGroup_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbInstanceTargetGroup(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstanceTargetGroup,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.target_group"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_name", "tgt_grp_test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "port", "33"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_instances.bind_ip", "10.0.0.4"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_instances.port", "33"),
+				),
+			},
+			{
+				Config: testAccClbInstanceTargetGroupUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.target_group"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_name", "tgt_grp_test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "port", "33"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_instances.bind_ip", "10.0.0.4"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.target_group", "target_group_instances.port", "44"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckClbTargetGroupDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -79,5 +111,27 @@ func testAccCheckClbTargetGroupExists(n string) resource.TestCheckFunc {
 const testAccClbTargetGroup_basic = `
 resource "tencentcloud_clb_target_group" "test"{
     target_group_name = "qwe"
+}
+`
+
+const testAccClbInstanceTargetGroup = `
+resource "tencentcloud_clb_instance" "target_group" {
+    target_group_name = "tgt_grp_test"
+    port              = 33
+    target_group_instances {
+      bind_ip = "10.0.0.4"
+      port = 18800
+    }
+}
+`
+
+const testAccClbInstanceTargetGroupUpdate = `
+resource "tencentcloud_clb_instance" "target_group" {
+    target_group_name = "tgt_grp_test"
+    port              = 44
+    target_group_instances {
+      bind_ip = "10.0.0.4"
+      port = 18800
+    }
 }
 `
