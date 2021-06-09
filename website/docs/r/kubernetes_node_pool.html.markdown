@@ -157,6 +157,7 @@ The `data_disk` object supports the following:
 The `node_config` object supports the following:
 
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
 * `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.

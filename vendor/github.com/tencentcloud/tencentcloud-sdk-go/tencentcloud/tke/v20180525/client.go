@@ -793,6 +793,31 @@ func (c *Client) DescribeClusterAsGroups(request *DescribeClusterAsGroupsRequest
     return
 }
 
+func NewDescribeClusterCommonNamesRequest() (request *DescribeClusterCommonNamesRequest) {
+    request = &DescribeClusterCommonNamesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterCommonNames")
+    return
+}
+
+func NewDescribeClusterCommonNamesResponse() (response *DescribeClusterCommonNamesResponse) {
+    response = &DescribeClusterCommonNamesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取指定子账户在RBAC授权模式中对应kube-apiserver客户端证书的CommonName字段，如果没有客户端证书，将会签发一个，此接口有最大传入子账户数量上限，当前为50
+func (c *Client) DescribeClusterCommonNames(request *DescribeClusterCommonNamesRequest) (response *DescribeClusterCommonNamesResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterCommonNamesRequest()
+    }
+    response = NewDescribeClusterCommonNamesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterEndpointStatusRequest() (request *DescribeClusterEndpointStatusRequest) {
     request = &DescribeClusterEndpointStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1093,6 +1118,31 @@ func (c *Client) DescribeEKSClusters(request *DescribeEKSClustersRequest) (respo
     return
 }
 
+func NewDescribeEnableVpcCniProgressRequest() (request *DescribeEnableVpcCniProgressRequest) {
+    request = &DescribeEnableVpcCniProgressRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEnableVpcCniProgress")
+    return
+}
+
+func NewDescribeEnableVpcCniProgressResponse() (response *DescribeEnableVpcCniProgressResponse) {
+    response = &DescribeEnableVpcCniProgressResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口用于查询开启vpc-cni模式的任务进度
+func (c *Client) DescribeEnableVpcCniProgress(request *DescribeEnableVpcCniProgressRequest) (response *DescribeEnableVpcCniProgressResponse, err error) {
+    if request == nil {
+        request = NewDescribeEnableVpcCniProgressRequest()
+    }
+    response = NewDescribeEnableVpcCniProgressResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeExistedInstancesRequest() (request *DescribeExistedInstancesRequest) {
     request = &DescribeExistedInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1389,6 +1439,31 @@ func (c *Client) DescribeRouteTableConflicts(request *DescribeRouteTableConflict
         request = NewDescribeRouteTableConflictsRequest()
     }
     response = NewDescribeRouteTableConflictsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableVpcCniNetworkTypeRequest() (request *EnableVpcCniNetworkTypeRequest) {
+    request = &EnableVpcCniNetworkTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "EnableVpcCniNetworkType")
+    return
+}
+
+func NewEnableVpcCniNetworkTypeResponse() (response *EnableVpcCniNetworkTypeResponse) {
+    response = &EnableVpcCniNetworkTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// GR集群可以通过本接口附加vpc-cni容器网络插件，开启vpc-cni容器网络能力
+func (c *Client) EnableVpcCniNetworkType(request *EnableVpcCniNetworkTypeRequest) (response *EnableVpcCniNetworkTypeResponse, err error) {
+    if request == nil {
+        request = NewEnableVpcCniNetworkTypeRequest()
+    }
+    response = NewEnableVpcCniNetworkTypeResponse()
     err = c.Send(request, response)
     return
 }

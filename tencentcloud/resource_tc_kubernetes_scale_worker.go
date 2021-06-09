@@ -20,6 +20,7 @@ variable "scale_instance_type" {
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = "cls-godovr32"
+  desired_pod_num = 16
   labels = {
     "test1" = "test1",
     "test2" = "test2",
@@ -161,6 +162,12 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Default:     0,
 				Description: "Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.",
 			},
+			"desired_pod_num": {
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.",
+			},
 			"docker_graph_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -268,9 +275,9 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
 	}
 
-	dMap := make(map[string]interface{}, 4)
-	//mount_target, docker_graph_path, data_disk, extra_args
-	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk"}
+	dMap := make(map[string]interface{}, 5)
+	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
+	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num"}
 	for _, k := range iAdvancedParas {
 		if v, ok := d.GetOk(k); ok {
 			dMap[k] = v

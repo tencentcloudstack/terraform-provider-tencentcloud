@@ -96,6 +96,11 @@ type AddExistedInstancesRequest struct {
 
 	// 校验规则相关选项，可配置跳过某些校验规则。目前支持GlobalRouteCIDRCheck（跳过GlobalRouter的相关校验），VpcCniCIDRCheck（跳过VpcCni相关校验）
 	SkipValidateOptions []*string `json:"SkipValidateOptions,omitempty" name:"SkipValidateOptions" list`
+
+	// 参数InstanceAdvancedSettingsOverride数组用于定制化地配置各台instance，与InstanceIds顺序对应。当传入InstanceAdvancedSettingsOverrides数组时，将覆盖默认参数InstanceAdvancedSettings；当没有传入参数InstanceAdvancedSettingsOverrides时，InstanceAdvancedSettings参数对每台instance生效。
+	// 
+	// 参数InstanceAdvancedSettingsOverride数组的长度应与InstanceIds数组一致；当长度大于InstanceIds数组长度时将报错；当长度小于InstanceIds数组时，没有对应配置的instace将使用默认配置。
+	InstanceAdvancedSettingsOverrides []*InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverrides,omitempty" name:"InstanceAdvancedSettingsOverrides" list`
 }
 
 func (r *AddExistedInstancesRequest) ToJsonString() string {
@@ -119,6 +124,7 @@ func (r *AddExistedInstancesRequest) FromJsonString(s string) error {
 	delete(f, "SecurityGroupIds")
 	delete(f, "NodePool")
 	delete(f, "SkipValidateOptions")
+	delete(f, "InstanceAdvancedSettingsOverrides")
 	if len(f) > 0 {
 		return errors.New("AddExistedInstancesRequest has unknown keys!")
 	}
@@ -661,6 +667,15 @@ type ClusterVersion struct {
 
 	// 集群主版本号列表，例如1.18.4
 	Versions []*string `json:"Versions,omitempty" name:"Versions" list`
+}
+
+type CommonName struct {
+
+	// 子账户UIN
+	SubaccountUin *string `json:"SubaccountUin,omitempty" name:"SubaccountUin"`
+
+	// 子账户客户端证书中的CommonName字段
+	CN *string `json:"CN,omitempty" name:"CN"`
 }
 
 type CreateClusterAsGroupRequest struct {
@@ -2184,6 +2199,63 @@ func (r *DescribeClusterAsGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeClusterCommonNamesRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 子账户列表，不可超出最大值50
+	SubaccountUins []*string `json:"SubaccountUins,omitempty" name:"SubaccountUins" list`
+
+	// 角色ID列表，不可超出最大值50
+	RoleIds []*string `json:"RoleIds,omitempty" name:"RoleIds" list`
+}
+
+func (r *DescribeClusterCommonNamesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterCommonNamesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "SubaccountUins")
+	delete(f, "RoleIds")
+	if len(f) > 0 {
+		return errors.New("DescribeClusterCommonNamesRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterCommonNamesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 子账户Uin与其客户端证书的CN字段映射
+		CommonNames []*CommonName `json:"CommonNames,omitempty" name:"CommonNames" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeClusterCommonNamesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterCommonNamesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeClusterEndpointStatusRequest struct {
 	*tchttp.BaseRequest
 
@@ -2883,6 +2955,59 @@ func (r *DescribeEKSClustersResponse) ToJsonString() string {
 // It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeEKSClustersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEnableVpcCniProgressRequest struct {
+	*tchttp.BaseRequest
+
+	// 开启vpc-cni的集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeEnableVpcCniProgressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEnableVpcCniProgressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return errors.New("DescribeEnableVpcCniProgressRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEnableVpcCniProgressResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 任务进度的描述：Running/Succeed/Failed
+		Status *string `json:"Status,omitempty" name:"Status"`
+
+		// 当任务进度为Failed时，对任务状态的进一步描述，例如IPAMD组件安装失败
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ErrorMessage *string `json:"ErrorMessage,omitempty" name:"ErrorMessage"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEnableVpcCniProgressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEnableVpcCniProgressResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3667,6 +3792,68 @@ type EksCluster struct {
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification" list`
 }
 
+type EnableVpcCniNetworkTypeRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 开启vpc-cni的模式，tke-route-eni开启的是策略路由模式，tke-direct-eni开启的是独立网卡模式
+	VpcCniType *string `json:"VpcCniType,omitempty" name:"VpcCniType"`
+
+	// 是否开启固定IP模式
+	EnableStaticIp *bool `json:"EnableStaticIp,omitempty" name:"EnableStaticIp"`
+
+	// 使用的容器子网
+	Subnets []*string `json:"Subnets,omitempty" name:"Subnets" list`
+
+	// 在固定IP模式下，Pod销毁后退还IP的时间，传参必须大于300；不传默认IP永不销毁。
+	ExpiredSeconds *uint64 `json:"ExpiredSeconds,omitempty" name:"ExpiredSeconds"`
+}
+
+func (r *EnableVpcCniNetworkTypeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableVpcCniNetworkTypeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "VpcCniType")
+	delete(f, "EnableStaticIp")
+	delete(f, "Subnets")
+	delete(f, "ExpiredSeconds")
+	if len(f) > 0 {
+		return errors.New("EnableVpcCniNetworkTypeRequest has unknown keys!")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type EnableVpcCniNetworkTypeResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *EnableVpcCniNetworkTypeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableVpcCniNetworkTypeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type EnhancedService struct {
 
 	// 开启云安全服务。若不指定该参数，则默认开启云安全服务。
@@ -3745,6 +3932,9 @@ type ExistedInstancesForNode struct {
 
 	// 节点高级设置，会覆盖集群级别设置的InstanceAdvancedSettings（当前只对节点自定义参数ExtraArgs生效）
 	InstanceAdvancedSettingsOverride *InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverride,omitempty" name:"InstanceAdvancedSettingsOverride"`
+
+	// 自定义模式集群，可指定每个节点的pod数量
+	DesiredPodNumbers []*int64 `json:"DesiredPodNumbers,omitempty" name:"DesiredPodNumbers" list`
 }
 
 type ExistedInstancesPara struct {
@@ -3959,6 +4149,10 @@ type InstanceAdvancedSettings struct {
 	// 节点相关的自定义参数信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
+
+	// 该节点属于podCIDR大小自定义模式时，可指定节点上运行的pod数量上限
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DesiredPodNumber *int64 `json:"DesiredPodNumber,omitempty" name:"DesiredPodNumber"`
 }
 
 type InstanceDataDiskMountSetting struct {
@@ -5104,6 +5298,18 @@ type RunSecurityServiceEnabled struct {
 
 type SetNodePoolNodeProtectionRequest struct {
 	*tchttp.BaseRequest
+
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 节点池id
+	NodePoolId *string `json:"NodePoolId,omitempty" name:"NodePoolId"`
+
+	// 节点id
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
+
+	// 节点是否需要移出保护
+	ProtectedFromScaleIn *bool `json:"ProtectedFromScaleIn,omitempty" name:"ProtectedFromScaleIn"`
 }
 
 func (r *SetNodePoolNodeProtectionRequest) ToJsonString() string {
@@ -5118,6 +5324,10 @@ func (r *SetNodePoolNodeProtectionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "ClusterId")
+	delete(f, "NodePoolId")
+	delete(f, "InstanceIds")
+	delete(f, "ProtectedFromScaleIn")
 	if len(f) > 0 {
 		return errors.New("SetNodePoolNodeProtectionRequest has unknown keys!")
 	}
@@ -5127,6 +5337,14 @@ func (r *SetNodePoolNodeProtectionRequest) FromJsonString(s string) error {
 type SetNodePoolNodeProtectionResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
+
+		// 成功设置的节点id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		SucceedInstanceIds []*string `json:"SucceedInstanceIds,omitempty" name:"SucceedInstanceIds" list`
+
+		// 没有成功设置的节点id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FailedInstanceIds []*string `json:"FailedInstanceIds,omitempty" name:"FailedInstanceIds" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
