@@ -232,7 +232,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"slave_zone_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down",
+				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.",
 			},
 		},
 	}

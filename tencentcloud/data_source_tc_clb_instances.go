@@ -162,27 +162,27 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"zone_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Available zone unique id(numerical representation), This field maybe null, means cannot get a valid value",
+							Description: "Available zone unique id(numerical representation), This field maybe null, means cannot get a valid value.",
 						},
 						"zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Available zone unique id(string representation), This field maybe null, means cannot get a valid value",
+							Description: "Available zone unique id(string representation), This field maybe null, means cannot get a valid value.",
 						},
 						"zone_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Available zone name, This field maybe null, means cannot get a valid value",
+							Description: "Available zone name, This field maybe null, means cannot get a valid value.",
 						},
 						"zone_region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Region that this available zone belong to, This field maybe null, means cannot get a valid value",
+							Description: "Region that this available zone belong to, This field maybe null, means cannot get a valid value.",
 						},
 						"local_zone": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether this available zone is local zone, This field maybe null, means cannot get a valid value",
+							Description: "Whether this available zone is local zone, This field maybe null, means cannot get a valid value.",
 						},
 					},
 				},
