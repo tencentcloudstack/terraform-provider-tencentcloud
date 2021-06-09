@@ -12,7 +12,7 @@ ENHANCEMENTS:
 * Resource `tencentcloud_clb_instance` add internal CLB supports security group. 
 * Resource `tencentcloud_clb_instance` add supports open and close CLB security group, default is open.
 * Resource `tencentcloud_clb_instance` add external CLB create multi AZ instance.
-* Resource `tencentcloud_container_cluster_instance` add supports params of img_id to assign image.
+* Resource `tencentcloud_kubernetes_cluster` add supports params of img_id to assign image.
 * Resource `tencentcloud_as_scaling_group` add MultiZoneSubnetPolicy.
 
 ## 1.56.8 (May 26, 2021)
