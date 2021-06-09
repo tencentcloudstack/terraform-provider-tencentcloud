@@ -116,6 +116,82 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance_default_enable,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.default_enable"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", "my_open_clb"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "load_balancer_pass_to_target", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "security_groups.0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "target_region_info_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "target_region_info_vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "tags.test", "open"),
+				),
+			},
+			{
+				Config: testAccClbInstance_default_enable_open,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.default_enable"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", "my_open_clb"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "load_balancer_pass_to_target", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "security_groups.0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "target_region_info_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "target_region_info_vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "tags.test", "hello"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance__multi_instance,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", "my_open_clb"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "10001"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "10002"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "mytest"),
+				),
+			},
+			{
+				Config: testAccClbInstance__multi_instance_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", "my_open_clb"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "10001"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "10002"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "open"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckClbInstanceDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -277,6 +353,122 @@ resource "tencentcloud_clb_instance" "clb_open" {
 
   tags = {
     test = "test"
+  }
+}
+`
+
+const testAccClbInstance_default_enable = `
+variable "availability_zone" {
+  default = "ap-guangzhou-1"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "sdk-feature-test"
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "sglab" {
+  name        = "sg_o0ek7r93"
+  description = "favourite sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name         = "for-my-open-clb"
+  cidr_block   = "10.0.0.0/16"
+
+  tags = {
+    "test" = "mytest"
+  }
+}
+
+resource "tencentcloud_clb_instance" "default_enable" {
+  network_type                 = "OPEN"
+  clb_name                     = "my-open-clb"
+  project_id                   = 0
+  vpc_id                       = tencentcloud_vpc.foo.id
+  load_balancer_pass_to_target = true
+
+  security_groups              = [tencentcloud_security_group.sglab.id]
+  target_region_info_region    = "ap-guangzhou"
+  target_region_info_vpc_id    = tencentcloud_vpc.foo.id
+
+  tags = {
+    test = "open"
+  }
+}
+`
+
+const testAccClbInstance_default_enable_open = `
+variable "availability_zone" {
+  default = "ap-guangzhou-1"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "sdk-feature-test"
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "sglab" {
+  name        = "sg_o0ek7r93"
+  description = "favourite sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name         = "for-my-open-clb"
+  cidr_block   = "10.0.0.0/16"
+
+  tags = {
+    "test" = "mytest"
+  }
+}
+
+resource "tencentcloud_clb_instance" "default_enable" {
+  network_type                 = "OPEN"
+  clb_name                     = "my-open-clb"
+  project_id                   = 0
+  vpc_id                       = tencentcloud_vpc.foo.id
+  load_balancer_pass_to_target = true
+
+  security_groups              = [tencentcloud_security_group.sglab.id]
+  target_region_info_region    = "ap-guangzhou"
+  target_region_info_vpc_id    = tencentcloud_vpc.foo.id
+
+  tags = {
+    test = "hello"
+  }
+}
+`
+
+const testAccClbInstance__multi_instance = `
+resource "tencentcloud_clb_instance" "multiple_instance" {
+  network_type              = "OPEN"
+  clb_name                  = "my-open-clb"
+  master_zone_id = "10001"
+  slave_zone_id = "10002"
+
+  tags = {
+    test = "open"
+  }
+}
+`
+
+const testAccClbInstance__multi_instance_update = `
+resource "tencentcloud_clb_instance" "multiple_instance" {
+  network_type              = "OPEN"
+  clb_name                  = "my-open-clb"
+  master_zone_id = "10001"
+  slave_zone_id = "10002"
+
+  tags = {
+    test = "open"
   }
 }
 `

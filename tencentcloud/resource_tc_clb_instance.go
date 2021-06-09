@@ -37,6 +37,60 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+Default enable
+
+```hcl
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "ap-guangzhou-1"
+  name              = "sdk-feature-test"
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "sglab" {
+  name        = "sg_o0ek7r93"
+  description = "favourite sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name         = "for-my-open-clb"
+  cidr_block   = "10.0.0.0/16"
+
+  tags = {
+    "test" = "mytest"
+  }
+}
+
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type                 = "OPEN"
+  clb_name                     = "my-open-clb"
+  project_id                   = 0
+  vpc_id                       = tencentcloud_vpc.foo.id
+  load_balancer_pass_to_target = true
+
+  security_groups              = [tencentcloud_security_group.sglab.id]
+  target_region_info_region    = "ap-guangzhou"
+  target_region_info_vpc_id    = tencentcloud_vpc.foo.id
+
+  tags = {
+    test = "open"
+  }
+}
+```
+
+CREATE multiple instance
+
+```hcl
+resource "tencentcloud_clb_instance" "open_clb1" {
+  network_type              = "OPEN"
+  clb_name = "hello"
+  master_zone_id = "ap-guangzhou-3"
+}
+~
+```
+
 Import
 
 CLB instance can be imported using the id, e.g.
@@ -178,7 +232,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"slave_zone_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down",
+				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.",
 			},
 		},
 	}

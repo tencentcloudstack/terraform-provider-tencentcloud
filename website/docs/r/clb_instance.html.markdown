@@ -47,6 +47,60 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+Default enable
+
+```hcl
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "ap-guangzhou-1"
+  name              = "sdk-feature-test"
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "sglab" {
+  name        = "sg_o0ek7r93"
+  description = "favourite sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "for-my-open-clb"
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    "test" = "mytest"
+  }
+}
+
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type                 = "OPEN"
+  clb_name                     = "my-open-clb"
+  project_id                   = 0
+  vpc_id                       = tencentcloud_vpc.foo.id
+  load_balancer_pass_to_target = true
+
+  security_groups           = [tencentcloud_security_group.sglab.id]
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc_id = tencentcloud_vpc.foo.id
+
+  tags = {
+    test = "open"
+  }
+}
+```
+
+CREATE multiple instance
+
+```hcl
+resource "tencentcloud_clb_instance" "open_clb1" {
+  network_type   = "OPEN"
+  clb_name       = "hello"
+  master_zone_id = "ap-guangzhou-3"
+}
+~
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -56,13 +110,17 @@ The following arguments are supported:
 * `address_ip_version` - (Optional) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
 * `internet_bandwidth_max_out` - (Optional) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `load_balancer_pass_to_target` - (Optional) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
+* `master_zone_id` - (Optional) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
-* `security_groups` - (Optional) Security groups of the CLB instance. Only supports `OPEN` CLBs.
+* `security_groups` - (Optional) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
+* `slave_zone_id` - (Optional) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
 * `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
 * `tags` - (Optional) The available tags within this CLB.
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
+* `zone_id` - (Optional) Available zone id, only applicable to open CLB.
 
 ## Attributes Reference
 

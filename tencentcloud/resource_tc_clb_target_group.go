@@ -10,6 +10,19 @@ resource "tencentcloud_clb_target_group" "test"{
 }
 ```
 
+Create target group
+
+```hcl
+resource "tencentcloud_clb_target_group" "test"{
+  target_group_name = "hello1"
+  port = 18082
+  target_group_instances {
+    bind_ip = "10.0.0.4"
+    port = 18080
+  }
+}
+```
+
 Import
 
 CLB target group can be imported using the id, e.g.
@@ -106,7 +119,7 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		err             error
 	)
 
-	if v, ok := d.GetOk("target_group_instance"); ok {
+	if v, ok := d.GetOk("target_group_instances"); ok {
 		targetGroupInstances := v.([]interface{})
 		for _, v1 := range targetGroupInstances {
 			value := v1.(map[string]interface{})
@@ -168,15 +181,28 @@ func resourceTencentCloudClbTargetUpdate(d *schema.ResourceData, meta interface{
 		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		clbService    = ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 		targetGroupId = d.Id()
+		port          uint64
+		tgtGroupName  string
 	)
 
+	isChanged := false
+	if d.HasChange("port") {
+		isChanged = true
+		port = uint64(d.Get("port").(int))
+	}
+
 	if d.HasChange("target_group_name") {
-		targetGroupName := d.Get("target_group_name").(string)
-		err := clbService.ModifyTargetGroup(ctx, targetGroupId, targetGroupName)
+		isChanged = true
+		tgtGroupName = d.Get("target_group_name").(string)
+	}
+
+	if isChanged {
+		err := clbService.ModifyTargetGroup(ctx, targetGroupId, tgtGroupName, port)
 		if err != nil {
 			return err
 		}
 	}
+
 	return resourceTencentCloudClbTargetRead(d, meta)
 }
 

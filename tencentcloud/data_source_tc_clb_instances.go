@@ -56,6 +56,11 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+			"master_zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Master available zone id.",
+			},
 			"clb_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -154,6 +159,31 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.",
 						},
+						"zone_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Available zone unique id(numerical representation), This field maybe null, means cannot get a valid value.",
+						},
+						"zone": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Available zone unique id(string representation), This field maybe null, means cannot get a valid value.",
+						},
+						"zone_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Available zone name, This field maybe null, means cannot get a valid value.",
+						},
+						"zone_region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Region that this available zone belong to, This field maybe null, means cannot get a valid value.",
+						},
+						"local_zone": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether this available zone is local zone, This field maybe null, means cannot get a valid value.",
+						},
 					},
 				},
 			},
@@ -179,6 +209,9 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	}
 	if v, ok := d.GetOk("network_type"); ok {
 		params["network_type"] = v.(string)
+	}
+	if v, ok := d.GetOk("master_zone"); ok {
+		params["master_zone"] = v.(string)
 	}
 
 	clbService := ClbService{
@@ -221,6 +254,14 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			mapping["internet_charge_type"] = *clbInstance.NetworkAttributes.InternetChargeType
 			mapping["internet_bandwidth_max_out"] = *clbInstance.NetworkAttributes.InternetMaxBandwidthOut
 		}
+		if clbInstance.MasterZone != nil {
+			mapping["zone_id"] = *clbInstance.MasterZone.ZoneId
+			mapping["zone"] = *clbInstance.MasterZone.Zone
+			mapping["zone_name"] = *clbInstance.MasterZone.ZoneName
+			mapping["zone_region"] = *clbInstance.MasterZone.ZoneRegion
+			mapping["local_zone"] = *clbInstance.MasterZone.LocalZone
+		}
+
 		if clbInstance.Tags != nil {
 			tags := make(map[string]interface{}, len(clbInstance.Tags))
 			for _, t := range clbInstance.Tags {

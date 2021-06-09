@@ -54,6 +54,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+	img_id                     = "img-rkiynh11"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -549,13 +550,18 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Disaster recover groups to which a CVM instance belongs. Only support maximum 1.",
 		},
-<<<<<<< HEAD
+		"img_id": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateImageID,
+			Description:  "The valid image id, format of img-xxx.",
+		},
 		// InstanceAdvancedSettingsOverrides
 		"desired_pod_num": {
-			Type:        schema.TypeInt,
-			ForceNew:    true,
-			Optional:    true,
-			Default:     -1,
+			Type:     schema.TypeInt,
+			ForceNew: true,
+			Optional: true,
+			Default:  -1,
 			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, " +
 				"and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
 		},
@@ -565,11 +571,11 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 func TkeExistCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"node_role": {
-			Type:        schema.TypeString,
-			ForceNew:    true,
-			Optional:    true,
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
 			ValidateFunc: validateAllowedStringValue([]string{TKE_ROLE_WORKER, TKE_ROLE_MASTER_ETCD}),
-			Description: "Role of existed node. value:MASTER_ETCD or WORKER.",
+			Description:  "Role of existed node. value:MASTER_ETCD or WORKER.",
 		},
 		"instances_para": {
 			Type:     schema.TypeList,
@@ -595,17 +601,9 @@ func TkeExistCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Elem:        &schema.Schema{Type: schema.TypeInt},
 			Description: "Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.",
-=======
-		"os": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validateImageID,
-			Description:  "The valid image id, format of img-xxx.",
->>>>>>> 37314e6e... 添加调用 CreateClusterInstances时，传入imageId参数来指定镜像，以及对镜像的验证，满足 img-xxx 的格式
 		},
 	}
 }
-
 
 func TkeNodePoolGlobalConfig() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -795,24 +793,24 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
 		},
 		"enable_customized_pod_cidr": {
-			Type:         schema.TypeBool,
-			ForceNew:     true,
-			Optional:     true,
-			Default:      false,
-			Description:  "Whether to enable the custom mode of node podCIDR size. Default is false.",
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     false,
+			Description: "Whether to enable the custom mode of node podCIDR size. Default is false.",
 		},
 		"base_pod_num": {
-			Type:         schema.TypeInt,
-			ForceNew:     true,
-			Optional:     true,
-			Description:  "The number of basic pods. valid when enable_customized_pod_cidr=true.",
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "The number of basic pods. valid when enable_customized_pod_cidr=true.",
 		},
 		"is_non_static_ip_mode": {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
 			Optional:    true,
 			Default:     false,
-			Description: "Indicates whether static ip mode is enabled. Default is false.",
+			Description: "Indicates whether non-static ip mode is enabled. Default is false.",
 		},
 		"deletion_protection": {
 			Type:        schema.TypeBool,
@@ -1345,7 +1343,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 
-	if v, ok := dMap["os"]; ok {
+	if v, ok := dMap["img_id"]; ok {
 		request.ImageId = helper.String(v.(string))
 	}
 

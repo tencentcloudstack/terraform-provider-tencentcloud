@@ -51,6 +51,7 @@ In addition to all arguments above, the following attributes are exported:
   * `load_balancer_ids` - A list of traditional clb ids which the CVM instances attached to.
   * `max_size` - The maximum number of CVM instances.
   * `min_size` - The minimum number of CVM instances.
+  * `multi_zone_subnet_policy` - Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
   * `project_id` - ID of the project to which the scaling group belongs. Default value is 0.
   * `retry_policy` - A retry policy can be used when a creation fails.
   * `scaling_group_id` - Auto scaling group ID.
