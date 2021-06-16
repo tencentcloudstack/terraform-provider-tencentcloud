@@ -307,13 +307,15 @@ func (me *TCRService) DescribeTCRNameSpaceById(ctx context.Context, instanceId s
 
 	if len(namespaces) == 0 {
 		return nil, has, nil
-	} else if len(namespaces) > 1 {
-		errRet = fmt.Errorf("TencentCloud SDK return more than 1 namespaces, %s %s", instanceId, name)
-		return
 	}
 
-	namespace = namespaces[0]
-	has = true
+	for i := range namespaces {
+		if name == *namespaces[i].Name {
+			namespace = namespaces[i]
+			has = true
+			return
+		}
+	}
 	return
 }
 
@@ -445,13 +447,16 @@ func (me *TCRService) DescribeTCRRepositoryById(ctx context.Context, instanceId 
 
 	if len(repositories) == 0 {
 		return nil, has, nil
-	} else if len(repositories) > 1 {
-		errRet = fmt.Errorf("TencentCloud SDK return more than 1 namespaces, %s %s %s", instanceId, namespace, repositoryName)
-		return
 	}
 
-	repository = repositories[0]
-	has = true
+	for i := range repositories {
+		if *repositories[i].Name == namespace+"/"+repositoryName {
+			repository = repositories[i]
+			has = true
+			return
+		}
+	}
+
 	return
 }
 
