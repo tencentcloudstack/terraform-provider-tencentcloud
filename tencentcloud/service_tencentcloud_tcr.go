@@ -446,6 +446,13 @@ func (me *TCRService) DescribeTCRRepositoryById(ctx context.Context, instanceId 
 	if len(repositories) == 0 {
 		return nil, has, nil
 	} else if len(repositories) > 1 {
+		for i := range repositories {
+			if *repositories[i].Name == namespace+"/"+repositoryName {
+				repository = repositories[i]
+				has = true
+				return
+			}
+		}
 		errRet = fmt.Errorf("TencentCloud SDK return more than 1 namespaces, %s %s %s", instanceId, namespace, repositoryName)
 		return
 	}
