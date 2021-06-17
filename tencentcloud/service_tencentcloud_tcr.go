@@ -308,6 +308,13 @@ func (me *TCRService) DescribeTCRNameSpaceById(ctx context.Context, instanceId s
 	if len(namespaces) == 0 {
 		return nil, has, nil
 	} else if len(namespaces) > 1 {
+		for i := range namespaces {
+			if name == *namespaces[i].Name {
+				namespace = namespaces[i]
+				has = true
+				return
+			}
+		}
 		errRet = fmt.Errorf("TencentCloud SDK return more than 1 namespaces, %s %s", instanceId, name)
 		return
 	}
