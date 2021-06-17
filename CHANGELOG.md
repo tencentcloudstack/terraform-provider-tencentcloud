@@ -1,4 +1,13 @@
-## 1.56.10 (Unreleased)
+## 1.56.11 (Unreleased)
+
+## 1.56.10 
+
+BUG FIXES
+
+* Resource `tencentcloud_tcr_namespace` fix create two namespace and one name is substring of another, then got an error about more than 1
+* Resource `tencentcloud_tcr_namespace` fix create two repositories and one name is substring of another, then got an error about more than 1
+
+
 ## 1.56.9 (Jun 09, 2021)
 
 BUG FIXES:
