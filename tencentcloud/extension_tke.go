@@ -99,3 +99,7 @@ type OverrideSettings struct {
 	Master []tke.InstanceAdvancedSettings
 	Work   []tke.InstanceAdvancedSettings
 }
+
+const (
+	DefaultDesiredPodNum = 0
+)

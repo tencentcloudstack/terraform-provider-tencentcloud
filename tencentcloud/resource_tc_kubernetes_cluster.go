@@ -561,7 +561,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			ForceNew: true,
 			Optional: true,
-			Default:  -1,
+			Default:  DefaultDesiredPodNum,
 			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, " +
 				"and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
 		},
@@ -793,8 +793,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
 		},
 		"enable_customized_pod_cidr": {
-			Type:        schema.TypeBool,
-			ForceNew:    true,
+			Type: schema.TypeBool,
+			//ForceNew:    true,
 			Optional:    true,
 			Default:     false,
 			Description: "Whether to enable the custom mode of node podCIDR size. Default is false.",
@@ -1645,7 +1645,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 			if v, ok := master["desired_pod_num"]; ok {
 				dpNum := int64(v.(int))
-				if dpNum != -1 {
+				if dpNum != DefaultDesiredPodNum {
 					overrideSettings.Master = append(overrideSettings.Master, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
 				}
 			}
@@ -1672,7 +1672,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 			if v, ok := worker["desired_pod_num"]; ok {
 				dpNum := int64(v.(int))
-				if dpNum != -1 {
+				if dpNum != DefaultDesiredPodNum {
 					overrideSettings.Work = append(overrideSettings.Work, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
 				}
 			}
