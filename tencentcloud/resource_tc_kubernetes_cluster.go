@@ -561,7 +561,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			ForceNew: true,
 			Optional: true,
-			Default:  -1,
+			Default:  DefaultDesiredPodNum,
 			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, " +
 				"and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
 		},
@@ -793,8 +793,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
 		},
 		"enable_customized_pod_cidr": {
-			Type:        schema.TypeBool,
-			ForceNew:    true,
+			Type: schema.TypeBool,
+			//ForceNew:    true,
 			Optional:    true,
 			Default:     false,
 			Description: "Whether to enable the custom mode of node podCIDR size. Default is false.",
@@ -1623,7 +1623,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	overrideSettings := make([]tke.InstanceAdvancedSettings, 0)
+	overrideSettings := OverrideSettings{
+		Master: make([]tke.InstanceAdvancedSettings, 0),
+		Work:   make([]tke.InstanceAdvancedSettings, 0),
+	}
 	if masters, ok := d.GetOk("master_config"); ok {
 		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
 			return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
@@ -1642,8 +1645,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 			if v, ok := master["desired_pod_num"]; ok {
 				dpNum := int64(v.(int))
-				if dpNum != -1 {
-					overrideSettings = append(overrideSettings, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+				if dpNum != DefaultDesiredPodNum {
+					overrideSettings.Master = append(overrideSettings.Master, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
 				}
 			}
 		}
@@ -1669,8 +1672,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 			if v, ok := worker["desired_pod_num"]; ok {
 				dpNum := int64(v.(int))
-				if dpNum != -1 {
-					overrideSettings = append(overrideSettings, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
+				if dpNum != DefaultDesiredPodNum {
+					overrideSettings.Work = append(overrideSettings.Work, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
 				}
 			}
 		}
@@ -1716,7 +1719,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existIntances, overrideSettings)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existIntances, &overrideSettings)
 	if err != nil {
 		return err
 	}
@@ -1893,9 +1896,18 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
+	// 兼容旧的 cluster_os 的 key, 由于 cluster_os有默认值，所以不大可能为空
+	oldOs := d.Get("cluster_os").(string)
+	newOs := tkeToShowClusterOs(info.ClusterOs)
+
+	if (oldOs == TkeClusterOsCentOS76 && newOs == TKE_CLUSTER_OS_CENTOS76) ||
+		(oldOs == TkeClusterOsUbuntu18 && newOs == TKE_CLUSTER_OS_UBUNTU18) {
+		newOs = oldOs
+	}
+
 	_ = d.Set("cluster_name", info.ClusterName)
 	_ = d.Set("cluster_desc", info.ClusterDescription)
-	_ = d.Set("cluster_os", tkeToShowClusterOs(info.ClusterOs))
+	_ = d.Set("cluster_os", newOs)
 	_ = d.Set("cluster_deploy_type", info.DeployType)
 	_ = d.Set("cluster_version", info.ClusterVersion)
 	_ = d.Set("cluster_ipvs", info.Ipvs)
