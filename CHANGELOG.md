@@ -5,7 +5,8 @@
 BUG FIXES
  
 * Resource `tencentcloud_kubernetes_cluster` fix create cluster without *desired_pod_num* in tf, then crash
-* Resource `tencentcloud_kubernetes_cluster` fix when upgrade terraform-provider-tencentclod from v1.56.1 to newer，cluster_os force replacement
+* Resource `tencentcloud_kubernetes_cluster` fix when upgrade terraform-provider-tencentclod from v1.56.1 to newer, cluster_os force replacement
+* Resource `tencentcloud_kubernetes_cluster` fix when upgrade terraform-provider-tencentclod from v1.56.1 to newer, enable_customized_pod_cidr rorce replace
 
 ## 1.56.10 
 
