@@ -1,5 +1,7 @@
 package tencentcloud
 
+import tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 const (
 	TKE_CLUSTER_OS_CENTOS72 = "centos7.2x86_64"
 	TKE_CLUSTER_OS_CENTOS76 = "centos7.6.0_x64"
@@ -7,6 +9,13 @@ const (
 	TKE_CLUSTER_OS_LINUX24  = "tlinux2.4x86_64"
 	TKE_CLUSTER_OS_LINUX22  = "tlinux2.2(tkernel3)x86_64"
 	TKE_CLUSTER_OS_LINUXF22 = "Tencent tlinux release 2.2 (Final)"
+)
+
+// 兼容旧的 cluster_os 定义
+const (
+	TkeClusterOsCentOS76 = "centos7.6x86_64"
+	//TkeClusterOsUbuntu16 = "ubuntu16.04.1 LTSx86_64"
+	TkeClusterOsUbuntu18 = "ubuntu18.04.1 LTSx86_64"
 )
 
 var TKE_CLUSTER_OS = []string{TKE_CLUSTER_OS_CENTOS76, TKE_CLUSTER_OS_UBUNTU18, TKE_CLUSTER_OS_LINUX24}
@@ -85,3 +94,8 @@ const (
 )
 
 var TKE_CLUSTER_KUBE_PROXY_MODE = []string{TKE_CLUSTER_KUBE_PROXY_MODE_BPF}
+
+type OverrideSettings struct {
+	Master []tke.InstanceAdvancedSettings
+	Work   []tke.InstanceAdvancedSettings
+}

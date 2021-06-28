@@ -1,4 +1,11 @@
-## 1.56.11 (Unreleased)
+## 1.56.12 (Unreleased)
+
+## 1.56.11 
+
+BUG FIXES
+ 
+* Resource `tencentcloud_kubernetes_cluster` fix create cluster without *desired_pod_num* in tf, then crash
+* Resource `tencentcloud_kubernetes_cluster` fix when upgrade terraform-provider-tencentclod from v1.56.1 to newer，cluster_os force replacement
 
 ## 1.56.10 
 

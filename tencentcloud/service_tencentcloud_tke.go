@@ -31,7 +31,7 @@ type ClusterBasicSetting struct {
 type ClusterAdvancedSettings struct {
 	Ipvs                    bool
 	AsEnabled               bool
-	EnableCustomizedPodCIDR	bool
+	EnableCustomizedPodCIDR bool
 	BasePodNumber           int64
 	ContainerRuntime        string
 	NodeNameType            string
@@ -371,13 +371,13 @@ func (me *TkeService) GetUpgradeInstanceResult(ctx context.Context, id string) (
 			continue
 		}
 		if *inst.LifeState != "process" {
-			return false, fmt.Errorf("upgrade instances failed, " +
+			return false, fmt.Errorf("upgrade instances failed, "+
 				"instanceId:%s, lifeState is:%s", *inst.InstanceID, *inst.LifeState)
 		}
 		// instance lifeState=process, check whether failed or not.
 		for _, detail := range inst.Detail {
 			if *detail.LifeState == "failed" {
-				return false, fmt.Errorf("upgrade instances failed, " +
+				return false, fmt.Errorf("upgrade instances failed, "+
 					"instanceId:%s, detail.lifeState is:%s", *inst.InstanceID, *detail.LifeState)
 			}
 		}
@@ -394,7 +394,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	cidrSetting ClusterCidrSettings,
 	tags map[string]string,
 	existedInstance []*tke.ExistedInstancesForNode,
-	overrideSettings []tke.InstanceAdvancedSettings,
+	overrideSettings *OverrideSettings,
 ) (id string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -459,7 +459,8 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
 	}
 
-	if len(overrideSettings) > 0 && len(overrideSettings) != (len(cvms.Master)+len(cvms.Work)) {
+	if len(overrideSettings.Master)+len(overrideSettings.Work) > 0 &&
+		len(overrideSettings.Master)+len(overrideSettings.Work) != (len(cvms.Master)+len(cvms.Work)) {
 		return "", fmt.Errorf("len(overrideSettings) != (len(cvms.Master)+len(cvms.Work))")
 	}
 
@@ -473,7 +474,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_INDEPENDENT)
 		for v := range cvms.Master {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Master[v])
-			node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings[v])
+			if len(overrideSettings.Master) != 0 {
+				node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings.Master[v])
+			}
 		}
 		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 
@@ -487,7 +490,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		node.RunInstancesPara = []*string{}
 		for v := range cvms.Work {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
-			node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings[v])
+			if len(overrideSettings.Work) != 0 {
+				node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings.Work[v])
+			}
 		}
 		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 	}
@@ -940,9 +945,9 @@ func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clust
 		}
 
 		request.ExtraArgs = &tke.ClusterExtraArgs{
-			KubeAPIServer: kas,
+			KubeAPIServer:         kas,
 			KubeControllerManager: kcms,
-			KubeScheduler: kss,
+			KubeScheduler:         kss,
 		}
 	}
 
