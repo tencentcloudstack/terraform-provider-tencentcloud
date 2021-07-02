@@ -1,4 +1,10 @@
-## 1.56.12 (Unreleased)
+## 1.56.13 (Unreleased)
+
+## 1.56.12 (July 02, 2021)
+
+BUG FIXES
+ 
+* Resource `TkeCvmCreateInfo.data_disk.disk_type` support CLOUD_HSSD
 
 ## 1.56.11 
 
