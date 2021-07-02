@@ -445,7 +445,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						Optional:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						//ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
+						Description:  "Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD`.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
