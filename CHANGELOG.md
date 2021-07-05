@@ -1,4 +1,10 @@
-## 1.56.12 (Unreleased)
+## 1.56.13 (Unreleased)
+
+## 1.56.12 
+
+BUG FIXES
+
+* Resource `tencentcloud_kubenetes_cluster` comment out the validate data_disk to supports hssd
 
 ## 1.56.11 
 
