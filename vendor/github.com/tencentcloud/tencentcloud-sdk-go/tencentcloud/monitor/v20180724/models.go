@@ -16,8 +16,7 @@ package v20180724
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -75,16 +74,16 @@ type AlarmHistory struct {
 	ProjectName *string `json:"ProjectName,omitempty" name:"ProjectName"`
 
 	// 告警对象所属实例组
-	InstanceGroup []*InstanceGroups `json:"InstanceGroup,omitempty" name:"InstanceGroup" list`
+	InstanceGroup []*InstanceGroups `json:"InstanceGroup,omitempty" name:"InstanceGroup"`
 
 	// 接收人列表
-	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids" list`
+	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids"`
 
 	// 接收组列表
-	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups" list`
+	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups"`
 
 	// 告警渠道列表 SMS=短信 EMAIL=邮件 CALL=电话 WECHAT=微信
-	NoticeWays []*string `json:"NoticeWays,omitempty" name:"NoticeWays" list`
+	NoticeWays []*string `json:"NoticeWays,omitempty" name:"NoticeWays"`
 
 	// 可用于实例、实例组的绑定和解绑接口（[BindingPolicyObject](https://cloud.tencent.com/document/product/248/40421)、[UnBindingAllPolicyObject](https://cloud.tencent.com/document/product/248/40568)、[UnBindingPolicyObject](https://cloud.tencent.com/document/product/248/40567)）的策略 ID
 	OriginId *string `json:"OriginId,omitempty" name:"OriginId"`
@@ -103,7 +102,7 @@ type AlarmHistory struct {
 
 	// 指标信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	MetricsInfo []*AlarmHistoryMetric `json:"MetricsInfo,omitempty" name:"MetricsInfo" list`
+	MetricsInfo []*AlarmHistoryMetric `json:"MetricsInfo,omitempty" name:"MetricsInfo"`
 }
 
 type AlarmHistoryMetric struct {
@@ -148,11 +147,11 @@ type AlarmNotice struct {
 
 	// 用户通知列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices" list`
+	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices"`
 
 	// 回调通知列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices" list`
+	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices"`
 
 	// 是否是系统预设通知模板 0=否 1=是
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -164,7 +163,7 @@ type AlarmNotice struct {
 
 	// 告警通知模板绑定的告警策略ID列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds" list`
+	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds"`
 }
 
 type AlarmPolicy struct {
@@ -219,15 +218,15 @@ type AlarmPolicy struct {
 
 	// 通知规则 id 列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 
 	// 通知规则 列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Notices []*AlarmNotice `json:"Notices,omitempty" name:"Notices" list`
+	Notices []*AlarmNotice `json:"Notices,omitempty" name:"Notices"`
 
 	// 触发任务列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks" list`
+	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks"`
 
 	// 模板策略组
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -250,7 +249,7 @@ type AlarmPolicy struct {
 
 	// 地域
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Region []*string `json:"Region,omitempty" name:"Region" list`
+	Region []*string `json:"Region,omitempty" name:"Region"`
 
 	// namespace显示名字
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -286,7 +285,7 @@ type AlarmPolicy struct {
 
 	// 标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagInstances []*TagInstance `json:"TagInstances,omitempty" name:"TagInstances" list`
+	TagInstances []*TagInstance `json:"TagInstances,omitempty" name:"TagInstances"`
 }
 
 type AlarmPolicyCondition struct {
@@ -297,14 +296,14 @@ type AlarmPolicyCondition struct {
 
 	// 告警触发条件列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Rules []*AlarmPolicyRule `json:"Rules,omitempty" name:"Rules" list`
+	Rules []*AlarmPolicyRule `json:"Rules,omitempty" name:"Rules"`
 }
 
 type AlarmPolicyEventCondition struct {
 
 	// 告警触发条件列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Rules []*AlarmPolicyRule `json:"Rules,omitempty" name:"Rules" list`
+	Rules []*AlarmPolicyRule `json:"Rules,omitempty" name:"Rules"`
 }
 
 type AlarmPolicyFilter struct {
@@ -414,20 +413,20 @@ type BindingPolicyObjectDimension struct {
 type BindingPolicyObjectRequest struct {
 	*tchttp.BaseRequest
 
+	// 必填。固定值"monitor"
+	Module *string `json:"Module,omitempty" name:"Module"`
+
 	// 策略组id，如传入 PolicyId 则该字段会被忽略可传入任意值如 0
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 必填。固定值"monitor"
-	Module *string `json:"Module,omitempty" name:"Module"`
+	// 告警策略ID，使用此字段时 GroupId 会被忽略
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
 	// 实例分组ID
 	InstanceGroupId *int64 `json:"InstanceGroupId,omitempty" name:"InstanceGroupId"`
 
 	// 需要绑定的对象维度信息
-	Dimensions []*BindingPolicyObjectDimension `json:"Dimensions,omitempty" name:"Dimensions" list`
-
-	// 告警策略ID，使用此字段时 GroupId 会被忽略
-	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+	Dimensions []*BindingPolicyObjectDimension `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 func (r *BindingPolicyObjectRequest) ToJsonString() string {
@@ -435,20 +434,20 @@ func (r *BindingPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *BindingPolicyObjectRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "GroupId")
 	delete(f, "Module")
+	delete(f, "GroupId")
+	delete(f, "PolicyId")
 	delete(f, "InstanceGroupId")
 	delete(f, "Dimensions")
-	delete(f, "PolicyId")
 	if len(f) > 0 {
-		return errors.New("BindingPolicyObjectRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "BindingPolicyObjectRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -467,7 +466,7 @@ func (r *BindingPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *BindingPolicyObjectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -491,7 +490,7 @@ type CommonNamespace struct {
 	Config *string `json:"Config,omitempty" name:"Config"`
 
 	// 支持地域列表
-	AvailableRegions []*string `json:"AvailableRegions,omitempty" name:"AvailableRegions" list`
+	AvailableRegions []*string `json:"AvailableRegions,omitempty" name:"AvailableRegions"`
 
 	// 排序Id
 	SortId *int64 `json:"SortId,omitempty" name:"SortId"`
@@ -531,10 +530,10 @@ type CreateAlarmNoticeRequest struct {
 	NoticeLanguage *string `json:"NoticeLanguage,omitempty" name:"NoticeLanguage"`
 
 	// 用户通知 最多5个
-	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices" list`
+	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices"`
 
 	// 回调通知 最多3个
-	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices" list`
+	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices"`
 }
 
 func (r *CreateAlarmNoticeRequest) ToJsonString() string {
@@ -542,7 +541,7 @@ func (r *CreateAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -556,7 +555,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "UserNotices")
 	delete(f, "URLNotices")
 	if len(f) > 0 {
-		return errors.New("CreateAlarmNoticeRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmNoticeRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -578,7 +577,7 @@ func (r *CreateAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlarmNoticeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -618,10 +617,16 @@ type CreateAlarmPolicyRequest struct {
 	EventCondition *AlarmPolicyEventCondition `json:"EventCondition,omitempty" name:"EventCondition"`
 
 	// 通知规则 Id 列表，由 [DescribeAlarmNotices](https://cloud.tencent.com/document/product/248/51280) 获得
-	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 
 	// 触发任务列表
-	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks" list`
+	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks"`
+
+	// 全局过滤条件
+	Filter *AlarmPolicyFilter `json:"Filter,omitempty" name:"Filter"`
+
+	// 聚合维度列表，指定按哪些维度 key 来做 group by
+	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
 }
 
 func (r *CreateAlarmPolicyRequest) ToJsonString() string {
@@ -629,7 +634,7 @@ func (r *CreateAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlarmPolicyRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -648,8 +653,10 @@ func (r *CreateAlarmPolicyRequest) FromJsonString(s string) error {
 	delete(f, "EventCondition")
 	delete(f, "NoticeIds")
 	delete(f, "TriggerTasks")
+	delete(f, "Filter")
+	delete(f, "GroupBy")
 	if len(f) > 0 {
-		return errors.New("CreateAlarmPolicyRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmPolicyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -674,7 +681,7 @@ func (r *CreateAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlarmPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -693,7 +700,7 @@ type CreateAlertRuleRequest struct {
 	Expr *string `json:"Expr,omitempty" name:"Expr"`
 
 	// 告警通知模板 ID 列表
-	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers"`
 
 	// 规则状态码，取值如下：
 	// <li>2=RuleEnabled</li>
@@ -704,10 +711,12 @@ type CreateAlertRuleRequest struct {
 	Duration *string `json:"Duration,omitempty" name:"Duration"`
 
 	// 标签列表
-	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels"`
 
-	// 注释列表
-	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+	// 注释列表。
+	// 
+	// 告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description。
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations"`
 
 	// 报警策略模板分类
 	Type *string `json:"Type,omitempty" name:"Type"`
@@ -718,7 +727,7 @@ func (r *CreateAlertRuleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlertRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -735,7 +744,7 @@ func (r *CreateAlertRuleRequest) FromJsonString(s string) error {
 	delete(f, "Annotations")
 	delete(f, "Type")
 	if len(f) > 0 {
-		return errors.New("CreateAlertRuleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlertRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -758,7 +767,7 @@ func (r *CreateAlertRuleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlertRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -834,10 +843,10 @@ type CreatePolicyGroupRequest struct {
 	InsertTime *int64 `json:"InsertTime,omitempty" name:"InsertTime"`
 
 	// 策略组中的阈值告警规则
-	Conditions []*CreatePolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions" list`
+	Conditions []*CreatePolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions"`
 
 	// 策略组中的事件告警规则
-	EventConditions []*CreatePolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
+	EventConditions []*CreatePolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions"`
 
 	// 是否为后端调用。当且仅当值为1时，后台拉取策略模版中的规则填充入Conditions以及EventConditions字段
 	BackEndCall *int64 `json:"BackEndCall,omitempty" name:"BackEndCall"`
@@ -851,7 +860,7 @@ func (r *CreatePolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreatePolicyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -871,7 +880,7 @@ func (r *CreatePolicyGroupRequest) FromJsonString(s string) error {
 	delete(f, "BackEndCall")
 	delete(f, "IsUnionRule")
 	if len(f) > 0 {
-		return errors.New("CreatePolicyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePolicyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -893,7 +902,7 @@ func (r *CreatePolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreatePolicyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -927,7 +936,7 @@ func (r *CreateServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateServiceDiscoveryRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -940,7 +949,7 @@ func (r *CreateServiceDiscoveryRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "Yaml")
 	if len(f) > 0 {
-		return errors.New("CreateServiceDiscoveryRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServiceDiscoveryRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -962,7 +971,7 @@ func (r *CreateServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -971,13 +980,13 @@ func (r *CreateServiceDiscoveryResponse) FromJsonString(s string) error {
 type DataPoint struct {
 
 	// 实例对象维度组合
-	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 时间戳数组，表示那些时间点有数据，缺失的时间戳，没有数据点，可以理解为掉点了
-	Timestamps []*float64 `json:"Timestamps,omitempty" name:"Timestamps" list`
+	Timestamps []*float64 `json:"Timestamps,omitempty" name:"Timestamps"`
 
 	// 监控值数组，该数组和Timestamps一一对应
-	Values []*float64 `json:"Values,omitempty" name:"Values" list`
+	Values []*float64 `json:"Values,omitempty" name:"Values"`
 }
 
 type DeleteAlarmNoticesRequest struct {
@@ -987,7 +996,7 @@ type DeleteAlarmNoticesRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 告警通知模板id列表
-	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 }
 
 func (r *DeleteAlarmNoticesRequest) ToJsonString() string {
@@ -995,7 +1004,7 @@ func (r *DeleteAlarmNoticesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlarmNoticesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1005,7 +1014,7 @@ func (r *DeleteAlarmNoticesRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "NoticeIds")
 	if len(f) > 0 {
-		return errors.New("DeleteAlarmNoticesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAlarmNoticesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1024,7 +1033,7 @@ func (r *DeleteAlarmNoticesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlarmNoticesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1037,7 +1046,7 @@ type DeleteAlarmPolicyRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 告警策略 ID 列表
-	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds" list`
+	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds"`
 }
 
 func (r *DeleteAlarmPolicyRequest) ToJsonString() string {
@@ -1045,7 +1054,7 @@ func (r *DeleteAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlarmPolicyRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1055,7 +1064,7 @@ func (r *DeleteAlarmPolicyRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "PolicyIds")
 	if len(f) > 0 {
-		return errors.New("DeleteAlarmPolicyRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAlarmPolicyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1074,7 +1083,7 @@ func (r *DeleteAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlarmPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1084,7 +1093,7 @@ type DeleteAlertRulesRequest struct {
 	*tchttp.BaseRequest
 
 	// 规则 ID 列表
-	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds" list`
+	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds"`
 
 	// Prometheus 实例 ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -1095,7 +1104,7 @@ func (r *DeleteAlertRulesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlertRulesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1105,7 +1114,7 @@ func (r *DeleteAlertRulesRequest) FromJsonString(s string) error {
 	delete(f, "RuleIds")
 	delete(f, "InstanceId")
 	if len(f) > 0 {
-		return errors.New("DeleteAlertRulesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAlertRulesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1124,7 +1133,7 @@ func (r *DeleteAlertRulesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlertRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1137,7 +1146,7 @@ type DeletePolicyGroupRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 策略组id
-	GroupId []*int64 `json:"GroupId,omitempty" name:"GroupId" list`
+	GroupId []*int64 `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *DeletePolicyGroupRequest) ToJsonString() string {
@@ -1145,7 +1154,7 @@ func (r *DeletePolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeletePolicyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1155,7 +1164,7 @@ func (r *DeletePolicyGroupRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "GroupId")
 	if len(f) > 0 {
-		return errors.New("DeletePolicyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeletePolicyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1174,7 +1183,7 @@ func (r *DeletePolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeletePolicyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1208,7 +1217,7 @@ func (r *DeleteServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteServiceDiscoveryRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1221,7 +1230,7 @@ func (r *DeleteServiceDiscoveryRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "Yaml")
 	if len(f) > 0 {
-		return errors.New("DeleteServiceDiscoveryRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteServiceDiscoveryRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1240,7 +1249,7 @@ func (r *DeleteServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1306,16 +1315,16 @@ type DescribeAccidentEventListRequest struct {
 	OccurTimeOrder *string `json:"OccurTimeOrder,omitempty" name:"OccurTimeOrder"`
 
 	// 根据事件类型过滤，1表示服务问题，2表示其他订阅
-	AccidentType []*int64 `json:"AccidentType,omitempty" name:"AccidentType" list`
+	AccidentType []*int64 `json:"AccidentType,omitempty" name:"AccidentType"`
 
 	// 根据事件过滤，1表示云服务器存储问题，2表示云服务器网络连接问题，3表示云服务器运行异常，202表示运营商网络抖动
-	AccidentEvent []*int64 `json:"AccidentEvent,omitempty" name:"AccidentEvent" list`
+	AccidentEvent []*int64 `json:"AccidentEvent,omitempty" name:"AccidentEvent"`
 
 	// 根据事件状态过滤，0表示已恢复，1表示未恢复
-	AccidentStatus []*int64 `json:"AccidentStatus,omitempty" name:"AccidentStatus" list`
+	AccidentStatus []*int64 `json:"AccidentStatus,omitempty" name:"AccidentStatus"`
 
 	// 根据事件地域过滤，gz表示广州，sh表示上海等
-	AccidentRegion []*string `json:"AccidentRegion,omitempty" name:"AccidentRegion" list`
+	AccidentRegion []*string `json:"AccidentRegion,omitempty" name:"AccidentRegion"`
 
 	// 根据影响资源过滤，比如ins-19a06bka
 	AffectResource *string `json:"AffectResource,omitempty" name:"AffectResource"`
@@ -1326,7 +1335,7 @@ func (r *DescribeAccidentEventListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccidentEventListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1346,7 +1355,7 @@ func (r *DescribeAccidentEventListRequest) FromJsonString(s string) error {
 	delete(f, "AccidentRegion")
 	delete(f, "AffectResource")
 	if len(f) > 0 {
-		return errors.New("DescribeAccidentEventListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccidentEventListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1357,7 +1366,7 @@ type DescribeAccidentEventListResponse struct {
 
 		// 平台事件列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Alarms []*DescribeAccidentEventListAlarms `json:"Alarms,omitempty" name:"Alarms" list`
+		Alarms []*DescribeAccidentEventListAlarms `json:"Alarms,omitempty" name:"Alarms"`
 
 		// 平台事件的总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -1373,7 +1382,7 @@ func (r *DescribeAccidentEventListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccidentEventListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1387,6 +1396,9 @@ type DescribeAlarmEventsRequest struct {
 
 	// 告警策略类型，由 DescribeAllNamespaces 获得，例如 cvm_device
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// 监控类型，如 MT_QCE。如果不填默认为 MT_QCE。
+	MonitorType *string `json:"MonitorType,omitempty" name:"MonitorType"`
 }
 
 func (r *DescribeAlarmEventsRequest) ToJsonString() string {
@@ -1394,7 +1406,7 @@ func (r *DescribeAlarmEventsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmEventsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1403,8 +1415,9 @@ func (r *DescribeAlarmEventsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Module")
 	delete(f, "Namespace")
+	delete(f, "MonitorType")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmEventsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmEventsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1414,7 +1427,7 @@ type DescribeAlarmEventsResponse struct {
 	Response *struct {
 
 		// 告警事件列表
-		Events []*AlarmEvent `json:"Events,omitempty" name:"Events" list`
+		Events []*AlarmEvent `json:"Events,omitempty" name:"Events"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1426,7 +1439,7 @@ func (r *DescribeAlarmEventsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmEventsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1454,27 +1467,27 @@ type DescribeAlarmHistoriesRequest struct {
 	EndTime *int64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 根据监控类型过滤 不选默认查所有类型 "MT_QCE"=云产品监控
-	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes" list`
+	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes"`
 
 	// 根据告警对象过滤 字符串模糊搜索
 	AlarmObject *string `json:"AlarmObject,omitempty" name:"AlarmObject"`
 
 	// 根据告警状态过滤 ALARM=未恢复 OK=已恢复 NO_CONF=已失效 NO_DATA=数据不足，不选默认查所有
-	AlarmStatus []*string `json:"AlarmStatus,omitempty" name:"AlarmStatus" list`
+	AlarmStatus []*string `json:"AlarmStatus,omitempty" name:"AlarmStatus"`
 
 	// 根据项目ID过滤，-1=无项目 0=默认项目
 	// 可在此页面查询 [项目管理](https://console.cloud.tencent.com/project)
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
 	// 根据实例组ID过滤
-	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds" list`
+	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds"`
 
 	// 根据策略类型过滤，策略类型是监控类型之下的概念，在这里两者都需要传入，例如 `[{"MonitorType": "MT_QCE", "Namespace": "cvm_device"}]`
 	// 可使用 [查询所有名字空间 DescribeAllNamespaces](https://cloud.tencent.com/document/product/248/48683) 接口查询
-	Namespaces []*MonitorTypeNamespace `json:"Namespaces,omitempty" name:"Namespaces" list`
+	Namespaces []*MonitorTypeNamespace `json:"Namespaces,omitempty" name:"Namespaces"`
 
 	// 根据指标名过滤
-	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames" list`
+	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
 	// 根据策略名称模糊搜索
 	PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
@@ -1483,13 +1496,13 @@ type DescribeAlarmHistoriesRequest struct {
 	Content *string `json:"Content,omitempty" name:"Content"`
 
 	// 根据接收人搜索，可以使用“访问管理”的 [拉取子用户 ListUsers](https://cloud.tencent.com/document/product/598/34587) 接口获取用户列表 或 [查询子用户 GetUser](https://cloud.tencent.com/document/product/598/34590) 接口查询子用户详情，此处填入返回结果中的 `Uid` 字段
-	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids" list`
+	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids"`
 
 	// 根据接收组搜索，可以使用“访问管理”的 [查询用户组列表 ListGroups](https://cloud.tencent.com/document/product/598/34589) 接口获取用户组列表 或 [列出用户关联的用户组 ListGroupsForUser](https://cloud.tencent.com/document/product/598/34588) 查询某个子用户所在的用户组列表 ，此处填入返回结果中的 `GroupId ` 字段
-	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups" list`
+	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups"`
 
 	// 根据告警策略 Id 列表搜索
-	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds" list`
+	PolicyIds []*string `json:"PolicyIds,omitempty" name:"PolicyIds"`
 }
 
 func (r *DescribeAlarmHistoriesRequest) ToJsonString() string {
@@ -1497,7 +1510,7 @@ func (r *DescribeAlarmHistoriesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmHistoriesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1523,7 +1536,7 @@ func (r *DescribeAlarmHistoriesRequest) FromJsonString(s string) error {
 	delete(f, "ReceiverGroups")
 	delete(f, "PolicyIds")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmHistoriesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmHistoriesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1536,7 +1549,7 @@ type DescribeAlarmHistoriesResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 告警历史列表
-		Histories []*AlarmHistory `json:"Histories,omitempty" name:"Histories" list`
+		Histories []*AlarmHistory `json:"Histories,omitempty" name:"Histories"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1548,7 +1561,7 @@ func (r *DescribeAlarmHistoriesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmHistoriesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1572,7 +1585,7 @@ func (r *DescribeAlarmMetricsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmMetricsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1583,7 +1596,7 @@ func (r *DescribeAlarmMetricsRequest) FromJsonString(s string) error {
 	delete(f, "MonitorType")
 	delete(f, "Namespace")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmMetricsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmMetricsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1593,7 +1606,7 @@ type DescribeAlarmMetricsResponse struct {
 	Response *struct {
 
 		// 告警指标列表
-		Metrics []*Metric `json:"Metrics,omitempty" name:"Metrics" list`
+		Metrics []*Metric `json:"Metrics,omitempty" name:"Metrics"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1605,7 +1618,7 @@ func (r *DescribeAlarmMetricsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmMetricsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1623,7 +1636,7 @@ func (r *DescribeAlarmNoticeCallbacksRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeCallbacksRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1632,7 +1645,7 @@ func (r *DescribeAlarmNoticeCallbacksRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Module")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmNoticeCallbacksRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmNoticeCallbacksRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1643,7 +1656,7 @@ type DescribeAlarmNoticeCallbacksResponse struct {
 
 		// 告警回调通知
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices" list`
+		URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1655,7 +1668,7 @@ func (r *DescribeAlarmNoticeCallbacksResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeCallbacksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1676,7 +1689,7 @@ func (r *DescribeAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1686,7 +1699,7 @@ func (r *DescribeAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "NoticeId")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmNoticeRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmNoticeRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1708,7 +1721,7 @@ func (r *DescribeAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1739,10 +1752,10 @@ type DescribeAlarmNoticesRequest struct {
 	ReceiverType *string `json:"ReceiverType,omitempty" name:"ReceiverType"`
 
 	// 接收对象列表
-	UserIds []*int64 `json:"UserIds,omitempty" name:"UserIds" list`
+	UserIds []*int64 `json:"UserIds,omitempty" name:"UserIds"`
 
 	// 接收组列表
-	GroupIds []*int64 `json:"GroupIds,omitempty" name:"GroupIds" list`
+	GroupIds []*int64 `json:"GroupIds,omitempty" name:"GroupIds"`
 }
 
 func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
@@ -1750,7 +1763,7 @@ func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1767,7 +1780,7 @@ func (r *DescribeAlarmNoticesRequest) FromJsonString(s string) error {
 	delete(f, "UserIds")
 	delete(f, "GroupIds")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmNoticesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmNoticesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1780,7 +1793,7 @@ type DescribeAlarmNoticesResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 告警通知模板列表
-		Notices []*AlarmNotice `json:"Notices,omitempty" name:"Notices" list`
+		Notices []*AlarmNotice `json:"Notices,omitempty" name:"Notices"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1792,7 +1805,7 @@ func (r *DescribeAlarmNoticesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmNoticesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1814,11 +1827,11 @@ type DescribeAlarmPoliciesRequest struct {
 	PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
 
 	// 根据监控类型过滤 不选默认查所有类型 "MT_QCE"=云产品监控
-	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes" list`
+	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes"`
 
 	// 根据命名空间过滤，不同策略类型的值详见
 	// [策略类型列表](https://cloud.tencent.com/document/product/248/50397)
-	Namespaces []*string `json:"Namespaces,omitempty" name:"Namespaces" list`
+	Namespaces []*string `json:"Namespaces,omitempty" name:"Namespaces"`
 
 	// 告警对象列表，JSON 字符串。外层数组，对应多个实例，内层为对象的维度。例如“云服务器-基础监控”可写为：
 	// `[ {"Dimensions": {"unInstanceId": "ins-qr8d555g"}}, {"Dimensions": {"unInstanceId": "ins-qr8d555h"}} ]`
@@ -1828,13 +1841,13 @@ type DescribeAlarmPoliciesRequest struct {
 	Dimensions *string `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 根据接收人搜索，可以使用“访问管理”的 [拉取子用户 ListUsers](https://cloud.tencent.com/document/product/598/34587) 接口获取用户列表 或 [查询子用户 GetUser](https://cloud.tencent.com/document/product/598/34590) 接口查询子用户详情，此处填入返回结果中的 `Uid` 字段
-	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids" list`
+	ReceiverUids []*int64 `json:"ReceiverUids,omitempty" name:"ReceiverUids"`
 
 	// 根据接收组搜索，可以使用“访问管理”的 [查询用户组列表 ListGroups](https://cloud.tencent.com/document/product/598/34589) 接口获取用户组列表 或 [列出用户关联的用户组 ListGroupsForUser](https://cloud.tencent.com/document/product/598/34588) 查询某个子用户所在的用户组列表 ，此处填入返回结果中的 `GroupId ` 字段
-	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups" list`
+	ReceiverGroups []*int64 `json:"ReceiverGroups,omitempty" name:"ReceiverGroups"`
 
 	// 根据默认策略筛选 不传展示全部策略 DEFAULT=展示默认策略 NOT_DEFAULT=展示非默认策略
-	PolicyType []*string `json:"PolicyType,omitempty" name:"PolicyType" list`
+	PolicyType []*string `json:"PolicyType,omitempty" name:"PolicyType"`
 
 	// 排序字段，例如按照最后修改时间排序，Field: "UpdateTime"
 	Field *string `json:"Field,omitempty" name:"Field"`
@@ -1844,17 +1857,17 @@ type DescribeAlarmPoliciesRequest struct {
 
 	// 策略所属项目的id数组，可在此页面查看
 	// [项目管理](https://console.cloud.tencent.com/project)
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
 	// 通知模版的id列表，可查询通知模版列表获取。
 	// 可使用 [查询通知模板列表](https://cloud.tencent.com/document/product/248/51280) 接口查询。
-	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 
 	// 根据触发条件筛选 不传展示全部策略 STATIC=展示静态阈值策略 DYNAMIC=展示动态阈值策略
-	RuleTypes []*string `json:"RuleTypes,omitempty" name:"RuleTypes" list`
+	RuleTypes []*string `json:"RuleTypes,omitempty" name:"RuleTypes"`
 
 	// 告警启停筛选，[1]：启用   [0]：停止，全部[0, 1]
-	Enable []*int64 `json:"Enable,omitempty" name:"Enable" list`
+	Enable []*int64 `json:"Enable,omitempty" name:"Enable"`
 
 	// 传 1 查询未配置通知规则的告警策略；不传或传其他数值，查询所有策略。
 	NotBindingNoticeRule *int64 `json:"NotBindingNoticeRule,omitempty" name:"NotBindingNoticeRule"`
@@ -1865,7 +1878,7 @@ func (r *DescribeAlarmPoliciesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmPoliciesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1890,7 +1903,7 @@ func (r *DescribeAlarmPoliciesRequest) FromJsonString(s string) error {
 	delete(f, "Enable")
 	delete(f, "NotBindingNoticeRule")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmPoliciesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmPoliciesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1903,7 +1916,7 @@ type DescribeAlarmPoliciesResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 策略数组
-		Policies []*AlarmPolicy `json:"Policies,omitempty" name:"Policies" list`
+		Policies []*AlarmPolicy `json:"Policies,omitempty" name:"Policies"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1915,7 +1928,7 @@ func (r *DescribeAlarmPoliciesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmPoliciesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1936,7 +1949,7 @@ func (r *DescribeAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmPolicyRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1946,7 +1959,7 @@ func (r *DescribeAlarmPolicyRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "PolicyId")
 	if len(f) > 0 {
-		return errors.New("DescribeAlarmPolicyRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmPolicyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1968,7 +1981,7 @@ func (r *DescribeAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlarmPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2006,7 +2019,7 @@ func (r *DescribeAlertRulesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlertRulesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2021,7 +2034,7 @@ func (r *DescribeAlertRulesRequest) FromJsonString(s string) error {
 	delete(f, "RuleName")
 	delete(f, "Type")
 	if len(f) > 0 {
-		return errors.New("DescribeAlertRulesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlertRulesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2035,7 +2048,7 @@ type DescribeAlertRulesResponse struct {
 
 		// 报警规则详情
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		AlertRuleSet []*PrometheusRuleSet `json:"AlertRuleSet,omitempty" name:"AlertRuleSet" list`
+		AlertRuleSet []*PrometheusRuleSet `json:"AlertRuleSet,omitempty" name:"AlertRuleSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2047,7 +2060,7 @@ func (r *DescribeAlertRulesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlertRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2063,10 +2076,10 @@ type DescribeAllNamespacesRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 根据监控类型过滤 不填默认查所有类型 "MT_QCE"=云产品监控
-	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes" list`
+	MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes"`
 
 	// 根据namespace的Id过滤 不填默认查询所有
-	Ids []*string `json:"Ids,omitempty" name:"Ids" list`
+	Ids []*string `json:"Ids,omitempty" name:"Ids"`
 }
 
 func (r *DescribeAllNamespacesRequest) ToJsonString() string {
@@ -2074,7 +2087,7 @@ func (r *DescribeAllNamespacesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAllNamespacesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2086,7 +2099,7 @@ func (r *DescribeAllNamespacesRequest) FromJsonString(s string) error {
 	delete(f, "MonitorTypes")
 	delete(f, "Ids")
 	if len(f) > 0 {
-		return errors.New("DescribeAllNamespacesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAllNamespacesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2102,10 +2115,10 @@ type DescribeAllNamespacesResponse struct {
 		CustomNamespaces *CommonNamespace `json:"CustomNamespaces,omitempty" name:"CustomNamespaces"`
 
 		// 云产品的告警策略类型
-		QceNamespacesNew []*CommonNamespace `json:"QceNamespacesNew,omitempty" name:"QceNamespacesNew" list`
+		QceNamespacesNew []*CommonNamespace `json:"QceNamespacesNew,omitempty" name:"QceNamespacesNew"`
 
 		// 其他告警策略类型，暂不支持
-		CustomNamespacesNew []*CommonNamespace `json:"CustomNamespacesNew,omitempty" name:"CustomNamespacesNew" list`
+		CustomNamespacesNew []*CommonNamespace `json:"CustomNamespacesNew,omitempty" name:"CustomNamespacesNew"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2117,7 +2130,7 @@ func (r *DescribeAllNamespacesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAllNamespacesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2138,7 +2151,7 @@ func (r *DescribeBaseMetricsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBaseMetricsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2148,7 +2161,7 @@ func (r *DescribeBaseMetricsRequest) FromJsonString(s string) error {
 	delete(f, "Namespace")
 	delete(f, "MetricName")
 	if len(f) > 0 {
-		return errors.New("DescribeBaseMetricsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBaseMetricsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2158,7 +2171,7 @@ type DescribeBaseMetricsResponse struct {
 	Response *struct {
 
 		// 查询得到的指标描述列表
-		MetricSet []*MetricSet `json:"MetricSet,omitempty" name:"MetricSet" list`
+		MetricSet []*MetricSet `json:"MetricSet,omitempty" name:"MetricSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2170,7 +2183,7 @@ func (r *DescribeBaseMetricsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBaseMetricsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2259,11 +2272,11 @@ type DescribeBasicAlarmListAlarms struct {
 
 	// 通知方式
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay" list`
+	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay"`
 
 	// 所属实例组信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstanceGroup []*InstanceGroup `json:"InstanceGroup,omitempty" name:"InstanceGroup" list`
+	InstanceGroup []*InstanceGroup `json:"InstanceGroup,omitempty" name:"InstanceGroup"`
 }
 
 type DescribeBasicAlarmListRequest struct {
@@ -2288,22 +2301,22 @@ type DescribeBasicAlarmListRequest struct {
 	OccurTimeOrder *string `json:"OccurTimeOrder,omitempty" name:"OccurTimeOrder"`
 
 	// 根据项目ID过滤
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
 	// 根据策略类型过滤
-	ViewNames []*string `json:"ViewNames,omitempty" name:"ViewNames" list`
+	ViewNames []*string `json:"ViewNames,omitempty" name:"ViewNames"`
 
 	// 根据告警状态过滤
-	AlarmStatus []*int64 `json:"AlarmStatus,omitempty" name:"AlarmStatus" list`
+	AlarmStatus []*int64 `json:"AlarmStatus,omitempty" name:"AlarmStatus"`
 
 	// 根据告警对象过滤
 	ObjLike *string `json:"ObjLike,omitempty" name:"ObjLike"`
 
 	// 根据实例组ID过滤
-	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds" list`
+	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds"`
 
 	// 根据指标名过滤
-	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames" list`
+	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 }
 
 func (r *DescribeBasicAlarmListRequest) ToJsonString() string {
@@ -2311,7 +2324,7 @@ func (r *DescribeBasicAlarmListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBasicAlarmListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2331,7 +2344,7 @@ func (r *DescribeBasicAlarmListRequest) FromJsonString(s string) error {
 	delete(f, "InstanceGroupIds")
 	delete(f, "MetricNames")
 	if len(f) > 0 {
-		return errors.New("DescribeBasicAlarmListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBasicAlarmListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2342,7 +2355,7 @@ type DescribeBasicAlarmListResponse struct {
 
 		// 告警列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Alarms []*DescribeBasicAlarmListAlarms `json:"Alarms,omitempty" name:"Alarms" list`
+		Alarms []*DescribeBasicAlarmListAlarms `json:"Alarms,omitempty" name:"Alarms"`
 
 		// 总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -2358,7 +2371,7 @@ func (r *DescribeBasicAlarmListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBasicAlarmListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2419,7 +2432,7 @@ type DescribeBindingPolicyObjectListInstanceGroup struct {
 
 	// 实例所在的地域集合
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Regions []*string `json:"Regions,omitempty" name:"Regions" list`
+	Regions []*string `json:"Regions,omitempty" name:"Regions"`
 }
 
 type DescribeBindingPolicyObjectListRequest struct {
@@ -2438,7 +2451,7 @@ type DescribeBindingPolicyObjectListRequest struct {
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
 	// 筛选对象的维度信息
-	Dimensions []*DescribeBindingPolicyObjectListDimension `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*DescribeBindingPolicyObjectListDimension `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 func (r *DescribeBindingPolicyObjectListRequest) ToJsonString() string {
@@ -2446,7 +2459,7 @@ func (r *DescribeBindingPolicyObjectListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBindingPolicyObjectListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2459,7 +2472,7 @@ func (r *DescribeBindingPolicyObjectListRequest) FromJsonString(s string) error 
 	delete(f, "Offset")
 	delete(f, "Dimensions")
 	if len(f) > 0 {
-		return errors.New("DescribeBindingPolicyObjectListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBindingPolicyObjectListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2470,7 +2483,7 @@ type DescribeBindingPolicyObjectListResponse struct {
 
 		// 绑定的对象实例列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		List []*DescribeBindingPolicyObjectListInstance `json:"List,omitempty" name:"List" list`
+		List []*DescribeBindingPolicyObjectListInstance `json:"List,omitempty" name:"List"`
 
 		// 绑定的对象实例总数
 		Total *int64 `json:"Total,omitempty" name:"Total"`
@@ -2492,7 +2505,7 @@ func (r *DescribeBindingPolicyObjectListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBindingPolicyObjectListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2510,7 +2523,7 @@ func (r *DescribeMonitorTypesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMonitorTypesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2519,7 +2532,7 @@ func (r *DescribeMonitorTypesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Module")
 	if len(f) > 0 {
-		return errors.New("DescribeMonitorTypesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMonitorTypesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2529,7 +2542,7 @@ type DescribeMonitorTypesResponse struct {
 	Response *struct {
 
 		// 监控类型，云产品监控为 MT_QCE
-		MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes" list`
+		MonitorTypes []*string `json:"MonitorTypes,omitempty" name:"MonitorTypes"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2541,7 +2554,7 @@ func (r *DescribeMonitorTypesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMonitorTypesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2554,14 +2567,14 @@ type DescribePolicyConditionListCondition struct {
 
 	// 事件告警条件
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EventMetrics []*DescribePolicyConditionListEventMetric `json:"EventMetrics,omitempty" name:"EventMetrics" list`
+	EventMetrics []*DescribePolicyConditionListEventMetric `json:"EventMetrics,omitempty" name:"EventMetrics"`
 
 	// 是否支持多地域
 	IsSupportMultiRegion *bool `json:"IsSupportMultiRegion,omitempty" name:"IsSupportMultiRegion"`
 
 	// 指标告警条件
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Metrics []*DescribePolicyConditionListMetric `json:"Metrics,omitempty" name:"Metrics" list`
+	Metrics []*DescribePolicyConditionListMetric `json:"Metrics,omitempty" name:"Metrics"`
 
 	// 策略类型名称
 	Name *string `json:"Name,omitempty" name:"Name"`
@@ -2574,7 +2587,7 @@ type DescribePolicyConditionListCondition struct {
 
 	// 支持该策略类型的地域列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SupportRegions []*string `json:"SupportRegions,omitempty" name:"SupportRegions" list`
+	SupportRegions []*string `json:"SupportRegions,omitempty" name:"SupportRegions"`
 }
 
 type DescribePolicyConditionListConfigManual struct {
@@ -2608,7 +2621,7 @@ type DescribePolicyConditionListConfigManualCalcType struct {
 
 	// CalcType 取值
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Keys []*int64 `json:"Keys,omitempty" name:"Keys" list`
+	Keys []*int64 `json:"Keys,omitempty" name:"Keys"`
 
 	// 是否必须
 	Need *bool `json:"Need,omitempty" name:"Need"`
@@ -2644,7 +2657,7 @@ type DescribePolicyConditionListConfigManualContinueTime struct {
 
 	// 可选持续时间，单位：秒
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Keys []*int64 `json:"Keys,omitempty" name:"Keys" list`
+	Keys []*int64 `json:"Keys,omitempty" name:"Keys"`
 
 	// 是否必须
 	Need *bool `json:"Need,omitempty" name:"Need"`
@@ -2658,7 +2671,7 @@ type DescribePolicyConditionListConfigManualPeriod struct {
 
 	// 可选周期，单位：秒
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Keys []*int64 `json:"Keys,omitempty" name:"Keys" list`
+	Keys []*int64 `json:"Keys,omitempty" name:"Keys"`
 
 	// 是否必须
 	Need *bool `json:"Need,omitempty" name:"Need"`
@@ -2672,7 +2685,7 @@ type DescribePolicyConditionListConfigManualPeriodNum struct {
 
 	// 可选周期数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Keys []*int64 `json:"Keys,omitempty" name:"Keys" list`
+	Keys []*int64 `json:"Keys,omitempty" name:"Keys"`
 
 	// 是否必须
 	Need *bool `json:"Need,omitempty" name:"Need"`
@@ -2756,7 +2769,7 @@ func (r *DescribePolicyConditionListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyConditionListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2765,7 +2778,7 @@ func (r *DescribePolicyConditionListRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Module")
 	if len(f) > 0 {
-		return errors.New("DescribePolicyConditionListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePolicyConditionListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2775,7 +2788,7 @@ type DescribePolicyConditionListResponse struct {
 	Response *struct {
 
 		// 告警策略条件列表
-		Conditions []*DescribePolicyConditionListCondition `json:"Conditions,omitempty" name:"Conditions" list`
+		Conditions []*DescribePolicyConditionListCondition `json:"Conditions,omitempty" name:"Conditions"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2787,7 +2800,7 @@ func (r *DescribePolicyConditionListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyConditionListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2896,10 +2909,10 @@ type DescribePolicyGroupInfoEventCondition struct {
 type DescribePolicyGroupInfoReceiverInfo struct {
 
 	// 告警接收组id列表
-	ReceiverGroupList []*int64 `json:"ReceiverGroupList,omitempty" name:"ReceiverGroupList" list`
+	ReceiverGroupList []*int64 `json:"ReceiverGroupList,omitempty" name:"ReceiverGroupList"`
 
 	// 告警接收人id列表
-	ReceiverUserList []*int64 `json:"ReceiverUserList,omitempty" name:"ReceiverUserList" list`
+	ReceiverUserList []*int64 `json:"ReceiverUserList,omitempty" name:"ReceiverUserList"`
 
 	// 告警时间段开始时间。范围[0,86400)，作为unix时间戳转成北京时间后去掉日期，例如7200表示"10:0:0"
 	StartTime *int64 `json:"StartTime,omitempty" name:"StartTime"`
@@ -2911,11 +2924,11 @@ type DescribePolicyGroupInfoReceiverInfo struct {
 	ReceiverType *string `json:"ReceiverType,omitempty" name:"ReceiverType"`
 
 	// 告警通知方式。可选 "SMS","SITE","EMAIL","CALL","WECHAT"
-	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay" list`
+	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay"`
 
 	// 电话告警接收者uid
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UidList []*int64 `json:"UidList,omitempty" name:"UidList" list`
+	UidList []*int64 `json:"UidList,omitempty" name:"UidList"`
 
 	// 电话告警轮数
 	RoundNumber *int64 `json:"RoundNumber,omitempty" name:"RoundNumber"`
@@ -2930,10 +2943,10 @@ type DescribePolicyGroupInfoReceiverInfo struct {
 	NeedSendNotice *int64 `json:"NeedSendNotice,omitempty" name:"NeedSendNotice"`
 
 	// 电话告警通知时机。可选"OCCUR"(告警时通知),"RECOVER"(恢复时通知)
-	SendFor []*string `json:"SendFor,omitempty" name:"SendFor" list`
+	SendFor []*string `json:"SendFor,omitempty" name:"SendFor"`
 
 	// 恢复通知方式。可选"SMS"
-	RecoverNotify []*string `json:"RecoverNotify,omitempty" name:"RecoverNotify" list`
+	RecoverNotify []*string `json:"RecoverNotify,omitempty" name:"RecoverNotify"`
 
 	// 告警发送语言
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -2955,7 +2968,7 @@ func (r *DescribePolicyGroupInfoRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyGroupInfoRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2965,7 +2978,7 @@ func (r *DescribePolicyGroupInfoRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "GroupId")
 	if len(f) > 0 {
-		return errors.New("DescribePolicyGroupInfoRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePolicyGroupInfoRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2999,22 +3012,22 @@ type DescribePolicyGroupInfoResponse struct {
 		UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 
 		// 该策略支持的地域
-		Region []*string `json:"Region,omitempty" name:"Region" list`
+		Region []*string `json:"Region,omitempty" name:"Region"`
 
 		// 策略类型的维度列表
-		DimensionGroup []*string `json:"DimensionGroup,omitempty" name:"DimensionGroup" list`
+		DimensionGroup []*string `json:"DimensionGroup,omitempty" name:"DimensionGroup"`
 
 		// 阈值规则列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		ConditionsConfig []*DescribePolicyGroupInfoCondition `json:"ConditionsConfig,omitempty" name:"ConditionsConfig" list`
+		ConditionsConfig []*DescribePolicyGroupInfoCondition `json:"ConditionsConfig,omitempty" name:"ConditionsConfig"`
 
 		// 产品事件规则列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		EventConfig []*DescribePolicyGroupInfoEventCondition `json:"EventConfig,omitempty" name:"EventConfig" list`
+		EventConfig []*DescribePolicyGroupInfoEventCondition `json:"EventConfig,omitempty" name:"EventConfig"`
 
 		// 用户接收人列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		ReceiverInfos []*DescribePolicyGroupInfoReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos" list`
+		ReceiverInfos []*DescribePolicyGroupInfoReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos"`
 
 		// 用户回调信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3041,7 +3054,7 @@ func (r *DescribePolicyGroupInfoResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyGroupInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3093,15 +3106,15 @@ type DescribePolicyGroupListGroup struct {
 
 	// 阈值规则列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Conditions []*DescribePolicyGroupInfoCondition `json:"Conditions,omitempty" name:"Conditions" list`
+	Conditions []*DescribePolicyGroupInfoCondition `json:"Conditions,omitempty" name:"Conditions"`
 
 	// 产品事件规则列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EventConditions []*DescribePolicyGroupInfoEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
+	EventConditions []*DescribePolicyGroupInfoEventCondition `json:"EventConditions,omitempty" name:"EventConditions"`
 
 	// 用户接收人列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ReceiverInfos []*DescribePolicyGroupInfoReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos" list`
+	ReceiverInfos []*DescribePolicyGroupInfoReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos"`
 
 	// 模板策略组
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3162,19 +3175,19 @@ type DescribePolicyGroupListRequest struct {
 	UpdateTimeOrder *string `json:"UpdateTimeOrder,omitempty" name:"UpdateTimeOrder"`
 
 	// 项目id列表
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds" list`
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
 	// 告警策略类型列表
-	ViewNames []*string `json:"ViewNames,omitempty" name:"ViewNames" list`
+	ViewNames []*string `json:"ViewNames,omitempty" name:"ViewNames"`
 
 	// 是否过滤无接收人策略组, 1表示过滤, 0表示不过滤
 	FilterUnuseReceiver *int64 `json:"FilterUnuseReceiver,omitempty" name:"FilterUnuseReceiver"`
 
 	// 过滤条件, 接收组列表
-	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers"`
 
 	// 过滤条件, 接收人列表
-	ReceiverUserList []*string `json:"ReceiverUserList,omitempty" name:"ReceiverUserList" list`
+	ReceiverUserList []*string `json:"ReceiverUserList,omitempty" name:"ReceiverUserList"`
 
 	// 维度组合字段(json字符串), 例如[[{"name":"unInstanceId","value":"ins-6e4b2aaa"}]]
 	Dimensions *string `json:"Dimensions,omitempty" name:"Dimensions"`
@@ -3194,7 +3207,7 @@ func (r *DescribePolicyGroupListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyGroupListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3217,7 +3230,7 @@ func (r *DescribePolicyGroupListRequest) FromJsonString(s string) error {
 	delete(f, "ReceiverType")
 	delete(f, "IsOpen")
 	if len(f) > 0 {
-		return errors.New("DescribePolicyGroupListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePolicyGroupListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3228,7 +3241,7 @@ type DescribePolicyGroupListResponse struct {
 
 		// 策略组列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		GroupList []*DescribePolicyGroupListGroup `json:"GroupList,omitempty" name:"GroupList" list`
+		GroupList []*DescribePolicyGroupListGroup `json:"GroupList,omitempty" name:"GroupList"`
 
 		// 策略组总数
 		Total *int64 `json:"Total,omitempty" name:"Total"`
@@ -3243,7 +3256,7 @@ func (r *DescribePolicyGroupListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribePolicyGroupListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3326,11 +3339,11 @@ type DescribeProductEventListEvents struct {
 
 	// 实例对象信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Dimensions []*DescribeProductEventListEventsDimensions `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*DescribeProductEventListEventsDimensions `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 实例对象附加信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AdditionMsg []*DescribeProductEventListEventsDimensions `json:"AdditionMsg,omitempty" name:"AdditionMsg" list`
+	AdditionMsg []*DescribeProductEventListEventsDimensions `json:"AdditionMsg,omitempty" name:"AdditionMsg"`
 
 	// 是否配置告警
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3338,7 +3351,7 @@ type DescribeProductEventListEvents struct {
 
 	// 策略信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupInfo []*DescribeProductEventListEventsGroupInfo `json:"GroupInfo,omitempty" name:"GroupInfo" list`
+	GroupInfo []*DescribeProductEventListEventsGroupInfo `json:"GroupInfo,omitempty" name:"GroupInfo"`
 
 	// 显示名称ViewName
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3397,28 +3410,28 @@ type DescribeProductEventListRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 产品类型过滤，比如"cvm"表示云服务器
-	ProductName []*string `json:"ProductName,omitempty" name:"ProductName" list`
+	ProductName []*string `json:"ProductName,omitempty" name:"ProductName"`
 
 	// 事件名称过滤，比如"guest_reboot"表示机器重启
-	EventName []*string `json:"EventName,omitempty" name:"EventName" list`
+	EventName []*string `json:"EventName,omitempty" name:"EventName"`
 
 	// 影响对象，比如"ins-19708ino"
-	InstanceId []*string `json:"InstanceId,omitempty" name:"InstanceId" list`
+	InstanceId []*string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 维度过滤，比如外网IP:10.0.0.1
-	Dimensions []*DescribeProductEventListDimensions `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*DescribeProductEventListDimensions `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 产品事件地域过滤参数，比如gz，各地域缩写可参见[地域列表](https://cloud.tencent.com/document/product/248/50863)
-	RegionList []*string `json:"RegionList,omitempty" name:"RegionList" list`
+	RegionList []*string `json:"RegionList,omitempty" name:"RegionList"`
 
 	// 事件类型过滤，取值范围["status_change","abnormal"]，分别表示状态变更、异常事件
-	Type []*string `json:"Type,omitempty" name:"Type" list`
+	Type []*string `json:"Type,omitempty" name:"Type"`
 
 	// 事件状态过滤，取值范围["recover","alarm","-"]，分别表示已恢复、未恢复、无状态
-	Status []*string `json:"Status,omitempty" name:"Status" list`
+	Status []*string `json:"Status,omitempty" name:"Status"`
 
 	// 项目ID过滤
-	Project []*string `json:"Project,omitempty" name:"Project" list`
+	Project []*string `json:"Project,omitempty" name:"Project"`
 
 	// 告警状态配置过滤，1表示已配置，0表示未配置
 	IsAlarmConfig *int64 `json:"IsAlarmConfig,omitempty" name:"IsAlarmConfig"`
@@ -3444,7 +3457,7 @@ func (r *DescribeProductEventListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductEventListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3467,7 +3480,7 @@ func (r *DescribeProductEventListRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeProductEventListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProductEventListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3478,7 +3491,7 @@ type DescribeProductEventListResponse struct {
 
 		// 事件列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Events []*DescribeProductEventListEvents `json:"Events,omitempty" name:"Events" list`
+		Events []*DescribeProductEventListEvents `json:"Events,omitempty" name:"Events"`
 
 		// 事件统计
 		OverView *DescribeProductEventListOverView `json:"OverView,omitempty" name:"OverView"`
@@ -3497,7 +3510,7 @@ func (r *DescribeProductEventListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductEventListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3524,7 +3537,7 @@ func (r *DescribeProductListRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductListRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3536,7 +3549,7 @@ func (r *DescribeProductListRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeProductListRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProductListRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3547,7 +3560,7 @@ type DescribeProductListResponse struct {
 
 		// 产品信息列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		ProductList []*ProductSimple `json:"ProductList,omitempty" name:"ProductList" list`
+		ProductList []*ProductSimple `json:"ProductList,omitempty" name:"ProductList"`
 
 		// 产品总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3563,7 +3576,7 @@ func (r *DescribeProductListResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3588,7 +3601,7 @@ func (r *DescribeServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeServiceDiscoveryRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3599,7 +3612,7 @@ func (r *DescribeServiceDiscoveryRequest) FromJsonString(s string) error {
 	delete(f, "KubeClusterId")
 	delete(f, "KubeType")
 	if len(f) > 0 {
-		return errors.New("DescribeServiceDiscoveryRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServiceDiscoveryRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3610,7 +3623,7 @@ type DescribeServiceDiscoveryResponse struct {
 
 		// 返回服务发现列表信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		ServiceDiscoverySet []*ServiceDiscoveryItem `json:"ServiceDiscoverySet,omitempty" name:"ServiceDiscoverySet" list`
+		ServiceDiscoverySet []*ServiceDiscoveryItem `json:"ServiceDiscoverySet,omitempty" name:"ServiceDiscoverySet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -3622,7 +3635,7 @@ func (r *DescribeServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3638,10 +3651,10 @@ type DescribeStatisticDataRequest struct {
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
 	// 指标名列表
-	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames" list`
+	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
 	// 维度条件，操作符支持=、in
-	Conditions []*MidQueryCondition `json:"Conditions,omitempty" name:"Conditions" list`
+	Conditions []*MidQueryCondition `json:"Conditions,omitempty" name:"Conditions"`
 
 	// 统计粒度。默认取值为300，单位为s
 	Period *uint64 `json:"Period,omitempty" name:"Period"`
@@ -3653,7 +3666,7 @@ type DescribeStatisticDataRequest struct {
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 按指定维度groupBy
-	GroupBys []*string `json:"GroupBys,omitempty" name:"GroupBys" list`
+	GroupBys []*string `json:"GroupBys,omitempty" name:"GroupBys"`
 }
 
 func (r *DescribeStatisticDataRequest) ToJsonString() string {
@@ -3661,7 +3674,7 @@ func (r *DescribeStatisticDataRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeStatisticDataRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3677,7 +3690,7 @@ func (r *DescribeStatisticDataRequest) FromJsonString(s string) error {
 	delete(f, "EndTime")
 	delete(f, "GroupBys")
 	if len(f) > 0 {
-		return errors.New("DescribeStatisticDataRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeStatisticDataRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3696,7 +3709,7 @@ type DescribeStatisticDataResponse struct {
 		EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
 		// 监控数据
-		Data []*MetricData `json:"Data,omitempty" name:"Data" list`
+		Data []*MetricData `json:"Data,omitempty" name:"Data"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -3708,7 +3721,7 @@ func (r *DescribeStatisticDataResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeStatisticDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3726,7 +3739,7 @@ type Dimension struct {
 type DimensionsDesc struct {
 
 	// 维度名数组
-	Dimensions []*string `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*string `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 type GetMonitorDataRequest struct {
@@ -3738,10 +3751,10 @@ type GetMonitorDataRequest struct {
 	// 指标名称，如CPUUsage，仅支持单指标拉取。各个云产品的详细指标说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的指标英文名即为MetricName
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 实例对象的维度组合，格式为key-value键值对形式的集合。如[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key,value为key对应的值
-	Instances []*Instance `json:"Instances,omitempty" name:"Instances" list`
+	// 实例对象的维度组合，格式为key-value键值对形式的集合。不同类型的实例字段完全不同，如CVM为[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]，Ckafka为[{"Name":"instanceId","Value":"ckafka-l49k54dd"}]，COS为[{"Name":"appid","Value":"1258344699"},{"Name":"bucket","Value":"rig-1258344699"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key，value为key对应的值。单请求最多支持批量拉取10个实例的监控数据。
+	Instances []*Instance `json:"Instances,omitempty" name:"Instances"`
 
-	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期
+	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期。单请求的数据点数限制为1440个。
 	Period *uint64 `json:"Period,omitempty" name:"Period"`
 
 	// 起始时间，如2018-09-22T19:51:23+08:00
@@ -3756,7 +3769,7 @@ func (r *GetMonitorDataRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetMonitorDataRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3770,7 +3783,7 @@ func (r *GetMonitorDataRequest) FromJsonString(s string) error {
 	delete(f, "StartTime")
 	delete(f, "EndTime")
 	if len(f) > 0 {
-		return errors.New("GetMonitorDataRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetMonitorDataRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3786,7 +3799,7 @@ type GetMonitorDataResponse struct {
 		MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
 		// 数据点数组
-		DataPoints []*DataPoint `json:"DataPoints,omitempty" name:"DataPoints" list`
+		DataPoints []*DataPoint `json:"DataPoints,omitempty" name:"DataPoints"`
 
 		// 开始时间
 		StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
@@ -3804,7 +3817,7 @@ func (r *GetMonitorDataResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetMonitorDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3813,7 +3826,7 @@ func (r *GetMonitorDataResponse) FromJsonString(s string) error {
 type Instance struct {
 
 	// 实例的维度组合
-	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 type InstanceGroup struct {
@@ -3854,7 +3867,7 @@ type Metric struct {
 	Max *float64 `json:"Max,omitempty" name:"Max"`
 
 	// 维度列表
-	Dimensions []*string `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*string `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 单位
 	Unit *string `json:"Unit,omitempty" name:"Unit"`
@@ -3867,13 +3880,13 @@ type Metric struct {
 type MetricConfig struct {
 
 	// 允许使用的运算符
-	Operator []*string `json:"Operator,omitempty" name:"Operator" list`
+	Operator []*string `json:"Operator,omitempty" name:"Operator"`
 
 	// 允许配置的数据周期，以秒为单位
-	Period []*int64 `json:"Period,omitempty" name:"Period" list`
+	Period []*int64 `json:"Period,omitempty" name:"Period"`
 
 	// 允许配置的持续周期个数
-	ContinuePeriod []*int64 `json:"ContinuePeriod,omitempty" name:"ContinuePeriod" list`
+	ContinuePeriod []*int64 `json:"ContinuePeriod,omitempty" name:"ContinuePeriod"`
 }
 
 type MetricData struct {
@@ -3882,16 +3895,16 @@ type MetricData struct {
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
 	// 监控数据点
-	Points []*MetricDataPoint `json:"Points,omitempty" name:"Points" list`
+	Points []*MetricDataPoint `json:"Points,omitempty" name:"Points"`
 }
 
 type MetricDataPoint struct {
 
 	// 实例对象维度组合
-	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*Dimension `json:"Dimensions,omitempty" name:"Dimensions"`
 
 	// 数据点列表
-	Values []*Point `json:"Values,omitempty" name:"Values" list`
+	Values []*Point `json:"Values,omitempty" name:"Values"`
 }
 
 type MetricDatum struct {
@@ -3927,16 +3940,16 @@ type MetricSet struct {
 	UnitCname *string `json:"UnitCname,omitempty" name:"UnitCname"`
 
 	// 指标支持的统计周期，单位是秒，如60、300
-	Period []*int64 `json:"Period,omitempty" name:"Period" list`
+	Period []*int64 `json:"Period,omitempty" name:"Period"`
 
 	// 统计周期内指标方式
-	Periods []*PeriodsSt `json:"Periods,omitempty" name:"Periods" list`
+	Periods []*PeriodsSt `json:"Periods,omitempty" name:"Periods"`
 
 	// 统计指标含义解释
 	Meaning *MetricObjectMeaning `json:"Meaning,omitempty" name:"Meaning"`
 
 	// 维度描述信息
-	Dimensions []*DimensionsDesc `json:"Dimensions,omitempty" name:"Dimensions" list`
+	Dimensions []*DimensionsDesc `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 type MidQueryCondition struct {
@@ -3948,7 +3961,7 @@ type MidQueryCondition struct {
 	Operator *string `json:"Operator,omitempty" name:"Operator"`
 
 	// 维度值，当Op是eq、ne时，只使用第一个元素
-	Value []*string `json:"Value,omitempty" name:"Value" list`
+	Value []*string `json:"Value,omitempty" name:"Value"`
 }
 
 type ModifyAlarmNoticeRequest struct {
@@ -3970,10 +3983,10 @@ type ModifyAlarmNoticeRequest struct {
 	NoticeId *string `json:"NoticeId,omitempty" name:"NoticeId"`
 
 	// 用户通知 最多5个
-	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices" list`
+	UserNotices []*UserNotice `json:"UserNotices,omitempty" name:"UserNotices"`
 
 	// 回调通知 最多3个
-	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices" list`
+	URLNotices []*URLNotice `json:"URLNotices,omitempty" name:"URLNotices"`
 }
 
 func (r *ModifyAlarmNoticeRequest) ToJsonString() string {
@@ -3981,7 +3994,7 @@ func (r *ModifyAlarmNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3996,7 +4009,7 @@ func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "UserNotices")
 	delete(f, "URLNotices")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmNoticeRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmNoticeRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4015,7 +4028,7 @@ func (r *ModifyAlarmNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmNoticeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4038,6 +4051,12 @@ type ModifyAlarmPolicyConditionRequest struct {
 
 	// 事件触发条件
 	EventCondition *AlarmPolicyEventCondition `json:"EventCondition,omitempty" name:"EventCondition"`
+
+	// 全局过滤条件
+	Filter *AlarmPolicyFilter `json:"Filter,omitempty" name:"Filter"`
+
+	// 聚合维度列表，指定按哪些维度 key 来做 group by
+	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
 }
 
 func (r *ModifyAlarmPolicyConditionRequest) ToJsonString() string {
@@ -4045,7 +4064,7 @@ func (r *ModifyAlarmPolicyConditionRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyConditionRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4057,8 +4076,10 @@ func (r *ModifyAlarmPolicyConditionRequest) FromJsonString(s string) error {
 	delete(f, "ConditionTemplateId")
 	delete(f, "Condition")
 	delete(f, "EventCondition")
+	delete(f, "Filter")
+	delete(f, "GroupBy")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmPolicyConditionRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyConditionRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4077,7 +4098,7 @@ func (r *ModifyAlarmPolicyConditionResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyConditionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4104,7 +4125,7 @@ func (r *ModifyAlarmPolicyInfoRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyInfoRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4116,7 +4137,7 @@ func (r *ModifyAlarmPolicyInfoRequest) FromJsonString(s string) error {
 	delete(f, "Key")
 	delete(f, "Value")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmPolicyInfoRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyInfoRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4135,7 +4156,7 @@ func (r *ModifyAlarmPolicyInfoResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4151,7 +4172,7 @@ type ModifyAlarmPolicyNoticeRequest struct {
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
 	// 告警通知模板 ID 列表
-	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds" list`
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 }
 
 func (r *ModifyAlarmPolicyNoticeRequest) ToJsonString() string {
@@ -4159,7 +4180,7 @@ func (r *ModifyAlarmPolicyNoticeRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyNoticeRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4170,7 +4191,7 @@ func (r *ModifyAlarmPolicyNoticeRequest) FromJsonString(s string) error {
 	delete(f, "PolicyId")
 	delete(f, "NoticeIds")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmPolicyNoticeRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyNoticeRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4189,7 +4210,7 @@ func (r *ModifyAlarmPolicyNoticeResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyNoticeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4213,7 +4234,7 @@ func (r *ModifyAlarmPolicyStatusRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyStatusRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4224,7 +4245,7 @@ func (r *ModifyAlarmPolicyStatusRequest) FromJsonString(s string) error {
 	delete(f, "PolicyId")
 	delete(f, "Enable")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmPolicyStatusRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyStatusRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4243,7 +4264,7 @@ func (r *ModifyAlarmPolicyStatusResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4259,7 +4280,7 @@ type ModifyAlarmPolicyTasksRequest struct {
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
 	// 告警策略触发任务列表，空数据代表解绑
-	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks" list`
+	TriggerTasks []*AlarmPolicyTriggerTask `json:"TriggerTasks,omitempty" name:"TriggerTasks"`
 }
 
 func (r *ModifyAlarmPolicyTasksRequest) ToJsonString() string {
@@ -4267,7 +4288,7 @@ func (r *ModifyAlarmPolicyTasksRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyTasksRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4278,7 +4299,7 @@ func (r *ModifyAlarmPolicyTasksRequest) FromJsonString(s string) error {
 	delete(f, "PolicyId")
 	delete(f, "TriggerTasks")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmPolicyTasksRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyTasksRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4297,7 +4318,7 @@ func (r *ModifyAlarmPolicyTasksResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmPolicyTasksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4313,7 +4334,7 @@ type ModifyAlarmReceiversRequest struct {
 	Module *string `json:"Module,omitempty" name:"Module"`
 
 	// 新接收人信息, 没有填写则删除所有接收人
-	ReceiverInfos []*ReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos" list`
+	ReceiverInfos []*ReceiverInfo `json:"ReceiverInfos,omitempty" name:"ReceiverInfos"`
 }
 
 func (r *ModifyAlarmReceiversRequest) ToJsonString() string {
@@ -4321,7 +4342,7 @@ func (r *ModifyAlarmReceiversRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmReceiversRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4332,7 +4353,7 @@ func (r *ModifyAlarmReceiversRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "ReceiverInfos")
 	if len(f) > 0 {
-		return errors.New("ModifyAlarmReceiversRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmReceiversRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4351,7 +4372,7 @@ func (r *ModifyAlarmReceiversResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAlarmReceiversResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4418,10 +4439,10 @@ type ModifyPolicyGroupRequest struct {
 	IsUnionRule *int64 `json:"IsUnionRule,omitempty" name:"IsUnionRule"`
 
 	// 指标告警条件规则，不填表示删除已有的所有指标告警条件规则
-	Conditions []*ModifyPolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions" list`
+	Conditions []*ModifyPolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions"`
 
 	// 事件告警条件，不填表示删除已有的事件告警条件
-	EventConditions []*ModifyPolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
+	EventConditions []*ModifyPolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions"`
 
 	// 模板策略组id
 	ConditionTempGroupId *int64 `json:"ConditionTempGroupId,omitempty" name:"ConditionTempGroupId"`
@@ -4432,7 +4453,7 @@ func (r *ModifyPolicyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyPolicyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4448,7 +4469,7 @@ func (r *ModifyPolicyGroupRequest) FromJsonString(s string) error {
 	delete(f, "EventConditions")
 	delete(f, "ConditionTempGroupId")
 	if len(f) > 0 {
-		return errors.New("ModifyPolicyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyPolicyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4470,7 +4491,7 @@ func (r *ModifyPolicyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyPolicyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4491,7 +4512,7 @@ type PeriodsSt struct {
 	Period *string `json:"Period,omitempty" name:"Period"`
 
 	// 统计方式
-	StatType []*string `json:"StatType,omitempty" name:"StatType" list`
+	StatType []*string `json:"StatType,omitempty" name:"StatType"`
 }
 
 type Point struct {
@@ -4543,11 +4564,11 @@ type PrometheusRuleSet struct {
 
 	// 规则标签列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels"`
 
 	// 规则注释列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations"`
 
 	// 规则表达式
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -4559,7 +4580,7 @@ type PrometheusRuleSet struct {
 
 	// 报警接收组列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers"`
 
 	// 规则运行健康状态，取值如下：
 	// <li>unknown 未知状态</li>
@@ -4581,7 +4602,7 @@ type PutMonitorDataRequest struct {
 	*tchttp.BaseRequest
 
 	// 一组指标和数据
-	Metrics []*MetricDatum `json:"Metrics,omitempty" name:"Metrics" list`
+	Metrics []*MetricDatum `json:"Metrics,omitempty" name:"Metrics"`
 
 	// 上报时自行指定的 IP
 	AnnounceIp *string `json:"AnnounceIp,omitempty" name:"AnnounceIp"`
@@ -4598,7 +4619,7 @@ func (r *PutMonitorDataRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *PutMonitorDataRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4610,7 +4631,7 @@ func (r *PutMonitorDataRequest) FromJsonString(s string) error {
 	delete(f, "AnnounceTimestamp")
 	delete(f, "AnnounceInstance")
 	if len(f) > 0 {
-		return errors.New("PutMonitorDataRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "PutMonitorDataRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4629,7 +4650,7 @@ func (r *PutMonitorDataResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *PutMonitorDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4644,7 +4665,7 @@ type ReceiverInfo struct {
 	EndTime *int64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 告警通知方式。可选 "SMS","SITE","EMAIL","CALL","WECHAT"
-	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay" list`
+	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay"`
 
 	// 接收人类型。“group” 或 “user”
 	ReceiverType *string `json:"ReceiverType,omitempty" name:"ReceiverType"`
@@ -4653,10 +4674,10 @@ type ReceiverInfo struct {
 	Id *int64 `json:"Id,omitempty" name:"Id"`
 
 	// 电话告警通知时机。可选"OCCUR"(告警时通知),"RECOVER"(恢复时通知)
-	SendFor []*string `json:"SendFor,omitempty" name:"SendFor" list`
+	SendFor []*string `json:"SendFor,omitempty" name:"SendFor"`
 
 	// 电话告警接收者uid
-	UidList []*int64 `json:"UidList,omitempty" name:"UidList" list`
+	UidList []*int64 `json:"UidList,omitempty" name:"UidList"`
 
 	// 电话告警轮数
 	RoundNumber *int64 `json:"RoundNumber,omitempty" name:"RoundNumber"`
@@ -4668,16 +4689,16 @@ type ReceiverInfo struct {
 	RoundInterval *int64 `json:"RoundInterval,omitempty" name:"RoundInterval"`
 
 	// 恢复通知方式。可选"SMS"
-	RecoverNotify []*string `json:"RecoverNotify,omitempty" name:"RecoverNotify" list`
+	RecoverNotify []*string `json:"RecoverNotify,omitempty" name:"RecoverNotify"`
 
 	// 是否需要电话告警触达提示。0不需要，1需要
 	NeedSendNotice *int64 `json:"NeedSendNotice,omitempty" name:"NeedSendNotice"`
 
 	// 接收组列表。通过平台接口查询到的接收组id列表
-	ReceiverGroupList []*int64 `json:"ReceiverGroupList,omitempty" name:"ReceiverGroupList" list`
+	ReceiverGroupList []*int64 `json:"ReceiverGroupList,omitempty" name:"ReceiverGroupList"`
 
 	// 接收人列表。通过平台接口查询到的接收人id列表
-	ReceiverUserList []*int64 `json:"ReceiverUserList,omitempty" name:"ReceiverUserList" list`
+	ReceiverUserList []*int64 `json:"ReceiverUserList,omitempty" name:"ReceiverUserList"`
 
 	// 告警接收语言，枚举值（zh-CN，en-US）
 	ReceiveLanguage *string `json:"ReceiveLanguage,omitempty" name:"ReceiveLanguage"`
@@ -4701,7 +4722,7 @@ func (r *SendCustomAlarmMsgRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SendCustomAlarmMsgRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4712,7 +4733,7 @@ func (r *SendCustomAlarmMsgRequest) FromJsonString(s string) error {
 	delete(f, "PolicyId")
 	delete(f, "Msg")
 	if len(f) > 0 {
-		return errors.New("SendCustomAlarmMsgRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SendCustomAlarmMsgRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4731,7 +4752,7 @@ func (r *SendCustomAlarmMsgResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SendCustomAlarmMsgResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4779,7 +4800,7 @@ func (r *SetDefaultAlarmPolicyRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SetDefaultAlarmPolicyRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4789,7 +4810,7 @@ func (r *SetDefaultAlarmPolicyRequest) FromJsonString(s string) error {
 	delete(f, "Module")
 	delete(f, "PolicyId")
 	if len(f) > 0 {
-		return errors.New("SetDefaultAlarmPolicyRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetDefaultAlarmPolicyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4808,7 +4829,7 @@ func (r *SetDefaultAlarmPolicyResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SetDefaultAlarmPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4878,7 +4899,7 @@ func (r *UnBindingAllPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnBindingAllPolicyObjectRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4889,7 +4910,7 @@ func (r *UnBindingAllPolicyObjectRequest) FromJsonString(s string) error {
 	delete(f, "GroupId")
 	delete(f, "PolicyId")
 	if len(f) > 0 {
-		return errors.New("UnBindingAllPolicyObjectRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnBindingAllPolicyObjectRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4908,7 +4929,7 @@ func (r *UnBindingAllPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnBindingAllPolicyObjectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -4924,7 +4945,7 @@ type UnBindingPolicyObjectRequest struct {
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
 	// 待删除对象实例的唯一id列表，UniqueId从调用[获取已绑定对象列表接口](https://cloud.tencent.com/document/api/248/40570)的出参的List中得到
-	UniqueId []*string `json:"UniqueId,omitempty" name:"UniqueId" list`
+	UniqueId []*string `json:"UniqueId,omitempty" name:"UniqueId"`
 
 	// 实例分组id，如果按实例分组删除的话UniqueId参数是无效的
 	InstanceGroupId *int64 `json:"InstanceGroupId,omitempty" name:"InstanceGroupId"`
@@ -4938,7 +4959,7 @@ func (r *UnBindingPolicyObjectRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnBindingPolicyObjectRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -4951,7 +4972,7 @@ func (r *UnBindingPolicyObjectRequest) FromJsonString(s string) error {
 	delete(f, "InstanceGroupId")
 	delete(f, "PolicyId")
 	if len(f) > 0 {
-		return errors.New("UnBindingPolicyObjectRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnBindingPolicyObjectRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -4970,7 +4991,7 @@ func (r *UnBindingPolicyObjectResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnBindingPolicyObjectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -5002,13 +5023,15 @@ type UpdateAlertRuleRequest struct {
 	Duration *string `json:"Duration,omitempty" name:"Duration"`
 
 	// 报警规则接收组列表
-	Receivers []*string `json:"Receivers,omitempty" name:"Receivers" list`
+	Receivers []*string `json:"Receivers,omitempty" name:"Receivers"`
 
 	// 报警规则标签列表
-	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels" list`
+	Labels []*PrometheusRuleKV `json:"Labels,omitempty" name:"Labels"`
 
-	// 报警规则注释列表
-	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations" list`
+	// 报警规则注释列表。
+	// 
+	// 告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description。
+	Annotations []*PrometheusRuleKV `json:"Annotations,omitempty" name:"Annotations"`
 
 	// 报警策略模板分类
 	Type *string `json:"Type,omitempty" name:"Type"`
@@ -5019,7 +5042,7 @@ func (r *UpdateAlertRuleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateAlertRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -5037,7 +5060,7 @@ func (r *UpdateAlertRuleRequest) FromJsonString(s string) error {
 	delete(f, "Annotations")
 	delete(f, "Type")
 	if len(f) > 0 {
-		return errors.New("UpdateAlertRuleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateAlertRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -5059,7 +5082,7 @@ func (r *UpdateAlertRuleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateAlertRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -5069,7 +5092,7 @@ type UpdateAlertRuleStateRequest struct {
 	*tchttp.BaseRequest
 
 	// 规则 ID 列表
-	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds" list`
+	RuleIds []*string `json:"RuleIds,omitempty" name:"RuleIds"`
 
 	// Prometheus 实例 ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -5086,7 +5109,7 @@ func (r *UpdateAlertRuleStateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateAlertRuleStateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -5097,7 +5120,7 @@ func (r *UpdateAlertRuleStateRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "RuleState")
 	if len(f) > 0 {
-		return errors.New("UpdateAlertRuleStateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateAlertRuleStateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -5116,7 +5139,7 @@ func (r *UpdateAlertRuleStateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateAlertRuleStateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -5150,7 +5173,7 @@ func (r *UpdateServiceDiscoveryRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateServiceDiscoveryRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -5163,7 +5186,7 @@ func (r *UpdateServiceDiscoveryRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "Yaml")
 	if len(f) > 0 {
-		return errors.New("UpdateServiceDiscoveryRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateServiceDiscoveryRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -5185,7 +5208,7 @@ func (r *UpdateServiceDiscoveryResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -5207,19 +5230,19 @@ type UserNotice struct {
 
 	// 通知渠道列表 EMAIL=邮件 SMS=短信 CALL=电话 WECHAT=微信
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NoticeWay []*string `json:"NoticeWay,omitempty" name:"NoticeWay" list`
+	NoticeWay []*string `json:"NoticeWay,omitempty" name:"NoticeWay"`
 
 	// 用户 uid 列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UserIds []*int64 `json:"UserIds,omitempty" name:"UserIds" list`
+	UserIds []*int64 `json:"UserIds,omitempty" name:"UserIds"`
 
 	// 用户组 group id 列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupIds []*int64 `json:"GroupIds,omitempty" name:"GroupIds" list`
+	GroupIds []*int64 `json:"GroupIds,omitempty" name:"GroupIds"`
 
 	// 电话轮询列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PhoneOrder []*int64 `json:"PhoneOrder,omitempty" name:"PhoneOrder" list`
+	PhoneOrder []*int64 `json:"PhoneOrder,omitempty" name:"PhoneOrder"`
 
 	// 电话轮询次数 （取值范围1-5）
 	// 注意：此字段可能返回 null，表示取不到有效值。

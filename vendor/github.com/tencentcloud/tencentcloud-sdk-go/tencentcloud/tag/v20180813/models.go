@@ -16,8 +16,7 @@ package v20180813
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -39,7 +38,7 @@ func (r *AddResourceTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AddResourceTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -50,7 +49,7 @@ func (r *AddResourceTagRequest) FromJsonString(s string) error {
 	delete(f, "TagValue")
 	delete(f, "Resource")
 	if len(f) > 0 {
-		return errors.New("AddResourceTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddResourceTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -69,7 +68,7 @@ func (r *AddResourceTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AddResourceTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -82,7 +81,7 @@ type AttachResourcesTagRequest struct {
 	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 
 	// 资源ID数组，资源个数最多为50
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 标签键
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
@@ -102,7 +101,7 @@ func (r *AttachResourcesTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AttachResourcesTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -116,7 +115,7 @@ func (r *AttachResourcesTagRequest) FromJsonString(s string) error {
 	delete(f, "ResourceRegion")
 	delete(f, "ResourcePrefix")
 	if len(f) > 0 {
-		return errors.New("AttachResourcesTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AttachResourcesTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -135,7 +134,7 @@ func (r *AttachResourcesTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AttachResourcesTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -156,7 +155,7 @@ func (r *CreateTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -166,7 +165,7 @@ func (r *CreateTagRequest) FromJsonString(s string) error {
 	delete(f, "TagKey")
 	delete(f, "TagValue")
 	if len(f) > 0 {
-		return errors.New("CreateTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -185,7 +184,7 @@ func (r *CreateTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -206,7 +205,7 @@ func (r *DeleteResourceTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteResourceTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -216,7 +215,7 @@ func (r *DeleteResourceTagRequest) FromJsonString(s string) error {
 	delete(f, "TagKey")
 	delete(f, "Resource")
 	if len(f) > 0 {
-		return errors.New("DeleteResourceTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteResourceTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -235,7 +234,7 @@ func (r *DeleteResourceTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteResourceTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -256,7 +255,7 @@ func (r *DeleteTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -266,7 +265,7 @@ func (r *DeleteTagRequest) FromJsonString(s string) error {
 	delete(f, "TagKey")
 	delete(f, "TagValue")
 	if len(f) > 0 {
-		return errors.New("DeleteTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -285,7 +284,7 @@ func (r *DeleteTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -301,7 +300,7 @@ type DescribeResourceTagsByResourceIdsRequest struct {
 	ResourcePrefix *string `json:"ResourcePrefix,omitempty" name:"ResourcePrefix"`
 
 	// 资源ID数组，大小不超过50
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 资源所在地域
 	ResourceRegion *string `json:"ResourceRegion,omitempty" name:"ResourceRegion"`
@@ -318,7 +317,7 @@ func (r *DescribeResourceTagsByResourceIdsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByResourceIdsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -332,7 +331,7 @@ func (r *DescribeResourceTagsByResourceIdsRequest) FromJsonString(s string) erro
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeResourceTagsByResourceIdsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceTagsByResourceIdsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -351,7 +350,7 @@ type DescribeResourceTagsByResourceIdsResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*TagResource `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*TagResource `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -363,7 +362,7 @@ func (r *DescribeResourceTagsByResourceIdsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByResourceIdsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -379,7 +378,7 @@ type DescribeResourceTagsByResourceIdsSeqRequest struct {
 	ResourcePrefix *string `json:"ResourcePrefix,omitempty" name:"ResourcePrefix"`
 
 	// 资源唯一标记
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 资源所在地域
 	ResourceRegion *string `json:"ResourceRegion,omitempty" name:"ResourceRegion"`
@@ -396,7 +395,7 @@ func (r *DescribeResourceTagsByResourceIdsSeqRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByResourceIdsSeqRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -410,7 +409,7 @@ func (r *DescribeResourceTagsByResourceIdsSeqRequest) FromJsonString(s string) e
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeResourceTagsByResourceIdsSeqRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceTagsByResourceIdsSeqRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -429,7 +428,7 @@ type DescribeResourceTagsByResourceIdsSeqResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*TagResource `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*TagResource `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -441,7 +440,7 @@ func (r *DescribeResourceTagsByResourceIdsSeqResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByResourceIdsSeqResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -460,10 +459,10 @@ type DescribeResourceTagsByTagKeysRequest struct {
 	ResourceRegion *string `json:"ResourceRegion,omitempty" name:"ResourceRegion"`
 
 	// 资源唯一标识
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 资源标签键
-	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys" list`
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
 	// 每页大小，默认为 400
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
@@ -477,7 +476,7 @@ func (r *DescribeResourceTagsByTagKeysRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByTagKeysRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -492,7 +491,7 @@ func (r *DescribeResourceTagsByTagKeysRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
-		return errors.New("DescribeResourceTagsByTagKeysRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceTagsByTagKeysRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -511,7 +510,7 @@ type DescribeResourceTagsByTagKeysResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 资源标签
-		Rows []*ResourceIdTag `json:"Rows,omitempty" name:"Rows" list`
+		Rows []*ResourceIdTag `json:"Rows,omitempty" name:"Rows"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -523,7 +522,7 @@ func (r *DescribeResourceTagsByTagKeysResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsByTagKeysResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -562,7 +561,7 @@ func (r *DescribeResourceTagsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -578,7 +577,7 @@ func (r *DescribeResourceTagsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "CosResourceId")
 	if len(f) > 0 {
-		return errors.New("DescribeResourceTagsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceTagsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -598,7 +597,7 @@ type DescribeResourceTagsResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 资源标签
-		Rows []*TagResource `json:"Rows,omitempty" name:"Rows" list`
+		Rows []*TagResource `json:"Rows,omitempty" name:"Rows"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -610,7 +609,7 @@ func (r *DescribeResourceTagsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourceTagsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -620,7 +619,7 @@ type DescribeResourcesByTagsRequest struct {
 	*tchttp.BaseRequest
 
 	// 标签过滤数组
-	TagFilters []*TagFilter `json:"TagFilters,omitempty" name:"TagFilters" list`
+	TagFilters []*TagFilter `json:"TagFilters,omitempty" name:"TagFilters"`
 
 	// 创建标签者uin
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
@@ -649,7 +648,7 @@ func (r *DescribeResourcesByTagsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourcesByTagsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -665,7 +664,7 @@ func (r *DescribeResourcesByTagsRequest) FromJsonString(s string) error {
 	delete(f, "ResourceRegion")
 	delete(f, "ServiceType")
 	if len(f) > 0 {
-		return errors.New("DescribeResourcesByTagsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcesByTagsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -685,7 +684,7 @@ type DescribeResourcesByTagsResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 资源标签
-		Rows []*ResourceTag `json:"Rows,omitempty" name:"Rows" list`
+		Rows []*ResourceTag `json:"Rows,omitempty" name:"Rows"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -697,7 +696,7 @@ func (r *DescribeResourcesByTagsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourcesByTagsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -707,7 +706,7 @@ type DescribeResourcesByTagsUnionRequest struct {
 	*tchttp.BaseRequest
 
 	// 标签过滤数组
-	TagFilters []*TagFilter `json:"TagFilters,omitempty" name:"TagFilters" list`
+	TagFilters []*TagFilter `json:"TagFilters,omitempty" name:"TagFilters"`
 
 	// 创建标签者uin
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
@@ -736,7 +735,7 @@ func (r *DescribeResourcesByTagsUnionRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourcesByTagsUnionRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -752,7 +751,7 @@ func (r *DescribeResourcesByTagsUnionRequest) FromJsonString(s string) error {
 	delete(f, "ResourceRegion")
 	delete(f, "ServiceType")
 	if len(f) > 0 {
-		return errors.New("DescribeResourcesByTagsUnionRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcesByTagsUnionRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -771,7 +770,7 @@ type DescribeResourcesByTagsUnionResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 资源标签
-		Rows []*ResourceTag `json:"Rows,omitempty" name:"Rows" list`
+		Rows []*ResourceTag `json:"Rows,omitempty" name:"Rows"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -783,7 +782,7 @@ func (r *DescribeResourcesByTagsUnionResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeResourcesByTagsUnionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -810,7 +809,7 @@ func (r *DescribeTagKeysRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagKeysRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -822,7 +821,7 @@ func (r *DescribeTagKeysRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "ShowProject")
 	if len(f) > 0 {
-		return errors.New("DescribeTagKeysRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTagKeysRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -841,7 +840,7 @@ type DescribeTagKeysResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*string `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*string `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -853,7 +852,7 @@ func (r *DescribeTagKeysResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagKeysResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -863,7 +862,7 @@ type DescribeTagValuesRequest struct {
 	*tchttp.BaseRequest
 
 	// 标签键列表
-	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys" list`
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
 	// 创建者用户 Uin，不传或为空只将 Uin 作为条件查询
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
@@ -880,7 +879,7 @@ func (r *DescribeTagValuesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagValuesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -892,7 +891,7 @@ func (r *DescribeTagValuesRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeTagValuesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTagValuesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -911,7 +910,7 @@ type DescribeTagValuesResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -923,7 +922,7 @@ func (r *DescribeTagValuesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagValuesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -933,7 +932,7 @@ type DescribeTagValuesSeqRequest struct {
 	*tchttp.BaseRequest
 
 	// 标签键列表
-	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys" list`
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
 	// 创建者用户 Uin，不传或为空只将 Uin 作为条件查询
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
@@ -950,7 +949,7 @@ func (r *DescribeTagValuesSeqRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagValuesSeqRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -962,7 +961,7 @@ func (r *DescribeTagValuesSeqRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeTagValuesSeqRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTagValuesSeqRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -981,7 +980,7 @@ type DescribeTagValuesSeqResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -993,7 +992,7 @@ func (r *DescribeTagValuesSeqResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagValuesSeqResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1018,7 +1017,7 @@ type DescribeTagsRequest struct {
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
 
 	// 标签键数组,与标签值同时存在或同时不存在，不存在时表示查询该用户所有标签,当与TagKey同时传递时只取本值
-	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys" list`
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
 	// 是否展现项目标签
 	ShowProject *uint64 `json:"ShowProject,omitempty" name:"ShowProject"`
@@ -1029,7 +1028,7 @@ func (r *DescribeTagsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1044,7 +1043,7 @@ func (r *DescribeTagsRequest) FromJsonString(s string) error {
 	delete(f, "TagKeys")
 	delete(f, "ShowProject")
 	if len(f) > 0 {
-		return errors.New("DescribeTagsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTagsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1063,7 +1062,7 @@ type DescribeTagsResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*TagWithDelete `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*TagWithDelete `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1075,7 +1074,7 @@ func (r *DescribeTagsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1100,7 +1099,7 @@ type DescribeTagsSeqRequest struct {
 	CreateUin *uint64 `json:"CreateUin,omitempty" name:"CreateUin"`
 
 	// 标签键数组,与标签值同时存在或同时不存在，不存在时表示查询该用户所有标签,当与TagKey同时传递时只取本值
-	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys" list`
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
 	// 是否展现项目标签
 	ShowProject *uint64 `json:"ShowProject,omitempty" name:"ShowProject"`
@@ -1111,7 +1110,7 @@ func (r *DescribeTagsSeqRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagsSeqRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1126,7 +1125,7 @@ func (r *DescribeTagsSeqRequest) FromJsonString(s string) error {
 	delete(f, "TagKeys")
 	delete(f, "ShowProject")
 	if len(f) > 0 {
-		return errors.New("DescribeTagsSeqRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTagsSeqRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1145,7 +1144,7 @@ type DescribeTagsSeqResponse struct {
 		Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 		// 标签列表
-		Tags []*TagWithDelete `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*TagWithDelete `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1157,7 +1156,7 @@ func (r *DescribeTagsSeqResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTagsSeqResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1170,7 +1169,7 @@ type DetachResourcesTagRequest struct {
 	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 
 	// 资源ID数组，资源个数最多为50
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 需要解绑的标签键
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
@@ -1187,7 +1186,7 @@ func (r *DetachResourcesTagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DetachResourcesTagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1200,7 +1199,7 @@ func (r *DetachResourcesTagRequest) FromJsonString(s string) error {
 	delete(f, "ResourceRegion")
 	delete(f, "ResourcePrefix")
 	if len(f) > 0 {
-		return errors.New("DetachResourcesTagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DetachResourcesTagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1219,7 +1218,7 @@ func (r *DetachResourcesTagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DetachResourcesTagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1232,10 +1231,10 @@ type ModifyResourceTagsRequest struct {
 	Resource *string `json:"Resource,omitempty" name:"Resource"`
 
 	// 需要增加或修改的标签集合。如果Resource描述的资源未关联输入的标签键，则增加关联；若已关联，则将该资源关联的键对应的标签值修改为输入值。本接口中ReplaceTags和DeleteTags二者必须存在其一，且二者不能包含相同的标签键。可以不传该参数，但不能是空数组。
-	ReplaceTags []*Tag `json:"ReplaceTags,omitempty" name:"ReplaceTags" list`
+	ReplaceTags []*Tag `json:"ReplaceTags,omitempty" name:"ReplaceTags"`
 
 	// 需要解关联的标签集合。本接口中ReplaceTags和DeleteTags二者必须存在其一，且二者不能包含相同的标签键。可以不传该参数，但不能是空数组。
-	DeleteTags []*TagKeyObject `json:"DeleteTags,omitempty" name:"DeleteTags" list`
+	DeleteTags []*TagKeyObject `json:"DeleteTags,omitempty" name:"DeleteTags"`
 }
 
 func (r *ModifyResourceTagsRequest) ToJsonString() string {
@@ -1243,7 +1242,7 @@ func (r *ModifyResourceTagsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyResourceTagsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1254,7 +1253,7 @@ func (r *ModifyResourceTagsRequest) FromJsonString(s string) error {
 	delete(f, "ReplaceTags")
 	delete(f, "DeleteTags")
 	if len(f) > 0 {
-		return errors.New("ModifyResourceTagsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourceTagsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1273,7 +1272,7 @@ func (r *ModifyResourceTagsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyResourceTagsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1286,7 +1285,7 @@ type ModifyResourcesTagValueRequest struct {
 	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 
 	// 资源ID数组，资源个数最多为50
-	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds" list`
+	ResourceIds []*string `json:"ResourceIds,omitempty" name:"ResourceIds"`
 
 	// 标签键
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
@@ -1306,7 +1305,7 @@ func (r *ModifyResourcesTagValueRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyResourcesTagValueRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1320,7 +1319,7 @@ func (r *ModifyResourcesTagValueRequest) FromJsonString(s string) error {
 	delete(f, "ResourceRegion")
 	delete(f, "ResourcePrefix")
 	if len(f) > 0 {
-		return errors.New("ModifyResourcesTagValueRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourcesTagValueRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1339,7 +1338,7 @@ func (r *ModifyResourcesTagValueResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyResourcesTagValueResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1353,7 +1352,7 @@ type ResourceIdTag struct {
 
 	// 标签键值对
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagKeyValues []*Tag `json:"TagKeyValues,omitempty" name:"TagKeyValues" list`
+	TagKeyValues []*Tag `json:"TagKeyValues,omitempty" name:"TagKeyValues"`
 }
 
 type ResourceTag struct {
@@ -1376,7 +1375,7 @@ type ResourceTag struct {
 
 	// 资源标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type Tag struct {
@@ -1394,7 +1393,7 @@ type TagFilter struct {
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
 
 	// 标签值数组 多个值的话是或的关系
-	TagValue []*string `json:"TagValue,omitempty" name:"TagValue" list`
+	TagValue []*string `json:"TagValue,omitempty" name:"TagValue"`
 }
 
 type TagKeyObject struct {
@@ -1455,7 +1454,7 @@ func (r *UpdateResourceTagValueRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateResourceTagValueRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1466,7 +1465,7 @@ func (r *UpdateResourceTagValueRequest) FromJsonString(s string) error {
 	delete(f, "TagValue")
 	delete(f, "Resource")
 	if len(f) > 0 {
-		return errors.New("UpdateResourceTagValueRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateResourceTagValueRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1485,7 +1484,7 @@ func (r *UpdateResourceTagValueResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateResourceTagValueResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
