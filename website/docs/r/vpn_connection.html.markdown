@@ -59,7 +59,7 @@ The following arguments are supported:
 * `ike_local_address` - (Optional) Local address of IKE operation specification, valid when ike_local_identity is `ADDRESS`, generally the value is `public_ip_address` of the related VPN gateway.
 * `ike_local_fqdn_name` - (Optional) Local FQDN name of the IKE operation specification.
 * `ike_local_identity` - (Optional) Local identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.
-* `ike_proto_authen_algorithm` - (Optional) Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`. Default Value is `MD5`.
+* `ike_proto_authen_algorithm` - (Optional) Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`, `SHA-256`. Default Value is `MD5`.
 * `ike_proto_encry_algorithm` - (Optional) Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.
 * `ike_remote_address` - (Optional) Remote address of IKE operation specification, valid when ike_remote_identity is `ADDRESS`, generally the value is `public_ip_address` of the related customer gateway.
 * `ike_remote_fqdn_name` - (Optional) Remote FQDN name of the IKE operation specification.
@@ -67,7 +67,7 @@ The following arguments are supported:
 * `ike_sa_lifetime_seconds` - (Optional) SA lifetime of the IKE operation specification, unit is `second`. The value ranges from 60 to 604800. Default value is 86400 seconds.
 * `ike_version` - (Optional) Version of the IKE operation specification. Default value is `IKEV1`.
 * `ipsec_encrypt_algorithm` - (Optional) Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.
-* `ipsec_integrity_algorithm` - (Optional) Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`. Default value is `MD5`.
+* `ipsec_integrity_algorithm` - (Optional) Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.
 * `ipsec_pfs_dh_group` - (Optional) PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
 * `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional) SA lifetime of the IPSEC operation specification, unit is KB. The value should not be less then 2560. Default value is 1843200.

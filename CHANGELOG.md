@@ -1,10 +1,16 @@
-## 1.56.13 (Unreleased)
+## 1.56.14 (Unreleased)
 
-## 1.56.12 
+## 1.56.13 (July 02, 2021)
 
 BUG FIXES
+ 
+* Resource `TkeCvmCreateInfo.data_disk.disk_type` support CLOUD_HSSD and CLOUD_TSSD
 
-* Resource `tencentcloud_kubenetes_cluster` comment out the validate data_disk to supports hssd
+## 1.56.12 (July 02, 2021)
+
+BUG FIXES
+ 
+* Resource `TkeCvmCreateInfo.data_disk.disk_type` support CLOUD_HSSD
 
 ## 1.56.11 
 

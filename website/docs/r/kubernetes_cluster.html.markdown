@@ -299,7 +299,7 @@ The following arguments are supported:
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `enable_customized_pod_cidr` - (Optional, ForceNew) Whether to enable the custom mode of node podCIDR size. Default is false.
+* `enable_customized_pod_cidr` - (Optional) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `exist_instance` - (Optional, ForceNew) create tke cluster by existed instances.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
@@ -330,7 +330,7 @@ The `cluster_extra_args` object supports the following:
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `exist_instance` object supports the following:

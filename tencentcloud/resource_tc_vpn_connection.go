@@ -142,7 +142,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      VPN_IKE_PROPO_AUTHEN_ALGORITHM_MD5,
 				ValidateFunc: validateAllowedStringValue(VPN_IKE_PROPO_AUTHEN_ALGORITHM),
-				Description:  "Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`. Default Value is `MD5`.",
+				Description:  "Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`, `SHA-256`. Default Value is `MD5`.",
 			},
 			"ike_exchange_mode": {
 				Type:         schema.TypeString,
@@ -221,7 +221,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      VPN_IPSEC_INTEGRITY_ALGORITHM_MD5,
 				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_INTEGRITY_ALGORITHM),
-				Description:  "Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`. Default value is `MD5`.",
+				Description:  "Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.",
 			},
 			"ipsec_sa_lifetime_seconds": {
 				Type:         schema.TypeInt,
