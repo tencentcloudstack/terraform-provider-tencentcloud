@@ -16,8 +16,7 @@ package v20170312
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -57,7 +56,7 @@ func (r *AddDBInstanceToReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AddDBInstanceToReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -67,7 +66,7 @@ func (r *AddDBInstanceToReadOnlyGroupRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "ReadOnlyGroupId")
 	if len(f) > 0 {
-		return errors.New("AddDBInstanceToReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddDBInstanceToReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -89,7 +88,7 @@ func (r *AddDBInstanceToReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AddDBInstanceToReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -110,7 +109,7 @@ func (r *CloseDBExtranetAccessRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CloseDBExtranetAccessRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -120,7 +119,7 @@ func (r *CloseDBExtranetAccessRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "IsIpv6")
 	if len(f) > 0 {
-		return errors.New("CloseDBExtranetAccessRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseDBExtranetAccessRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -142,7 +141,7 @@ func (r *CloseDBExtranetAccessResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CloseDBExtranetAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -163,7 +162,7 @@ func (r *CloseServerlessDBExtranetAccessRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CloseServerlessDBExtranetAccessRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -173,7 +172,7 @@ func (r *CloseServerlessDBExtranetAccessRequest) FromJsonString(s string) error 
 	delete(f, "DBInstanceId")
 	delete(f, "DBInstanceName")
 	if len(f) > 0 {
-		return errors.New("CloseServerlessDBExtranetAccessRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseServerlessDBExtranetAccessRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -192,7 +191,7 @@ func (r *CloseServerlessDBExtranetAccessResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CloseServerlessDBExtranetAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -229,7 +228,7 @@ type CreateDBInstancesRequest struct {
 	AutoVoucher *uint64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券ID列表，目前仅支持指定一张代金券。
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 
 	// 私有网络ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
@@ -250,10 +249,10 @@ type CreateDBInstancesRequest struct {
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitempty" name:"NeedSupportIpv6"`
 
 	// 实例需要绑定的Tag信息，默认为空
-	TagList []*Tag `json:"TagList,omitempty" name:"TagList" list`
+	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
 
 	// 安全组id
-	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *CreateDBInstancesRequest) ToJsonString() string {
@@ -261,7 +260,7 @@ func (r *CreateDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -287,7 +286,7 @@ func (r *CreateDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "TagList")
 	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
-		return errors.New("CreateDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -297,13 +296,13 @@ type CreateDBInstancesResponse struct {
 	Response *struct {
 
 		// 订单号列表。每个实例对应一个订单号。
-		DealNames []*string `json:"DealNames,omitempty" name:"DealNames" list`
+		DealNames []*string `json:"DealNames,omitempty" name:"DealNames"`
 
 		// 冻结流水号
 		BillId *string `json:"BillId,omitempty" name:"BillId"`
 
 		// 创建成功的实例ID集合，只在后付费情景下有返回值
-		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -315,7 +314,7 @@ func (r *CreateDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -361,7 +360,7 @@ type CreateInstancesRequest struct {
 	AutoVoucher *uint64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券ID列表，目前仅支持指定一张代金券。
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 
 	// 私有网络ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
@@ -382,10 +381,10 @@ type CreateInstancesRequest struct {
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitempty" name:"NeedSupportIpv6"`
 
 	// 实例需要绑定的Tag信息，默认为空。
-	TagList []*Tag `json:"TagList,omitempty" name:"TagList" list`
+	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
 
 	// 安全组ID。
-	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *CreateInstancesRequest) ToJsonString() string {
@@ -393,7 +392,7 @@ func (r *CreateInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -422,7 +421,7 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	delete(f, "TagList")
 	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
-		return errors.New("CreateInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -432,13 +431,13 @@ type CreateInstancesResponse struct {
 	Response *struct {
 
 		// 订单号列表。每个实例对应一个订单号。
-		DealNames []*string `json:"DealNames,omitempty" name:"DealNames" list`
+		DealNames []*string `json:"DealNames,omitempty" name:"DealNames"`
 
 		// 冻结流水号。
 		BillId *string `json:"BillId,omitempty" name:"BillId"`
 
 		// 创建成功的实例ID集合，只在后付费情景下有返回值。
-		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -450,7 +449,7 @@ func (r *CreateInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -490,7 +489,7 @@ type CreateReadOnlyDBInstanceRequest struct {
 	AutoVoucher *uint64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券ID列表，目前仅支持指定一张代金券。
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 
 	// 续费标记：0-正常续费（默认）；1-自动续费；
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
@@ -517,7 +516,7 @@ type CreateReadOnlyDBInstanceRequest struct {
 	TagList *Tag `json:"TagList,omitempty" name:"TagList"`
 
 	// 安全组id
-	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *CreateReadOnlyDBInstanceRequest) ToJsonString() string {
@@ -525,7 +524,7 @@ func (r *CreateReadOnlyDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateReadOnlyDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -553,7 +552,7 @@ func (r *CreateReadOnlyDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "TagList")
 	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
-		return errors.New("CreateReadOnlyDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReadOnlyDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -563,13 +562,13 @@ type CreateReadOnlyDBInstanceResponse struct {
 	Response *struct {
 
 		// 订单号列表。每个实例对应一个订单号
-		DealNames []*string `json:"DealNames,omitempty" name:"DealNames" list`
+		DealNames []*string `json:"DealNames,omitempty" name:"DealNames"`
 
 		// 冻结流水号
 		BillId *string `json:"BillId,omitempty" name:"BillId"`
 
 		// 创建成功的实例ID集合，只在后付费情景下有返回值
-		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -581,7 +580,7 @@ func (r *CreateReadOnlyDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateReadOnlyDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -621,7 +620,7 @@ type CreateReadOnlyGroupRequest struct {
 	MinDelayEliminateReserve *uint64 `json:"MinDelayEliminateReserve,omitempty" name:"MinDelayEliminateReserve"`
 
 	// 安全组id
-	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *CreateReadOnlyGroupRequest) ToJsonString() string {
@@ -629,7 +628,7 @@ func (r *CreateReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -648,7 +647,7 @@ func (r *CreateReadOnlyGroupRequest) FromJsonString(s string) error {
 	delete(f, "MinDelayEliminateReserve")
 	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
-		return errors.New("CreateReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -674,7 +673,7 @@ func (r *CreateReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -705,7 +704,7 @@ type CreateServerlessDBInstanceRequest struct {
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
 	// 实例需要绑定的标签数组信息
-	TagList []*Tag `json:"TagList,omitempty" name:"TagList" list`
+	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
 }
 
 func (r *CreateServerlessDBInstanceRequest) ToJsonString() string {
@@ -713,7 +712,7 @@ func (r *CreateServerlessDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateServerlessDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -729,7 +728,7 @@ func (r *CreateServerlessDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "SubnetId")
 	delete(f, "TagList")
 	if len(f) > 0 {
-		return errors.New("CreateServerlessDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServerlessDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -751,7 +750,7 @@ func (r *CreateServerlessDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateServerlessDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -784,7 +783,7 @@ type DBBackup struct {
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
 	// DB列表
-	DbList []*string `json:"DbList,omitempty" name:"DbList" list`
+	DbList []*string `json:"DbList,omitempty" name:"DbList"`
 
 	// 内网下载地址
 	InternalAddr *string `json:"InternalAddr,omitempty" name:"InternalAddr"`
@@ -862,7 +861,7 @@ type DBInstance struct {
 	AutoRenew *uint64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 
 	// 实例网络连接信息
-	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo" list`
+	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo"`
 
 	// 机器类型
 	Type *string `json:"Type,omitempty" name:"Type"`
@@ -878,7 +877,7 @@ type DBInstance struct {
 
 	// 实例绑定的标签信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagList []*Tag `json:"TagList,omitempty" name:"TagList" list`
+	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
 
 	// 主实例信息，仅在实例为只读实例时返回
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -927,7 +926,7 @@ func (r *DeleteReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -936,7 +935,7 @@ func (r *DeleteReadOnlyGroupRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ReadOnlyGroupId")
 	if len(f) > 0 {
-		return errors.New("DeleteReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -959,7 +958,7 @@ func (r *DeleteReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -980,7 +979,7 @@ func (r *DeleteServerlessDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteServerlessDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -990,7 +989,7 @@ func (r *DeleteServerlessDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceName")
 	delete(f, "DBInstanceId")
 	if len(f) > 0 {
-		return errors.New("DeleteServerlessDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteServerlessDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1009,7 +1008,7 @@ func (r *DeleteServerlessDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteServerlessDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1039,7 +1038,7 @@ func (r *DescribeAccountsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccountsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1052,7 +1051,7 @@ func (r *DescribeAccountsRequest) FromJsonString(s string) error {
 	delete(f, "OrderBy")
 	delete(f, "OrderByType")
 	if len(f) > 0 {
-		return errors.New("DescribeAccountsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccountsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1065,7 +1064,7 @@ type DescribeAccountsResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 帐号列表详细信息。
-		Details []*AccountInfo `json:"Details,omitempty" name:"Details" list`
+		Details []*AccountInfo `json:"Details,omitempty" name:"Details"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1077,7 +1076,7 @@ func (r *DescribeAccountsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccountsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1110,7 +1109,7 @@ func (r *DescribeDBBackupsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBBackupsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1124,7 +1123,7 @@ func (r *DescribeDBBackupsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
-		return errors.New("DescribeDBBackupsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBBackupsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1137,7 +1136,7 @@ type DescribeDBBackupsResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 备份列表
-		BackupList []*DBBackup `json:"BackupList,omitempty" name:"BackupList" list`
+		BackupList []*DBBackup `json:"BackupList,omitempty" name:"BackupList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1149,7 +1148,7 @@ func (r *DescribeDBBackupsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBBackupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1171,7 +1170,7 @@ type DescribeDBErrlogsRequest struct {
 	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
 
 	// 搜索关键字
-	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys" list`
+	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys"`
 
 	// 分页返回，每页返回的最大数量。取值为1-100
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
@@ -1185,7 +1184,7 @@ func (r *DescribeDBErrlogsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBErrlogsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1200,7 +1199,7 @@ func (r *DescribeDBErrlogsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
-		return errors.New("DescribeDBErrlogsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBErrlogsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1213,7 +1212,7 @@ type DescribeDBErrlogsResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 错误日志列表
-		Details []*ErrLogDetail `json:"Details,omitempty" name:"Details" list`
+		Details []*ErrLogDetail `json:"Details,omitempty" name:"Details"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1225,7 +1224,7 @@ func (r *DescribeDBErrlogsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBErrlogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1243,7 +1242,7 @@ func (r *DescribeDBInstanceAttributeRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstanceAttributeRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1252,7 +1251,7 @@ func (r *DescribeDBInstanceAttributeRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DBInstanceId")
 	if len(f) > 0 {
-		return errors.New("DescribeDBInstanceAttributeRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBInstanceAttributeRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1274,7 +1273,7 @@ func (r *DescribeDBInstanceAttributeResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstanceAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1283,19 +1282,24 @@ func (r *DescribeDBInstanceAttributeResponse) FromJsonString(s string) error {
 type DescribeDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
-	// 过滤条件，目前支持：db-instance-id、db-instance-name、db-project-id、db-pay-mode、db-tag-key。
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
+	// 按照一个或者多个过滤条件进行查询，目前支持的过滤条件有：
+	// db-instance-id：按照实例ID过滤，类型为string
+	// db-instance-name：按照实例名过滤，类型为string
+	// db-project-id：按照项目ID过滤，类型为integer
+	// db-pay-mode：按照付费模式过滤，类型为string
+	// db-tag-key：按照标签键过滤，类型为string
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
-	// 每页显示数量，默认返回10条。
+	// 每页显示数量，取值范围为1-100，默认为返回10条。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
-
-	// 数据偏移量，从0开始。
-	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
 	// 排序指标，如实例名、创建时间等，支持DBInstanceId,CreateTime,Name,EndTime
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 排序方式，包括升序、降序
+	// 页码偏移量，从0开始。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 排序方式，包括升序：asc、降序：desc。
 	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
 }
 
@@ -1304,7 +1308,7 @@ func (r *DescribeDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1313,11 +1317,11 @@ func (r *DescribeDBInstancesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Filters")
 	delete(f, "Limit")
-	delete(f, "Offset")
 	delete(f, "OrderBy")
+	delete(f, "Offset")
 	delete(f, "OrderByType")
 	if len(f) > 0 {
-		return errors.New("DescribeDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1330,7 +1334,7 @@ type DescribeDBInstancesResponse struct {
 		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 实例详细信息集合。
-		DBInstanceSet []*DBInstance `json:"DBInstanceSet,omitempty" name:"DBInstanceSet" list`
+		DBInstanceSet []*DBInstance `json:"DBInstanceSet,omitempty" name:"DBInstanceSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1342,7 +1346,7 @@ func (r *DescribeDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1381,7 +1385,7 @@ func (r *DescribeDBSlowlogsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBSlowlogsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1397,7 +1401,7 @@ func (r *DescribeDBSlowlogsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
-		return errors.New("DescribeDBSlowlogsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBSlowlogsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1422,7 +1426,7 @@ func (r *DescribeDBSlowlogsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBSlowlogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1452,7 +1456,7 @@ func (r *DescribeDBXlogsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBXlogsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1465,7 +1469,7 @@ func (r *DescribeDBXlogsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
-		return errors.New("DescribeDBXlogsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBXlogsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1478,7 +1482,7 @@ type DescribeDBXlogsResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// Xlog列表
-		XlogList []*Xlog `json:"XlogList,omitempty" name:"XlogList" list`
+		XlogList []*Xlog `json:"XlogList,omitempty" name:"XlogList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1490,7 +1494,7 @@ func (r *DescribeDBXlogsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBXlogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1508,7 +1512,7 @@ func (r *DescribeDatabasesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDatabasesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1517,7 +1521,7 @@ func (r *DescribeDatabasesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DBInstanceId")
 	if len(f) > 0 {
-		return errors.New("DescribeDatabasesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDatabasesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1527,7 +1531,7 @@ type DescribeDatabasesResponse struct {
 	Response *struct {
 
 		// 数据库信息
-		Items []*string `json:"Items,omitempty" name:"Items" list`
+		Items []*string `json:"Items,omitempty" name:"Items"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1539,7 +1543,7 @@ func (r *DescribeDatabasesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDatabasesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1549,7 +1553,7 @@ type DescribeOrdersRequest struct {
 	*tchttp.BaseRequest
 
 	// 订单名集合
-	DealNames []*string `json:"DealNames,omitempty" name:"DealNames" list`
+	DealNames []*string `json:"DealNames,omitempty" name:"DealNames"`
 }
 
 func (r *DescribeOrdersRequest) ToJsonString() string {
@@ -1557,7 +1561,7 @@ func (r *DescribeOrdersRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeOrdersRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1566,7 +1570,7 @@ func (r *DescribeOrdersRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DealNames")
 	if len(f) > 0 {
-		return errors.New("DescribeOrdersRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOrdersRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1579,7 +1583,7 @@ type DescribeOrdersResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 订单数组
-		Deals []*PgDeal `json:"Deals,omitempty" name:"Deals" list`
+		Deals []*PgDeal `json:"Deals,omitempty" name:"Deals"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1591,7 +1595,7 @@ func (r *DescribeOrdersResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeOrdersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1609,7 +1613,7 @@ func (r *DescribeProductConfigRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductConfigRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1618,7 +1622,7 @@ func (r *DescribeProductConfigRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Zone")
 	if len(f) > 0 {
-		return errors.New("DescribeProductConfigRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProductConfigRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1628,7 +1632,7 @@ type DescribeProductConfigResponse struct {
 	Response *struct {
 
 		// 售卖规格列表。
-		SpecInfoList []*SpecInfo `json:"SpecInfoList,omitempty" name:"SpecInfoList" list`
+		SpecInfoList []*SpecInfo `json:"SpecInfoList,omitempty" name:"SpecInfoList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1640,7 +1644,7 @@ func (r *DescribeProductConfigResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeProductConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1650,7 +1654,7 @@ type DescribeReadOnlyGroupsRequest struct {
 	*tchttp.BaseRequest
 
 	// 过滤条件，必须传入主实例ID进行过滤，否则返回值将为空，过滤参数为：db-master-instance-id
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 查询每一页的条数，默认为10
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
@@ -1670,7 +1674,7 @@ func (r *DescribeReadOnlyGroupsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeReadOnlyGroupsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1683,7 +1687,7 @@ func (r *DescribeReadOnlyGroupsRequest) FromJsonString(s string) error {
 	delete(f, "OrderBy")
 	delete(f, "OrderByType")
 	if len(f) > 0 {
-		return errors.New("DescribeReadOnlyGroupsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeReadOnlyGroupsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1693,7 +1697,7 @@ type DescribeReadOnlyGroupsResponse struct {
 	Response *struct {
 
 		// 只读组列表
-		ReadOnlyGroupList []*ReadOnlyGroup `json:"ReadOnlyGroupList,omitempty" name:"ReadOnlyGroupList" list`
+		ReadOnlyGroupList []*ReadOnlyGroup `json:"ReadOnlyGroupList,omitempty" name:"ReadOnlyGroupList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1705,7 +1709,7 @@ func (r *DescribeReadOnlyGroupsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeReadOnlyGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1720,7 +1724,7 @@ func (r *DescribeRegionsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeRegionsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1728,7 +1732,7 @@ func (r *DescribeRegionsRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("DescribeRegionsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRegionsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1741,7 +1745,7 @@ type DescribeRegionsResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 地域信息集合。
-		RegionSet []*RegionInfo `json:"RegionSet,omitempty" name:"RegionSet" list`
+		RegionSet []*RegionInfo `json:"RegionSet,omitempty" name:"RegionSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1753,7 +1757,7 @@ func (r *DescribeRegionsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeRegionsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1763,7 +1767,7 @@ type DescribeServerlessDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
 	// 查询条件
-	Filter []*Filter `json:"Filter,omitempty" name:"Filter" list`
+	Filter []*Filter `json:"Filter,omitempty" name:"Filter"`
 
 	// 查询个数
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
@@ -1783,7 +1787,7 @@ func (r *DescribeServerlessDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeServerlessDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1796,7 +1800,7 @@ func (r *DescribeServerlessDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "OrderBy")
 	delete(f, "OrderByType")
 	if len(f) > 0 {
-		return errors.New("DescribeServerlessDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServerlessDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1810,7 +1814,7 @@ type DescribeServerlessDBInstancesResponse struct {
 
 		// 查询结果
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		DBInstanceSet []*ServerlessDBInstance `json:"DBInstanceSet,omitempty" name:"DBInstanceSet" list`
+		DBInstanceSet []*ServerlessDBInstance `json:"DBInstanceSet,omitempty" name:"DBInstanceSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1822,7 +1826,7 @@ func (r *DescribeServerlessDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeServerlessDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1837,7 +1841,7 @@ func (r *DescribeZonesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeZonesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1845,7 +1849,7 @@ func (r *DescribeZonesRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("DescribeZonesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeZonesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1858,7 +1862,7 @@ type DescribeZonesResponse struct {
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
 		// 可用区信息集合。
-		ZoneSet []*ZoneInfo `json:"ZoneSet,omitempty" name:"ZoneSet" list`
+		ZoneSet []*ZoneInfo `json:"ZoneSet,omitempty" name:"ZoneSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1870,7 +1874,7 @@ func (r *DescribeZonesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeZonesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1888,7 +1892,7 @@ func (r *DestroyDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DestroyDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1897,7 +1901,7 @@ func (r *DestroyDBInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DBInstanceId")
 	if len(f) > 0 {
-		return errors.New("DestroyDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DestroyDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1916,7 +1920,7 @@ func (r *DestroyDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DestroyDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1926,7 +1930,7 @@ type DisIsolateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
 	// 资源ID列表
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 	// 包年包月实例解隔离时购买时常 以月为单位
 	Period *int64 `json:"Period,omitempty" name:"Period"`
@@ -1935,7 +1939,7 @@ type DisIsolateDBInstancesRequest struct {
 	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券id列表
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 }
 
 func (r *DisIsolateDBInstancesRequest) ToJsonString() string {
@@ -1943,7 +1947,7 @@ func (r *DisIsolateDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DisIsolateDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1955,7 +1959,7 @@ func (r *DisIsolateDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "AutoVoucher")
 	delete(f, "VoucherIds")
 	if len(f) > 0 {
-		return errors.New("DisIsolateDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisIsolateDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1974,7 +1978,7 @@ func (r *DisIsolateDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DisIsolateDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2001,14 +2005,14 @@ type Filter struct {
 	Name *string `json:"Name,omitempty" name:"Name"`
 
 	// 一个或者多个过滤值。
-	Values []*string `json:"Values,omitempty" name:"Values" list`
+	Values []*string `json:"Values,omitempty" name:"Values"`
 }
 
 type InitDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
 	// 实例ID集合。
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 	// 实例根账号用户名。
 	AdminName *string `json:"AdminName,omitempty" name:"AdminName"`
@@ -2025,7 +2029,7 @@ func (r *InitDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InitDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2037,7 +2041,7 @@ func (r *InitDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "AdminPassword")
 	delete(f, "Charset")
 	if len(f) > 0 {
-		return errors.New("InitDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InitDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2047,7 +2051,7 @@ type InitDBInstancesResponse struct {
 	Response *struct {
 
 		// 实例ID集合。
-		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+		DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2059,7 +2063,7 @@ func (r *InitDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InitDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2095,7 +2099,7 @@ func (r *InquiryPriceCreateDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceCreateDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2110,7 +2114,7 @@ func (r *InquiryPriceCreateDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "Pid")
 	delete(f, "InstanceChargeType")
 	if len(f) > 0 {
-		return errors.New("InquiryPriceCreateDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceCreateDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2135,7 +2139,7 @@ func (r *InquiryPriceCreateDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceCreateDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2156,7 +2160,7 @@ func (r *InquiryPriceRenewDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceRenewDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2166,7 +2170,7 @@ func (r *InquiryPriceRenewDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "Period")
 	if len(f) > 0 {
-		return errors.New("InquiryPriceRenewDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceRenewDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2191,7 +2195,7 @@ func (r *InquiryPriceRenewDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceRenewDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2218,7 +2222,7 @@ func (r *InquiryPriceUpgradeDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceUpgradeDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2230,7 +2234,7 @@ func (r *InquiryPriceUpgradeDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "InstanceChargeType")
 	if len(f) > 0 {
-		return errors.New("InquiryPriceUpgradeDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceUpgradeDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2255,7 +2259,7 @@ func (r *InquiryPriceUpgradeDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *InquiryPriceUpgradeDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2265,7 +2269,7 @@ type IsolateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
 	// 实例ID集合
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 }
 
 func (r *IsolateDBInstancesRequest) ToJsonString() string {
@@ -2273,7 +2277,7 @@ func (r *IsolateDBInstancesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *IsolateDBInstancesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2282,7 +2286,7 @@ func (r *IsolateDBInstancesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DBInstanceIdSet")
 	if len(f) > 0 {
-		return errors.New("IsolateDBInstancesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "IsolateDBInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2301,7 +2305,7 @@ func (r *IsolateDBInstancesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *IsolateDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2325,7 +2329,7 @@ func (r *ModifyAccountRemarkRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAccountRemarkRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2336,7 +2340,7 @@ func (r *ModifyAccountRemarkRequest) FromJsonString(s string) error {
 	delete(f, "UserName")
 	delete(f, "Remark")
 	if len(f) > 0 {
-		return errors.New("ModifyAccountRemarkRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAccountRemarkRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2355,7 +2359,7 @@ func (r *ModifyAccountRemarkResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAccountRemarkResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2376,7 +2380,7 @@ func (r *ModifyDBInstanceNameRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceNameRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2386,7 +2390,7 @@ func (r *ModifyDBInstanceNameRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "InstanceName")
 	if len(f) > 0 {
-		return errors.New("ModifyDBInstanceNameRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceNameRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2405,7 +2409,7 @@ func (r *ModifyDBInstanceNameResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2429,7 +2433,7 @@ func (r *ModifyDBInstanceReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2440,7 +2444,7 @@ func (r *ModifyDBInstanceReadOnlyGroupRequest) FromJsonString(s string) error {
 	delete(f, "ReadOnlyGroupId")
 	delete(f, "NewReadOnlyGroupId")
 	if len(f) > 0 {
-		return errors.New("ModifyDBInstanceReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2462,7 +2466,7 @@ func (r *ModifyDBInstanceReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2472,7 +2476,7 @@ type ModifyDBInstancesProjectRequest struct {
 	*tchttp.BaseRequest
 
 	// postgresql实例ID数组
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 	// postgresql实例所属新项目的ID
 	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
@@ -2483,7 +2487,7 @@ func (r *ModifyDBInstancesProjectRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstancesProjectRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2493,7 +2497,7 @@ func (r *ModifyDBInstancesProjectRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceIdSet")
 	delete(f, "ProjectId")
 	if len(f) > 0 {
-		return errors.New("ModifyDBInstancesProjectRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstancesProjectRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2515,7 +2519,7 @@ func (r *ModifyDBInstancesProjectResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstancesProjectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2554,7 +2558,7 @@ func (r *ModifyReadOnlyGroupConfigRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyReadOnlyGroupConfigRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2570,7 +2574,7 @@ func (r *ModifyReadOnlyGroupConfigRequest) FromJsonString(s string) error {
 	delete(f, "Rebalance")
 	delete(f, "MinDelayEliminateReserve")
 	if len(f) > 0 {
-		return errors.New("ModifyReadOnlyGroupConfigRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyReadOnlyGroupConfigRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2589,7 +2593,7 @@ func (r *ModifyReadOnlyGroupConfigResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyReadOnlyGroupConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2604,7 +2608,7 @@ type NormalQueryItem struct {
 	Calls *int64 `json:"Calls,omitempty" name:"Calls"`
 
 	// 粒度点
-	CallsGrids []*int64 `json:"CallsGrids,omitempty" name:"CallsGrids" list`
+	CallsGrids []*int64 `json:"CallsGrids,omitempty" name:"CallsGrids"`
 
 	// 花费总时间
 	CostTime *float64 `json:"CostTime,omitempty" name:"CostTime"`
@@ -2658,7 +2662,7 @@ func (r *OpenDBExtranetAccessRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *OpenDBExtranetAccessRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2668,7 +2672,7 @@ func (r *OpenDBExtranetAccessRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "IsIpv6")
 	if len(f) > 0 {
-		return errors.New("OpenDBExtranetAccessRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenDBExtranetAccessRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2690,7 +2694,7 @@ func (r *OpenDBExtranetAccessResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *OpenDBExtranetAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2711,7 +2715,7 @@ func (r *OpenServerlessDBExtranetAccessRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *OpenServerlessDBExtranetAccessRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2721,7 +2725,7 @@ func (r *OpenServerlessDBExtranetAccessRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceId")
 	delete(f, "DBInstanceName")
 	if len(f) > 0 {
-		return errors.New("OpenServerlessDBExtranetAccessRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenServerlessDBExtranetAccessRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2740,7 +2744,7 @@ func (r *OpenServerlessDBExtranetAccessResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *OpenServerlessDBExtranetAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2764,7 +2768,7 @@ type PgDeal struct {
 	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
 
 	// 实例ID数组
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 }
 
 type ReadOnlyGroup struct {
@@ -2818,13 +2822,13 @@ type ReadOnlyGroup struct {
 	Status *string `json:"Status,omitempty" name:"Status"`
 
 	// 实例详细信息
-	ReadOnlyDBInstanceList []*DBInstance `json:"ReadOnlyDBInstanceList,omitempty" name:"ReadOnlyDBInstanceList" list`
+	ReadOnlyDBInstanceList []*DBInstance `json:"ReadOnlyDBInstanceList,omitempty" name:"ReadOnlyDBInstanceList"`
 
 	// 自动负载均衡开关
 	Rebalance *int64 `json:"Rebalance,omitempty" name:"Rebalance"`
 
 	// 网络信息
-	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo" list`
+	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo"`
 }
 
 type RebalanceReadOnlyGroupRequest struct {
@@ -2839,7 +2843,7 @@ func (r *RebalanceReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RebalanceReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2848,7 +2852,7 @@ func (r *RebalanceReadOnlyGroupRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ReadOnlyGroupId")
 	if len(f) > 0 {
-		return errors.New("RebalanceReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RebalanceReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2867,7 +2871,7 @@ func (r *RebalanceReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RebalanceReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2907,7 +2911,7 @@ func (r *RemoveDBInstanceFromReadOnlyGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RemoveDBInstanceFromReadOnlyGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2917,7 +2921,7 @@ func (r *RemoveDBInstanceFromReadOnlyGroupRequest) FromJsonString(s string) erro
 	delete(f, "DBInstanceId")
 	delete(f, "ReadOnlyGroupId")
 	if len(f) > 0 {
-		return errors.New("RemoveDBInstanceFromReadOnlyGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveDBInstanceFromReadOnlyGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2939,7 +2943,7 @@ func (r *RemoveDBInstanceFromReadOnlyGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RemoveDBInstanceFromReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2958,7 +2962,7 @@ type RenewInstanceRequest struct {
 	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券ID列表，目前仅支持指定一张代金券
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 }
 
 func (r *RenewInstanceRequest) ToJsonString() string {
@@ -2966,7 +2970,7 @@ func (r *RenewInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RenewInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2978,7 +2982,7 @@ func (r *RenewInstanceRequest) FromJsonString(s string) error {
 	delete(f, "AutoVoucher")
 	delete(f, "VoucherIds")
 	if len(f) > 0 {
-		return errors.New("RenewInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenewInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3000,7 +3004,7 @@ func (r *RenewInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RenewInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3024,7 +3028,7 @@ func (r *ResetAccountPasswordRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ResetAccountPasswordRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3035,7 +3039,7 @@ func (r *ResetAccountPasswordRequest) FromJsonString(s string) error {
 	delete(f, "UserName")
 	delete(f, "Password")
 	if len(f) > 0 {
-		return errors.New("ResetAccountPasswordRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetAccountPasswordRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3054,7 +3058,7 @@ func (r *ResetAccountPasswordResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ResetAccountPasswordResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3072,7 +3076,7 @@ func (r *RestartDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RestartDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3081,7 +3085,7 @@ func (r *RestartDBInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DBInstanceId")
 	if len(f) > 0 {
-		return errors.New("RestartDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RestartDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3103,7 +3107,7 @@ func (r *RestartDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RestartDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3172,19 +3176,19 @@ type ServerlessDBInstance struct {
 
 	// 实例网络信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DBInstanceNetInfo []*ServerlessDBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo" list`
+	DBInstanceNetInfo []*ServerlessDBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo"`
 
 	// 实例账户信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DBAccountSet []*ServerlessDBAccount `json:"DBAccountSet,omitempty" name:"DBAccountSet" list`
+	DBAccountSet []*ServerlessDBAccount `json:"DBAccountSet,omitempty" name:"DBAccountSet"`
 
 	// 实例下的db信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DBDatabaseList []*string `json:"DBDatabaseList,omitempty" name:"DBDatabaseList" list`
+	DBDatabaseList []*string `json:"DBDatabaseList,omitempty" name:"DBDatabaseList"`
 
 	// 实例绑定的标签数组
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagList []*Tag `json:"TagList,omitempty" name:"TagList" list`
+	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
 }
 
 type ServerlessDBInstanceNetInfo struct {
@@ -3214,7 +3218,7 @@ type SetAutoRenewFlagRequest struct {
 	*tchttp.BaseRequest
 
 	// 实例ID数组
-	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet" list`
+	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
 
 	// 续费标记。0-正常续费；1-自动续费；2-到期不续费
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
@@ -3225,7 +3229,7 @@ func (r *SetAutoRenewFlagRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SetAutoRenewFlagRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3235,7 +3239,7 @@ func (r *SetAutoRenewFlagRequest) FromJsonString(s string) error {
 	delete(f, "DBInstanceIdSet")
 	delete(f, "AutoRenewFlag")
 	if len(f) > 0 {
-		return errors.New("SetAutoRenewFlagRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetAutoRenewFlagRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3257,7 +3261,7 @@ func (r *SetAutoRenewFlagResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SetAutoRenewFlagResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -3272,7 +3276,7 @@ type SlowlogDetail struct {
 	TotalCalls *int64 `json:"TotalCalls,omitempty" name:"TotalCalls"`
 
 	// 脱敏后的慢SQL列表
-	NormalQueries []*NormalQueryItem `json:"NormalQueries,omitempty" name:"NormalQueries" list`
+	NormalQueries []*NormalQueryItem `json:"NormalQueries,omitempty" name:"NormalQueries"`
 }
 
 type SpecInfo struct {
@@ -3284,7 +3288,7 @@ type SpecInfo struct {
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
 	// 规格详细信息列表
-	SpecItemInfoList []*SpecItemInfo `json:"SpecItemInfoList,omitempty" name:"SpecItemInfoList" list`
+	SpecItemInfoList []*SpecItemInfo `json:"SpecItemInfoList,omitempty" name:"SpecItemInfoList"`
 }
 
 type SpecItemInfo struct {
@@ -3345,7 +3349,7 @@ type UpgradeDBInstanceRequest struct {
 	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
 
 	// 代金券ID列表，目前仅支持指定一张代金券
-	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
 
 	// 活动ID
 	ActivityId *int64 `json:"ActivityId,omitempty" name:"ActivityId"`
@@ -3356,7 +3360,7 @@ func (r *UpgradeDBInstanceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -3370,7 +3374,7 @@ func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "VoucherIds")
 	delete(f, "ActivityId")
 	if len(f) > 0 {
-		return errors.New("UpgradeDBInstanceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeDBInstanceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -3395,7 +3399,7 @@ func (r *UpgradeDBInstanceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpgradeDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)

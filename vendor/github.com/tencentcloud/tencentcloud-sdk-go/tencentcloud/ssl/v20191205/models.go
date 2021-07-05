@@ -16,8 +16,7 @@ package v20191205
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -66,7 +65,7 @@ func (r *ApplyCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ApplyCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -86,7 +85,7 @@ func (r *ApplyCertificateRequest) FromJsonString(s string) error {
 	delete(f, "Alias")
 	delete(f, "OldCertificateId")
 	if len(f) > 0 {
-		return errors.New("ApplyCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ApplyCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -108,7 +107,7 @@ func (r *ApplyCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ApplyCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -126,7 +125,7 @@ func (r *CancelCertificateOrderRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CancelCertificateOrderRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -135,7 +134,7 @@ func (r *CancelCertificateOrderRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("CancelCertificateOrderRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CancelCertificateOrderRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -157,7 +156,7 @@ func (r *CancelCertificateOrderResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CancelCertificateOrderResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -262,7 +261,7 @@ type Certificates struct {
 
 	// 证书包含的多个域名（包含主域名）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName" list`
+	SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName"`
 
 	// 证书类型名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -298,7 +297,7 @@ type Certificates struct {
 
 	// 关联的云资源，暂不可用
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	BoundResource []*string `json:"BoundResource,omitempty" name:"BoundResource" list`
+	BoundResource []*string `json:"BoundResource,omitempty" name:"BoundResource"`
 
 	// 是否可部署。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -306,7 +305,7 @@ type Certificates struct {
 
 	// 标签列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*Tags `json:"Tags,omitempty" name:"Tags" list`
+	Tags []*Tags `json:"Tags,omitempty" name:"Tags"`
 }
 
 type CheckCertificateChainRequest struct {
@@ -321,7 +320,7 @@ func (r *CheckCertificateChainRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CheckCertificateChainRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -330,7 +329,7 @@ func (r *CheckCertificateChainRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateChain")
 	if len(f) > 0 {
-		return errors.New("CheckCertificateChainRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckCertificateChainRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -346,7 +345,7 @@ type CheckCertificateChainResponse struct {
 		IsTrustedCA *bool `json:"IsTrustedCA,omitempty" name:"IsTrustedCA"`
 
 		// 包含证书链中每一段证书的通用名称。
-		Chains []*string `json:"Chains,omitempty" name:"Chains" list`
+		Chains []*string `json:"Chains,omitempty" name:"Chains"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -358,7 +357,7 @@ func (r *CheckCertificateChainResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CheckCertificateChainResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -376,7 +375,7 @@ func (r *CommitCertificateInformationRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CommitCertificateInformationRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -385,7 +384,7 @@ func (r *CommitCertificateInformationRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("CommitCertificateInformationRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CommitCertificateInformationRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -410,7 +409,7 @@ func (r *CommitCertificateInformationResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CommitCertificateInformationResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -452,7 +451,7 @@ func (r *CompleteCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CompleteCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -461,7 +460,7 @@ func (r *CompleteCertificateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("CompleteCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CompleteCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -483,7 +482,7 @@ func (r *CompleteCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CompleteCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -507,7 +506,7 @@ func (r *CreateCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -518,7 +517,7 @@ func (r *CreateCertificateRequest) FromJsonString(s string) error {
 	delete(f, "DomainNum")
 	delete(f, "TimeSpan")
 	if len(f) > 0 {
-		return errors.New("CreateCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -528,10 +527,10 @@ type CreateCertificateResponse struct {
 	Response *struct {
 
 		// 证书ID列表
-		CertificateIds []*string `json:"CertificateIds,omitempty" name:"CertificateIds" list`
+		CertificateIds []*string `json:"CertificateIds,omitempty" name:"CertificateIds"`
 
 		// 订单号列表
-		DealIds []*string `json:"DealIds,omitempty" name:"DealIds" list`
+		DealIds []*string `json:"DealIds,omitempty" name:"DealIds"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -543,7 +542,7 @@ func (r *CreateCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -561,7 +560,7 @@ func (r *DeleteCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -570,7 +569,7 @@ func (r *DeleteCertificateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("DeleteCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -592,7 +591,7 @@ func (r *DeleteCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -610,7 +609,7 @@ func (r *DeleteManagerRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteManagerRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -619,7 +618,7 @@ func (r *DeleteManagerRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ManagerId")
 	if len(f) > 0 {
-		return errors.New("DeleteManagerRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteManagerRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -641,7 +640,7 @@ func (r *DeleteManagerResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteManagerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -659,7 +658,7 @@ func (r *DescribeCertificateDetailRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateDetailRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -668,7 +667,7 @@ func (r *DescribeCertificateDetailRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("DescribeCertificateDetailRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCertificateDetailRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -779,7 +778,7 @@ type DescribeCertificateDetailResponse struct {
 
 		// 证书包含的多个域名（包含主域名）
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName" list`
+		SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName"`
 
 		// 是否为 VIP 客户。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -811,7 +810,7 @@ type DescribeCertificateDetailResponse struct {
 
 		// 关联标签列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Tags []*Tags `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*Tags `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -823,7 +822,7 @@ func (r *DescribeCertificateDetailResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateDetailResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -850,7 +849,7 @@ func (r *DescribeCertificateOperateLogsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateOperateLogsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -862,7 +861,7 @@ func (r *DescribeCertificateOperateLogsRequest) FromJsonString(s string) error {
 	delete(f, "StartTime")
 	delete(f, "EndTime")
 	if len(f) > 0 {
-		return errors.New("DescribeCertificateOperateLogsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCertificateOperateLogsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -879,7 +878,7 @@ type DescribeCertificateOperateLogsResponse struct {
 
 		// 证书操作日志列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		OperateLogs []*OperationLog `json:"OperateLogs,omitempty" name:"OperateLogs" list`
+		OperateLogs []*OperationLog `json:"OperateLogs,omitempty" name:"OperateLogs"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -891,7 +890,7 @@ func (r *DescribeCertificateOperateLogsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateOperateLogsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -909,7 +908,7 @@ func (r *DescribeCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -918,7 +917,7 @@ func (r *DescribeCertificateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("DescribeCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1021,7 +1020,7 @@ type DescribeCertificateResponse struct {
 
 		// 证书包含的多个域名（包含主域名）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName" list`
+		SubjectAltName []*string `json:"SubjectAltName,omitempty" name:"SubjectAltName"`
 
 		// 是否为 VIP 客户。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -1053,7 +1052,7 @@ type DescribeCertificateResponse struct {
 
 		// 标签列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Tags []*Tags `json:"Tags,omitempty" name:"Tags" list`
+		Tags []*Tags `json:"Tags,omitempty" name:"Tags"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1065,7 +1064,7 @@ func (r *DescribeCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1093,7 +1092,7 @@ type DescribeCertificatesRequest struct {
 	ExpirationSort *string `json:"ExpirationSort,omitempty" name:"ExpirationSort"`
 
 	// 证书状态。
-	CertificateStatus []*uint64 `json:"CertificateStatus,omitempty" name:"CertificateStatus" list`
+	CertificateStatus []*uint64 `json:"CertificateStatus,omitempty" name:"CertificateStatus"`
 
 	// 是否可部署，可选值：1 = 可部署，0 =  不可部署。
 	Deployable *uint64 `json:"Deployable,omitempty" name:"Deployable"`
@@ -1104,7 +1103,7 @@ func (r *DescribeCertificatesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificatesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1120,7 +1119,7 @@ func (r *DescribeCertificatesRequest) FromJsonString(s string) error {
 	delete(f, "CertificateStatus")
 	delete(f, "Deployable")
 	if len(f) > 0 {
-		return errors.New("DescribeCertificatesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCertificatesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1135,7 +1134,7 @@ type DescribeCertificatesResponse struct {
 
 		// 列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		Certificates []*Certificates `json:"Certificates,omitempty" name:"Certificates" list`
+		Certificates []*Certificates `json:"Certificates,omitempty" name:"Certificates"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1147,7 +1146,7 @@ func (r *DescribeCertificatesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCertificatesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1171,7 +1170,7 @@ func (r *DescribeManagerDetailRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeManagerDetailRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1182,7 +1181,7 @@ func (r *DescribeManagerDetailRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
-		return errors.New("DescribeManagerDetailRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeManagerDetailRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1257,7 +1256,7 @@ func (r *DescribeManagerDetailResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeManagerDetailResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1297,7 +1296,7 @@ func (r *DescribeManagersRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeManagersRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1311,7 +1310,7 @@ func (r *DescribeManagersRequest) FromJsonString(s string) error {
 	delete(f, "ManagerMail")
 	delete(f, "Status")
 	if len(f) > 0 {
-		return errors.New("DescribeManagersRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeManagersRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1321,7 +1320,7 @@ type DescribeManagersResponse struct {
 	Response *struct {
 
 		// 公司管理人列表
-		Managers []*ManagerInfo `json:"Managers,omitempty" name:"Managers" list`
+		Managers []*ManagerInfo `json:"Managers,omitempty" name:"Managers"`
 
 		// 公司管理人总数
 		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
@@ -1336,7 +1335,7 @@ func (r *DescribeManagersResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeManagersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1354,7 +1353,7 @@ func (r *DownloadCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DownloadCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1363,7 +1362,7 @@ func (r *DownloadCertificateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "CertificateId")
 	if len(f) > 0 {
-		return errors.New("DownloadCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DownloadCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1390,7 +1389,7 @@ func (r *DownloadCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DownloadCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1420,7 +1419,7 @@ type DvAuthDetail struct {
 
 	// DV 认证信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DvAuths []*DvAuths `json:"DvAuths,omitempty" name:"DvAuths" list`
+	DvAuths []*DvAuths `json:"DvAuths,omitempty" name:"DvAuths"`
 }
 
 type DvAuths struct {
@@ -1514,7 +1513,7 @@ func (r *ModifyCertificateAliasRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCertificateAliasRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1524,7 +1523,7 @@ func (r *ModifyCertificateAliasRequest) FromJsonString(s string) error {
 	delete(f, "CertificateId")
 	delete(f, "Alias")
 	if len(f) > 0 {
-		return errors.New("ModifyCertificateAliasRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCertificateAliasRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1546,7 +1545,7 @@ func (r *ModifyCertificateAliasResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCertificateAliasResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1556,7 +1555,7 @@ type ModifyCertificateProjectRequest struct {
 	*tchttp.BaseRequest
 
 	// 需要修改所属项目的证书 ID 集合，最多100个证书。
-	CertificateIdList []*string `json:"CertificateIdList,omitempty" name:"CertificateIdList" list`
+	CertificateIdList []*string `json:"CertificateIdList,omitempty" name:"CertificateIdList"`
 
 	// 项目 ID。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
@@ -1567,7 +1566,7 @@ func (r *ModifyCertificateProjectRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCertificateProjectRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1577,7 +1576,7 @@ func (r *ModifyCertificateProjectRequest) FromJsonString(s string) error {
 	delete(f, "CertificateIdList")
 	delete(f, "ProjectId")
 	if len(f) > 0 {
-		return errors.New("ModifyCertificateProjectRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCertificateProjectRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1588,11 +1587,11 @@ type ModifyCertificateProjectResponse struct {
 
 		// 修改所属项目成功的证书集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		SuccessCertificates []*string `json:"SuccessCertificates,omitempty" name:"SuccessCertificates" list`
+		SuccessCertificates []*string `json:"SuccessCertificates,omitempty" name:"SuccessCertificates"`
 
 		// 修改所属项目失败的证书集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		FailCertificates []*string `json:"FailCertificates,omitempty" name:"FailCertificates" list`
+		FailCertificates []*string `json:"FailCertificates,omitempty" name:"FailCertificates"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1604,7 +1603,7 @@ func (r *ModifyCertificateProjectResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCertificateProjectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1673,7 +1672,7 @@ func (r *ReplaceCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ReplaceCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1687,7 +1686,7 @@ func (r *ReplaceCertificateRequest) FromJsonString(s string) error {
 	delete(f, "CsrkeyPassword")
 	delete(f, "Reason")
 	if len(f) > 0 {
-		return errors.New("ReplaceCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReplaceCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1709,7 +1708,7 @@ func (r *ReplaceCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ReplaceCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1730,7 +1729,7 @@ func (r *RevokeCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RevokeCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1740,7 +1739,7 @@ func (r *RevokeCertificateRequest) FromJsonString(s string) error {
 	delete(f, "CertificateId")
 	delete(f, "Reason")
 	if len(f) > 0 {
-		return errors.New("RevokeCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RevokeCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1751,7 +1750,7 @@ type RevokeCertificateResponse struct {
 
 		// 吊销证书域名验证信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-		RevokeDomainValidateAuths []*RevokeDomainValidateAuths `json:"RevokeDomainValidateAuths,omitempty" name:"RevokeDomainValidateAuths" list`
+		RevokeDomainValidateAuths []*RevokeDomainValidateAuths `json:"RevokeDomainValidateAuths,omitempty" name:"RevokeDomainValidateAuths"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1763,7 +1762,7 @@ func (r *RevokeCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *RevokeCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1800,7 +1799,7 @@ func (r *SubmitAuditManagerRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SubmitAuditManagerRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1809,7 +1808,7 @@ func (r *SubmitAuditManagerRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ManagerId")
 	if len(f) > 0 {
-		return errors.New("SubmitAuditManagerRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SubmitAuditManagerRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1831,7 +1830,7 @@ func (r *SubmitAuditManagerResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SubmitAuditManagerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1853,7 +1852,7 @@ type SubmitCertificateInformationRequest struct {
 	CertificateDomain *string `json:"CertificateDomain,omitempty" name:"CertificateDomain"`
 
 	// 上传的域名数组（多域名证书可以上传）。
-	DomainList []*string `json:"DomainList,omitempty" name:"DomainList" list`
+	DomainList []*string `json:"DomainList,omitempty" name:"DomainList"`
 
 	// 私钥密码（非必填）。
 	KeyPassword *string `json:"KeyPassword,omitempty" name:"KeyPassword"`
@@ -1924,7 +1923,7 @@ func (r *SubmitCertificateInformationRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SubmitCertificateInformationRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1958,7 +1957,7 @@ func (r *SubmitCertificateInformationRequest) FromJsonString(s string) error {
 	delete(f, "ContactNumber")
 	delete(f, "ContactPosition")
 	if len(f) > 0 {
-		return errors.New("SubmitCertificateInformationRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SubmitCertificateInformationRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1980,7 +1979,7 @@ func (r *SubmitCertificateInformationResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SubmitCertificateInformationResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2002,7 +2001,7 @@ type SubmittedData struct {
 
 	// DNS 信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DomainList []*string `json:"DomainList,omitempty" name:"DomainList" list`
+	DomainList []*string `json:"DomainList,omitempty" name:"DomainList"`
 
 	// 私钥密码。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -2125,7 +2124,7 @@ func (r *UploadCertificateRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadCertificateRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2139,7 +2138,7 @@ func (r *UploadCertificateRequest) FromJsonString(s string) error {
 	delete(f, "ProjectId")
 	delete(f, "CertificateUse")
 	if len(f) > 0 {
-		return errors.New("UploadCertificateRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UploadCertificateRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2161,7 +2160,7 @@ func (r *UploadCertificateResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2182,7 +2181,7 @@ func (r *UploadConfirmLetterRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadConfirmLetterRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2192,7 +2191,7 @@ func (r *UploadConfirmLetterRequest) FromJsonString(s string) error {
 	delete(f, "CertificateId")
 	delete(f, "ConfirmLetter")
 	if len(f) > 0 {
-		return errors.New("UploadConfirmLetterRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UploadConfirmLetterRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2217,7 +2216,7 @@ func (r *UploadConfirmLetterResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadConfirmLetterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2238,7 +2237,7 @@ func (r *UploadRevokeLetterRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadRevokeLetterRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2248,7 +2247,7 @@ func (r *UploadRevokeLetterRequest) FromJsonString(s string) error {
 	delete(f, "CertificateId")
 	delete(f, "RevokeLetter")
 	if len(f) > 0 {
-		return errors.New("UploadRevokeLetterRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UploadRevokeLetterRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2273,7 +2272,7 @@ func (r *UploadRevokeLetterResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UploadRevokeLetterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -2291,7 +2290,7 @@ func (r *VerifyManagerRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *VerifyManagerRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -2300,7 +2299,7 @@ func (r *VerifyManagerRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ManagerId")
 	if len(f) > 0 {
-		return errors.New("VerifyManagerRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "VerifyManagerRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -2322,7 +2321,7 @@ func (r *VerifyManagerResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *VerifyManagerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)

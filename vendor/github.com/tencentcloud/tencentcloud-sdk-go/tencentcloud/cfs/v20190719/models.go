@@ -16,8 +16,7 @@ package v20190719
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -42,7 +41,7 @@ type AvailableRegion struct {
 	RegionStatus *string `json:"RegionStatus,omitempty" name:"RegionStatus"`
 
 	// 可用区数组
-	Zones []*AvailableZone `json:"Zones,omitempty" name:"Zones" list`
+	Zones []*AvailableZone `json:"Zones,omitempty" name:"Zones"`
 
 	// 区域中文名称，如“广州”
 	RegionCnName *string `json:"RegionCnName,omitempty" name:"RegionCnName"`
@@ -51,7 +50,7 @@ type AvailableRegion struct {
 type AvailableType struct {
 
 	// 协议与售卖详情
-	Protocols []*AvailableProtoStatus `json:"Protocols,omitempty" name:"Protocols" list`
+	Protocols []*AvailableProtoStatus `json:"Protocols,omitempty" name:"Protocols"`
 
 	// 存储类型。返回值中 SD 为标准型存储、HP 为性能型存储
 	Type *string `json:"Type,omitempty" name:"Type"`
@@ -72,7 +71,7 @@ type AvailableZone struct {
 	ZoneCnName *string `json:"ZoneCnName,omitempty" name:"ZoneCnName"`
 
 	// Type数组
-	Types []*AvailableType `json:"Types,omitempty" name:"Types" list`
+	Types []*AvailableType `json:"Types,omitempty" name:"Types"`
 
 	// 可用区中英文名称
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
@@ -109,7 +108,7 @@ type CreateCfsFileSystemRequest struct {
 	FsName *string `json:"FsName,omitempty" name:"FsName"`
 
 	// 文件系统标签
-	ResourceTags []*TagInfo `json:"ResourceTags,omitempty" name:"ResourceTags" list`
+	ResourceTags []*TagInfo `json:"ResourceTags,omitempty" name:"ResourceTags"`
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。用于保证请求幂等性的字符串失效时间为2小时。
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
@@ -120,7 +119,7 @@ func (r *CreateCfsFileSystemRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsFileSystemRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -139,7 +138,7 @@ func (r *CreateCfsFileSystemRequest) FromJsonString(s string) error {
 	delete(f, "ResourceTags")
 	delete(f, "ClientToken")
 	if len(f) > 0 {
-		return errors.New("CreateCfsFileSystemRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCfsFileSystemRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -182,7 +181,7 @@ func (r *CreateCfsFileSystemResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsFileSystemResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -203,7 +202,7 @@ func (r *CreateCfsPGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsPGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -213,7 +212,7 @@ func (r *CreateCfsPGroupRequest) FromJsonString(s string) error {
 	delete(f, "Name")
 	delete(f, "DescInfo")
 	if len(f) > 0 {
-		return errors.New("CreateCfsPGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCfsPGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -247,7 +246,7 @@ func (r *CreateCfsPGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsPGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -277,7 +276,7 @@ func (r *CreateCfsRuleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -290,7 +289,7 @@ func (r *CreateCfsRuleRequest) FromJsonString(s string) error {
 	delete(f, "RWPermission")
 	delete(f, "UserPermission")
 	if len(f) > 0 {
-		return errors.New("CreateCfsRuleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCfsRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -327,7 +326,7 @@ func (r *CreateCfsRuleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateCfsRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -345,7 +344,7 @@ func (r *DeleteCfsFileSystemRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsFileSystemRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -354,7 +353,7 @@ func (r *DeleteCfsFileSystemRequest) FromJsonString(s string) error {
 	}
 	delete(f, "FileSystemId")
 	if len(f) > 0 {
-		return errors.New("DeleteCfsFileSystemRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCfsFileSystemRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -373,7 +372,7 @@ func (r *DeleteCfsFileSystemResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsFileSystemResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -391,7 +390,7 @@ func (r *DeleteCfsPGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsPGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -400,7 +399,7 @@ func (r *DeleteCfsPGroupRequest) FromJsonString(s string) error {
 	}
 	delete(f, "PGroupId")
 	if len(f) > 0 {
-		return errors.New("DeleteCfsPGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCfsPGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -425,7 +424,7 @@ func (r *DeleteCfsPGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsPGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -446,7 +445,7 @@ func (r *DeleteCfsRuleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -456,7 +455,7 @@ func (r *DeleteCfsRuleRequest) FromJsonString(s string) error {
 	delete(f, "PGroupId")
 	delete(f, "RuleId")
 	if len(f) > 0 {
-		return errors.New("DeleteCfsRuleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCfsRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -481,7 +480,7 @@ func (r *DeleteCfsRuleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCfsRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -502,7 +501,7 @@ func (r *DeleteMountTargetRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteMountTargetRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -512,7 +511,7 @@ func (r *DeleteMountTargetRequest) FromJsonString(s string) error {
 	delete(f, "FileSystemId")
 	delete(f, "MountTargetId")
 	if len(f) > 0 {
-		return errors.New("DeleteMountTargetRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteMountTargetRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -531,7 +530,7 @@ func (r *DeleteMountTargetResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteMountTargetResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -546,7 +545,7 @@ func (r *DescribeAvailableZoneInfoRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAvailableZoneInfoRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -554,7 +553,7 @@ func (r *DescribeAvailableZoneInfoRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("DescribeAvailableZoneInfoRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAvailableZoneInfoRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -564,7 +563,7 @@ type DescribeAvailableZoneInfoResponse struct {
 	Response *struct {
 
 		// 各可用区的资源售卖情况以及支持的存储类型、存储协议等信息
-		RegionZones []*AvailableRegion `json:"RegionZones,omitempty" name:"RegionZones" list`
+		RegionZones []*AvailableRegion `json:"RegionZones,omitempty" name:"RegionZones"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -576,7 +575,7 @@ func (r *DescribeAvailableZoneInfoResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAvailableZoneInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -594,7 +593,7 @@ func (r *DescribeCfsFileSystemClientsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsFileSystemClientsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -603,7 +602,7 @@ func (r *DescribeCfsFileSystemClientsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "FileSystemId")
 	if len(f) > 0 {
-		return errors.New("DescribeCfsFileSystemClientsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsFileSystemClientsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -613,7 +612,7 @@ type DescribeCfsFileSystemClientsResponse struct {
 	Response *struct {
 
 		// 客户端列表
-		ClientList []*FileSystemClient `json:"ClientList,omitempty" name:"ClientList" list`
+		ClientList []*FileSystemClient `json:"ClientList,omitempty" name:"ClientList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -625,7 +624,7 @@ func (r *DescribeCfsFileSystemClientsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsFileSystemClientsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -649,7 +648,7 @@ func (r *DescribeCfsFileSystemsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsFileSystemsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -660,7 +659,7 @@ func (r *DescribeCfsFileSystemsRequest) FromJsonString(s string) error {
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
 	if len(f) > 0 {
-		return errors.New("DescribeCfsFileSystemsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsFileSystemsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -670,7 +669,7 @@ type DescribeCfsFileSystemsResponse struct {
 	Response *struct {
 
 		// 文件系统信息
-		FileSystems []*FileSystemInfo `json:"FileSystems,omitempty" name:"FileSystems" list`
+		FileSystems []*FileSystemInfo `json:"FileSystems,omitempty" name:"FileSystems"`
 
 		// 文件系统总数
 		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
@@ -685,7 +684,7 @@ func (r *DescribeCfsFileSystemsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsFileSystemsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -700,7 +699,7 @@ func (r *DescribeCfsPGroupsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsPGroupsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -708,7 +707,7 @@ func (r *DescribeCfsPGroupsRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("DescribeCfsPGroupsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsPGroupsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -718,7 +717,7 @@ type DescribeCfsPGroupsResponse struct {
 	Response *struct {
 
 		// 权限组信息列表
-		PGroupList []*PGroupInfo `json:"PGroupList,omitempty" name:"PGroupList" list`
+		PGroupList []*PGroupInfo `json:"PGroupList,omitempty" name:"PGroupList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -730,7 +729,7 @@ func (r *DescribeCfsPGroupsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsPGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -748,7 +747,7 @@ func (r *DescribeCfsRulesRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsRulesRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -757,7 +756,7 @@ func (r *DescribeCfsRulesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "PGroupId")
 	if len(f) > 0 {
-		return errors.New("DescribeCfsRulesRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsRulesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -767,7 +766,7 @@ type DescribeCfsRulesResponse struct {
 	Response *struct {
 
 		// 权限组规则列表
-		RuleList []*PGroupRuleInfo `json:"RuleList,omitempty" name:"RuleList" list`
+		RuleList []*PGroupRuleInfo `json:"RuleList,omitempty" name:"RuleList"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -779,7 +778,7 @@ func (r *DescribeCfsRulesResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -794,7 +793,7 @@ func (r *DescribeCfsServiceStatusRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsServiceStatusRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -802,7 +801,7 @@ func (r *DescribeCfsServiceStatusRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("DescribeCfsServiceStatusRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsServiceStatusRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -824,7 +823,7 @@ func (r *DescribeCfsServiceStatusResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCfsServiceStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -842,7 +841,7 @@ func (r *DescribeMountTargetsRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMountTargetsRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -851,7 +850,7 @@ func (r *DescribeMountTargetsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "FileSystemId")
 	if len(f) > 0 {
-		return errors.New("DescribeMountTargetsRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMountTargetsRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -861,7 +860,7 @@ type DescribeMountTargetsResponse struct {
 	Response *struct {
 
 		// 挂载点详情
-		MountTargets []*MountInfo `json:"MountTargets,omitempty" name:"MountTargets" list`
+		MountTargets []*MountInfo `json:"MountTargets,omitempty" name:"MountTargets"`
 
 		// 挂载点数量
 		NumberOfMountTargets *int64 `json:"NumberOfMountTargets,omitempty" name:"NumberOfMountTargets"`
@@ -876,7 +875,7 @@ func (r *DescribeMountTargetsResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMountTargetsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1047,7 +1046,7 @@ func (r *SignUpCfsServiceRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SignUpCfsServiceRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1055,7 +1054,7 @@ func (r *SignUpCfsServiceRequest) FromJsonString(s string) error {
 		return err
 	}
 	if len(f) > 0 {
-		return errors.New("SignUpCfsServiceRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SignUpCfsServiceRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1077,7 +1076,7 @@ func (r *SignUpCfsServiceResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *SignUpCfsServiceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1107,7 +1106,7 @@ func (r *UpdateCfsFileSystemNameRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemNameRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1117,7 +1116,7 @@ func (r *UpdateCfsFileSystemNameRequest) FromJsonString(s string) error {
 	delete(f, "FileSystemId")
 	delete(f, "FsName")
 	if len(f) > 0 {
-		return errors.New("UpdateCfsFileSystemNameRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCfsFileSystemNameRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1145,7 +1144,7 @@ func (r *UpdateCfsFileSystemNameResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1166,7 +1165,7 @@ func (r *UpdateCfsFileSystemPGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemPGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1176,7 +1175,7 @@ func (r *UpdateCfsFileSystemPGroupRequest) FromJsonString(s string) error {
 	delete(f, "PGroupId")
 	delete(f, "FileSystemId")
 	if len(f) > 0 {
-		return errors.New("UpdateCfsFileSystemPGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCfsFileSystemPGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1201,7 +1200,7 @@ func (r *UpdateCfsFileSystemPGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemPGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1222,7 +1221,7 @@ func (r *UpdateCfsFileSystemSizeLimitRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemSizeLimitRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1232,7 +1231,7 @@ func (r *UpdateCfsFileSystemSizeLimitRequest) FromJsonString(s string) error {
 	delete(f, "FsLimit")
 	delete(f, "FileSystemId")
 	if len(f) > 0 {
-		return errors.New("UpdateCfsFileSystemSizeLimitRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCfsFileSystemSizeLimitRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1251,7 +1250,7 @@ func (r *UpdateCfsFileSystemSizeLimitResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsFileSystemSizeLimitResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1275,7 +1274,7 @@ func (r *UpdateCfsPGroupRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsPGroupRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1286,7 +1285,7 @@ func (r *UpdateCfsPGroupRequest) FromJsonString(s string) error {
 	delete(f, "Name")
 	delete(f, "DescInfo")
 	if len(f) > 0 {
-		return errors.New("UpdateCfsPGroupRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCfsPGroupRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1314,7 +1313,7 @@ func (r *UpdateCfsPGroupResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsPGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -1347,7 +1346,7 @@ func (r *UpdateCfsRuleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -1361,7 +1360,7 @@ func (r *UpdateCfsRuleRequest) FromJsonString(s string) error {
 	delete(f, "UserPermission")
 	delete(f, "Priority")
 	if len(f) > 0 {
-		return errors.New("UpdateCfsRuleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCfsRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -1398,7 +1397,7 @@ func (r *UpdateCfsRuleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateCfsRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)

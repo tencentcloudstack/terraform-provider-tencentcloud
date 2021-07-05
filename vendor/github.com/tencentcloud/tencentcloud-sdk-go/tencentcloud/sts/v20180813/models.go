@@ -16,8 +16,7 @@ package v20180813
 
 import (
     "encoding/json"
-    "errors"
-
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
@@ -67,7 +66,7 @@ func (r *AssumeRoleRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AssumeRoleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -80,7 +79,7 @@ func (r *AssumeRoleRequest) FromJsonString(s string) error {
 	delete(f, "Policy")
 	delete(f, "ExternalId")
 	if len(f) > 0 {
-		return errors.New("AssumeRoleRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssumeRoleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -108,7 +107,7 @@ func (r *AssumeRoleResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AssumeRoleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -138,7 +137,7 @@ func (r *AssumeRoleWithSAMLRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AssumeRoleWithSAMLRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -151,7 +150,7 @@ func (r *AssumeRoleWithSAMLRequest) FromJsonString(s string) error {
 	delete(f, "RoleSessionName")
 	delete(f, "DurationSeconds")
 	if len(f) > 0 {
-		return errors.New("AssumeRoleWithSAMLRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssumeRoleWithSAMLRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -179,7 +178,7 @@ func (r *AssumeRoleWithSAMLResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AssumeRoleWithSAMLResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -219,7 +218,7 @@ func (r *GetFederationTokenRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetFederationTokenRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -230,7 +229,7 @@ func (r *GetFederationTokenRequest) FromJsonString(s string) error {
 	delete(f, "Policy")
 	delete(f, "DurationSeconds")
 	if len(f) > 0 {
-		return errors.New("GetFederationTokenRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetFederationTokenRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -259,7 +258,7 @@ func (r *GetFederationTokenResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetFederationTokenResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
@@ -277,7 +276,7 @@ func (r *QueryApiKeyRequest) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *QueryApiKeyRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
@@ -286,7 +285,7 @@ func (r *QueryApiKeyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "TargetUin")
 	if len(f) > 0 {
-		return errors.New("QueryApiKeyRequest has unknown keys!")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "QueryApiKeyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
@@ -296,7 +295,7 @@ type QueryApiKeyResponse struct {
 	Response *struct {
 
 		// 密钥ID列表
-		IdKeys []*ApiKey `json:"IdKeys,omitempty" name:"IdKeys" list`
+		IdKeys []*ApiKey `json:"IdKeys,omitempty" name:"IdKeys"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -308,7 +307,7 @@ func (r *QueryApiKeyResponse) ToJsonString() string {
     return string(b)
 }
 
-// It is highly **NOT** recommended to use this function
+// FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *QueryApiKeyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
