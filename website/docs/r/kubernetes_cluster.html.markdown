@@ -348,6 +348,7 @@ The `master_config` object supports the following:
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
 * `subnet_id` - (Required, ForceNew) Private network ID.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `bandwidth_package_id` - (Optional) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
@@ -362,7 +363,7 @@ The `master_config` object supports the following:
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
 * `instance_name` - (Optional, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
+* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is 0.
 * `key_ids` - (Optional, ForceNew) ID list of keys, should be set if `password` not set.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
@@ -388,6 +389,7 @@ The `worker_config` object supports the following:
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
 * `subnet_id` - (Required, ForceNew) Private network ID.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `bandwidth_package_id` - (Optional) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
@@ -402,7 +404,7 @@ The `worker_config` object supports the following:
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
 * `instance_name` - (Optional, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
+* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is 0.
 * `key_ids` - (Optional, ForceNew) ID list of keys, should be set if `password` not set.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.

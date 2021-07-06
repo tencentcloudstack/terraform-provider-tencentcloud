@@ -175,9 +175,13 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"internet_max_bandwidth_out": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
 			Default:     0,
 			Description: "Max bandwidth of Internet access in Mbps. Default is `0`.",
+		},
+		"bandwidth_package_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.",
 		},
 		"public_ip_assigned": {
 			Type:        schema.TypeBool,
@@ -495,6 +499,9 @@ func comosedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, met
 	request.InternetAccessible = &as.InternetAccessible{}
 	if v, ok := dMap["internet_charge_type"]; ok {
 		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+	}
+	if v, ok := dMap["bandwidth_package_id"]; ok {
+		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
 	}
 	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
 		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))

@@ -13,6 +13,11 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   password          = "Test12345"
   license_type      = "oss"
 
+  web_node_type_info {
+    node_num = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
   node_info_list {
     node_num  = 2
     node_type = "ES.S1.SMALL2"
@@ -141,6 +146,25 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "The ID of a VPC subnetwork.",
+						},
+					},
+				},
+			},
+			"web_node_type_info": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Visual node configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"node_num": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Visual node number.",
+						},
+						"node_type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Visual node specifications.",
 						},
 					},
 				},
@@ -298,6 +322,19 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("basic_security_type"); ok {
 		request.BasicSecurityType = helper.IntUint64(v.(int))
 	}
+	if v, ok := d.GetOk("web_node_type_info"); ok {
+		infos := v.([]interface{})
+		for _, item := range infos {
+			value := item.(map[string]interface{})
+			info := &es.WebNodeTypeInfo{
+				NodeNum:  helper.IntUint64(value["node_num"].(int)),
+				NodeType: helper.String(value["node_type"].(string)),
+			}
+			request.WebNodeTypeInfo = info
+			break
+		}
+	}
+
 	if v, ok := d.GetOk("node_info_list"); ok {
 		infos := v.([]interface{})
 		request.NodeInfoList = make([]*es.NodeInfo, 0, len(infos))

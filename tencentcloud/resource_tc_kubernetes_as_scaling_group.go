@@ -278,7 +278,6 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"internet_max_bandwidth_out": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
 			Default:     0,
 			Description: "Max bandwidth of Internet access in Mbps. Default is `0`.",
 		},

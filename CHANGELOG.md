@@ -1,4 +1,18 @@
-## 1.56.14 (Unreleased)
+## 1.56.15 (Unreleased)
+
+## 1.56.14 (July 06,2021)
+
+BUG FIXES
+
+* Resource `tencentcloud_tc_clb_listener` exec the plan will lead the resource rebuild.
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_elasticsearch_instance` create **ES** cluster add new parametes of *web_node_type_info*.
+* Resource `tencentcloud_tc_instance` add *instance_count* to support create multiple consecutive name of instance
+* Resource `tencentcloud_tc_kubernetes_cluster` supports change *internet_max_bandwidth_out*
+* Resource `tencentcloud_tc_instance` create cvm instance add *bandwidth_package_id*
+
 
 ## 1.56.13 (July 02, 2021)
 

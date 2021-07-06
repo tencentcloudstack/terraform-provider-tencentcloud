@@ -23,6 +23,11 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   password          = "Test12345"
   license_type      = "oss"
 
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
   node_info_list {
     node_num  = 2
     node_type = "ES.S1.SMALL2"
@@ -54,6 +59,7 @@ The following arguments are supported:
 * `multi_zone_infos` - (Optional, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
 * `renew_flag` - (Optional, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `tags` - (Optional) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
+* `web_node_type_info` - (Optional) Visual node configuration.
 
 The `multi_zone_infos` object supports the following:
 
@@ -68,6 +74,11 @@ The `node_info_list` object supports the following:
 * `disk_type` - (Optional) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.
 * `encrypt` - (Optional) Decides to encrypt this disk or not.
 * `type` - (Optional) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
+
+The `web_node_type_info` object supports the following:
+
+* `node_num` - (Required) Visual node number.
+* `node_type` - (Required) Visual node specifications.
 
 ## Attributes Reference
 

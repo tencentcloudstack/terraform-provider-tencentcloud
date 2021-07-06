@@ -176,6 +176,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "The available zone for the CVM instance.",
 			},
+			"instance_count": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: validateIntegerInRange(1, 100),
+				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
+			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -269,6 +276,11 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
 				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.",
+			},
+			"bandwidth_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
@@ -508,6 +520,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
 	}
+	if v, ok := d.GetOk("instance_count"); ok {
+		request.InstanceCount = helper.Int64(int64(v.(int)))
+	}
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
 	}
@@ -574,6 +589,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		maxBandwidthOut := int64(v.(int))
 		request.InternetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+	}
+	if v, ok := d.GetOk("bandwidth_package_id"); ok {
+		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("allocate_public_ip"); ok {
 		allocatePublicIp := v.(bool)
