@@ -27,7 +27,9 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", defaultVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", defaultSubnetId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "oss"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM4"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.SMALL2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.type", "hotData"),
@@ -43,6 +45,8 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM8"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.MEDIUM8"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.disk_size", "200"),
 				),
@@ -133,6 +137,11 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	password            = "Test1234"
 	license_type        = "oss"
   
+    web_node_type_info {
+      node_num = 1
+      node_type = "ES.S1.MEDIUM4"
+    }
+
 	node_info_list {
 	  node_num          = 2
 	  node_type         = "ES.S1.SMALL2"
@@ -154,7 +163,12 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	password            = "Test12345"
 	license_type        = "basic"
 	basic_security_type = 2
-  
+
+	web_node_type_info {
+      node_num = 1
+      node_type = "ES.S1.MEDIUM8"
+  	}
+
 	node_info_list {
 	  node_num          = 2
 	  node_type         = "ES.S1.MEDIUM8"

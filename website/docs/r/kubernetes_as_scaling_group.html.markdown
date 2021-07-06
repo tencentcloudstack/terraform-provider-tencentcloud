@@ -152,7 +152,7 @@ The `auto_scaling_config` object supports the following:
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
 * `instance_tags` - (Optional, ForceNew) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, ForceNew) ID list of keys.
 * `password` - (Optional, ForceNew) Password to access.
 * `project_id` - (Optional, ForceNew) Specifys to which project the configuration belongs.
