@@ -501,7 +501,9 @@ func comosedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, met
 		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := dMap["bandwidth_package_id"]; ok {
-		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		if v.(string) != "" {
+			request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		}
 	}
 	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
 		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))

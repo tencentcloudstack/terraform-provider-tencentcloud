@@ -1231,7 +1231,9 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	}
 
 	if v, ok := dMap["bandwidth_package_id"]; ok {
-		request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		if v.(string) != "" {
+			request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		}
 	}
 
 	if v, ok := dMap["public_ip_assigned"]; ok {
