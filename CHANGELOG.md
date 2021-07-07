@@ -1,6 +1,13 @@
 ## 1.56.15 (Unreleased)
 
-## 1.56.14 (July 06,2021)
+## 1.56.15 (July 07, 2021)
+
+BUG FIXES
+
+* Resource `tencentcloud_tc_kubernetes_cluster` filter the request field of *bandwidth_package_id* when it is null
+* Resource `tencentcloud_tc_kubernetes_node_pool` filter the request field of *bandwidth_package_id* when it is null
+
+## 1.56.14 (July 06, 2021)
 
 BUG FIXES
 
