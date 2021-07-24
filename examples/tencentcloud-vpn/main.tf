@@ -68,6 +68,7 @@ data "tencentcloud_vpn_connections" "example" {
 # vpn tunnel in the usual way.
 resource tencentcloud_vpn_gateway ccn_vpngw_example {
   name      = "ccn-vpngw-example"
+  vpc_id    = data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id
   bandwidth = 5
   zone      = var.availability_zone
   type      = "CCN"
@@ -75,4 +76,17 @@ resource tencentcloud_vpn_gateway ccn_vpngw_example {
   tags = {
     test = "ccn-vpngw-example"
   }
+}
+
+resource "tencentcloud_vpn_gateway_route" "example" {
+    vpn_gateway_id = tencentcloud_vpn_gateway.example.id
+    destination_cidr_block = "10.0.0.0/16"
+    instance_type = "VPNCONN"
+    instance_id = "vpnx-5b5dmao3"
+    priority = "100"
+    status = "DISABLE"
+}
+
+data "tencentcloud_vpn_gateway_routes" "example" {
+  vpn_gateway_id = tencentcloud_vpn_gateway.example.id
 }
