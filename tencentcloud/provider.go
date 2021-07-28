@@ -521,10 +521,12 @@ VPN
     tencentcloud_vpn_connections
     tencentcloud_vpn_customer_gateways
     tencentcloud_vpn_gateways
+    tencentcloud_vpn_gateway_routes
 
   Resource
     tencentcloud_vpn_customer_gateway
     tencentcloud_vpn_gateway
+    tencentcloud_vpn_gateway_route
     tencentcloud_vpn_connection
 */
 package tencentcloud
@@ -664,6 +666,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_nat_gateways":                             dataSourceTencentCloudNatGateways(),
 			"tencentcloud_vpn_customer_gateways":                    dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                             dataSourceTencentCloudVpnGateways(),
+			"tencentcloud_vpn_gateway_routes":                       dataSourceTencentCloudVpnGatewayRoutes(),
 			"tencentcloud_vpn_connections":                          dataSourceTencentCloudVpnConnections(),
 			"tencentcloud_ha_vips":                                  dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                   dataSourceTencentCloudHaVipEipAttachments(),
@@ -824,6 +827,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dc_gateway_ccn_route":                    resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_vpn_customer_gateway":                    resourceTencentCloudVpnCustomerGateway(),
 			"tencentcloud_vpn_gateway":                             resourceTencentCloudVpnGateway(),
+			"tencentcloud_vpn_gateway_route":                       resourceTencentCloudVpnGatewayRoute(),
 			"tencentcloud_vpn_connection":                          resourceTencentCloudVpnConnection(),
 			"tencentcloud_ha_vip":                                  resourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":                   resourceTencentCloudHaVipEipAttachment(),

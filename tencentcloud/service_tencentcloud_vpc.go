@@ -1700,7 +1700,7 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 	info.PolicyType = m["direction"]
 	info.Action = m["action"]
 
-	//the newest version include template
+	// the newest version include template
 	addressTemplateId, addressTemplateOk := m["address_template_id"]
 	addressGroupTemplateId, addressTemplateGroupOk := m["address_template_group_id"]
 	if addressTemplateOk || addressTemplateGroupOk {
@@ -1772,7 +1772,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 		return false
 	}
 
-	//if template is not null it must be compared
+	// if template is not null it must be compared
 	if info.ProtocolTemplateId != nil && *info.ProtocolTemplateId != "" {
 		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceId == nil || *info.ProtocolTemplateId != *policy.ServiceTemplate.ServiceId {
 			log.Printf("%s %v test", *info.ProtocolTemplateId, policy.ServiceTemplate)
@@ -2892,7 +2892,7 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 	})
 }
 
-//deal acl
+// deal acl
 func parseACLRule(str string) (liteRule VpcACLRule, err error) {
 	split := strings.Split(str, "#")
 	if len(split) != 4 {
@@ -3109,7 +3109,7 @@ func (me *VpcService) DeleteAcl(ctx context.Context, aclID string) (errRet error
 		}
 	}
 
-	//delete acl
+	// delete acl
 	request.NetworkAclId = &aclID
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -3857,4 +3857,136 @@ func (me *VpcService) DeleteServiceTemplateGroup(ctx context.Context, templateGr
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseVpcClient().DeleteServiceTemplateGroup(request)
 	return err
+}
+
+func (me *VpcService) CreateVpnGatewayRoute(ctx context.Context, vpnGatewayId string, vpnGwRoutes []*vpc.VpnGatewayRoute) (errRet error, routes []*vpc.VpnGatewayRoute) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateVpnGatewayRoutesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpnGatewayId = &vpnGatewayId
+	request.Routes = vpnGwRoutes
+
+	var response *vpc.CreateVpnGatewayRoutesResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseVpcClient().CreateVpnGatewayRoutes(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s create vpn gateway route failed, reason: %v", logId, errRet)
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return errRet, nil
+	}
+
+	if response == nil || response.Response == nil || response.Response.Routes == nil || len(response.Response.Routes) == 0 {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %+v, %s", response, request.GetAction())
+	} else {
+		routes = response.Response.Routes
+	}
+	return
+}
+
+func (me *VpcService) ModifyVpnGatewayRoutes(ctx context.Context, vpnGatewayId, routeId, status string) (errRet error, routes *vpc.VpnGatewayRoute) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyVpnGatewayRoutesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpnGatewayId = &vpnGatewayId
+	request.Routes = []*vpc.VpnGatewayRouteModify{{
+		RouteId: &routeId,
+		Status:  &status,
+	}}
+
+	var response *vpc.ModifyVpnGatewayRoutesResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseVpcClient().ModifyVpnGatewayRoutes(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return errRet, nil
+	}
+
+	if response == nil || response.Response == nil || response.Response.Routes == nil || len(response.Response.Routes) == 0 {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	} else {
+		routes = response.Response.Routes[0]
+	}
+	return
+}
+
+func (me *VpcService) DeleteVpnGatewayRoutes(ctx context.Context, vpnGatewayId string, routeIds []*string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteVpnGatewayRoutesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpnGatewayId = &vpnGatewayId
+	request.RouteIds = routeIds
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteVpnGatewayRoutes(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
+}
+
+func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId string, filters []*vpc.Filter) (errRet error, result []*vpc.VpnGatewayRoute) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeVpnGatewayRoutesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpnGatewayId = &vpnGatewayId
+	if filters != nil && len(filters) > 0 {
+		request.Filters = filters
+	}
+
+	offset := int64(0)
+	limit := int64(VPN_DESCRIBE_LIMIT)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		var response *vpc.DescribeVpnGatewayRoutesResponse
+		errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, errRet = me.client.UseVpcClient().DescribeVpnGatewayRoutes(request)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if errRet != nil {
+			return errRet, nil
+		}
+
+		if response == nil || response.Response == nil {
+			return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()), nil
+		} else if len(response.Response.Routes) > 0 {
+			result = append(result, response.Response.Routes...)
+		} else {
+			return
+		}
+		offset = offset + limit
+	}
 }
