@@ -18,6 +18,7 @@ resource "tencentcloud_postgresql_instance" "example" {
   vpc_id            = tencentcloud_vpc.foo.id
   subnet_id         = tencentcloud_subnet.foo.id
   engine_version    = "9.3.5"
+  root_user         = "root"
   root_password     = "1qaA2k1wgvfa3ZZZ"
   charset           = "UTF8"
   project_id        = 0

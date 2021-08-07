@@ -1,4 +1,21 @@
-## 1.56.16 (Unreleased)
+## 1.57.2 (Aug 7, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_postgresql_instance` root_user setting support
+
+## 1.57.1 (Aug 5, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_vpn_gateway_route` add example docs
+
+## 1.57.0 (July 28, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_vpn_gateway_route`
+* **New Data Source**: `tencentcloud_vpn_gateway_route`
 
 ## 1.56.15 (July 07, 2021)
 

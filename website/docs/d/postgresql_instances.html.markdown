@@ -56,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
   * `public_access_host` - Host for public access.
   * `public_access_port` - Port for public access.
   * `public_access_switch` - Indicates whether to enable the access to an instance from public network or not.
+  * `root_user` - Instance root account name, default value is `root`.
   * `storage` - Volume size(in GB).
   * `subnet_id` - ID of subnet.
   * `tags` - The available tags within this postgresql.

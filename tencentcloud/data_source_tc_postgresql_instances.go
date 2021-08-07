@@ -113,6 +113,11 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Availability zone.",
 						},
+						"root_user": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance root account name, default value is `root`.",
+						},
 						"public_access_switch": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -209,6 +214,15 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		listItem["public_access_switch"] = false
 		listItem["charset"] = v.DBCharset
 		listItem["public_access_host"] = ""
+
+		// rootUser
+		accounts, outErr := service.DescribeRootUser(ctx, d.Id())
+		if outErr != nil {
+			return outErr
+		}
+		if len(accounts) > 0 {
+			listItem["root_user"] = accounts[0].UserName
+		}
 
 		for _, netInfo := range v.DBInstanceNetInfo {
 			if *netInfo.NetType == "public" {

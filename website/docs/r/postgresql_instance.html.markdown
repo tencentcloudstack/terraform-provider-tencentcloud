@@ -14,14 +14,35 @@ Use this resource to create postgresql instance.
 ## Example Usage
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-1"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "guagua_vpc_instance_test"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "guagua_vpc_subnet_test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create postgresql
 resource "tencentcloud_postgresql_instance" "foo" {
   name              = "example"
   availability_zone = var.availability_zone
   charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = "vpc-409mvdvv"
-  subnet_id         = "subnet-nf9n81ps"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   engine_version    = "9.3.5"
-  root_password     = "1qaA2k1wgvfa3ZZZ"
+  root_user         = "root123"
+  root_password     = "Root123$"
   charset           = "UTF8"
   project_id        = 0
   memory            = 2
@@ -47,6 +68,7 @@ The following arguments are supported:
 * `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `9.3.5`, `9.5.4`, `10.4`.
 * `project_id` - (Optional) Project id, default value is `0`.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
+* `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
 * `tags` - (Optional) The available tags within this postgresql.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.

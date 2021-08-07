@@ -19,9 +19,9 @@ type PostgresqlService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name string, dbVersion string, chargeType string, specCode string, autoRenewFlag int, projectId int, period int, subnetId string, vpcId string, zone string, storage int) (instanceId string, errRet error) {
+func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string, storage int, username, password, charset string) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
-	request := postgresql.NewCreateDBInstancesRequest()
+	request := postgresql.NewCreateInstancesRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
@@ -39,9 +39,12 @@ func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name 
 	request.Storage = helper.IntUint64(storage)
 	request.Zone = &zone
 	request.InstanceCount = helper.Int64Uint64(1)
+	request.AdminName = &username
+	request.AdminPassword = &password
+	request.Charset = &charset
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UsePostgresqlClient().CreateDBInstances(request)
+	response, err := me.client.UsePostgresqlClient().CreateInstances(request)
 	if err != nil {
 		errRet = err
 		return
@@ -60,7 +63,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name 
 	return
 }
 
-func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanceId string, password string, charset string) (errRet error) {
+func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanceId string, username string, password string, charset string) (errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewInitDBInstancesRequest()
 	defer func() {
@@ -69,7 +72,7 @@ func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanc
 		}
 	}()
 	request.Charset = &charset
-	request.AdminName = helper.String("root")
+	request.AdminName = &username
 	request.AdminPassword = &password
 	request.DBInstanceIdSet = []*string{&instanceId}
 
@@ -132,7 +135,7 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
 
-		//check open or not
+		// check open or not
 		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
@@ -150,7 +153,7 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 							}
 						}
 					}
-					//there is no public service yet
+					// there is no public service yet
 					return resource.RetryableError(fmt.Errorf("cannot find public status, postgresql instance %s watiting", instanceId))
 				} else {
 					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
@@ -175,7 +178,7 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
-		//check close or not
+		// check close or not
 		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
@@ -193,7 +196,7 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 							}
 						}
 					}
-					//there is no public service
+					// there is no public service
 					return nil
 				} else {
 					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
@@ -342,6 +345,29 @@ func (me *PostgresqlService) SetPostgresqlInstanceAutoRenewFlag(ctx context.Cont
 	return err
 }
 
+func (me *PostgresqlService) IsolatePostgresqlInstance(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewIsolateDBInstancesRequest()
+	request.DBInstanceIdSet = []*string{&instanceId}
+	ratelimit.Check(request.GetAction())
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, errRet = me.client.UsePostgresqlClient().IsolateDBInstances(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s describe account failed, reason: %v", logId, errRet)
+			return retryError(errRet)
+		}
+		return nil
+	})
+	return errRet
+}
+
 func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDestroyDBInstanceRequest()
@@ -375,7 +401,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 }
 
 func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string) error {
-	//check status
+	// check status
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
@@ -390,4 +416,34 @@ func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instance
 	})
 
 	return err
+}
+
+func (me *PostgresqlService) DescribeRootUser(ctx context.Context, instanceId string) (accounts []*postgresql.AccountInfo, errRet error) {
+	logId := getLogId(ctx)
+	orderBy := "createTime"
+	orderByType := "asc"
+
+	request := postgresql.NewDescribeAccountsRequest()
+	request.DBInstanceId = &instanceId
+	request.OrderBy = &orderBy
+	request.OrderByType = &orderByType
+	var response *postgresql.DescribeAccountsResponse
+	errRet = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		response, errRet = me.client.UsePostgresqlClient().DescribeAccounts(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s describe account failed, reason: %v", logId, errRet)
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return nil, errRet
+	}
+	if response == nil || response.Response == nil || response.Response.Details == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %+v, %s", response, request.GetAction())
+	} else {
+		accounts = response.Response.Details
+	}
+
+	return accounts, errRet
 }
