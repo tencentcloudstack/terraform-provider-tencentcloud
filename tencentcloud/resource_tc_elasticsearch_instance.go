@@ -461,6 +461,10 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 
 	nodeInfoList := make([]map[string]interface{}, 0, len(instance.NodeInfoList))
 	for _, item := range instance.NodeInfoList {
+		// this will not keep longer as long as cloud api response update
+		if *item.Type == "kibana" {
+			continue
+		}
 		info := make(map[string]interface{}, 5)
 		info["node_num"] = item.NodeNum
 		info["node_type"] = item.NodeType
