@@ -1,3 +1,8 @@
+## 1.57.3 (Aug 10, 2021)
+
+* Resource `data_source_tc_elasticsearch_instances.go` skip kibana node info record after elastic search instance create
+* Resource `resource_tc_postgresql_instance.go` skip kibana node info record after elastic search instance create
+
 ## 1.57.2 (Aug 7, 2021)
 
 ENHANCEMENTS:
