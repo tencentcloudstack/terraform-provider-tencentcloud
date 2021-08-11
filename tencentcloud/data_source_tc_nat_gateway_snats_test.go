@@ -1,3 +1,32 @@
+package tencentcloud
+
+import (
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+)
+
+func TestAccTencentCloudNatGatewaySnatsDataSource(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudNatGatewaySnatsDataSourceConfig_basic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_nat_gateway_snats.snat"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateway_snats.snat", "nats.#", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateway_snats.snat", "nats.0.resource_type", "SUBNET"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateway_snats.snat", "nats.1.resource_type", "NETWORKINTERFACE"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateway_snats.snat", "nats.0.description", "terraform test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateway_snats.snat", "nats.1.description", "terraform test"),
+				),
+			},
+		},
+	})
+}
+
+const testAccTencentCloudNatGatewaySnatsDataSourceConfig_basic = `
 data "tencentcloud_availability_zones" "my_zones" {}
 
 data "tencentcloud_vpc" "my_vpc" {
@@ -55,6 +84,19 @@ resource "tencentcloud_subnet" "my_subnet" {
   route_table_id    = tencentcloud_route_table.my_route_table.id
 }
 
+# Subnet Nat gateway snat
+resource "tencentcloud_nat_gateway_snat" "my_subnet_snat" {
+  nat_gateway_id    = tencentcloud_nat_gateway.my_nat.id
+  resource_type     = "SUBNET"
+  subnet_id         = tencentcloud_subnet.my_subnet.id
+  subnet_cidr_block = tencentcloud_subnet.my_subnet.cidr_block
+  description       = "terraform test"
+  public_ip_addr = [
+    tencentcloud_eip.eip_dev_dnat.public_ip,
+    tencentcloud_eip.eip_test_dnat.public_ip,
+  ]
+}
+
 # Create instance
 resource "tencentcloud_instance" "my_instance" {
   instance_name              = "terraform test"
@@ -70,40 +112,6 @@ resource "tencentcloud_instance" "my_instance" {
   internet_max_bandwidth_out = 20
 }
 
-# Add DNAT Entry
-resource "tencentcloud_dnat" "dev_dnat" {
-  vpc_id       = tencentcloud_nat_gateway.my_nat.vpc_id
-  nat_id       = tencentcloud_nat_gateway.my_nat.id
-  protocol     = "TCP"
-  elastic_ip   = tencentcloud_eip.eip_dev_dnat.public_ip
-  elastic_port = "80"
-  private_ip   = tencentcloud_instance.my_instance.private_ip
-  private_port = "9001"
-}
-
-resource "tencentcloud_dnat" "test_dnat" {
-  vpc_id       = tencentcloud_nat_gateway.my_nat.vpc_id
-  nat_id       = tencentcloud_nat_gateway.my_nat.id
-  protocol     = "UDP"
-  elastic_ip   = tencentcloud_eip.eip_test_dnat.public_ip
-  elastic_port = "8080"
-  private_ip   = tencentcloud_instance.my_instance.private_ip
-  private_port = "9002"
-}
-
-# Subnet Nat gateway snat
-resource "tencentcloud_nat_gateway_snat" "my_subnet_snat" {
-  nat_gateway_id    = tencentcloud_nat_gateway.my_nat.id
-  resource_type     = "SUBNET"
-  subnet_id         = tencentcloud_subnet.my_subnet.id
-  subnet_cidr_block = tencentcloud_subnet.my_subnet.cidr_block
-  description       = "terraform test"
-  public_ip_addr = [
-    tencentcloud_eip.eip_dev_dnat.public_ip,
-    tencentcloud_eip.eip_test_dnat.public_ip,
-  ]
-}
-
 # NetWorkInterface Nat gateway snat
 resource "tencentcloud_nat_gateway_snat" "my_instance_snat" {
   nat_gateway_id           = tencentcloud_nat_gateway.my_nat.id
@@ -115,3 +123,8 @@ resource "tencentcloud_nat_gateway_snat" "my_instance_snat" {
     tencentcloud_eip.eip_dev_dnat.public_ip,
   ]
 }
+
+data "tencentcloud_nat_gateway_snats" "snat" {
+  nat_gateway_id     = tencentcloud_nat_gateway.my_nat.id
+}
+`

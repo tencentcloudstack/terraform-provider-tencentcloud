@@ -1,4 +1,13 @@
+## 1.58.0 (Aug 11, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_nat_gateway_snat`
+* **New Data Source**: `tencentcloud_nat_gateway_snat`
+
 ## 1.57.3 (Aug 10, 2021)
+
+BUG FIXES:
 
 * Resource `data_source_tc_elasticsearch_instances.go` skip kibana node info record after elastic search instance create
 * Resource `resource_tc_postgresql_instance.go` skip kibana node info record after elastic search instance create
@@ -24,14 +33,14 @@ FEATURES:
 
 ## 1.56.15 (July 07, 2021)
 
-BUG FIXES
+BUG FIXES:
 
 * Resource `tencentcloud_tc_kubernetes_cluster` filter the request field of *bandwidth_package_id* when it is null
 * Resource `tencentcloud_tc_kubernetes_node_pool` filter the request field of *bandwidth_package_id* when it is null
 
 ## 1.56.14 (July 06, 2021)
 
-BUG FIXES
+BUG FIXES:
 
 * Resource `tencentcloud_tc_clb_listener` exec the plan will lead the resource rebuild.
 

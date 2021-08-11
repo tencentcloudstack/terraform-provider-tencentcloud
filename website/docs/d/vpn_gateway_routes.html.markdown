@@ -22,7 +22,7 @@ data "tencentcloud_vpn_gateways" "foo" {
   tags = {
     test = "tf"
   }
-} a
+}
 ```
 
 ## Argument Reference

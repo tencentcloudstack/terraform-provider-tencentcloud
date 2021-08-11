@@ -492,6 +492,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachments
     tencentcloud_ha_vips
     tencentcloud_nat_gateways
+    tencentcloud_nat_gateway_snats
     tencentcloud_nats
 
   Resource
@@ -513,6 +514,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_route_table_entry
     tencentcloud_dnat
     tencentcloud_nat_gateway
+    tencentcloud_nat_gateway_snat
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
 
@@ -664,6 +666,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_nats":                                     dataSourceTencentCloudNats(),
 			"tencentcloud_dnats":                                    dataSourceTencentCloudDnats(),
 			"tencentcloud_nat_gateways":                             dataSourceTencentCloudNatGateways(),
+			"tencentcloud_nat_gateway_snats":                        dataSourceTencentCloudNatGatewaySnats(),
 			"tencentcloud_vpn_customer_gateways":                    dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                             dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                       dataSourceTencentCloudVpnGatewayRoutes(),
@@ -815,6 +818,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_route_table":                             resourceTencentCloudVpcRouteTable(),
 			"tencentcloud_dnat":                                    resourceTencentCloudDnat(),
 			"tencentcloud_nat_gateway":                             resourceTencentCloudNatGateway(),
+			"tencentcloud_nat_gateway_snat":                        resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_eip":                                     resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                         resourceTencentCloudEipAssociation(),
 			"tencentcloud_eni":                                     resourceTencentCloudEni(),

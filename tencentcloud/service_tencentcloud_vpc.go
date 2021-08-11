@@ -3892,7 +3892,7 @@ func (me *VpcService) CreateVpnGatewayRoute(ctx context.Context, vpnGatewayId st
 	return
 }
 
-func (me *VpcService) ModifyVpnGatewayRoutes(ctx context.Context, vpnGatewayId, routeId, status string) (errRet error, routes *vpc.VpnGatewayRoute) {
+func (me *VpcService) ModifyVpnGatewayRoute(ctx context.Context, vpnGatewayId, routeId, status string) (errRet error, routes *vpc.VpnGatewayRoute) {
 	logId := getLogId(ctx)
 	request := vpc.NewModifyVpnGatewayRoutesRequest()
 	defer func() {
@@ -3984,6 +3984,131 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 			return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()), nil
 		} else if len(response.Response.Routes) > 0 {
 			result = append(result, response.Response.Routes...)
+		} else {
+			return
+		}
+		offset = offset + limit
+	}
+}
+
+func (me *VpcService) CreateNatGatewaySnat(ctx context.Context, natGatewayId string, snat *vpc.SourceIpTranslationNatRule) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewCreateNatGatewaySourceIpTranslationNatRuleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.NatGatewayId = &natGatewayId
+	request.SourceIpTranslationNatRules = []*vpc.SourceIpTranslationNatRule{snat}
+
+	var response *vpc.CreateNatGatewaySourceIpTranslationNatRuleResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseVpcClient().CreateNatGatewaySourceIpTranslationNatRule(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s create nat gateway source ip translation nat rule failed, reason: %v", logId, errRet)
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return errRet
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %+v, %s", response, request.GetAction())
+	}
+	return
+}
+
+func (me *VpcService) ModifyNatGatewaySnat(ctx context.Context, natGatewayId string, snat *vpc.SourceIpTranslationNatRule) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyNatGatewaySourceIpTranslationNatRuleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.NatGatewayId = &natGatewayId
+	request.SourceIpTranslationNatRule = snat
+
+	var response *vpc.ModifyNatGatewaySourceIpTranslationNatRuleResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseVpcClient().ModifyNatGatewaySourceIpTranslationNatRule(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return errRet
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return
+}
+
+func (me *VpcService) DeleteNatGatewaySnat(ctx context.Context, natGatewayId string, snatId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteNatGatewaySourceIpTranslationNatRuleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.NatGatewayId = &natGatewayId
+	request.NatGatewaySnatIds = []*string{&snatId}
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteNatGatewaySourceIpTranslationNatRule(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
+}
+
+func (me *VpcService) DescribeNatGatewaySnats(ctx context.Context, natGatewayId string, filters []*vpc.Filter) (errRet error, result []*vpc.SourceIpTranslationNatRule) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeNatGatewaySourceIpTranslationNatRulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.NatGatewayId = &natGatewayId
+	if filters != nil && len(filters) > 0 {
+		request.Filters = filters
+	}
+
+	offset := int64(0)
+	limit := int64(VPN_DESCRIBE_LIMIT)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		var response *vpc.DescribeNatGatewaySourceIpTranslationNatRulesResponse
+		errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, errRet = me.client.UseVpcClient().DescribeNatGatewaySourceIpTranslationNatRules(request)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if errRet != nil {
+			return errRet, nil
+		}
+
+		if response == nil || response.Response == nil {
+			return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()), nil
+		} else if len(response.Response.SourceIpTranslationNatRuleSet) > 0 {
+			result = append(result, response.Response.SourceIpTranslationNatRuleSet...)
 		} else {
 			return
 		}

@@ -32,7 +32,6 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
-	"strings"
 )
 
 func resourceTencentCloudVpnGatewayRoute() *schema.Resource {
@@ -138,7 +137,7 @@ func resourceTencentCloudVpnGatewayRouteCreate(d *schema.ResourceData, meta inte
 	if len(routeList) == 0 {
 		return fmt.Errorf("VPN gateway route id is nil")
 	}
-	d.SetId(genRouteId(vpnGatewayId, *(routeList[0].RouteId)))
+	d.SetId(helper.IdFormat(vpnGatewayId, *(routeList[0].RouteId)))
 
 	setRouteInfo(d, vpnGatewayId, route)
 	return nil
@@ -154,7 +153,7 @@ func resourceTencentCloudVpnGatewayRouteRead(d *schema.ResourceData, meta interf
 		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		id      = d.Id()
 	)
-	compositeId := parseRouteId(id)
+	compositeId := helper.IdParse(id)
 	if len(compositeId) != 2 {
 		return errors.New("the id format must be '{vpn_gateway_id}#{route_id}'")
 	}
@@ -188,7 +187,7 @@ func resourceTencentCloudVpnGatewayRouteUpdate(d *schema.ResourceData, meta inte
 		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		id      = d.Id()
 	)
-	compositeId := parseRouteId(id)
+	compositeId := helper.IdParse(id)
 	if len(compositeId) != 2 {
 		return errors.New("the id format must be '{vpn_gateway_id}#{route_id}'")
 	}
@@ -199,7 +198,7 @@ func resourceTencentCloudVpnGatewayRouteUpdate(d *schema.ResourceData, meta inte
 	status := d.Get("status").(string)
 
 	// update
-	err, route := service.ModifyVpnGatewayRoutes(ctx, compositeId[0], compositeId[1], status)
+	err, route := service.ModifyVpnGatewayRoute(ctx, compositeId[0], compositeId[1], status)
 	if err != nil {
 		log.Printf("[CRITAL]%s modify VPN gateway route failed, reason:%s\n", logId, err.Error())
 		return err
@@ -218,7 +217,7 @@ func resourceTencentCloudVpnGatewayRouteDelete(d *schema.ResourceData, meta inte
 		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		id      = d.Id()
 	)
-	compositeId := parseRouteId(id)
+	compositeId := helper.IdParse(id)
 	if len(compositeId) != 2 {
 		return errors.New("the id format must be '{vpn_gateway_id}#{route_id}'")
 	}
@@ -229,14 +228,6 @@ func resourceTencentCloudVpnGatewayRouteDelete(d *schema.ResourceData, meta inte
 		return err
 	}
 	return nil
-}
-
-func genRouteId(vpnGatewayId, routeId string) string {
-	return vpnGatewayId + "#" + routeId
-}
-
-func parseRouteId(routeId string) []string {
-	return strings.Split(routeId, "#")
 }
 
 func setRouteInfo(d *schema.ResourceData, vpnGatewayId string, route *vpc.VpnGatewayRoute) {
