@@ -133,6 +133,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Memory size (in MB).",
 		},
+		"cpu": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Optional:    true,
+			Description: "CPU cores.",
+		},
 		"volume_size": {
 			Type:        schema.TypeInt,
 			Required:    true,
@@ -338,6 +344,13 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 		requestByMonth.Memory = &memSize
 	} else {
 		requestByUse.Memory = &memSize
+	}
+
+	cpu := int64(d.Get("cpu").(int))
+	if okByMonth {
+		requestByMonth.Cpu = &cpu
+	} else {
+		requestByUse.Cpu = &cpu
 	}
 
 	volumeSize := int64(d.Get("volume_size").(int))
@@ -692,6 +705,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
 	_ = d.Set("mem_size", mysqlInfo.Memory)
+	_ = d.Set("cpu", mysqlInfo.Cpu)
 	_ = d.Set("volume_size", mysqlInfo.Volume)
 	if d.Get("vpc_id").(string) != "" {
 		errRet = d.Set("vpc_id", mysqlInfo.UniqVpcId)
@@ -907,12 +921,13 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("volume_size") {
+	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") {
 
 		memSize := int64(d.Get("mem_size").(int))
+		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, volumeSize)
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize)
 
 		if err != nil {
 			return err
@@ -946,6 +961,9 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 		if d.HasChange("mem_size") {
 			d.SetPartial("mem_size")
+		}
+		if d.HasChange("cpu") {
+			d.SetPartial("cpu")
 		}
 		if d.HasChange("volume_size") {
 			d.SetPartial("volume_size")
