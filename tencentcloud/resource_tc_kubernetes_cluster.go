@@ -1134,6 +1134,11 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Custom parameter information related to the node.",
 		},
+		"runtime_version": {
+			Type:		schema.TypeString,
+			Optional: true,
+			Description: "Container Runtime version.",
+		},
 
 		"kube_config": {
 			Type:        schema.TypeString,
@@ -1655,6 +1660,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		if math.Pow(2, float64(32-bitNumber)) <= float64(cidrSet.MaxNodePodNum) {
 			return fmt.Errorf("`cluster_cidr` Network segment range is too small, can not cover cluster_max_service_num")
 		}
+	}
+
+	if version, ok := d.GetOk("runtime_version"); ok {
+		advanced.RuntimeVersion = version.(string)
 	}
 
 	overrideSettings := OverrideSettings{
