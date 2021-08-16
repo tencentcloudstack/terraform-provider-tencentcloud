@@ -53,6 +53,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
 
   worker_config {
     count                      = 1
@@ -329,8 +333,11 @@ The `cluster_extra_args` object supports the following:
 
 The `data_disk` object supports the following:
 
+* `auto_format_and_mount` - (Optional, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
+* `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, ForceNew) Mount target.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `exist_instance` object supports the following:

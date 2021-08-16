@@ -43,6 +43,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
+  data_disk {
+	disk_type = "CLOUD_PREMIUM"
+	disk_size = 50
+  }
 
   worker_config {
     count                      = 1
@@ -459,6 +463,25 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						ForceNew:    true,
 						Optional:    true,
 						Description: "Data disk snapshot ID.",
+					},
+					"file_system": {
+						Type: schema.TypeString,
+						ForceNew: true,
+						Optional: true,
+						Description: "File system, e.g. `ext3/ext4/xfs`.",
+					},
+					"auto_format_and_mount": {
+						Type: schema.TypeBool,
+						ForceNew: true,
+						Optional: true,
+						Default: true,
+						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
+					},
+					"mount_target": {
+						Type: schema.TypeString,
+						ForceNew: true,
+						Optional: true,
+						Description: "Mount target.",
 					},
 				},
 			},
@@ -1492,15 +1515,16 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		basic            ClusterBasicSetting
-		advanced         ClusterAdvancedSettings
-		cvms             RunInstancesForNode
-		iAdvanced        InstanceAdvancedSettings
-		cidrSet          ClusterCidrSettings
-		securityPolicies []string
-		clusterInternet  = d.Get("cluster_internet").(bool)
-		clusterIntranet  = d.Get("cluster_intranet").(bool)
-		intranetSubnetId = d.Get("cluster_intranet_subnet_id").(string)
+		basic            	ClusterBasicSetting
+		advanced         	ClusterAdvancedSettings
+		cvms             	RunInstancesForNode
+		iAdvanced        	InstanceAdvancedSettings
+		iDiskMountSettings	[]*tke.InstanceDataDiskMountSetting
+		cidrSet          	ClusterCidrSettings
+		securityPolicies 	[]string
+		clusterInternet  	= d.Get("cluster_internet").(bool)
+		clusterIntranet  	= d.Get("cluster_intranet").(bool)
+		intranetSubnetId 	= d.Get("cluster_intranet_subnet_id").(string)
 	)
 
 	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
@@ -1686,6 +1710,46 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 					overrideSettings.Work = append(overrideSettings.Work, tke.InstanceAdvancedSettings{DesiredPodNumber: helper.Int64(dpNum)})
 				}
 			}
+
+			if v, ok := worker["data_disk"]; ok {
+				var (
+					instanceType = worker["instance_type"].(string)
+					zone = worker["availability_zone"].(string)
+				)
+				iDiskMountSetting := &tke.InstanceDataDiskMountSetting{
+					InstanceType: &instanceType,
+					Zone: &zone,
+				}
+
+				diskList := v.([]interface{})
+				for _, d := range diskList {
+					var (
+						disk      = d.(map[string]interface{})
+						diskType = disk["disk_type"].(string)
+						diskSize = int64(disk["disk_size"].(int))
+						fileSystem = disk["file_system"].(string)
+						autoFormatAndMount = disk["auto_format_and_mount"].(bool)
+						mountTarget = disk["mount_target"].(string)
+					)
+
+					dataDisk := &tke.DataDisk{
+						DiskType: &diskType,
+						DiskSize: &diskSize,
+						AutoFormatAndMount: &autoFormatAndMount,
+					}
+
+					if fileSystem != "" {
+						dataDisk.FileSystem = &fileSystem
+					}
+					if mountTarget != "" {
+						dataDisk.MountTarget = &mountTarget
+					}
+
+					iDiskMountSetting.DataDisks = append(iDiskMountSetting.DataDisks, dataDisk)
+				}
+
+				iDiskMountSettings = append(iDiskMountSettings, iDiskMountSetting)
+			}
 		}
 	}
 
@@ -1713,23 +1777,23 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	// ExistedInstancesForNode
-	existIntances := make([]*tke.ExistedInstancesForNode, 0)
+	existInstances := make([]*tke.ExistedInstancesForNode, 0)
 	if instances, ok := d.GetOk("exist_instance"); ok {
 		instanceList := instances.([]interface{})
 		for index := range instanceList {
 			instance := instanceList[index].(map[string]interface{})
 			existedInstance, _ := tkeGetCvmExistInstancesPara(instance)
-			existIntances = append(existIntances, &existedInstance)
+			existInstances = append(existInstances, &existedInstance)
 		}
 	}
 
 	// RunInstancesForNode（master_config+worker_config) 和 ExistedInstancesForNode 不能同时存在
-	if len(cvms.Master)+len(cvms.Work) > 0 && len(existIntances) > 0 {
+	if len(cvms.Master)+len(cvms.Work) > 0 && len(existInstances) > 0 {
 		return fmt.Errorf("master_config+worker_config and exist_instance can not exist at the same time")
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existIntances, &overrideSettings)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existInstances, &overrideSettings, iDiskMountSettings)
 	if err != nil {
 		return err
 	}

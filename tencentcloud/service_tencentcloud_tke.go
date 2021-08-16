@@ -60,6 +60,7 @@ type InstanceAdvancedSettings struct {
 	Unschedulable   int64
 	DesiredPodNum   int64
 	Labels          []*tke.Label
+	DataDisks		[]*tke.DataDisk
 	ExtraArgs       tke.InstanceExtraArgs
 }
 
@@ -82,12 +83,13 @@ type ClusterInfo struct {
 }
 
 type InstanceInfo struct {
-	InstanceId               string
-	InstanceRole             string
-	InstanceState            string
-	FailedReason             string
-	InstanceAdvancedSettings *tke.InstanceAdvancedSettings
-	LanIp                    string
+	InstanceId               		string
+	InstanceRole             		string
+	InstanceState            		string
+	FailedReason             		string
+	InstanceAdvancedSettings 		*tke.InstanceAdvancedSettings
+	InstanceDataDiskMountSetting	*tke.InstanceDataDiskMountSetting
+	LanIp                    		string
 }
 
 type TkeService struct {
@@ -395,6 +397,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	tags map[string]string,
 	existedInstance []*tke.ExistedInstancesForNode,
 	overrideSettings *OverrideSettings,
+	iDiskMountSettings []*tke.InstanceDataDiskMountSetting,
 ) (id string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -459,6 +462,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
 	}
 
+	if len(iAdvanced.DataDisks) > 0 {
+		request.InstanceAdvancedSettings.DataDisks = iAdvanced.DataDisks
+	}
+
 	if len(overrideSettings.Master)+len(overrideSettings.Work) > 0 &&
 		len(overrideSettings.Master)+len(overrideSettings.Work) != (len(cvms.Master)+len(cvms.Work)) {
 		return "", fmt.Errorf("len(overrideSettings) != (len(cvms.Master)+len(cvms.Work))")
@@ -495,6 +502,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 			}
 		}
 		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
+	}
+
+	if len(iDiskMountSettings) != 0 {
+		request.InstanceDataDiskMountSettings = iDiskMountSettings
 	}
 
 	request.ClusterCIDRSettings = &tke.ClusterCIDRSettings{}
