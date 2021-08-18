@@ -319,6 +319,7 @@ The following arguments are supported:
 * `node_name_type` - (Optional, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
 * `node_pool_global_config` - (Optional) Global config effective for all node pools.
 * `project_id` - (Optional) Project ID, default value is 0.
+* `runtime_version` - (Optional) Container Runtime version.
 * `service_cidr` - (Optional, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional) The tags of the cluster.
 * `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.

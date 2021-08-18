@@ -1,6 +1,15 @@
-## 1.58.1 (Aug 17, 2021)
+## 1.58.2 (Aug 18, 2021)
 ENHANCEMENTS:
+* Resource `resource_tc_kubernetes_cluster.go` tke instance creation - add RuntimeVersion param
 * Resource `resource_tc_kubernetes_cluster.go` extend worker instance data disk mount settings
+
+## 1.58.1 (Aug 17, 2021)
+
+ENHANCEMENTS:
+* Resource `resource_tc_mysql_instance.go` add cpu params for mysql
+
+BUG_FIXES:
+* Resource `resource_tc_instance.go` fix read cvm data_disks bug
 
 ## 1.58.0 (Aug 11, 2021)
 

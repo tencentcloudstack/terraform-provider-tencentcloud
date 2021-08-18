@@ -34,6 +34,7 @@ type ClusterAdvancedSettings struct {
 	EnableCustomizedPodCIDR bool
 	BasePodNumber           int64
 	ContainerRuntime        string
+	RuntimeVersion			string
 	NodeNameType            string
 	ExtraArgs               ClusterExtraArgs
 	NetworkType             string
@@ -435,6 +436,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterAdvancedSettings.IPVS = &advanced.Ipvs
 	request.ClusterAdvancedSettings.AsEnabled = &advanced.AsEnabled
 	request.ClusterAdvancedSettings.ContainerRuntime = &advanced.ContainerRuntime
+	request.ClusterAdvancedSettings.RuntimeVersion = &advanced.RuntimeVersion
 	request.ClusterAdvancedSettings.NodeNameType = &advanced.NodeNameType
 	request.ClusterAdvancedSettings.EnableCustomizedPodCIDR = &advanced.EnableCustomizedPodCIDR
 	request.ClusterAdvancedSettings.BasePodNumber = &advanced.BasePodNumber
