@@ -144,6 +144,7 @@ The `auto_scaling_config` object supports the following:
 The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.
