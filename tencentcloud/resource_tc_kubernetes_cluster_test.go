@@ -178,6 +178,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
+      file_system = "ext3"
+	  auto_format_and_mount = "true"
+	  mount_target = "/var/lib/docker"
+      disk_partition = "/dev/sdb1"
     }
 
     enhanced_security_service = false

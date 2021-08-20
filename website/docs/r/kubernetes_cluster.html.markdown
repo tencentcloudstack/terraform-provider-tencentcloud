@@ -53,10 +53,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
-  data_disk {
-    disk_type = "CLOUD_PREMIUM"
-    disk_size = 50
-  }
 
   worker_config {
     count                      = 1
@@ -278,6 +274,63 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
 }
 ```
 
+Using VPC-CNI network type
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-1"
+}
+
+variable "vpc" {
+  default = "vpc-r1m1fyx5"
+}
+
+variable "default_instance_type" {
+  default = "SA2.SMALL2"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = var.vpc
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 256
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  network_type                               = "VPC-CNI"
+  eni_subnet_ids                             = ["subnet-bk1etlyu"]
+  service_cidr                               = "10.1.0.0/24"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = "subnet-t5dv27rs"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -335,6 +388,7 @@ The `cluster_extra_args` object supports the following:
 The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.

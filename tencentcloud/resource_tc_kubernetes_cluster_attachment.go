@@ -171,6 +171,12 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Default:     "",
 						Description: "Mount target.",
 					},
+					"disk_partition": {
+						Type: schema.TypeString,
+						ForceNew: true,
+						Optional: true,
+						Description: "The name of the device or partition to mount.",
+					},
 				},
 			},
 		},
@@ -316,12 +322,14 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 				fileSystem         = value["file_system"].(string)
 				autoFormatAndMount = value["auto_format_and_mount"].(bool)
 				mountTarget        = value["mount_target"].(string)
+				diskPartition	   = value["disk_partition"].(string)
 				dataDisk           = tke.DataDisk{
 					DiskType:           &diskType,
 					DiskSize:           &diskSize,
 					FileSystem:         &fileSystem,
 					AutoFormatAndMount: &autoFormatAndMount,
 					MountTarget:        &mountTarget,
+					DiskPartition: 		&diskPartition,
 				}
 			)
 			setting.DataDisks = append(setting.DataDisks, &dataDisk)

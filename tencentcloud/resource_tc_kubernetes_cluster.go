@@ -43,10 +43,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
-  data_disk {
-	disk_type = "CLOUD_PREMIUM"
-	disk_size = 50
-  }
 
   worker_config {
     count                      = 1
@@ -267,6 +263,62 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
   }
 }
 ```
+
+Using VPC-CNI network type
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-1"
+}
+
+variable "vpc" {
+  default = "vpc-r1m1fyx5"
+}
+
+variable "default_instance_type" {
+  default = "SA2.SMALL2"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = var.vpc
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 256
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  network_type								 = "VPC-CNI"
+  eni_subnet_ids							 = ["subnet-bk1etlyu"]
+  service_cidr								 = "10.1.0.0/24"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = "subnet-t5dv27rs"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+```
 */
 package tencentcloud
 
@@ -474,7 +526,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						Type: schema.TypeBool,
 						ForceNew: true,
 						Optional: true,
-						Default: true,
+						Default: false,
 						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
 					},
 					"mount_target": {
@@ -482,6 +534,12 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						ForceNew: true,
 						Optional: true,
 						Description: "Mount target.",
+					},
+					"disk_partition": {
+						Type: schema.TypeString,
+						ForceNew: true,
+						Optional: true,
+						Description: "The name of the device or partition to mount.",
 					},
 				},
 			},
@@ -1739,6 +1797,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 						fileSystem = disk["file_system"].(string)
 						autoFormatAndMount = disk["auto_format_and_mount"].(bool)
 						mountTarget = disk["mount_target"].(string)
+						diskPartition = disk["disk_partition"].(string)
 					)
 
 					dataDisk := &tke.DataDisk{
@@ -1750,8 +1809,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 					if fileSystem != "" {
 						dataDisk.FileSystem = &fileSystem
 					}
+
 					if mountTarget != "" {
 						dataDisk.MountTarget = &mountTarget
+					}
+
+					if diskPartition != "" {
+						dataDisk.DiskPartition = &diskPartition
 					}
 
 					iDiskMountSetting.DataDisks = append(iDiskMountSetting.DataDisks, dataDisk)
