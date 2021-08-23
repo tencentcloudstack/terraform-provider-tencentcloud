@@ -3,6 +3,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/tencentyun/cos-go-sdk-v5"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -117,6 +119,23 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 		logId, "put bucket", request.String(), response.String())
 
 	return nil
+}
+
+func (me *CosService) CosPutBucket(ctx context.Context, bucket, acl string) (errRet error)  {
+	logId := getLogId(ctx)
+
+	opt := &cos.BucketPutOptions{
+
+	}
+
+	me.client.UseTencentCosClient().Bucket.Put(ctx, opt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "put bucket", opt.String(), errRet.Error())
+		}
+	}()
 }
 
 func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet error) {

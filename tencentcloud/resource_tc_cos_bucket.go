@@ -332,6 +332,12 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Computed:    true,
 				Description: "The URL of this cos bucket.",
 			},
+			"az_config": {
+				Type: schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: "The configuration of bucket available zone, set `MAZ` to enable multi available zone.",
+			},
 		},
 	}
 }
@@ -384,8 +390,8 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	cosBuckeUrl := fmt.Sprintf("%s.cos.%s.myqcloud.com", d.Id(), meta.(*TencentCloudClient).apiV3Conn.Region)
-	_ = d.Set("cos_bucket_url", cosBuckeUrl)
+	cosBucketUrl := fmt.Sprintf("%s.cos.%s.myqcloud.com", d.Id(), meta.(*TencentCloudClient).apiV3Conn.Region)
+	_ = d.Set("cos_bucket_url", cosBucketUrl)
 	// set bucket in the import case
 	if _, ok := d.GetOk("bucket"); !ok {
 		_ = d.Set("bucket", d.Id())

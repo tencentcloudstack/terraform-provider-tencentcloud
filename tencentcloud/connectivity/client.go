@@ -2,6 +2,8 @@ package connectivity
 
 import (
 	"fmt"
+	"github.com/tencentyun/cos-go-sdk-v5"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -53,6 +55,7 @@ type TencentCloudClient struct {
 	Domain     string
 
 	cosConn            *s3.S3
+	tencentCosConn     *cos.Client
 	mysqlConn          *cdb.Client
 	redisConn          *redis.Client
 	asConn             *as.Client
@@ -130,6 +133,22 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	}))
 
 	return s3.New(sess)
+}
+
+// UseTencentCosClient tencent cloud own client for service instead of aws
+func (me *TencentCloudClient) UseTencentCosClient() *cos.Client {
+	if me.tencentCosConn != nil {
+		return me.tencentCosConn
+	}
+	me.tencentCosConn = cos.NewClient("", &http.Client{
+		Timeout: 60,
+		Transport: &cos.AuthorizationTransport{
+			SecretID: me.Credential.SecretId,
+			SecretKey: me.Credential.SecretKey,
+		},
+	})
+
+	return me.tencentCosConn
 }
 
 // UseMysqlClient returns mysql(cdb) client for service
