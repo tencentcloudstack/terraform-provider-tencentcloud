@@ -128,6 +128,7 @@ The following arguments are supported:
 The `auto_scaling_config` object supports the following:
 
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
+* `backup_instance_types` - (Optional) Backup CVM instance types if specified instance type sold out or mismatch.
 * `bandwidth_package_id` - (Optional) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.

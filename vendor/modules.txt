@@ -545,11 +545,12 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.234
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.199
@@ -588,7 +589,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.234
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717

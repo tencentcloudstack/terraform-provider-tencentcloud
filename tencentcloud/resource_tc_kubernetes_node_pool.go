@@ -108,6 +108,30 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+func getNodePoolInstanceTypes(d *schema.ResourceData) []*string {
+	configParas := d.Get("auto_scaling_config").([]interface{})
+	dMap := configParas[0].(map[string]interface{})
+	instanceType, _ := dMap["instance_type"]
+	currInsType := instanceType.(string)
+	v, ok := dMap["backup_instance_types"]
+	backupInstanceTypes := v.([]interface{})
+	instanceTypes := make([]*string, 0)
+	if !ok || len(backupInstanceTypes) == 0 {
+		instanceTypes = append(instanceTypes, &currInsType)
+		return instanceTypes
+	}
+	headType := backupInstanceTypes[0].(string)
+	if headType != currInsType {
+		instanceTypes = append(instanceTypes, &currInsType)
+	}
+	for i := range backupInstanceTypes {
+		insType := backupInstanceTypes[i].(string)
+		instanceTypes = append(instanceTypes, &insType)
+	}
+
+	return instanceTypes
+}
+
 func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 	needSchema := map[string]*schema.Schema{
 		"instance_type": {
@@ -115,6 +139,12 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Required:    true,
 			ForceNew:    true,
 			Description: "Specified types of CVM instance.",
+		},
+		"backup_instance_types": {
+			Type: 		 schema.TypeList,
+			Optional: 	 true,
+			Description: "Backup CVM instance types if specified instance type sold out or mismatch.",
+			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"system_disk_type": {
 			Type:         schema.TypeString,
@@ -457,7 +487,7 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 }
 
 //this function is similar to kubernetesAsScalingConfigParaSerial, but less parameter
-func comosedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
+func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
 	var (
 		result string
 		errRet error
@@ -687,7 +717,7 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	configParaStr, err := comosedKubernetesAsScalingConfigParaSerial(configParas[0].(map[string]interface{}), meta)
+	configParaStr, err := composedKubernetesAsScalingConfigParaSerial(configParas[0].(map[string]interface{}), meta)
 	if err != nil {
 		return err
 	}
@@ -742,7 +772,16 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	//modify os and image
+	instanceTypes := getNodePoolInstanceTypes(d)
+
+	if len(instanceTypes) != 0 {
+		err := service.ModifyClusterNodePoolInstanceTypes(ctx, clusterId, nodePoolId, instanceTypes)
+		if err != nil {
+			return err
+		}
+	}
+
+	//modify os, instanceTypes and image
 	err = resourceKubernetesNodePoolUpdate(d, meta)
 	if err != nil {
 		return err
@@ -810,6 +849,21 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 		d.SetPartial("desired_capacity")
+	}
+
+	if d.HasChange("auto_scaling_config.0.backup_instance_types") {
+		instanceTypes := getNodePoolInstanceTypes(d)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := service.ModifyClusterNodePoolInstanceTypes(ctx, clusterId, nodePoolId, instanceTypes)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
 	}
 	d.Partial(false)
 
