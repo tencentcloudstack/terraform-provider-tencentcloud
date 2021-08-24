@@ -1,3 +1,8 @@
+## 1.58.4 (Aug 24, 2021)
+
+ENHANCEMENTS:
+* Resource `resource_tc_kubernetes_node_pool.go` support `backup_instance_type` for `auto_scaling_config`
+
 ## 1.58.3 (Aug 18, 2021)
 
 ENHANCEMENTS:
