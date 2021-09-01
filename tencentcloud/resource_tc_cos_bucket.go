@@ -12,6 +12,40 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+Using verbose acl
+```hcl
+resource "tencentcloud_cos_bucket" "with_acl_body" {
+  bucket = "mycos-1258798060"
+  acl_body = <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+            </Grantee>
+            <Permission>READ</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>WRITE</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>READ_ACP</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}
+```
+
 Static Website
 
 ```hcl
@@ -64,12 +98,66 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+Using custom origin domain settings
+
+```hcl
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+  origin_domain_rules {
+    domain = "abc.example.com"
+    type = "REST"
+    status = "ENABLE"
+  }
+}
+```
+
+Using origin-pull settings
+```hcl
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+  origin_pull_rules {
+    priority = 1
+    sync_back_to_source = false
+    host = "abc.example.com"
+    prefix = "/"
+    protocol = "FOLLOW" // "HTTP" "HTTPS"
+    follow_query_string = true
+    follow_redirection = true
+    follow_http_headers = ["Origin", "Host"]
+    custom_http_headers = {
+	  "X-Custom-Header" = "custom_value"
+    }
+    redirect_prefix = "prefix"
+    redirect_suffix = ".jpg"
+  }
+}
+```
+
 Setting log status
 
 ```hcl
 resource "tencentcloud_cam_role" "cosLogGrant" {
   name          = "CLS_QcsRole"
-document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"service\":[\"cls.cloud.tencent.com\"]}}]}"
+  document      = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": [
+        "name/sts:AssumeRole"
+      ],
+      "effect": "allow",
+      "principal": {
+        "service": [
+          "cls.cloud.tencent.com"
+        ]
+      }
+    }
+  ]
+}
+EOF
 
   description   = "cos log enable grant"
 }
@@ -114,6 +202,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/tencentyun/cos-go-sdk-v5"
 	"log"
 	"time"
 
@@ -139,6 +228,118 @@ var (
 		tencentCloudCosStorageClassArchive,
 	}
 )
+
+func originPullRules() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"priority": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Priority of origin-pull rules, do not set the same value for multiple rules.",
+			},
+			"sync_back_to_source": {
+				Type:		 schema.TypeBool,
+				Optional: 	 true,
+				Default: 	 false,
+				Description: "If `true`, COS will not return 3XX status code when pulling data from an origin server. Currently available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.",
+			},
+			"prefix": {
+				Type:		 schema.TypeString,
+				Optional: 	 true,
+				Default:	 "",
+				Description: "Triggers the origin-pull rule when the requested file name matches this prefix.",
+			},
+			"protocol": {
+				Type:		 schema.TypeString,
+				Optional: 	 true,
+				Default:	 "",
+				Description: "the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`",
+			},
+			"host": {
+				Type:		 schema.TypeString,
+				Required: 	 true,
+				Description: "Allows only a domain name or IP address. You can optionally append a port number to the address.",
+			},
+			"follow_query_string": {
+				Type:		 schema.TypeBool,
+				Optional: 	 true,
+				Default:	 true,
+				Description: "Specifies whether to pass through COS request query string when accessing the origin server.",
+			},
+			"follow_redirection": {
+				Type:		 schema.TypeBool,
+				Optional: 	 true,
+				Default:	 true,
+				Description: "Specifies whether to follow 3XX redirect to another origin server to pull data from",
+			},
+			//"copy_origin_data": {
+			//	Type:		 schema.TypeBool,
+			//	Optional: 	 true,
+			//	Default:	 true,
+			//	Description: "",
+			//},
+			"follow_http_headers": {
+				Type:		 schema.TypeList,
+				Optional:    true,
+				Description: "Specifies the pass through headers when accessing the origin server.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"custom_http_headers": {
+				Type:		 schema.TypeMap,
+				Optional:    true,
+				Description: "Specifies the custom headers that you can add for COS to access your origin server.",
+			},
+			"redirect_prefix": {
+				Type:		schema.TypeString,
+				Optional:   true,
+				Description: "Prefix for the file to which a request is redirected when the origin-pull rule is triggered.",
+			},
+			"redirect_suffix": {
+				Type:		schema.TypeString,
+				Optional:   true,
+				Description: "Suffix for the file to which a request is redirected when the origin-pull rule is triggered.",
+			},
+		},
+	}
+}
+
+// x-cos-grant-* headers may conflict with xml acl body, we don't open up for now.
+func aclGrantHeaders() *schema.Schema {
+	return &schema.Schema {
+		Type: schema.TypeMap,
+		Optional: true,
+			Description: "ACL x-cos-grant-* headers for multiple grand info",
+			Elem: &schema.Resource {
+			Schema: map[string]*schema.Schema{
+				"grant_read": {
+					Type: schema.TypeString,
+					Optional: true,
+					Description: "Allows grantee to read the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+				},
+				"grant_write": {
+					Type: schema.TypeString,
+					Optional: true,
+					Description: "Allows grantee to write to the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+				},
+				"grant_read_acp": {
+					Type: schema.TypeString,
+					Optional: true,
+					Description: "Allows grantee to read the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+				},
+				"grant_write_acp": {
+					Type: schema.TypeString,
+					Optional: true,
+					Description: "Allows grantee to write the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+				},
+				"grant_full_control": {
+					Type: schema.TypeString,
+					Optional: true,
+					Description: "Grants a user full permission to perform operations on the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+				},
+			},
+		},
+	}
+}
 
 func resourceTencentCloudCosBucket() *schema.Resource {
 	return &schema.Resource{
@@ -168,6 +369,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
 				Description: "The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.",
+			},
+			"acl_body": {
+				Type: schema.TypeString,
+				Optional: true,
+				Description: "ACL XML body for multiple grant info",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
@@ -215,6 +421,44 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Specifies expose header in the response.",
 						},
+					},
+				},
+			},
+			"origin_pull_rules": {
+				Type:		 schema.TypeList,
+				Optional:	 true,
+				Description: "Bucket Origin-Pull settings.",
+				Elem: 	     originPullRules(),
+			},
+			"origin_domain_rules": {
+				Type:		 schema.TypeList,
+				Optional:	 true,
+				Description: "Bucket Origin Domain settings.",
+				Elem: 	     &schema.Resource{
+					Schema: map[string]*schema.Schema {
+						"domain": {
+							Type:		 schema.TypeString,
+							Required: 	 true,
+							Description: "Specify domain host.",
+						},
+						"type": {
+							Type:		 schema.TypeString,
+							Optional: 	 true,
+							Default: "REST",
+							Description: "Specify origin domain type. Available values: `REST` , `WEBSITE`, `ACCELERATE`. Default: `REST`",
+						},
+						"status": {
+							Type:		 schema.TypeString,
+							Optional: 	 true,
+							Default: 	 "ENABLED",
+							Description: "Domain status, default: `ENABLED`.",
+							ValidateFunc: validateAllowedStringValue([]string{"ENABLED", "DISABLED"}),
+						},
+						//"force_replacement": {
+						//	Type:		 schema.TypeString,
+						//	Optional: 	 true,
+						//	Description: "Specify type to replace exist domain resolve record.",
+						//},
 					},
 				},
 			},
@@ -332,11 +576,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Computed:    true,
 				Description: "The URL of this cos bucket.",
 			},
-			"az_config": {
-				Type: schema.TypeString,
+			"multi_az": {
+				Type: schema.TypeBool,
 				Optional: true,
 				ForceNew: true,
-				Description: "The configuration of bucket available zone, set `MAZ` to enable multi available zone.",
+				Description: "Indicates whether to create a bucket of multi available zone.",
 			},
 		},
 	}
@@ -344,6 +588,8 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 
 func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
+
+	var err error
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -353,7 +599,13 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := cosService.PutBucket(ctx, bucket, acl)
+	useCosService, createOptions := getBucketPutOptions(d);
+
+	if useCosService {
+		err = cosService.TencentCosPutBucket(ctx, bucket, createOptions)
+	} else {
+		err = cosService.PutBucket(ctx, bucket, acl)
+	}
 	if err != nil {
 		return err
 	}
@@ -397,6 +649,18 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("bucket", d.Id())
 	}
 
+	acl, err := cosService.GetBucketACLXML(ctx, bucket)
+	if err != nil {
+		return err
+	}
+
+	if err = d.Set("acl_body", acl); err != nil {
+		return fmt.Errorf("setting acl_body error: %v", err)
+	}
+
+	if err != nil {
+		return err
+	}
 	// read the cors
 	corsRules, err := cosService.GetBucketCors(ctx, bucket)
 	if err != nil {
@@ -405,6 +669,18 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	if err = d.Set("cors_rules", corsRules); err != nil {
 		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
+
+	originPullRules, err := cosService.GetBucketPullOrigin(ctx, bucket)
+	if err != nil {
+		return err
+	}
+
+	if err = d.Set("origin_pull_rules", originPullRules); err != nil {
+		return fmt.Errorf("setting origin_pull_rules error: %v", err)
+	}
+
+	originDomainRules, _ := cosService.GetBucketOriginDomain(ctx, bucket)
+	log.Printf("--+-----*-*-*-originDomainRules, %s", originDomainRules)
 
 	// read the lifecycle
 	lifecycleRules, err := cosService.GetBucketLifecycle(ctx, bucket)
@@ -475,6 +751,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	d.Partial(true)
 
@@ -486,12 +763,37 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		d.SetPartial("acl")
 	}
 
+	if d.HasChange("acl_body") {
+		body := d.Get("acl_body")
+		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
+			return err
+		}
+		d.Set("acl_body", body)
+	}
+
 	if d.HasChange("cors_rules") {
 		err := resourceTencentCloudCosBucketCorsUpdate(ctx, client, d)
 		if err != nil {
 			return err
 		}
 		d.SetPartial("cors_rules")
+	}
+
+	if d.HasChange("origin_pull_rules") {
+		rules := d.Get("origin_pull_rules")
+		err := resourceTencentCloudCosBucketOriginPullUpdate(ctx, cosService, d)
+		if err != nil {
+			return err
+		}
+		d.Set("origin_pull_rules", rules)
+	}
+
+	if d.HasChange("origin_domain_rules") {
+		rules := d.Get("origin_domain_rules")
+		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d);err != nil {
+			return err
+		}
+		d.Set("origin_domain_rules", rules)
 	}
 
 	if d.HasChange("lifecycle_rules") {
@@ -653,6 +955,27 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 }
 
 func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+
+	bucket := d.Get("bucket").(string)
+	acl := d.Get("acl").(string)
+	request := s3.PutBucketAclInput{
+		Bucket: aws.String(bucket),
+		ACL:    aws.String(acl),
+	}
+	response, err := client.PutBucketAcl(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "put bucket acl", request.String(), err.Error())
+		return fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "put bucket acl", request.String(), response.String())
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketAclHeaderUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -945,6 +1268,193 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 	}
 
 	return nil
+}
+
+func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, service CosService, d *schema.ResourceData ) error {
+	var body string
+	v, ok := d.GetOk("acl_body")
+	bucket := d.Get("bucket").(string)
+	if !ok {
+		body = ""
+	} else {
+		body = v.(string)
+	}
+	if err := service.TencentCosPutBucketACL(ctx, bucket, body); err != nil {
+		return err
+	}
+	return nil
+}
+
+func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
+	var rules []cos.BucketOriginRule
+	v, ok := d.GetOk("origin_pull_rules")
+	bucket := d.Get("bucket").(string)
+	if !ok {
+		if err := service.DeleteBucketPullOrigin(ctx, bucket); err != nil {
+			return err
+		}
+		return nil
+	}
+	rulesRaw := v.([]interface{})
+	for _, i := range rulesRaw {
+		var (
+			dMap = i.(map[string]interface{})
+			item = &cos.BucketOriginRule{
+				OriginCondition: &cos.BucketOriginCondition{
+					HTTPStatusCode: "404",
+				},
+				OriginParameter: &cos.BucketOriginParameter{
+					CopyOriginData: true,
+					HttpHeader: &cos.BucketOriginHttpHeader{
+
+					},
+				},
+				OriginInfo: &cos.BucketOriginInfo{
+					FileInfo: &cos.BucketOriginFileInfo{
+						PrefixDirective: false,
+					},
+				},
+			}
+		)
+
+		if v, _ := dMap["sync_back_to_source"]; v.(bool) {
+			item.OriginType = "Mirror"
+		} else {
+			item.OriginType = "Proxy"
+		}
+
+		if v, ok := dMap["priority"]; ok {
+			item.RulePriority = v.(int)
+		}
+		if v, ok := dMap["prefix"]; ok {
+			item.OriginCondition.Prefix = v.(string)
+		}
+		if v, ok := dMap["protocol"]; ok {
+			item.OriginParameter.Protocol = v.(string)
+		}
+		if v, ok := dMap["host"]; ok {
+			item.OriginInfo.HostInfo = v.(string)
+		}
+		if v, ok := dMap["follow_query_string"]; ok {
+			item.OriginParameter.FollowQueryString = v.(bool)
+		}
+		if v, ok := dMap["follow_redirection"]; ok {
+			item.OriginParameter.FollowRedirection = v.(bool)
+		}
+		//if v, ok := dMap["copy_origin_data"]; ok {
+		//	item.OriginParameter.CopyOriginData = v.(bool)
+		//}
+		if v, ok := dMap["redirect_prefix"]; ok {
+			item.OriginInfo.FileInfo.Prefix = v.(string)
+		}
+		if v, ok := dMap["redirect_suffix"]; ok {
+			item.OriginInfo.FileInfo.Suffix = v.(string)
+		}
+		if v, ok := dMap["custom_http_headers"]; ok {
+			var customHeaders []cos.OriginHttpHeader
+			header := cos.OriginHttpHeader{}
+			for key, val := range v.(map[string]interface{}) {
+				header.Key = key
+				header.Value = val.(string)
+			}
+			customHeaders = append(customHeaders, header)
+			item.OriginParameter.HttpHeader.NewHttpHeaders = customHeaders
+		}
+		if v, ok := dMap["follow_http_headers"]; ok {
+			var followHeaders []cos.OriginHttpHeader
+			for _, item := range v.([]interface{}) {
+				header := cos.OriginHttpHeader{
+					Key: item.(string),
+					Value: "",
+				}
+				followHeaders = append(followHeaders, header)
+			}
+			item.OriginParameter.HttpHeader.FollowHttpHeaders = followHeaders
+		}
+		rules = append(rules, *item)
+	}
+
+	if err := service.PutBucketPullOrigin(ctx, bucket, rules); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketOriginDomainUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
+	v, ok := d.GetOk("origin_domain_rules")
+	bucket := d.Get("bucket").(string)
+	if !ok {
+		return nil
+	}
+	rules := v.([]map[string]interface{})
+	domainRules := make([]cos.BucketDomainRule, 0)
+
+	for _, rule := range rules {
+		item := cos.BucketDomainRule{}
+		if name, ok := rule["domain"]; ok {
+			item.Name = name.(string)
+		}
+		if status, ok := rule["status"]; ok {
+			item.Status = status.(string)
+		}
+		if domainType, ok := rule["type"]; ok {
+			item.Type = domainType.(string)
+		}
+
+		domainRules = append(domainRules, item)
+	}
+
+	if err := service.PutBucketOriginDomain(ctx, bucket, domainRules); err != nil {
+		return err
+	}
+	return nil
+}
+
+func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *cos.BucketPutOptions) {
+	opt := &cos.BucketPutOptions{
+		XCosACL: d.Get("acl").(string),
+		XCosGrantRead: "",
+		XCosGrantWrite: "",
+		XCosGrantReadACP: "",
+		XCosGrantWriteACP: "",
+		XCosGrantFullControl: "",
+	}
+	grants, hasGrantHeaders := d.GetOk("grant_headers")
+	maz, hasMAZ := d.GetOk("multi_az")
+
+	if !hasGrantHeaders && !hasMAZ {
+		return false, opt
+	}
+
+	if hasGrantHeaders {
+		headers := grants.(map[string]interface{})
+		if v, ok := headers["grant_read"]; ok {
+			opt.XCosGrantRead = v.(string)
+		}
+		if v, ok := headers["grant_write"]; ok {
+			opt.XCosGrantWrite = v.(string)
+		}
+		if v, ok := headers["grant_read_acp"]; ok {
+			opt.XCosGrantReadACP = v.(string)
+		}
+		if v, ok := headers["grant_write_acp"]; ok {
+			opt.XCosGrantWriteACP = v.(string)
+		}
+		if v, ok := headers["grant_full_control"]; ok {
+			opt.XCosGrantFullControl = v.(string)
+		}
+	}
+
+	if hasMAZ {
+		if maz.(bool) {
+			opt.CreateBucketConfiguration = &cos.CreateBucketConfiguration{
+				BucketAZConfig: "MAZ",
+			}
+		}
+	}
+
+	return true, opt
 }
 
 func expirationHash(v interface{}) int {

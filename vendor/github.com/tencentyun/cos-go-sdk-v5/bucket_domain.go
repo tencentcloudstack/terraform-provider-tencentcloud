@@ -6,12 +6,16 @@ import (
 	"net/http"
 )
 
+type BucketDomainRule struct {
+	Status            string `xml:"Status,omitempty"`
+	Name              string `xml:"Name,omitempty"`
+	Type              string `xml:"Type,omitempty"`
+	ForcedReplacement string `xml:"ForcedReplacement,omitempty"`
+}
+
 type BucketPutDomainOptions struct {
-	XMLName           xml.Name `xml:"DomainConfiguration"`
-	Status            string   `xml:"DomainRule>Status"`
-	Name              string   `xml:"DomainRule>Name"`
-	Type              string   `xml:"DomainRule>Type"`
-	ForcedReplacement string   `xml:"DomainRule>ForcedReplacement,omitempty"`
+	XMLName xml.Name           `xml:"DomainConfiguration"`
+	Rules   []BucketDomainRule `xml:"DomainRule,omitempty"`
 }
 type BucketGetDomainResult BucketPutDomainOptions
 
@@ -22,7 +26,7 @@ func (s *BucketService) PutDomain(ctx context.Context, opt *BucketPutDomainOptio
 		method:  http.MethodPut,
 		body:    opt,
 	}
-	resp, err := s.client.send(ctx, sendOpt)
+	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
 }
 
@@ -34,6 +38,16 @@ func (s *BucketService) GetDomain(ctx context.Context) (*BucketGetDomainResult, 
 		method:  http.MethodGet,
 		result:  &res,
 	}
-	resp, err := s.client.send(ctx, sendOpt)
+	resp, err := s.client.doRetry(ctx, sendOpt)
 	return &res, resp, err
+}
+
+func (s *BucketService) DeleteDomain(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.BucketURL,
+		uri:     "/?domain",
+		method:  http.MethodDelete,
+	}
+	resp, err := s.client.doRetry(ctx, sendOpt)
+	return resp, err
 }

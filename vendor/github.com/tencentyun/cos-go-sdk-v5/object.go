@@ -3,6 +3,7 @@ package cos
 import (
 	"context"
 	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -72,7 +73,7 @@ func (s *ObjectService) Get(ctx context.Context, name string, opt *ObjectGetOpti
 		optHeader:        opt,
 		disableCloseBody: true,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 
 	if opt != nil && opt.Listener != nil {
 		if err == nil && resp != nil {
@@ -349,7 +350,7 @@ func (s *ObjectService) Copy(ctx context.Context, name, sourceURL string, opt *O
 		optHeader: copyOpt,
 		result:    &res,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 	// If the error occurs during the copy operation, the error response is embedded in the 200 OK response. This means that a 200 OK response can contain either a success or an error.
 	if err == nil && resp.StatusCode == 200 {
 		if res.ETag == "" {
@@ -389,7 +390,7 @@ func (s *ObjectService) Delete(ctx context.Context, name string, opt ...*ObjectD
 		optHeader: optHeader,
 		optQuery:  optHeader,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 	return resp, err
 }
 
@@ -422,7 +423,7 @@ func (s *ObjectService) Head(ctx context.Context, name string, opt *ObjectHeadOp
 		method:    http.MethodHead,
 		optHeader: opt,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 	if resp != nil && resp.Header["X-Cos-Object-Type"] != nil && resp.Header["X-Cos-Object-Type"][0] == "appendable" {
 		resp.Header.Add("x-cos-next-append-position", resp.Header["Content-Length"][0])
 	}
@@ -478,13 +479,11 @@ func (s *ObjectService) PostRestore(ctx context.Context, name string, opt *Objec
 		body:      opt,
 		optHeader: opt,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 
 	return resp, err
 }
 
-// TODO Append 接口在优化未开放使用
-//
 // Append请求可以将一个文件（Object）以分块追加的方式上传至 Bucket 中。使用Append Upload的文件必须事前被设定为Appendable。
 // 当Appendable的文件被执行Put Object的操作以后，文件被覆盖，属性改变为Normal。
 //
@@ -498,21 +497,59 @@ func (s *ObjectService) PostRestore(ctx context.Context, name string, opt *Objec
 // 当 r 不是 bytes.Buffer/bytes.Reader/strings.Reader 时，必须指定 opt.ObjectPutHeaderOptions.ContentLength
 //
 // https://www.qcloud.com/document/product/436/7741
-// func (s *ObjectService) Append(ctx context.Context, name string, position int, r io.Reader, opt *ObjectPutOptions) (*Response, error) {
-// 	u := fmt.Sprintf("/%s?append&position=%d", encodeURIComponent(name), position)
-// 	if position != 0{
-// 		opt = nil
-// 	}
-// 	sendOpt := sendOptions{
-// 		baseURL:   s.client.BaseURL.BucketURL,
-// 		uri:       u,
-// 		method:    http.MethodPost,
-// 		optHeader: opt,
-// 		body:      r,
-// 	}
-// 	resp, err := s.client.send(ctx, &sendOpt)
-// 	return resp, err
-// }
+func (s *ObjectService) Append(ctx context.Context, name string, position int, r io.Reader, opt *ObjectPutOptions) (int, *Response, error) {
+	res := position
+	if r == nil {
+		return res, nil, fmt.Errorf("reader is nil")
+	}
+	if err := CheckReaderLen(r); err != nil {
+		return res, nil, err
+	}
+	opt = CloneObjectPutOptions(opt)
+	totalBytes, err := GetReaderLen(r)
+	if err != nil && opt != nil && opt.Listener != nil {
+		if opt.ContentLength == 0 {
+			return res, nil, err
+		}
+		totalBytes = opt.ContentLength
+	}
+	if err == nil {
+		// 与 go http 保持一致, 非bytes.Buffer/bytes.Reader/strings.Reader需用户指定ContentLength
+		if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
+			opt.ContentLength = totalBytes
+		}
+	}
+	reader := TeeReader(r, nil, totalBytes, nil)
+	if s.client.Conf.EnableCRC {
+		reader.writer = md5.New() // MD5校验
+		reader.disableCheckSum = true
+	}
+	if opt != nil && opt.Listener != nil {
+		reader.listener = opt.Listener
+	}
+	u := fmt.Sprintf("/%s?append&position=%d", encodeURIComponent(name), position)
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       u,
+		method:    http.MethodPost,
+		optHeader: opt,
+		body:      reader,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+
+	if err == nil {
+		// 数据校验
+		if s.client.Conf.EnableCRC && reader.writer != nil {
+			wanted := hex.EncodeToString(reader.Sum())
+			if wanted != resp.Header.Get("x-cos-content-sha1") {
+				return res, resp, fmt.Errorf("append verification failed, want:%v, return:%v", wanted, resp.Header.Get("x-cos-content-sha1"))
+			}
+		}
+		np, err := strconv.ParseInt(resp.Header.Get("x-cos-next-append-position"), 10, 64)
+		return int(np), resp, err
+	}
+	return res, resp, err
+}
 
 // ObjectDeleteMultiOptions is the option of DeleteMulti
 type ObjectDeleteMultiOptions struct {
@@ -547,7 +584,7 @@ func (s *ObjectService) DeleteMulti(ctx context.Context, opt *ObjectDeleteMultiO
 		body:    opt,
 		result:  &res,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 	return &res, resp, err
 }
 
@@ -566,19 +603,20 @@ type Object struct {
 // MultiUploadOptions is the option of the multiupload,
 // ThreadPoolSize default is one
 type MultiUploadOptions struct {
-	OptIni             *InitiateMultipartUploadOptions
-	PartSize           int64
-	ThreadPoolSize     int
-	CheckPoint         bool
-	EnableVerification bool
+	OptIni          *InitiateMultipartUploadOptions
+	PartSize        int64
+	ThreadPoolSize  int
+	CheckPoint      bool
+	DisableChecksum bool
 }
 
 type MultiDownloadOptions struct {
-	Opt            *ObjectGetOptions
-	PartSize       int64
-	ThreadPoolSize int
-	CheckPoint     bool
-	CheckPointFile string
+	Opt             *ObjectGetOptions
+	PartSize        int64
+	ThreadPoolSize  int
+	CheckPoint      bool
+	CheckPointFile  string
+	DisableChecksum bool
 }
 
 type MultiDownloadCPInfo struct {
@@ -695,6 +733,7 @@ func worker(ctx context.Context, s *ObjectService, jobs <-chan *Jobs, results ch
 					results <- &res
 					break
 				}
+				time.Sleep(time.Millisecond)
 				continue
 			}
 			results <- &res
@@ -720,16 +759,12 @@ func downloadWorker(ctx context.Context, s *ObjectService, jobs <-chan *Jobs, re
 			res.err = err
 			res.Resp = resp
 			if err != nil {
-				rt--
-				if rt == 0 {
-					results <- &res
-					break
-				}
-				continue
+				results <- &res
+				break
 			}
-			defer resp.Body.Close()
 			fd, err := os.OpenFile(j.FilePath, os.O_WRONLY, 0660)
 			if err != nil {
+				resp.Body.Close()
 				res.err = err
 				results <- &res
 				break
@@ -737,9 +772,19 @@ func downloadWorker(ctx context.Context, s *ObjectService, jobs <-chan *Jobs, re
 			fd.Seek(j.Chunk.OffSet, os.SEEK_SET)
 			n, err := io.Copy(fd, LimitReadCloser(resp.Body, j.Chunk.Size))
 			if n != j.Chunk.Size || err != nil {
-				res.err = fmt.Errorf("io.Copy Failed, nread:%v, want:%v, err:%v", n, j.Chunk.Size, err)
+				fd.Close()
+				resp.Body.Close()
+				rt--
+				if rt == 0 {
+					res.err = fmt.Errorf("io.Copy Failed, nread:%v, want:%v, err:%v", n, j.Chunk.Size, err)
+					results <- &res
+					break
+				}
+				time.Sleep(time.Millisecond)
+				continue
 			}
 			fd.Close()
+			resp.Body.Close()
 			results <- &res
 			break
 		}
@@ -781,7 +826,7 @@ func SplitFileIntoChunks(filePath string, partSize int64) (int64, []Chunk, int, 
 			return 0, nil, 0, errors.New("Too many parts, out of 10000")
 		}
 	} else {
-		partNum, partSize = DividePart(stat.Size(), 64)
+		partNum, partSize = DividePart(stat.Size(), 16)
 	}
 
 	var chunks []Chunk
@@ -899,7 +944,7 @@ func (s *ObjectService) Upload(ctx context.Context, name string, filepath string
 		return nil, nil, err
 	}
 	// 校验
-	if s.client.Conf.EnableCRC {
+	if s.client.Conf.EnableCRC && !opt.DisableChecksum {
 		fd, err := os.Open(filepath)
 		if err != nil {
 			return nil, nil, err
@@ -928,7 +973,7 @@ func (s *ObjectService) Upload(ctx context.Context, name string, filepath string
 			Key:      name,
 			ETag:     rsp.Header.Get("ETag"),
 		}
-		if rsp != nil && s.client.Conf.EnableCRC {
+		if rsp != nil && s.client.Conf.EnableCRC && !opt.DisableChecksum {
 			scoscrc := rsp.Header.Get("x-cos-hash-crc64ecma")
 			icoscrc, _ := strconv.ParseUint(scoscrc, 10, 64)
 			if icoscrc != localcrc {
@@ -1061,7 +1106,7 @@ func (s *ObjectService) Upload(ctx context.Context, name string, filepath string
 		return v, resp, err
 	}
 
-	if resp != nil && s.client.Conf.EnableCRC {
+	if resp != nil && s.client.Conf.EnableCRC && !opt.DisableChecksum {
 		scoscrc := resp.Header.Get("x-cos-hash-crc64ecma")
 		icoscrc, _ := strconv.ParseUint(scoscrc, 10, 64)
 		if icoscrc != localcrc {
@@ -1082,7 +1127,7 @@ func SplitSizeIntoChunks(totalBytes int64, partSize int64) ([]Chunk, int, error)
 			return nil, 0, errors.New("Too manry parts, out of 10000")
 		}
 	} else {
-		partNum, partSize = DividePart(totalBytes, 64)
+		partNum, partSize = DividePart(totalBytes, 16)
 	}
 
 	var chunks []Chunk
@@ -1181,7 +1226,7 @@ func (s *ObjectService) Download(ctx context.Context, name string, filepath stri
 		if err != nil {
 			return rsp, err
 		}
-		if coscrc != "" && s.client.Conf.EnableCRC {
+		if coscrc != "" && s.client.Conf.EnableCRC && !opt.DisableChecksum {
 			icoscrc, _ := strconv.ParseUint(coscrc, 10, 64)
 			fd, err := os.Open(filepath)
 			if err != nil {
@@ -1300,7 +1345,7 @@ func (s *ObjectService) Download(ctx context.Context, name string, filepath stri
 	if opt.CheckPoint {
 		os.Remove(cpfile)
 	}
-	if coscrc != "" && s.client.Conf.EnableCRC {
+	if coscrc != "" && s.client.Conf.EnableCRC && !opt.DisableChecksum {
 		icoscrc, _ := strconv.ParseUint(coscrc, 10, 64)
 		fd, err := os.Open(filepath)
 		if err != nil {
@@ -1340,7 +1385,7 @@ func (s *ObjectService) PutTagging(ctx context.Context, name string, opt *Object
 		method:  http.MethodPut,
 		body:    opt,
 	}
-	resp, err := s.client.send(ctx, sendOpt)
+	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
 }
 
@@ -1361,7 +1406,7 @@ func (s *ObjectService) GetTagging(ctx context.Context, name string, id ...strin
 		method:  http.MethodGet,
 		result:  &res,
 	}
-	resp, err := s.client.send(ctx, sendOpt)
+	resp, err := s.client.doRetry(ctx, sendOpt)
 	return &res, resp, err
 }
 
@@ -1380,6 +1425,6 @@ func (s *ObjectService) DeleteTagging(ctx context.Context, name string, id ...st
 		uri:     u,
 		method:  http.MethodDelete,
 	}
-	resp, err := s.client.send(ctx, sendOpt)
+	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
 }

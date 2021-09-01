@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/tencentyun/cos-go-sdk-v5"
 	"net/http"
+	"net/url"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -136,12 +138,18 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 }
 
 // UseTencentCosClient tencent cloud own client for service instead of aws
-func (me *TencentCloudClient) UseTencentCosClient() *cos.Client {
+func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 	if me.tencentCosConn != nil {
 		return me.tencentCosConn
 	}
-	me.tencentCosConn = cos.NewClient("", &http.Client{
-		Timeout: 60,
+
+	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucket, me.Region))
+	baseUrl := &cos.BaseURL{
+		BucketURL: u,
+	}
+
+	me.tencentCosConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
 		Transport: &cos.AuthorizationTransport{
 			SecretID: me.Credential.SecretId,
 			SecretKey: me.Credential.SecretKey,
