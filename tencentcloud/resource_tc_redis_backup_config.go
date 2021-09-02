@@ -65,8 +65,10 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 			},
 			"backup_period": {
 				Type:        schema.TypeSet,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+				Deprecated:  "It has been deprecated from version 1.58.2. It makes no difference to online config at all",
 				Description: "Specifys which day the backup action should take place. Valid values: `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday` and `Sunday`.",
 			},
 		},
@@ -139,6 +141,9 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 		}
 		backupPeriods = append(backupPeriods, v.(string))
 	}
+
+	backupPeriods = []string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+
 	if len(backupPeriods) == 0 {
 		return fmt.Errorf("redis backup config[backup_period] can not empty")
 	}
