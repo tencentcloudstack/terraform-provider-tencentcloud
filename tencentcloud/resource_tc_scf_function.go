@@ -32,6 +32,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"io/ioutil"
 	"log"
 	"os"
@@ -190,7 +191,19 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the SCF function.",
 			},
-
+			"enable_public_net": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default: 	 false,
+				Description: "Indicates whether public net config enabled.",
+			},
+			"enable_eip_config": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default: 	 false,
+				AtLeastOneOf: []string{"enable_public_net"},
+				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.",
+			},
 			// cos code
 			"cos_bucket_name": {
 				Type:          schema.TypeString,
@@ -433,6 +446,37 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		functionInfo.cosBucketRegion = helper.String(raw.(string))
 	}
 
+	enablePublicNet, enablePublicNetOk := d.GetOk("enable_public_net")
+	enableEipConfig, enableEipConfigOk := d.GetOk("enable_eip_config")
+
+	if enablePublicNetOk {
+		enable := enablePublicNet.(bool)
+		publicNetStatus := helper.String("ENABLE")
+		if !enable {
+			publicNetStatus = helper.String("DISABLE")
+		}
+		functionInfo.publicNetConfig = &scf.PublicNetConfigIn{
+			PublicNetStatus: publicNetStatus,
+			EipConfig: &scf.EipConfigIn{
+				EipStatus: helper.String("DISABLE"),
+			},
+		}
+	}
+
+	if enableEipConfigOk {
+		enableEip := enableEipConfig.(bool)
+		eipStatus := "DISABLE"
+		if enableEip {
+			if !enablePublicNet.(bool) {
+				return fmt.Errorf("cannot set enable_eip_config to true if enable_public_net was disable")
+			}
+			eipStatus = "ENABLE"
+		}
+		functionInfo.publicNetConfig.EipConfig = &scf.EipConfigIn{
+			EipStatus: helper.String(eipStatus),
+		}
+	}
+
 	if raw, ok := d.GetOk("zip_file"); ok {
 		path, err := homedir.Expand(raw.(string))
 		if err != nil {
@@ -606,6 +650,10 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	_ = d.Set("eips", resp.EipConfig.Eips)
 	_ = d.Set("host", resp.AccessInfo.Host)
 	_ = d.Set("vip", resp.AccessInfo.Vip)
+	if resp.PublicNetConfig != nil {
+		_ = d.Set("enable_public_net", *resp.PublicNetConfig.PublicNetStatus == "ENABLE")
+		_ = d.Set("enable_eip_config", *resp.PublicNetConfig.EipConfig.EipStatus == "ENABLE")
+	}
 
 	triggers := make([]map[string]interface{}, 0, len(resp.Triggers))
 	for _, trigger := range resp.Triggers {
@@ -804,6 +852,42 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 	if d.HasChange("l5_enable") {
 		updateAttrs = append(updateAttrs, "l5_enable")
 		functionInfo.l5Enable = helper.Bool(d.Get("l5_enable").(bool))
+	}
+
+	if d.HasChange("enable_public_net") {
+		updateAttrs = append(updateAttrs, "enable_public_net")
+	}
+
+	if d.HasChange("enable_eip_config") {
+		updateAttrs = append(updateAttrs, "enable_eip_config")
+	}
+
+	if raw, ok := d.GetOk("enable_public_net"); ok {
+		enablePublicNet := raw.(bool)
+		publicNetStatus := helper.String("ENABLE")
+		if !enablePublicNet {
+			publicNetStatus = helper.String("DISABLE")
+		}
+		functionInfo.publicNetConfig = &scf.PublicNetConfigIn{
+			PublicNetStatus: publicNetStatus,
+			EipConfig: &scf.EipConfigIn{
+				EipStatus: helper.String("DISABLE"),
+			},
+		}
+	}
+
+	if raw, ok := d.GetOk("enable_eip_config"); ok {
+		status := "DISABLE"
+		enablePublicNet := d.Get("enable_public_net").(bool)
+		if raw.(bool) {
+			if !enablePublicNet {
+				return fmt.Errorf("cannot set enable_eip_config to true if enable_public_net was disable")
+			}
+			status = "ENABLE"
+		}
+		functionInfo.publicNetConfig.EipConfig = &scf.EipConfigIn{
+			EipStatus: helper.String(status),
+		}
 	}
 
 	// update function configuration

@@ -28,6 +28,7 @@ type scfFunctionInfo struct {
 	clsTopicId  *string
 	namespace   *string
 	l5Enable    *bool
+	publicNetConfig *scf.PublicNetConfigIn
 
 	cosBucketName   *string
 	cosObjectName   *string
@@ -54,6 +55,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.Handler = info.handler
 	request.Description = info.desc
 	request.MemorySize = helper.IntInt64(*info.memSize)
+	request.PublicNetConfig = info.publicNetConfig
 	request.Timeout = helper.IntInt64(*info.timeout)
 	for k, v := range info.environment {
 		if request.Environment == nil {
@@ -248,6 +250,9 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 			request.VpcConfig = new(scf.VpcConfig)
 		}
 		request.VpcConfig.SubnetId = info.subnetId
+	}
+	if info.publicNetConfig != nil {
+		request.PublicNetConfig = info.publicNetConfig
 	}
 	request.Role = info.role
 	request.ClsLogsetId = info.clsLogsetId
