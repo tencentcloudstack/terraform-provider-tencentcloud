@@ -349,6 +349,10 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 		m["host"] = resp.AccessInfo.Host
 		m["vip"] = resp.AccessInfo.Vip
 		m["l5_enable"] = *resp.L5Enable == "TRUE"
+		if resp.PublicNetConfig != nil {
+			m["enable_public_net"] = *resp.PublicNetConfig.PublicNetStatus == "ENABLE"
+			m["enable_eip_config"] = *resp.PublicNetConfig.EipConfig.EipStatus == "ENABLE"
+		}
 
 		triggers := make([]map[string]interface{}, 0, len(resp.Triggers))
 		for _, trigger := range resp.Triggers {
