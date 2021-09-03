@@ -38,6 +38,8 @@ The following arguments are supported:
 * `cos_bucket_region` - (Optional) Cos bucket region of the SCF function, conflict with `zip_file`.
 * `cos_object_name` - (Optional) Cos object name of the SCF function, should have suffix `.zip` or `.jar`, conflict with `zip_file`.
 * `description` - (Optional) Description of the SCF function. Description supports English letters, numbers, spaces, commas, newlines, periods and Chinese, the maximum length is 1000.
+* `enable_eip_config` - (Optional) Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.
+* `enable_public_net` - (Optional) Indicates whether public net config enabled.
 * `environment` - (Optional) Environment of the SCF function.
 * `l5_enable` - (Optional) Enable L5 for SCF function, default is `false`.
 * `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.
