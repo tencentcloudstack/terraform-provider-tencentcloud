@@ -22,6 +22,41 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+Using verbose acl
+
+```hcl
+resource "tencentcloud_cos_bucket" "with_acl_body" {
+  bucket   = "mycos-1258798060"
+  acl_body = <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+            </Grantee>
+            <Permission>READ</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>WRITE</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>READ_ACP</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}
+```
+
 Static Website
 
 ```hcl
@@ -74,12 +109,65 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+Using custom origin domain settings
+
+```hcl
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+  origin_domain_rules {
+    domain = "abc.example.com"
+    type   = "REST"
+    status = "ENABLE"
+  }
+}
+```
+
+Using origin-pull settings
+
+```hcl
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+  origin_pull_rules {
+    priority            = 1
+    sync_back_to_source = false
+    host                = "abc.example.com"
+    prefix              = "/"
+    protocol            = "FOLLOW" // "HTTP" "HTTPS"
+    follow_query_string = true
+    follow_redirection  = true
+    follow_http_headers = ["Origin", "Host"]
+    custom_http_headers = {
+      "X-Custom-Header" = "custom_value"
+    }
+  }
+}
+```
+
 Setting log status
 
 ```hcl
 resource "tencentcloud_cam_role" "cosLogGrant" {
   name     = "CLS_QcsRole"
-  document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"service\":[\"cls.cloud.tencent.com\"]}}]}"
+  document = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": [
+        "name/sts:AssumeRole"
+      ],
+      "effect": "allow",
+      "principal": {
+        "service": [
+          "cls.cloud.tencent.com"
+        ]
+      }
+    }
+  ]
+}
+EOF
 
   description = "cos log enable grant"
 }
@@ -112,6 +200,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 The following arguments are supported:
 
 * `bucket` - (Required, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
+* `acl_body` - (Optional) ACL XML body for multiple grant info.
 * `acl` - (Optional) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `encryption_algorithm` - (Optional) The server-side encryption algorithm to use. Valid value is `AES256`.
@@ -119,6 +208,9 @@ The following arguments are supported:
 * `log_enable` - (Optional) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
 * `log_prefix` - (Optional) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
 * `log_target_bucket` - (Optional) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
+* `multi_az` - (Optional, ForceNew) Indicates whether to create a bucket of multi available zone.
+* `origin_domain_rules` - (Optional) Bucket Origin Domain settings.
+* `origin_pull_rules` - (Optional) Bucket Origin-Pull settings.
 * `tags` - (Optional) The tags of a bucket.
 * `versioning_enable` - (Optional) Enable bucket versioning.
 * `website` - (Optional) A website object(documented below).
@@ -141,6 +233,24 @@ The `lifecycle_rules` object supports the following:
 * `filter_prefix` - (Required) Object key prefix identifying one or more objects to which the rule applies.
 * `expiration` - (Optional) Specifies a period in the object's expire (documented below).
 * `transition` - (Optional) Specifies a period in the object's transitions (documented below).
+
+The `origin_domain_rules` object supports the following:
+
+* `domain` - (Required) Specify domain host.
+* `status` - (Optional) Domain status, default: `ENABLED`.
+* `type` - (Optional) Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.
+
+The `origin_pull_rules` object supports the following:
+
+* `host` - (Required) Allows only a domain name or IP address. You can optionally append a port number to the address.
+* `priority` - (Required) Priority of origin-pull rules, do not set the same value for multiple rules.
+* `custom_http_headers` - (Optional) Specifies the custom headers that you can add for COS to access your origin server.
+* `follow_http_headers` - (Optional) Specifies the pass through headers when accessing the origin server.
+* `follow_query_string` - (Optional) Specifies whether to pass through COS request query string when accessing the origin server.
+* `follow_redirection` - (Optional) Specifies whether to follow 3XX redirect to another origin server to pull data from.
+* `prefix` - (Optional) Triggers the origin-pull rule when the requested file name matches this prefix.
+* `protocol` - (Optional) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
+* `sync_back_to_source` - (Optional) If `true`, COS will not return 3XX status code when pulling data from an origin server. Currently available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
 
 The `transition` object supports the following:
 

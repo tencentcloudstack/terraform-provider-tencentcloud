@@ -33,6 +33,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `bucket_list` - A list of bucket. Each element contains the following attributes:
+  * `acl_body` - Bucket acl configurations.
   * `bucket` - Bucket name, the format likes `<bucket>-<appid>`.
   * `cors_rules` - A list of CORS rule configurations.
     * `allowed_headers` - Specifies which headers are allowed.
@@ -50,6 +51,8 @@ In addition to all arguments above, the following attributes are exported:
       * `date` - Specifies the date after which you want the corresponding action to take effect.
       * `days` - Specifies the number of days after object creation when the specific rule action takes effect.
       * `storage_class` - Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
+  * `origin_domain_rules` - Bucket origin domain rules.
+  * `origin_pull_rules` - Bucket Origin-Pull rules.
   * `tags` - The tags of a bucket.
   * `website` - A list of one element containing configuration parameters used when the bucket is used as a website.
     * `error_document` - An absolute path to the document to return in case of a 4XX error.

@@ -156,19 +156,25 @@ func (me *CosService) TencentCosPutBucketACL(
 	ctx context.Context,
 	bucket string,
 	reqBody string,
+	header string,
 ) (errRet error)  {
 	logId := getLogId(ctx)
 
 	acl := &cos.ACLXml{}
-	err := xml.Unmarshal([]byte(reqBody), acl)
 
-	if err != nil {
-		errRet = err
-		return
-	}
+	opt := &cos.BucketPutACLOptions{}
+	if reqBody != "" {
+		err := xml.Unmarshal([]byte(reqBody), acl)
 
-	opt := &cos.BucketPutACLOptions{
-		Body: acl,
+		if err != nil {
+			errRet = fmt.Errorf("cos [PutBucketACL] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
+			return
+		}
+		opt.Body = acl
+	} else if header != "" {
+		opt.Header = &cos.ACLHeaderOptions{
+			XCosACL: header,
+		}
 	}
 
 	req, _ := json.Marshal(opt)
@@ -777,6 +783,10 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 	ratelimit.Check("TencentcloudCosGetBucketPullOrigin")
 	originConfig, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetOrigin(ctx)
 
+	if response.StatusCode == 404 {
+		return make([]map[string]interface{}, 0), nil
+	}
+
 	if err != nil {
 		errRet = fmt.Errorf("cos [GetBucketPullOrigin] error: %s, bucket: %s", err.Error(), bucket)
 		return nil, errRet
@@ -792,6 +802,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 	for _, rule := range originConfig.Rule {
 		item := make(map[string]interface{})
 		item["priority"] = helper.Int(rule.RulePriority)
+		item["host"] = helper.String(rule.OriginInfo.HostInfo)
 
 		if rule.OriginCondition != nil {
 			item["prefix"] = helper.String(rule.OriginCondition.Prefix)
@@ -810,13 +821,13 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 					for _, header := range rule.OriginParameter.HttpHeader.NewHttpHeaders {
 						headers[header.Key] = helper.String(header.Value)
 					}
-					item["custom_http_headers"] = &headers
+					item["custom_http_headers"] = headers
 				}
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
 					headers := make([]*string, 0)
-					for _, header := range rule.OriginParameter.HttpHeader.NewHttpHeaders {
-						headers = append(headers, helper.String(header.Value))
+					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
+						headers = append(headers, helper.String(header.Key))
 					}
 					item["follow_http_headers"] = &headers
 				}
@@ -829,8 +840,8 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 
 		if rule.OriginInfo.FileInfo != nil {
 			item["host"] = helper.String(rule.OriginInfo.HostInfo)
-			item["redirect_prefix"] = helper.String(rule.OriginInfo.FileInfo.Prefix)
-			item["redirect_suffix"] = helper.String(rule.OriginInfo.FileInfo.Suffix)
+			//item["redirect_prefix"] = helper.String(rule.OriginInfo.FileInfo.Prefix)
+			//item["redirect_suffix"] = helper.String(rule.OriginInfo.FileInfo.Suffix)
 		}
 
 		rules = append(rules, item)
@@ -850,6 +861,13 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 	req, _ := json.Marshal(opt)
 	resp, _ := json.Marshal(response)
 
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request:[%s], reason[%s]\n",
+				logId, "PutBucketPullOrigin", req, errRet.Error())
+		}
+	}()
+
 	if err != nil {
 		errRet = fmt.Errorf("[PutBucketPullOrigin] error: %s, bucket: %s", err.Error(), bucket)
 		return
@@ -864,7 +882,14 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string) (errRet error) {
 	logId := getLogId(ctx)
 
-	ratelimit.Check("PutBucketDeleteOrigin")
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+				logId, "DeleteBucketPullOrigin", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DeleteBucketPullOrigin")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteOrigin(ctx)
 	resp, _ := json.Marshal(response)
 
@@ -926,6 +951,13 @@ func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, 
 	req, _ := json.Marshal(opt)
 	resp, _ := json.Marshal(response)
 
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request:[%s], reason[%s]\n",
+				logId, "PutBucketOriginDomain", req, errRet.Error())
+		}
+	}()
+
 	if err != nil {
 		errRet = fmt.Errorf("[PutBucketOriginDomain] error: %s, bucket: %s", err.Error(), bucket)
 		return
@@ -933,6 +965,31 @@ func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, 
 
 	log.Printf("[DEBUG]%s api[PutBucketOriginDomain] success, request body [%s], response body [%s]\n",
 		logId, req, resp)
+
+	return nil
+}
+
+func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+				logId, "DeleteBucketOriginDomain", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DeleteBucketOriginDomain")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomain(ctx)
+	resp, _ := json.Marshal(response)
+
+	if err != nil {
+		errRet = fmt.Errorf("[DeleteBucketOriginDomain] error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[DeleteBucketOriginDomain] success, response body [%s]\n",
+		logId, resp)
 
 	return nil
 }

@@ -195,7 +195,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 										Type:		 schema.TypeString,
 										Optional: 	 true,
 										Default:	 "",
-										Description: "the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`",
+										Description: "the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.",
 									},
 									"host": {
 										Type:		 schema.TypeString,
@@ -212,7 +212,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 										Type:		 schema.TypeBool,
 										Optional: 	 true,
 										Default:	 true,
-										Description: "Specifies whether to follow 3XX redirect to another origin server to pull data from",
+										Description: "Specifies whether to follow 3XX redirect to another origin server to pull data from.",
 									},
 									//"copy_origin_data": {
 									//	Type:		 schema.TypeBool,
@@ -231,16 +231,16 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 										Optional:    true,
 										Description: "Specifies the custom headers that you can add for COS to access your origin server.",
 									},
-									"redirect_prefix": {
-										Type:		schema.TypeString,
-										Optional:   true,
-										Description: "Prefix for the file to which a request is redirected when the origin-pull rule is triggered.",
-									},
-									"redirect_suffix": {
-										Type:		schema.TypeString,
-										Optional:   true,
-										Description: "Suffix for the file to which a request is redirected when the origin-pull rule is triggered.",
-									},
+									//"redirect_prefix": {
+									//	Type:		schema.TypeString,
+									//	Optional:   true,
+									//	Description: "Prefix for the file to which a request is redirected when the origin-pull rule is triggered.",
+									//},
+									//"redirect_suffix": {
+									//	Type:		schema.TypeString,
+									//	Optional:   true,
+									//	Description: "Suffix for the file to which a request is redirected when the origin-pull rule is triggered.",
+									//},
 								},
 							},
 						},
@@ -250,7 +250,24 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 							Description: "Bucket origin domain rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-
+									"domain": {
+										Type:		 schema.TypeString,
+										Required: 	 true,
+										Description: "Specify domain host.",
+									},
+									"type": {
+										Type:		 schema.TypeString,
+										Optional: 	 true,
+										Default: "REST",
+										Description: "Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.",
+									},
+									"status": {
+										Type:		 schema.TypeString,
+										Optional: 	 true,
+										Default: 	 "ENABLED",
+										Description: "Domain status, default: `ENABLED`.",
+										ValidateFunc: validateAllowedStringValue([]string{"ENABLED", "DISABLED"}),
+									},
 								},
 							},
 						},
@@ -322,9 +339,10 @@ LOOP:
 		bucket["website"] = website
 
 		originRules, err := cosService.GetBucketPullOrigin(ctx, *v.Name)
-		if err == nil {
-			bucket["origin_pull_rules"] = originRules
+		if err != nil {
+			return err
 		}
+		bucket["origin_pull_rules"] = originRules
 
 		domainRules, err := cosService.GetBucketOriginDomain(ctx, *v.Name)
 		if err == nil {

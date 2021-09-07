@@ -301,42 +301,72 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 				Config: testAccBucket_originPull(appid),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules[0].priority", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "priority", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "sync_back_to_source", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "host", "abc.example.com"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "prefix", "/test"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "protocol", "FOLLOW"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_query_string", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_redirection", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_http_headers.0", "Origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_http_headers.1", "Host"),
-					//resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "custom_http_headers[X-Custom-Header]", "custom_value"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin","redirect_prefix", "prefix"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin","redirect_suffix", ".jpg"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.sync_back_to_source", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.host", "abc.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.prefix", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "custom_value"),
 				),
 			},
 			{
 				Config: testAccBucket_originPullUpdate(appid),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules[0].priority", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "priority", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "sync_back_to_source", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "host", "test.abc.example.com"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "prefix", "/test"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "protocol", "FOLLOW"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_query_string", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_redirection", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_http_headers.0", "Origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "follow_http_headers.1", "Host"),
-					//resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "custom_http_headers[X-Custom-Header]", "value2"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin","redirect_prefix", "prefix"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin","redirect_suffix", ".jpg"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.sync_back_to_source", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.host", "test.abc.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.prefix", "/test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "test"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_cos_bucket.with_origin",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBucket_originDomain(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "ENABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.domain", "www.example.com"),
+				),
+			},
+			{
+				Config: testAccBucket_originDomainUpdate(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "DISABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.domain", "www.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.1.status", "ENABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.1.domain", "test.example1.com"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.with_domain",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"acl"},
@@ -570,12 +600,10 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     protocol = "FOLLOW" // "HTTP" "HTTPS"
     follow_query_string = true
     follow_redirection = true
-    follow_http_headers = ["Origin", "Host"]
+    follow_http_headers = ["origin", "host"]
     custom_http_headers = {
-	  "X-Custom-Header" = "custom_value"
+	  "x-custom-header" = "custom_value"
     }
-    redirect_prefix = "prefix"
-    redirect_suffix = ".jpg"
   }
 }
 `, appid)
@@ -594,12 +622,10 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     protocol = "FOLLOW" // "HTTP" "HTTPS"
     follow_query_string = true
     follow_redirection = true
-    follow_http_headers = ["Origin", "Host"]
+    follow_http_headers = ["origin", "host"]
     custom_http_headers = {
-	  "X-Custom-Header" = "test"
+	  "x-custom-header" = "test"
     }
-    redirect_prefix = "prefix"
-    redirect_suffix = ".jpg"
   }
 }
 `, appid)
@@ -612,6 +638,7 @@ resource "tencentcloud_cos_bucket" "with_domain" {
   bucket = "tf-bucket-website-%s"
   acl    = "private"
   origin_domain_rules {
+	status = "ENABLED"
 	domain = "www.example.com"
   }
 }
@@ -624,7 +651,11 @@ resource "tencentcloud_cos_bucket" "with_domain" {
   bucket = "tf-bucket-website-%s"
   acl    = "private"
   origin_domain_rules {
-	domain = "test.example.com"
+	status = "DISABLED"
+	domain = "www.example.com"
+  }
+  origin_domain_rules {
+	domain = "test.example1.com"
   }
 }
 `, appid)
