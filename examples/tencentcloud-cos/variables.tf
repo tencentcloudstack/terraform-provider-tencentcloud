@@ -38,3 +38,33 @@ variable "policy" {
 }
 EOF
 }
+
+variable "acl_body" {
+  default = <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+            </Grantee>
+            <Permission>READ</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>WRITE</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+            </Grantee>
+            <Permission>READ_ACP</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}

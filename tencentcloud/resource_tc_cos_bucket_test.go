@@ -264,6 +264,117 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBucket_MAZ(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_maz"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_maz", "multi_az", "true"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBucket_originPull(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.sync_back_to_source", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.host", "abc.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.prefix", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "custom_value"),
+				),
+			},
+			{
+				Config: testAccBucket_originPullUpdate(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.sync_back_to_source", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.host", "test.abc.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.prefix", "/test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "test"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.with_origin",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBucket_originDomain(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "ENABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.domain", "www.example.com"),
+				),
+			},
+			{
+				Config: testAccBucket_originDomainUpdate(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "DISABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.domain", "www.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.1.status", "ENABLED"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.1.domain", "test.example1.com"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.with_domain",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
+		},
+	})
+}
+
 func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -460,6 +571,91 @@ resource "tencentcloud_cos_bucket" "bucket_website" {
   website {
     index_document = "testindex.html"
     error_document = "testerror.html"
+  }
+}
+`, appid)
+}
+
+func testAccBucket_MAZ(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_maz" {
+  bucket   = "tf-bucket-website-%s"
+  acl      = "public-read"
+  multi_az = true
+}
+`, appid)
+}
+
+
+func testAccBucket_originPull(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "tf-bucket-website-%s"
+  acl    = "private"
+  origin_pull_rules {
+    priority = 1
+    sync_back_to_source = false
+    host = "abc.example.com"
+    prefix = "/"
+    protocol = "FOLLOW" // "HTTP" "HTTPS"
+    follow_query_string = true
+    follow_redirection = true
+    follow_http_headers = ["origin", "host"]
+    custom_http_headers = {
+	  "x-custom-header" = "custom_value"
+    }
+  }
+}
+`, appid)
+}
+
+func testAccBucket_originPullUpdate(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "with_origin" {
+  bucket = "tf-bucket-website-%s"
+  acl    = "private"
+  origin_pull_rules {
+    priority = 1
+    sync_back_to_source = false
+    host = "test.abc.example.com"
+    prefix = "/test"
+    protocol = "FOLLOW" // "HTTP" "HTTPS"
+    follow_query_string = true
+    follow_redirection = true
+    follow_http_headers = ["origin", "host"]
+    custom_http_headers = {
+	  "x-custom-header" = "test"
+    }
+  }
+}
+`, appid)
+}
+
+
+func testAccBucket_originDomain(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "with_domain" {
+  bucket = "tf-bucket-website-%s"
+  acl    = "private"
+  origin_domain_rules {
+	status = "ENABLED"
+	domain = "www.example.com"
+  }
+}
+`, appid)
+}
+
+func testAccBucket_originDomainUpdate(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "with_domain" {
+  bucket = "tf-bucket-website-%s"
+  acl    = "private"
+  origin_domain_rules {
+	status = "DISABLED"
+	domain = "www.example.com"
+  }
+  origin_domain_rules {
+	domain = "test.example1.com"
   }
 }
 `, appid)

@@ -1,6 +1,15 @@
+## 1.58.5 (September 7, 2021)
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_redis_backup_config.go ` change backup_period to optional
+* Resource `resource_tc_scf_function.go` enable public net config and eip config
+* Resource `resource_tc_cos_bucket.go` support MAZ, ACL XML body, Origin-Pull rules and origin domain rules
+
 ## 1.58.4 (Aug 24, 2021)
 
 ENHANCEMENTS:
+
 * Resource `resource_tc_kubernetes_node_pool.go` support `backup_instance_type` for `auto_scaling_config`
 
 ## 1.58.3 (Aug 18, 2021)
@@ -27,7 +36,7 @@ ENHANCEMENTS:
 
 * Resource `resource_tc_mysql_instance.go` add cpu params for mysql
 
-BUG_FIXES:
+BUG FIXES:
 
 * Resource `resource_tc_instance.go` fix read cvm data_disks bug
 

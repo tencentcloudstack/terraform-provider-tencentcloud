@@ -296,12 +296,14 @@ github.com/golangci/prealloc
 github.com/golangci/revgrep
 # github.com/golangci/unconvert v0.0.0-20180507085042-28b1c447d1f4
 github.com/golangci/unconvert
-# github.com/google/go-cmp v0.3.1
+# github.com/google/go-cmp v0.5.2
 github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
+# github.com/google/go-querystring v1.1.0
+github.com/google/go-querystring/query
 # github.com/google/uuid v1.1.1
 github.com/google/uuid
 # github.com/googleapis/gax-go/v2 v2.0.5
@@ -467,6 +469,8 @@ github.com/mitchellh/go-wordwrap
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.1
 github.com/mitchellh/reflectwalk
+# github.com/mozillazg/go-httpheader v0.3.0
+github.com/mozillazg/go-httpheader
 # github.com/nakabonne/nestif v0.3.0
 github.com/nakabonne/nestif
 # github.com/nbutton23/zxcvbn-go v0.0.0-20180912185939-ae427f1e4c1d
@@ -597,6 +601,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426
+# github.com/tencentyun/cos-go-sdk-v5 v0.7.31-0.20210902132439-360bc9b1be6b
+github.com/tencentyun/cos-go-sdk-v5
 # github.com/tetafro/godot v0.3.7
 github.com/tetafro/godot
 # github.com/timakin/bodyclose v0.0.0-20190930140734-f7f2e9bca95e
