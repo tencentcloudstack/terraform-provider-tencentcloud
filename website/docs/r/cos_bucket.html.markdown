@@ -137,9 +137,9 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     protocol            = "FOLLOW" // "HTTP" "HTTPS"
     follow_query_string = true
     follow_redirection  = true
-    follow_http_headers = ["Origin", "Host"]
+    follow_http_headers = ["origin", "host"]
     custom_http_headers = {
-      "X-Custom-Header" = "custom_value"
+      "x-custom-header" = "custom_value"
     }
   }
 }
@@ -250,7 +250,7 @@ The `origin_pull_rules` object supports the following:
 * `follow_redirection` - (Optional) Specifies whether to follow 3XX redirect to another origin server to pull data from.
 * `prefix` - (Optional) Triggers the origin-pull rule when the requested file name matches this prefix.
 * `protocol` - (Optional) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
-* `sync_back_to_source` - (Optional) If `true`, COS will not return 3XX status code when pulling data from an origin server. Currently available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
+* `sync_back_to_source` - (Optional) If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
 
 The `transition` object supports the following:
 
