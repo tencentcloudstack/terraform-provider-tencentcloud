@@ -1,5 +1,6 @@
 package tencentcloud
 
+import "os"
 /*
 ---------------------------------------------------
 If you want to run through the test cases,
@@ -7,7 +8,7 @@ the following must be changed to your resource id.
 ---------------------------------------------------
 */
 
-const appid string = "1259649581"
+var appid string = os.Getenv("TENCENTCLOUD_APPID")
 
 const (
 	defaultRegion      = "ap-guangzhou"
