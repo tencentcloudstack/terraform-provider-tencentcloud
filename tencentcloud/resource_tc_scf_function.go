@@ -194,13 +194,13 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"enable_public_net": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: 	 false,
+				Default:     false,
 				Description: "Indicates whether public net config enabled.",
 			},
 			"enable_eip_config": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: 	 false,
+				Default:     false,
 				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.",
 			},
 			// cos code

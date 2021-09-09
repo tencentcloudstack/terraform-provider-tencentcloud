@@ -517,28 +517,28 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						Description: "Data disk snapshot ID.",
 					},
 					"file_system": {
-						Type: schema.TypeString,
-						ForceNew: true,
-						Optional: true,
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
 						Description: "File system, e.g. `ext3/ext4/xfs`.",
 					},
 					"auto_format_and_mount": {
-						Type: schema.TypeBool,
-						ForceNew: true,
-						Optional: true,
-						Default: false,
+						Type:        schema.TypeBool,
+						ForceNew:    true,
+						Optional:    true,
+						Default:     false,
 						Description: "Indicate whether to auto format and mount or not. Default is `false`.",
 					},
 					"mount_target": {
-						Type: schema.TypeString,
-						ForceNew: true,
-						Optional: true,
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
 						Description: "Mount target.",
 					},
 					"disk_partition": {
-						Type: schema.TypeString,
-						ForceNew: true,
-						Optional: true,
+						Type:        schema.TypeString,
+						ForceNew:    true,
+						Optional:    true,
 						Description: "The name of the device or partition to mount.",
 					},
 				},
@@ -1193,8 +1193,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Custom parameter information related to the node.",
 		},
 		"runtime_version": {
-			Type:		schema.TypeString,
-			Optional: true,
+			Type:        schema.TypeString,
+			Optional:    true,
 			Description: "Container Runtime version.",
 		},
 
@@ -1578,16 +1578,16 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		basic            	ClusterBasicSetting
-		advanced         	ClusterAdvancedSettings
-		cvms             	RunInstancesForNode
-		iAdvanced        	InstanceAdvancedSettings
-		iDiskMountSettings	[]*tke.InstanceDataDiskMountSetting
-		cidrSet          	ClusterCidrSettings
-		securityPolicies 	[]string
-		clusterInternet  	= d.Get("cluster_internet").(bool)
-		clusterIntranet  	= d.Get("cluster_intranet").(bool)
-		intranetSubnetId 	= d.Get("cluster_intranet_subnet_id").(string)
+		basic              ClusterBasicSetting
+		advanced           ClusterAdvancedSettings
+		cvms               RunInstancesForNode
+		iAdvanced          InstanceAdvancedSettings
+		iDiskMountSettings []*tke.InstanceDataDiskMountSetting
+		cidrSet            ClusterCidrSettings
+		securityPolicies   []string
+		clusterInternet    = d.Get("cluster_internet").(bool)
+		clusterIntranet    = d.Get("cluster_intranet").(bool)
+		intranetSubnetId   = d.Get("cluster_intranet_subnet_id").(string)
 	)
 
 	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
@@ -1781,28 +1781,28 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			if v, ok := worker["data_disk"]; ok {
 				var (
 					instanceType = worker["instance_type"].(string)
-					zone = worker["availability_zone"].(string)
+					zone         = worker["availability_zone"].(string)
 				)
 				iDiskMountSetting := &tke.InstanceDataDiskMountSetting{
 					InstanceType: &instanceType,
-					Zone: &zone,
+					Zone:         &zone,
 				}
 
 				diskList := v.([]interface{})
 				for _, d := range diskList {
 					var (
-						disk      = d.(map[string]interface{})
-						diskType = disk["disk_type"].(string)
-						diskSize = int64(disk["disk_size"].(int))
-						fileSystem = disk["file_system"].(string)
+						disk               = d.(map[string]interface{})
+						diskType           = disk["disk_type"].(string)
+						diskSize           = int64(disk["disk_size"].(int))
+						fileSystem         = disk["file_system"].(string)
 						autoFormatAndMount = disk["auto_format_and_mount"].(bool)
-						mountTarget = disk["mount_target"].(string)
-						diskPartition = disk["disk_partition"].(string)
+						mountTarget        = disk["mount_target"].(string)
+						diskPartition      = disk["disk_partition"].(string)
 					)
 
 					dataDisk := &tke.DataDisk{
-						DiskType: &diskType,
-						DiskSize: &diskSize,
+						DiskType:           &diskType,
+						DiskSize:           &diskSize,
 						AutoFormatAndMount: &autoFormatAndMount,
 					}
 

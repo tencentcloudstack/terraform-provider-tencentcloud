@@ -1,6 +1,7 @@
 package tencentcloud
 
 import "os"
+
 /*
 ---------------------------------------------------
 If you want to run through the test cases,

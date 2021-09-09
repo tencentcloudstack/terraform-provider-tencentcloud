@@ -236,38 +236,38 @@ func originPullRules() *schema.Resource {
 				Description: "Priority of origin-pull rules, do not set the same value for multiple rules.",
 			},
 			"sync_back_to_source": {
-				Type:		 schema.TypeBool,
-				Optional: 	 true,
-				Default: 	 false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
 				Description: "If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.",
 			},
 			"prefix": {
-				Type:		 schema.TypeString,
-				Optional: 	 true,
-				Default:	 "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
 				Description: "Triggers the origin-pull rule when the requested file name matches this prefix.",
 			},
 			"protocol": {
-				Type:		 schema.TypeString,
-				Optional: 	 true,
-				Default:	 "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
 				Description: "the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.",
 			},
 			"host": {
-				Type:		 schema.TypeString,
-				Required: 	 true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Allows only a domain name or IP address. You can optionally append a port number to the address.",
 			},
 			"follow_query_string": {
-				Type:		 schema.TypeBool,
-				Optional: 	 true,
-				Default:	 true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
 				Description: "Specifies whether to pass through COS request query string when accessing the origin server.",
 			},
 			"follow_redirection": {
-				Type:		 schema.TypeBool,
-				Optional: 	 true,
-				Default:	 true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
 				Description: "Specifies whether to follow 3XX redirect to another origin server to pull data from.",
 			},
 			//"copy_origin_data": {
@@ -277,13 +277,13 @@ func originPullRules() *schema.Resource {
 			//	Description: "",
 			//},
 			"follow_http_headers": {
-				Type:		 schema.TypeList,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Specifies the pass through headers when accessing the origin server.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"custom_http_headers": {
-				Type:		 schema.TypeMap,
+				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Specifies the custom headers that you can add for COS to access your origin server.",
 			},
@@ -303,35 +303,35 @@ func originPullRules() *schema.Resource {
 
 // x-cos-grant-* headers may conflict with xml acl body, we don't open up for now.
 func aclGrantHeaders() *schema.Schema {
-	return &schema.Schema {
-		Type: schema.TypeMap,
-		Optional: true,
-			Description: "ACL x-cos-grant-* headers for multiple grand info",
-			Elem: &schema.Resource {
+	return &schema.Schema{
+		Type:        schema.TypeMap,
+		Optional:    true,
+		Description: "ACL x-cos-grant-* headers for multiple grand info",
+		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"grant_read": {
-					Type: schema.TypeString,
-					Optional: true,
+					Type:        schema.TypeString,
+					Optional:    true,
 					Description: "Allows grantee to read the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
 				},
 				"grant_write": {
-					Type: schema.TypeString,
-					Optional: true,
+					Type:        schema.TypeString,
+					Optional:    true,
 					Description: "Allows grantee to write to the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
 				},
 				"grant_read_acp": {
-					Type: schema.TypeString,
-					Optional: true,
+					Type:        schema.TypeString,
+					Optional:    true,
 					Description: "Allows grantee to read the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
 				},
 				"grant_write_acp": {
-					Type: schema.TypeString,
-					Optional: true,
+					Type:        schema.TypeString,
+					Optional:    true,
 					Description: "Allows grantee to write the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
 				},
 				"grant_full_control": {
-					Type: schema.TypeString,
-					Optional: true,
+					Type:        schema.TypeString,
+					Optional:    true,
 					Description: "Grants a user full permission to perform operations on the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
 				},
 			},
@@ -369,8 +369,8 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Description: "The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.",
 			},
 			"acl_body": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "ACL XML body for multiple grant info.",
 			},
 			"encryption_algorithm": {
@@ -423,33 +423,33 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				},
 			},
 			"origin_pull_rules": {
-				Type:		 schema.TypeList,
-				Optional:	 true,
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "Bucket Origin-Pull settings.",
-				Elem: 	     originPullRules(),
+				Elem:        originPullRules(),
 			},
 			"origin_domain_rules": {
-				Type:		 schema.TypeList,
-				Optional:	 true,
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "Bucket Origin Domain settings.",
-				Elem: 	     &schema.Resource{
-					Schema: map[string]*schema.Schema {
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
 						"domain": {
-							Type:		 schema.TypeString,
-							Required: 	 true,
+							Type:        schema.TypeString,
+							Required:    true,
 							Description: "Specify domain host.",
 						},
 						"type": {
-							Type:		 schema.TypeString,
-							Optional: 	 true,
-							Default: "REST",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "REST",
 							Description: "Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.",
 						},
 						"status": {
-							Type:		 schema.TypeString,
-							Optional: 	 true,
-							Default: 	 "ENABLED",
-							Description: "Domain status, default: `ENABLED`.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "ENABLED",
+							Description:  "Domain status, default: `ENABLED`.",
 							ValidateFunc: validateAllowedStringValue([]string{"ENABLED", "DISABLED"}),
 						},
 						//"force_replacement": {
@@ -575,9 +575,9 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Description: "The URL of this cos bucket.",
 			},
 			"multi_az": {
-				Type: schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Indicates whether to create a bucket of multi available zone.",
 			},
 		},
@@ -597,7 +597,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	useCosService, createOptions := getBucketPutOptions(d);
+	useCosService, createOptions := getBucketPutOptions(d)
 
 	if useCosService {
 		err = cosService.TencentCosPutBucket(ctx, bucket, createOptions)
@@ -784,7 +784,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("origin_domain_rules") {
 		rules := d.Get("origin_domain_rules")
-		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d);err != nil {
+		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
 		d.Set("origin_domain_rules", rules)
@@ -1243,7 +1243,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 	return nil
 }
 
-func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, service CosService, d *schema.ResourceData ) error {
+func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
 	aclHeader := ""
 	aclBody := ""
 	body, bodyOk := d.GetOk("acl_body")
@@ -1283,9 +1283,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 				},
 				OriginParameter: &cos.BucketOriginParameter{
 					CopyOriginData: true,
-					HttpHeader: &cos.BucketOriginHttpHeader{
-
-					},
+					HttpHeader:     &cos.BucketOriginHttpHeader{},
 				},
 				OriginInfo: &cos.BucketOriginInfo{
 					FileInfo: &cos.BucketOriginFileInfo{
@@ -1340,7 +1338,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			var customHeaders []cos.OriginHttpHeader
 			for key, val := range v.(map[string]interface{}) {
 				customHeaders = append(customHeaders, cos.OriginHttpHeader{
-					Key: key,
+					Key:   key,
 					Value: val.(string),
 				})
 			}
@@ -1350,7 +1348,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			var followHeaders []cos.OriginHttpHeader
 			for _, item := range v.([]interface{}) {
 				header := cos.OriginHttpHeader{
-					Key: item.(string),
+					Key:   item.(string),
 					Value: "",
 				}
 				followHeaders = append(followHeaders, header)
@@ -1402,11 +1400,11 @@ func resourceTencentCloudCosBucketOriginDomainUpdate(ctx context.Context, servic
 
 func getBucketPutOptions(d *schema.ResourceData) (useCosService bool, options *cos.BucketPutOptions) {
 	opt := &cos.BucketPutOptions{
-		XCosACL: d.Get("acl").(string),
-		XCosGrantRead: "",
-		XCosGrantWrite: "",
-		XCosGrantReadACP: "",
-		XCosGrantWriteACP: "",
+		XCosACL:              d.Get("acl").(string),
+		XCosGrantRead:        "",
+		XCosGrantWrite:       "",
+		XCosGrantReadACP:     "",
+		XCosGrantWriteACP:    "",
 		XCosGrantFullControl: "",
 	}
 	grants, hasGrantHeaders := d.GetOk("grant_headers")
