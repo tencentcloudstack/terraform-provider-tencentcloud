@@ -77,7 +77,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   availability_zone = var.availability_zone
   host_type = "HM50"
   charge_type = "PREPAID"
-  prepaid_period = 1
+  instance_charge_type_prepaid_period = 1
   host_name = "test"
   prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
@@ -1170,9 +1170,12 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet, InternalError)
 			}
-			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
+			log.Printf(instanceId)
+			log.Printf(*instance.InstanceState)
+			//log.Printf(*instance.LatestOperationState)
+			//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+			//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			//}
 			return nil
 		})
 		if err != nil {
@@ -1190,9 +1193,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if errRet != nil {
 					return retryError(errRet, InternalError)
 				}
-				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-				}
+				log.Printf(instanceId)
+				log.Printf(*instance.InstanceState)
+				//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				//}
 				return nil
 			})
 			if err != nil {
@@ -1275,9 +1280,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet, InternalError)
 			}
-			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
+			log.Printf(instanceId)
+			log.Printf(*instance.InstanceState)
+			//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+			//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			//}
 			return nil
 		})
 		if err != nil {
