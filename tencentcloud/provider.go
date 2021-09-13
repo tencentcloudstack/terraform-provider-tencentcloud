@@ -316,6 +316,7 @@ KMS
 Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
+    tencentcloud_eks_clusters
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -323,6 +324,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_as_scaling_group
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
+    tencentcloud_eks_cluster
 
 MongoDB
   Data Source
@@ -682,6 +684,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_security_group":                           dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups":                          dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_kubernetes_clusters":                      dataSourceTencentCloudKubernetesClusters(),
+			"tencentcloud_eks_clusters":                             dataSourceTencentCloudEKSClusters(),
 			"tencentcloud_container_clusters":                       dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances":              dataSourceTencentCloudContainerClusterInstances(),
 			"tencentcloud_mysql_backup_list":                        dataSourceTencentMysqlBackupList(),
@@ -851,10 +854,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
+			"tencentcloud_eks_cluster":                             resourceTencentcloudEksCluster(),
 			"tencentcloud_kubernetes_as_scaling_group":             ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":                 resourceTencentCloudTkeScaleWorker(),
 			"tencentcloud_kubernetes_cluster_attachment":           resourceTencentCloudTkeClusterAttachment(),
 			"tencentcloud_kubernetes_node_pool":                    ResourceTencentCloudKubernetesNodePool(),
+			"resource_tc_eks_cluster":                              resourceTencentcloudEksCluster(),
 			"tencentcloud_mysql_backup_policy":                     resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                           resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                 resourceTencentCloudMysqlAccountPrivilege(),

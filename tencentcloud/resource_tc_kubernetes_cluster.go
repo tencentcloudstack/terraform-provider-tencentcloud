@@ -1551,8 +1551,8 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 	request.ClusterId = helper.String(d.Id())
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
-		Issuer: helper.String(""),
-		JWKSURI: helper.String(""),
+		Issuer:                           helper.String(""),
+		JWKSURI:                          helper.String(""),
 	}
 
 	if !ok || len(options) == 0 {
