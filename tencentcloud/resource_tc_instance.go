@@ -1164,22 +1164,20 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-		}
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
+			time.Sleep(10 * time.Second)
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				}
+				return nil
+			})
+			if err != nil {
+				return err
 			}
-			log.Printf(instanceId)
-			log.Printf(*instance.InstanceState)
-			//log.Printf(*instance.LatestOperationState)
-			//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-			//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			//}
-			return nil
-		})
-		if err != nil {
-			return err
 		}
 
 		if keyId != "" {
@@ -1193,11 +1191,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if errRet != nil {
 					return retryError(errRet, InternalError)
 				}
-				log.Printf(instanceId)
-				log.Printf(*instance.InstanceState)
-				//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-				//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-				//}
+				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				}
 				return nil
 			})
 			if err != nil {
@@ -1280,11 +1276,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet, InternalError)
 			}
-			log.Printf(instanceId)
-			log.Printf(*instance.InstanceState)
-			//if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-			//	return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			//}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
 			return nil
 		})
 		if err != nil {
