@@ -97,7 +97,7 @@ func testAccCheckClbServerAttachmentTargetGroups(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{

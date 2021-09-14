@@ -275,27 +275,11 @@ func resourceTencentCloudClbServerAttachmentRemove(d *schema.ResourceData, meta 
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	// Destroy CVM instance will dispatch async task to deregister target group from cloudApi backend. Duplicate deregister target groups here will cause Error response.
-	// If remove diffs created, check existing cvm instance first, filter target groups which already deregister
-	removeCandidates := make([]interface{}, 0)
-	existAttachments, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
-	if err != nil {
-		return err
-	}
-	existTargetGroups := existAttachments.Targets
-
-	for _, item := range remove {
-		target := item.(map[string]interface{})
-		if targetGroupContainsInstance(existTargetGroups, target["instance_id"].(string)) {
-			removeCandidates = append(removeCandidates, target)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		removeCandidates := getRemoveCandidates(ctx, clbService, clbId, listenerId, locationId, remove)
+		if len(removeCandidates) == 0 {
+			return nil
 		}
-	}
-
-	if len(removeCandidates) == 0 {
-		return nil
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, removeCandidates)
 		if e != nil {
 			return retryError(e)
@@ -464,12 +448,34 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	return nil
 }
 
+// Destroy CVM instance will dispatch async task to deregister target group from cloudApi backend. Duplicate deregister target groups here will cause Error response.
+// If remove diffs created, check existing cvm instance first, filter target groups which already deregister
+func getRemoveCandidates(ctx context.Context, clbService ClbService, clbId string, listenerId string, locationId string, remove []interface{}) []interface{} {
+	removeCandidates := make([]interface{}, 0)
+	existAttachments, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+	if err != nil {
+		return removeCandidates
+	}
+	existTargetGroups := existAttachments.Targets
+
+	for _, item := range remove {
+		target := item.(map[string]interface{})
+		if targetGroupContainsInstance(existTargetGroups, target["instance_id"].(string)) {
+			removeCandidates = append(removeCandidates, target)
+		}
+	}
+
+	return removeCandidates
+}
+
 func targetGroupContainsInstance(targets []*clb.Backend, instanceId string) (contains bool) {
 	contains = false
 	for _, target := range targets {
 		if instanceId == *target.InstanceId {
+			log.Printf("[WARN] Instance %s applied.", instanceId)
 			return true
 		}
 	}
+	log.Printf("[WARN] Instance %s not exist, skip deregister.", instanceId)
 	return
 }
