@@ -250,7 +250,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	return nil
 }
 
-func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
+func resourceTencentCloudClbServerAttachmentRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := getLogId(contextNil)
@@ -275,8 +275,28 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, remove)
+	// Destroy CVM instance will dispatch async task to deregister target group from cloudApi backend. Duplicate deregister target groups here will cause Error response.
+	// If remove diffs created, check existing cvm instance first, filter target groups which already deregister
+	removeCandidates := make([]interface{}, 0)
+	existAttachments, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+	if err != nil {
+		return err
+	}
+	existTargetGroups := existAttachments.Targets
+
+	for _, item := range remove {
+		target := item.(map[string]interface{})
+		if targetGroupContainsInstance(existTargetGroups, target["instance_id"].(string)) {
+			removeCandidates = append(removeCandidates, target)
+		}
+	}
+
+	if len(removeCandidates) == 0 {
+		return nil
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, removeCandidates)
 		if e != nil {
 			return retryError(e)
 		}
@@ -291,7 +311,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	return nil
 }
 
-func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
+func resourceTencentCloudClbServerAttachmentAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.add")()
 	logId := getLogId(contextNil)
 
@@ -349,13 +369,13 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
 		if len(remove) > 0 {
-			err := resourceTencentCloudClbServerAttachementRemove(d, meta, remove)
+			err := resourceTencentCloudClbServerAttachmentRemove(d, meta, remove)
 			if err != nil {
 				return err
 			}
 		}
 		if len(add) > 0 {
-			err := resourceTencentCloudClbServerAttachementAdd(d, meta, add)
+			err := resourceTencentCloudClbServerAttachmentAdd(d, meta, add)
 			if err != nil {
 				return err
 			}
@@ -442,4 +462,14 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	}
 
 	return nil
+}
+
+func targetGroupContainsInstance(targets []*clb.Backend, instanceId string) (contains bool) {
+	contains = false
+	for _, target := range targets {
+		if instanceId == *target.InstanceId {
+			return true
+		}
+	}
+	return
 }
