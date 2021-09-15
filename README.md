@@ -82,8 +82,24 @@ log.Println("[DEBUG] the message and some import values: %v", importantValues)
 ### Test
 
 The quicker way for development and debug is writing test cases.
-How to trigger running the test cases, please refer the `test.sh` script.
-How to write test cases, check the `xxx_test.go` files.
+
+Config environment variables:
+```
+export TF_ACC=true
+```
+
+Config your appid for COS bucket testing
+```
+export TENCENTCLOUD_APPID=1234567890
+```
+
+This example show how to test single test function:
+```
+cd tencentcloud
+go test -i; go test -test.run TestAccTencentCloudNatGateway_basic -v
+```
+
+To write test cases, check the `xxx_test.go` files for more reference.
 
 ### Avoid ``terrafrom init``
 

@@ -34,7 +34,7 @@ type ClusterAdvancedSettings struct {
 	EnableCustomizedPodCIDR bool
 	BasePodNumber           int64
 	ContainerRuntime        string
-	RuntimeVersion			string
+	RuntimeVersion          string
 	NodeNameType            string
 	ExtraArgs               ClusterExtraArgs
 	NetworkType             string
@@ -61,7 +61,7 @@ type InstanceAdvancedSettings struct {
 	Unschedulable   int64
 	DesiredPodNum   int64
 	Labels          []*tke.Label
-	DataDisks		[]*tke.DataDisk
+	DataDisks       []*tke.DataDisk
 	ExtraArgs       tke.InstanceExtraArgs
 }
 
@@ -84,13 +84,13 @@ type ClusterInfo struct {
 }
 
 type InstanceInfo struct {
-	InstanceId               		string
-	InstanceRole             		string
-	InstanceState            		string
-	FailedReason             		string
-	InstanceAdvancedSettings 		*tke.InstanceAdvancedSettings
-	InstanceDataDiskMountSetting	*tke.InstanceDataDiskMountSetting
-	LanIp                    		string
+	InstanceId                   string
+	InstanceRole                 string
+	InstanceState                string
+	FailedReason                 string
+	InstanceAdvancedSettings     *tke.InstanceAdvancedSettings
+	InstanceDataDiskMountSetting *tke.InstanceDataDiskMountSetting
+	LanIp                        string
 }
 
 type TkeService struct {

@@ -586,7 +586,6 @@ resource "tencentcloud_cos_bucket" "bucket_maz" {
 `, appid)
 }
 
-
 func testAccBucket_originPull(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "with_origin" {
@@ -630,7 +629,6 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 `, appid)
 }
-
 
 func testAccBucket_originDomain(appid string) string {
 	return fmt.Sprintf(`

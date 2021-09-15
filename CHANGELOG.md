@@ -1,3 +1,16 @@
+## 1.59.1 (September 15, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud/resource_tc_instance.go` remove last_update_status judge
+* Resource `tencentcloud/resource_tc_instance.go` fix DescribeInstanceById return LatestOperationState
+* Resource `tencentcloud/resource_tc_clb_attachment.go` clb_attachment check instances before unbind target groups
+
+CHORE:
+
+* Define `TENCENTCLOUD_APPID` Environment variable for testing appid.
+* Format code style
+
 ## 1.58.5 (September 7, 2021)
 
 ENHANCEMENTS:

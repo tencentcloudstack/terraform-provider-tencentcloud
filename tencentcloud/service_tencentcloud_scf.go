@@ -14,20 +14,20 @@ import (
 )
 
 type scfFunctionInfo struct {
-	name        string
-	handler     *string
-	desc        *string
-	memSize     *int
-	timeout     *int
-	environment map[string]string
-	runtime     *string
-	vpcId       *string
-	subnetId    *string
-	role        *string
-	clsLogsetId *string
-	clsTopicId  *string
-	namespace   *string
-	l5Enable    *bool
+	name            string
+	handler         *string
+	desc            *string
+	memSize         *int
+	timeout         *int
+	environment     map[string]string
+	runtime         *string
+	vpcId           *string
+	subnetId        *string
+	role            *string
+	clsLogsetId     *string
+	clsTopicId      *string
+	namespace       *string
+	l5Enable        *bool
 	publicNetConfig *scf.PublicNetConfigIn
 
 	cosBucketName   *string

@@ -124,7 +124,7 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 }
 
 // TencentCosPutBucket - To support MAZ config, We use tencentcloud cos sdk instead of aws s3
-func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (errRet error)  {
+func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (errRet error) {
 	logId := getLogId(ctx)
 
 	req, _ := json.Marshal(opt)
@@ -157,7 +157,7 @@ func (me *CosService) TencentCosPutBucketACL(
 	bucket string,
 	reqBody string,
 	header string,
-) (errRet error)  {
+) (errRet error) {
 	logId := getLogId(ctx)
 
 	acl := &cos.ACLXml{}

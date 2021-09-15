@@ -141,8 +141,8 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Description: "Specified types of CVM instance.",
 		},
 		"backup_instance_types": {
-			Type: 		 schema.TypeList,
-			Optional: 	 true,
+			Type:        schema.TypeList,
+			Optional:    true,
 			Description: "Backup CVM instance types if specified instance type sold out or mismatch.",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
