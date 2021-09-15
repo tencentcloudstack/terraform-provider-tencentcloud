@@ -85,12 +85,12 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_cdh_instance" "foo" {
-  availability_zone  = var.availability_zone
-  host_type          = "HM50"
-  charge_type        = "PREPAID"
-  prepaid_period     = 1
-  host_name          = "test"
-  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
+  availability_zone                   = var.availability_zone
+  host_type                           = "HM50"
+  charge_type                         = "PREPAID"
+  instance_charge_type_prepaid_period = 1
+  host_name                           = "test"
+  prepaid_renew_flag                  = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
 
 data "tencentcloud_cdh_instances" "list" {
