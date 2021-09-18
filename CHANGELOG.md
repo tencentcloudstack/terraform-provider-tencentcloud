@@ -1,3 +1,13 @@
+## 1.59.2 (September 18, 2021)
+
+BUGFIXES:
+
+* Add missing AuthorizationTransport.Token field
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_cdn_domain.go` support `ipv6_access_switch` config
+
 ## 1.59.1 (September 15, 2021)
 
 BUGFIXES:
