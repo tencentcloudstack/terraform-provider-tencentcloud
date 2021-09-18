@@ -153,6 +153,7 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 		Transport: &cos.AuthorizationTransport{
 			SecretID: me.Credential.SecretId,
 			SecretKey: me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
 		},
 	})
 
