@@ -144,6 +144,7 @@ The following arguments are supported:
 * `area` - (Optional) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
 * `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
+* `ipv6_access_switch` - (Optional) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
 * `range_origin_switch` - (Optional) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
 * `request_header` - (Optional) Request header configuration. It's a list and consist of at most one item.

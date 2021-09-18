@@ -408,6 +408,13 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
 				Description:  "Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.",
 			},
+			"ipv6_access_switch": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CDN_SWITCH_OFF,
+				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				Description:  "ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.",
+			},
 			"rule_cache": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -601,6 +608,12 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	// Range Origin Pull
 	request.RangeOriginPull = &cdn.RangeOriginPull{}
 	request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
+
+	if v, ok := d.GetOk("ipv6_access_switch"); ok {
+		request.Ipv6Access = &cdn.Ipv6Access{
+			Switch: helper.String(v.(string)),
+		}
+	}
 
 	// rule_cache
 	if v, ok := d.GetOk("rule_cache"); ok {
@@ -863,6 +876,10 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("create_time", domainConfig.CreateTime)
 	_ = d.Set("cname", domainConfig.Cname)
 	_ = d.Set("range_origin_switch", domainConfig.RangeOriginPull.Switch)
+
+	if domainConfig.Ipv6Access != nil {
+		_ = d.Set("ipv6_access_switch", domainConfig.Ipv6Access.Switch)
+	}
 	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
 		_ = d.Set("full_url_cache", false)
 	} else {
@@ -1040,6 +1057,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.RangeOriginPull = &cdn.RangeOriginPull{}
 		request.RangeOriginPull.Switch = helper.String(d.Get("range_origin_switch").(string))
 		updateAttrs = append(updateAttrs, "range_origin_switch")
+	}
+	if d.HasChange("ipv6_access_switch") {
+		request.Ipv6Access = &cdn.Ipv6Access{}
+		request.Ipv6Access.Switch = helper.String(d.Get("ipv6_access_switch").(string))
+		updateAttrs = append(updateAttrs, "ipv6_access_switch")
 	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
