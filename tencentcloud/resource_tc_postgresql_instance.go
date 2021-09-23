@@ -57,6 +57,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -108,6 +109,16 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of subnet.",
+			},
+			"security_groups": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Set: func(v interface{}) int {
+					return hashcode.String(v.(string))
+				},
+				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.",
 			},
 			"storage": {
 				Type:        schema.TypeInt,
@@ -210,6 +221,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		projectId = d.Get("project_id").(int)
 		subnetId  = d.Get("subnet_id").(string)
 		vpcId     = d.Get("vpc_id").(string)
+		securityGroups = d.Get("security_groups").(*schema.Set).List()
 		zone      = d.Get("availability_zone").(string)
 		storage   = d.Get("storage").(int)
 		memory    = d.Get("memory").(int)
@@ -224,6 +236,12 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	var instanceId, specVersion, specCode string
 	var outErr, inErr error
 	var allowVersion, allowMemory []string
+
+	requestSecurityGroup := make([]string, 0, len(securityGroups))
+
+	for _, v := range securityGroups {
+		requestSecurityGroup = append(requestSecurityGroup, v.(string))
+	}
 
 	// get speccode with engine_version and memory
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -262,7 +280,21 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = postgresqlService.CreatePostgresqlInstance(ctx, name, dbVersion, payType, specCode, 0, projectId, period, subnetId, vpcId, zone, storage, username, password, charset)
+		instanceId, inErr = postgresqlService.CreatePostgresqlInstance(ctx,
+			name,
+			dbVersion,
+			payType, specCode,
+			0,
+			projectId,
+			period,
+			subnetId,
+			vpcId,
+			zone,
+			requestSecurityGroup,
+			storage,
+			username,
+			password,
+			charset)
 		if inErr != nil {
 			return retryError(inErr)
 		}

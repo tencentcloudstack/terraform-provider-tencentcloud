@@ -19,7 +19,7 @@ type PostgresqlService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string, storage int, username, password, charset string) (instanceId string, errRet error) {
+func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string, securityGroups []string, storage int, username, password, charset string) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
 	defer func() {
@@ -42,6 +42,13 @@ func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name,
 	request.AdminName = &username
 	request.AdminPassword = &password
 	request.Charset = &charset
+
+	if len(securityGroups) > 0 {
+		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+		for v := range securityGroups {
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroups[v])
+		}
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().CreateInstances(request)
