@@ -161,7 +161,7 @@ func (me *MonitorService) DescribeBindingPolicyObjectList(ctx context.Context, g
 		requestList  = monitor.NewDescribeBindingPolicyObjectListRequest()
 		responseList *monitor.DescribeBindingPolicyObjectListResponse
 		offset       int64 = 0
-		limit        int64 = 20
+		limit        int64 = 100
 		finish       bool
 		err          error
 	)
