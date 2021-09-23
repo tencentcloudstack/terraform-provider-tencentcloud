@@ -112,6 +112,7 @@ The following arguments are supported:
 * `min_size` - (Required) Minimum number of node.
 * `name` - (Required, ForceNew) Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.
 * `vpc_id` - (Required, ForceNew) ID of VPC network.
+* `default_cooldown` - (Optional) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
 * `desired_capacity` - (Optional) Desired capacity ot the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
 * `enable_auto_scale` - (Optional) Indicate whether to enable auto scaling or not.
@@ -120,10 +121,14 @@ The following arguments are supported:
 * `node_os_type` - (Optional) The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.
 * `node_os` - (Optional) Operating system of the cluster, the available values include: `tlinux2.4x86_64`, `ubuntu18.04.1x86_64`, `ubuntu16.04.1 LTSx86_64`, `centos7.6.0_x64` and `centos7.2x86_64`. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.
 * `retry_policy` - (Optional, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
+* `scaling_group_name` - (Optional) Name of relative scaling group.
+* `scaling_group_project_id` - (Optional) Project ID the scaling group belongs to.
 * `scaling_mode` - (Optional, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
 * `subnet_ids` - (Optional, ForceNew) ID list of subnet, and for VPC it is required.
 * `taints` - (Optional) Taints of kubernetes node pool created nodes.
+* `termination_policies` - (Optional) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `zones` - (Optional) List of auto scaling group available zones, for Basic network it is required.
 
 The `auto_scaling_config` object supports the following:
 

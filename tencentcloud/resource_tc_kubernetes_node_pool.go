@@ -410,6 +410,36 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Default:     "GENERAL",
 				Description: "The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.",
 			},
+			// asg pass through arguments
+			"scaling_group_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of relative scaling group.",
+			},
+			"zones": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of auto scaling group available zones, for Basic network it is required.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"scaling_group_project_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Project ID the scaling group belongs to.",
+			},
+			"default_cooldown": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Seconds of scaling group cool down. Default value is `300`.",
+			},
+			"termination_policies": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Policy of scaling group termination. Available values: `[\"OLDEST_INSTANCE\"]`, `[\"NEWEST_INSTANCE\"]`.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			//computed
 			"status": {
 				Type:        schema.TypeString,
@@ -609,6 +639,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		logId   = getLogId(contextNil)
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items   = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
@@ -677,6 +708,30 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		lables[*v.Name] = *v.Value
 	}
 	d.Set("labels", lables)
+
+	// Relative scaling group status
+	asg, hasAsg, err := asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			asg, hasAsg, err = asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	if hasAsg >= 1 {
+		_ = d.Set("scaling_group_name", asg.AutoScalingGroupName)
+		_ = d.Set("zones", asg.ZoneSet)
+		_ = d.Set("scaling_group_project_id", asg.ProjectId)
+		_ = d.Set("default_cooldown", asg.DefaultCooldown)
+		_ = d.Set("termination_policies", asg.TerminationPolicySet)
+	}
 
 	taints := make([]map[string]interface{}, len(nodePool.Taints))
 	for i, v := range nodePool.Taints {
@@ -797,6 +852,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		logId   = getLogId(contextNil)
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items   = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
@@ -834,6 +890,57 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("node_os_type")
 		d.SetPartial("labels")
 		d.SetPartial("taints")
+	}
+
+	if d.HasChange("scaling_group_name") ||
+		d.HasChange("zones") ||
+		d.HasChange("scaling_group_project_id") ||
+		d.HasChange("default_cooldown") ||
+		d.HasChange("termination_policies") {
+
+		nodePool, _, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
+		if err != nil {
+			return err
+		}
+
+		var (
+			scalingGroupId	  = *nodePool.AutoscalingGroupId
+			name              = d.Get("scaling_group_name").(string)
+			projectId		  = d.Get("scaling_group_project_id").(int)
+			defaultCooldown   = d.Get("default_cooldown").(int)
+			zones             []*string
+			terminationPolicy []*string
+		)
+
+		if v, ok := d.GetOk("zones"); ok {
+			for _, zone := range v.([]interface{}) {
+				zones = append(zones, helper.String(zone.(string)))
+			}
+		}
+
+		if v, ok := d.GetOk("termination_policy"); ok {
+			for _, policy := range v.([]interface{}) {
+				terminationPolicy = append(terminationPolicy, helper.String(policy.(string)))
+			}
+		}
+
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := asService.ModifyScalingGroup(ctx, scalingGroupId, name, projectId, defaultCooldown, zones, terminationPolicy)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+		d.SetPartial("scaling_group_name")
+		d.SetPartial("zones")
+		d.SetPartial("scaling_group_project_id")
+		d.SetPartial("default_cooldown")
+		d.SetPartial("termination_policies")
 	}
 
 	if d.HasChange("desired_capacity") {
