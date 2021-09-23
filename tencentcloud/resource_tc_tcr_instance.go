@@ -59,7 +59,6 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The available tags within this TCR instance.",
 			},
 			"open_public_operation": {
@@ -110,7 +109,6 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	var (
 		name           = d.Get("name").(string)
 		insType        = d.Get("instance_type").(string)
-		tags           = helper.GetTags(d, "tags")
 		outErr, inErr  error
 		instanceId     string
 		instanceStatus string
@@ -118,7 +116,7 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = tcrService.CreateTCRInstance(ctx, name, insType, tags)
+		instanceId, inErr = tcrService.CreateTCRInstance(ctx, name, insType, map[string]string{})
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -165,6 +163,15 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		})
 		if outErr != nil {
 			return outErr
+		}
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("tcr", "instance", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
 		}
 	}
 
@@ -268,6 +275,19 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
+	}
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("tcr", "instance", region, d.Id())
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }
