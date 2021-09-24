@@ -32,7 +32,7 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional) Control public network access.
-* `tags` - (Optional, ForceNew) The available tags within this TCR instance.
+* `tags` - (Optional) The available tags within this TCR instance.
 
 ## Attributes Reference
 
