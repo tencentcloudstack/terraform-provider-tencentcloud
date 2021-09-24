@@ -856,7 +856,7 @@ func resourceTencentCloudAPIGatewayAPIDelete(d *schema.ResourceData, meta interf
 		ctx                     = context.WithValue(context.TODO(), logIdKey, logId)
 		apiId                   = d.Id()
 		serviceId               = d.Get("service_id").(string)
-		limitNumber       int64 = QUOTA_MAX
+		limitNumber       int64 = QUOTA
 		err               error
 	)
 	for _, v := range API_GATEWAY_SERVICE_ENVS {
