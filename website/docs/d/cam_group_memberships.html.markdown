@@ -32,6 +32,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `membership_list` - A list of CAM group membership. Each element contains the following attributes:
   * `group_id` - ID of CAM group.
-  * `user_ids` - ID set of the CAM group members.
+  * `user_ids` - (**Deprecated**) It has been deprecated from version 1.59.5. Use `user_names` instead. ID set of the CAM group members.
+  * `user_names` - ID set of the CAM group members.
 
 

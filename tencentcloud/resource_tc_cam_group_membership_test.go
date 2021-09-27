@@ -20,14 +20,14 @@ func TestAccTencentCloudCamGroupMembership_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamGroupMembershipExists("tencentcloud_cam_group_membership.group_membership_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_group_membership.group_membership_basic", "group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_group_membership.group_membership_basic", "user_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_group_membership.group_membership_basic", "user_names.#", "1"),
 				),
 			}, {
 				Config: testAccCamGroupMembership_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamGroupMembershipExists("tencentcloud_cam_group_membership.group_membership_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_group_membership.group_membership_basic", "group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_group_membership.group_membership_basic", "user_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_group_membership.group_membership_basic", "user_names.#", "1"),
 				),
 			},
 			{
@@ -95,7 +95,7 @@ resource "tencentcloud_cam_user" "foo" {
   name                = "cam-user-test22"
   remark              = "test"
   console_login       = true
-  use_api             = true
+  use_api             = trueresource_tc_cam_group_membership.go
   need_reset_password = true
   password            = "Gail@1234"
   phone_num           = "12345678910"
@@ -106,7 +106,7 @@ resource "tencentcloud_cam_user" "foo" {
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
   group_id = tencentcloud_cam_group.group_basic.id
-  user_ids = [tencentcloud_cam_user.foo.id,]
+  user_names = [tencentcloud_cam_user.foo.id]
 }
 `
 
@@ -131,6 +131,6 @@ resource "tencentcloud_cam_user" "user_basic" {
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
   group_id = tencentcloud_cam_group.group_basic.id
-  user_ids = [tencentcloud_cam_user.user_basic.id]
+  user_names = [tencentcloud_cam_user.user_basic.id]
 }
 `
