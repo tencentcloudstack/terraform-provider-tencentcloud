@@ -440,6 +440,42 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 	return
 }
 
+func (me *AsService) ModifyScalingGroup(ctx context.Context, id string, name string, projectId int, cooldown int, zones []*string, terminatePolicy []*string) error {
+	logId := getLogId(ctx)
+	request := as.NewModifyAutoScalingGroupRequest()
+
+	request.AutoScalingGroupId = helper.String(id)
+
+	if name != "" {
+		request.AutoScalingGroupName = helper.String(name)
+	}
+
+	if projectId != 0 {
+		request.ProjectId = helper.IntUint64(projectId)
+	}
+
+	if cooldown != 0 {
+		request.DefaultCooldown = helper.IntUint64(cooldown)
+	}
+
+	if len(zones) != 0 {
+		request.Zones = zones
+	}
+
+	if len(terminatePolicy) != 0 {
+		request.TerminationPolicies = terminatePolicy[:1]
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	return nil
+}
+
 func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId string) error {
 	logId := getLogId(ctx)
 	request := as.NewDeleteScheduledActionRequest()

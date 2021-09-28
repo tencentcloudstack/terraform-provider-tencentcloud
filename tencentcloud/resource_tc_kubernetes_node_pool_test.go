@@ -34,6 +34,10 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepool"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "400"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "OLDEST_INSTANCE"),
 				),
 			},
 			{
@@ -50,6 +54,10 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", "ubuntu18.04.1x86_64"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group_test"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
 				),
 			},
 		},
@@ -189,6 +197,9 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 1
   enable_auto_scale    = true
+  scaling_group_name	   = "basic_group"
+  default_cooldown		   = 400
+  termination_policies	   = ["OLDEST_INSTANCE"]
 
   auto_scaling_config {
     instance_type      = var.default_instance_type
@@ -222,9 +233,9 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   }
 
   node_config {
-      extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
   }
 }
 
@@ -243,6 +254,9 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   enable_auto_scale    = false
   node_os = "ubuntu18.04.1x86_64"
   delete_keep_instance = true
+  scaling_group_name 	   = "basic_group_test"
+  default_cooldown 		   = 350
+  termination_policies 	   = ["NEWEST_INSTANCE"]
 
   auto_scaling_config {
     instance_type      = var.default_instance_type
@@ -270,9 +284,9 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   }
 
   node_config {
-      extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
   }
 }
 `
