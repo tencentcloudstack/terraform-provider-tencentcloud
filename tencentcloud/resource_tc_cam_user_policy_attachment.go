@@ -43,19 +43,19 @@ func resourceTencentCloudCamUserPolicyAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"user_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
 				AtLeastOneOf: []string{"user_name", "user_id"},
-				Deprecated: "It has been deprecated from version 1.59.5. Use `user_name` instead.",
-				Description: "ID of the attached CAM user.",
+				Deprecated:   "It has been deprecated from version 1.59.5. Use `user_name` instead.",
+				Description:  "ID of the attached CAM user.",
 			},
 			"user_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
 				AtLeastOneOf: []string{"user_name", "user_id"},
-				Description: "Name of the attached CAM user as uniq key.",
+				Description:  "Name of the attached CAM user as uniq key.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,

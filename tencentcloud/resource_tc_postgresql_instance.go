@@ -215,19 +215,19 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name      = d.Get("name").(string)
-		dbVersion = d.Get("engine_version").(string)
-		payType   = d.Get("charge_type").(string)
-		projectId = d.Get("project_id").(int)
-		subnetId  = d.Get("subnet_id").(string)
-		vpcId     = d.Get("vpc_id").(string)
+		name           = d.Get("name").(string)
+		dbVersion      = d.Get("engine_version").(string)
+		payType        = d.Get("charge_type").(string)
+		projectId      = d.Get("project_id").(int)
+		subnetId       = d.Get("subnet_id").(string)
+		vpcId          = d.Get("vpc_id").(string)
 		securityGroups = d.Get("security_groups").(*schema.Set).List()
-		zone      = d.Get("availability_zone").(string)
-		storage   = d.Get("storage").(int)
-		memory    = d.Get("memory").(int)
-		username  = d.Get("root_user").(string)
-		password  = d.Get("root_password").(string)
-		charset   = d.Get("charset").(string)
+		zone           = d.Get("availability_zone").(string)
+		storage        = d.Get("storage").(int)
+		memory         = d.Get("memory").(int)
+		username       = d.Get("root_user").(string)
+		password       = d.Get("root_password").(string)
+		charset        = d.Get("charset").(string)
 	)
 
 	var period = 1
