@@ -148,7 +148,7 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	//in this situation, import action is not supported
 	stateMembers, usingNames, err := getUserIds(d)
 	if err != nil {
-		return err
+		stateMembers = &schema.Set{}
 	}
 	memberResult := make([]*string, 0)
 	if stateMembers.Len() != 0 {
@@ -340,7 +340,7 @@ func getUserIds(d *schema.ResourceData) (data *schema.Set, usingNames bool, errR
 	} else if hasIds {
 		return ids.(*schema.Set), false, nil
 	}
-	return nil, false, fmt.Errorf("no user names provided %v %v", hasNames, hasIds)
+	return nil, true, fmt.Errorf("no user names provided")
 }
 
 func processChange(d *schema.ResourceData, groupId string, logId string, meta interface{}) error {

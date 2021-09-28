@@ -19,7 +19,7 @@ func TestAccTencentCloudCamUserPolicyAttachment_basic(t *testing.T) {
 				Config: testAccCamUserPolicyAttachment_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamUserPolicyAttachmentExists("tencentcloud_cam_user_policy_attachment.user_policy_attachment_basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_user_policy_attachment.user_policy_attachment_basic", "user_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_user_policy_attachment.user_policy_attachment_basic", "user_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user_policy_attachment.user_policy_attachment_basic", "policy_id"),
 				),
 			},
