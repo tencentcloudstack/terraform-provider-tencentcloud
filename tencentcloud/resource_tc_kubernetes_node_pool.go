@@ -636,11 +636,11 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 	defer logElapsed("resource.tencentcloud_kubernetes_node_pool.read")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = getLogId(contextNil)
+		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
+		service   = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
-		items   = strings.Split(d.Id(), FILED_SP)
+		items     = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
 		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
@@ -849,11 +849,11 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 	defer logElapsed("resource.tencentcloud_kubernetes_node_pool.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = getLogId(contextNil)
+		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
+		service   = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
-		items   = strings.Split(d.Id(), FILED_SP)
+		items     = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
 		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
@@ -904,9 +904,9 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 
 		var (
-			scalingGroupId	  = *nodePool.AutoscalingGroupId
+			scalingGroupId    = *nodePool.AutoscalingGroupId
 			name              = d.Get("scaling_group_name").(string)
-			projectId		  = d.Get("scaling_group_project_id").(int)
+			projectId         = d.Get("scaling_group_project_id").(int)
 			defaultCooldown   = d.Get("default_cooldown").(int)
 			zones             []*string
 			terminationPolicy []*string
@@ -923,7 +923,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 				terminationPolicy = append(terminationPolicy, helper.String(policy.(string)))
 			}
 		}
-
 
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := asService.ModifyScalingGroup(ctx, scalingGroupId, name, projectId, defaultCooldown, zones, terminationPolicy)

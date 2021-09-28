@@ -50,18 +50,18 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 				Description: "ID of CAM group.",
 			},
 			"user_ids": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Type:         schema.TypeSet,
+				Optional:     true,
 				AtLeastOneOf: []string{"user_ids", "user_names"},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Deprecated: "It has been deprecated from version 1.59.5. Use `user_names` instead.",
+				Deprecated:  "It has been deprecated from version 1.59.5. Use `user_names` instead.",
 				Description: "ID set of the CAM group members.",
 			},
 			"user_names": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Type:         schema.TypeSet,
+				Optional:     true,
 				AtLeastOneOf: []string{"user_ids", "user_names"},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,

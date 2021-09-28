@@ -1,3 +1,24 @@
+## 1.59.4 (September 28, 2021)
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_kubernetes_node_pool_test.go` extend relative auto-scaling group arguments in node pool resource
+
+DEPRECATED:
+
+* Resource `resource_tc_cam_group_membership.go` argument `user_ids` was deprecated, replace by `user_names`
+* Resource `resource_tc_cam_user_policy_attachment.go` argument `user_id` was deprecated, replace by `user_name`
+
+
+## 1.59.3 (September 24, 2021)
+
+BUGFIXES:
+* Resource `resource_tc_tcr_instance.go` support modify tags
+* Resource `service_tencentcloud_postgresql.go` support security group
+* Resource `service_tencentcloud_monitor.go` fix binding policy query limit
+* Resource `resource_tc_api_gateway_api.go` fix destroy limitNumber
+
+
 ## 1.59.2 (September 18, 2021)
 
 BUGFIXES:
