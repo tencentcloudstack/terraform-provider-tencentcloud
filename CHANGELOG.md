@@ -1,4 +1,4 @@
-## 1.59.4 (September 28, 2021)
+## 1.59.5 (September 28, 2021)
 
 ENHANCEMENTS:
 
@@ -10,7 +10,7 @@ DEPRECATED:
 * Resource `resource_tc_cam_user_policy_attachment.go` argument `user_id` was deprecated, replace by `user_name`
 
 
-## 1.59.3 (September 24, 2021)
+## 1.59.4 (September 24, 2021)
 
 BUGFIXES:
 * Resource `resource_tc_tcr_instance.go` support modify tags
