@@ -25,7 +25,8 @@ resource "tencentcloud_cam_user_policy_attachment" "foo" {
 The following arguments are supported:
 
 * `policy_id` - (Required, ForceNew) ID of the policy.
-* `user_id` - (Required, ForceNew) ID of the attached CAM user.
+* `user_id` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.59.5. Use `user_name` instead. ID of the attached CAM user.
+* `user_name` - (Optional, ForceNew) Name of the attached CAM user as uniq key.
 
 ## Attributes Reference
 

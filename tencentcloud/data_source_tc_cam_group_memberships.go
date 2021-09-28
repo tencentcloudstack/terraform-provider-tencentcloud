@@ -52,6 +52,15 @@ func dataSourceTencentCloudCamGroupMemberships() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+							Deprecated: "It has been deprecated from version 1.59.5. Use `user_names` instead.",
+							Description: "ID set of the CAM group members.",
+						},
+						"user_names": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Description: "ID set of the CAM group members.",
 						},
 					},
@@ -89,6 +98,7 @@ func dataSourceTencentCloudCamGroupMembershipsRead(d *schema.ResourceData, meta 
 	mapping := map[string]interface{}{
 		"group_id": groupId,
 		"user_ids": memberships,
+		"user_names": memberships,
 	}
 	groupList = append(groupList, mapping)
 	ids = append(ids, groupId)

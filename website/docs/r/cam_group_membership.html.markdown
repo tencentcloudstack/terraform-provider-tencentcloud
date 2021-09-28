@@ -15,8 +15,8 @@ Provides a resource to create a CAM group membership.
 
 ```hcl
 resource "tencentcloud_cam_group_membership" "foo" {
-  group_id = tencentcloud_cam_group.foo.id
-  user_ids = [tencentcloud_cam_user.foo.id, tencentcloud_cam_user.bar.id]
+  group_id   = tencentcloud_cam_group.foo.id
+  user_names = [tencentcloud_cam_user.foo.name, tencentcloud_cam_user.bar.name]
 }
 ```
 
@@ -25,7 +25,8 @@ resource "tencentcloud_cam_group_membership" "foo" {
 The following arguments are supported:
 
 * `group_id` - (Required) ID of CAM group.
-* `user_ids` - (Required) ID set of the CAM group members.
+* `user_ids` - (Optional, **Deprecated**) It has been deprecated from version 1.59.5. Use `user_names` instead. ID set of the CAM group members.
+* `user_names` - (Optional) User name set as ID of the CAM group members.
 
 ## Attributes Reference
 

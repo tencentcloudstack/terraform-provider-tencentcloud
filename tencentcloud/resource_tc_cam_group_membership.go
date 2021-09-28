@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_group_membership" "foo" {
   group_id = tencentcloud_cam_group.foo.id
-  user_ids = [tencentcloud_cam_user.foo.id, tencentcloud_cam_user.bar.id]
+  user_names = [tencentcloud_cam_user.foo.name, tencentcloud_cam_user.bar.name]
 }
 ```
 
@@ -51,11 +51,22 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 			},
 			"user_ids": {
 				Type:     schema.TypeSet,
-				Required: true,
+				Optional: true,
+				AtLeastOneOf: []string{"user_ids", "user_names"},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Deprecated: "It has been deprecated from version 1.59.5. Use `user_names` instead.",
 				Description: "ID set of the CAM group members.",
+			},
+			"user_names": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				AtLeastOneOf: []string{"user_ids", "user_names"},
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "User name set as ID of the CAM group members.",
 			},
 		},
 	}
@@ -67,8 +78,11 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	groupId := d.Get("group_id").(string)
-	members := d.Get("user_ids").(*schema.Set).List()
-	err := addUsersToGroup(members, groupId, meta)
+	members, _, err := getUserIds(d)
+	if err != nil {
+		return err
+	}
+	err = addUsersToGroup(members.List(), groupId, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create CAM group membership failed, reason:%s\n", logId, err.Error())
 		return err
@@ -132,7 +146,11 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	//this may cause problems when there are members in two dimensions array
 	//need to read state of the tfstate file to clear the relationships
 	//in this situation, import action is not supported
-	stateMembers := d.Get("user_ids").(*schema.Set)
+	stateMembers, usingNames, err := getUserIds(d)
+	if err != nil {
+		stateMembers = &schema.Set{}
+	}
+	memberResult := make([]*string, 0)
 	if stateMembers.Len() != 0 {
 		//the old state exist
 		//create a new membership with state
@@ -142,9 +160,15 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 				exactMembers = append(exactMembers, v)
 			}
 		}
-		_ = d.Set("user_ids", exactMembers)
+		memberResult = exactMembers
 	} else {
-		_ = d.Set("user_ids", members)
+		memberResult = members
+	}
+
+	if usingNames {
+		_ = d.Set("user_names", memberResult)
+	} else {
+		_ = d.Set("user_ids", memberResult)
 	}
 	_ = d.Set("group_id", groupId)
 
@@ -158,26 +182,8 @@ func resourceTencentCloudCamGroupMembershipUpdate(d *schema.ResourceData, meta i
 
 	groupId := d.Id()
 
-	if d.HasChange("user_ids") {
-		o, n := d.GetChange("user_ids")
-		os := o.(*schema.Set)
-		ns := n.(*schema.Set)
-		add := ns.Difference(os).List()
-		remove := os.Difference(ns).List()
-		if len(remove) > 0 {
-			oErr := removeUsersFromGroup(remove, groupId, meta)
-			if oErr != nil {
-				log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, oErr.Error())
-				return oErr
-			}
-		}
-		if len(add) > 0 {
-			nErr := addUsersToGroup(add, groupId, meta)
-			if nErr != nil {
-				log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, nErr.Error())
-				return nErr
-			}
-		}
+	if err := processChange(d, groupId, logId, meta); err != nil {
+		return err
 	}
 
 	return resourceTencentCloudCamGroupMembershipRead(d, meta)
@@ -188,8 +194,12 @@ func resourceTencentCloudCamGroupMembershipDelete(d *schema.ResourceData, meta i
 
 	logId := getLogId(contextNil)
 	groupId := d.Get("group_id").(string)
-	members := d.Get("user_ids").(*schema.Set).List()
-	err := removeUsersFromGroup(members, groupId, meta)
+	userIds, _, err := getUserIds(d)
+	if err != nil {
+		return err
+	}
+	members := userIds.List()
+	err = removeUsersFromGroup(members, groupId, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s delete CAM group failed, reason:%s\n", logId, err.Error())
 		return err
@@ -317,6 +327,52 @@ func removeUsersFromGroup(members []interface{}, groupId string, meta interface{
 	if err != nil {
 		log.Printf("[CRITAL]%s delete CAM group membership failed, reason:%s\n", logId, err.Error())
 		return err
+	}
+	return nil
+}
+
+func getUserIds(d *schema.ResourceData) (data *schema.Set, usingNames bool, errRet error) {
+	names, hasNames := d.GetOk("user_names")
+	ids, hasIds := d.GetOk("user_ids")
+
+	if hasNames {
+		return names.(*schema.Set), true, nil
+	} else if hasIds {
+		return ids.(*schema.Set), false, nil
+	}
+	return nil, true, fmt.Errorf("no user names provided")
+}
+
+func processChange(d *schema.ResourceData, groupId string, logId string, meta interface{}) error {
+	var (
+		o interface{}
+		n interface{}
+	)
+	if d.HasChange("user_names") {
+		o, n = d.GetChange("user_names")
+	} else if d.HasChange("user_ids") {
+		o, n = d.GetChange("user_ids")
+	} else {
+		return nil
+	}
+
+	os := o.(*schema.Set)
+	ns := n.(*schema.Set)
+	add := ns.Difference(os).List()
+	remove := os.Difference(ns).List()
+	if len(remove) > 0 {
+		oErr := removeUsersFromGroup(remove, groupId, meta)
+		if oErr != nil {
+			log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, oErr.Error())
+			return oErr
+		}
+	}
+	if len(add) > 0 {
+		nErr := addUsersToGroup(add, groupId, meta)
+		if nErr != nil {
+			log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, nErr.Error())
+			return nErr
+		}
 	}
 	return nil
 }

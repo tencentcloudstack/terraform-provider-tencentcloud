@@ -44,9 +44,18 @@ func resourceTencentCloudCamUserPolicyAttachment() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"user_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
+				AtLeastOneOf: []string{"user_name", "user_id"},
+				Deprecated: "It has been deprecated from version 1.59.5. Use `user_name` instead.",
 				Description: "ID of the attached CAM user.",
+			},
+			"user_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				AtLeastOneOf: []string{"user_name", "user_id"},
+				Description: "Name of the attached CAM user as uniq key.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -84,12 +93,15 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	userId := d.Get("user_id").(string)
+	userId, _, err := getUserId(d)
+	if err != nil {
+		return err
+	}
 	policyId := d.Get("policy_id").(string)
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := camService.AddUserPolicyAttachment(ctx, userId, policyId)
 		if e != nil {
 			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
@@ -161,7 +173,7 @@ func resourceTencentCloudCamUserPolicyAttachmentRead(d *schema.ResourceData, met
 	if e != nil {
 		return e
 	}
-	_ = d.Set("user_id", userId)
+	_ = d.Set("user_name", userId)
 	_ = d.Set("policy_id", strconv.Itoa(int(policyId)))
 	_ = d.Set("policy_name", *instance.PolicyName)
 	_ = d.Set("create_time", *instance.AddTime)
@@ -195,4 +207,15 @@ func resourceTencentCloudCamUserPolicyAttachmentDelete(d *schema.ResourceData, m
 	}
 
 	return nil
+}
+
+func getUserId(d *schema.ResourceData) (value string, usingName bool, err error) {
+	name, hasName := d.GetOk("user_name")
+	id, hasId := d.GetOk("user_id")
+	if hasName {
+		return name.(string), true, nil
+	} else if hasId {
+		return id.(string), false, nil
+	}
+	return "", false, fmt.Errorf("no user name provided")
 }
