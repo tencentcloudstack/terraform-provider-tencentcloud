@@ -2,7 +2,7 @@
 
 BUGFIXES:
 
-* Resource `resource_tc_kubernetes_node_pool_test.go` fix termination_policies argument mistake
+* Resource `resource_tc_kubernetes_node_pool.go` fix termination_policies argument mistake
 
 DEPRECATED:
 
