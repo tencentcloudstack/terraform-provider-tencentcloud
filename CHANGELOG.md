@@ -1,3 +1,13 @@
+## 1.59.6 (September 28, 2021)
+
+BUGFIXES:
+
+* Resource `resource_tc_kubernetes_node_pool_test.go` fix termination_policies argument mistake
+
+DEPRECATED:
+
+* DataSource `data_source_tc_cam_user_policy_attachments.go` deprecate `user_id` and replaced by `user_name`
+
 ## 1.59.5 (September 28, 2021)
 
 ENHANCEMENTS:

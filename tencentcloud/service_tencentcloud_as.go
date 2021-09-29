@@ -440,7 +440,7 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 	return
 }
 
-func (me *AsService) ModifyScalingGroup(ctx context.Context, id string, name string, projectId int, cooldown int, zones []*string, terminatePolicy []*string) error {
+func (me *AsService) ModifyScalingGroup(ctx context.Context, id string, name string, projectId int, cooldown int, zones []*string, terminationPolicies []*string) error {
 	logId := getLogId(ctx)
 	request := as.NewModifyAutoScalingGroupRequest()
 
@@ -462,8 +462,8 @@ func (me *AsService) ModifyScalingGroup(ctx context.Context, id string, name str
 		request.Zones = zones
 	}
 
-	if len(terminatePolicy) != 0 {
-		request.TerminationPolicies = terminatePolicy[:1]
+	if len(terminationPolicies) != 0 {
+		request.TerminationPolicies = terminationPolicies
 	}
 
 	ratelimit.Check(request.GetAction())

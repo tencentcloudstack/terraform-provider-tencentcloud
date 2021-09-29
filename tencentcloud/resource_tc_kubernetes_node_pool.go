@@ -909,7 +909,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			projectId         = d.Get("scaling_group_project_id").(int)
 			defaultCooldown   = d.Get("default_cooldown").(int)
 			zones             []*string
-			terminationPolicy []*string
+			terminationPolicies []*string
 		)
 
 		if v, ok := d.GetOk("zones"); ok {
@@ -918,14 +918,14 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			}
 		}
 
-		if v, ok := d.GetOk("termination_policy"); ok {
+		if v, ok := d.GetOk("termination_policies"); ok {
 			for _, policy := range v.([]interface{}) {
-				terminationPolicy = append(terminationPolicy, helper.String(policy.(string)))
+				terminationPolicies = append(terminationPolicies, helper.String(policy.(string)))
 			}
 		}
 
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := asService.ModifyScalingGroup(ctx, scalingGroupId, name, projectId, defaultCooldown, zones, terminationPolicy)
+			errRet := asService.ModifyScalingGroup(ctx, scalingGroupId, name, projectId, defaultCooldown, zones, terminationPolicies)
 			if errRet != nil {
 				return retryError(errRet)
 			}
