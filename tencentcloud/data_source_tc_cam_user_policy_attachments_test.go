@@ -17,7 +17,7 @@ func TestAccTencentCloudCamUserPolicyAttachmentsDataSource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCamUserPolicyAttachmentExists("tencentcloud_cam_user_policy_attachment.user_policy_attachment"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.#", "1"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.0.user_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.0.user_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.0.policy_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.0.policy_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_user_policy_attachments.user_policy_attachments", "user_policy_attachment_list.0.create_mode"),
@@ -48,11 +48,11 @@ resource "tencentcloud_cam_policy" "policy" {
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment" {
-  user_id   = tencentcloud_cam_user.user.id
+  user_name   = tencentcloud_cam_user.user.name
   policy_id = tencentcloud_cam_policy.policy.id
 }
   
 data "tencentcloud_cam_user_policy_attachments" "user_policy_attachments" {
-  user_id = tencentcloud_cam_user_policy_attachment.user_policy_attachment.user_id
+  user_name = tencentcloud_cam_user_policy_attachment.user_policy_attachment.user_name
 }
 `
