@@ -580,7 +580,7 @@ func (me *TCRService) DescribeTCRLongTermTokenById(ctx context.Context, instance
 }
 
 //VPC attachment
-func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string) (errRet error) {
+func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string, regionId int64) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewManageInternalEndpointRequest()
 	defer func() {
@@ -592,6 +592,7 @@ func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId str
 	request.VpcId = &vpcId
 	request.SubnetId = &subnetId
 	request.Operation = helper.String("Create")
+	request.RegionId = helper.Int64Uint64(regionId)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().ManageInternalEndpoint(request)

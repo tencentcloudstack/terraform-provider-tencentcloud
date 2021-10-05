@@ -60,6 +60,11 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of subnet.",
 			},
+			"region_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to enable public domain dns. Default value is `false`.",
+			},
 			"enable_public_domain_dns": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -99,12 +104,13 @@ func resourceTencentCloudTcrVpcAttachmentCreate(d *schema.ResourceData, meta int
 		instanceId    = d.Get("instance_id").(string)
 		vpcId         = d.Get("vpc_id").(string)
 		subnetId      = d.Get("subnet_id").(string)
+		regionId      = int64(d.Get("region_id").(int))
 		outErr, inErr error
 		has           bool
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr = tcrService.CreateTCRVPCAttachment(ctx, instanceId, vpcId, subnetId)
+		inErr = tcrService.CreateTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
 		if inErr != nil {
 			return retryError(inErr)
 		}
