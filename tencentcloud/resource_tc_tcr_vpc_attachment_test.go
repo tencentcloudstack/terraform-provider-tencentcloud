@@ -129,4 +129,5 @@ resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment" {
   instance_id = tencentcloud_tcr_instance.mytcr_instance.id
   vpc_id = tencentcloud_vpc.foo.id
   subnet_id = tencentcloud_subnet.subnet.id
+  region_id = 1
 }`

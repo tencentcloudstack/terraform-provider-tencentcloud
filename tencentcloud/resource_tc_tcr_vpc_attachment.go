@@ -63,7 +63,7 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 			"region_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Whether to enable public domain dns. Default value is `false`.",
+				Description: "ID of region.",
 			},
 			"enable_public_domain_dns": {
 				Type:        schema.TypeBool,
@@ -271,6 +271,7 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Id()
+	regionId := d.Get("region_id").(int)
 	items := strings.Split(resourceId, FILED_SP)
 	if len(items) != 3 {
 		return fmt.Errorf("invalid ID %s", resourceId)
@@ -285,10 +286,10 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 	var inErr, outErr error
 	var has bool
 
-	outErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId)
+	outErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
 	if outErr != nil {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId)
+			inErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
 			if inErr != nil {
 				return retryError(inErr)
 			}
