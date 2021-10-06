@@ -606,7 +606,7 @@ func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId str
 	return
 }
 
-func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string) (errRet error) {
+func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string, subnetId string, regionId int) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewManageInternalEndpointRequest()
 	defer func() {
@@ -618,6 +618,7 @@ func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId str
 	request.VpcId = &vpcId
 	request.SubnetId = &subnetId
 	request.Operation = helper.String("Delete")
+	request.RegionId = helper.IntUint64(regionId)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().ManageInternalEndpoint(request)
