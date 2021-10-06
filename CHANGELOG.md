@@ -1,3 +1,15 @@
+## 1.59.8 (October, 6, 2021)
+
+BUGFIXES:
+
+* Resource `resource_tc_tcr_vpc_attachment.go` pass region_id for delete if provided.
+
+## 1.59.7 (October, 5, 2021)
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_tcr_vpc_attachment.go` tcr vpc attachment support region.
+ 
 ## 1.59.6 (September 28, 2021)
 
 BUGFIXES:
