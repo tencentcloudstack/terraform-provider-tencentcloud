@@ -70,6 +70,26 @@ func TestAccTencentCloudCosBucketObject_content(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCosBucketObject_tags(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketObjectDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCosBucketObject_tags(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketObjectExists("tencentcloud_cos_bucket_object.object_content"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_content", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_content", "tags.hello", "world"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudCosBucketObject_storageClass(t *testing.T) {
 	t.Parallel()
 
@@ -188,6 +208,25 @@ resource "tencentcloud_cos_bucket_object" "object_content" {
   key          = "tf-object-content"
   content      = "aaaaaaaaaaaaaaaa"
   content_type = "binary/octet-stream"
+}
+`, acctest.RandInt(), appid)
+}
+
+func testAccCosBucketObject_tags(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "object_bucket" {
+  bucket = "tf-bucket-%d-%s"
+}
+
+resource "tencentcloud_cos_bucket_object" "object_with_tags" {
+  bucket       = tencentcloud_cos_bucket.object_bucket.bucket
+  key          = "tf-object-tags"
+  content       = "aaaaaaaaaaaaaaaa"
+  content_type = "binary/octet-stream"
+  tags = {
+    test = "test"
+    hello = "world"
+  }
 }
 `, acctest.RandInt(), appid)
 }

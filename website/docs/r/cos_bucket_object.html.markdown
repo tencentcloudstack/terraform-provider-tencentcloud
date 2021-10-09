@@ -53,6 +53,7 @@ The following arguments are supported:
 * `etag` - (Optional) The ETag generated for the object (an MD5 sum of the object content).
 * `source` - (Optional) The path to the source file being uploaded to the bucket.
 * `storage_class` - (Optional) Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `tags` - (Optional) Tag of the object.
 
 ## Attributes Reference
 

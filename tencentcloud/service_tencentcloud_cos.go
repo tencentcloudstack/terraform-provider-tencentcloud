@@ -674,6 +674,91 @@ func (me *CosService) GetBucketTags(ctx context.Context, bucket string) (map[str
 	return tags, nil
 }
 
+func (me *CosService) GetObjectTags(ctx context.Context, bucket string, key string) (map[string]string, error) {
+	logId := getLogId(ctx)
+
+	req := &s3.GetObjectTaggingInput{
+		Bucket: &bucket,
+		Key:    &key,
+	}
+
+	ratelimit.Check("GetObjectTagging")
+	resp, err := me.client.UseCosClient().GetObjectTagging(req)
+	if err != nil {
+		if awsErr, ok := err.(awserr.Error); !ok || awsErr.Code() != "404" {
+			return nil, nil
+		}
+
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, "get object tags", req.String(), err)
+		return nil, err
+	}
+
+	tags := make(map[string]string, len(resp.TagSet))
+
+	for _, tag := range resp.TagSet {
+		tags[*tag.Key] = *tag.Value
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "get tags", req.String(), resp.String())
+
+	return tags, nil
+}
+
+// SetObjectTags same as delete Bucket Tags
+func (me *CosService) SetObjectTags(ctx context.Context, bucket string, key string, tags map[string]string) error {
+	logId := getLogId(ctx)
+
+	deleteReq := &s3.DeleteObjectTaggingInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	}
+
+	ratelimit.Check("DeleteObjectTagging")
+
+	deleteResp, err := me.client.UseCosClient().DeleteObjectTagging(deleteReq)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, "delete olg object tags", deleteReq.String(), err)
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "delete olg object tags", deleteReq.String(), deleteResp.String())
+
+	if len(tags) == 0 {
+		return nil
+	}
+
+	putReq := &s3.PutObjectTaggingInput{
+		Key:     aws.String(key),
+		Bucket:  aws.String(bucket),
+		Tagging: new(s3.Tagging),
+	}
+
+	for k, v := range tags {
+		putReq.Tagging.TagSet = append(putReq.Tagging.TagSet, &s3.Tag{
+			Key:   aws.String(k),
+			Value: aws.String(v),
+		})
+	}
+
+	ratelimit.Check("PutObjectTagging")
+
+	resp, err := me.client.UseCosClient().PutObjectTagging(putReq)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, "put new object tags", deleteReq.String(), err)
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "put new object tags", putReq.String(), resp.String())
+
+	return nil
+}
+
 func (me *CosService) PutBucketPolicy(ctx context.Context, bucket, policy string) (errRet error) {
 	logId := getLogId(ctx)
 
