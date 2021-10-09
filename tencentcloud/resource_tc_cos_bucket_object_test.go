@@ -81,9 +81,9 @@ func TestAccTencentCloudCosBucketObject_tags(t *testing.T) {
 			{
 				Config: testAccCosBucketObject_tags(appid),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckCosBucketObjectExists("tencentcloud_cos_bucket_object.object_content"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_content", "tags.test", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_content", "tags.hello", "world"),
+					testAccCheckCosBucketObjectExists("tencentcloud_cos_bucket_object.object_with_tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_with_tags", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket_object.object_with_tags", "tags.hello", "world"),
 				),
 			},
 		},
