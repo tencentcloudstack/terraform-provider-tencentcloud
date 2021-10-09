@@ -352,6 +352,26 @@ type AutoscalingAdded struct {
 	Total *int64 `json:"Total,omitempty" name:"Total"`
 }
 
+type Capabilities struct {
+
+	// 启用安全能力项列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Add []*string `json:"Add,omitempty" name:"Add"`
+
+	// 禁用安全能力向列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Drop []*string `json:"Drop,omitempty" name:"Drop"`
+}
+
+type CbsVolume struct {
+
+	// cbs volume 数据卷名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 腾讯云cbs盘Id
+	CbsDiskId *string `json:"CbsDiskId,omitempty" name:"CbsDiskId"`
+}
+
 type CheckInstancesUpgradeAbleRequest struct {
 	*tchttp.BaseRequest
 
@@ -688,7 +708,7 @@ type ClusterCIDRSettings struct {
 	// 集群中每个Node上最大的Pod数量。取值范围4～256。不为2的幂值时会向上取最接近的2的幂值。
 	MaxNodePodNum *uint64 `json:"MaxNodePodNum,omitempty" name:"MaxNodePodNum"`
 
-	// 集群最大的service数量。取值范围32～32768，不为2的幂值时会向上取最接近的2的幂值。
+	// 集群最大的service数量。取值范围32～32768，不为2的幂值时会向上取最接近的2的幂值。默认值256
 	MaxClusterServiceNum *uint64 `json:"MaxClusterServiceNum,omitempty" name:"MaxClusterServiceNum"`
 
 	// 用于分配集群服务 IP 的 CIDR，不得与 VPC CIDR 冲突，也不得与同 VPC 内其他集群 CIDR 冲突。且网段范围必须在内网网段内，例如:10.1.0.0/14, 192.168.0.1/18,172.16.0.0/16。
@@ -805,6 +825,88 @@ type CommonName struct {
 
 	// 子账户客户端证书中的CommonName字段
 	CN *string `json:"CN,omitempty" name:"CN"`
+}
+
+type Container struct {
+
+	// 镜像
+	Image *string `json:"Image,omitempty" name:"Image"`
+
+	// 容器名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 容器启动命令
+	Commands []*string `json:"Commands,omitempty" name:"Commands"`
+
+	// 容器启动参数
+	Args []*string `json:"Args,omitempty" name:"Args"`
+
+	// 容器内操作系统的环境变量
+	EnvironmentVars []*EnvironmentVariable `json:"EnvironmentVars,omitempty" name:"EnvironmentVars"`
+
+	// CPU，制改容器最多可使用的核数，该值不可超过容器实例的总核数。单位：核。
+	Cpu *float64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 内存，限制该容器最多可使用的内存值，该值不可超过容器实例的总内存值。单位：GiB
+	Memory *float64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 数据卷挂载信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VolumeMounts []*VolumeMount `json:"VolumeMounts,omitempty" name:"VolumeMounts"`
+
+	// 当前状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentState *ContainerState `json:"CurrentState,omitempty" name:"CurrentState"`
+
+	// 重启次数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RestartCount *uint64 `json:"RestartCount,omitempty" name:"RestartCount"`
+
+	// 容器工作目录
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkingDir *string `json:"WorkingDir,omitempty" name:"WorkingDir"`
+
+	// 存活探针
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LivenessProbe *LivenessOrReadinessProbe `json:"LivenessProbe,omitempty" name:"LivenessProbe"`
+
+	// 就绪探针
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadinessProbe *LivenessOrReadinessProbe `json:"ReadinessProbe,omitempty" name:"ReadinessProbe"`
+
+	// Gpu限制
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuLimit *uint64 `json:"GpuLimit,omitempty" name:"GpuLimit"`
+}
+
+type ContainerState struct {
+
+	// 容器运行开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 容器状态：created, running, exited, unknown
+	State *string `json:"State,omitempty" name:"State"`
+
+	// 容器运行结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FinishTime *string `json:"FinishTime,omitempty" name:"FinishTime"`
+
+	// 容器运行退出码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExitCode *int64 `json:"ExitCode,omitempty" name:"ExitCode"`
+
+	// 容器状态 Reason
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Reason *string `json:"Reason,omitempty" name:"Reason"`
+
+	// 容器状态信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitempty" name:"Message"`
+
+	// 容器重启次数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RestartCount *int64 `json:"RestartCount,omitempty" name:"RestartCount"`
 }
 
 type ControllerStatus struct {
@@ -1468,6 +1570,142 @@ func (r *CreateEKSClusterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateEKSContainerInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 容器组
+	Containers []*Container `json:"Containers,omitempty" name:"Containers"`
+
+	// EKS Container Instance容器实例名称
+	EksCiName *string `json:"EksCiName,omitempty" name:"EksCiName"`
+
+	// 指定新创建实例所属于的安全组Id
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
+
+	// 实例所属子网Id
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 实例所属VPC的Id
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 内存，单位：GiB。可参考[资源规格](https://cloud.tencent.com/document/product/457/39808)文档
+	Memory *float64 `json:"Memory,omitempty" name:"Memory"`
+
+	// CPU，单位：核。可参考[资源规格](https://cloud.tencent.com/document/product/457/39808)文档
+	Cpu *float64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 实例重启策略： Always(总是重启)、Never(从不重启)、OnFailure(失败时重启)，默认：Always。
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
+
+	// 镜像仓库凭证数组
+	ImageRegistryCredentials []*ImageRegistryCredential `json:"ImageRegistryCredentials,omitempty" name:"ImageRegistryCredentials"`
+
+	// 数据卷，包含NfsVolume数组和CbsVolume数组
+	EksCiVolume *EksCiVolume `json:"EksCiVolume,omitempty" name:"EksCiVolume"`
+
+	// 实例副本数，默认为1
+	Replicas *int64 `json:"Replicas,omitempty" name:"Replicas"`
+
+	// Init 容器
+	InitContainers []*Container `json:"InitContainers,omitempty" name:"InitContainers"`
+
+	// 自定义DNS配置
+	DnsConfig *DNSConfig `json:"DnsConfig,omitempty" name:"DnsConfig"`
+
+	// 用来绑定容器实例的已有EIP的列表。如传值，需要保证数值和Replicas相等。
+	// 另外此参数和AutoCreateEipAttribute互斥。
+	ExistedEipIds []*string `json:"ExistedEipIds,omitempty" name:"ExistedEipIds"`
+
+	// 自动创建EIP的可选参数。若传此参数，则会自动创建EIP。
+	// 另外此参数和ExistedEipIds互斥
+	AutoCreateEipAttribute *EipAttribute `json:"AutoCreateEipAttribute,omitempty" name:"AutoCreateEipAttribute"`
+
+	// 是否为容器实例自动创建EIP，默认为false。若传true，则此参数和ExistedEipIds互斥
+	AutoCreateEip *bool `json:"AutoCreateEip,omitempty" name:"AutoCreateEip"`
+
+	// Pod 所需的 CPU 资源型号，如果不填写则默认不强制指定 CPU 类型。目前支持型号如下：
+	// intel
+	// amd
+	// - 支持优先级顺序写法，如 “amd,intel” 表示优先创建 amd 资源 Pod，如果所选地域可用区 amd 资源不足，则会创建 intel 资源 Pod。
+	CpuType *string `json:"CpuType,omitempty" name:"CpuType"`
+
+	// 容器实例所需的 GPU 资源型号，目前支持型号如下：
+	// 1/4\*V100
+	// 1/2\*V100
+	// V100
+	// 1/4\*T4
+	// 1/2\*T4
+	// T4
+	GpuType *string `json:"GpuType,omitempty" name:"GpuType"`
+
+	// Pod 所需的 GPU 数量，如填写，请确保为支持的规格。默认单位为卡，无需再次注明。
+	GpuCount *uint64 `json:"GpuCount,omitempty" name:"GpuCount"`
+
+	// 为容器实例关联 CAM 角色，value 填写 CAM 角色名称，容器实例可获取该 CAM 角色包含的权限策略，方便 容器实例 内的程序进行如购买资源、读写存储等云资源操作。
+	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
+}
+
+func (r *CreateEKSContainerInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateEKSContainerInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Containers")
+	delete(f, "EksCiName")
+	delete(f, "SecurityGroupIds")
+	delete(f, "SubnetId")
+	delete(f, "VpcId")
+	delete(f, "Memory")
+	delete(f, "Cpu")
+	delete(f, "RestartPolicy")
+	delete(f, "ImageRegistryCredentials")
+	delete(f, "EksCiVolume")
+	delete(f, "Replicas")
+	delete(f, "InitContainers")
+	delete(f, "DnsConfig")
+	delete(f, "ExistedEipIds")
+	delete(f, "AutoCreateEipAttribute")
+	delete(f, "AutoCreateEip")
+	delete(f, "CpuType")
+	delete(f, "GpuType")
+	delete(f, "GpuCount")
+	delete(f, "CamRoleName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateEKSContainerInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateEKSContainerInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// EKS Container Instance Id集合，格式为eksci-xxx，是容器实例的唯一标识。
+		EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateEKSContainerInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreatePrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
 
@@ -1623,6 +1861,32 @@ func (r *CreatePrometheusTemplateResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *CreatePrometheusTemplateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type DNSConfig struct {
+
+	// DNS 服务器IP地址列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Nameservers []*string `json:"Nameservers,omitempty" name:"Nameservers"`
+
+	// DNS搜索域列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Searches []*string `json:"Searches,omitempty" name:"Searches"`
+
+	// 对象选项列表，每个对象由name和value（可选）构成
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Options []*DNSConfigOption `json:"Options,omitempty" name:"Options"`
+}
+
+type DNSConfigOption struct {
+
+	// 配置项名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 项值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type DataDisk struct {
@@ -2126,6 +2390,56 @@ func (r *DeleteEKSClusterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DeleteEKSContainerInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 需要删除的EksCi的Id。 最大数量不超过20
+	EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
+
+	// 是否释放为EksCi自动创建的Eip
+	ReleaseAutoCreatedEip *bool `json:"ReleaseAutoCreatedEip,omitempty" name:"ReleaseAutoCreatedEip"`
+}
+
+func (r *DeleteEKSContainerInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteEKSContainerInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EksCiIds")
+	delete(f, "ReleaseAutoCreatedEip")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteEKSContainerInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteEKSContainerInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteEKSContainerInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DeletePrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
 
@@ -2444,6 +2758,60 @@ func (r *DescribeClusterAsGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeClusterAuthenticationOptionsRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeClusterAuthenticationOptionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterAuthenticationOptionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterAuthenticationOptionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterAuthenticationOptionsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ServiceAccount认证配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ServiceAccounts *ServiceAccountAuthenticationOptions `json:"ServiceAccounts,omitempty" name:"ServiceAccounts"`
+
+		// 最近一次修改操作结果，返回值可能为：Updating，Success，Failed，TimeOut
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		LatestOperationState *string `json:"LatestOperationState,omitempty" name:"LatestOperationState"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeClusterAuthenticationOptionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterAuthenticationOptionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeClusterCommonNamesRequest struct {
 	*tchttp.BaseRequest
 
@@ -2738,6 +3106,9 @@ type DescribeClusterKubeconfigRequest struct {
 
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 默认false 获取内网，是否获取外网访问的kubeconfig
+	IsExtranet *bool `json:"IsExtranet,omitempty" name:"IsExtranet"`
 }
 
 func (r *DescribeClusterKubeconfigRequest) ToJsonString() string {
@@ -2753,6 +3124,7 @@ func (r *DescribeClusterKubeconfigRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ClusterId")
+	delete(f, "IsExtranet")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterKubeconfigRequest has unknown keys!", "")
 	}
@@ -3081,8 +3453,39 @@ type DescribeClustersRequest struct {
 	// 最大输出条数，默认20，最大为100
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 过滤条件,当前只支持按照单个条件ClusterName进行过滤
+	// ·  ClusterName
+	//     按照【集群名】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  Tags
+	//     按照【标签键值对】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  vpc-id
+	//     按照【VPC】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  tag-key
+	//     按照【标签键】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  tag-value
+	//     按照【标签值】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  tag:tag-key
+	//     按照【标签键值对】进行过滤。
+	//     类型：String
+	//     必选：否
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 集群类型，例如：MANAGED_CLUSTER
+	ClusterType *string `json:"ClusterType,omitempty" name:"ClusterType"`
 }
 
 func (r *DescribeClustersRequest) ToJsonString() string {
@@ -3101,6 +3504,7 @@ func (r *DescribeClustersRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "Filters")
+	delete(f, "ClusterType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClustersRequest has unknown keys!", "")
 	}
@@ -3256,6 +3660,271 @@ func (r *DescribeEKSClustersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeEKSContainerInstanceEventRequest struct {
+	*tchttp.BaseRequest
+
+	// 容器实例id
+	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+	// 最大事件数量。默认为50，最大取值100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeEKSContainerInstanceEventRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstanceEventRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EksCiId")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEKSContainerInstanceEventRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEKSContainerInstanceEventResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 事件集合
+		Events []*Event `json:"Events,omitempty" name:"Events"`
+
+		// 容器实例id
+		EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEKSContainerInstanceEventResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstanceEventResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEKSContainerInstanceRegionsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeEKSContainerInstanceRegionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstanceRegionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEKSContainerInstanceRegionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEKSContainerInstanceRegionsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// EKS Container Instance支持的地域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Regions []*EksCiRegionInfo `json:"Regions,omitempty" name:"Regions"`
+
+		// 总数
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEKSContainerInstanceRegionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstanceRegionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEKSContainerInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 限定此次返回资源的数量。如果不设定，默认返回20，最大不能超过100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量,默认0
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 过滤条件，可条件：
+	// (1)实例名称
+	// KeyName: eks-ci-name
+	// 类型：String
+	// 
+	// (2)实例状态
+	// KeyName: status
+	// 类型：String
+	// 可选值："Pending", "Running", "Succeeded", "Failed"
+	// 
+	// (3)内网ip
+	// KeyName: private-ip
+	// 类型：String
+	// 
+	// (4)EIP地址
+	// KeyName: eip-address
+	// 类型：String
+	// 
+	// (5)VpcId
+	// KeyName: vpc-id
+	// 类型：String
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 容器实例 ID 数组
+	EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
+}
+
+func (r *DescribeEKSContainerInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "EksCiIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEKSContainerInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEKSContainerInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 容器组总数
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 容器组列表
+		EksCis []*EksCi `json:"EksCis,omitempty" name:"EksCis"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEKSContainerInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEksContainerInstanceLogRequest struct {
+	*tchttp.BaseRequest
+
+	// Eks Container Instance Id，即容器实例Id
+	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+	// 容器名称，单容器的实例可选填。如果为多容器实例，请指定容器名称。
+	ContainerName *string `json:"ContainerName,omitempty" name:"ContainerName"`
+
+	// 返回最新日志行数，默认500，最大2000。日志内容最大返回 1M 数据。
+	Tail *uint64 `json:"Tail,omitempty" name:"Tail"`
+
+	// UTC时间，RFC3339标准
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 是否是查上一个容器（如果容器退出重启了）
+	Previous *bool `json:"Previous,omitempty" name:"Previous"`
+
+	// 查询最近多少秒内的日志
+	SinceSeconds *uint64 `json:"SinceSeconds,omitempty" name:"SinceSeconds"`
+
+	// 日志总大小限制
+	LimitBytes *uint64 `json:"LimitBytes,omitempty" name:"LimitBytes"`
+}
+
+func (r *DescribeEksContainerInstanceLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEksContainerInstanceLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EksCiId")
+	delete(f, "ContainerName")
+	delete(f, "Tail")
+	delete(f, "StartTime")
+	delete(f, "Previous")
+	delete(f, "SinceSeconds")
+	delete(f, "LimitBytes")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEksContainerInstanceLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEksContainerInstanceLogResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 容器名称
+		ContainerName *string `json:"ContainerName,omitempty" name:"ContainerName"`
+
+		// 日志内容
+		LogContent *string `json:"LogContent,omitempty" name:"LogContent"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEksContainerInstanceLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEksContainerInstanceLogResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeEnableVpcCniProgressRequest struct {
 	*tchttp.BaseRequest
 
@@ -3387,6 +4056,66 @@ func (r *DescribeExistedInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeExistedInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeExternalClusterSpecRequest struct {
+	*tchttp.BaseRequest
+
+	// 注册集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 默认false 获取内网，是否获取外网版注册命令
+	IsExtranet *bool `json:"IsExtranet,omitempty" name:"IsExtranet"`
+
+	// 默认false 不刷新有效时间 ，true刷新有效时间
+	IsRefreshExpirationTime *bool `json:"IsRefreshExpirationTime,omitempty" name:"IsRefreshExpirationTime"`
+}
+
+func (r *DescribeExternalClusterSpecRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeExternalClusterSpecRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "IsExtranet")
+	delete(f, "IsRefreshExpirationTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeExternalClusterSpecRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeExternalClusterSpecResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 导入第三方集群YAML定义
+		Spec *string `json:"Spec,omitempty" name:"Spec"`
+
+		// agent.yaml文件过期时间字符串，时区UTC
+		Expiration *string `json:"Expiration,omitempty" name:"Expiration"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeExternalClusterSpecResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeExternalClusterSpecResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4277,6 +5006,139 @@ type DnsServerConf struct {
 	DnsServers []*string `json:"DnsServers,omitempty" name:"DnsServers"`
 }
 
+type EipAttribute struct {
+
+	// 容器实例删除后，EIP是否释放。
+	// Never表示不释放，其他任意值（包括空字符串）表示释放。
+	DeletePolicy *string `json:"DeletePolicy,omitempty" name:"DeletePolicy"`
+
+	// EIP线路类型。默认值：BGP。
+	// 已开通静态单线IP白名单的用户，可选值：
+	// CMCC：中国移动
+	// CTCC：中国电信
+	// CUCC：中国联通
+	// 注意：仅部分地域支持静态单线IP。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternetServiceProvider *string `json:"InternetServiceProvider,omitempty" name:"InternetServiceProvider"`
+
+	// EIP出带宽上限，单位：Mbps。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
+}
+
+type EksCi struct {
+
+	// EKS Cotainer Instance Id
+	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+	// EKS Cotainer Instance Name
+	EksCiName *string `json:"EksCiName,omitempty" name:"EksCiName"`
+
+	// 内存大小
+	Memory *float64 `json:"Memory,omitempty" name:"Memory"`
+
+	// CPU大小
+	Cpu *float64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 安全组ID
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
+
+	// 容器组的重启策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
+
+	// 返回容器组创建状态：Pending，Running，Succeeded，Failed。其中：
+	// Failed （运行失败）指的容器组退出，RestartPolilcy为Never， 有容器exitCode非0；
+	// Succeeded（运行成功）指的是容器组退出了，RestartPolicy为Never或onFailure，所有容器exitCode都为0；
+	// Failed和Succeeded这两种状态都会停止运行，停止计费。
+	// Pending是创建中，Running是 运行中。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 接到请求后的系统创建时间。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreationTime *string `json:"CreationTime,omitempty" name:"CreationTime"`
+
+	// 容器全部成功退出后的时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SucceededTime *string `json:"SucceededTime,omitempty" name:"SucceededTime"`
+
+	// 容器列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Containers []*Container `json:"Containers,omitempty" name:"Containers"`
+
+	// 数据卷信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EksCiVolume *EksCiVolume `json:"EksCiVolume,omitempty" name:"EksCiVolume"`
+
+	// 容器组运行的安全上下文
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityContext *SecurityContext `json:"SecurityContext,omitempty" name:"SecurityContext"`
+
+	// 内网ip地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PrivateIp *string `json:"PrivateIp,omitempty" name:"PrivateIp"`
+
+	// 容器实例绑定的Eip地址，注意可能为空
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EipAddress *string `json:"EipAddress,omitempty" name:"EipAddress"`
+
+	// GPU类型。如无使用GPU则不返回
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuType *string `json:"GpuType,omitempty" name:"GpuType"`
+
+	// CPU类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CpuType *string `json:"CpuType,omitempty" name:"CpuType"`
+
+	// GPU卡数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuCount *uint64 `json:"GpuCount,omitempty" name:"GpuCount"`
+
+	// 实例所属VPC的Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 实例所属子网Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 初始化容器列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InitContainers []*Container `json:"InitContainers,omitempty" name:"InitContainers"`
+
+	// 为容器实例关联 CAM 角色，value 填写 CAM 角色名称，容器实例可获取该 CAM 角色包含的权限策略，方便 容器实例 内的程序进行如购买资源、读写存储等云资源操作。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
+
+	// 自动为用户创建的EipId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoCreatedEipId *string `json:"AutoCreatedEipId,omitempty" name:"AutoCreatedEipId"`
+}
+
+type EksCiRegionInfo struct {
+
+	// 地域别名，形如gz
+	Alias *string `json:"Alias,omitempty" name:"Alias"`
+
+	// 地域名，形如ap-guangzhou
+	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
+
+	// 地域ID
+	RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
+}
+
+type EksCiVolume struct {
+
+	// Cbs Volume
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CbsVolumes []*CbsVolume `json:"CbsVolumes,omitempty" name:"CbsVolumes"`
+
+	// Nfs Volume
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NfsVolumes []*NfsVolume `json:"NfsVolumes,omitempty" name:"NfsVolumes"`
+}
+
 type EksCluster struct {
 
 	// 集群Id
@@ -4392,6 +5254,46 @@ type EnhancedService struct {
 
 	// 开启云自动化助手服务。若不指定该参数，则默认不开启云自动化助手服务。
 	AutomationService *RunAutomationServiceEnabled `json:"AutomationService,omitempty" name:"AutomationService"`
+}
+
+type EnvironmentVariable struct {
+
+	// key
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// val
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type Event struct {
+
+	// pod名称
+	PodName *string `json:"PodName,omitempty" name:"PodName"`
+
+	// 事件原因内容
+	Reason *string `json:"Reason,omitempty" name:"Reason"`
+
+	// 事件类型
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 事件出现次数
+	Count *int64 `json:"Count,omitempty" name:"Count"`
+
+	// 事件第一次出现时间
+	FirstTimestamp *string `json:"FirstTimestamp,omitempty" name:"FirstTimestamp"`
+
+	// 事件最后一次出现时间
+	LastTimestamp *string `json:"LastTimestamp,omitempty" name:"LastTimestamp"`
+
+	// 事件内容
+	Message *string `json:"Message,omitempty" name:"Message"`
+}
+
+type Exec struct {
+
+	// 容器内检测的命令
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Commands []*string `json:"Commands,omitempty" name:"Commands"`
 }
 
 type ExistedInstance struct {
@@ -4582,6 +5484,21 @@ func (r *GetUpgradeInstanceProgressResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type HttpGet struct {
+
+	// HttpGet检测的路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// HttpGet检测的端口号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Port *int64 `json:"Port,omitempty" name:"Port"`
+
+	// HTTP or HTTPS
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Scheme *string `json:"Scheme,omitempty" name:"Scheme"`
+}
+
 type IPAddress struct {
 
 	// Ip 地址的类型。可为 advertise, public 等
@@ -4611,6 +5528,21 @@ type ImageInstance struct {
 	// 容器的镜像版本，"DOCKER_CUSTOMIZE"(容器定制版),"GENERAL"(普通版本，默认值)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
+}
+
+type ImageRegistryCredential struct {
+
+	// 镜像仓库地址
+	Server *string `json:"Server,omitempty" name:"Server"`
+
+	// 用户名
+	Username *string `json:"Username,omitempty" name:"Username"`
+
+	// 密码
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// ImageRegistryCredential的名字
+	Name *string `json:"Name,omitempty" name:"Name"`
 }
 
 type Instance struct {
@@ -4684,6 +5616,10 @@ type InstanceAdvancedSettings struct {
 	// 该节点属于podCIDR大小自定义模式时，可指定节点上运行的pod数量上限
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DesiredPodNumber *int64 `json:"DesiredPodNumber,omitempty" name:"DesiredPodNumber"`
+
+	// base64 编码的用户脚本，在初始化节点之前执行，目前只对添加已有节点生效
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PreStartUserScript *string `json:"PreStartUserScript,omitempty" name:"PreStartUserScript"`
 }
 
 type InstanceDataDiskMountSetting struct {
@@ -4784,6 +5720,25 @@ type Label struct {
 
 	// map表中的Value
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type LivenessOrReadinessProbe struct {
+
+	// 探针参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Probe *Probe `json:"Probe,omitempty" name:"Probe"`
+
+	// HttpGet检测参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HttpGet *HttpGet `json:"HttpGet,omitempty" name:"HttpGet"`
+
+	// 容器内检测命令参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Exec *Exec `json:"Exec,omitempty" name:"Exec"`
+
+	// TcpSocket检测的端口参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TcpSocket *TcpSocket `json:"TcpSocket,omitempty" name:"TcpSocket"`
 }
 
 type LoginSettings struct {
@@ -4986,6 +5941,56 @@ func (r *ModifyClusterAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyClusterAuthenticationOptionsRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// ServiceAccount认证配置
+	ServiceAccounts *ServiceAccountAuthenticationOptions `json:"ServiceAccounts,omitempty" name:"ServiceAccounts"`
+}
+
+func (r *ModifyClusterAuthenticationOptionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterAuthenticationOptionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "ServiceAccounts")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterAuthenticationOptionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyClusterAuthenticationOptionsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyClusterAuthenticationOptionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterAuthenticationOptionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyClusterEndpointSPRequest struct {
 	*tchttp.BaseRequest
 
@@ -5068,6 +6073,9 @@ type ModifyClusterNodePoolRequest struct {
 
 	// 镜像版本，"DOCKER_CUSTOMIZE"(容器定制版),"GENERAL"(普通版本，默认值)
 	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
+
+	// 节点自定义参数
+	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 }
 
 func (r *ModifyClusterNodePoolRequest) ToJsonString() string {
@@ -5092,6 +6100,7 @@ func (r *ModifyClusterNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "EnableAutoscale")
 	delete(f, "OsName")
 	delete(f, "OsCustomizeType")
+	delete(f, "ExtraArgs")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterNodePoolRequest has unknown keys!", "")
 	}
@@ -5326,6 +6335,21 @@ func (r *ModifyPrometheusTemplateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type NfsVolume struct {
+
+	// nfs volume 数据卷名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// NFS 服务器地址
+	Server *string `json:"Server,omitempty" name:"Server"`
+
+	// NFS 数据卷路径
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// 默认为 False
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+}
+
 type NodeCountSummary struct {
 
 	// 手动管理的节点
@@ -5447,6 +6471,30 @@ type PodLimitsInstance struct {
 	// 机型可支持的最大VPC-CNI模式Pod数量信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PodLimits *PodLimitsByType `json:"PodLimits,omitempty" name:"PodLimits"`
+}
+
+type Probe struct {
+
+	// Number of seconds after the container has started before liveness probes are initiated.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InitialDelaySeconds *int64 `json:"InitialDelaySeconds,omitempty" name:"InitialDelaySeconds"`
+
+	// Number of seconds after which the probe times out.
+	// Defaults to 1 second. Minimum value is 1.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeoutSeconds *int64 `json:"TimeoutSeconds,omitempty" name:"TimeoutSeconds"`
+
+	// How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PeriodSeconds *int64 `json:"PeriodSeconds,omitempty" name:"PeriodSeconds"`
+
+	// Minimum consecutive successes for the probe to be considered successful after having failed.Defaults to 1. Must be 1 for liveness. Minimum value is 1.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SuccessThreshold *int64 `json:"SuccessThreshold,omitempty" name:"SuccessThreshold"`
+
+	// Minimum consecutive failures for the probe to be considered failed after having succeeded.Defaults to 3. Minimum value is 1.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailureThreshold *int64 `json:"FailureThreshold,omitempty" name:"FailureThreshold"`
 }
 
 type PrometheusAgentOverview struct {
@@ -5936,6 +6984,52 @@ type ResourceDeleteOption struct {
 	DeleteMode *string `json:"DeleteMode,omitempty" name:"DeleteMode"`
 }
 
+type RestartEKSContainerInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// EKS instance ids
+	EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
+}
+
+func (r *RestartEKSContainerInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartEKSContainerInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EksCiIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RestartEKSContainerInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type RestartEKSContainerInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RestartEKSContainerInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type RouteInfo struct {
 
 	// 路由表名称。
@@ -5979,6 +7073,9 @@ type RouteTableInfo struct {
 }
 
 type RunAutomationServiceEnabled struct {
+
+	// 是否开启云自动化助手。取值范围：<br><li>TRUE：表示开启云自动化助手服务<br><li>FALSE：表示不开启云自动化助手服务<br><br>默认取值：FALSE。
+	Enabled *bool `json:"Enabled,omitempty" name:"Enabled"`
 }
 
 type RunInstancesForNode struct {
@@ -6003,6 +7100,28 @@ type RunSecurityServiceEnabled struct {
 
 	// 是否开启[云安全](/document/product/296)服务。取值范围：<br><li>TRUE：表示开启云安全服务<br><li>FALSE：表示不开启云安全服务<br><br>默认取值：TRUE。
 	Enabled *bool `json:"Enabled,omitempty" name:"Enabled"`
+}
+
+type SecurityContext struct {
+
+	// 安全能力清单
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Capabilities *Capabilities `json:"Capabilities,omitempty" name:"Capabilities"`
+}
+
+type ServiceAccountAuthenticationOptions struct {
+
+	// service-account-issuer
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Issuer *string `json:"Issuer,omitempty" name:"Issuer"`
+
+	// service-account-jwks-uri
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JWKSURI *string `json:"JWKSURI,omitempty" name:"JWKSURI"`
+
+	// 如果为true，则会自动创建允许匿名用户访问'/.well-known/openid-configuration'和/openid/v1/jwks的rbac规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoCreateDiscoveryAnonymousAuth *bool `json:"AutoCreateDiscoveryAnonymousAuth,omitempty" name:"AutoCreateDiscoveryAnonymousAuth"`
 }
 
 type SetNodePoolNodeProtectionRequest struct {
@@ -6178,6 +7297,13 @@ type TaskStepInfo struct {
 	FailedMsg *string `json:"FailedMsg,omitempty" name:"FailedMsg"`
 }
 
+type TcpSocket struct {
+
+	// TcpSocket检测的端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Port *uint64 `json:"Port,omitempty" name:"Port"`
+}
+
 type UpdateClusterVersionRequest struct {
 	*tchttp.BaseRequest
 
@@ -6322,6 +7448,80 @@ func (r *UpdateEKSClusterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type UpdateEKSContainerInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 容器实例 ID
+	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+	// 实例重启策略： Always(总是重启)、Never(从不重启)、OnFailure(失败时重启)
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
+
+	// 数据卷，包含NfsVolume数组和CbsVolume数组
+	EksCiVolume *EksCiVolume `json:"EksCiVolume,omitempty" name:"EksCiVolume"`
+
+	// 容器组
+	Containers []*Container `json:"Containers,omitempty" name:"Containers"`
+
+	// Init 容器组
+	InitContainers []*Container `json:"InitContainers,omitempty" name:"InitContainers"`
+
+	// 容器实例名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 镜像仓库凭证数组
+	ImageRegistryCredentials []*ImageRegistryCredential `json:"ImageRegistryCredentials,omitempty" name:"ImageRegistryCredentials"`
+}
+
+func (r *UpdateEKSContainerInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateEKSContainerInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EksCiId")
+	delete(f, "RestartPolicy")
+	delete(f, "EksCiVolume")
+	delete(f, "Containers")
+	delete(f, "InitContainers")
+	delete(f, "Name")
+	delete(f, "ImageRegistryCredentials")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateEKSContainerInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateEKSContainerInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 容器实例 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateEKSContainerInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateEKSContainerInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type UpgradeAbleInstancesItem struct {
 
 	// 节点Id
@@ -6439,4 +7639,31 @@ type VersionInstance struct {
 	// Remark
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type VolumeMount struct {
+
+	// volume名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 挂载路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MountPath *string `json:"MountPath,omitempty" name:"MountPath"`
+
+	// 是否只读
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 子路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubPath *string `json:"SubPath,omitempty" name:"SubPath"`
+
+	// 传播挂载方式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MountPropagation *string `json:"MountPropagation,omitempty" name:"MountPropagation"`
+
+	// 子路径表达式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubPathExpr *string `json:"SubPathExpr,omitempty" name:"SubPathExpr"`
 }

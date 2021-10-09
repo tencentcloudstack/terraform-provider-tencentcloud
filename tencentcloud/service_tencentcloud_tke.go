@@ -1380,3 +1380,47 @@ func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, c
 
 	return
 }
+
+// DescribeClusterAuthenticationOptions
+// Field `ServiceAccounts.AutoCreateDiscoveryAnonymousAuth` will always return null by design
+// For argument consistency, we will not fetch this options when tf reading tke cluster resource
+func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, id string) (options *tke.ServiceAccountAuthenticationOptions, state string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
+	request.ClusterId = helper.String(id)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	res, err := me.client.UseTkeClient().DescribeClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+	}
+
+	if res.Response != nil {
+		state = *res.Response.LatestOperationState
+		options = res.Response.ServiceAccounts
+	}
+
+	return
+}
+
+
+func (me *TkeService) ModifyClusterAuthenticationOptions(ctx context.Context, request *tke.ModifyClusterAuthenticationOptionsRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterAuthenticationOptions(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}

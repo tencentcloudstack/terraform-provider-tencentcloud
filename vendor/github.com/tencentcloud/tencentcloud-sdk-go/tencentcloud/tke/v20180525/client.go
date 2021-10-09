@@ -715,6 +715,41 @@ func (c *Client) CreateEKSCluster(request *CreateEKSClusterRequest) (response *C
     return
 }
 
+func NewCreateEKSContainerInstancesRequest() (request *CreateEKSContainerInstancesRequest) {
+    request = &CreateEKSContainerInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "CreateEKSContainerInstances")
+    return
+}
+
+func NewCreateEKSContainerInstancesResponse() (response *CreateEKSContainerInstancesResponse) {
+    response = &CreateEKSContainerInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateEKSContainerInstances
+// 创建容器实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CMDTIMEOUT = "InternalError.CmdTimeout"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateEKSContainerInstances(request *CreateEKSContainerInstancesRequest) (response *CreateEKSContainerInstancesResponse, err error) {
+    if request == nil {
+        request = NewCreateEKSContainerInstancesRequest()
+    }
+    response = NewCreateEKSContainerInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreatePrometheusAlertRuleRequest() (request *CreatePrometheusAlertRuleRequest) {
     request = &CreatePrometheusAlertRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1169,6 +1204,42 @@ func (c *Client) DeleteEKSCluster(request *DeleteEKSClusterRequest) (response *D
     return
 }
 
+func NewDeleteEKSContainerInstancesRequest() (request *DeleteEKSContainerInstancesRequest) {
+    request = &DeleteEKSContainerInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteEKSContainerInstances")
+    return
+}
+
+func NewDeleteEKSContainerInstancesResponse() (response *DeleteEKSContainerInstancesResponse) {
+    response = &DeleteEKSContainerInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteEKSContainerInstances
+// 删除容器实例，可批量删除
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CONTAINERNOTFOUND = "InternalError.ContainerNotFound"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteEKSContainerInstances(request *DeleteEKSContainerInstancesRequest) (response *DeleteEKSContainerInstancesResponse, err error) {
+    if request == nil {
+        request = NewDeleteEKSContainerInstancesRequest()
+    }
+    response = NewDeleteEKSContainerInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeletePrometheusAlertRuleRequest() (request *DeletePrometheusAlertRuleRequest) {
     request = &DeletePrometheusAlertRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1379,6 +1450,38 @@ func (c *Client) DescribeClusterAsGroups(request *DescribeClusterAsGroupsRequest
         request = NewDescribeClusterAsGroupsRequest()
     }
     response = NewDescribeClusterAsGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterAuthenticationOptionsRequest() (request *DescribeClusterAuthenticationOptionsRequest) {
+    request = &DescribeClusterAuthenticationOptionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterAuthenticationOptions")
+    return
+}
+
+func NewDescribeClusterAuthenticationOptionsResponse() (response *DescribeClusterAuthenticationOptionsResponse) {
+    response = &DescribeClusterAuthenticationOptionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClusterAuthenticationOptions
+// 查看集群认证配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) DescribeClusterAuthenticationOptions(request *DescribeClusterAuthenticationOptionsRequest) (response *DescribeClusterAuthenticationOptionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterAuthenticationOptionsRequest()
+    }
+    response = NewDescribeClusterAuthenticationOptionsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1931,6 +2034,144 @@ func (c *Client) DescribeEKSClusters(request *DescribeEKSClustersRequest) (respo
     return
 }
 
+func NewDescribeEKSContainerInstanceEventRequest() (request *DescribeEKSContainerInstanceEventRequest) {
+    request = &DescribeEKSContainerInstanceEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEKSContainerInstanceEvent")
+    return
+}
+
+func NewDescribeEKSContainerInstanceEventResponse() (response *DescribeEKSContainerInstanceEventResponse) {
+    response = &DescribeEKSContainerInstanceEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeEKSContainerInstanceEvent
+// 查询容器实例的事件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeEKSContainerInstanceEvent(request *DescribeEKSContainerInstanceEventRequest) (response *DescribeEKSContainerInstanceEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeEKSContainerInstanceEventRequest()
+    }
+    response = NewDescribeEKSContainerInstanceEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEKSContainerInstanceRegionsRequest() (request *DescribeEKSContainerInstanceRegionsRequest) {
+    request = &DescribeEKSContainerInstanceRegionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEKSContainerInstanceRegions")
+    return
+}
+
+func NewDescribeEKSContainerInstanceRegionsResponse() (response *DescribeEKSContainerInstanceRegionsResponse) {
+    response = &DescribeEKSContainerInstanceRegionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeEKSContainerInstanceRegions
+// 查询容器实例支持的地域
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeEKSContainerInstanceRegions(request *DescribeEKSContainerInstanceRegionsRequest) (response *DescribeEKSContainerInstanceRegionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeEKSContainerInstanceRegionsRequest()
+    }
+    response = NewDescribeEKSContainerInstanceRegionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEKSContainerInstancesRequest() (request *DescribeEKSContainerInstancesRequest) {
+    request = &DescribeEKSContainerInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEKSContainerInstances")
+    return
+}
+
+func NewDescribeEKSContainerInstancesResponse() (response *DescribeEKSContainerInstancesResponse) {
+    response = &DescribeEKSContainerInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeEKSContainerInstances
+// 查询容器实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeEKSContainerInstances(request *DescribeEKSContainerInstancesRequest) (response *DescribeEKSContainerInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeEKSContainerInstancesRequest()
+    }
+    response = NewDescribeEKSContainerInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEksContainerInstanceLogRequest() (request *DescribeEksContainerInstanceLogRequest) {
+    request = &DescribeEksContainerInstanceLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEksContainerInstanceLog")
+    return
+}
+
+func NewDescribeEksContainerInstanceLogResponse() (response *DescribeEksContainerInstanceLogResponse) {
+    response = &DescribeEksContainerInstanceLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeEksContainerInstanceLog
+// 查询容器实例中容器日志
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_CONTAINERNOTFOUND = "InternalError.ContainerNotFound"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_EKSCONTAINERSTATUS = "ResourceUnavailable.EksContainerStatus"
+func (c *Client) DescribeEksContainerInstanceLog(request *DescribeEksContainerInstanceLogRequest) (response *DescribeEksContainerInstanceLogResponse, err error) {
+    if request == nil {
+        request = NewDescribeEksContainerInstanceLogRequest()
+    }
+    response = NewDescribeEksContainerInstanceLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEnableVpcCniProgressRequest() (request *DescribeEnableVpcCniProgressRequest) {
     request = &DescribeEnableVpcCniProgressRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2013,6 +2254,48 @@ func (c *Client) DescribeExistedInstances(request *DescribeExistedInstancesReque
         request = NewDescribeExistedInstancesRequest()
     }
     response = NewDescribeExistedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeExternalClusterSpecRequest() (request *DescribeExternalClusterSpecRequest) {
+    request = &DescribeExternalClusterSpecRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeExternalClusterSpec")
+    return
+}
+
+func NewDescribeExternalClusterSpecResponse() (response *DescribeExternalClusterSpecResponse) {
+    response = &DescribeExternalClusterSpecResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeExternalClusterSpec
+// 获取导入第三方集群YAML定义
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESCREATEOPERATIONERROR = "InternalError.KubernetesCreateOperationError"
+//  INTERNALERROR_KUBERNETESDELETEOPERATIONERROR = "InternalError.KubernetesDeleteOperationError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INTERNALERROR_WHITELISTUNEXPECTEDERROR = "InternalError.WhitelistUnexpectedError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+func (c *Client) DescribeExternalClusterSpec(request *DescribeExternalClusterSpecRequest) (response *DescribeExternalClusterSpecResponse, err error) {
+    if request == nil {
+        request = NewDescribeExternalClusterSpecRequest()
+    }
+    response = NewDescribeExternalClusterSpecResponse()
     err = c.Send(request, response)
     return
 }
@@ -2752,6 +3035,38 @@ func (c *Client) ModifyClusterAttribute(request *ModifyClusterAttributeRequest) 
     return
 }
 
+func NewModifyClusterAuthenticationOptionsRequest() (request *ModifyClusterAuthenticationOptionsRequest) {
+    request = &ModifyClusterAuthenticationOptionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyClusterAuthenticationOptions")
+    return
+}
+
+func NewModifyClusterAuthenticationOptionsResponse() (response *ModifyClusterAuthenticationOptionsResponse) {
+    response = &ModifyClusterAuthenticationOptionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyClusterAuthenticationOptions
+// 修改集群认证配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) ModifyClusterAuthenticationOptions(request *ModifyClusterAuthenticationOptionsRequest) (response *ModifyClusterAuthenticationOptionsResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterAuthenticationOptionsRequest()
+    }
+    response = NewModifyClusterAuthenticationOptionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyClusterEndpointSPRequest() (request *ModifyClusterEndpointSPRequest) {
     request = &ModifyClusterEndpointSPRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2784,6 +3099,7 @@ func NewModifyClusterEndpointSPResponse() (response *ModifyClusterEndpointSPResp
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3003,6 +3319,37 @@ func (c *Client) RemoveNodeFromNodePool(request *RemoveNodeFromNodePoolRequest) 
     return
 }
 
+func NewRestartEKSContainerInstancesRequest() (request *RestartEKSContainerInstancesRequest) {
+    request = &RestartEKSContainerInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "RestartEKSContainerInstances")
+    return
+}
+
+func NewRestartEKSContainerInstancesResponse() (response *RestartEKSContainerInstancesResponse) {
+    response = &RestartEKSContainerInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RestartEKSContainerInstances
+// 重启弹性容器实例，支持批量操作
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) RestartEKSContainerInstances(request *RestartEKSContainerInstancesRequest) (response *RestartEKSContainerInstancesResponse, err error) {
+    if request == nil {
+        request = NewRestartEKSContainerInstancesRequest()
+    }
+    response = NewRestartEKSContainerInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSetNodePoolNodeProtectionRequest() (request *SetNodePoolNodeProtectionRequest) {
     request = &SetNodePoolNodeProtectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3064,6 +3411,7 @@ func NewSyncPrometheusTemplateResponse() (response *SyncPrometheusTemplateRespon
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 //  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
 func (c *Client) SyncPrometheusTemplate(request *SyncPrometheusTemplateRequest) (response *SyncPrometheusTemplateResponse, err error) {
@@ -3146,6 +3494,37 @@ func (c *Client) UpdateEKSCluster(request *UpdateEKSClusterRequest) (response *U
         request = NewUpdateEKSClusterRequest()
     }
     response = NewUpdateEKSClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateEKSContainerInstanceRequest() (request *UpdateEKSContainerInstanceRequest) {
+    request = &UpdateEKSContainerInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "UpdateEKSContainerInstance")
+    return
+}
+
+func NewUpdateEKSContainerInstanceResponse() (response *UpdateEKSContainerInstanceResponse) {
+    response = &UpdateEKSContainerInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateEKSContainerInstance
+// 更新容器实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateEKSContainerInstance(request *UpdateEKSContainerInstanceRequest) (response *UpdateEKSContainerInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpdateEKSContainerInstanceRequest()
+    }
+    response = NewUpdateEKSContainerInstanceResponse()
     err = c.Send(request, response)
     return
 }

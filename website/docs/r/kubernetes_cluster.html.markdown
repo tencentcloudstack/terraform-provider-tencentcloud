@@ -336,6 +336,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 The following arguments are supported:
 
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
+* `auth_options` - (Optional) Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.
 * `base_pod_num` - (Optional, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
 * `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler. Default is false.
@@ -378,6 +379,12 @@ The following arguments are supported:
 * `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 * `upgrade_instances_follow_cluster` - (Optional) Indicates whether upgrade all instances when cluster_version change. Default is false.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
+
+The `auth_options` object supports the following:
+
+* `auto_create_discovery_anonymous_auth` - (Optional) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
+* `issuer` - (Optional) Specify service-account-issuer.
+* `jwks_uri` - (Optional) Specify service-account-jwks-uri.
 
 The `cluster_extra_args` object supports the following:
 
