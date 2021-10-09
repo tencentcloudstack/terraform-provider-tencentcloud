@@ -35,17 +35,17 @@ func dataSourceTencentCloudCamUserPolicyAttachments() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"user_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
 				AtLeastOneOf: []string{"user_id", "user_name"},
-				Deprecated: "It has been deprecated from version 1.59.6. Use `user_name` instead.",
-				Description: "ID of the attached CAM user to be queried.",
+				Deprecated:   "It has been deprecated from version 1.59.6. Use `user_name` instead.",
+				Description:  "ID of the attached CAM user to be queried.",
 			},
 			"user_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
 				AtLeastOneOf: []string{"user_id", "user_name"},
-				Description: "Name of the attached CAM user as unique key to be queried.",
+				Description:  "Name of the attached CAM user as unique key to be queried.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -78,7 +78,7 @@ func dataSourceTencentCloudCamUserPolicyAttachments() *schema.Resource {
 						"user_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Deprecated: "It has been deprecated from version 1.59.6. Use `user_name` instead.",
+							Deprecated:  "It has been deprecated from version 1.59.6. Use `user_name` instead.",
 							Description: "ID of CAM user.",
 						},
 						"user_name": {
@@ -164,7 +164,7 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 	ids := make([]string, 0, len(policyOfUsers))
 	for _, policy := range policyOfUsers {
 		mapping := map[string]interface{}{
-			"user_id": 	   userId,
+			"user_id":     userId,
 			"user_name":   userId,
 			"policy_id":   strconv.Itoa(int(*policy.PolicyId)),
 			"create_time": *policy.AddTime,

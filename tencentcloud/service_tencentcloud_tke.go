@@ -1408,7 +1408,6 @@ func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, 
 	return
 }
 
-
 func (me *TkeService) ModifyClusterAuthenticationOptions(ctx context.Context, request *tke.ModifyClusterAuthenticationOptionsRequest) (errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -1418,9 +1417,13 @@ func (me *TkeService) ModifyClusterAuthenticationOptions(ctx context.Context, re
 	}()
 
 	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseTkeClient().ModifyClusterAuthenticationOptions(request)
+	response, err := me.client.UseTkeClient().ModifyClusterAuthenticationOptions(request)
 	if err != nil {
 		errRet = err
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
