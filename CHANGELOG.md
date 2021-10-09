@@ -1,3 +1,13 @@
+## 1.59.10 (October, 9, 2021)
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_cos_bucket_object.go` support cos object tags.
+
+BUGFIXES:
+
+* Resource `resource_tc_kubernetes_cluster.go` update authentication options immediately after create
+
 ## 1.59.9 (October, 9, 2021)
 
 ENHANCEMENTS:
