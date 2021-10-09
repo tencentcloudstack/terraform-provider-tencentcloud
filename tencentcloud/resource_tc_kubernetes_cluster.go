@@ -1547,17 +1547,19 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 	raw, ok := d.GetOk("auth_options")
 	options := raw.([]interface{})
 
+	request := tke.NewModifyClusterAuthenticationOptionsRequest()
+	request.ClusterId = helper.String(d.Id())
+	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
+		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
+		Issuer: helper.String(""),
+		JWKSURI: helper.String(""),
+	}
+
 	if !ok || len(options) == 0 {
-		return nil
+		return request
 	}
 
 	option := options[0].(map[string]interface{})
-	request := tke.NewModifyClusterAuthenticationOptionsRequest()
-	request.ClusterId = helper.String(d.Id())
-
-	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
-		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
-	}
 
 	if v, ok := option["auto_create_discovery_anonymous_auth"]; ok {
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
