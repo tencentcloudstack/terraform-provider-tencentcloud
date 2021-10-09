@@ -105,6 +105,11 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 				Optional:    true,
 				Description: "Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag of the object.",
+			},
 			"content_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -192,6 +197,22 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "put object", request.String(), response.String())
 
+	if v, ok := d.GetOk("tags"); ok {
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		service := CosService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		tags := make(map[string]string)
+
+		for key, val := range v.(map[string]interface{}) {
+			tags[key] = val.(string)
+		}
+
+		if err := service.SetObjectTags(ctx, bucket, key, tags); err != nil {
+			log.Printf("[WARN] set object tags error, skip processing")
+		}
+	}
+
 	d.SetId(bucket + key)
 	return resourceTencentCloudCosBucketObjectRead(d, meta)
 }
@@ -228,6 +249,18 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 		_ = d.Set("storage_class", response.StorageClass)
 	}
 
+	var tags map[string]string
+	tags, err = cosService.GetObjectTags(ctx, bucket, key)
+	if err != nil {
+		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
+			log.Printf("[WARN]%s tags in object (%s) of bucket (%s) not found, error code (404)", logId, key, bucket)
+			d.SetId("")
+			return nil
+		}
+		return err
+	}
+	err = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -263,6 +296,17 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 		acl := d.Get("acl").(string)
 		err := cosService.PutObjectAcl(ctx, bucket, key, acl)
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		v := d.Get("tags").(map[string]interface{})
+		tags := make(map[string]string)
+		for key, val := range v {
+			tags[key] = val.(string)
+		}
+		if err := cosService.SetObjectTags(ctx, bucket, key, tags); err != nil {
 			return err
 		}
 	}
