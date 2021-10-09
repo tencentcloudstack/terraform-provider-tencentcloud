@@ -1125,21 +1125,20 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"jwks_uri": {
-						Type: 	schema.TypeString,
-						Optional: true,
+						Type:        schema.TypeString,
+						Optional:    true,
 						Description: "Specify service-account-jwks-uri.",
 					},
 					"issuer": {
-						Type: 	schema.TypeString,
-						Optional: true,
+						Type:        schema.TypeString,
+						Optional:    true,
 						Description: "Specify service-account-issuer.",
 					},
 					"auto_create_discovery_anonymous_auth": {
-						Type: 	schema.TypeBool,
-						Optional: true,
+						Type:        schema.TypeBool,
+						Optional:    true,
 						Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
 					},
-
 				},
 			},
 			Description: "Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.",
@@ -1544,7 +1543,7 @@ func tkeGetNodePoolGlobalConfig(d *schema.ResourceData) *tke.ModifyClusterAsGrou
 	return request
 }
 
-func tkeGetAuthOptions (d *schema.ResourceData) *tke.ModifyClusterAuthenticationOptionsRequest {
+func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationOptionsRequest {
 	raw, ok := d.GetOk("auth_options")
 	options := raw.([]interface{})
 
@@ -1552,7 +1551,7 @@ func tkeGetAuthOptions (d *schema.ResourceData) *tke.ModifyClusterAuthentication
 		return nil
 	}
 
-    option := options[0].(map[string]interface{})
+	option := options[0].(map[string]interface{})
 	request := tke.NewModifyClusterAuthenticationOptionsRequest()
 	request.ClusterId = helper.String(d.Id())
 
@@ -1563,7 +1562,7 @@ func tkeGetAuthOptions (d *schema.ResourceData) *tke.ModifyClusterAuthentication
 	if v, ok := option["auto_create_discovery_anonymous_auth"]; ok {
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
 	}
-	
+
 	if v, ok := option["issuer"]; ok {
 		request.ServiceAccounts.Issuer = helper.String(v.(string))
 	}
@@ -2061,6 +2060,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			return nil
 		})
 		if err != nil {
+			return err
+		}
+	}
+
+	if _, ok := d.GetOk("auth_options"); ok {
+		request := tkeGetAuthOptions(d)
+		if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
 			return err
 		}
 	}

@@ -904,11 +904,11 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 
 		var (
-			scalingGroupId    = *nodePool.AutoscalingGroupId
-			name              = d.Get("scaling_group_name").(string)
-			projectId         = d.Get("scaling_group_project_id").(int)
-			defaultCooldown   = d.Get("default_cooldown").(int)
-			zones             []*string
+			scalingGroupId      = *nodePool.AutoscalingGroupId
+			name                = d.Get("scaling_group_name").(string)
+			projectId           = d.Get("scaling_group_project_id").(int)
+			defaultCooldown     = d.Get("default_cooldown").(int)
+			zones               []*string
 			terminationPolicies []*string
 		)
 
