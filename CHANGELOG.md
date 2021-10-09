@@ -1,3 +1,10 @@
+## 1.59.9 (October, 9, 2021)
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_kubernetes_cluster.go` cluster support authentication options.
+
+
 ## 1.59.8 (October, 6, 2021)
 
 BUGFIXES:
