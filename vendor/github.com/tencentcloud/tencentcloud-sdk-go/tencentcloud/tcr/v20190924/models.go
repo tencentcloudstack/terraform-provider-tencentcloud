@@ -211,6 +211,58 @@ func (r *CheckInstanceNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CheckInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 待检测的实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+}
+
+func (r *CheckInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CheckInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 检查结果，true为合法，false为非法
+		IsValidated *bool `json:"IsValidated,omitempty" name:"IsValidated"`
+
+		// 实例所在的RegionId
+		RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CheckInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateApplicationTriggerPersonalRequest struct {
 	*tchttp.BaseRequest
 
@@ -347,6 +399,60 @@ func (r *CreateImageLifecyclePersonalResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateImmutableTagRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 命名空间
+	NamespaceName *string `json:"NamespaceName,omitempty" name:"NamespaceName"`
+
+	// 规则
+	Rule *ImmutableTagRule `json:"Rule,omitempty" name:"Rule"`
+}
+
+func (r *CreateImmutableTagRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateImmutableTagRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "NamespaceName")
+	delete(f, "Rule")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateImmutableTagRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateImmutableTagRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateImmutableTagRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateImmutableTagRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateInstanceRequest struct {
 	*tchttp.BaseRequest
 
@@ -453,7 +559,7 @@ type CreateInstanceTokenResponse struct {
 		// 访问凭证
 		Token *string `json:"Token,omitempty" name:"Token"`
 
-		// 访问凭证过期时间戳
+		// 访问凭证过期时间戳，是一个时间戳数字，无单位
 		ExpTime *int64 `json:"ExpTime,omitempty" name:"ExpTime"`
 
 		// 长期凭证的TokenId，短期凭证没有TokenId
@@ -641,7 +747,7 @@ type CreateNamespaceRequest struct {
 	// 实例ID
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
 
-	// 命名空间的名称
+	// 命名空间的名称（长度2-30个字符，只能包含小写字母、数字及分隔符("."、"_"、"-")，且不能以分隔符开头、结尾或连续）
 	NamespaceName *string `json:"NamespaceName,omitempty" name:"NamespaceName"`
 
 	// 是否公开，true为公开，fale为私有
@@ -697,6 +803,9 @@ type CreateReplicationInstanceRequest struct {
 
 	// 复制实例地域ID
 	ReplicationRegionId *uint64 `json:"ReplicationRegionId,omitempty" name:"ReplicationRegionId"`
+
+	// 复制实例地域名称
+	ReplicationRegionName *string `json:"ReplicationRegionName,omitempty" name:"ReplicationRegionName"`
 }
 
 func (r *CreateReplicationInstanceRequest) ToJsonString() string {
@@ -713,6 +822,7 @@ func (r *CreateReplicationInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "RegistryId")
 	delete(f, "ReplicationRegionId")
+	delete(f, "ReplicationRegionName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReplicationInstanceRequest has unknown keys!", "")
 	}
@@ -924,7 +1034,7 @@ type CreateTagRetentionExecutionRequest struct {
 	// 版本保留规则Id
 	RetentionId *int64 `json:"RetentionId,omitempty" name:"RetentionId"`
 
-	// 是否模拟执行
+	// 是否模拟执行，默认值为false，即非模拟执行
 	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
 }
 
@@ -984,7 +1094,7 @@ type CreateTagRetentionRuleRequest struct {
 	// 执行周期，当前只能选择： manual;daily;weekly;monthly
 	CronSetting *string `json:"CronSetting,omitempty" name:"CronSetting"`
 
-	// 是否禁用规则
+	// 是否禁用规则，默认值为false
 	Disabled *bool `json:"Disabled,omitempty" name:"Disabled"`
 }
 
@@ -1034,7 +1144,7 @@ func (r *CreateTagRetentionRuleResponse) FromJsonString(s string) error {
 type CreateUserPersonalRequest struct {
 	*tchttp.BaseRequest
 
-	// 用户密码
+	// 用户密码，密码必须为8到16位
 	Password *string `json:"Password,omitempty" name:"Password"`
 }
 
@@ -1376,6 +1486,60 @@ func (r *DeleteImageResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DeleteImmutableTagRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 命名空间
+	NamespaceName *string `json:"NamespaceName,omitempty" name:"NamespaceName"`
+
+	// 规则 Id
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+}
+
+func (r *DeleteImmutableTagRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteImmutableTagRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "NamespaceName")
+	delete(f, "RuleId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteImmutableTagRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteImmutableTagRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteImmutableTagRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteImmutableTagRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DeleteInstanceRequest struct {
 	*tchttp.BaseRequest
 
@@ -1488,8 +1652,8 @@ type DeleteInternalEndpointDnsRequest struct {
 	// tcr内网访问链路ip
 	EniLBIp *string `json:"EniLBIp,omitempty" name:"EniLBIp"`
 
-	// true：use instance name as subdomain
-	// false: use instancename+"-vpc" as subdomain
+	// true：使用默认域名
+	// false:  使用带有vpc的域名
 	UsePublicDomain *bool `json:"UsePublicDomain,omitempty" name:"UsePublicDomain"`
 }
 
@@ -1739,7 +1903,7 @@ type DeleteRepositoryRequest struct {
 	// 命名空间的名称
 	NamespaceName *string `json:"NamespaceName,omitempty" name:"NamespaceName"`
 
-	// 仓库名称的名称
+	// 镜像仓库的名称
 	RepositoryName *string `json:"RepositoryName,omitempty" name:"RepositoryName"`
 }
 
@@ -2295,7 +2459,7 @@ type DescribeImageFilterPersonalResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// payload
+		// 返回tag镜像内容相同的tag列表
 		Data *SameImagesResp `json:"Data,omitempty" name:"Data"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2602,6 +2766,63 @@ func (r *DescribeImagesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeImagesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeImmutableTagRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+}
+
+func (r *DescribeImmutableTagRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeImmutableTagRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeImmutableTagRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeImmutableTagRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 规则列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Rules []*ImmutableTagRule `json:"Rules,omitempty" name:"Rules"`
+
+		// 未创建规则的命名空间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		EmptyNs []*string `json:"EmptyNs,omitempty" name:"EmptyNs"`
+
+		// 规则总量
+		Total *int64 `json:"Total,omitempty" name:"Total"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeImmutableTagRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeImmutableTagRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3012,10 +3233,10 @@ func (r *DescribeNamespacesResponse) FromJsonString(s string) error {
 type DescribeReplicationInstanceCreateTasksRequest struct {
 	*tchttp.BaseRequest
 
-	// 同步实例Id
+	// 同步实例Id，见实例返回列表中的同步实例ID
 	ReplicationRegistryId *string `json:"ReplicationRegistryId,omitempty" name:"ReplicationRegistryId"`
 
-	// 同步实例的地域ID
+	// 同步实例的地域ID，见实例返回列表中地域ID
 	ReplicationRegionId *uint64 `json:"ReplicationRegionId,omitempty" name:"ReplicationRegionId"`
 }
 
@@ -3076,6 +3297,15 @@ type DescribeReplicationInstanceSyncStatusRequest struct {
 
 	// 复制实例的地域Id
 	ReplicationRegionId *uint64 `json:"ReplicationRegionId,omitempty" name:"ReplicationRegionId"`
+
+	// 是否显示同步日志
+	ShowReplicationLog *bool `json:"ShowReplicationLog,omitempty" name:"ShowReplicationLog"`
+
+	// 日志页号, 默认0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认5，最大为20
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 }
 
 func (r *DescribeReplicationInstanceSyncStatusRequest) ToJsonString() string {
@@ -3093,6 +3323,9 @@ func (r *DescribeReplicationInstanceSyncStatusRequest) FromJsonString(s string) 
 	delete(f, "RegistryId")
 	delete(f, "ReplicationRegistryId")
 	delete(f, "ReplicationRegionId")
+	delete(f, "ShowReplicationLog")
+	delete(f, "Offset")
+	delete(f, "Limit")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeReplicationInstanceSyncStatusRequest has unknown keys!", "")
 	}
@@ -3108,6 +3341,10 @@ type DescribeReplicationInstanceSyncStatusResponse struct {
 
 		// 同步完成时间
 		ReplicationTime *string `json:"ReplicationTime,omitempty" name:"ReplicationTime"`
+
+		// 同步日志
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ReplicationLog *ReplicationLog `json:"ReplicationLog,omitempty" name:"ReplicationLog"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4060,6 +4297,30 @@ type Header struct {
 	Values []*string `json:"Values,omitempty" name:"Values"`
 }
 
+type ImmutableTagRule struct {
+
+	// 仓库匹配规则
+	RepositoryPattern *string `json:"RepositoryPattern,omitempty" name:"RepositoryPattern"`
+
+	// Tag 匹配规则
+	TagPattern *string `json:"TagPattern,omitempty" name:"TagPattern"`
+
+	// repoMatches或repoExcludes
+	RepositoryDecoration *string `json:"RepositoryDecoration,omitempty" name:"RepositoryDecoration"`
+
+	// matches或excludes
+	TagDecoration *string `json:"TagDecoration,omitempty" name:"TagDecoration"`
+
+	// 禁用规则
+	Disabled *bool `json:"Disabled,omitempty" name:"Disabled"`
+
+	// 规则 Id
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 命名空间
+	NsName *string `json:"NsName,omitempty" name:"NsName"`
+}
+
 type Limit struct {
 
 	// 用户名
@@ -4190,8 +4451,11 @@ type ManageInternalEndpointRequest struct {
 	// 需要接入的用户子网id
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 请求的地域ID
+	// 请求的地域ID，用于实例复制地域
 	RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
+
+	// 请求的地域名称，用于实例复制地域
+	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
 }
 
 func (r *ManageInternalEndpointRequest) ToJsonString() string {
@@ -4211,6 +4475,7 @@ func (r *ManageInternalEndpointRequest) FromJsonString(s string) error {
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
 	delete(f, "RegionId")
+	delete(f, "RegionName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ManageInternalEndpointRequest has unknown keys!", "")
 	}
@@ -4257,6 +4522,9 @@ type ManageReplicationRequest struct {
 
 	// 目标实例的地域ID，如广州是1
 	DestinationRegionId *uint64 `json:"DestinationRegionId,omitempty" name:"DestinationRegionId"`
+
+	// 开启跨主账号实例同步配置项
+	PeerReplicationOption *PeerReplicationOption `json:"PeerReplicationOption,omitempty" name:"PeerReplicationOption"`
 }
 
 func (r *ManageReplicationRequest) ToJsonString() string {
@@ -4276,6 +4544,7 @@ func (r *ManageReplicationRequest) FromJsonString(s string) error {
 	delete(f, "Rule")
 	delete(f, "Description")
 	delete(f, "DestinationRegionId")
+	delete(f, "PeerReplicationOption")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ManageReplicationRequest has unknown keys!", "")
 	}
@@ -4308,7 +4577,7 @@ type ModifyApplicationTriggerPersonalRequest struct {
 	// 触发器关联的镜像仓库，library/test格式
 	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
 
-	// 触发器名称
+	// 触发器名称，必填参数
 	TriggerName *string `json:"TriggerName,omitempty" name:"TriggerName"`
 
 	// 触发方式，"all"全部触发，"taglist"指定tag触发，"regex"正则触发
@@ -4388,6 +4657,114 @@ func (r *ModifyApplicationTriggerPersonalResponse) FromJsonString(s string) erro
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyImmutableTagRulesRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 命名空间
+	NamespaceName *string `json:"NamespaceName,omitempty" name:"NamespaceName"`
+
+	// 规则 Id
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 规则
+	Rule *ImmutableTagRule `json:"Rule,omitempty" name:"Rule"`
+}
+
+func (r *ModifyImmutableTagRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyImmutableTagRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "NamespaceName")
+	delete(f, "RuleId")
+	delete(f, "Rule")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyImmutableTagRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyImmutableTagRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyImmutableTagRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyImmutableTagRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 实例的规格
+	RegistryType *string `json:"RegistryType,omitempty" name:"RegistryType"`
+}
+
+func (r *ModifyInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "RegistryType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyInstanceTokenRequest struct {
 	*tchttp.BaseRequest
 
@@ -4403,7 +4780,7 @@ type ModifyInstanceTokenRequest struct {
 	// 访问凭证描述
 	Desc *string `json:"Desc,omitempty" name:"Desc"`
 
-	// 1为修改描述 2为启动禁用，不填写默认为修改启动禁用
+	// 1为修改描述 2为操作启动禁用，默认值为2
 	ModifyFlag *int64 `json:"ModifyFlag,omitempty" name:"ModifyFlag"`
 }
 
@@ -4510,7 +4887,7 @@ type ModifyRepositoryAccessPersonalRequest struct {
 	// 仓库名称
 	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
 
-	// 默认值为0
+	// 默认值为0, 1公共，0私有
 	Public *int64 `json:"Public,omitempty" name:"Public"`
 }
 
@@ -4923,6 +5300,18 @@ type NamespaceIsExistsResp struct {
 	IsPreserved *bool `json:"IsPreserved,omitempty" name:"IsPreserved"`
 }
 
+type PeerReplicationOption struct {
+
+	// 待同步实例的uin
+	PeerRegistryUin *string `json:"PeerRegistryUin,omitempty" name:"PeerRegistryUin"`
+
+	// 待同步实例的访问永久Token
+	PeerRegistryToken *string `json:"PeerRegistryToken,omitempty" name:"PeerRegistryToken"`
+
+	// 是否开启跨主账号实例同步
+	EnablePeerReplication *bool `json:"EnablePeerReplication,omitempty" name:"EnablePeerReplication"`
+}
+
 type Registry struct {
 
 	// 实例ID
@@ -5016,7 +5405,7 @@ type RenewInstanceRequest struct {
 	// 实例Id
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
 
-	// 预付费自动续费标识和购买时长
+	// 预付费自动续费标识和购买时长,0：手动续费，1：自动续费，2：不续费并且不通知;单位为月
 	RegistryChargePrepaid *RegistryChargePrepaid `json:"RegistryChargePrepaid,omitempty" name:"RegistryChargePrepaid"`
 
 	// 0 续费， 1按量转包年包月
@@ -5074,6 +5463,33 @@ type ReplicationFilter struct {
 
 	// 默认为空
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type ReplicationLog struct {
+
+	// 资源类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
+
+	// 源资源
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Source *string `json:"Source,omitempty" name:"Source"`
+
+	// 目的资源
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Destination *string `json:"Destination,omitempty" name:"Destination"`
+
+	// 同步状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 }
 
 type ReplicationRegistry struct {
@@ -5647,7 +6063,7 @@ type ValidateNamespaceExistPersonalResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 命名空间是否存在
+		// 验证命名空间是否存在返回信息
 		Data *NamespaceIsExistsResp `json:"Data,omitempty" name:"Data"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -5696,7 +6112,7 @@ type ValidateRepositoryExistPersonalResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 仓库是否存在
+		// 验证个人版仓库是否存在返回信息
 		Data *RepoIsExistResp `json:"Data,omitempty" name:"Data"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。

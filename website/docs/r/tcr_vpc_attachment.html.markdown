@@ -30,7 +30,8 @@ The following arguments are supported:
 * `vpc_id` - (Required, ForceNew) ID of VPC.
 * `enable_public_domain_dns` - (Optional) Whether to enable public domain dns. Default value is `false`.
 * `enable_vpc_domain_dns` - (Optional) Whether to enable vpc domain dns. Default value is `false`.
-* `region_id` - (Optional) ID of region.
+* `region_id` - (Optional) ID of region. Conflict with region_name, can not be set at the same time.
+* `region_name` - (Optional) Name of region. Conflict with region_id, can not be set at the same time.
 
 ## Attributes Reference
 

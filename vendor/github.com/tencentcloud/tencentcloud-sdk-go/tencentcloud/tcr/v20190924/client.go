@@ -34,7 +34,7 @@ func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, 
     return
 }
 
-func NewClient(credential *common.Credential, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
+func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
     client = &Client{}
     client.Init(region).
         WithCredential(credential).
@@ -102,6 +102,49 @@ func (c *Client) BatchDeleteRepositoryPersonal(request *BatchDeleteRepositoryPer
         request = NewBatchDeleteRepositoryPersonalRequest()
     }
     response = NewBatchDeleteRepositoryPersonalResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCheckInstanceRequest() (request *CheckInstanceRequest) {
+    request = &CheckInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CheckInstance")
+    return
+}
+
+func NewCheckInstanceResponse() (response *CheckInstanceResponse) {
+    response = &CheckInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CheckInstance
+// 用于校验企业版实例信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
+//  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
+//  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
+//  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORNAMEEXISTS = "InvalidParameter.ErrorNameExists"
+//  INVALIDPARAMETER_ERRORREGISTRYNAME = "InvalidParameter.ErrorRegistryName"
+//  INVALIDPARAMETER_ERRORTAGOVERLIMIT = "InvalidParameter.ErrorTagOverLimit"
+//  INVALIDPARAMETER_UNSUPPORTEDREGION = "InvalidParameter.UnsupportedRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CheckInstance(request *CheckInstanceRequest) (response *CheckInstanceResponse, err error) {
+    if request == nil {
+        request = NewCheckInstanceRequest()
+    }
+    response = NewCheckInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -212,6 +255,40 @@ func (c *Client) CreateImageLifecyclePersonal(request *CreateImageLifecyclePerso
         request = NewCreateImageLifecyclePersonalRequest()
     }
     response = NewCreateImageLifecyclePersonalResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateImmutableTagRulesRequest() (request *CreateImmutableTagRulesRequest) {
+    request = &CreateImmutableTagRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateImmutableTagRules")
+    return
+}
+
+func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResponse) {
+    response = &CreateImmutableTagRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateImmutableTagRules
+// 创建镜像不可变规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
+    if request == nil {
+        request = NewCreateImmutableTagRulesRequest()
+    }
+    response = NewCreateImmutableTagRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -579,6 +656,7 @@ func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) 
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -657,6 +735,7 @@ func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleRespon
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -895,6 +974,39 @@ func (c *Client) DeleteImagePersonal(request *DeleteImagePersonalRequest) (respo
         request = NewDeleteImagePersonalRequest()
     }
     response = NewDeleteImagePersonalResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteImmutableTagRulesRequest() (request *DeleteImmutableTagRulesRequest) {
+    request = &DeleteImmutableTagRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImmutableTagRules")
+    return
+}
+
+func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResponse) {
+    response = &DeleteImmutableTagRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteImmutableTagRules
+//  删除镜像不可变规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteImmutableTagRulesRequest()
+    }
+    response = NewDeleteImmutableTagRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1250,6 +1362,7 @@ func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleRespon
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -1655,6 +1768,41 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
         request = NewDescribeImagesRequest()
     }
     response = NewDescribeImagesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeImmutableTagRulesRequest() (request *DescribeImmutableTagRulesRequest) {
+    request = &DescribeImmutableTagRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImmutableTagRules")
+    return
+}
+
+func NewDescribeImmutableTagRulesResponse() (response *DescribeImmutableTagRulesResponse) {
+    response = &DescribeImmutableTagRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeImmutableTagRules
+// 列出镜像不可变规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
+func (c *Client) DescribeImmutableTagRules(request *DescribeImmutableTagRulesRequest) (response *DescribeImmutableTagRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeImmutableTagRulesRequest()
+    }
+    response = NewDescribeImmutableTagRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2288,6 +2436,7 @@ func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRules
 //  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
+//  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -2390,6 +2539,7 @@ func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLog
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
@@ -2553,6 +2703,7 @@ func NewManageInternalEndpointResponse() (response *ManageInternalEndpointRespon
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINSUFFICIENT_ERRORVPCDNSSTATUS = "ResourceInsufficient.ErrorVpcDnsStatus"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -2638,6 +2789,78 @@ func (c *Client) ModifyApplicationTriggerPersonal(request *ModifyApplicationTrig
         request = NewModifyApplicationTriggerPersonalRequest()
     }
     response = NewModifyApplicationTriggerPersonalResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesRequest) {
+    request = &ModifyImmutableTagRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyImmutableTagRules")
+    return
+}
+
+func NewModifyImmutableTagRulesResponse() (response *ModifyImmutableTagRulesResponse) {
+    response = &ModifyImmutableTagRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyImmutableTagRules
+// 更新镜像不可变规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
+func (c *Client) ModifyImmutableTagRules(request *ModifyImmutableTagRulesRequest) (response *ModifyImmutableTagRulesResponse, err error) {
+    if request == nil {
+        request = NewModifyImmutableTagRulesRequest()
+    }
+    response = NewModifyImmutableTagRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceRequest() (request *ModifyInstanceRequest) {
+    request = &ModifyInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyInstance")
+    return
+}
+
+func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
+    response = &ModifyInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyInstance
+// 更新实例信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERROR = "InternalError.DbError"
+//  INTERNALERROR_ERRNOTEXIST = "InternalError.ErrNotExist"
+//  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *ModifyInstanceResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceRequest()
+    }
+    response = NewModifyInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -2879,6 +3102,7 @@ func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleRespon
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"

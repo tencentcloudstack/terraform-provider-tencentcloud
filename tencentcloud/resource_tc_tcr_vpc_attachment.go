@@ -63,7 +63,14 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 			"region_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "ID of region.",
+				ConflictsWith: []string{"region_name"},
+				Description: "ID of region. Conflict with region_name, can not be set at the same time.",
+			},
+			"region_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ConflictsWith: []string{"region_id"},
+				Description: "Name of region. Conflict with region_id, can not be set at the same time.",
 			},
 			"enable_public_domain_dns": {
 				Type:        schema.TypeBool,
@@ -105,12 +112,13 @@ func resourceTencentCloudTcrVpcAttachmentCreate(d *schema.ResourceData, meta int
 		vpcId         = d.Get("vpc_id").(string)
 		subnetId      = d.Get("subnet_id").(string)
 		regionId      = int64(d.Get("region_id").(int))
+		regionName    = d.Get("region_name").(string)
 		outErr, inErr error
 		has           bool
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr = tcrService.CreateTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
+		inErr = tcrService.CreateTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId, regionName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -272,6 +280,7 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 
 	resourceId := d.Id()
 	regionId := d.Get("region_id").(int)
+	regionName := d.Get("region_name").(string)
 	items := strings.Split(resourceId, FILED_SP)
 	if len(items) != 3 {
 		return fmt.Errorf("invalid ID %s", resourceId)
@@ -286,10 +295,10 @@ func resourceTencentCLoudTcrVpcAttachmentDelete(d *schema.ResourceData, meta int
 	var inErr, outErr error
 	var has bool
 
-	outErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
+	outErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId, regionName)
 	if outErr != nil {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId)
+			inErr = tcrService.DeleteTCRVPCAttachment(ctx, instanceId, vpcId, subnetId, regionId, regionName)
 			if inErr != nil {
 				return retryError(inErr)
 			}
