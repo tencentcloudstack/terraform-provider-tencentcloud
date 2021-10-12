@@ -591,7 +591,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.264
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
