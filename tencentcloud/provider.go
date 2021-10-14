@@ -325,6 +325,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
     tencentcloud_eks_cluster
+    tencentcloud_kubernetes_auth_attachment
 
 MongoDB
   Data Source
@@ -855,6 +856,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
 			"tencentcloud_eks_cluster":                             resourceTencentcloudEksCluster(),
+			"tencentcloud_kubernetes_auth_attachment":              resourceTencentCloudTKEAuthAttachment(),
 			"tencentcloud_kubernetes_as_scaling_group":             ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":                 resourceTencentCloudTkeScaleWorker(),
 			"tencentcloud_kubernetes_cluster_attachment":           resourceTencentCloudTkeClusterAttachment(),

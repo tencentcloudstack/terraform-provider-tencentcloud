@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"log"
 	"strings"
 
@@ -1381,9 +1382,35 @@ func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, c
 	return
 }
 
+func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Context, id string) (info *tke.ServiceAccountAuthenticationOptions, errRet error) {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		options, state, err := me.DescribeClusterAuthenticationOptions(ctx, id)
+		info = options
+
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		if state == "Success" {
+			return nil
+		}
+
+		if state == "Updating" {
+			return resource.RetryableError(fmt.Errorf("state is %s, retry", state))
+		}
+
+		return resource.NonRetryableError(fmt.Errorf("update failed: %s", state))
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
 // DescribeClusterAuthenticationOptions
 // Field `ServiceAccounts.AutoCreateDiscoveryAnonymousAuth` will always return null by design
-// For argument consistency, we will not fetch this options when tf reading tke cluster resource
 func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, id string) (options *tke.ServiceAccountAuthenticationOptions, state string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
