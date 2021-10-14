@@ -859,7 +859,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kubernetes_scale_worker":                 resourceTencentCloudTkeScaleWorker(),
 			"tencentcloud_kubernetes_cluster_attachment":           resourceTencentCloudTkeClusterAttachment(),
 			"tencentcloud_kubernetes_node_pool":                    ResourceTencentCloudKubernetesNodePool(),
-			"resource_tc_eks_cluster":                              resourceTencentcloudEksCluster(),
 			"tencentcloud_mysql_backup_policy":                     resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                           resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                 resourceTencentCloudMysqlAccountPrivilege(),
