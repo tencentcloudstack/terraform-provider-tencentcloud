@@ -399,6 +399,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	existedInstance []*tke.ExistedInstancesForNode,
 	overrideSettings *OverrideSettings,
 	iDiskMountSettings []*tke.InstanceDataDiskMountSetting,
+	extensionAddons []*tke.ExtensionAddon,
 ) (id string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -466,6 +467,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 
 	if len(iAdvanced.DataDisks) > 0 {
 		request.InstanceAdvancedSettings.DataDisks = iAdvanced.DataDisks
+	}
+
+	if len(extensionAddons) > 0 {
+		request.ExtensionAddons = extensionAddons
 	}
 
 	if len(overrideSettings.Master)+len(overrideSettings.Work) > 0 &&
