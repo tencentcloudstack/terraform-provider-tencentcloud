@@ -327,6 +327,14 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_eks_cluster
     tencentcloud_kubernetes_auth_attachment
 
+TDMQ
+  Resource
+    tencentcloud_tdmq_instance
+	tencentcloud_tdmq_namespace
+	tencentcloud_tdmq_topic
+	tencentcloud_tdmq_role
+	tencentcloud_tdmq_namespace_role_attachment
+
 MongoDB
   Data Source
     tencentcloud_mongodb_instances
@@ -958,6 +966,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_repository":                          resourceTencentCloudTcrRepository(),
 			"tencentcloud_tcr_token":                               resourceTencentCloudTcrToken(),
 			"tencentcloud_tcr_vpc_attachment":                      resourceTencentCloudTcrVpcAttachment(),
+			"tencentcloud_tdmq_instance":                           resourceTencentCloudTdmqInstance(),
+			"tencentcloud_tdmq_namespace":                          resourceTencentCloudTdmqNamespace(),
+			"tencentcloud_tdmq_topic":                              resourceTencentCloudTdmqTopic(),
+			"tencentcloud_tdmq_role":                               resourceTencentCloudTdmqRole(),
+			"tencentcloud_tdmq_namespace_role_attachment":          resourceTencentCloudTdmqNamespaceRoleAttachment(),
 			"tencentcloud_cos_bucket_policy":                       resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_address_template":                        resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                  resourceTencentCloudAddressTemplateGroup(),
