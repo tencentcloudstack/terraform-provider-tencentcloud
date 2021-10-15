@@ -203,6 +203,81 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+Use extension addons
+
+```hcl
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S5.SMALL1"
+}
+
+data "tencentcloud_vpc_subnets" "vpc_first" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+    img_id                     = "img-rkiynh11"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    password                   = "ZZXXccvv1212"
+  }
+
+  extension_addon {
+    name  = "NodeProblemDetectorPlus"
+    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
+  }
+  extension_addon {
+    name  = "OOMGuard"
+    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+  }
+  extension_addon {
+    name  = "DNSAutoscaler"
+    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
+  }
+  extension_addon {
+    name  = "COS"
+    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
+  }
+  extension_addon {
+    name  = "CFS"
+    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
+  }
+  extension_addon {
+    name  = "CBS"
+    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
+  }
+}
+```
+
 Use node pool global config
 
 ```hcl
@@ -360,6 +435,7 @@ The following arguments are supported:
 * `enable_customized_pod_cidr` - (Optional) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `exist_instance` - (Optional, ForceNew) create tke cluster by existed instances.
+* `extension_addon` - (Optional, ForceNew) Information of the add-on to be installed.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
@@ -407,6 +483,11 @@ The `exist_instance` object supports the following:
 * `desired_pod_numbers` - (Optional, ForceNew) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
 * `instances_para` - (Optional, ForceNew) Reinstallation parameters of an existing instance.
 * `node_role` - (Optional, ForceNew) Role of existed node. value:MASTER_ETCD or WORKER.
+
+The `extension_addon` object supports the following:
+
+* `name` - (Required) Add-on name.
+* `param` - (Required) Description of the add-on resource object in JSON string format.
 
 The `instances_para` object supports the following:
 
