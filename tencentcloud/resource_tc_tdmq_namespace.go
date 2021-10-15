@@ -88,11 +88,7 @@ func resourceTencentCloudTdmqNamespace() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: RetentionPolicy(),
 				},
-<<<<<<< HEAD
 				Description: "The Policy of message to retain.",
-=======
-				Description: "The Policy of message to retain",
->>>>>>> 39fd7a08de47a080227257461f5dd46e7d6c77e1
 			},
 		},
 	}
