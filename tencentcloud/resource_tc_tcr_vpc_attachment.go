@@ -61,16 +61,16 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 				Description: "ID of subnet.",
 			},
 			"region_id": {
-				Type:        schema.TypeInt,
-				Optional:    true,
+				Type:          schema.TypeInt,
+				Optional:      true,
 				ConflictsWith: []string{"region_name"},
-				Description: "ID of region. Conflict with region_name, can not be set at the same time.",
+				Description:   "ID of region. Conflict with region_name, can not be set at the same time.",
 			},
 			"region_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:          schema.TypeString,
+				Optional:      true,
 				ConflictsWith: []string{"region_id"},
-				Description: "Name of region. Conflict with region_id, can not be set at the same time.",
+				Description:   "Name of region. Conflict with region_id, can not be set at the same time.",
 			},
 			"enable_public_domain_dns": {
 				Type:        schema.TypeBool,

@@ -103,3 +103,7 @@ type OverrideSettings struct {
 const (
 	DefaultDesiredPodNum = 0
 )
+
+const (
+	DefaultAuthenticationOptionsIssuer = "https://kubernetes.default.svc.cluster.local"
+)
