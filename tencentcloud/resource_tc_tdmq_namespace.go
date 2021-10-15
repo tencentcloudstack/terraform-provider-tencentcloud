@@ -46,7 +46,7 @@ func RetentionPolicy() map[string]*schema.Schema {
 		"size_in_mb": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "the size of message to retain",
+			Description: "the size of message to retain.",
 		},
 	}
 }
@@ -88,7 +88,7 @@ func resourceTencentCloudTdmqNamespace() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: RetentionPolicy(),
 				},
-				Description: "The Policy of message to retain",
+				Description: "The Policy of message to retain.",
 			},
 		},
 	}

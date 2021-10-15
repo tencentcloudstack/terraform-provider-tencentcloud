@@ -13,6 +13,8 @@ Provide a resource to configure kubernetes cluster authentication info.
 *
 Provide a resource to configure kubernetes cluster authentication info.
 
+~> **NOTE:** Only avaliable for cluster version >= 1.20
+
 ## Example Usage
 
 ```hcl
@@ -44,6 +46,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_max_pod_num     = 32
   cluster_name            = "keep"
   cluster_desc            = "test cluster desc"
+  cluster_version         = "1.20.6"
   cluster_max_service_num = 32
 
   worker_config {
@@ -73,8 +76,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
-  jwks_uri                             = "${tencentcloud_kubernetes_cluster.managed_cluster.cluster_external_endpoint}/openid/v1/jwks"
-  issuer                               = tencentcloud_kubernetes_cluster.managed_cluster.cluster_external_endpoint
+  jwks_uri                             = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com/openid/v1/jwks"
+  issuer                               = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com"
   auto_create_discovery_anonymous_auth = true
 }
 ```

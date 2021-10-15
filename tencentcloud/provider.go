@@ -327,6 +327,14 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_eks_cluster
     tencentcloud_kubernetes_auth_attachment
 
+TDMQ
+  Resource
+    tencentcloud_tdmq_instance
+	tencentcloud_tdmq_namespace
+	tencentcloud_tdmq_topic
+	tencentcloud_tdmq_role
+	tencentcloud_tdmq_namespace_role_attachment
+
 MongoDB
   Data Source
     tencentcloud_mongodb_instances
