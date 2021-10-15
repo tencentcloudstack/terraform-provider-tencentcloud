@@ -44,6 +44,7 @@ import (
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
@@ -70,6 +71,7 @@ type TencentCloudClient struct {
 	tagConn            *tag.Client
 	mongodbConn        *mongodb.Client
 	tkeConn            *tke.Client
+	tdmqConn           *tdmq.Client
 	tcrConn            *tcr.Client
 	camConn            *cam.Client
 	stsConn            *sts.Client
@@ -301,6 +303,19 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	me.tkeConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tkeConn
+}
+
+// UseTdmqClient returns Tdmq client for service
+func (me *TencentCloudClient) UseTdmqClient() *tdmq.Client {
+	if me.tdmqConn != nil {
+		return me.tdmqConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tdmqConn, _ = tdmq.NewClient(me.Credential, me.Region, cpf)
+	me.tdmqConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tdmqConn
 }
 
 // UseGaapClient returns gaap client for service
