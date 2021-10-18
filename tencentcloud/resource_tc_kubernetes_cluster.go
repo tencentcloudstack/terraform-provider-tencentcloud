@@ -1194,8 +1194,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "create tke cluster by existed instances.",
 		},
 		"auth_options": {
-			Type:     schema.TypeMap,
+			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 1,
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"jwks_uri": {
