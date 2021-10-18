@@ -72,7 +72,8 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Default:     "-",
 				ForceNew:    true,
 				Description: "Availability zone.",
 			},
@@ -89,7 +90,8 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Default:     "-",
 				ForceNew:    true,
 				Description: "The ID of a VPC subnetwork.",
 			},
