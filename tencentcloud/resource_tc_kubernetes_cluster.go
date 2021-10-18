@@ -193,6 +193,81 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+Use extension addons
+
+```hcl
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S5.SMALL1"
+}
+
+data "tencentcloud_vpc_subnets" "vpc_first" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+    img_id                     = "img-rkiynh11"
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  extension_addon {
+    name  = "NodeProblemDetectorPlus"
+    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
+  }
+  extension_addon {
+    name  = "OOMGuard"
+    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+  }
+  extension_addon {
+    name  = "DNSAutoscaler"
+    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
+  }
+  extension_addon {
+    name  = "COS"
+    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
+  }
+  extension_addon {
+    name  = "CFS"
+    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
+  }
+  extension_addon {
+    name  = "CBS"
+    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
+  }
+}
+```
+
 Use node pool global config
 
 ```hcl
@@ -1143,6 +1218,26 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			Description: "Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.",
 		},
+		"extension_addon": {
+			Type:     schema.TypeList,
+			Optional: true,
+			ForceNew: true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Add-on name.",
+					},
+					"param": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Description of the add-on resource object in JSON string format.",
+					},
+				},
+			},
+			Description: "Information of the add-on to be installed.",
+		},
 		"tags": {
 			Type:        schema.TypeMap,
 			Optional:    true,
@@ -1643,6 +1738,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		iDiskMountSettings []*tke.InstanceDataDiskMountSetting
 		cidrSet            ClusterCidrSettings
 		securityPolicies   []string
+		extensionAddons    []*tke.ExtensionAddon
 		clusterInternet    = d.Get("cluster_internet").(bool)
 		clusterIntranet    = d.Get("cluster_intranet").(bool)
 		intranetSubnetId   = d.Get("cluster_intranet_subnet_id").(string)
@@ -1923,8 +2019,22 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("master_config+worker_config and exist_instance can not exist at the same time")
 	}
 
+	if v, ok := d.GetOk("extension_addon"); ok {
+		for _, i := range v.([]interface{}) {
+			dMap := i.(map[string]interface{})
+			name := dMap["name"].(string)
+			param := dMap["param"].(string)
+			addon := &tke.ExtensionAddon{
+				AddonName: helper.String(name),
+				AddonParam: helper.String(param),
+			}
+			extensionAddons = append(extensionAddons, addon)
+		}
+	}
+
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existInstances, &overrideSettings, iDiskMountSettings)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existInstances, &overrideSettings, iDiskMountSettings, extensionAddons)
 	if err != nil {
 		return err
 	}
