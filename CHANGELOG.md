@@ -1,3 +1,31 @@
+## 1.59.13 (October 18, 2021)
+
+ENHANCEMENTS:
+
+* resource `resource_tc_kubernetes_cluster.go` support argument `extension_addon`
+
+## 1.59.12 (October 15, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_kubernetes_auth_attachment`
+* **New Resource**: `tencentcloud_tdmq_instance`
+* **New Resource**: `tencentcloud_tdmq_namespace` 
+* **New Resource**: `tencentcloud_tdmq_topic`                           
+* **New Resource**: `tencentcloud_tdmq_role`                          
+* **New Resource**: `tencentcloud_tdmq_namespace_role_attachment`                              
+                               
+## 1.59.11 (October 12, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_eks_cluster`
+* **New Data Source**: `tencentcloud_eks_clusters`
+
+ENHANCEMENTS:
+
+* Resource `resource_tc_tcr_vpc_attachment.go` support argument `region_name`
+
 ## 1.59.10 (October, 9, 2021)
 
 ENHANCEMENTS:
