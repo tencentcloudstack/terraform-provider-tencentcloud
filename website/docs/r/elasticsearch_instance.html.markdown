@@ -44,12 +44,11 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) Availability zone.
 * `node_info_list` - (Required) Node information list, which is used to describe the specification information of various types of nodes in the cluster, such as node type, node quantity, node specification, disk type, and disk size.
 * `password` - (Required) Password to an instance.
-* `subnet_id` - (Required, ForceNew) The ID of a VPC subnetwork.
 * `version` - (Required) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.
 * `vpc_id` - (Required, ForceNew) The ID of a VPC network.
+* `availability_zone` - (Optional, ForceNew) Availability zone. When create multi-az es, this parameter must be omitted.
 * `basic_security_type` - (Optional) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.
 * `charge_period` - (Optional, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
@@ -58,6 +57,7 @@ The following arguments are supported:
 * `license_type` - (Optional) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
 * `renew_flag` - (Optional, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
+* `subnet_id` - (Optional, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.
 * `tags` - (Optional) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `web_node_type_info` - (Optional) Visual node configuration.
 

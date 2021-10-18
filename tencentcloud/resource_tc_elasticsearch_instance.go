@@ -75,7 +75,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "Availability zone.",
+				Description: "Availability zone. When create multi-az es, this parameter must be omitted.",
 			},
 			"version": {
 				Type:        schema.TypeString,
@@ -93,7 +93,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "The ID of a VPC subnetwork.",
+				Description: "The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.",
 			},
 			"password": {
 				Type:        schema.TypeString,
