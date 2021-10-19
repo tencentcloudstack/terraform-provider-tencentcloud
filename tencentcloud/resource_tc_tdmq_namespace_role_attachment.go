@@ -199,7 +199,7 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentUpdate(d *schema.ResourceDat
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		permissions [] *string
+		permissions []*string
 	)
 	old, now := d.GetChange("permissions")
 	if d.HasChange("permissions") {
@@ -236,7 +236,6 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentDelete(d *schema.ResourceDat
 	environId := idSplit[0]
 	roleName := idSplit[1]
 	clusterId := d.Get("cluster_id").(string)
-
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 

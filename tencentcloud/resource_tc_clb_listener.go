@@ -543,20 +543,48 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 			healthCheckSwitch = true
 		}
 		_ = d.Set("health_check_switch", healthCheckSwitch)
-		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
-		_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
-		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
-		_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
-		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
-		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
-		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
-		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
-		_ = d.Set("health_check_http_method", instance.HealthCheck.HttpCheckMethod)
-		_ = d.Set("health_check_http_version", instance.HealthCheck.HttpVersion)
-		_ = d.Set("health_check_context_type", instance.HealthCheck.ContextType)
-		_ = d.Set("health_check_send_context", instance.HealthCheck.SendContext)
-		_ = d.Set("health_check_recv_context", instance.HealthCheck.RecvContext)
+		if instance.HealthCheck.IntervalTime != nil {
+			_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		}
+		if instance.HealthCheck.TimeOut != nil {
+			_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
+		}
+		if instance.HealthCheck.HealthNum != nil {
+			_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
+		}
+		if instance.HealthCheck.UnHealthNum != nil {
+			_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+		}
+		if instance.HealthCheck.CheckPort != nil {
+			_ = d.Set("health_check_port", instance.HealthCheck.CheckPort)
+		}
+		if instance.HealthCheck.CheckType != nil {
+			_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
+		}
+		if instance.HealthCheck.HttpCode != nil {
+			_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+		}
+		if instance.HealthCheck.HttpCheckPath != nil {
+			_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
+		}
+		if instance.HealthCheck.HttpCheckDomain != nil {
+			_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
+		}
+		if instance.HealthCheck.HttpCheckMethod != nil {
+			_ = d.Set("health_check_http_method", instance.HealthCheck.HttpCheckMethod)
+		}
+		if instance.HealthCheck.HttpVersion != nil {
+			_ = d.Set("health_check_http_version", instance.HealthCheck.HttpVersion)
+		}
+		if instance.HealthCheck.ContextType != nil {
+			_ = d.Set("health_check_context_type", instance.HealthCheck.ContextType)
+		}
+		if instance.HealthCheck.SendContext != nil {
+			_ = d.Set("health_check_send_context", instance.HealthCheck.SendContext)
+		}
+		if instance.HealthCheck.RecvContext != nil {
+			_ = d.Set("health_check_recv_context", instance.HealthCheck.RecvContext)
+		}
 	}
 
 	if instance.Certificate != nil {

@@ -384,7 +384,7 @@ func (me *TdmqService) DeleteTdmqTopic(ctx context.Context, environId string, to
 		}
 	}()
 	var (
-		topicRecord  tdmq.TopicRecord
+		topicRecord tdmq.TopicRecord
 	)
 	topicRecord.TopicName = &topicName
 	topicRecord.EnvironmentId = &environId

@@ -89,9 +89,9 @@ func resourceTencentCloudTdmqRoleCreate(d *schema.ResourceData, meta interface{}
 	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		roleName   string
-		clusterId  string
-		remark     string
+		roleName  string
+		clusterId string
+		remark    string
 	)
 	if temp, ok := d.GetOk("role_name"); ok {
 		roleName = temp.(string)
@@ -164,7 +164,7 @@ func resourceTencentCloudTdmqRoleUpdate(d *schema.ResourceData, meta interface{}
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		remark      string
+		remark string
 	)
 	old, now := d.GetChange("remark")
 	if d.HasChange("remark") {

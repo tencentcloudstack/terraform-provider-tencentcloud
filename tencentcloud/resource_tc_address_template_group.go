@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_address_template_group" "foo" {
   name                = "group-test"
-  addresses = ["ipl-axaf24151","ipl-axaf24152"]
+  template_ids = ["ipl-axaf24151","ipl-axaf24152"]
 }
 ```
 
