@@ -526,11 +526,17 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	_ = d.Set("clb_id", clbId)
 	_ = d.Set("listener_id", instance.ListenerId)
-	_ = d.Set("listener_name", instance.ListenerName)
-	_ = d.Set("target_type", instance.TargetType)
 	_ = d.Set("port", instance.Port)
 	_ = d.Set("protocol", instance.Protocol)
-	_ = d.Set("session_expire_time", instance.SessionExpireTime)
+	if instance.ListenerName != nil {
+		_ = d.Set("listener_name", instance.ListenerName)
+	}
+	if instance.TargetType != nil {
+		_ = d.Set("target_type", instance.TargetType)
+	}
+	if instance.SessionExpireTime != nil {
+		_ = d.Set("session_expire_time", instance.SessionExpireTime)
+	}
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
 		_ = d.Set("scheduler", instance.Scheduler)
 	}
