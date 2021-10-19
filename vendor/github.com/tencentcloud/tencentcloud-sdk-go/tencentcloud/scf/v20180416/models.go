@@ -65,7 +65,7 @@ type AsyncEvent struct {
 	// 函数版本
 	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
 
-	// 事件状态
+	// 事件状态，RUNNING 表示运行中, FINISHED 表示调用成功, ABORTED 表示调用终止, FAILED 表示调用失败
 	Status *string `json:"Status,omitempty" name:"Status"`
 
 	// 调用开始时间，格式: "%Y-%m-%d %H:%M:%S.%f"
@@ -131,7 +131,7 @@ type Code struct {
 	// 对象存储桶名称（填写存储桶名称自定义部分，不包含-appid）
 	CosBucketName *string `json:"CosBucketName,omitempty" name:"CosBucketName"`
 
-	// 对象存储对象路径
+	// 对象存储中代码包文件路径，以/开头
 	CosObjectName *string `json:"CosObjectName,omitempty" name:"CosObjectName"`
 
 	// 包含函数代码文件及其依赖项的 zip 格式文件，zip包大小上限为 50MB，使用该接口时要求将 zip 文件的内容转成 base64 编码
@@ -169,6 +169,9 @@ type Code struct {
 
 	// 加密后的Git用户名，一般无需指定
 	GitUserNameSecret *string `json:"GitUserNameSecret,omitempty" name:"GitUserNameSecret"`
+
+	// 镜像部署时配置TCR镜像信息
+	ImageConfig *ImageConfig `json:"ImageConfig,omitempty" name:"ImageConfig"`
 }
 
 type CopyFunctionRequest struct {
@@ -376,7 +379,7 @@ type CreateFunctionRequest struct {
 	// 文件系统配置参数，用于云函数挂载文件系统
 	CfsConfig *CfsConfig `json:"CfsConfig,omitempty" name:"CfsConfig"`
 
-	// 函数初始化超时时间
+	// 函数初始化超时时间，默认 65s，镜像部署函数默认 90s。
 	InitTimeout *int64 `json:"InitTimeout,omitempty" name:"InitTimeout"`
 
 	// 函数 Tag 参数，以键值对数组形式传入
@@ -509,7 +512,7 @@ type CreateTriggerRequest struct {
 	// 新建触发器名称。如果是定时触发器，名称支持英文字母、数字、连接符和下划线，最长100个字符；如果是cos触发器，需要是对应cos存储桶适用于XML API的访问域名(例如:5401-5ff414-12345.cos.ap-shanghai.myqcloud.com);如果是其他触发器，见具体触发器绑定参数的说明
 	TriggerName *string `json:"TriggerName,omitempty" name:"TriggerName"`
 
-	// 触发器类型，目前支持 cos 、cmq、 timer、 ckafka、apigw类型
+	// 触发器类型，目前支持 cos 、cmq、 timer、 ckafka、apigw类型。创建 cls 触发器请参考[CLS 创建投递 SCF 任务](https://cloud.tencent.com/document/product/614/61096)。
 	Type *string `json:"Type,omitempty" name:"Type"`
 
 	// 触发器对应的参数，可见具体[触发器描述说明](https://cloud.tencent.com/document/product/583/39901)
@@ -850,7 +853,7 @@ func (r *DeleteProvisionedConcurrencyConfigResponse) FromJsonString(s string) er
 type DeleteReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
 
-	// 需要删除预置并发的函数的名称
+	// 需要删除最大独占配额的函数的名称
 	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
 
 	// 函数所属命名空间，默认为default
@@ -1048,6 +1051,12 @@ type Function struct {
 	// 函数并发保留内存
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReservedConcurrencyMem *uint64 `json:"ReservedConcurrencyMem,omitempty" name:"ReservedConcurrencyMem"`
+
+	// 函数异步属性，取值 TRUE 或者 FALSE
+	AsyncRunEnable *string `json:"AsyncRunEnable,omitempty" name:"AsyncRunEnable"`
+
+	// 异步函数是否开启调用追踪，取值 TRUE 或者 FALSE
+	TraceEnable *string `json:"TraceEnable,omitempty" name:"TraceEnable"`
 }
 
 type FunctionLog struct {
@@ -1619,6 +1628,14 @@ type GetFunctionResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		StatusReasons []*StatusReason `json:"StatusReasons,omitempty" name:"StatusReasons"`
 
+		// 是否开启异步属性
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		AsyncRunEnable *string `json:"AsyncRunEnable,omitempty" name:"AsyncRunEnable"`
+
+		// 是否开启事件追踪
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TraceEnable *string `json:"TraceEnable,omitempty" name:"TraceEnable"`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -1779,7 +1796,7 @@ func (r *GetProvisionedConcurrencyConfigResponse) FromJsonString(s string) error
 type GetReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
 
-	// 需要获取预置并发详情的函数名称。
+	// 需要获取最大独占配额详情的函数名称。
 	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
 
 	// 函数所在的命名空间，默认为default。
@@ -1810,7 +1827,7 @@ type GetReservedConcurrencyConfigResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 该函数的保留并发内存。
+		// 该函数的最大独占配额。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		ReservedMem *uint64 `json:"ReservedMem,omitempty" name:"ReservedMem"`
 
@@ -1830,22 +1847,116 @@ func (r *GetReservedConcurrencyConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ImageConfig struct {
+
+	// 镜像仓库类型，个人版或者企业版：personal/enterprise
+	ImageType *string `json:"ImageType,omitempty" name:"ImageType"`
+
+	// {domain}/{namespace}/{imageName}:{tag}@{digest}
+	ImageUri *string `json:"ImageUri,omitempty" name:"ImageUri"`
+
+	// 用于企业版TCR获取镜像拉取临时凭证，ImageType为"enterprise"时必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 应用的ENTRYPOINT
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EntryPoint *string `json:"EntryPoint,omitempty" name:"EntryPoint"`
+
+	// entrypoint执行命令
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Command *string `json:"Command,omitempty" name:"Command"`
+
+	// 命令参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Args *string `json:"Args,omitempty" name:"Args"`
+}
+
+type InvokeFunctionRequest struct {
+	*tchttp.BaseRequest
+
+	// 函数名称
+	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
+
+	// 触发函数的版本号或别名，默认值为$DEFAULT
+	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
+
+	// 运行函数时的参数，以json格式传入，最大支持的参数长度是 6MB。该字段信息对应函数 [event 入参](https://cloud.tencent.com/document/product/583/9210#.E5.87.BD.E6.95.B0.E5.85.A5.E5.8F.82.3Ca-id.3D.22input.22.3E.3C.2Fa.3E)。
+	Event *string `json:"Event,omitempty" name:"Event"`
+
+	// 返回值会包含4KB的日志，可选值为None和Tail，默认值为None。当该值为Tail时，返回参数中的Log字段会包含对应的函数执行日志
+	LogType *string `json:"LogType,omitempty" name:"LogType"`
+
+	// 命名空间，不填默认为 default
+	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// 函数灰度流量控制调用，以json格式传入，例如{"k":"v"}，注意kv都需要是字符串类型，最大支持的参数长度是1024字节
+	RoutingKey *string `json:"RoutingKey,omitempty" name:"RoutingKey"`
+}
+
+func (r *InvokeFunctionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InvokeFunctionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FunctionName")
+	delete(f, "Qualifier")
+	delete(f, "Event")
+	delete(f, "LogType")
+	delete(f, "Namespace")
+	delete(f, "RoutingKey")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InvokeFunctionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type InvokeFunctionResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 函数执行结果
+		Result *Result `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *InvokeFunctionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InvokeFunctionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type InvokeRequest struct {
 	*tchttp.BaseRequest
 
 	// 函数名称
 	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
 
-	// RequestResponse(同步) 和 Event(异步)，默认为同步
+	// 同步调用请使用[同步 Invoke 调用接口](https://cloud.tencent.com/document/product/583/58400) 或填写同步调用参数 RequestResponse ，建议使用同步调用接口以获取最佳性能；异步调用填写 Event；默认为同步。接口超时时间为 300s，更长超时时间请使用异步调用。
 	InvocationType *string `json:"InvocationType,omitempty" name:"InvocationType"`
 
 	// 触发函数的版本号或别名
 	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
 
-	// 运行函数时的参数，以json格式传入，最大支持的参数长度是 1M
+	// 运行函数时的参数，以json格式传入，同步调用最大支持 6MB，异步调用最大支持 128 KB。该字段信息对应函数 [event 入参](https://cloud.tencent.com/document/product/583/9210#.E5.87.BD.E6.95.B0.E5.85.A5.E5.8F.82.3Ca-id.3D.22input.22.3E.3C.2Fa.3E)。
 	ClientContext *string `json:"ClientContext,omitempty" name:"ClientContext"`
 
-	// 同步调用时指定该字段，返回值会包含4K的日志，可选值为None和Tail，默认值为None。当该值为Tail时，返回参数中的Log字段会包含对应的函数执行日志
+	// 异步调用该字段返回为空。
 	LogType *string `json:"LogType,omitempty" name:"LogType"`
 
 	// 命名空间
@@ -2327,6 +2438,9 @@ type ListNamespacesRequest struct {
 
 	// 以升序还是降序的方式返回结果，可选值 ASC 和 DESC
 	Order *string `json:"Order,omitempty" name:"Order"`
+
+	// 关键字匹配搜索，Key 可选值为 Namespace 和 Description，多个搜索条件之间是与的关系
+	SearchKey []*SearchKey `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
 func (r *ListNamespacesRequest) ToJsonString() string {
@@ -2345,6 +2459,7 @@ func (r *ListNamespacesRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Orderby")
 	delete(f, "Order")
+	delete(f, "SearchKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListNamespacesRequest has unknown keys!", "")
 	}
@@ -2844,10 +2959,10 @@ func (r *PutProvisionedConcurrencyConfigResponse) FromJsonString(s string) error
 type PutReservedConcurrencyConfigRequest struct {
 	*tchttp.BaseRequest
 
-	// 需要设置预置并发的函数的名称
+	// 需要设置最大独占配额的函数的名称
 	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
 
-	// 函数保留并发内存，注：函数的保留并发内存总和上限：用户总并发内存配额 - 12800
+	// 函数最大独占配额，注：函数的最大独占配额内存总和上限：用户总并发内存配额 - 12800
 	ReservedConcurrencyMem *uint64 `json:"ReservedConcurrencyMem,omitempty" name:"ReservedConcurrencyMem"`
 
 	// 函数所属命名空间，默认为default
@@ -2985,6 +3100,15 @@ type RoutingConfig struct {
 
 	// 规则路由附加版本
 	AddtionVersionMatchs []*VersionMatch `json:"AddtionVersionMatchs,omitempty" name:"AddtionVersionMatchs"`
+}
+
+type SearchKey struct {
+
+	// 搜索关键字
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 搜索内容
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type StatusReason struct {
@@ -3389,7 +3513,7 @@ type UpdateFunctionConfigurationRequest struct {
 	// 文件系统配置入参，用于云函数绑定CFS文件系统
 	CfsConfig *CfsConfig `json:"CfsConfig,omitempty" name:"CfsConfig"`
 
-	// 函数初始化执行超时时间，默认15秒
+	// 函数初始化执行超时时间
 	InitTimeout *int64 `json:"InitTimeout,omitempty" name:"InitTimeout"`
 }
 

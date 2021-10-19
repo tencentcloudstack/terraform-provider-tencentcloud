@@ -494,6 +494,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199 h1:lXCng
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199/go.mod h1:5bwboqeXqVnRvUlKn2G9Y9DbOnWMSVQ0zWhhPZKUVZE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.199 h1:vvxCCj6RiRM4FkSdxncroAx9JGD6xBBhAnXugQrE3j8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.199/go.mod h1:Pew6DV5oBGrzHYWZ8ssiHeJS/Z39ggVv1y5ADGWdO4s=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.267 h1:ipvvQOzGyUUGohsVLElJnDDZn4Xoq1axk8my+GLyRYs=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.267/go.mod h1:Pew6DV5oBGrzHYWZ8ssiHeJS/Z39ggVv1y5ADGWdO4s=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.199 h1:Ms62XLYCuqrdG4mD5S72oj/ZxdNTxJ+Mc4w0Kxqucwo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.199/go.mod h1:ySz4zbciCFruAviNMeBcu7wW2+BY9Maw8qGWawTywkM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199 h1:UkF3qBxMbpOf2VjxgzMgqvBCS+Hqr8XXSrtRd+rABMk=
