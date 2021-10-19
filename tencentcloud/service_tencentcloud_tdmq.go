@@ -292,14 +292,12 @@ func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, to
 	request.Remark = &remark
 	request.ClusterId = &clusterId
 
-	var response *tdmq.CreateTopicResponse
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseTdmqClient().CreateTopic(request)
+		_, err := me.client.UseTdmqClient().CreateTopic(request)
 		if err != nil {
 			return retryError(err)
 		}
-		response = result
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s create tdmq topic failed, reason: %v", logId, err)
