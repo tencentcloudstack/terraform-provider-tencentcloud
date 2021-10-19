@@ -4,13 +4,11 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_auth_attachment"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_auth_attachment"
 description: |-
-  *
-Provide a resource to configure kubernetes cluster authentication info.
+  Provide a resource to configure kubernetes cluster authentication info.
 ---
 
 # tencentcloud_kubernetes_auth_attachment
 
-*
 Provide a resource to configure kubernetes cluster authentication info.
 
 ~> **NOTE:** Only avaliable for cluster version >= 1.20

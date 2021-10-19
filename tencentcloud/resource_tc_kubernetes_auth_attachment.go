@@ -1,4 +1,4 @@
-/**
+/*
 Provide a resource to configure kubernetes cluster authentication info.
 
 ~> **NOTE:** Only avaliable for cluster version >= 1.20
