@@ -41,6 +41,7 @@ The following arguments are supported:
 * `enable_eip_config` - (Optional) Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.
 * `enable_public_net` - (Optional) Indicates whether public net config enabled.
 * `environment` - (Optional) Environment of the SCF function.
+* `image_config` - (Optional) Image of the SCF function, conflict with ``.
 * `l5_enable` - (Optional) Enable L5 for SCF function, default is `false`.
 * `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.
 * `namespace` - (Optional, ForceNew) Namespace of the SCF function, default is `default`.
@@ -51,6 +52,15 @@ The following arguments are supported:
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
 * `vpc_id` - (Optional) VPC ID of the SCF function.
 * `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
+
+The `image_config` object supports the following:
+
+* `image_type` - (Required) The image type. personal or enterprise.
+* `image_uri` - (Required) The uri of image.
+* `args` - (Optional) the parameters of command.
+* `command` - (Optional) The command of entrypoint.
+* `entry_point` - (Optional) The entrypoint of app.
+* `registry_id` - (Optional) The registry id of TCR. When image type is enterprise, it must be set.
 
 The `triggers` object supports the following:
 

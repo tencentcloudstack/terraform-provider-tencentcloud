@@ -207,20 +207,20 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"cos_bucket_name": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ConflictsWith: []string{"zip_file"},
+				ConflictsWith: []string{"zip_file", "image_config"},
 				Description:   "Cos bucket name of the SCF function, such as `cos-1234567890`, conflict with `zip_file`.",
 			},
 			"cos_object_name": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ConflictsWith: []string{"zip_file"},
+				ConflictsWith: []string{"zip_file", "image_config"},
 				ValidateFunc:  validateStringSuffix(".zip", ".jar"),
 				Description:   "Cos object name of the SCF function, should have suffix `.zip` or `.jar`, conflict with `zip_file`.",
 			},
 			"cos_bucket_region": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ConflictsWith: []string{"zip_file"},
+				ConflictsWith: []string{"zip_file", "image_config"},
 				Description:   "Cos bucket region of the SCF function, conflict with `zip_file`.",
 			},
 
@@ -228,8 +228,52 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"zip_file": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region"},
+				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region", "image_config"},
 				Description:   "Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.",
+			},
+
+			// image
+			"image_config": {
+				Type: schema.TypeList,
+				Optional: true,
+				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region", "zip_file"},
+				Description: "Image of the SCF function, conflict with ``.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"image_type": {
+							Type: schema.TypeString,
+							Required: true,
+							ValidateFunc: validateAllowedStringValue([]string{"personal", "enterprise"}),
+							Description: "The image type. personal or enterprise.",
+						},
+						"image_uri": {
+							Type: schema.TypeString,
+							Required: true,
+							Description: "The uri of image.",
+						},
+						"registry_id": {
+							Type: schema.TypeString,
+							Optional: true,
+							Description: "The registry id of TCR. When image type is enterprise, it must be set.",
+						},
+						"entry_point": {
+							Type: schema.TypeString,
+							Optional: true,
+							Description: "The entrypoint of app.",
+						},
+						"command": {
+							Type: schema.TypeString,
+							Optional: true,
+							Description: "The command of entrypoint.",
+						},
+						"args": {
+							Type: schema.TypeString,
+							Optional: true,
+							Description: "the parameters of command.",
+						},
+
+					},
+				},
 			},
 
 			"triggers": {
@@ -423,6 +467,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	const (
 		scfFunctionCosCode scfFunctionCodeType = iota + 1 // start at 1 so we can check if codeType set or not
 		scfFunctionZipFileCode
+		scfFunctionImageCode
 	)
 
 	var codeType scfFunctionCodeType
@@ -496,6 +541,34 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		functionInfo.zipFile = &content
 	}
 
+	var imageConfigs = make([]*scf.ImageConfig, 0)
+
+	if raw, ok := d.GetOk("image_config"); ok {
+		configs := raw.([]interface{})
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			imageType := value["image_type"].(string)
+			imageUri := value["image_uri"].(string)
+			registryId := value["registry_id"].(string)
+			entryPoint := value["entry_point"].(string)
+			command := value["command"].(string)
+			args := value["args"].(string)
+
+			config := &scf.ImageConfig{
+				ImageType : &imageType,
+				ImageUri: &imageUri,
+				RegistryId: &registryId,
+				EntryPoint: &entryPoint,
+				Command: &command,
+				Args: &args,
+			}
+			imageConfigs = append(imageConfigs, config)
+		}
+		codeType = scfFunctionImageCode
+	}
+
+	functionInfo.imageConfig = imageConfigs[0]
+
 	switch codeType {
 	case scfFunctionCosCode:
 		if err := helper.CheckIfSetTogether(d, "cos_bucket_name", "cos_object_name", "cos_bucket_region"); err != nil {
@@ -503,7 +576,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 
 	case scfFunctionZipFileCode:
-
+	case scfFunctionImageCode:
 	default:
 		return errors.New("no function code set")
 	}
@@ -762,6 +835,34 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 		content := base64.StdEncoding.EncodeToString(body)
 		functionInfo.zipFile = &content
+	}
+
+	if d.HasChange("image_config") {
+		updateAttrs = append(updateAttrs, "image_config")
+		if raw, ok := d.GetOk("image_config"); ok {
+			var imageConfigs = make([]*scf.ImageConfig, 0)
+			configs := raw.([]interface{})
+			for _, v := range configs {
+				value := v.(map[string]interface{})
+				imageType := value["image_type"].(string)
+				imageUri := value["image_uri"].(string)
+				registryId := value["registry_id"].(string)
+				entryPoint := value["entry_point"].(string)
+				command := value["command"].(string)
+				args := value["args"].(string)
+
+				config := &scf.ImageConfig{
+					ImageType : &imageType,
+					ImageUri: &imageUri,
+					RegistryId: &registryId,
+					EntryPoint: &entryPoint,
+					Command: &command,
+					Args: &args,
+				}
+				imageConfigs = append(imageConfigs, config)
+			}
+			functionInfo.imageConfig = imageConfigs[0]
+		}
 	}
 
 	// update function code

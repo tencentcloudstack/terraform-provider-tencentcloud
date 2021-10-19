@@ -116,6 +116,9 @@ const (
 	// 当前函数已有保留并发设置任务处于进行中，请稍后重试。
 	FAILEDOPERATION_RESERVEDINPROGRESS = "FailedOperation.ReservedInProgress"
 
+	// Topic不存在。
+	FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
+
 	// 用户并发内存配额设置任务处于进行中，请稍后重试。
 	FAILEDOPERATION_TOTALCONCURRENCYMEMORYINPROGRESS = "FailedOperation.TotalConcurrencyMemoryInProgress"
 
@@ -179,6 +182,9 @@ const (
 	// AdditionalVersionWeights参数传入错误。
 	INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
 
+	// 不支持删除默认别名，请修正后重试。
+	INVALIDPARAMETERVALUE_ALIAS = "InvalidParameterValue.Alias"
+
 	// ApiGateway参数错误。
 	INVALIDPARAMETERVALUE_APIGATEWAY = "InvalidParameterValue.ApiGateway"
 
@@ -188,17 +194,20 @@ const (
 	// Cdn传入错误。
 	INVALIDPARAMETERVALUE_CDN = "InvalidParameterValue.Cdn"
 
+	// cfs配置项重复。
+	INVALIDPARAMETERVALUE_CFSPARAMETERDUPLICATE = "InvalidParameterValue.CfsParameterDuplicate"
+
 	// cfs配置项取值与规范不符。
 	INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
-
-	// cfs参数格式与规范不符。
-	INVALIDPARAMETERVALUE_CFSSTRUCTIONERROR = "InvalidParameterValue.CfsStructionError"
 
 	// Ckafka传入错误。
 	INVALIDPARAMETERVALUE_CKAFKA = "InvalidParameterValue.Ckafka"
 
 	// Cls传入错误。
 	INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
+
+	// 修改Cls配置需要传入Role参数，请修正后重试。
+	INVALIDPARAMETERVALUE_CLSROLE = "InvalidParameterValue.ClsRole"
 
 	// Cmq传入错误。
 	INVALIDPARAMETERVALUE_CMQ = "InvalidParameterValue.Cmq"
@@ -287,6 +296,9 @@ const (
 	// Handler传入错误。
 	INVALIDPARAMETERVALUE_HANDLER = "InvalidParameterValue.Handler"
 
+	// IdleTimeOut参数传入错误。
+	INVALIDPARAMETERVALUE_IDLETIMEOUT = "InvalidParameterValue.IdleTimeOut"
+
 	// InlineZipFile非法。
 	INVALIDPARAMETERVALUE_INLINEZIPFILE = "InvalidParameterValue.InlineZipFile"
 
@@ -332,11 +344,17 @@ const (
 	// 入参不是标准的json。
 	INVALIDPARAMETERVALUE_PARAM = "InvalidParameterValue.Param"
 
+	// ProtocolType参数传入错误。
+	INVALIDPARAMETERVALUE_PROTOCOLTYPE = "InvalidParameterValue.ProtocolType"
+
 	// PublicNetConfig参数错误。
 	INVALIDPARAMETERVALUE_PUBLICNETCONFIG = "InvalidParameterValue.PublicNetConfig"
 
 	// 不支持的函数版本。
 	INVALIDPARAMETERVALUE_QUALIFIER = "InvalidParameterValue.Qualifier"
+
+	// RetCode不合法。
+	INVALIDPARAMETERVALUE_RETCODE = "InvalidParameterValue.RetCode"
 
 	// RoutingConfig取值与规范不符，请修正后再试。可参考：https://tencentcs.com/5jXKFnBW。
 	INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
@@ -346,6 +364,9 @@ const (
 
 	// searchkey 不是 Keyword,Tag 或者 Runtime。
 	INVALIDPARAMETERVALUE_SEARCHKEY = "InvalidParameterValue.SearchKey"
+
+	// SecretInfo错误。
+	INVALIDPARAMETERVALUE_SECRETINFO = "InvalidParameterValue.SecretInfo"
 
 	// ServiceName命名不规范。
 	INVALIDPARAMETERVALUE_SERVICENAME = "InvalidParameterValue.ServiceName"
@@ -365,6 +386,9 @@ const (
 	// 非法的TempCosObjectName。
 	INVALIDPARAMETERVALUE_TEMPCOSOBJECTNAME = "InvalidParameterValue.TempCosObjectName"
 
+	// TraceEnable取值与规范不符，请修正后再试。
+	INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
+
 	// TriggerDesc传入参数错误。
 	INVALIDPARAMETERVALUE_TRIGGERDESC = "InvalidParameterValue.TriggerDesc"
 
@@ -376,6 +400,9 @@ const (
 
 	// 开启cfs配置的同时必须开启vpc。
 	INVALIDPARAMETERVALUE_VPCNOTSETWHENOPENCFS = "InvalidParameterValue.VpcNotSetWhenOpenCfs"
+
+	// WebSocketsParams参数传入错误。
+	INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 
 	// 检测到不是标准的zip文件，请重新压缩后再试。
 	INVALIDPARAMETERVALUE_ZIPFILE = "InvalidParameterValue.ZipFile"
@@ -502,6 +529,9 @@ const (
 
 	// Cdn不存在。
 	RESOURCENOTFOUND_CDN = "ResourceNotFound.Cdn"
+
+	// 指定的cfs下未找到您所指定的挂载点。
+	RESOURCENOTFOUND_CFSMOUNTINSNOTMATCH = "ResourceNotFound.CfsMountInsNotMatch"
 
 	// cfs与云函数所处vpc不一致。
 	RESOURCENOTFOUND_CFSVPCNOTMATCH = "ResourceNotFound.CfsVpcNotMatch"

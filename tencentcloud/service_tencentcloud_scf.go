@@ -35,6 +35,8 @@ type scfFunctionInfo struct {
 	cosBucketRegion *string
 
 	zipFile *string
+
+	imageConfig *scf.ImageConfig
 }
 
 type scfTrigger struct {
@@ -86,6 +88,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 		CosObjectName:   info.cosObjectName,
 		CosBucketRegion: info.cosBucketRegion,
 		ZipFile:         info.zipFile,
+		ImageConfig:     info.imageConfig,
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -194,6 +197,7 @@ func (me *ScfService) ModifyFunctionCode(ctx context.Context, info scfFunctionIn
 		CosObjectName:   info.cosObjectName,
 		CosBucketRegion: info.cosBucketRegion,
 		ZipFile:         info.zipFile,
+		ImageConfig:     info.imageConfig,
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

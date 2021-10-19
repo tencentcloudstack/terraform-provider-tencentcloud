@@ -34,7 +34,7 @@ func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, 
     return
 }
 
-func NewClient(credential *common.Credential, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
+func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
     client = &Client{}
     client.Init(region).
         WithCredential(credential).
@@ -182,8 +182,8 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  INVALIDPARAMETERVALUE_CFSPARAMETERDUPLICATE = "InvalidParameterValue.CfsParameterDuplicate"
 //  INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
-//  INVALIDPARAMETERVALUE_CFSSTRUCTIONERROR = "InvalidParameterValue.CfsStructionError"
 //  INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
 //  INVALIDPARAMETERVALUE_CODE = "InvalidParameterValue.Code"
 //  INVALIDPARAMETERVALUE_CODESECRET = "InvalidParameterValue.CodeSecret"
@@ -202,17 +202,21 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETERVALUE_GITCOMMITID = "InvalidParameterValue.GitCommitId"
 //  INVALIDPARAMETERVALUE_GITURL = "InvalidParameterValue.GitUrl"
 //  INVALIDPARAMETERVALUE_HANDLER = "InvalidParameterValue.Handler"
+//  INVALIDPARAMETERVALUE_IDLETIMEOUT = "InvalidParameterValue.IdleTimeOut"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 //  INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
 //  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
+//  INVALIDPARAMETERVALUE_PROTOCOLTYPE = "InvalidParameterValue.ProtocolType"
 //  INVALIDPARAMETERVALUE_PUBLICNETCONFIG = "InvalidParameterValue.PublicNetConfig"
 //  INVALIDPARAMETERVALUE_RUNTIME = "InvalidParameterValue.Runtime"
 //  INVALIDPARAMETERVALUE_STAMP = "InvalidParameterValue.Stamp"
 //  INVALIDPARAMETERVALUE_TEMPCOSOBJECTNAME = "InvalidParameterValue.TempCosObjectName"
+//  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 //  INVALIDPARAMETERVALUE_VPCNOTSETWHENOPENCFS = "InvalidParameterValue.VpcNotSetWhenOpenCfs"
+//  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  INVALIDPARAMETERVALUE_ZIPFILE = "InvalidParameterValue.ZipFile"
 //  INVALIDPARAMETERVALUE_ZIPFILEBASE64BINASCIIERROR = "InvalidParameterValue.ZipFileBase64BinasciiError"
 //  LIMITEXCEEDED_EIP = "LimitExceeded.Eip"
@@ -226,6 +230,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  RESOURCEINUSE_FUNCTION = "ResourceInUse.Function"
 //  RESOURCEINUSE_FUNCTIONNAME = "ResourceInUse.FunctionName"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CFSMOUNTINSNOTMATCH = "ResourceNotFound.CfsMountInsNotMatch"
 //  RESOURCENOTFOUND_CFSVPCNOTMATCH = "ResourceNotFound.CfsVpcNotMatch"
 //  RESOURCENOTFOUND_CMQ = "ResourceNotFound.Cmq"
 //  RESOURCENOTFOUND_DEMO = "ResourceNotFound.Demo"
@@ -328,6 +333,7 @@ func NewCreateTriggerResponse() (response *CreateTriggerResponse) {
 //  INVALIDPARAMETERVALUE_CUSTOMARGUMENT = "InvalidParameterValue.CustomArgument"
 //  INVALIDPARAMETERVALUE_ENABLE = "InvalidParameterValue.Enable"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_SECRETINFO = "InvalidParameterValue.SecretInfo"
 //  INVALIDPARAMETERVALUE_SERVICENAME = "InvalidParameterValue.ServiceName"
 //  INVALIDPARAMETERVALUE_TRIGGERDESC = "InvalidParameterValue.TriggerDesc"
 //  INVALIDPARAMETERVALUE_TRIGGERNAME = "InvalidParameterValue.TriggerName"
@@ -390,6 +396,8 @@ func NewDeleteAliasResponse() (response *DeleteAliasResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_DELETEALIAS = "FailedOperation.DeleteAlias"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETERVALUE_ALIAS = "InvalidParameterValue.Alias"
+//  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
 //  RESOURCENOTFOUND_ALIAS = "ResourceNotFound.Alias"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
@@ -544,10 +552,12 @@ func NewDeleteProvisionedConcurrencyConfigResponse() (response *DeleteProvisione
 // 可能返回的错误码:
 //  FAILEDOPERATION_PROVISIONEDINPROGRESS = "FailedOperation.ProvisionedInProgress"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_QUALIFIER = "InvalidParameterValue.Qualifier"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_FUNCTIONVERSION = "ResourceNotFound.FunctionVersion"
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCENOTFOUND_VERSION = "ResourceNotFound.Version"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DeleteProvisionedConcurrencyConfig(request *DeleteProvisionedConcurrencyConfigRequest) (response *DeleteProvisionedConcurrencyConfigResponse, err error) {
     if request == nil {
@@ -574,7 +584,7 @@ func NewDeleteReservedConcurrencyConfigResponse() (response *DeleteReservedConcu
 }
 
 // DeleteReservedConcurrencyConfig
-// 删除函数的保留并发配置。
+// 删除函数的最大独占配额配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEBUGMODESTATUS = "FailedOperation.DebugModeStatus"
@@ -869,6 +879,7 @@ func NewGetFunctionLogsResponse() (response *GetFunctionLogsResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ES = "InternalError.ES"
 //  INTERNALERROR_EXCEPTION = "InternalError.Exception"
@@ -879,6 +890,7 @@ func NewGetFunctionLogsResponse() (response *GetFunctionLogsResponse) {
 //  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
+//  INVALIDPARAMETERVALUE_RETCODE = "InvalidParameterValue.RetCode"
 //  INVALIDPARAMETERVALUE_STARTTIMEORENDTIME = "InvalidParameterValue.StartTimeOrEndTime"
 //  LIMITEXCEEDED_OFFSET = "LimitExceeded.Offset"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
@@ -978,7 +990,7 @@ func NewGetReservedConcurrencyConfigResponse() (response *GetReservedConcurrency
 }
 
 // GetReservedConcurrencyConfig
-// 获取函数的保留并发详情。
+// 获取函数的最大独占配额详情。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1037,6 +1049,46 @@ func (c *Client) Invoke(request *InvokeRequest) (response *InvokeResponse, err e
     return
 }
 
+func NewInvokeFunctionRequest() (request *InvokeFunctionRequest) {
+    request = &InvokeFunctionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "InvokeFunction")
+    return
+}
+
+func NewInvokeFunctionResponse() (response *InvokeFunctionResponse) {
+    response = &InvokeFunctionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// InvokeFunction
+//  SCF同步调用函数接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FUNCTIONSTATUSERROR = "FailedOperation.FunctionStatusError"
+//  FAILEDOPERATION_INVOKEFUNCTION = "FailedOperation.InvokeFunction"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INVALIDPARAMETER_FUNCTIONNAME = "InvalidParameter.FunctionName"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_PARAM = "InvalidParameterValue.Param"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_QUALIFIER = "ResourceNotFound.Qualifier"
+//  RESOURCEUNAVAILABLE_INSUFFICIENTBALANCE = "ResourceUnavailable.InsufficientBalance"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) InvokeFunction(request *InvokeFunctionRequest) (response *InvokeFunctionResponse, err error) {
+    if request == nil {
+        request = NewInvokeFunctionRequest()
+    }
+    response = NewInvokeFunctionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewListAliasesRequest() (request *ListAliasesRequest) {
     request = &ListAliasesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1091,8 +1143,10 @@ func NewListAsyncEventsResponse() (response *ListAsyncEventsResponse) {
 // 拉取函数异步事件列表
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_INVOKETYPE = "InvalidParameterValue.InvokeType"
 //  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_STATUS = "InvalidParameterValue.Status"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
@@ -1131,6 +1185,7 @@ func NewListFunctionsResponse() (response *ListFunctionsResponse) {
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
 //  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
@@ -1267,6 +1322,7 @@ func NewListTriggersResponse() (response *ListTriggersResponse) {
 //  FAILEDOPERATION_APIGW = "FailedOperation.Apigw"
 //  INVALIDPARAMETERVALUE_FILTERS = "InvalidParameterValue.Filters"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
+//  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
 func (c *Client) ListTriggers(request *ListTriggersRequest) (response *ListTriggersResponse, err error) {
     if request == nil {
         request = NewListTriggersRequest()
@@ -1348,6 +1404,7 @@ func NewPublishLayerVersionResponse() (response *PublishLayerVersionResponse) {
 //  INVALIDPARAMETERVALUE_RUNTIME = "InvalidParameterValue.Runtime"
 //  INVALIDPARAMETERVALUE_STAMP = "InvalidParameterValue.Stamp"
 //  INVALIDPARAMETERVALUE_TEMPCOSOBJECTNAME = "InvalidParameterValue.TempCosObjectName"
+//  INVALIDPARAMETERVALUE_ZIPFILEBASE64BINASCIIERROR = "InvalidParameterValue.ZipFileBase64BinasciiError"
 //  LIMITEXCEEDED_LAYERVERSIONS = "LimitExceeded.LayerVersions"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
@@ -1465,7 +1522,7 @@ func NewPutReservedConcurrencyConfigResponse() (response *PutReservedConcurrency
 }
 
 // PutReservedConcurrencyConfig
-// 设置函数保留并发
+// 设置函数最大独占配额
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEBUGMODESTATUS = "FailedOperation.DebugModeStatus"
@@ -1684,13 +1741,16 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DEBUGMODEUPDATETIMEOUTFAIL = "FailedOperation.DebugModeUpdateTimeOutFail"
-//  FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
 //  FAILEDOPERATION_RESERVEDINPROGRESS = "FailedOperation.ReservedInProgress"
 //  FAILEDOPERATION_UPDATEFUNCTIONCONFIGURATION = "FailedOperation.UpdateFunctionConfiguration"
 //  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_CFSPARAMETERDUPLICATE = "InvalidParameterValue.CfsParameterDuplicate"
+//  INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
 //  INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
+//  INVALIDPARAMETERVALUE_CLSROLE = "InvalidParameterValue.ClsRole"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
 //  INVALIDPARAMETERVALUE_ENVIRONMENT = "InvalidParameterValue.Environment"
@@ -1698,6 +1758,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  INVALIDPARAMETERVALUE_ENVIRONMENTSYSTEMPROTECT = "InvalidParameterValue.EnvironmentSystemProtect"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_HANDLER = "InvalidParameterValue.Handler"
+//  INVALIDPARAMETERVALUE_IDLETIMEOUT = "InvalidParameterValue.IdleTimeOut"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
@@ -1706,6 +1767,8 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  INVALIDPARAMETERVALUE_PUBLICNETCONFIG = "InvalidParameterValue.PublicNetConfig"
 //  INVALIDPARAMETERVALUE_RUNTIME = "InvalidParameterValue.Runtime"
 //  INVALIDPARAMETERVALUE_SYSTEMENVIRONMENT = "InvalidParameterValue.SystemEnvironment"
+//  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
+//  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  LIMITEXCEEDED_EIP = "LimitExceeded.Eip"
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
