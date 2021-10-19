@@ -15,8 +15,8 @@ Provides a resource to manage address template group.
 
 ```hcl
 resource "tencentcloud_address_template_group" "foo" {
-  name      = "group-test"
-  addresses = ["ipl-axaf24151", "ipl-axaf24152"]
+  name         = "group-test"
+  template_ids = ["ipl-axaf24151", "ipl-axaf24152"]
 }
 ```
 

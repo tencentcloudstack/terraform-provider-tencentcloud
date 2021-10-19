@@ -73,12 +73,19 @@ type VpcRouteTableBasicInfo struct {
 }
 
 type VpcSecurityGroupLiteRule struct {
-	action                string
-	cidrIp                string
-	port                  string
-	protocol              string
-	nestedSecurityGroupId string // if rule is a nested security group, other attrs will be ignored
+	action          string
+	cidrIp          string
+	port            string
+	protocol        string
+	addressId       string
+	addressGroupId  string
+	securityGroupId string
 }
+
+var securityGroupIdRE = regexp.MustCompile("^sg-\\w{8}$")
+var ipAddressIdRE = regexp.MustCompile("^ipm-\\w{8}$")
+var ipAddressGroupIdRE = regexp.MustCompile("^ipmg-\\w{8}$")
+var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
 type VpcACLRule struct {
@@ -95,11 +102,56 @@ type VpcEniIP struct {
 }
 
 func (rule VpcSecurityGroupLiteRule) String() string {
-	if rule.nestedSecurityGroupId != "" {
-		return rule.nestedSecurityGroupId
+
+	var source string
+
+	if rule.cidrIp != "" {
+		source = rule.cidrIp
+	}
+	if rule.securityGroupId != "" {
+		source = rule.securityGroupId
+	}
+	if rule.addressId != "" {
+		source = rule.addressId
+	}
+	if rule.addressGroupId != "" {
+		source = rule.addressGroupId
 	}
 
-	return fmt.Sprintf("%s#%s#%s#%s", rule.action, rule.cidrIp, rule.port, rule.protocol)
+	return fmt.Sprintf("%s#%s#%s#%s", rule.action, source, rule.port, rule.protocol)
+}
+
+func getSecurityGroupPolicies(rules []VpcSecurityGroupLiteRule) []*vpc.SecurityGroupPolicy {
+	policies := make([]*vpc.SecurityGroupPolicy, 0)
+
+	for i := range rules {
+		rule := rules[i]
+		policy := &vpc.SecurityGroupPolicy{
+			Protocol: &rule.protocol,
+			Action:   &rule.action,
+		}
+
+		if rule.securityGroupId != "" {
+			policy.SecurityGroupId = &rule.securityGroupId
+		} else if rule.addressId != "" || rule.addressGroupId != "" {
+			policy.AddressTemplate = &vpc.AddressTemplateSpecification{}
+			if rule.addressId != "" {
+				policy.AddressTemplate.AddressId = &rule.addressId
+			}
+			if rule.addressGroupId != "" {
+				policy.AddressTemplate.AddressGroupId = &rule.addressGroupId
+			}
+		} else {
+			policy.CidrBlock = &rule.cidrIp
+		}
+
+		if rule.port != "" {
+			policy.Port = &rule.port
+		}
+
+		policies = append(policies, policy)
+	}
+	return policies
 }
 
 type VpcService struct {
@@ -1447,34 +1499,8 @@ func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId s
 	request := vpc.NewModifySecurityGroupPoliciesRequest()
 	request.SecurityGroupId = &sgId
 	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
-
-	for i := range egress {
-		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  &egress[i].protocol,
-			CidrBlock: &egress[i].cidrIp,
-			Action:    &egress[i].action,
-		}
-
-		if egress[i].port != "" {
-			policy.Port = &egress[i].port
-		}
-
-		request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
-	}
-
-	for i := range ingress {
-		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  &ingress[i].protocol,
-			CidrBlock: &ingress[i].cidrIp,
-			Action:    &ingress[i].action,
-		}
-
-		if ingress[i].port != "" {
-			policy.Port = &ingress[i].port
-		}
-
-		request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
-	}
+	request.SecurityGroupPolicySet.Egress = getSecurityGroupPolicies(egress)
+	request.SecurityGroupPolicySet.Ingress = getSecurityGroupPolicies(ingress)
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1496,26 +1522,10 @@ func (me *VpcService) DeleteLiteRules(ctx context.Context, sgId string, rules []
 	request.SecurityGroupId = &sgId
 	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
-	polices := make([]*vpc.SecurityGroupPolicy, 0, len(rules))
-
-	for i := range rules {
-		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  &rules[i].protocol,
-			CidrBlock: &rules[i].cidrIp,
-			Action:    &rules[i].action,
-		}
-
-		if rules[i].port != "" {
-			policy.Port = &rules[i].port
-		}
-
-		polices = append(polices, policy)
-	}
-
 	if isIngress {
-		request.SecurityGroupPolicySet.Ingress = polices
+		request.SecurityGroupPolicySet.Ingress = getSecurityGroupPolicies(rules)
 	} else {
-		request.SecurityGroupPolicySet.Egress = polices
+		request.SecurityGroupPolicySet.Egress = getSecurityGroupPolicies(rules)
 	}
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1572,7 +1582,6 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 			if nilFields := CheckNil(in, map[string]string{
 				"Protocol":        "protocol",
 				"Port":            "port",
-				"CidrBlock":       "cidr ip",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
@@ -1580,20 +1589,26 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 				log.Printf("[CRITAL]%s %v", logId, err)
 			}
 
-			ingress = append(ingress, VpcSecurityGroupLiteRule{
-				protocol:              strings.ToUpper(*in.Protocol),
-				port:                  *in.Port,
-				cidrIp:                *in.CidrBlock,
-				action:                *in.Action,
-				nestedSecurityGroupId: *in.SecurityGroupId,
-			})
+			liteRule := VpcSecurityGroupLiteRule{
+				protocol:        strings.ToUpper(*in.Protocol),
+				port:            *in.Port,
+				cidrIp:          *in.CidrBlock,
+				action:          *in.Action,
+				securityGroupId: *in.SecurityGroupId,
+			}
+
+			if in.AddressTemplate != nil {
+				liteRule.addressId = *in.AddressTemplate.AddressId
+				liteRule.addressGroupId = *in.AddressTemplate.AddressGroupId
+			}
+
+			ingress = append(ingress, liteRule)
 		}
 
 		for _, eg := range policySet.Egress {
 			if nilFields := CheckNil(eg, map[string]string{
 				"Protocol":        "protocol",
 				"Port":            "port",
-				"CidrBlock":       "cidr ip",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
@@ -1601,13 +1616,20 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 				log.Printf("[CRITAL]%s %v", logId, err)
 			}
 
-			egress = append(egress, VpcSecurityGroupLiteRule{
-				protocol:              strings.ToUpper(*eg.Protocol),
-				port:                  *eg.Port,
-				cidrIp:                *eg.CidrBlock,
-				action:                *eg.Action,
-				nestedSecurityGroupId: *eg.SecurityGroupId,
-			})
+			liteRule := VpcSecurityGroupLiteRule{
+				protocol:        strings.ToUpper(*eg.Protocol),
+				port:            *eg.Port,
+				action:          *eg.Action,
+				cidrIp:          *eg.CidrBlock,
+				securityGroupId: *eg.SecurityGroupId,
+			}
+
+			if eg.AddressTemplate != nil {
+				liteRule.addressId = *eg.AddressTemplate.AddressId
+				liteRule.addressGroupId = *eg.AddressTemplate.AddressGroupId
+			}
+
+			egress = append(egress, liteRule)
 		}
 
 		exist = true
@@ -1806,7 +1828,24 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 		return
 	}
 
-	liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+	var (
+		source string
+		// source is "sg-xxxxxx" / "ipm-xxxxxx" / "ipmg-xxxxxx" formatted
+		isInstanceIdSource = true
+	)
+
+	liteRule.action, source, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+
+	if securityGroupIdRE.MatchString(source) {
+		liteRule.securityGroupId = source
+	} else if ipAddressIdRE.MatchString(source) {
+		liteRule.addressId = source
+	} else if ipAddressGroupIdRE.MatchString(source) {
+		liteRule.addressGroupId = source
+	} else {
+		isInstanceIdSource = false
+		liteRule.cidrIp = source
+	}
 
 	switch liteRule.action {
 	default:
@@ -1815,14 +1854,14 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 	case "ACCEPT", "DROP":
 	}
 
-	if net.ParseIP(liteRule.cidrIp) == nil {
+	if net.ParseIP(liteRule.cidrIp) == nil && !isInstanceIdSource {
 		if _, _, err = net.ParseCIDR(liteRule.cidrIp); err != nil {
 			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", liteRule.cidrIp)
 			return
 		}
 	}
 
-	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(liteRule.port) {
+	if liteRule.port != "ALL" && !portRE.MatchString(liteRule.port) {
 		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
 		return
 	}

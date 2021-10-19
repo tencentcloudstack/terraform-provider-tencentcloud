@@ -124,6 +124,22 @@ func TestAccTencentCloudSecurityGroupLiteRule_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "egress.#", "0"),
 				),
 			},
+			{
+				Config: testAccSecurityGroupLiteRuleUpdate6,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupLiteRuleExists("tencentcloud_security_group_lite_rule.foo", &liteRuleId),
+					resource.TestCheckResourceAttrSet("tencentcloud_security_group_lite_rule.foo", "security_group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "ingress.#", "5"),
+					resource.TestCheckResourceAttrSet("tencentcloud_security_group_lite_rule.foo", "ingress.0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_security_group_lite_rule.foo", "ingress.1"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "ingress.2", "ACCEPT#0.0.0.0/0#80-90#TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "ingress.3", "DROP#8.8.8.8#80,90#UDP"),
+					resource.TestCheckResourceAttrSet("tencentcloud_security_group_lite_rule.foo", "ingress.4"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "egress.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_lite_rule.foo", "egress.0", "ACCEPT#192.168.0.0/16#ALL#TCP"),
+					resource.TestCheckResourceAttrSet("tencentcloud_security_group_lite_rule.foo", "egress.1"),
+				),
+			},
 		},
 	})
 }
@@ -272,5 +288,44 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_security_group_lite_rule" "foo" {
   security_group_id = tencentcloud_security_group.foo.id
+}
+`
+const testAccSecurityGroupLiteRuleUpdate6 = `
+resource "tencentcloud_security_group" "foo" {
+  name = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_security_group" "group1" {
+  name = "tf-test-sec"
+}
+
+resource "tencentcloud_address_template" "addr-foo" {
+  name      = "tf-test-addr"
+  addresses = ["10.0.0.1", "10.0.1.0/24", "10.0.0.1-10.0.0.100"]
+}
+
+resource "tencentcloud_address_template" "addr-bar" {
+  name      = "cam-user-test"
+  addresses = ["10.0.2.1", "10.0.3.0/24"]
+}
+
+resource "tencentcloud_address_template_group" "foo" {
+  name      = "group-test"
+  template_ids = [tencentcloud_address_template.addr-foo.id, tencentcloud_address_template.addr-bar.id]
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+  ingress = [
+    "ACCEPT#${tencentcloud_address_template_group.foo.id}#8080#TCP",
+    "DROP#${tencentcloud_address_template.addr-foo.id}#8080#TCP",
+    "ACCEPT#0.0.0.0/0#80-90#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "ACCEPT#${tencentcloud_security_group.group1.id}#80#TCP",
+  ]
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#${tencentcloud_security_group.group1.id}#ALL#TCP",
+  ]
 }
 `

@@ -2025,13 +2025,12 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			name := dMap["name"].(string)
 			param := dMap["param"].(string)
 			addon := &tke.ExtensionAddon{
-				AddonName: helper.String(name),
+				AddonName:  helper.String(name),
 				AddonParam: helper.String(param),
 			}
 			extensionAddons = append(extensionAddons, addon)
 		}
 	}
-
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags, existInstances, &overrideSettings, iDiskMountSettings, extensionAddons)
