@@ -179,6 +179,11 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
+			"bandwidth_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.",
+			},
 			"internet_bandwidth_max_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -308,6 +313,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	v, ok := d.GetOk("internet_charge_type")
 	bv, bok := d.GetOk("internet_bandwidth_max_out")
+	pv, pok := d.GetOk("bandwidth_package_id")
+
+	chargeType := v.(string)
 
 	//internet charge type
 	if ok || bok {
@@ -316,10 +324,18 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 		request.InternetAccessible = &clb.InternetAccessible{}
 		if ok {
-			request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+			request.InternetAccessible.InternetChargeType = helper.String(chargeType)
 		}
 		if bok {
 			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
+		}
+		if pok {
+			if pok && chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
+			}
+			request.BandwidthPackageId = helper.String(pv.(string))
+		} else if chargeType == INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+			return fmt.Errorf("[CHECK][CLB instance][Create] check: the `bandwidth_package_id` must be specified if internet_charge_type was `BANDWIDTH_PACKAGE`")
 		}
 	}
 
