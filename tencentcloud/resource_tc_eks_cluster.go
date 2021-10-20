@@ -77,24 +77,24 @@ func resourceTencentcloudEksCluster() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Name of EKS cluster.",
 			},
 			"k8s_version": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
 				Description: "Kubernetes version of EKS cluster.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
 				Description: "Vpc Id of EKS cluster.",
 			},
 			"subnet_ids": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Required:    true,
 				Description: "Subnet Ids for EKS cluster.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
