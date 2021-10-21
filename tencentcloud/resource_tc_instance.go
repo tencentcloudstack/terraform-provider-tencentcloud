@@ -846,9 +846,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	cvmService := CvmService{
 		client: client,
 	}
-	tkeService := TkeService{
-		client: client,
-	}
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -866,9 +863,17 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	}
 
-	var tkeImages []string
+	var cvmImages []string
+	var response *cvm.DescribeImagesResponse
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		tkeImages, errRet = tkeService.DescribeImages(ctx)
+		request := cvm.NewDescribeImagesRequest()
+		response, errRet = client.UseCvmClient().DescribeImages(request)
+		if *response.Response.TotalCount > 0 {
+			for i := range response.Response.ImageSet {
+				image := response.Response.ImageSet[i]
+				cvmImages = append(cvmImages, *image.ImageId)
+			}
+		}
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -879,7 +884,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	if d.Get("image_id").(string) == "" || !IsContains(tkeImages, *instance.ImageId) {
+	if d.Get("image_id").(string) == "" || !IsContains(cvmImages, *instance.ImageId) {
 		_ = d.Set("image_id", instance.ImageId)
 	}
 
