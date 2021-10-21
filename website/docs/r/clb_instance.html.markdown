@@ -108,6 +108,7 @@ The following arguments are supported:
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
 * `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
 * `address_ip_version` - (Optional) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
+* `bandwidth_package_id` - (Optional) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
 * `internet_bandwidth_max_out` - (Optional) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
