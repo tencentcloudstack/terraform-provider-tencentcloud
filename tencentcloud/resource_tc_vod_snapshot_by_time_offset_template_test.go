@@ -63,12 +63,17 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateDestroy(s *terraform.State) erro
 		if rs.Type != "tencentcloud_vod_snapshot_by_time_offset_template" {
 			continue
 		}
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
 
-		_, has, err := vodService.DescribeSnapshotByTimeOffsetTemplatesById(ctx, rs.Primary.ID)
+		templates, err := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return nil
 		}
 		return fmt.Errorf("vod snapshot by time offset template still exists: %s", rs.Primary.ID)
@@ -91,11 +96,17 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateExists(n string) resource.TestCh
 		vodService := VodService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, has, err := vodService.DescribeSnapshotByTimeOffsetTemplatesById(ctx, rs.Primary.ID)
+
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
+		templates, err := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return fmt.Errorf("vod snapshot by time offset template doesn't exist: %s", rs.Primary.ID)
 		}
 		return nil

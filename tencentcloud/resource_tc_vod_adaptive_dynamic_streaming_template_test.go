@@ -92,12 +92,17 @@ func testAccCheckVodAdaptiveDynamicStreamingTemplateDestroy(s *terraform.State) 
 		if rs.Type != "tencentcloud_vod_adaptive_dynamic_streaming_template" {
 			continue
 		}
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
 
-		_, has, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesById(ctx, rs.Primary.ID)
+		templates, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return nil
 		}
 		return fmt.Errorf("vod adaptive dynamic streaming template still exists: %s", rs.Primary.ID)
@@ -120,11 +125,17 @@ func testAccCheckVodAdaptiveDynamicStreamingTemplateExists(n string) resource.Te
 		vodService := VodService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, has, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesById(ctx, rs.Primary.ID)
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
+
+		templates, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return fmt.Errorf("vod adaptive dynamic streaming template doesn't exist: %s", rs.Primary.ID)
 		}
 		return nil

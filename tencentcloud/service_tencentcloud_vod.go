@@ -64,10 +64,11 @@ func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx cont
 	return
 }
 
-func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesById(ctx context.Context, templateId string) (templateInfo *vod.AdaptiveDynamicStreamingTemplate, has bool, errRet error) {
+func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.AdaptiveDynamicStreamingTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
+			"sub_appid": subAppId,
 		}
 	)
 
@@ -160,10 +161,11 @@ func (me *VodService) DescribeProcedureTemplatesByFilter(ctx context.Context, fi
 	return
 }
 
-func (me *VodService) DescribeProcedureTemplatesById(ctx context.Context, templateId string) (templateInfo *vod.ProcedureTemplate, has bool, errRet error) {
+func (me *VodService) DescribeProcedureTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.ProcedureTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
 			"name": []string{templateId},
+			"sub_appid": subAppId,
 		}
 	)
 
@@ -256,10 +258,11 @@ func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx context.
 	return
 }
 
-func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesById(ctx context.Context, templateId string) (templateInfo *vod.SnapshotByTimeOffsetTemplate, has bool, errRet error) {
+func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.SnapshotByTimeOffsetTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
+			"sub_appid": subAppId,
 		}
 	)
 
@@ -353,10 +356,11 @@ func (me *VodService) DescribeImageSpriteTemplatesByFilter(ctx context.Context, 
 	return
 }
 
-func (me *VodService) DescribeImageSpriteTemplatesById(ctx context.Context, templateId string) (templateInfo *vod.ImageSpriteTemplate, has bool, errRet error) {
+func (me *VodService) DescribeImageSpriteTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.ImageSpriteTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
+			"sub_appid": subAppId,
 		}
 	)
 

@@ -664,10 +664,11 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		id         = d.Id()
+		subAppId   = d.Get("sub_app_id").(int)
 		client     = meta.(*TencentCloudClient).apiV3Conn
 		vodService = VodService{client: client}
 	)
-	template, has, err := vodService.DescribeProcedureTemplatesById(ctx, id)
+	template, has, err := vodService.DescribeProcedureTemplatesById(ctx, id, subAppId)
 	if err != nil {
 		return err
 	}
