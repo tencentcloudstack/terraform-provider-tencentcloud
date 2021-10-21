@@ -225,10 +225,13 @@ func (me *CvmService) ModifyVpc(ctx context.Context, instanceId, vpcId, subnetId
 	return nil
 }
 
-func (me *CvmService) StopInstance(ctx context.Context, instanceId string) error {
+func (me *CvmService) StopInstance(ctx context.Context, instanceId string, stoppedMode string) error {
 	logId := getLogId(ctx)
 	request := cvm.NewStopInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+	if stoppedMode != "" {
+		request.StoppedMode = &stoppedMode
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().StopInstances(request)
@@ -268,6 +271,23 @@ func (me *CvmService) DeleteInstance(ctx context.Context, instanceId string) err
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().TerminateInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) ResetInstance(ctx context.Context, request *cvm.ResetInstanceRequest) (errRet error) {
+	logId := getLogId(ctx)
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().ResetInstance(request)
+
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

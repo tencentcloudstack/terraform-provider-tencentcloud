@@ -78,14 +78,14 @@ resource "tencentcloud_cdh_instance" "foo" {
   host_type = "HM50"
   charge_type = "PREPAID"
   instance_charge_type_prepaid_period = 1
-  host_name = "test"
+  hostname = "test"
   prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
 
 data "tencentcloud_cdh_instances" "list" {
   availability_zone = var.availability_zone
   host_id = tencentcloud_cdh_instance.foo.id
-  host_name = "test"
+  hostname = "test"
   host_state = "RUNNING"
 }
 
@@ -167,8 +167,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"image_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "The image to use for the instance. Changing `image_id` will cause the instance to be destroyed and re-created.",
+				Description: "The image to use for the instance. Changing `image_id` will cause the instance reset.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
@@ -180,6 +179,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1,
+				Deprecated:  "It has been deprecated from version 1.59.17. Use built-in `count` instead.",
 				ValidateFunc: validateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
@@ -200,8 +200,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
-				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -214,6 +213,15 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Default:     true,
 				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.",
+			},
+			"stopped_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.",
+				ValidateFunc: validateAllowedStringValue([]string{
+					CVM_STOP_MODE_KEEP_CHARGING,
+					CVM_STOP_MODE_STOP_CHARGING,
+				}),
 			},
 			"placement_group_id": {
 				Type:        schema.TypeString,
@@ -234,14 +242,14 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
-				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. Modifying will cause the instance reset.",
 			},
 			"instance_charge_type_prepaid_renew_flag": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
-				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`. Modifying will cause the instance reset.",
 			},
 			"spot_instance_type": {
 				Type:         schema.TypeString,
@@ -439,9 +447,8 @@ func resourceTencentCloudInstance() *schema.Resource {
 						return old == new
 					}
 				},
-				ForceNew:      true,
 				ConflictsWith: []string{"key_name", "password"},
-				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`.",
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.",
 			},
 			"user_data": {
 				Type:          schema.TypeString,
@@ -797,7 +804,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	if !(d.Get("running_flag").(bool)) {
-		err = cvmService.StopInstance(ctx, instanceId)
+		stoppedMode := d.Get("stopped_mode").(string)
+		err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
 		if err != nil {
 			return err
 		}
@@ -1038,6 +1046,152 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.SetPartial("project_id")
 	}
 
+	// Reset Instance
+	// Keep Login Info
+	if d.HasChange("image_id") ||
+		d.HasChange("host_name") ||
+		d.HasChange("disable_security_service") ||
+		d.HasChange("disable_monitor_service") ||
+		d.HasChange("keep_image_login") {
+
+		var updateAttr []string
+
+		request := cvm.NewResetInstanceRequest()
+		request.InstanceId = helper.String(d.Id())
+
+		if v, ok := d.GetOk("image_id"); ok {
+			updateAttr = append(updateAttr, "image_id")
+			request.ImageId = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("hostname"); ok {
+			updateAttr = append(updateAttr, "hostname")
+			request.HostName = helper.String(v.(string))
+		}
+
+		// enhanced service
+		request.EnhancedService = &cvm.EnhancedService{}
+		if d.HasChange("disable_security_service") {
+			updateAttr = append(updateAttr, "disable_security_service")
+			v := d.Get("disable_security_service")
+			securityService := v.(bool)
+			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+				Enabled: &securityService,
+			}
+		}
+
+		if d.HasChange("disable_monitor_service") {
+			updateAttr = append(updateAttr, "disable_monitor_service")
+			v := d.Get("disable_monitor_service")
+			monitorService := !(v.(bool))
+			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+				Enabled: &monitorService,
+			}
+		}
+
+		// Modify or keep login info when instance reset
+		request.LoginSettings = &cvm.LoginSettings{}
+
+		if v, ok := d.GetOk("password"); ok {
+			updateAttr = append(updateAttr, "password")
+			request.LoginSettings.Password = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("key_name"); ok {
+			updateAttr = append(updateAttr, "key_name")
+			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+		}
+
+		if d.HasChange("keep_image_login") {
+			updateAttr = append(updateAttr, "keep_image_login")
+		}
+
+		if v := d.Get("keep_image_login").(bool); v {
+			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+		} else {
+			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		}
+
+		if err := cvmService.ResetInstance(ctx, request); err != nil {
+			return err
+		}
+
+		for _, attr := range updateAttr {
+			d.SetPartial(attr)
+		}
+
+	// Modify Login Info Directly
+	} else {
+		if d.HasChange("password") {
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+			if err != nil {
+				return err
+			}
+			d.SetPartial("password")
+			time.Sleep(10 * time.Second)
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+
+		if d.HasChange("key_name") {
+			old, new := d.GetChange("key_name")
+			oldKeyId := old.(string)
+			keyId := new.(string)
+			if oldKeyId != "" {
+				err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
+				if err != nil {
+					return err
+				}
+				time.Sleep(10 * time.Second)
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+					if errRet != nil {
+						return retryError(errRet, InternalError)
+					}
+					if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+						return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+			}
+
+			if keyId != "" {
+				err = cvmService.BindKeyPair(ctx, keyId, instanceId)
+				if err != nil {
+					return err
+				}
+				time.Sleep(10 * time.Second)
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+					if errRet != nil {
+						return retryError(errRet, InternalError)
+					}
+					if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+						return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+			}
+			d.SetPartial("key_name")
+		}
+	}
+
 	var flag bool
 	if d.HasChange("running_flag") {
 		flag = d.Get("running_flag").(bool)
@@ -1060,7 +1214,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				return err
 			}
 		} else {
-			err = cvmService.StopInstance(ctx, instanceId)
+			stoppedMode := d.Get("stopped_mode").(string)
+			err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
 			if err != nil {
 				return err
 			}
@@ -1131,76 +1286,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-	}
-
-	if d.HasChange("password") {
-		err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
-		if err != nil {
-			return err
-		}
-		d.SetPartial("password")
-		time.Sleep(10 * time.Second)
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("key_name") {
-		old, new := d.GetChange("key_name")
-		oldKeyId := old.(string)
-		keyId := new.(string)
-		if oldKeyId != "" {
-			err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
-			if err != nil {
-				return err
-			}
-			time.Sleep(10 * time.Second)
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return retryError(errRet, InternalError)
-				}
-				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-		}
-
-		if keyId != "" {
-			err = cvmService.BindKeyPair(ctx, keyId, instanceId)
-			if err != nil {
-				return err
-			}
-			time.Sleep(10 * time.Second)
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return retryError(errRet, InternalError)
-				}
-				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-		}
-		d.SetPartial("key_name")
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
