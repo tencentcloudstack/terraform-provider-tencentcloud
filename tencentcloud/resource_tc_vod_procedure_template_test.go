@@ -69,12 +69,17 @@ func testAccCheckVodProcedureTemplateDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vod_procedure_template" {
 			continue
 		}
+		var (
+			filter = map[string]interface{}{
+				"name": []string{rs.Primary.ID},
+			}
+		)
 
-		_, has, err := vodService.DescribeProcedureTemplatesById(ctx, rs.Primary.ID)
+		templates, err := vodService.DescribeProcedureTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 {
 			return nil
 		}
 		return fmt.Errorf("vod procedure template still exists: %s", rs.Primary.ID)
@@ -97,11 +102,16 @@ func testAccCheckVodProcedureTemplateExists(n string) resource.TestCheckFunc {
 		vodService := VodService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, has, err := vodService.DescribeProcedureTemplatesById(ctx, rs.Primary.ID)
+		var (
+			filter = map[string]interface{}{
+				"name": []string{rs.Primary.ID},
+			}
+		)
+		templates, err := vodService.DescribeProcedureTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return fmt.Errorf("vod procedure template doesn't exist: %s", rs.Primary.ID)
 		}
 		return nil

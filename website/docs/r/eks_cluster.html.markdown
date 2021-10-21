@@ -58,17 +58,17 @@ resource "tencentcloud_eks_cluster" "foo" {
 
 The following arguments are supported:
 
+* `cluster_name` - (Required) Name of EKS cluster.
+* `k8s_version` - (Required, ForceNew) Kubernetes version of EKS cluster.
+* `subnet_ids` - (Required) Subnet Ids for EKS cluster.
+* `vpc_id` - (Required, ForceNew) Vpc Id of EKS cluster.
 * `cluster_desc` - (Optional) Description of EKS cluster.
-* `cluster_name` - (Optional) Name of EKS cluster.
 * `dns_servers` - (Optional) List of cluster custom DNS Server info.
 * `enable_vpc_core_dns` - (Optional, ForceNew) Indicates whether to enable dns in user cluster, default value is `true`.
 * `extra_param` - (Optional, ForceNew) Extend parameters.
-* `k8s_version` - (Optional, ForceNew) Kubernetes version of EKS cluster.
 * `need_delete_cbs` - (Optional) Delete CBS after EKS cluster remove.
 * `service_subnet_id` - (Optional) Subnet id of service.
-* `subnet_ids` - (Optional) Subnet Ids for EKS cluster.
 * `tags` - (Optional) Tags of EKS cluster.
-* `vpc_id` - (Optional, ForceNew) Vpc Id of EKS cluster.
 
 The `dns_servers` object supports the following:
 

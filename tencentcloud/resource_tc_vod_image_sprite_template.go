@@ -184,12 +184,13 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		id         = d.Id()
+		subAppId   = d.Get("sub_app_id").(int)
 		client     = meta.(*TencentCloudClient).apiV3Conn
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
 	time.Sleep(30 * time.Second)
-	template, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, id)
+	template, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, id, subAppId)
 	if err != nil {
 		return err
 	}

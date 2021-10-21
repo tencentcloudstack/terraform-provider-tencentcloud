@@ -69,12 +69,17 @@ func testAccCheckVodImageSpriteTemplateDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vod_image_sprite_template" {
 			continue
 		}
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
 
-		_, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, rs.Primary.ID)
+		templates, err := vodService.DescribeImageSpriteTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 {
 			return nil
 		}
 		return fmt.Errorf("vod image sprite template still exists: %s", rs.Primary.ID)
@@ -97,11 +102,16 @@ func testAccCheckVodImageSpriteTemplateExists(n string) resource.TestCheckFunc {
 		vodService := VodService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, rs.Primary.ID)
+		var (
+			filter = map[string]interface{}{
+				"definitions": []string{rs.Primary.ID},
+			}
+		)
+		templates, err := vodService.DescribeImageSpriteTemplatesByFilter(ctx, filter)
 		if err != nil {
 			return err
 		}
-		if !has {
+		if len(templates) == 0 || len(templates) != 1 {
 			return fmt.Errorf("vod image sprite template doesn't exist: %s", rs.Primary.ID)
 		}
 		return nil
