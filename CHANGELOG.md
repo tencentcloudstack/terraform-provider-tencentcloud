@@ -18,13 +18,17 @@ BUGFIXES:
 
 ## 1.59.16 (October 19, 2021)
 
+ENHANCEMENTS:
+
+* Resource `tencentcloud_clb_instance` support `bandwidth_package_id`
+
 COMMON:
 
 * Resource `tencentcloud_eks_cluster` make essential argument required
 
 ## 1.59.15 (October 19, 2021)
 
-ENHANCEMENT:
+ENHANCEMENTS:
 
 * Resource `tencentcloud_scf_function` support scf create by image
 * Resource `tencentcloud_security_group_lite_rule` ingress/egress policy support security group ID, address template as source
