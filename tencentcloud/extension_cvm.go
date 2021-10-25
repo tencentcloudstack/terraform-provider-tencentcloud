@@ -51,6 +51,9 @@ const (
 
 	CVM_ZONE_NOT_SUPPORT_ERROR    = "InvalidParameterValue.ZoneNotSupported"
 	CVM_CLOUD_DISK_SOLD_OUT_ERROR = "ResourceInsufficient.CloudDiskSoldOut"
+
+	CVM_STOP_MODE_KEEP_CHARGING = "KEEP_CHARGING"
+	CVM_STOP_MODE_STOP_CHARGING = "STOP_CHARGING"
 )
 
 var CVM_CHARGE_TYPE = []string{
