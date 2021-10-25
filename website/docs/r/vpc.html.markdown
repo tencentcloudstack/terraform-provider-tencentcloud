@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of VPC.
+* `default_route_table_id` - Default route table id, which created automatically after VPC create.
 * `is_default` - Indicates whether it is the default VPC for this region.
 
 

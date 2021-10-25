@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/tencentyun/cos-go-sdk-v5"
 	"log"
+
+	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

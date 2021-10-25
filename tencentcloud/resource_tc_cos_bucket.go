@@ -200,9 +200,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/tencentyun/cos-go-sdk-v5"
 	"log"
 	"time"
+
+	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

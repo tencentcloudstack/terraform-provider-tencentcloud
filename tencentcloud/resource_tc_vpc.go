@@ -96,8 +96,8 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 				Description: "Creation time of VPC.",
 			},
 			"default_route_table_id": {
-				Type:	    schema.TypeString,
-				Computed:   true,
+				Type:        schema.TypeString,
+				Computed:    true,
 				Description: "Default route table id, which created automatically after VPC create.",
 			},
 		},
@@ -216,7 +216,6 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 
 			tags[*tag.Key] = *tag.Value
 		}
-
 
 		_ = d.Set("name", info.name)
 		_ = d.Set("cidr_block", info.cidr)

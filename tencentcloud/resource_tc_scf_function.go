@@ -32,13 +32,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 	"time"
 	"unicode"
+
+	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -234,44 +235,43 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 
 			// image
 			"image_config": {
-				Type: schema.TypeList,
-				Optional: true,
+				Type:          schema.TypeList,
+				Optional:      true,
 				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region", "zip_file"},
-				Description: "Image of the SCF function, conflict with ``.",
+				Description:   "Image of the SCF function, conflict with ``.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"image_type": {
-							Type: schema.TypeString,
-							Required: true,
+							Type:         schema.TypeString,
+							Required:     true,
 							ValidateFunc: validateAllowedStringValue([]string{"personal", "enterprise"}),
-							Description: "The image type. personal or enterprise.",
+							Description:  "The image type. personal or enterprise.",
 						},
 						"image_uri": {
-							Type: schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
 							Description: "The uri of image.",
 						},
 						"registry_id": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The registry id of TCR. When image type is enterprise, it must be set.",
 						},
 						"entry_point": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The entrypoint of app.",
 						},
 						"command": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The command of entrypoint.",
 						},
 						"args": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "the parameters of command.",
 						},
-
 					},
 				},
 			},
@@ -555,12 +555,12 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			args := value["args"].(string)
 
 			config := &scf.ImageConfig{
-				ImageType : &imageType,
-				ImageUri: &imageUri,
+				ImageType:  &imageType,
+				ImageUri:   &imageUri,
 				RegistryId: &registryId,
 				EntryPoint: &entryPoint,
-				Command: &command,
-				Args: &args,
+				Command:    &command,
+				Args:       &args,
 			}
 			imageConfigs = append(imageConfigs, config)
 		}
@@ -852,12 +852,12 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				args := value["args"].(string)
 
 				config := &scf.ImageConfig{
-					ImageType : &imageType,
-					ImageUri: &imageUri,
+					ImageType:  &imageType,
+					ImageUri:   &imageUri,
 					RegistryId: &registryId,
 					EntryPoint: &entryPoint,
-					Command: &command,
-					Args: &args,
+					Command:    &command,
+					Args:       &args,
 				}
 				imageConfigs = append(imageConfigs, config)
 			}

@@ -1,22 +1,50 @@
+## 1.59.18 (October 25, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_instance` support instance reset and pay as you go
+* Resource `tencentcloud_vpc` support `default_route_table_id`
+* DataSource `tencentcloud_vpc_route_tables` add example usage for fetching default route table
+
+DEPRECATED:
+
+* Resource `tencentcloud_instance` argument `instance_count` was deprecated, replace by built-in `count`
+
+## 1.59.17 (October 20, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud_vod_xxx` fix resource related to vod, while user create vod resource use sub app id.
+
+## 1.59.16 (October 19, 2021)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_clb_instance` support `bandwidth_package_id`
+
+COMMON:
+
+* Resource `tencentcloud_eks_cluster` make essential argument required
+
 ## 1.59.15 (October 19, 2021)
 
-ENHANCEMENT:
+ENHANCEMENTS:
 
-* resource `resource_tc_scf_function` support scf create by image
-* resource `resource_tc_security_group_lite_rule` ingress/egress policy support security group ID, address template as source
+* Resource `tencentcloud_scf_function` support scf create by image
+* Resource `tencentcloud_security_group_lite_rule` ingress/egress policy support security group ID, address template as source
 
 
 BUGFIXES:
 
-* resource `tencentcloud_clb_listener` skip empty import set
-* resource `resource_tc_address_template_group` fix incorrect field `addresses` to `template_ids` in example usage.
+* Resource `tencentcloud_clb_listener` skip empty import set
+* Resource `tencentcloud_address_template_group` fix incorrect field `addresses` to `template_ids` in example usage.
 
 ## 1.59.14 (October 19, 2021)
 
 BUGFIXES:
 
-* resource `tencentcloud_kubernetes_auth_attachment` fix official document synchronous error.  
-* resource `resource_tc_elasticsearch_instance` make zone and subnet optional for multi az case.
+* Resource `tencentcloud_kubernetes_auth_attachment` fix official document synchronous error.  
+* Resource `tencentcloud_elasticsearch_instance` make zone and subnet optional for multi az case.
 
 COMMON:
 
@@ -26,7 +54,7 @@ COMMON:
 
 ENHANCEMENTS:
 
-* resource `resource_tc_kubernetes_cluster` support argument `extension_addon`
+* Resource `tencentcloud_kubernetes_cluster` support argument `extension_addon`
 
 ## 1.59.12 (October 15, 2021)
 
@@ -48,42 +76,42 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_tcr_vpc_attachment` support argument `region_name`
+* Resource `tencentcloud_tcr_vpc_attachment` support argument `region_name`
 
 ## 1.59.10 (October, 9, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_cos_bucket_object` support cos object tags.
+* Resource `tencentcloud_cos_bucket_object` support cos object tags.
 
 BUGFIXES:
 
-* Resource `resource_tc_kubernetes_cluster` update authentication options immediately after create
+* Resource `tencentcloud_kubernetes_cluster` update authentication options immediately after create
 
 ## 1.59.9 (October, 9, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_kubernetes_cluster` cluster support authentication options.
+* Resource `tencentcloud_kubernetes_cluster` cluster support authentication options.
 
 
 ## 1.59.8 (October, 6, 2021)
 
 BUGFIXES:
 
-* Resource `resource_tc_tcr_vpc_attachment` pass region_id for delete if provided.
+* Resource `tencentcloud_tcr_vpc_attachment` pass region_id for delete if provided.
 
 ## 1.59.7 (October, 5, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_tcr_vpc_attachment` tcr vpc attachment support region.
+* Resource `tencentcloud_tcr_vpc_attachment` tcr vpc attachment support region.
  
 ## 1.59.6 (September 28, 2021)
 
 BUGFIXES:
 
-* Resource `resource_tc_kubernetes_node_pool` fix termination_policies argument mistake
+* Resource `tencentcloud_kubernetes_node_pool` fix termination_policies argument mistake
 
 DEPRECATED:
 
@@ -93,21 +121,21 @@ DEPRECATED:
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_kubernetes_node_pool_test` extend relative auto-scaling group arguments in node pool resource
+* TestCase `TestAccTencentCloudTkeNodePoolResource` extend relative auto-scaling group arguments in node pool resource
 
 DEPRECATED:
 
-* Resource `resource_tc_cam_group_membership` argument `user_ids` was deprecated, replace by `user_names`
-* Resource `resource_tc_cam_user_policy_attachment` argument `user_id` was deprecated, replace by `user_name`
+* Resource `tencentcloud_cam_group_membership` argument `user_ids` was deprecated, replace by `user_names`
+* Resource `tencentcloud_cam_user_policy_attachment` argument `user_id` was deprecated, replace by `user_name`
 
 
 ## 1.59.4 (September 24, 2021)
 
 BUGFIXES:
-* Resource `resource_tc_tcr_instance` support modify tags
+* Resource `tencentcloud_tcr_instance` support modify tags
 * Resource `service_tencentcloud_postgresql` support security group
 * Resource `service_tencentcloud_monitor` fix binding policy query limit
-* Resource `resource_tc_api_gateway_api` fix destroy limitNumber
+* Resource `tencentcloud_api_gateway_api` fix destroy limitNumber
 
 
 ## 1.59.2 (September 18, 2021)
@@ -118,15 +146,15 @@ BUGFIXES:
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_cdn_domain` support `ipv6_access_switch` config
+* Resource `tencentcloud_cdn_domain` support `ipv6_access_switch` config
 
 ## 1.59.1 (September 15, 2021)
 
 BUGFIXES:
 
-* Resource `tencentcloud/resource_tc_instance` remove last_update_status judge
-* Resource `tencentcloud/resource_tc_instance` fix DescribeInstanceById return LatestOperationState
-* Resource `tencentcloud/resource_tc_clb_attachment` clb_attachment check instances before unbind target groups
+* Resource `tencentcloud_instance` remove last_update_status judge
+* Resource `tencentcloud_instance` fix DescribeInstanceById return LatestOperationState
+* Resource `tencentcloud_clb_attachment` clb_attachment check instances before unbind target groups
 
 CHORE:
 
@@ -137,43 +165,43 @@ CHORE:
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_redis_backup_config.go ` change backup_period to optional
-* Resource `resource_tc_scf_function` enable public net config and eip config
-* Resource `resource_tc_cos_bucket` support MAZ, ACL XML body, Origin-Pull rules and origin domain rules
+* Resource `tencentcloud_redis_backup_config ` change backup_period to optional
+* Resource `tencentcloud_scf_function` enable public net config and eip config
+* Resource `tencentcloud_cos_bucket` support MAZ, ACL XML body, Origin-Pull rules and origin domain rules
 
 ## 1.58.4 (Aug 24, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_kubernetes_node_pool` support `backup_instance_type` for `auto_scaling_config`
+* Resource `tencentcloud_kubernetes_node_pool` support `backup_instance_type` for `auto_scaling_config`
 
 ## 1.58.3 (Aug 18, 2021)
 
 ENHANCEMENTS:
 
 * Extend kubernetes node instance disk allow types
-* Resource `resource_tc_kubernetes_cluster_attachment` add `disk_partition` field
+* Resource `tencentcloud_kubernetes_cluster_attachment` add `disk_partition` field
 
 BUGFIXES:
 
-* Resource `resource_tc_kubernetes_cluster` fix `auto_format_and_mount` default value to `false`
+* Resource `tencentcloud_kubernetes_cluster` fix `auto_format_and_mount` default value to `false`
 
 ## 1.58.2 (Aug 18, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_kubernetes_cluster` tke instance creation - add RuntimeVersion param
-* Resource `resource_tc_kubernetes_cluster` extend worker instance data disk mount settings
+* Resource `tencentcloud_kubernetes_cluster` tke instance creation - add RuntimeVersion param
+* Resource `tencentcloud_kubernetes_cluster` extend worker instance data disk mount settings
 
 ## 1.58.1 (Aug 17, 2021)
 
 ENHANCEMENTS:
 
-* Resource `resource_tc_mysql_instance` add cpu params for mysql
+* Resource `tencentcloud_mysql_instance` add cpu params for mysql
 
 BUG FIXES:
 
-* Resource `resource_tc_instance` fix read cvm data_disks bug
+* Resource `tencentcloud_instance` fix read cvm data_disks bug
 
 ## 1.58.0 (Aug 11, 2021)
 
@@ -186,8 +214,8 @@ FEATURES:
 
 BUG FIXES:
 
-* Resource `data_source_tc_elasticsearch_instances` skip kibana node info record after elastic search instance create
-* Resource `resource_tc_postgresql_instance` skip kibana node info record after elastic search instance create
+* DataSource `data_source_tc_elasticsearch_instances` skip kibana node info record after elastic search instance create
+* Resource `tencentcloud_postgresql_instance` skip kibana node info record after elastic search instance create
 
 ## 1.57.2 (Aug 7, 2021)
 
@@ -261,7 +289,7 @@ BUG FIXES
 
 BUG FIXES:
 
-* Resource `tencentcloud_instance` fix words spell, in tencendcloud/resource_tc_instance.go L45, data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name change to data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name".
+* Resource `tencentcloud_instance` fix words spell, in tencendcloud/tencentcloud_instance.go L45, data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name change to data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name".
 * Resource `tencentcloud_kubernetes_clusters` fix the description of is_non_static_ip_mode
 
 ENHANCEMENTS:

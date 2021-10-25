@@ -179,7 +179,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1,
-				Deprecated:  "It has been deprecated from version 1.59.17. Use built-in `count` instead.",
+				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
 				ValidateFunc: validateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
@@ -1124,7 +1124,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			d.SetPartial(attr)
 		}
 
-	// Modify Login Info Directly
+		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
 			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
