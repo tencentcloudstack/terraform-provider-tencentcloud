@@ -24,6 +24,7 @@ func TestAccTencentCloudVpcV3Basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "default_route_table_id"),
 				),
 			},
 			{
