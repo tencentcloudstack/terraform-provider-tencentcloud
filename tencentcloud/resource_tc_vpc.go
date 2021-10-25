@@ -95,6 +95,11 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Creation time of VPC.",
 			},
+			"default_route_table_id": {
+				Type:	    schema.TypeString,
+				Computed:   true,
+				Description: "Default route table id, which created automatically after VPC create.",
+			},
 		},
 	}
 }
@@ -186,6 +191,20 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 			return resource.NonRetryableError(errRet)
 		}
 
+		routeTables, err := service.DescribeRouteTables(ctx, "", "", d.Id(), nil, helper.Bool(true), "")
+
+		if err != nil {
+			log.Printf("[WARN] Describe default Route Table error: %s", err.Error())
+		}
+
+		for i := range routeTables {
+			routeTable := routeTables[i]
+			if routeTable.isDefault {
+				_ = d.Set("default_route_table_id", routeTable.routeTableId)
+				break
+			}
+		}
+
 		tags := make(map[string]string, len(info.tags))
 		for _, tag := range info.tags {
 			if tag.Key == nil {
@@ -197,6 +216,7 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 
 			tags[*tag.Key] = *tag.Value
 		}
+
 
 		_ = d.Set("name", info.name)
 		_ = d.Set("cidr_block", info.cidr)
