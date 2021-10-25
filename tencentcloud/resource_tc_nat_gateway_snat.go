@@ -121,10 +121,11 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudNatGatewaySnat() *schema.Resource {

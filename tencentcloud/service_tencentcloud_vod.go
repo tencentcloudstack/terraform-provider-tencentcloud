@@ -68,7 +68,7 @@ func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesById(ctx context.
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
-			"sub_appid": subAppId,
+			"sub_appid":   subAppId,
 		}
 	)
 
@@ -164,7 +164,7 @@ func (me *VodService) DescribeProcedureTemplatesByFilter(ctx context.Context, fi
 func (me *VodService) DescribeProcedureTemplatesById(ctx context.Context, templateId string, subAppId int) (templateInfo *vod.ProcedureTemplate, has bool, errRet error) {
 	var (
 		filter = map[string]interface{}{
-			"name": []string{templateId},
+			"name":      []string{templateId},
 			"sub_appid": subAppId,
 		}
 	)
@@ -262,7 +262,7 @@ func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesById(ctx context.Cont
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
-			"sub_appid": subAppId,
+			"sub_appid":   subAppId,
 		}
 	)
 
@@ -360,7 +360,7 @@ func (me *VodService) DescribeImageSpriteTemplatesById(ctx context.Context, temp
 	var (
 		filter = map[string]interface{}{
 			"definitions": []string{templateId},
-			"sub_appid": subAppId,
+			"sub_appid":   subAppId,
 		}
 	)
 

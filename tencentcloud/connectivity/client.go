@@ -2,10 +2,11 @@ package connectivity
 
 import (
 	"fmt"
-	"github.com/tencentyun/cos-go-sdk-v5"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -43,8 +44,8 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
@@ -153,8 +154,8 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string) *cos.Client {
 	me.tencentCosConn = cos.NewClient(baseUrl, &http.Client{
 		Timeout: 100 * time.Second,
 		Transport: &cos.AuthorizationTransport{
-			SecretID: me.Credential.SecretId,
-			SecretKey: me.Credential.SecretKey,
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
 			SessionToken: me.Credential.Token,
 		},
 	})
