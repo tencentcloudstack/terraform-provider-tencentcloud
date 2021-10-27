@@ -488,6 +488,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199 h1:2js
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199/go.mod h1:f5GhbJyuYQBzRaDHGe3I4U9utb0Pmx2NlI+XcqSQRp0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.199 h1:/nt4GJuPxGyM2RSudKOsuq1dG52U67VWuH+meXH2D+k=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.199/go.mod h1:aMwrB/fRSIS8IFabcF0hfRC89y76DptUknUjAf1jlHE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.256 h1:ZuLw+tA9BunYh68AZ1c4tuRJOwsSRKgyf5HYRWyp2gA=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.256/go.mod h1:aMwrB/fRSIS8IFabcF0hfRC89y76DptUknUjAf1jlHE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199 h1:Opze570l6JbOc+/nYftYmheyCU9omz+emNJpDUBYYFQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199/go.mod h1:Rh/4NXBd0aqmaRGDYcW4gL2Zi8JShGZiB23zrfVaS90=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199 h1:lXCng7HQqvubF7uwa7x5COsDZlJEjEJ/RBpaeYGc0+I=

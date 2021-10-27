@@ -103,6 +103,10 @@ type AlarmHistory struct {
 	// 指标信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetricsInfo []*AlarmHistoryMetric `json:"MetricsInfo,omitempty" name:"MetricsInfo"`
+
+	// 告警实例的维度信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Dimensions *string `json:"Dimensions,omitempty" name:"Dimensions"`
 }
 
 type AlarmHistoryMetric struct {
@@ -1756,6 +1760,9 @@ type DescribeAlarmNoticesRequest struct {
 
 	// 接收组列表
 	GroupIds []*int64 `json:"GroupIds,omitempty" name:"GroupIds"`
+
+	// 根据通知模板 id 过滤，空数组/不传则不过滤
+	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
 }
 
 func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
@@ -1779,6 +1786,7 @@ func (r *DescribeAlarmNoticesRequest) FromJsonString(s string) error {
 	delete(f, "ReceiverType")
 	delete(f, "UserIds")
 	delete(f, "GroupIds")
+	delete(f, "NoticeIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmNoticesRequest has unknown keys!", "")
 	}
@@ -1871,6 +1879,9 @@ type DescribeAlarmPoliciesRequest struct {
 
 	// 传 1 查询未配置通知规则的告警策略；不传或传其他数值，查询所有策略。
 	NotBindingNoticeRule *int64 `json:"NotBindingNoticeRule,omitempty" name:"NotBindingNoticeRule"`
+
+	// 实例分组id
+	InstanceGroupId *int64 `json:"InstanceGroupId,omitempty" name:"InstanceGroupId"`
 }
 
 func (r *DescribeAlarmPoliciesRequest) ToJsonString() string {
@@ -1902,6 +1913,7 @@ func (r *DescribeAlarmPoliciesRequest) FromJsonString(s string) error {
 	delete(f, "RuleTypes")
 	delete(f, "Enable")
 	delete(f, "NotBindingNoticeRule")
+	delete(f, "InstanceGroupId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmPoliciesRequest has unknown keys!", "")
 	}
@@ -2069,7 +2081,7 @@ func (r *DescribeAlertRulesResponse) FromJsonString(s string) error {
 type DescribeAllNamespacesRequest struct {
 	*tchttp.BaseRequest
 
-	// 根据使用场景过滤 "ST_DASHBOARD"=Dashboard类型 或 "ST_ALARM"=告警类型
+	// 根据使用场景过滤 目前仅有"ST_ALARM"=告警类型
 	SceneType *string `json:"SceneType,omitempty" name:"SceneType"`
 
 	// 固定值，为"monitor"
@@ -2441,13 +2453,16 @@ type DescribeBindingPolicyObjectListRequest struct {
 	// 固定值，为"monitor"
 	Module *string `json:"Module,omitempty" name:"Module"`
 
-	// 策略组id
+	// 策略组id，如果有形如 policy-xxxx 的 id，请填到 PolicyId 字段中，本字段填 0
 	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 分页参数，每页返回的数量，取值1~100，默认20
+	// 告警策略id，形如 policy-xxxx，如果填入，则GroupId可以填0
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 每次返回的数量，取值1~100，默认20
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 分页参数，页偏移量，从0开始计数，默认0
+	// 偏移量，从0开始计数，默认0。举例来说，参数 Offset=0&Limit=20 返回第 0 到 19 项，Offset=20&Limit=20 返回第 20 到 39 项，以此类推
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
 	// 筛选对象的维度信息
@@ -2468,6 +2483,7 @@ func (r *DescribeBindingPolicyObjectListRequest) FromJsonString(s string) error 
 	}
 	delete(f, "Module")
 	delete(f, "GroupId")
+	delete(f, "PolicyId")
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "Dimensions")
@@ -3950,6 +3966,14 @@ type MetricSet struct {
 
 	// 维度描述信息
 	Dimensions []*DimensionsDesc `json:"Dimensions,omitempty" name:"Dimensions"`
+
+	// 指标中文名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricCName *string `json:"MetricCName,omitempty" name:"MetricCName"`
+
+	// 指标英文名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricEName *string `json:"MetricEName,omitempty" name:"MetricEName"`
 }
 
 type MidQueryCondition struct {

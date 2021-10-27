@@ -1,6 +1,8 @@
 /*
 Provides a policy group resource for monitor.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_alarm_policy.
+
 Example Usage
 
 ```hcl
@@ -64,6 +66,7 @@ import (
 
 func resourceTencentMonitorPolicyGroup() *schema.Resource {
 	return &schema.Resource{
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.59.18. Please use 'tencentcloud_alarm_policy' instead.",
 		Create: resourceTencentMonitorPolicyGroupCreate,
 		Read:   resourceTencentMonitorPolicyGroupRead,
 		Update: resourceTencentMonitorPolicyGroupUpdate,

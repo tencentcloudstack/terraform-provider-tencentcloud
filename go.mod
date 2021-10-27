@@ -36,7 +36,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.256
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.267
