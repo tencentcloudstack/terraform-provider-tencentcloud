@@ -650,7 +650,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 
 		d.SetPartial("mem_size")
-		d.SetPartial("replica_zone_ids")
 	}
 
 	if d.HasChange("password") {
