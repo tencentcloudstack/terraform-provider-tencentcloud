@@ -373,14 +373,14 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		// insert master node
 		nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
 			NodeType: helper.Int64(0),
-			ZoneId: helper.Int64Uint64(masterZoneId),
+			ZoneId:   helper.Int64Uint64(masterZoneId),
 		})
 
 		for _, v := range zoneIds {
 			id := v.(int)
 			nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
 				NodeType: helper.Int64(1),
-				ZoneId: helper.IntUint64(id),
+				ZoneId:   helper.IntUint64(id),
 			})
 		}
 	}
@@ -595,7 +595,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		d.SetPartial("name")
 	}
 
-	if d.HasChange("mem_size"){
+	if d.HasChange("mem_size") {
 
 		oldInter, newInter := d.GetChange("mem_size")
 		newMemSize := newInter.(int)

@@ -153,24 +153,24 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`.",
 						},
 						"node_info": {
-							Type:		 schema.TypeList,
-							Computed: 	 true,
+							Type:        schema.TypeList,
+							Computed:    true,
 							Description: "List of instance node information. Currently, information about the node type (master or replica) and node availability zone can be passed in.",
-							Elem:        &schema.Resource{
+							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"master": {
-										Type: schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
 										Description: "Indicates whether the node is master.",
 									},
 									"id": {
-										Type:	schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
 										Description: "ID of the master or replica node.",
 									},
 									"zone_id": {
-										Type: schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
 										Description: "ID of the availability zone of the master or replica node.",
 									},
 								},
