@@ -19,6 +19,39 @@ resource "tencentcloud_redis_instance" "redis_instance_test_2" {
 }
 ```
 
+Using multi replica zone set
+```
+data "tencentcloud_availability_zones" "az" {
+
+}
+
+variable "redis_replicas_num" {
+  default = 3
+}
+
+resource "tencentcloud_redis_instance" "red1" {
+  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
+  charge_type        = "POSTPAID"
+  mem_size           = 1024
+  name               = "test-redis"
+  port               = 6379
+  project_id         = 0
+  redis_replicas_num = var.redis_replicas_num
+  redis_shard_num    = 1
+  security_groups    = [
+    "sg-d765yoec",
+  ]
+  subnet_id          = "subnet-ie01x91v"
+  type_id            = 6
+  vpc_id             = "vpc-k4lrsafc"
+  password = "a12121312334"
+
+  replica_zone_ids = [
+    for i in range(var.redis_replicas_num)
+    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id ]
+}
+```
+
 Import
 
 Redis instance can be imported, e.g.
@@ -94,6 +127,13 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:    true,
 				Default:     1,
 				Description: "The number of instance copies. This is not required for standalone and master slave versions.",
+			},
+			"replica_zone_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions.",
+				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
 			"type": {
 				Type:     schema.TypeString,
@@ -203,7 +243,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"force_delete": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
 				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.",
 			},
 		},
@@ -320,6 +359,32 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	nodeInfo := make([]*redis.RedisNodeInfo, 0)
+	if raw, ok := d.GetOk("replica_zone_ids"); ok {
+		zoneIds := raw.([]interface{})
+
+		masterZoneId, err := service.getZoneId(availabilityZone)
+		if err != nil {
+			return err
+		}
+
+		// insert master node
+		nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
+			NodeType: helper.Int64(0),
+			ZoneId:   helper.Int64Uint64(masterZoneId),
+		})
+
+		for _, v := range zoneIds {
+			id := v.(int)
+			nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
+				NodeType: helper.Int64(1),
+				ZoneId:   helper.IntUint64(id),
+			})
+		}
+	}
+
 	instanceIds, err := redisService.CreateInstances(ctx,
 		availabilityZone,
 		typeId,
@@ -335,6 +400,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		redisReplicasNum,
 		chargeTypeID,
 		chargePeriod,
+		nodeInfo,
 	)
 
 	if err != nil {
@@ -429,8 +495,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	//not set field type_id
-	if d.Get("type_id").(int) == 0 {
+	// not set field type_id
+	// process import case
+	if d.Get("type_id").(int) == 0 && d.Get("type").(string) != "" {
 		typeName := REDIS_NAMES[*info.Type]
 		if typeName == "" {
 			err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
@@ -442,14 +509,8 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("type_id", info.Type)
 	}
 
-	if d.Get("redis_shard_num").(int) != 0 {
-		_ = d.Set("redis_shard_num", info.RedisShardNum)
-	}
-
-	if d.Get("redis_replicas_num").(int) != 0 {
-		_ = d.Set("redis_replicas_num", info.RedisReplicasNum)
-	}
-
+	_ = d.Set("redis_shard_num", info.RedisShardNum)
+	_ = d.Set("redis_replicas_num", info.RedisReplicasNum)
 	_ = d.Set("availability_zone", zoneName)
 	_ = d.Set("mem_size", info.RedisShardSize)
 	_ = d.Set("vpc_id", info.UniqVpcId)
@@ -465,6 +526,21 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		}
 		if len(securityGroups) > 0 {
 			_ = d.Set("security_groups", securityGroups)
+		}
+	}
+
+	if info.NodeSet != nil {
+		var zoneIds []uint64
+		for i := range info.NodeSet {
+			nodeInfo := info.NodeSet[i]
+			if *nodeInfo.NodeType == 0 {
+				continue
+			}
+			zoneIds = append(zoneIds, *nodeInfo.ZoneId)
+		}
+
+		if err := d.Set("replica_zone_ids", zoneIds); err != nil {
+			log.Printf("[WARN] replica_zone_ids set error: %s", err.Error())
 		}
 	}
 

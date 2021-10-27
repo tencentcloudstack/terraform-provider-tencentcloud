@@ -930,7 +930,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_group":                    resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":                  resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_binding_receiver":                resourceTencentMonitorBindingAlarmReceiver(),
-			"tencentcloud_monitor_alarm_policy":					resourceTencentMonitorAlarmPolicy(),
+			"tencentcloud_monitor_alarm_policy":                    resourceTencentMonitorAlarmPolicy(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),

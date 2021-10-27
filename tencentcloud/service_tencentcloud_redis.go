@@ -37,6 +37,7 @@ type TencentCloudRedisDetail struct {
 	CreateTime       string
 	Tags             map[string]string
 	BillingMode      string
+	NodeInfo         []map[string]interface{}
 }
 
 func (me *RedisService) fullZoneId() (errRet error) {
@@ -196,6 +197,23 @@ needMoreItems:
 		if item.RedisShardNum != nil {
 			instance.RedisShardNum = *item.RedisShardNum
 		}
+
+		if item.NodeSet != nil {
+			nodeInfos := make([]map[string]interface{}, 0, len(item.NodeSet))
+			for i := range item.NodeSet {
+				dMap := make(map[string]interface{})
+				nodeInfo := item.NodeSet[i]
+				if *nodeInfo.NodeType == 0 {
+					dMap["master"] = true
+				} else {
+					dMap["master"] = false
+				}
+				dMap["id"] = *nodeInfo.NodeId
+				dMap["zone_id"] = *nodeInfo.ZoneId
+				nodeInfos = append(nodeInfos, dMap)
+			}
+			instance.NodeInfo = nodeInfos
+		}
 		instance.Tags = make(map[string]string, len(item.InstanceTags))
 		for _, tag := range item.InstanceTags {
 			if tag.TagKey == nil {
@@ -226,7 +244,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	memSize, projectId, port int64,
 	securityGroups []string,
 	redisShardNum,
-	redisReplicasNum int, chargeTypeID int64, chargePeriod uint64) (instanceIds []*string, errRet error) {
+	redisReplicasNum int, chargeTypeID int64, chargePeriod uint64, nodeInfo []*redis.RedisNodeInfo) (instanceIds []*string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
@@ -293,6 +311,11 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 			request.SecurityGroupIdList = append(request.SecurityGroupIdList, &securityGroups[v])
 		}
 	}
+
+	if len(nodeInfo) > 0 {
+		request.NodeSet = nodeInfo
+	}
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().CreateInstances(request)
 	if err != nil {

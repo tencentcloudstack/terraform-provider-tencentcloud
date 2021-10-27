@@ -44,6 +44,10 @@ In addition to all arguments above, the following attributes are exported:
   * `ip` - IP address of an instance.
   * `mem_size` - Memory size in MB.
   * `name` - Name of a redis instance.
+  * `node_info` - List of instance node information. Currently, information about the node type (master or replica) and node availability zone can be passed in.
+    * `id` - ID of the master or replica node.
+    * `master` - Indicates whether the node is master.
+    * `zone_id` - ID of the availability zone of the master or replica node.
   * `port` - The port used to access a redis instance.
   * `project_id` - ID of the project to which a redis instance belongs.
   * `redis_id` - ID of a redis instance.
