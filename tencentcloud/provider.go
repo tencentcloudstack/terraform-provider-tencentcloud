@@ -401,6 +401,7 @@ Serverless Cloud Function(SCF)
   Resource
     tencentcloud_scf_function
     tencentcloud_scf_namespace
+	tencentcloud_scf_layer
 
 SQLServer
   Data Source
@@ -922,6 +923,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_saml_provider":                       resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_scf_function":                            resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                           resourceTencentCloudScfNamespace(),
+			"tencentcloud_scf_layer":                               resourceTencentCloudScfLayer(),
 			"tencentcloud_tcaplus_cluster":                         resourceTencentCloudTcaplusCluster(),
 			"tencentcloud_tcaplus_tablegroup":                      resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                             resourceTencentCloudTcaplusIdl(),

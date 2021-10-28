@@ -39,7 +39,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.256
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.267
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.199
