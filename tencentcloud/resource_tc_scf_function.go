@@ -187,6 +187,25 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Default:     false,
 				Description: "Enable L5 for SCF function, default is `false`.",
 			},
+			"layers": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: "The list of association layers.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"layer_name": {
+							Type: schema.TypeString,
+							Required: true,
+							Description: "The name of Layer.",
+						},
+						"layer_version": {
+							Type: schema.TypeInt,
+							Required: true,
+							Description: "The version of layer.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -490,6 +509,18 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		functionInfo.cosBucketRegion = helper.String(raw.(string))
 	}
 
+	if v, ok := d.GetOk("layers"); ok {
+		layers := make([]*scf.LayerVersionSimple, 0, 10)
+		for _, item := range v.([]interface{}) {
+			m := item.(map[string]interface{})
+			layer := scf.LayerVersionSimple{}
+			layer.LayerName = helper.String(m["layer_name"].(string))
+			layer.LayerVersion = helper.IntInt64(m["layer_version"].(int))
+			layers = append(layers, &layer)
+		}
+		functionInfo.layers = layers
+	}
+
 	enablePublicNet, enablePublicNetOk := d.GetOk("enable_public_net")
 	enableEipConfig, enableEipConfigOk := d.GetOk("enable_eip_config")
 
@@ -565,9 +596,9 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			imageConfigs = append(imageConfigs, config)
 		}
 		codeType = scfFunctionImageCode
+		functionInfo.imageConfig = imageConfigs[0]
 	}
 
-	functionInfo.imageConfig = imageConfigs[0]
 
 	switch codeType {
 	case scfFunctionCosCode:

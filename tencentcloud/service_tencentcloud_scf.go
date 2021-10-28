@@ -27,6 +27,7 @@ type scfFunctionInfo struct {
 	clsLogsetId     *string
 	clsTopicId      *string
 	namespace       *string
+	layers          []*scf.LayerVersionSimple
 	l5Enable        *bool
 	publicNetConfig *scf.PublicNetConfigIn
 
@@ -81,6 +82,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.Role = info.role
 	request.ClsLogsetId = info.clsLogsetId
 	request.ClsTopicId = info.clsTopicId
+	request.Layers =info.layers
 	request.Type = helper.String(SCF_FUNCTION_TYPE_EVENT)
 
 	request.Code = &scf.Code{
