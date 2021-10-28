@@ -32,7 +32,13 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional) Control public network access.
+* `security_policy` - (Optional) Public network access allowlist policies of the TCR instance.
 * `tags` - (Optional) The available tags within this TCR instance.
+
+The `security_policy` object supports the following:
+
+* `cidr_block` - (Optional) The public network IP address of the access source.
+* `description` - (Optional) Remarks of policy.
 
 ## Attributes Reference
 
