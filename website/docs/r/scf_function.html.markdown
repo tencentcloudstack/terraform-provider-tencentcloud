@@ -43,6 +43,7 @@ The following arguments are supported:
 * `environment` - (Optional) Environment of the SCF function.
 * `image_config` - (Optional) Image of the SCF function, conflict with ``.
 * `l5_enable` - (Optional) Enable L5 for SCF function, default is `false`.
+* `layers` - (Optional) The list of association layers.
 * `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.
 * `namespace` - (Optional, ForceNew) Namespace of the SCF function, default is `default`.
 * `role` - (Optional) Role of the SCF function.
@@ -61,6 +62,11 @@ The `image_config` object supports the following:
 * `command` - (Optional) The command of entrypoint.
 * `entry_point` - (Optional) The entrypoint of app.
 * `registry_id` - (Optional) The registry id of TCR. When image type is enterprise, it must be set.
+
+The `layers` object supports the following:
+
+* `layer_name` - (Required) The name of Layer.
+* `layer_version` - (Required) The version of layer.
 
 The `triggers` object supports the following:
 

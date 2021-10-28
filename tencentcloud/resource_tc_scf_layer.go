@@ -28,8 +28,12 @@ $ terraform import tencentcloud_scf_layer.layer layerId#layerVersion
 package tencentcloud
 
 import (
+	"encoding/base64"
 	"fmt"
+	"github.com/mitchellh/go-homedir"
+	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -114,7 +118,7 @@ func resourceTencentCloudScfLayer() *schema.Resource {
 
 			//compute
 			"layer_version": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The version of layer.",
 			},
@@ -182,7 +186,22 @@ func resourceTencentCloudScfLayerCreate(d *schema.ResourceData, meta interface{}
 			content.CosBucketRegion = helper.String(item["cos_bucket_region"].(string))
 		}
 		if item["zip_file"] != nil {
-			content.ZipFile = helper.String(item["zip_file"].(string))
+			path, err := homedir.Expand(item["zip_file"].(string))
+			if err != nil {
+				return fmt.Errorf("zip file (%s) homedir expand error: %s", item["zip_file"].(string), err.Error())
+			}
+			file, err := os.Open(path)
+			if err != nil {
+				return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
+			}
+			defer file.Close()
+			body, err := ioutil.ReadAll(file)
+			if err != nil {
+				return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
+			}
+
+			zipContent := base64.StdEncoding.EncodeToString(body)
+			content.ZipFile = &zipContent
 		}
 		request.Content = &content
 	}
