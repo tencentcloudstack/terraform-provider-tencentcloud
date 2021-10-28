@@ -1,5 +1,7 @@
 package helper
 
+import "strconv"
+
 func Bool(i bool) *bool { return &i }
 
 func String(i string) *string { return &i }
@@ -107,5 +109,15 @@ func BoolToInt64Ptr(s bool) (i *int64) {
 		result = int64(1)
 	}
 	i = &result
+	return
+}
+
+func Int64ToStr(s int64) (i string) {
+	i = strconv.FormatInt(s, 10)
+	return
+}
+
+func StrToInt64(s string) (i int64) {
+	i, _ = strconv.ParseInt(s, 10, 64)
 	return
 }
