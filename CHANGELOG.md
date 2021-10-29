@@ -1,3 +1,33 @@
+## 1.60.1 (October 29, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_tcr_instance` support security policies
+
+## 1.60.0 (October 28, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_scf_layer`
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_scf_function: Add `layers` argument
+
+## 1.59.20 (October 27, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_redis_instance` support multi replica zone ids
+
+## 1.59.19 (October 27, 2021)
+
+FEATURES:
+* **New Resource**: `tencentcloud_monitor_alarm_policy`
+
+DEPRECATED:
+* Resource: `tencentcloud_monitor_policy_group` replaced by `tencentcloud_monitor_alarm_policy`
+
 ## 1.59.18 (October 25, 2021)
 
 ENHANCEMENTS:
