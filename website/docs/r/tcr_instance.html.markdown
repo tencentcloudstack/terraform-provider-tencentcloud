@@ -1,3 +1,4 @@
+
 ---
 subcategory: "Tencent Container Registry(TCR)"
 layout: "tencentcloud"
@@ -24,6 +25,22 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
+Using public network access whitelist
+
+```hcl
+resource "tencentcloud_tcr_instance" "foo" {
+  name                  = "example"
+  instance_type         = "basic"
+  open_public_operation = true
+  security_poicy {
+    cidr_block = "10.0.0.1/24"
+  }
+  security_policy {
+    cidr_block = "192.168.1.1"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -32,7 +49,7 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional) Control public network access.
-* `security_policy` - (Optional) Public network access allowlist policies of the TCR instance.
+* `security_policy` - (Optional) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
 * `tags` - (Optional) The available tags within this TCR instance.
 
 The `security_policy` object supports the following:

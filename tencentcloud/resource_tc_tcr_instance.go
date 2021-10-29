@@ -14,6 +14,21 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
+Using public network access whitelist
+```
+resource "tencentcloud_tcr_instance" "foo" {
+  name                  = "example"
+  instance_type		    = "basic"
+  open_public_operation = true
+  security_poicy {
+    cidr_block = "10.0.0.1/24"
+  }
+  security_policy {
+    cidr_block = "192.168.1.1"
+  }
+}
+```
+
 Import
 
 tcr instance can be imported using the id, e.g.
@@ -71,7 +86,7 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 			"security_policy": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Public network access allowlist policies of the TCR instance.",
+				Description: "Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cidr_block": {
