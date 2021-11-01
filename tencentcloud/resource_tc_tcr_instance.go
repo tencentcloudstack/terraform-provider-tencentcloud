@@ -15,7 +15,7 @@ resource "tencentcloud_tcr_instance" "foo" {
 ```
 
 Using public network access whitelist
-```
+```hcl
 resource "tencentcloud_tcr_instance" "foo" {
   name                  = "example"
   instance_type		    = "basic"
