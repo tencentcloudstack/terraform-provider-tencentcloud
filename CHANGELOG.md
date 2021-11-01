@@ -1,3 +1,9 @@
+## 1.60.2 (November 1, 2021)
+
+BUGFIXES:
+
+* resource `tencentcloud_tcr_instance` fix document format error
+
 ## 1.60.1 (October 29, 2021)
 
 ENHANCEMENTS:
