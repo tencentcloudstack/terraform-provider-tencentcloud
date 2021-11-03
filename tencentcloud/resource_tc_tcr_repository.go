@@ -4,11 +4,14 @@ Use this resource to create tcr repository.
 Example Usage
 
 ```hcl
+data "tencentcloud_tcr_instances" "test" {
+  name = "test"
+}
+
 resource "tencentcloud_tcr_repository" "foo" {
-  instance_id		= ""
+  instance_id		= data.tencentcloud_tcr_instances.test.instance_list[0].id
   namespace_name 	= "exampleNamespace"
   name              = "example"
-  is_public		 	= true
 }
 ```
 
@@ -62,12 +65,14 @@ func resourceTencentCloudTcrRepository() *schema.Resource {
 			},
 			"brief_desc": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				ValidateFunc: validateStringLengthInRange(1, 100),
 				Description: "Brief description of the repository. Valid length is [1~100].",
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				ValidateFunc: validateStringLengthInRange(1, 1000),
 				Description: "Description of the repository. Valid length is [1~1000].",
 			},
 			//computed
