@@ -1,3 +1,13 @@
+## 1.60.3 (November 3, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud_tcr_repository` fix inaccurate document and example usage
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_postgresql_instance` support modifying `security_groups`
+
 ## 1.60.2 (November 1, 2021)
 
 BUGFIXES:
