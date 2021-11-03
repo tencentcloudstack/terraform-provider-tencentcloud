@@ -20,7 +20,7 @@ resource "tencentcloud_tcr_instance" "foo" {
   name                  = "example"
   instance_type		    = "basic"
   open_public_operation = true
-  security_poicy {
+  security_policy {
     cidr_block = "10.0.0.1/24"
   }
   security_policy {
