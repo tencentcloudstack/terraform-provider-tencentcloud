@@ -114,7 +114,6 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"security_groups": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
@@ -507,6 +506,22 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("root_password")
 	}
 
+	if d.HasChange("security_groups") {
+
+		// Only redis service support modify Generic DB instance security groups
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ids := d.Get("security_groups").(*schema.Set).List()
+		var sgIds []*string
+		for _, id := range ids {
+			sgIds = append(sgIds, helper.String(id.(string)))
+		}
+		err := service.ModifyDBInstanceSecurityGroups(ctx, "postgres", d.Id(), sgIds)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("security_groups")
+	}
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -607,6 +622,17 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		}
 	}
 	_ = d.Set("public_access_switch", public_access_switch)
+
+	// security groups
+	// Only redis service support modify Generic DB instance security groups
+	redisService := RedisService{client:meta.(*TencentCloudClient).apiV3Conn}
+	sg, err := redisService.DescribeDBSecurityGroups(ctx, "postgres", d.Id())
+	if err != nil {
+		return err
+	}
+	if len(sg) > 0 {
+		_ = d.Set("security_groups", sg)
+	}
 
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
