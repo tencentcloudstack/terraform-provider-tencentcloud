@@ -586,6 +586,61 @@ func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redis
 	return
 }
 
+// DescribeDBSecurityGroups support query different type of DB by passing product name
+func (me *RedisService) DescribeDBSecurityGroups(ctx context.Context, product string, instanceId string) (sg []string, errRet error) {
+	logId := getLogId(ctx)
+	request := redis.NewDescribeDBSecurityGroupsRequest()
+	request.Product = &product
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeDBSecurityGroups(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	groups := response.Response.Groups
+	if len(groups) > 0 {
+		for i := range groups {
+			sg = append(sg, *groups[i].SecurityGroupId)
+		}
+	}
+	return
+}
+
+func (me *RedisService) ModifyDBInstanceSecurityGroups(ctx context.Context, product string, instanceId string, securityGroupIds []*string) (errRet error) {
+	logId := getLogId(ctx)
+	request := redis.NewModifyDBInstanceSecurityGroupsRequest()
+	request.Product = &product
+	request.InstanceId = &instanceId
+	request.SecurityGroupIds = securityGroupIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().ModifyDBInstanceSecurityGroups(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+	errRet = err
+	return
+}
+
 func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
 	logId := getLogId(ctx)
 	request := redis.NewDestroyPostpaidInstanceRequest()

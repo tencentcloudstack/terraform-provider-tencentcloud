@@ -69,7 +69,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Project id, default value is `0`.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
-* `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
+* `security_groups` - (Optional) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
 * `tags` - (Optional) The available tags within this postgresql.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.
