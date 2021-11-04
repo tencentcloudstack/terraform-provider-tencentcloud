@@ -121,3 +121,8 @@ func StrToInt64(s string) (i int64) {
 	i, _ = strconv.ParseInt(s, 10, 64)
 	return
 }
+
+func UInt64ToStr(s uint64) (i string) {
+	i = strconv.FormatUint(s, 10)
+	return
+}
