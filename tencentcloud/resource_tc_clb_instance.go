@@ -221,7 +221,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"load_balancer_pass_to_target": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
+				Default:     false,
 				Description: "Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.",
 			},
 			"master_zone_id": {
@@ -358,6 +358,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support slave zone id setting")
 		}
 		request.SlaveZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok{
+		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
 	}
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
