@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -94,6 +95,7 @@ type TencentCloudClient struct {
 	sslCertificateConn *sslCertificate.Client
 	kmsConn            *kms.Client
 	ssmConn            *ssm.Client
+	apiConn            *api.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -606,4 +608,16 @@ func (me *TencentCloudClient) UseSsmClient() *ssm.Client {
 	me.ssmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ssmConn
+}
+
+// UseApiClient return API client for service
+func (me *TencentCloudClient) UseApiClient() *api.Client {
+	if me.apiConn != nil {
+		return me.apiConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.apiConn, _ = api.NewClient(me.Credential, me.Region, cpf)
+	me.apiConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.apiConn
 }
