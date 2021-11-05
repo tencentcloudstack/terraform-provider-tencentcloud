@@ -185,6 +185,8 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	clbService := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	attachmentId := d.Id()
 
@@ -204,7 +206,10 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 		request.LocationId = helper.String(locationId)
 	}
 
-	insList := d.Get("targets").(*schema.Set).List()
+	//insList := d.Get("targets").(*schema.Set).List()
+
+	// filter target group which cvm not existed
+	insList := getRemoveCandidates(ctx, clbService, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
 	insLen := len(insList)
 	for count := 0; count < insLen; count += 20 {
 		//this request only support 20 targets at most once time
