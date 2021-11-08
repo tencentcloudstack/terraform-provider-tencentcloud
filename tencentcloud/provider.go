@@ -484,6 +484,7 @@ Video on Demand(VOD)
     tencentcloud_vod_snapshot_by_time_offset_template
     tencentcloud_vod_image_sprite_template
     tencentcloud_vod_super_player_config
+	tencentcloud_vod_sub_application
 
 Virtual Private Cloud(VPC)
   Data Source
