@@ -47,18 +47,20 @@ func TestAccTencentCloudAvailabilityZonesByProductDataSource_basic(t *testing.T)
 
 const testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigBasic = `
 data "tencentcloud_availability_zones_by_product" "basic" {
-	product = var.cvm_producr
+	product = var.cvm_product
 }
 `
 
 const testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigFilterWithName = defaultVpcVariable + `
 data "tencentcloud_availability_zones_by_product" "filter" {
+	product = var.cvm_product
   	name = var.availability_zone
 }
 `
 
 const testAccTencentCloudAvailabilityZonesByProductDataSourceConfigIncludeUnavailable = `
 data "tencentcloud_availability_zones_by_product" "unavailable" {
+	product = var.cvm_product
   	include_unavailable = true
 }
 `

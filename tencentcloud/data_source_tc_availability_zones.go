@@ -23,6 +23,8 @@ import (
 
 func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 	return &schema.Resource{
+		DeprecationMessage: "This data source will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_availability_zones_by_product` instead.",
+
 		Read: dataSourceTencentCloudAvailabilityZonesRead,
 
 		Schema: map[string]*schema.Schema{
