@@ -51,6 +51,10 @@ func PString(pointer *string) string {
 	return *pointer
 }
 
+func PUint64(pointer *uint64) uint64 {
+	return *pointer
+}
+
 // Takes the result of flatmap.Expand for an array of strings
 // and returns a []string
 func InterfacesStrings(configured []interface{}) []string {
@@ -119,5 +123,16 @@ func Int64ToStr(s int64) (i string) {
 
 func StrToInt64(s string) (i int64) {
 	i, _ = strconv.ParseInt(s, 10, 64)
+	return
+}
+
+func UInt64ToStr(s uint64) (i string) {
+	i = strconv.FormatUint(s, 10)
+	return
+}
+
+func StrToUInt64(s string) (i uint64) {
+	intNum, _ := strconv.Atoi(s)
+	i = uint64(intNum)
 	return
 }
