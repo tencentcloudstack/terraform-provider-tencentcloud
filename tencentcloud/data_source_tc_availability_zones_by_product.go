@@ -1,11 +1,12 @@
 /*
-Use this data source to get the available zones in current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
-
+Use this data source to get the available zones in current region.
+* Must set product param to fetch the product infomations(e.g. => cvm, vpc)
+* By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "my_favourite_zone" {
-  name = "ap-guangzhou-3"
+data "tencentcloud_availability_zones_by_product" "all" {
+  product="cvm"
 }
 ```
 */
@@ -17,21 +18,24 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
+func dataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data source will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_availability_zones_by_product` instead.",
-
-		Read: dataSourceTencentCloudAvailabilityZonesRead,
+		Read: dataSourceTencentCloudAvailabilityZonesByProductRead,
 
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "When specified, only the zone with the exactly name match will be returned.",
+			},
+			"product": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "A string variable indicates that the query will use product infomation.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,
@@ -78,28 +82,32 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cvmService := CvmService{
+	apiService := APIService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	var name string
+	var product string
 	var includeUnavailable = false
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
+	}
+	if v, ok := d.GetOk("product"); ok {
+		product = v.(string)
 	}
 	if v, ok := d.GetOkExists("include_unavailable"); ok {
 		includeUnavailable = v.(bool)
 	}
 
-	var zones []*cvm.ZoneInfo
+	var zones []*api.ZoneInfo
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		zones, errRet = cvmService.DescribeZones(ctx)
+		zones, errRet = apiService.DescribeZonesWithProduct(ctx, product)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}

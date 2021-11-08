@@ -17,3 +17,7 @@ variable "max_size" {
 variable "desired_capacity" {
   default = 0
 }
+
+variable "cvm_product" {
+  default = "cvm"
+}
