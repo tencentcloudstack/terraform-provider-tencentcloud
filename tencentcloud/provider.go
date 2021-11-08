@@ -953,6 +953,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vod_procedure_template":                  resourceTencentCloudVodProcedureTemplate(),
 			"tencentcloud_vod_snapshot_by_time_offset_template":    resourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
 			"tencentcloud_vod_super_player_config":                 resourceTencentCloudVodSuperPlayerConfig(),
+			"tencentcloud_vod_sub_application":                     resourceTencentCloudVodSubApplication(),
 			"tencentcloud_sqlserver_publish_subscribe":             resourceTencentCloudSqlserverPublishSubscribe(),
 			"tencentcloud_api_gateway_usage_plan":                  resourceTencentCloudAPIGatewayUsagePlan(),
 			"tencentcloud_api_gateway_usage_plan_attachment":       resourceTencentCloudAPIGatewayUsagePlanAttachment(),
