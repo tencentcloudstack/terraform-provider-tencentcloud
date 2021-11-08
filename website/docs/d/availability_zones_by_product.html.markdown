@@ -5,15 +5,15 @@ page_title: "TencentCloud: tencentcloud_availability_zones_by_product"
 sidebar_current: "docs-tencentcloud-datasource-availability_zones_by_product"
 description: |-
   Use this data source to get the available zones in current region.
-* Must set product param to fetch the product infomations(e.g. => cvm, vpc)
-* By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
+Must set product param to fetch the product infomations(e.g. => cvm, vpc)
+By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 ---
 
 # tencentcloud_availability_zones_by_product
 
 Use this data source to get the available zones in current region.
-* Must set product param to fetch the product infomations(e.g. => cvm, vpc)
-* By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
+Must set product param to fetch the product infomations(e.g. => cvm, vpc)
+By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 
 ## Example Usage
 
@@ -27,6 +27,7 @@ data "tencentcloud_availability_zones_by_product" "all" {
 
 The following arguments are supported:
 
+* `product` - (Required) A string variable indicates that the query will use product infomation.
 * `include_unavailable` - (Optional) A bool variable indicates that the query will include `UNAVAILABLE` zones.
 * `name` - (Optional) When specified, only the zone with the exactly name match will be returned.
 * `result_output_file` - (Optional) Used to save results.

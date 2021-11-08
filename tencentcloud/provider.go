@@ -34,8 +34,8 @@ Resources List
 
 Provider Data Sources
   tencentcloud_availability_regions
-  tencentcloud_availability_zones
   tencentcloud_availability_zones_by_product
+  tencentcloud_availability_zones
 
 Anti-DDoS(Dayu)
   Data Source
