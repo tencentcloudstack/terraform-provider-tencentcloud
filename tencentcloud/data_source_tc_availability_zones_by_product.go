@@ -1,11 +1,12 @@
 /*
-Use this data source to get the available zones in current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
-
+Use this data source to get the available zones in current region.
+* Must set product param to fetch the product infomations(e.g. => cvm, vpc)
+* By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "my_favourite_zone" {
-  name = "ap-guangzhou-3"
+data "tencentcloud_availability_zones_by_product" "all" {
+  product="cvm"
 }
 ```
 */
@@ -30,6 +31,11 @@ func dataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "When specified, only the zone with the exactly name match will be returned.",
+			},
+			"product": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "A string variable indicates that the query will use product infomation.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,
@@ -81,14 +87,18 @@ func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cvmService := APIService{
+	apiService := APIService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	var name string
+	var product string
 	var includeUnavailable = false
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
+	}
+	if v, ok := d.GetOk("product"); ok {
+		product = v.(string)
 	}
 	if v, ok := d.GetOkExists("include_unavailable"); ok {
 		includeUnavailable = v.(bool)
@@ -97,7 +107,7 @@ func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData
 	var zones []*api.ZoneInfo
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		zones, errRet = cvmService.DescribeZonesWithProduct(ctx)
+		zones, errRet = apiService.DescribeZonesWithProduct(ctx, product)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}

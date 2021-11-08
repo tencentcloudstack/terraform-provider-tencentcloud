@@ -14,12 +14,13 @@ type APIService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *APIService) DescribeZonesWithProduct(ctx context.Context) (zones []*api.ZoneInfo, errRet error) {
+func (me *APIService) DescribeZonesWithProduct(ctx context.Context, product string) (zones []*api.ZoneInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := api.NewDescribeZonesRequest()
-	request.Product = common.StringPtr("cvm")
+	request.Product = common.StringPtr(product)
 
 	ratelimit.Check(request.GetAction())
+	// API: https://cloud.tencent.com/document/product/1278/55254
 	response, err := me.client.UseApiClient().DescribeZones(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
