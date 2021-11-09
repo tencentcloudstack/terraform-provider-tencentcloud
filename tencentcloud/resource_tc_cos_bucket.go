@@ -52,7 +52,7 @@ Static Website
 resource "tencentcloud_cos_bucket" "mycos" {
   bucket = "mycos-1258798060"
 
-  website = {
+  website {
     index_document = "index.html"
     error_document = "error.html"
   }
