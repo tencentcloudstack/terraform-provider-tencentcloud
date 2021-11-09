@@ -162,6 +162,75 @@ func (me *EksService) DescribeEksCluster(ctx context.Context, id string) (cluste
 	return
 }
 
+func (me *EksService) DescribeEksContainerInstanceById(ctx context.Context, id string) (instance *tke.EksCi, has bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeEKSContainerInstancesRequest()
+	request.EksCiIds = []*string{&id}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeEKSContainerInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.EksCis) > 0 {
+		has = true
+		instance = response.Response.EksCis[0]
+	}
+	return
+}
+
+
+func (me *EksService) DescribeEksContainerInstancesByFilter(ctx context.Context, filters []*tke.Filter, limit uint64, offset uint64) (instances []*tke.EksCi, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeEKSContainerInstancesRequest()
+	if limit > 0 {
+		request.Limit = &limit
+	}
+
+	if offset > 0 {
+		request.Offset = &offset
+	}
+
+	if len(filters) > 0 {
+		request.Filters = filters
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeEKSContainerInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *EksService) CreateEksCluster(ctx context.Context, request *tke.CreateEKSClusterRequest) (id string, errRet error) {
 	logId := getLogId(ctx)
 
@@ -185,6 +254,58 @@ func (me *EksService) CreateEksCluster(ctx context.Context, request *tke.CreateE
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return *response.Response.ClusterId, nil
+}
+
+func (me *EksService) CreateEksContainerInstances(ctx context.Context, request *tke.CreateEKSContainerInstancesRequest) (id string, errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateEKSContainerInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.EksCiIds) > 0{
+		id = *response.Response.EksCiIds[0]
+	}
+
+	return
+}
+
+func (me *EksService) UpdateEksContainerInstances(ctx context.Context, request *tke.UpdateEKSContainerInstanceRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().UpdateEKSContainerInstance(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
 
 func (me *EksService) UpdateEksCluster(ctx context.Context, request *tke.UpdateEKSClusterRequest) (errRet error) {
@@ -235,4 +356,28 @@ func (me *EksService) DeleteEksCluster(ctx context.Context, request *tke.DeleteE
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return nil
+}
+
+func (me *EksService) DeleteEksContainerInstance(ctx context.Context, request *tke.DeleteEKSContainerInstancesRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeleteEKSContainerInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }

@@ -65,7 +65,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentcloudEksCluster() *schema.Resource {
+func resourceTencentCloudEksCluster() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentcloudEKSClusterRead,
 		Create: resourceTencentcloudEKSClusterCreate,

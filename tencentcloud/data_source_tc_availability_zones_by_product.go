@@ -36,7 +36,7 @@ func dataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
 			"product": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "A string variable indicates that the query will use product infomation.",
+				Description: "A string variable indicates that the query will use product information.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,
