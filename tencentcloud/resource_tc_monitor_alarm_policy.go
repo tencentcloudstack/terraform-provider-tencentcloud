@@ -173,7 +173,6 @@ func resourceTencentMonitorAlarmPolicy() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Computed:    true,
 				Description: "A list of metric trigger condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -197,7 +196,6 @@ func resourceTencentMonitorAlarmPolicy() *schema.Resource {
 			"event_conditions": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
 				Description: "A list of event trigger condition.",
 				Elem: &schema.Resource{
 					Schema: AlarmPolicyRule(),
