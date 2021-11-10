@@ -55,6 +55,10 @@ func PUint64(pointer *uint64) uint64 {
 	return *pointer
 }
 
+func PInt64(pointer *int64) int64 {
+	return *pointer
+}
+
 // Takes the result of flatmap.Expand for an array of strings
 // and returns a []string
 func InterfacesStrings(configured []interface{}) []string {

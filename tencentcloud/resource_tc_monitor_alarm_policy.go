@@ -173,6 +173,7 @@ func resourceTencentMonitorAlarmPolicy() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
+				Computed:    true,
 				Description: "A list of metric trigger condition.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -196,6 +197,7 @@ func resourceTencentMonitorAlarmPolicy() *schema.Resource {
 			"event_conditions": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "A list of event trigger condition.",
 				Elem: &schema.Resource{
 					Schema: AlarmPolicyRule(),
@@ -457,31 +459,32 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		d.Set("update_time", policy.UpdateTime),
 	)
 
-	var conditions = map[string]interface{}{}
-	conditions["is_union_rule"] = policy.Condition.IsUnionRule
 	var rules = make([]interface{}, 0, 100)
 	for _, rule := range policy.Condition.Rules {
-		m := map[string]interface{}{}
-		m["metrics_name"] = rule.MetricName
-		m["period"] = rule.Period
-		m["operator"] = rule.Operator
-		m["value"] = rule.Value
-		m["continue_period"] = rule.ContinuePeriod
-		m["notice_frequency"] = rule.NoticeFrequency
-		m["is_power_notice"] = rule.IsPowerNotice
-		m["notice_frequency"] = rule.NoticeFrequency
-		m["description"] = rule.Description
-		m["unit"] = rule.Unit
-		m["rule_type"] = rule.RuleType
+		m := map[string]interface{}{
+			"metric_name":      rule.MetricName,
+			"period":           rule.Period,
+			"operator":         rule.Operator,
+			"value":            rule.Value,
+			"continue_period":  rule.ContinuePeriod,
+			"notice_frequency": rule.NoticeFrequency,
+			"description":      rule.Description,
+			"unit":             rule.Unit,
+			"rule_type":        rule.RuleType,
+		}
 		rules = append(rules, m)
 	}
-	conditions["rules"] = rules
-	errs = append(errs, d.Set("conditions", conditions))
 
-	var eventConditions = make([]interface{}, 0, 100)
+	conditions := map[string]interface{}{
+		"is_union_rule": policy.Condition.IsUnionRule,
+		"rules":         rules,
+	}
+	_ = d.Set("conditions", []interface{}{conditions})
+
+	eventConditions := make([]map[string]interface{}, 0, len(policy.EventCondition.Rules))
 	for _, eventRule := range policy.EventCondition.Rules {
-		m := map[string]interface{}{}
-		m["metrics_name"] = eventRule.MetricName
+		m := make(map[string]interface{}, 5)
+		m["metric_name"] = eventRule.MetricName
 		m["period"] = eventRule.Period
 		m["operator"] = eventRule.Operator
 		m["value"] = eventRule.Value
@@ -494,8 +497,7 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		m["rule_type"] = eventRule.RuleType
 		eventConditions = append(eventConditions, m)
 	}
-	errs = append(errs, d.Set("event_conditions", eventConditions))
-
+	_ = d.Set("event_conditions", eventConditions)
 	var noticeIds = make([]interface{}, 0, 100)
 	for _, notice := range policy.NoticeIds {
 		noticeIds = append(noticeIds, notice)
