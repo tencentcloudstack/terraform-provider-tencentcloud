@@ -373,6 +373,7 @@ Monitor
   Resource
     tencentcloud_monitor_policy_group
     tencentcloud_monitor_binding_object
+	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
 
@@ -934,6 +935,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdn_domain":                              resourceTencentCloudCdnDomain(),
 			"tencentcloud_monitor_policy_group":                    resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":                  resourceTencentMonitorBindingObject(),
+			"tencentcloud_monitor_policy_binding_object":           resourceTencentMonitorPolicyBindingObject(),
 			"tencentcloud_monitor_binding_receiver":                resourceTencentMonitorBindingAlarmReceiver(),
 			"tencentcloud_monitor_alarm_policy":                    resourceTencentMonitorAlarmPolicy(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
@@ -1056,6 +1058,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			*response.Response.Credentials.Token,
 		)
 	}
-
 	return &tcClient, nil
 }

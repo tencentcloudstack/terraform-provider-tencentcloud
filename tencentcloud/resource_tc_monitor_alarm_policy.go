@@ -101,19 +101,19 @@ func AlarmPolicyRule() map[string]*schema.Schema {
 		"description": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
+			Computed:    true,
 			Description: "Metric display name, which is used in the output parameter.",
 		},
 		"unit": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
+			Computed:    true,
 			Description: "Unit, which is used in the output parameter.",
 		},
 		"rule_type": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
+			Computed:    true,
 			Description: "Trigger condition type.",
 		},
 	}

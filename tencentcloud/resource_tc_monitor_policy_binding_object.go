@@ -1,32 +1,52 @@
 /*
-Provides a resource for bind objects to a policy group resource.
-
-~> **NOTE:** It has been deprecated and replaced by tencentcloud_monitor_policy_binding_object.
+Provides a resource for bind objects to a alarm policy resource.
 
 Example Usage
 
 ```hcl
 data "tencentcloud_instances" "instances" {
 }
-resource "tencentcloud_monitor_policy_group" "group" {
-  group_name       = "terraform_test"
-  policy_view_name = "cvm_device"
-  remark           = "this is a test policy group"
-  is_union_rule    = 1
+resource "tencentcloud_monitor_alarm_policy" "policy" {
+  policy_name = "hello"
+  monitor_type = "MT_QCE"
+  enable = 1
+  project_id = 1244035
+  namespace = "cvm_device"
+
   conditions {
-    metric_id           = 33
-    alarm_notify_type   = 1
-    alarm_notify_period = 600
-    calc_type           = 1
-    calc_value          = 3
-    calc_period         = 300
-    continue_period     = 2
+    is_union_rule = 1
+    rules {
+      metric_name = "CpuUsage"
+      period = 60
+      operator = "ge"
+      value = "89.9"
+      continue_period = 1
+      notice_frequency = 3600
+      is_power_notice = 0
+    }
   }
+
+  event_conditions {
+    metric_name = "ping_unreachable"
+  }
+
+  event_conditions {
+    metric_name = "guest_reboot"
+  }
+
+  notice_ids = ["notice-l9ziyxw6"]
+
+  trigger_tasks {
+    type = "AS"
+    task_config = "{\"Region\":\"ap-guangzhou\",\"Group\":\"asg-0z312312x\",\"Policy\":\"asp-ganig28\"}"
+  }
+
 }
 
 #for cvm
-resource "tencentcloud_monitor_binding_object" "binding" {
-  group_id = tencentcloud_monitor_policy_group.group.id
+resource "tencentcloud_monitor_policy_binding_object" "binding" {
+  policy_id = tencentcloud_monitor_alarm_policy.policy.id
+
   dimensions {
     dimensions_json = "{\"unInstanceId\":\"${data.tencentcloud_instances.instances.instance_list[0].instance_id}\"}"
   }
@@ -50,18 +70,17 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentMonitorBindingObject() *schema.Resource {
+func resourceTencentMonitorPolicyBindingObject() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.60.5. Please use 'tencentcloud_monitor_policy_binding_object' instead.",
-		Create: resourceTencentMonitorBindingObjectCreate,
-		Read:   resourceTencentMonitorBindingObjectRead,
-		Delete: resourceTencentMonitorBindingObjectDelete,
+		Create: resourceTencentMonitorPolicyBindingObjectCreate,
+		Read:   resourceTencentMonitorPolicyBindingObjectRead,
+		Delete: resourceTencentMonitorPolicyBindingObjectDelete,
 		Schema: map[string]*schema.Schema{
-			"group_id": {
-				Type:        schema.TypeInt,
+			"policy_id": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Policy group ID for binding objects.",
+				Description: "Alarm policy ID for binding objects.",
 			},
 			"dimensions": {
 				Type:        schema.TypeSet,
@@ -97,7 +116,7 @@ func resourceTencentMonitorBindingObject() *schema.Resource {
 	}
 }
 
-func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_binding_object.create")()
 
 	var (
@@ -106,22 +125,23 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewBindingPolicyObjectRequest()
 		idSeeds        []string
-		groupId        = int64(d.Get("group_id").(int))
+		policyId       = d.Get("policy_id").(string)
 	)
 
-	info, err := monitorService.DescribePolicyGroup(ctx, groupId)
+	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
 	if err != nil {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("policy group %d not exist", groupId)
+		return fmt.Errorf("alarm policy %s not exist", policyId)
 	}
-	request.GroupId = &groupId
+	request.GroupId = helper.Int64(0)
+	request.PolicyId = &policyId
 	dimensions := d.Get("dimensions").(*schema.Set).List()
 
 	request.Dimensions = make([]*monitor.BindingPolicyObjectDimension, 0, len(dimensions))
 
-	idSeeds = append(idSeeds, fmt.Sprintf("%d", groupId))
+	idSeeds = append(idSeeds, fmt.Sprintf("%s", policyId))
 
 	for _, v := range dimensions {
 		m := v.(map[string]interface{})
@@ -136,7 +156,6 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		dimension.Dimensions = &dimensionsJson
 		dimension.Region = &region
 		request.Dimensions = append(request.Dimensions, &dimension)
-
 	}
 
 	request.Module = helper.String("monitor")
@@ -149,10 +168,11 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 	}); err != nil {
 		return err
 	}
+
 	d.SetId(helper.DataResourceIdsHash(idSeeds))
 	time.Sleep(3 * time.Second)
 
-	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+	objects, err := monitorService.DescribeBindingAlarmPolicyObjectList(ctx, policyId)
 
 	if err != nil {
 		return err
@@ -174,28 +194,28 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 			monitorService.client.Region, helper.SliceFieldSerialize(bindingFails))
 	}
 
-	return resourceTencentMonitorBindingObjectRead(d, meta)
+	return resourceTencentMonitorPolicyBindingObjectRead(d, meta)
 }
 
-func resourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_binding_object.read")()
+func resourceTencentMonitorPolicyBindingObjectRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_policy_binding_object.read")()
 	defer inconsistentCheck(d, meta)()
 	var (
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		groupId        = int64(d.Get("group_id").(int))
+		policyId       = d.Get("policy_id").(string)
 	)
 
-	info, err := monitorService.DescribePolicyGroup(ctx, groupId)
+	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
 	if err != nil {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("policy group %d not exist", groupId)
+		return fmt.Errorf("alarm policy %s not exist", policyId)
 	}
 
-	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+	objects, err := monitorService.DescribeBindingAlarmPolicyObjectList(ctx, policyId)
 
 	if err != nil {
 		return err
@@ -234,25 +254,26 @@ func resourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interf
 
 	return d.Set("dimensions", newDimensions)
 }
-func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta interface{}) error {
+
+func resourceTencentMonitorPolicyBindingObjectDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_binding_object.delete")()
 
 	var (
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		groupId        = int64(d.Get("group_id").(int))
+		policyId       = d.Get("policy_id").(string)
 	)
 
-	info, err := monitorService.DescribePolicyGroup(ctx, groupId)
+	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
 	if err != nil {
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("policy group %d not exist", groupId)
+		return fmt.Errorf("alarm policy %s not exist", policyId)
 	}
 
-	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+	objects, err := monitorService.DescribeBindingAlarmPolicyObjectList(ctx, policyId)
 
 	if err != nil {
 		return err
@@ -289,7 +310,8 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 	)
 
 	request.Module = helper.String("monitor")
-	request.GroupId = &groupId
+	request.GroupId = helper.Int64(0)
+	request.PolicyId = &policyId
 	request.UniqueId = uniqueIds
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

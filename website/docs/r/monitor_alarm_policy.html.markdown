@@ -71,27 +71,27 @@ The `conditions` object supports the following:
 The `event_conditions` object supports the following:
 
 * `continue_period` - (Optional) Number of periods.
-* `description` - (Optional, ForceNew) Metric display name, which is used in the output parameter.
+* `description` - (Optional) Metric display name, which is used in the output parameter.
 * `is_power_notice` - (Optional) Whether the alarm frequency increases exponentially.
 * `metric_name` - (Optional) Metric name or event name.
 * `notice_frequency` - (Optional) Alarm interval in seconds.
 * `operator` - (Optional) Operator.
 * `period` - (Optional) Statistical period in seconds.
-* `rule_type` - (Optional, ForceNew) Trigger condition type.
-* `unit` - (Optional, ForceNew) Unit, which is used in the output parameter.
+* `rule_type` - (Optional) Trigger condition type.
+* `unit` - (Optional) Unit, which is used in the output parameter.
 * `value` - (Optional) Threshold.
 
 The `rules` object supports the following:
 
 * `continue_period` - (Optional) Number of periods.
-* `description` - (Optional, ForceNew) Metric display name, which is used in the output parameter.
+* `description` - (Optional) Metric display name, which is used in the output parameter.
 * `is_power_notice` - (Optional) Whether the alarm frequency increases exponentially.
 * `metric_name` - (Optional) Metric name or event name.
 * `notice_frequency` - (Optional) Alarm interval in seconds.
 * `operator` - (Optional) Operator.
 * `period` - (Optional) Statistical period in seconds.
-* `rule_type` - (Optional, ForceNew) Trigger condition type.
-* `unit` - (Optional, ForceNew) Unit, which is used in the output parameter.
+* `rule_type` - (Optional) Trigger condition type.
+* `unit` - (Optional) Unit, which is used in the output parameter.
 * `value` - (Optional) Threshold.
 
 The `trigger_tasks` object supports the following:

@@ -11,7 +11,7 @@ description: |-
 
 Provides a policy group resource for monitor.
 
-~> **NOTE:** It has been deprecated and replaced by tencentcloud_alarm_policy.
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_monitor_alarm_policy.
 
 ## Example Usage
 
