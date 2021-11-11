@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource for bind objects to a policy group resource.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_monitor_policy_binding_object.
+
 ## Example Usage
 
 ```hcl
