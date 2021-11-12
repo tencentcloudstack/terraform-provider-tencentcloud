@@ -658,7 +658,8 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"tencentcloud_availability_regions":                     dataSourceTencentCloudAvailabilityRegions(),
+			"tencentcloud_availability_regions": dataSourceTencentCloudAvailabilityRegions(),
+			// "tencentcloud_emr":                                      dataSourceTencentCloudEmr(),
 			"tencentcloud_availability_zones":                       dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":            dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_instances":                                dataSourceTencentCloudInstances(),
@@ -817,6 +818,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"tencentcloud_emr_instance":                            resourceTencentCloudEmrInstance(),
 			"tencentcloud_instance":                                resourceTencentCloudInstance(),
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),

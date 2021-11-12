@@ -30,6 +30,7 @@ import (
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
@@ -96,6 +97,7 @@ type TencentCloudClient struct {
 	kmsConn            *kms.Client
 	ssmConn            *ssm.Client
 	apiConn            *api.Client
+	emrConn            *emr.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -620,4 +622,16 @@ func (me *TencentCloudClient) UseApiClient() *api.Client {
 	me.apiConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apiConn
+}
+
+// UseEmrClient return EMR client for service
+func (me *TencentCloudClient) UseEmrClient() *emr.Client {
+	if me.emrConn != nil {
+		return me.emrConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.emrConn, _ = emr.NewClient(me.Credential, me.Region, cpf)
+	me.emrConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.emrConn
 }
