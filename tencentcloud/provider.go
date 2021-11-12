@@ -215,6 +215,7 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_target_group
     tencentcloud_clb_target_group_instance_attachment
     tencentcloud_clb_target_group_attachment
+    tencentcloud_clb_logset
 
 Cloud Object Storage(COS)
   Data Source
@@ -866,6 +867,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_clb_target_group":                        resourceTencentCloudClbTargetGroup(),
 			"tencentcloud_clb_target_group_instance_attachment":    resourceTencentCloudClbTGAttachmentInstance(),
 			"tencentcloud_clb_target_group_attachment":             resourceTencentCloudClbTargetGroupAttachment(),
+			"tencentcloud_clb_logset":                              resourceTencentCloudClbLogSet(),
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
