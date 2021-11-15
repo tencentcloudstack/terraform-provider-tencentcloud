@@ -551,6 +551,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.290
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.264
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
