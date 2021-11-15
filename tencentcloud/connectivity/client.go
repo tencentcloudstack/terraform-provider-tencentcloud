@@ -24,6 +24,7 @@ import (
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -96,6 +97,7 @@ type TencentCloudClient struct {
 	kmsConn            *kms.Client
 	ssmConn            *ssm.Client
 	apiConn            *api.Client
+	clsConn            *cls.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -620,4 +622,16 @@ func (me *TencentCloudClient) UseApiClient() *api.Client {
 	me.apiConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apiConn
+}
+
+// UseClsClient return API client for service
+func (me *TencentCloudClient) UseClsClient() *cls.Client {
+	if me.clsConn != nil {
+		return me.clsConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.clsConn, _ = cls.NewClient(me.Credential, me.Region, cpf)
+	me.clsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.clsConn
 }

@@ -1059,7 +1059,7 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	return
 }
 
-func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interface{}) error {
+func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interface{}) (response *clb.CreateTopicResponse, err error) {
 
 	request := clb.NewCreateTopicRequest()
 
@@ -1071,17 +1071,16 @@ func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interfa
 		request.PartitionCount = common.Uint64Ptr((uint64)(partitionCount.(int)))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, err := me.client.UseClbClient().CreateTopic(request)
-		if err != nil {
-			return retryError(err)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		resp, ok := me.client.UseClbClient().CreateTopic(request)
+		if ok != nil {
+			err = ok
+			return retryError(ok)
 		}
+		response = resp
 		return nil
 	})
-	if err != nil {
-		return err
-	}
-	return nil
+	return
 }
 
 func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId, targetGroupName string, port uint64) (err error) {
