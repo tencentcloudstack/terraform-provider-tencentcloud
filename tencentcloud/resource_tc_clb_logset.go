@@ -33,31 +33,30 @@ func resourceTencentCloudClbLogSet() *schema.Resource {
 		Create: resourceTencentCloudClbLogSetCreate,
 		Read:   resourceTencentCloudClbLogSetRead,
 		Delete: resourceTencentCloudClbLogSetDelete,
-		Update: resourceTencentCloudClbLogSetUpdate,
+		//Update: resourceTencentCloudClbLogSetUpdate,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type: schema.TypeString,
-				Optional: true,
-				Default: "clb_logset",
-				Description: "Logset name, which must be unique among all CLS logsets. Default is `clb_logset`.",
-			},
 			"period": {
-				Type: schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Logset retention period in days. Maximun value is `90`.",
 			},
+			"name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Logset name, which unique and fixed `clb_logset` among all CLS logsets.",
+			},
 			"create_time": {
-				Type: schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
 				Description: "Logset creation time.",
 			},
 			"topic_count": {
-				Type: schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
 				Description: "Number of log topics in logset.",
 			},
 		},
@@ -70,7 +69,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{ client: meta.(*TencentCloudClient).apiV3Conn }
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
 
@@ -86,6 +85,11 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 	}
 
 	_ = d.Set("name", info.LogsetName)
+
+	//
+	//if _, ok := d.GetOk("period"); !ok {
+	//	_ = d.Set("period", info)
+	//}
 	_ = d.Set("create_time", info.CreateTime)
 	_ = d.Set("topic_count", info.TopicCount)
 
@@ -102,12 +106,11 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name = d.Get("name").(string)
 		period = d.Get("period").(int)
 	)
 
-	// We're not support health logs for now
-	id, err := service.CreateClbLogSet(ctx, name, "", period)
+	// We're not support specify name and health logs for now
+	id, err := service.CreateClbLogSet(ctx, "clb_logset", "", period)
 
 	if err != nil {
 		return err
@@ -118,11 +121,12 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 	return resourceTencentCloudClbLogSetRead(d, meta)
 }
 
+// All fields are now Computed/ForceNew, means it does not support update
 func resourceTencentCloudClbLogSetUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_logset.update")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{ client: meta.(*TencentCloudClient).apiV3Conn }
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	request := cls.NewModifyLogsetRequest()
 
 	request.LogsetId = helper.String(d.Id())
@@ -137,7 +141,7 @@ func resourceTencentCloudClbLogSetUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	return resourceTencentcloudEKSClusterRead(d, meta)
+	return resourceTencentCloudClbLogSetCreate(d, meta)
 }
 
 func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{}) error {
@@ -148,9 +152,8 @@ func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{ client: meta.(*TencentCloudClient).apiV3Conn }
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
-
 
 	if err := service.DeleteClsLogSet(ctx, id); err != nil {
 		return err

@@ -24,7 +24,6 @@ resource "tencentcloud_clb_logset" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Logset name, which must be unique among all CLS logsets. Default is `clb_logset`.
 * `period` - (Optional, ForceNew) Logset retention period in days. Maximun value is `90`.
 
 ## Attributes Reference
@@ -33,6 +32,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Logset creation time.
+* `name` - Logset name, which unique and fixed `clb_logset` among all CLS logsets.
 * `topic_count` - Number of log topics in logset.
 
 
