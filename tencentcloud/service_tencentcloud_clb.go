@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1056,6 +1057,31 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	}
 	targetGroupId = *response.Response.TargetGroupId
 	return
+}
+
+func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interface{}) error {
+
+	request := clb.NewCreateTopicRequest()
+
+	if topicName, ok := params["topic_name"]; ok {
+		request.TopicName = common.StringPtr(topicName.(string))
+	}
+
+	if partitionCount, ok := params["partition_count"]; ok {
+		request.PartitionCount = common.Uint64Ptr((uint64)(partitionCount.(int)))
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().CreateTopic(request)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId, targetGroupName string, port uint64) (err error) {

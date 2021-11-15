@@ -206,6 +206,7 @@ Cloud Load Balancer(CLB)
 
   Resource
     tencentcloud_clb_instance
+	tencentcloud_clb_instance_topic
     tencentcloud_clb_listener
     tencentcloud_clb_listener_rule
     tencentcloud_clb_attachment
@@ -859,6 +860,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lb":                                      resourceTencentCloudLB(),
 			"tencentcloud_alb_server_attachment":                   resourceTencentCloudAlbServerAttachment(),
 			"tencentcloud_clb_instance":                            resourceTencentCloudClbInstance(),
+			"tencentcloud_clb_instance_topic":                      resourceTencentCloudClbInstanceTopic(),
 			"tencentcloud_clb_listener":                            resourceTencentCloudClbListener(),
 			"tencentcloud_clb_listener_rule":                       resourceTencentCloudClbListenerRule(),
 			"tencentcloud_clb_attachment":                          resourceTencentCloudClbServerAttachment(),
