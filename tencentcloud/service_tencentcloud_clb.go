@@ -1072,6 +1072,7 @@ func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interfa
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		resp, ok := me.client.UseClbClient().CreateTopic(request)
 		if ok != nil {
 			err = ok

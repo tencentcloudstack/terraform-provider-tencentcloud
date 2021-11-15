@@ -37,7 +37,6 @@ func (me *ClsService) DescribeTopicsByTopicName(ctx context.Context, topicName s
 		return
 	}
 	clbInstance = response.Response.Topics[0]
-	log.Printf("[==============clbInstance]: %v", clbInstance)
 	return
 }
 
