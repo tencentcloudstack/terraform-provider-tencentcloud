@@ -562,13 +562,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
 			if v, ok := d.GetOk("spot_instance_type"); ok {
 				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(v.(string)))
-			} else {
-				return fmt.Errorf("spot_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 			if v, ok := d.GetOk("spot_max_price"); ok {
 				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
-			} else {
-				return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 		}
 		if instanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
