@@ -557,14 +557,18 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			}
 		}
 		if instanceChargeType == CVM_CHARGE_TYPE_SPOTPAID {
-			request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
-			request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
-			request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
-			if v, ok := d.GetOk("spot_instance_type"); ok {
-				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(v.(string)))
+			spotInstanceType, sitOk := d.GetOk("spot_instance_type")
+			spotMaxPrice, smpOk := d.GetOk("spot_max_price")
+			if sitOk || smpOk {
+				request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
+				request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
+				request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
 			}
-			if v, ok := d.GetOk("spot_max_price"); ok {
-				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
+			if sitOk {
+				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(spotInstanceType.(string)))
+			}
+			if smpOk {
+				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(spotMaxPrice.(string))
 			}
 		}
 		if instanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
