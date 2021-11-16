@@ -4,11 +4,18 @@ Provides a resource to create a CLB instance topic.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_instances_topic" "topic" {
+resource "tencentcloud_clb_log_topic" "topic" {
     topic_name="clb-topic"
     partition_count=3
 }
 ```
+
+Import
+
+CLB log topic can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_clb_log_topic.topic lb-7a0t6zqb
 */
 package tencentcloud
 
@@ -22,7 +29,7 @@ import (
 
 var clsActionMu = &sync.Mutex{}
 
-func resourceTencentCloudClbInstanceTopic() *schema.Resource {
+func resourceTencentCloudClbLogTopic() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbInstanceTopicCreate,
 		Read:   resourceTencentCloudClbInstanceTopicRead,
