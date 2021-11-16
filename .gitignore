@@ -17,4 +17,3 @@ terraform.tfstate.backup
 terraform.tfstate.lock.info
 dist/
 gendoc/gendoc
-.vscode/
