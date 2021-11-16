@@ -1,3 +1,60 @@
+## 1.60.9 (November 16, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud_instance` omit `InstanceMarketOptions` field if spot arguments empty
+
+## 1.60.8 (November 16, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud_clb_log_set` remove doc
+
+## 1.60.7 (November 16, 2021)
+
+FEATURES:
+* **New Resource**: `tencentcloud_clb_log_set`
+* **New Resource**: `tencentcloud_clb_log_topic`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_clb_instance`  support set log
+* resource `tencentcloud_instance` unlimited spot charge argument
+
+## 1.60.6 (November 12, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_monitor_policy_binding_object`
+
+ENHANCEMENTS:
+
+* fix resource `tencentcloud_kubernetes_node_pool` plan change
+* fix resource `tencentcloud_monitor_alarm_policy` import lacking eventditions
+
+DEPRECATED:
+
+* Resource: `tencentcloud_monitor_binding_object` replaced by tencentcloud_monitor_policy_binding_object
+
+## 1.60.5 (November 8, 2021)
+
+BUGFIXES:
+
+*Resource `tencentcloud_availability_zones_by_product` add dependency
+
+## 1.60.4 (November 8, 2021)
+
+FEATURES:
+* **New Resource**: `tencentcloud_vod_sub_application`
+* **New Resource**: `tencentcloud_availability_zones_by_product`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_clb_instance` support set load_balancer_pass_to_target
+
+DEPRECATED:
+* Resource: `tencentcloud_availability_zones` replaced by `tencentcloud_availability_zones_by_product`
+
 ## 1.60.3 (November 3, 2021)
 
 BUGFIXES:

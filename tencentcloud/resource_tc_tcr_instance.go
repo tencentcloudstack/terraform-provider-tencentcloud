@@ -224,7 +224,7 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 				var (
 					status string
 				)
-				status, _, err =  tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
+				status, _, err = tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
 				if err != nil {
 					return resource.NonRetryableError(fmt.Errorf("an error occured during DescribeExternalEndpointStatus: %s", err.Error()))
 				}
@@ -392,7 +392,7 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			var (
 				status string
 			)
-			status, _, err =  tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
+			status, _, err = tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
 			if err != nil {
 				return resource.NonRetryableError(fmt.Errorf("an error occured during DescribeExternalEndpointStatus: %s", err.Error()))
 			}

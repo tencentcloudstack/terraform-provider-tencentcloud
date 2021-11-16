@@ -53,9 +53,9 @@ import (
 func resourceTencentMonitorBindingObject() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.60.5. Please use 'tencentcloud_monitor_policy_binding_object' instead.",
-		Create: resourceTencentMonitorBindingObjectCreate,
-		Read:   resourceTencentMonitorBindingObjectRead,
-		Delete: resourceTencentMonitorBindingObjectDelete,
+		Create:             resourceTencentMonitorBindingObjectCreate,
+		Read:               resourceTencentMonitorBindingObjectRead,
+		Delete:             resourceTencentMonitorBindingObjectDelete,
 		Schema: map[string]*schema.Schema{
 			"group_id": {
 				Type:        schema.TypeInt,

@@ -1378,7 +1378,7 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 func (me *ClbService) DescribeClbLogSet(ctx context.Context) (logSetId string, healthId string, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeClsLogSetRequest()
-		defer func() {
+	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
@@ -1399,7 +1399,7 @@ func (me *ClbService) DescribeClbLogSet(ctx context.Context) (logSetId string, h
 	return
 }
 
-func (me *ClbService) CreateClbLogSet(ctx context.Context, name string, logsetType string, period int) (id string, errRet error){
+func (me *ClbService) CreateClbLogSet(ctx context.Context, name string, logsetType string, period int) (id string, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewCreateClsLogSetRequest()
 	request.Period = helper.IntUint64(period)

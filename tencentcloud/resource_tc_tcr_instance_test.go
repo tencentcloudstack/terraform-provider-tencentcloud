@@ -134,7 +134,6 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   }
 }`
 
-
 const testAccTCRInstance_basic_update_security = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "testacctcrinstance1"
