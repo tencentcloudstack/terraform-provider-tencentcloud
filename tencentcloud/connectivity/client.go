@@ -624,7 +624,6 @@ func (me *TencentCloudClient) UseApiClient() *api.Client {
 	return me.apiConn
 }
 
-
 // UseClsClient return CLS client for service
 func (me *TencentCloudClient) UseClsClient() *cls.Client {
 	if me.clsConn != nil {

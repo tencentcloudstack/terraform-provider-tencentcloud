@@ -360,7 +360,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SlaveZoneId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok{
+	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
 	}
 	clbId := ""
