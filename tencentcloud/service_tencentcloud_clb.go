@@ -1374,3 +1374,50 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	}
 	return nil
 }
+
+func (me *ClbService) DescribeClbLogSet(ctx context.Context) (logSetId string, healthId string, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeClsLogSetRequest()
+		defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeClsLogSet(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	logSetId = *response.Response.LogsetId
+	healthId = *response.Response.HealthLogsetId
+	return
+}
+
+func (me *ClbService) CreateClbLogSet(ctx context.Context, name string, logsetType string, period int) (id string, errRet error){
+	logId := getLogId(ctx)
+	request := clb.NewCreateClsLogSetRequest()
+	request.Period = helper.IntUint64(period)
+	request.LogsetName = &name
+	if logsetType != "" {
+		request.LogsetType = &logsetType
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().CreateClsLogSet(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		id = *response.Response.LogsetId
+	}
+	return
+}
