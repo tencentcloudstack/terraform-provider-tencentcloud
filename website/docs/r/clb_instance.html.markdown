@@ -159,7 +159,7 @@ The following arguments are supported:
 * `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
 * `log_set_id` - (Optional) The id of log set.
-* `log_topic_id` - (Optional) the id of log topic.
+* `log_topic_id` - (Optional) The id of log topic.
 * `master_zone_id` - (Optional) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
