@@ -91,6 +91,52 @@ resource "tencentcloud_clb_instance" "open_clb1" {
 ~
 ```
 
+CREATE instance with log
+```hcl
+resource "tencentcloud_vpc" "vpc_test" {
+  name = "clb-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "rtb_test" {
+  name = "clb-test"
+  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
+}
+
+resource "tencentcloud_subnet" "subnet_test" {
+  name = "clb-test"
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "ap-guangzhou-3"
+  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
+  route_table_id = "${tencentcloud_route_table.rtb_test.id}"
+}
+
+resource "tencentcloud_clb_log_set" "set" {
+  period = 7
+}
+
+resource "tencentcloud_clb_log_topic" "topic" {
+  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+  topic_name = "clb-topic"
+}
+
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type = "INTERNAL"
+  clb_name = "myclb"
+  project_id = 0
+  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
+  subnet_id = "${tencentcloud_subnet.subnet_test.id}"
+  load_balancer_pass_to_target = true
+  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+  log_topic_id = "${tencentcloud_clb_log_topic.topic.id}"
+
+  tags = {
+    test = "tf"
+  }
+}
+
+```
+
 Import
 
 CLB instance can be imported using the id, e.g.
@@ -238,6 +284,16 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.",
+			},
+			"log_set_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The id of log set.",
+			},
+			"log_topic_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The id of log topic.",
 			},
 		},
 	}
@@ -422,6 +478,38 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if v, ok := d.GetOk("log_set_id"); ok {
+		if u, ok := d.GetOk("log_topic_id"); ok {
+			logRequest := clb.NewSetLoadBalancerClsLogRequest()
+			logRequest.LoadBalancerId = helper.String(clbId)
+			logRequest.LogSetId = helper.String(v.(string))
+			logRequest.LogTopicId = helper.String(u.(string))
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				logResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().SetLoadBalancerClsLog(logRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
+					requestId := *logResponse.Response.RequestId
+
+					retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+					if retryErr != nil {
+						return retryError(errors.WithStack(retryErr))
+					}
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s set CLB instance log failed, reason:%+v", logId, err)
+				return err
+			}
+
+		} else {
+			return fmt.Errorf("log_topic_id and log_set_id must be set together.")
+		}
+	}
+
 	if targetRegionInfoRegion != "" {
 		isLoadBalancePassToTgt := d.Get("load_balancer_pass_to_target").(bool)
 		targetRegionInfo := clb.TargetRegionInfo{
@@ -504,6 +592,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
+
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
 	}
@@ -519,6 +608,8 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("master_zone_id", instance.MasterZone)
 	_ = d.Set("zone_id", instance.MasterZone)
 	_ = d.Set("slave_zone_id", instance.MasterZone)
+	_ = d.Set("log_set_id", instance.LogSetId)
+	_ = d.Set("log_topic_id", instance.LogTopicId)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -671,6 +762,35 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 		d.SetPartial("security_groups")
+	}
+
+	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
+		logSetId := d.Get("log_set_id")
+		logTopicId := d.Get("log_topic_id")
+		logRequest := clb.NewSetLoadBalancerClsLogRequest()
+		logRequest.LoadBalancerId = helper.String(clbId)
+		logRequest.LogSetId = helper.String(logSetId.(string))
+		logRequest.LogTopicId = helper.String(logTopicId.(string))
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			logResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().SetLoadBalancerClsLog(logRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, logRequest.GetAction(), logRequest.ToJsonString(), logResponse.ToJsonString())
+				requestId := *logResponse.Response.RequestId
+
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return retryError(errors.WithStack(retryErr))
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s set CLB instance log failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if d.HasChange("tags") {

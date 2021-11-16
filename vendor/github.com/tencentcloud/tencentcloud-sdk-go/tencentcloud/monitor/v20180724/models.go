@@ -599,7 +599,7 @@ type CreateAlarmPolicyRequest struct {
 	// 监控类型 MT_QCE=云产品监控
 	MonitorType *string `json:"MonitorType,omitempty" name:"MonitorType"`
 
-	// 告警策略类型，由 [DescribeAllNamespaces](https://cloud.tencent.com/document/product/248/48683) 获得，例如 cvm_device
+	// 告警策略类型，由 [DescribeAllNamespaces](https://cloud.tencent.com/document/product/248/48683) 获得。对于云产品监控，取接口出参的 QceNamespacesNew.N.Id，例如 cvm_device
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
 	// 备注，不超过100字符，仅支持中英文、数字、下划线、-
@@ -4879,7 +4879,7 @@ type TagInstance struct {
 
 	// 地域ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+	RegionId *int64 `json:"RegionId,omitempty" name:"RegionId"`
 
 	// 绑定状态，2：绑定成功，1：绑定中
 	// 注意：此字段可能返回 null，表示取不到有效值。

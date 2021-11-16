@@ -101,6 +101,52 @@ resource "tencentcloud_clb_instance" "open_clb1" {
 ~
 ```
 
+CREATE instance with log
+
+```hcl
+resource "tencentcloud_vpc" "vpc_test" {
+  name       = "clb-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "rtb_test" {
+  name   = "clb-test"
+  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
+}
+
+resource "tencentcloud_subnet" "subnet_test" {
+  name              = "clb-test"
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc_test.id}"
+  route_table_id    = "${tencentcloud_route_table.rtb_test.id}"
+}
+
+resource "tencentcloud_clb_log_set" "set" {
+  period = 7
+}
+
+resource "tencentcloud_clb_log_topic" "topic" {
+  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+  topic_name = "clb-topic"
+}
+
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type                 = "INTERNAL"
+  clb_name                     = "myclb"
+  project_id                   = 0
+  vpc_id                       = "${tencentcloud_vpc.vpc_test.id}"
+  subnet_id                    = "${tencentcloud_subnet.subnet_test.id}"
+  load_balancer_pass_to_target = true
+  log_set_id                   = "${tencentcloud_clb_log_set.set.id}"
+  log_topic_id                 = "${tencentcloud_clb_log_topic.topic.id}"
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -112,6 +158,8 @@ The following arguments are supported:
 * `internet_bandwidth_max_out` - (Optional) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
+* `log_set_id` - (Optional) The id of log set.
+* `log_topic_id` - (Optional) the id of log topic.
 * `master_zone_id` - (Optional) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.

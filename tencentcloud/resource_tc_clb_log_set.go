@@ -4,15 +4,14 @@ Provides a resource to create an exclusive CLB Logset.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_logset" "foo" {
-  name = "clb_logset"
+resource "tencentcloud_clb_log_set" "foo" {
   perioid = 7
 }
 ```
 
 Import
 
-CLB attachment can be imported using the id, e.g.
+CLB log set can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_logset.foo 4eb9e3a8-9c42-4b32-9ddf-e215e9c92764
@@ -26,6 +25,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"time"
 )
 
 func resourceTencentCloudClbLogSet() *schema.Resource {
@@ -115,7 +115,8 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
-
+	//加一个创建保护
+	time.Sleep(3)
 	d.SetId(id)
 
 	return resourceTencentCloudClbLogSetRead(d, meta)

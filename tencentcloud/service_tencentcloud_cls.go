@@ -16,13 +16,13 @@ type ClsService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *ClsService) DescribeTopicsByTopicName(ctx context.Context, topicName string) (clbInstance *cls.TopicInfo, errRet error) {
+func (me *ClsService) DescribeTopicsById(ctx context.Context, topicId string) (topicInfo *cls.TopicInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := cls.NewDescribeTopicsRequest()
 	request.Filters = []*cls.Filter{
 		{
-			Key:    common.StringPtr("topicName"),
-			Values: []*string{&topicName},
+			Key:    common.StringPtr("topicId"),
+			Values: []*string{&topicId},
 		},
 	}
 	ratelimit.Check(request.GetAction())
@@ -37,43 +37,22 @@ func (me *ClsService) DescribeTopicsByTopicName(ctx context.Context, topicName s
 	if len(response.Response.Topics) < 1 {
 		return
 	}
-	clbInstance = response.Response.Topics[0]
+	topicInfo = response.Response.Topics[0]
 	return
 }
 
-func (me *ClsService) DeleteTopicsByTopicName(ctx context.Context, topicName string) (topicInfo *cls.TopicInfo, errRet error) {
+func (me *ClsService) DeleteTopicsById(ctx context.Context, topicId string) (errRet error) {
 	logId := getLogId(ctx)
-	request := cls.NewDescribeTopicsRequest()
-	request.Filters = []*cls.Filter{
-		{
-			Key:    common.StringPtr("topicName"),
-			Values: []*string{&topicName},
-		},
-	}
-	ratelimit.Check(request.GetAction())
-	client := me.client.UseClsClient()
-	response, err := client.DescribeTopics(request)
+	request := cls.NewDeleteTopicRequest()
+	request.TopicId = &topicId
+	response, err := me.client.UseClsClient().DeleteTopic(request)
 	if err != nil {
 		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.Topics) < 1 {
-		return
-	}
-	clbInstance := response.Response.Topics[0]
-
-	delRequest := cls.NewDeleteTopicRequest()
-	delRequest.TopicId = clbInstance.TopicId
-	_, err = client.DeleteTopic(delRequest)
-	if err != nil {
-		errRet = errors.WithStack(err)
-		return
-	}
-	topicInfo = clbInstance
-	return
+	return nil
 }
 
 func (me *ClsService) DescribeClsLogSetById(ctx context.Context, logSetId string) (logset *cls.LogsetInfo, errRet error) {
