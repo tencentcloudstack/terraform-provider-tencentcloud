@@ -206,7 +206,6 @@ Cloud Load Balancer(CLB)
 
   Resource
     tencentcloud_clb_instance
-	tencentcloud_clb_log_topic
     tencentcloud_clb_listener
     tencentcloud_clb_listener_rule
     tencentcloud_clb_attachment
@@ -216,7 +215,8 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_target_group
     tencentcloud_clb_target_group_instance_attachment
     tencentcloud_clb_target_group_attachment
-    tencentcloud_clb_logset
+    tencentcloud_clb_log_set
+	tencentcloud_clb_log_topic
 
 Cloud Object Storage(COS)
   Data Source
@@ -861,7 +861,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lb":                                      resourceTencentCloudLB(),
 			"tencentcloud_alb_server_attachment":                   resourceTencentCloudAlbServerAttachment(),
 			"tencentcloud_clb_instance":                            resourceTencentCloudClbInstance(),
-			"tencentcloud_clb_log_topic":                           resourceTencentCloudClbLogTopic(),
 			"tencentcloud_clb_listener":                            resourceTencentCloudClbListener(),
 			"tencentcloud_clb_listener_rule":                       resourceTencentCloudClbListenerRule(),
 			"tencentcloud_clb_attachment":                          resourceTencentCloudClbServerAttachment(),
@@ -869,7 +868,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_clb_target_group":                        resourceTencentCloudClbTargetGroup(),
 			"tencentcloud_clb_target_group_instance_attachment":    resourceTencentCloudClbTGAttachmentInstance(),
 			"tencentcloud_clb_target_group_attachment":             resourceTencentCloudClbTargetGroupAttachment(),
-			"tencentcloud_clb_logset":                              resourceTencentCloudClbLogSet(),
+			"tencentcloud_clb_log_set":                             resourceTencentCloudClbLogSet(),
+			"tencentcloud_clb_log_topic":                           resourceTencentCloudClbLogTopic(),
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),

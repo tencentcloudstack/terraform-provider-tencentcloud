@@ -15,8 +15,8 @@ Provides a resource to create a CLB instance topic.
 
 ```hcl
 resource "tencentcloud_clb_log_topic" "topic" {
-  topic_name      = "clb-topic"
-  partition_count = 3
+  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+  topic_name = "clb-topic"
 }
 ```
 
@@ -24,17 +24,16 @@ resource "tencentcloud_clb_log_topic" "topic" {
 
 The following arguments are supported:
 
-* `topic_name` - (Required) Log topic of CLB instance.
-* `limit` - (Optional) Fetch topic info pagination limit.
-* `offset` - (Optional) Fetch topic info pagination offset.
-* `partition_count` - (Optional) Topic partition count of CLB instance.(Default 1).
+* `log_set_id` - (Required, ForceNew) Log topic of CLB instance.
+* `topic_name` - (Required, ForceNew) Log topic of CLB instance.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `create_time` - Log topic creation time.
+* `status` - The status of log topic.
 
 
 ## Import

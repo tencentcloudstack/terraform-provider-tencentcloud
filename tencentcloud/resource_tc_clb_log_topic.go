@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_log_topic" "topic" {
-    topic_name="clb-topic"
-    partition_count=3
+  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+  topic_name = "clb-topic"
 }
 ```
 
@@ -21,6 +21,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"sync"
 
@@ -33,36 +34,81 @@ func resourceTencentCloudClbLogTopic() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbInstanceTopicCreate,
 		Read:   resourceTencentCloudClbInstanceTopicRead,
-		Update: resourceTencentCloudClbInstanceTopicUpdate,
+		//Update: resourceTencentCloudClbInstanceTopicUpdate,
 		Delete: resourceTencentCloudClbInstanceTopicDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
+			"log_set_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Log topic of CLB instance.",
+			},
 			"topic_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Log topic of CLB instance.",
 			},
-			"partition_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateIntegerInRange(1, 10),
-				Description:  "Topic partition count of CLB instance.(Default 1).",
+			//"partition_count": {
+			//	Type:         schema.TypeInt,
+			//	Optional:     true,
+			//	ValidateFunc: validateIntegerInRange(1, 10),
+			//	Description:  "Topic partition count of CLB instance.(Default 1).",
+			//},
+			//compute
+			"status": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "The status of log topic.",
 			},
-			"limit": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Fetch topic info pagination limit.",
-			},
-			"offset": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Fetch topic info pagination offset.",
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Log topic creation time.",
 			},
 		},
 	}
+}
+
+func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta interface{}) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	clsService := ClsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	if v, ok := d.GetOk("log_set_id"); ok {
+		info, err := clsService.DescribeClsLogSetById(ctx, v.(string))
+		if err != nil {
+			return err
+		}
+		if info == nil {
+			return fmt.Errorf("resource `log_set` %s does not exist", v.(string))
+		}
+	}
+
+	clbService := ClbService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	params := make(map[string]interface{})
+	if topicName, ok := d.GetOk("topic_name"); ok {
+		params["topic_name"] = topicName
+	}
+	if partitionCount, ok := d.GetOk("partition_count"); ok {
+		params["partition_count"] = partitionCount
+	}
+	resp, err := clbService.CreateTopic(ctx, params)
+	if err != nil {
+		log.Printf("[CRITAL]%s create clb topic failed, reason:%+v", logId, err)
+		return err
+	}
+	d.SetId(*resp.Response.TopicId)
+	return resourceTencentCloudClbInstanceTopicRead(d, meta)
 }
 
 func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta interface{}) error {
@@ -70,29 +116,23 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	defer clsActionMu.Unlock()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var topicName string
-	if value, ok := d.GetOk("topic_name"); ok {
-		topicName = value.(string)
-	}
+
+	id := d.Id()
 	clsService := ClsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	res, ok := clsService.DescribeTopicsByTopicName(ctx, topicName)
-	if ok != nil {
-		return ok
+	res, err := clsService.DescribeTopicsById(ctx, id)
+	if err != nil {
+		return err
 	}
-	_ = d.Set("logset_id", res.LogsetId)
-	_ = d.Set("topic_id", res.TopicId)
+	if res == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `logTopic` %s does not exist", id)
+	}
+	_ = d.Set("log_set_id", res.LogsetId)
 	_ = d.Set("topic_name", res.TopicName)
-	_ = d.Set("partition_count", res.PartitionCount)
-	_ = d.Set("index", res.Index)
 	_ = d.Set("create_time", res.CreateTime)
 	_ = d.Set("status", res.Status)
-	_ = d.Set("tags", res.Tags)
-	_ = d.Set("auto_split", res.AutoSplit)
-	_ = d.Set("max_split_partitions", res.MaxSplitPartitions)
-	_ = d.Set("storage_type", res.StorageType)
-	_ = d.Set("period", res.Period)
 	return nil
 
 }
@@ -106,38 +146,14 @@ func resourceTencentCloudClbInstanceTopicDelete(d *schema.ResourceData, meta int
 	defer clsActionMu.Unlock()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var topicName string
-	if value, ok := d.GetOk("topic_name"); ok {
-		topicName = value.(string)
-	}
+
+	id := d.Id()
 	clsService := ClsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	_, ok := clsService.DeleteTopicsByTopicName(ctx, topicName)
-	if ok != nil {
-		return ok
-	}
-	return nil
-}
-
-func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	params := make(map[string]interface{})
-	if topicName, ok := d.GetOk("topic_name"); ok {
-		params["topic_name"] = topicName
-	}
-	if partitionCount, ok := d.GetOk("partition_count"); ok {
-		params["partition_count"] = partitionCount
-	}
-	clbService := ClbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
-	resp, err := clbService.CreateTopic(ctx, params)
-	d.SetId(*resp.Response.TopicId)
+	err := clsService.DeleteTopicsById(ctx, id)
 	if err != nil {
-		log.Printf("[CRITAL]%s create CLB topic failed, reason:%+v", logId, err)
 		return err
 	}
-	return resourceTencentCloudClbInstanceTopicRead(d, meta)
+	return nil
 }
