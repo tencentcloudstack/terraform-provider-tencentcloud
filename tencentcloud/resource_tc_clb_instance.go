@@ -293,7 +293,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"log_topic_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "the id of log topic.",
+				Description: "The id of log topic.",
 			},
 		},
 	}
