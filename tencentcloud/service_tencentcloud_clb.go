@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1058,6 +1059,31 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	return
 }
 
+func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interface{}) (response *clb.CreateTopicResponse, err error) {
+
+	request := clb.NewCreateTopicRequest()
+
+	if topicName, ok := params["topic_name"]; ok {
+		request.TopicName = common.StringPtr(topicName.(string))
+	}
+
+	if partitionCount, ok := params["partition_count"]; ok {
+		request.PartitionCount = common.Uint64Ptr((uint64)(partitionCount.(int)))
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		resp, ok := me.client.UseClbClient().CreateTopic(request)
+		if ok != nil {
+			err = ok
+			return retryError(ok)
+		}
+		response = resp
+		return nil
+	})
+	return
+}
+
 func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId, targetGroupName string, port uint64) (err error) {
 	request := clb.NewModifyTargetGroupAttributeRequest()
 	request.TargetGroupId = &targetGroupId
@@ -1347,4 +1373,51 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 		return err
 	}
 	return nil
+}
+
+func (me *ClbService) DescribeClbLogSet(ctx context.Context) (logSetId string, healthId string, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeClsLogSetRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeClsLogSet(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	logSetId = *response.Response.LogsetId
+	healthId = *response.Response.HealthLogsetId
+	return
+}
+
+func (me *ClbService) CreateClbLogSet(ctx context.Context, name string, logsetType string, period int) (id string, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewCreateClsLogSetRequest()
+	request.Period = helper.IntUint64(period)
+	request.LogsetName = &name
+	if logsetType != "" {
+		request.LogsetType = &logsetType
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().CreateClsLogSet(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		id = *response.Response.LogsetId
+	}
+	return
 }

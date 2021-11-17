@@ -625,7 +625,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 
 	// security groups
 	// Only redis service support modify Generic DB instance security groups
-	redisService := RedisService{client:meta.(*TencentCloudClient).apiV3Conn}
+	redisService := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 	sg, err := redisService.DescribeDBSecurityGroups(ctx, "postgres", d.Id())
 	if err != nil {
 		return err

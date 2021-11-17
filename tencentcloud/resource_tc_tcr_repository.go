@@ -64,16 +64,16 @@ func resourceTencentCloudTcrRepository() *schema.Resource {
 				Description: "Name of the TCR repository. Valid length is [2~200]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`, `/`), and cannot start, end or continue with separators. Support the use of multi-level address formats, such as `sub1/sub2/repo`.",
 			},
 			"brief_desc": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
-				Description: "Brief description of the repository. Valid length is [1~100].",
+				Description:  "Brief description of the repository. Valid length is [1~100].",
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 1000),
-				Description: "Description of the repository. Valid length is [1~1000].",
+				Description:  "Description of the repository. Valid length is [1~1000].",
 			},
 			//computed
 			"is_public": {

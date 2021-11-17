@@ -108,6 +108,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+// merge `instance_type` to `backup_instance_types` as param `instance_types`
 func getNodePoolInstanceTypes(d *schema.ResourceData) []*string {
 	configParas := d.Get("auto_scaling_config").([]interface{})
 	dMap := configParas[0].(map[string]interface{})
@@ -414,6 +415,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"scaling_group_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Name of relative scaling group.",
 			},
 			"zones": {
@@ -431,12 +433,14 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"default_cooldown": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Seconds of scaling group cool down. Default value is `300`.",
 			},
 			"termination_policies": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Policy of scaling group termination. Available values: `[\"OLDEST_INSTANCE\"]`, `[\"NEWEST_INSTANCE\"]`.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
@@ -461,6 +465,9 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Computed:    true,
 				Description: "The auto scaling group ID.",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
 		},
 		//compare to console, miss cam_role and running_version and lock_initial_node and security_proof
 	}
@@ -500,11 +507,7 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 
 	if v, ok := d.GetOk("subnet_ids"); ok {
 		subnetIds := v.([]interface{})
-		request.SubnetIds = make([]*string, 0, len(subnetIds))
-		for i := range subnetIds {
-			subnetId := subnetIds[i].(string)
-			request.SubnetIds = append(request.SubnetIds, &subnetId)
-		}
+		request.SubnetIds = helper.InterfacesStringsPoint(subnetIds)
 	}
 
 	if v, ok := d.GetOk("scaling_mode"); ok {
@@ -668,6 +671,8 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		return nil
 	}
 
+	_ = d.Set("cluster_id", clusterId)
+
 	//Describe Node Pool
 	nodePool, has, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
 	if err != nil {
@@ -689,25 +694,121 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		return nil
 	}
 
+	_ = d.Set("name", nodePool.Name)
+	_ = d.Set("status", nodePool.LifeState)
+	_ = d.Set("node_count", nodePool.NodeCountSummary)
+	_ = d.Set("auto_scaling_group_id", nodePool.AutoscalingGroupId)
+	_ = d.Set("launch_config_id", nodePool.LaunchConfigurationId)
 	//set not force new parameters
-	d.Set("max_size", nodePool.MaxNodesNum)
-	d.Set("min_size", nodePool.MinNodesNum)
-	d.Set("desired_capacity", nodePool.DesiredNodesNum)
-	d.Set("name", nodePool.Name)
-	d.Set("status", nodePool.LifeState)
-	d.Set("node_count", nodePool.NodeCountSummary)
-	d.Set("auto_scaling_group_id", nodePool.AutoscalingGroupId)
-	d.Set("launch_config_id", nodePool.LaunchConfigurationId)
-	d.Set("enable_auto_scale", *nodePool.AutoscalingGroupStatus == "enabled")
-	d.Set("node_os", *nodePool.NodePoolOs)
-	d.Set("node_system_type", *nodePool.OsCustomizeType)
+	if nodePool.MaxNodesNum != nil {
+		_ = d.Set("max_size", nodePool.MaxNodesNum)
+	}
+	if nodePool.MinNodesNum != nil {
+		_ = d.Set("min_size", nodePool.MinNodesNum)
+	}
+	if nodePool.DesiredNodesNum != nil {
+		_ = d.Set("desired_capacity", nodePool.DesiredNodesNum)
+	}
+	if nodePool.AutoscalingGroupStatus != nil {
+		_ = d.Set("enable_auto_scale", *nodePool.AutoscalingGroupStatus == "enabled")
+	}
+	if nodePool.NodePoolOs != nil {
+		_ = d.Set("node_os", nodePool.NodePoolOs)
+	}
+	if nodePool.OsCustomizeType != nil {
+		_ = d.Set("node_os_type", nodePool.OsCustomizeType)
+	}
 
 	//set composed struct
 	lables := make(map[string]interface{}, len(nodePool.Labels))
 	for _, v := range nodePool.Labels {
 		lables[*v.Name] = *v.Value
 	}
-	d.Set("labels", lables)
+	_ = d.Set("labels", lables)
+
+	// set launch config
+	launchCfg, hasLC, err := asService.DescribeLaunchConfigurationById(ctx, *nodePool.LaunchConfigurationId)
+
+	if hasLC > 0 {
+		launchConfig := make(map[string]interface{})
+		if launchCfg.InstanceTypes != nil {
+			backupInsTypes := launchCfg.InstanceTypes
+			launchConfig["instance_type"] = backupInsTypes[0]
+			launchConfig["backup_instance_types"] = helper.StringsInterfaces(backupInsTypes[1:])
+		} else {
+			launchConfig["instance_type"] = launchCfg.InstanceType
+		}
+		if launchCfg.SystemDisk.DiskType != nil {
+			launchConfig["system_disk_type"] = launchCfg.SystemDisk.DiskType
+		}
+		if launchCfg.SystemDisk.DiskSize != nil {
+			launchConfig["system_disk_size"] = launchCfg.SystemDisk.DiskSize
+		}
+		if launchCfg.InternetAccessible.InternetChargeType != nil {
+			launchConfig["internet_charge_type"] = launchCfg.InternetAccessible.InternetChargeType
+		}
+		if launchCfg.InternetAccessible.InternetMaxBandwidthOut != nil {
+			launchConfig["internet_max_bandwidth_out"] = launchCfg.InternetAccessible.InternetMaxBandwidthOut
+		}
+		if launchCfg.InternetAccessible.BandwidthPackageId != nil {
+			launchConfig["bandwidth_package_id"] = launchCfg.InternetAccessible.BandwidthPackageId
+		}
+		if launchCfg.InternetAccessible.PublicIpAssigned != nil {
+			launchConfig["public_ip_assigned"] = launchCfg.InternetAccessible.PublicIpAssigned
+		}
+		if len(launchCfg.DataDisks) > 0 {
+			dataDisks := make([]map[string]interface{}, 0, len(launchCfg.DataDisks))
+			for i := range launchCfg.DataDisks {
+				item := launchCfg.DataDisks[i]
+				disk := make(map[string]interface{})
+				disk["disk_type"] = *item.DiskType
+				disk["disk_size"] = *item.DiskSize
+				if item.SnapshotId != nil {
+					disk["snapshot_id"] = *item.SnapshotId
+				}
+				dataDisks = append(dataDisks, disk)
+			}
+			launchConfig["data_disk"] = dataDisks
+		}
+		if launchCfg.LoginSettings != nil {
+			launchConfig["key_ids"] = helper.StringsInterfaces(launchCfg.LoginSettings.KeyIds)
+		}
+		// keep existing password in new launchConfig object
+		if v, ok := d.GetOk("auto_scaling_config.0.password"); ok {
+			launchConfig["password"] = v.(string)
+		}
+		launchConfig["security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
+
+		enableSecurity := launchCfg.EnhancedService.SecurityService.Enabled
+		enableMonitor := launchCfg.EnhancedService.MonitorService.Enabled
+		// Only declared or diff from exist will set.
+		if _, ok := d.GetOk("enhanced_security_service"); ok || enableSecurity != nil {
+			launchConfig["enhanced_security_service"] = *enableSecurity
+		}
+		if _, ok := d.GetOk("enhanced_monitor_service"); ok || enableMonitor != nil {
+			launchConfig["enhanced_monitor_service"] = *enableMonitor
+		}
+		asgConfig := make([]interface{}, 0, 1)
+		asgConfig = append(asgConfig, launchConfig)
+		if err := d.Set("auto_scaling_config", asgConfig); err != nil {
+			return err
+		}
+	}
+
+	// asg node unschedulable
+	clusterAsg, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, *nodePool.AutoscalingGroupId)
+
+	if err != nil {
+		return err
+	}
+
+	unschedulable := 0
+	if clusterAsg != nil {
+		if clusterAsg.IsUnschedulable != nil && *clusterAsg.IsUnschedulable {
+			unschedulable = 1
+		}
+	}
+	_ = d.Set("unschedulable", unschedulable)
 
 	// Relative scaling group status
 	asg, hasAsg, err := asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
@@ -725,12 +826,15 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		return nil
 	}
 
-	if hasAsg >= 1 {
+	if hasAsg > 0 {
 		_ = d.Set("scaling_group_name", asg.AutoScalingGroupName)
 		_ = d.Set("zones", asg.ZoneSet)
 		_ = d.Set("scaling_group_project_id", asg.ProjectId)
 		_ = d.Set("default_cooldown", asg.DefaultCooldown)
-		_ = d.Set("termination_policies", asg.TerminationPolicySet)
+		_ = d.Set("termination_policies", helper.StringsInterfaces(asg.TerminationPolicySet))
+		_ = d.Set("vpc_id", asg.VpcId)
+		_ = d.Set("retry_policy", asg.RetryPolicy)
+		_ = d.Set("subnet_ids", helper.StringsInterfaces(asg.SubnetIdSet))
 	}
 
 	taints := make([]map[string]interface{}, len(nodePool.Taints))

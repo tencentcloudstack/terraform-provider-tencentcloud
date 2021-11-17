@@ -188,19 +188,19 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Description: "Enable L5 for SCF function, default is `false`.",
 			},
 			"layers": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "The list of association layers.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"layer_name": {
-							Type: schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
 							Description: "The name of Layer.",
 						},
 						"layer_version": {
-							Type: schema.TypeInt,
-							Required: true,
+							Type:        schema.TypeInt,
+							Required:    true,
 							Description: "The version of layer.",
 						},
 					},
@@ -598,7 +598,6 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		codeType = scfFunctionImageCode
 		functionInfo.imageConfig = imageConfigs[0]
 	}
-
 
 	switch codeType {
 	case scfFunctionCosCode:

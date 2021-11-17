@@ -215,6 +215,8 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_target_group
     tencentcloud_clb_target_group_instance_attachment
     tencentcloud_clb_target_group_attachment
+    tencentcloud_clb_log_set
+	tencentcloud_clb_log_topic
 
 Cloud Object Storage(COS)
   Data Source
@@ -373,6 +375,7 @@ Monitor
   Resource
     tencentcloud_monitor_policy_group
     tencentcloud_monitor_binding_object
+	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
 
@@ -867,6 +870,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_clb_target_group":                        resourceTencentCloudClbTargetGroup(),
 			"tencentcloud_clb_target_group_instance_attachment":    resourceTencentCloudClbTGAttachmentInstance(),
 			"tencentcloud_clb_target_group_attachment":             resourceTencentCloudClbTargetGroupAttachment(),
+			"tencentcloud_clb_log_set":                             resourceTencentCloudClbLogSet(),
+			"tencentcloud_clb_log_topic":                           resourceTencentCloudClbLogTopic(),
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
@@ -936,6 +941,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdn_domain":                              resourceTencentCloudCdnDomain(),
 			"tencentcloud_monitor_policy_group":                    resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":                  resourceTencentMonitorBindingObject(),
+			"tencentcloud_monitor_policy_binding_object":           resourceTencentMonitorPolicyBindingObject(),
 			"tencentcloud_monitor_binding_receiver":                resourceTencentMonitorBindingAlarmReceiver(),
 			"tencentcloud_monitor_alarm_policy":                    resourceTencentMonitorAlarmPolicy(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
@@ -1058,6 +1064,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			*response.Response.Credentials.Token,
 		)
 	}
-
 	return &tcClient, nil
 }

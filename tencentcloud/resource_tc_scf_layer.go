@@ -185,7 +185,7 @@ func resourceTencentCloudScfLayerCreate(d *schema.ResourceData, meta interface{}
 		if item["cos_bucket_region"] != "" {
 			content.CosBucketRegion = helper.String(item["cos_bucket_region"].(string))
 		}
-		if item["zip_file"] != ""  {
+		if item["zip_file"] != "" {
 			path, err := homedir.Expand(item["zip_file"].(string))
 			if err != nil {
 				return fmt.Errorf("zip file (%s) homedir expand error: %s", item["zip_file"].(string), err.Error())
