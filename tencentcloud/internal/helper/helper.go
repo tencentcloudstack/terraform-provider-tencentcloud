@@ -41,6 +41,16 @@ func GetTags(d *schema.ResourceData, k string) map[string]string {
 	}
 	return tags
 }
+
+func GetMap(d *schema.ResourceData, k string) map[string]string {
+	tMap := make(map[string]string)
+	if raw, ok := d.GetOk(k); ok {
+		for k, v := range raw.(map[string]interface{}) {
+			tMap[k] = v.(string)
+		}
+	}
+	return tMap
+}
 func ParseMultiDisks(_multiDisks []map[string]interface{}) []*emr.MultiDisk {
 	multiDisks := make([]*emr.MultiDisk, len(_multiDisks))
 	for _, item := range _multiDisks {
@@ -83,17 +93,17 @@ func ParseResource(_resource map[string]interface{}) *emr.Resource {
 		if k == "spec" {
 			resultResource.Spec = common.StringPtr(v.(string))
 		} else if k == "storage_type" {
-			resultResource.StorageType = common.Int64Ptr(v.(int64))
+			resultResource.StorageType = common.Int64Ptr((int64)(v.(int)))
 		} else if k == "disk_type" {
 			resultResource.DiskType = common.StringPtr(v.(string))
 		} else if k == "mem_size" {
-			resultResource.MemSize = common.Int64Ptr(v.(int64))
+			resultResource.MemSize = common.Int64Ptr((int64)(v.(int)))
 		} else if k == "cpu" {
-			resultResource.Cpu = common.Int64Ptr(v.(int64))
+			resultResource.Cpu = common.Int64Ptr((int64)(v.(int)))
 		} else if k == "disk_size" {
-			resultResource.DiskSize = common.Int64Ptr(v.(int64))
+			resultResource.DiskSize = common.Int64Ptr((int64)(v.(int)))
 		} else if k == "root_size" {
-			resultResource.RootSize = common.Int64Ptr(v.(int64))
+			resultResource.RootSize = common.Int64Ptr((int64)(v.(int)))
 		} else if k == "multi_disks" {
 			multiDisks := v.([]map[string]interface{})
 			resultResource.MultiDisks = ParseMultiDisks(multiDisks)

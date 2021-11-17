@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -20,9 +21,8 @@ type EMRService struct {
 func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
-
 	if v, ok := d.GetOk("product_id"); ok {
-		request.ProductId = common.Uint64Ptr(v.(uint64))
+		request.ProductId = common.Uint64Ptr((uint64)(v.(int)))
 	}
 
 	if v, ok := d.GetOk("vpc_settings"); ok {
@@ -42,37 +42,49 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 
 	if v, ok := d.GetOk("softwares"); ok {
 		softwares := v.([]interface{})
-		request.Software = make([]*string, len(softwares))
+		request.Software = make([]*string, 0)
 		for _, software := range softwares {
 			request.Software = append(request.Software, common.StringPtr(software.(string)))
 		}
 	}
 
 	if v, ok := d.GetOk("resource_spec"); ok {
-		resourceSpec := v.(map[string]interface{})
+		tmpResourceSpec := v.([]interface{})
+		resourceSpec := tmpResourceSpec[0].(map[string]interface{})
+		request.ResourceSpec = &emr.NewResourceSpec{}
 		for k, v := range resourceSpec {
 			if k == "master_resource_spec" {
-				request.ResourceSpec.MasterResourceSpec = helper.ParseResource(v.(map[string]interface{}))
+				if len(v.([]interface{})) > 0 {
+					request.ResourceSpec.MasterResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+				}
 			} else if k == "core_resource_spec" {
-				request.ResourceSpec.CoreResourceSpec = helper.ParseResource(v.(map[string]interface{}))
+				if len(v.([]interface{})) > 0 {
+					request.ResourceSpec.CoreResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+				}
 			} else if k == "task_resource_spec" {
-				request.ResourceSpec.TaskResourceSpec = helper.ParseResource(v.(map[string]interface{}))
+				if len(v.([]interface{})) > 0 {
+					request.ResourceSpec.TaskResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+				}
 			} else if k == "master_count" {
-				request.ResourceSpec.MasterCount = common.Int64Ptr(v.(int64))
+				request.ResourceSpec.MasterCount = common.Int64Ptr((int64)(v.(int)))
 			} else if k == "core_count" {
-				request.ResourceSpec.CoreCount = common.Int64Ptr(v.(int64))
+				request.ResourceSpec.CoreCount = common.Int64Ptr((int64)(v.(int)))
 			} else if k == "task_count" {
-				request.ResourceSpec.TaskCount = common.Int64Ptr(v.(int64))
+				request.ResourceSpec.TaskCount = common.Int64Ptr((int64)(v.(int)))
 			} else if k == "common_resource_spec" {
-				request.ResourceSpec.CommonResourceSpec = helper.ParseResource(v.(map[string]interface{}))
+				if len(v.([]interface{})) > 0 {
+					request.ResourceSpec.CommonResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+				}
 			} else if k == "common_count" {
-				request.ResourceSpec.CommonCount = common.Int64Ptr(v.(int64))
+				request.ResourceSpec.CommonCount = common.Int64Ptr((int64)(v.(int)))
 			}
 		}
 	}
 
 	if v, ok := d.GetOk("support_ha"); ok {
-		request.SupportHA = common.Uint64Ptr(v.(uint64))
+		request.SupportHA = common.Uint64Ptr((uint64)(v.(int)))
+	} else {
+		request.SupportHA = common.Uint64Ptr(0)
 	}
 
 	if v, ok := d.GetOk("instance_name"); ok {
@@ -80,13 +92,17 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	}
 
 	if v, ok := d.GetOk("pay_mode"); ok {
-		request.PayMode = common.Uint64Ptr(v.(uint64))
+		request.PayMode = common.Uint64Ptr((uint64)(v.(int)))
 	}
-
 	if v, ok := d.GetOk("placement"); ok {
+		request.Placement = &emr.Placement{}
 		placement := v.(map[string]interface{})
+
 		if projectId, ok := placement["project_id"]; ok {
-			request.Placement.ProjectId = common.Int64Ptr(projectId.(int64))
+			projectIdInt64, _ := strconv.ParseInt(projectId.(string), 10, 64)
+			request.Placement.ProjectId = common.Int64Ptr(projectIdInt64)
+		} else {
+			request.Placement.ProjectId = common.Int64Ptr(0)
 		}
 		if zone, ok := placement["zone"]; ok {
 			request.Placement.Zone = common.StringPtr(zone.(string))
@@ -94,12 +110,13 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	}
 
 	if v, ok := d.GetOk("time_span"); ok {
-		request.TimeSpan = common.Uint64Ptr(v.(uint64))
+		request.TimeSpan = common.Uint64Ptr((uint64)(v.(int)))
 	}
 	if v, ok := d.GetOk("time_unit"); ok {
 		request.TimeUnit = common.StringPtr(v.(string))
 	}
 	if v, ok := d.GetOk("login_settings"); ok {
+		request.LoginSettings = &emr.LoginSettings{}
 		loginSettings := v.(map[string]interface{})
 		if password, ok := loginSettings["password"]; ok {
 			request.LoginSettings.Password = common.StringPtr(password.(string))
@@ -125,7 +142,7 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		return err
 	}
-	d.SetId(instanceId)
+	d.Set("instance_id", instanceId)
 	return nil
 }
 
@@ -141,20 +158,8 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 	if v, ok := filters["prefix_instance_ids"]; ok {
 		request.InstanceIds = common.StringPtrs(v.([]string))
 	}
-	if v, ok := filters["offset"]; ok {
-		request.Offset = common.Uint64Ptr(v.(uint64))
-	}
-	if v, ok := filters["limit"]; ok {
-		request.Limit = common.Uint64Ptr(v.(uint64))
-	}
 	if v, ok := filters["project_id"]; ok {
 		request.ProjectId = common.Int64Ptr(v.(int64))
-	}
-	if v, ok := filters["order_field"]; ok {
-		request.OrderField = common.StringPtr(v.(string))
-	}
-	if v, ok := filters["asc"]; ok {
-		request.Asc = common.Int64Ptr(v.(int64))
 	}
 
 	response, err := me.client.UseEmrClient().DescribeInstances(request)

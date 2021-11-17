@@ -39,32 +39,18 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 			"prefix_instance_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "fetch all instances with same prefix(e.g.:emr-xxxxxx).",
-			},
-			"offset": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Default 0 meaning first page",
-			},
-			"limit": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Default 10, max value 100",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Fetch all instances which owner same project. Default 0 meaning use default project id",
 			},
-			"order_field": {
+			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Fetch all instances which owner same project. Default 0 meaning use default project id",
-			},
-			"asc": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Default 0 => descending order, 1 => ascending order",
+				Description: "Used to save results.",
 			},
 			"clusters": {
 				Type:        schema.TypeList,
@@ -95,42 +81,42 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 						"region_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "region id of instance",
+							Description: "Region id of instance",
 						},
 						"zone_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "region id of instance",
+							Description: "Zone id of instance",
 						},
-						"app_id": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "app id of instance",
-						},
-						"uin": {
+						"zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "user uin of instance",
+							Description: "Zone of instance",
+						},
+						"master_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Master ip of instance",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "project id of instance",
+							Description: "Project id of instance",
 						},
-						"vpc_id": {
+						"charge_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "vpc id of instance",
-						},
-						"subnet_id": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "subnet id of instance",
+							Description: "Charge type of instance",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "status of instance",
+							Description: "Status of instance",
+						},
+						"add_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Add time of instance",
 						},
 					},
 				},
@@ -156,22 +142,9 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("prefix_instance_ids"); ok {
 		filters["prefix_instance_ids"] = v.(string)
 	}
-	if v, ok := d.GetOk("offset"); ok {
-		filters["offset"] = v.(uint64)
-	}
-	if v, ok := d.GetOk("limit"); ok {
-		filters["limit"] = v.(uint64)
-	}
 	if v, ok := d.GetOk("project_id"); ok {
 		filters["project_id"] = v.(int64)
 	}
-	if v, ok := d.GetOk("order_field"); ok {
-		filters["order_field"] = v.(string)
-	}
-	if v, ok := d.GetOk("asc"); ok {
-		filters["asc"] = v.(int64)
-	}
-
 	var clusters []*emr.ClusterInstancesInfo
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -187,14 +160,18 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 
 	emr_instances := make([]map[string]interface{}, 0, len(clusters))
 	ids := make([]string, 0, len(clusters))
-
 	for _, cluster := range clusters {
 		mapping := map[string]interface{}{
 			"cluster_id":   cluster.ClusterId,
-			"ftitle":       cluster.Ftitle,
 			"cluster_name": cluster.ClusterName,
+			"ftitle":       cluster.Ftitle,
+			"status":       cluster.Status,
 			"region_id":    cluster.RegionId,
 			"zone_id":      cluster.ZoneId,
+			"zone":         cluster.Zone,
+			"charge_type":  cluster.ChargeType,
+			"master_ip":    cluster.MasterIp,
+			"add_time":     cluster.AddTime,
 		}
 		emr_instances = append(emr_instances, mapping)
 		ids = append(ids, (string)(*cluster.Id))
@@ -202,8 +179,14 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("clusters", emr_instances)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set zones list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set cluster list fail, reason:%s\n ", logId, err.Error())
 		return err
+	}
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if err := writeToFile(output.(string), emr_instances); err != nil {
+			return err
+		}
 	}
 	return nil
 }
