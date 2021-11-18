@@ -40,7 +40,9 @@ package tencentcloud
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudEmrInstance() *schema.Resource {
@@ -53,6 +55,11 @@ func resourceTencentCloudEmrInstance() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"display_strategy": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Display strategy of EMR instance.",
+			},
 			"product_id": {
 				Type:         schema.TypeInt,
 				Required:     true,
@@ -217,11 +224,68 @@ func resourceTencentCloudEmrInstanceCreate(d *schema.ResourceData, meta interfac
 	if err := emrService.CreateInstance(ctx, d); err != nil {
 		return err
 	}
+	instanceId := d.Id()
+	params := make(map[string]interface{})
+	instances := make([]string, 0)
+	instances = append(instances, instanceId)
+	params["instance_ids"] = instances
+	var displayStrategy string
+	if v, ok := d.GetOk("display_strategy"); ok {
+		displayStrategy = v.(string)
+	}
+	params["display_strategy"] = displayStrategy
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		_, err := emrService.DescribeInstances(ctx, params)
 
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func resourceTencentCloudEmrInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_emr_instance.delete")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	emrService := EMRService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	if err := emrService.DeleteInstance(ctx, d); err != nil {
+		return err
+	}
+	instanceId := d.Id()
+	params := make(map[string]interface{})
+	instances := make([]string, 0)
+	instances = append(instances, instanceId)
+	params["instance_ids"] = instances
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		_, err := emrService.DescribeInstances(ctx, params)
+
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

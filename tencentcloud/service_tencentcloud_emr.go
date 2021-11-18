@@ -5,7 +5,6 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
@@ -16,6 +15,23 @@ import (
 
 type EMRService struct {
 	client *connectivity.TencentCloudClient
+}
+
+func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+	request := emr.NewTerminateInstanceRequest()
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.InstanceId = common.StringPtr(v.(string))
+	}
+	ratelimit.Check(request.GetAction())
+	//API: https://cloud.tencent.com/document/api/589/34261
+	_, err := me.client.UseEmrClient().TerminateInstance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	return nil
 }
 
 func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) error {
@@ -126,22 +142,16 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
-	instanceId := ""
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		//API: https://cloud.tencent.com/document/api/589/34261
-		response, err := me.client.UseEmrClient().CreateInstance(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
-		}
-		instanceId = *response.Response.InstanceId
-		return nil
-	})
+	ratelimit.Check(request.GetAction())
+	//API: https://cloud.tencent.com/document/api/589/34261
+	response, err := me.client.UseEmrClient().CreateInstance(request)
 	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
+	instanceId := *response.Response.InstanceId
+	d.SetId(instanceId)
 	d.Set("instance_id", instanceId)
 	return nil
 }
@@ -152,6 +162,13 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 
 	ratelimit.Check(request.GetAction())
 	// API: https://cloud.tencent.com/document/api/589/41707
+	if v, ok := filters["instance_ids"]; ok {
+		instances := v.([]string)
+		request.InstanceIds = make([]*string, 0)
+		for _, instance := range instances {
+			request.InstanceIds = append(request.InstanceIds, common.StringPtr(instance))
+		}
+	}
 	if v, ok := filters["display_strategy"]; ok {
 		request.DisplayStrategy = common.StringPtr(v.(string))
 	}
