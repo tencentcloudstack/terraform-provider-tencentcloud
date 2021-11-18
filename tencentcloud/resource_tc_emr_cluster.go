@@ -136,17 +136,17 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 						"master_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of master node",
+							Description: "The number of master node.",
 						},
 						"core_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of core node",
+							Description: "The number of core node.",
 						},
 						"task_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of core node",
+							Description: "The number of core node.",
 						},
 						"common_resource_spec": {
 							Type:     schema.TypeList,
@@ -166,7 +166,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 						"common_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of common node",
+							Description: "The number of common node.",
 						},
 					},
 				},
@@ -176,7 +176,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 1),
-				Description:  "The flag whether the instance support high availability.(0=>not support, 1=>support)",
+				Description:  "The flag whether the instance support high availability.(0=>not support, 1=>support).",
 			},
 			"instance_name": {
 				Type:         schema.TypeString,
@@ -203,7 +203,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"time_unit": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month)",
+				Description: "The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).",
 			},
 			"login_settings": {
 				Type:        schema.TypeMap,

@@ -555,6 +555,7 @@ EMR
 
   Resource
     tencentcloud_emr_cluster
+
 */
 package tencentcloud
 

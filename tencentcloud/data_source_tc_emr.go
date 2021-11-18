@@ -34,7 +34,7 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 			"display_strategy": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Display strategy(e.g.:clusterList, monitorManage)",
+				Description: "Display strategy(e.g.:clusterList, monitorManage).",
 			},
 			"prefix_instance_ids": {
 				Type:        schema.TypeList,
@@ -45,7 +45,7 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Fetch all instances which owner same project. Default 0 meaning use default project id",
+				Description: "Fetch all instances which owner same project. Default 0 meaning use default project id.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -61,62 +61,62 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 						"id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Id of instance",
+							Description: "Id of instance.",
 						},
 						"cluster_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Cluster id of instance",
+							Description: "Cluster id of instance.",
 						},
 						"ftitle": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Title of instance",
+							Description: "Title of instance.",
 						},
 						"cluster_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Cluster name of instance",
+							Description: "Cluster name of instance.",
 						},
 						"region_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Region id of instance",
+							Description: "Region id of instance.",
 						},
 						"zone_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Zone id of instance",
+							Description: "Zone id of instance.",
 						},
 						"zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Zone of instance",
+							Description: "Zone of instance.",
 						},
 						"master_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Master ip of instance",
+							Description: "Master ip of instance.",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Project id of instance",
+							Description: "Project id of instance.",
 						},
 						"charge_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Charge type of instance",
+							Description: "Charge type of instance.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Status of instance",
+							Description: "Status of instance.",
 						},
 						"add_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Add time of instance",
+							Description: "Add time of instance.",
 						},
 					},
 				},
