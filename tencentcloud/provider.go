@@ -548,6 +548,13 @@ VPN
     tencentcloud_vpn_gateway
     tencentcloud_vpn_gateway_route
     tencentcloud_vpn_connection
+
+EMR
+  Data Source
+    tencentcloud_emr
+
+  Resource
+    tencentcloud_emr_cluster
 */
 package tencentcloud
 
@@ -821,7 +828,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"tencentcloud_emr_instance":                            resourceTencentCloudEmrInstance(),
+			"tencentcloud_emr_cluster":                             resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                resourceTencentCloudInstance(),
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),

@@ -1,37 +1,41 @@
 /*
-Provides a mysql instance resource to create master database instances.
-
-~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+Provide a resource to create a emr cluster.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_instance" "default" {
-  internet_service = 1
-  engine_version   = "5.7"
-  charge_type = "POSTPAID"
-  root_password     = "********"
-  slave_deploy_mode = 0
-  first_slave_zone  = "ap-guangzhou-4"
-  second_slave_zone = "ap-guangzhou-4"
-  slave_sync_mode   = 1
-  availability_zone = "ap-guangzhou-4"
-  project_id        = 201901010001
-  instance_name     = "myTestMysql"
-  mem_size          = 128000
-  volume_size       = 250
-  vpc_id            = "vpc-12mt3l31"
-  subnet_id         = "subnet-9uivyb1g"
-  intranet_port     = 3306
-  security_groups   = ["sg-ot8eclwz"]
-
-  tags = {
-    name = "test"
-  }
-
-  parameters = {
-    max_connections = "1000"
-  }
+resource "tencentcloud_emr_cluster" "emrrrr" {
+	product_id=4
+	display_strategy="clusterList"
+	vpc_settings={vpc_id:"vpc-fuwly8x5", subnet_id:"subnet-d830wfso"}
+	softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
+    support_ha=0
+    instance_name="emr-test"
+	resource_spec {
+	    master_resource_spec {
+	        mem_size=8192
+	        cpu=4
+	        disk_size=100
+	        disk_type="CLOUD_PREMIUM"
+	        spec="CVM.S2"
+	        storage_type=5
+	    }
+	    core_resource_spec {
+	        mem_size=8192
+	        cpu=4
+	        disk_size=100
+	        disk_type="CLOUD_PREMIUM"
+	        spec="CVM.S2"
+	        storage_type=5
+	    }
+	    master_count=1
+	    core_count=2
+	}
+	login_settings={password:"tencent@cloud123"}
+	time_span=1
+	time_unit="m"
+    pay_mode=1
+    placement={zone:"ap-guangzhou-3", project_id:0}
 }
 ```
 */
@@ -39,18 +43,19 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudEmrInstance() *schema.Resource {
+func resourceTencentCloudEmrCluster() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudEmrInstanceCreate,
-		Read:   resourceTencentCloudEmrInstanceRead,
-		Update: resourceTencentCloudEmrInstanceUpdate,
-		Delete: resourceTencentCloudEmrInstanceDelete,
+		Create: resourceTencentCloudEmrClusterCreate,
+		Read:   resourceTencentCloudEmrClusterRead,
+		Update: resourceTencentCloudEmrClusterUpdate,
+		Delete: resourceTencentCloudEmrClusterDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -214,7 +219,7 @@ func resourceTencentCloudEmrInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudEmrInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_emr_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -235,11 +240,19 @@ func resourceTencentCloudEmrInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	params["display_strategy"] = displayStrategy
 	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-		_, err := emrService.DescribeInstances(ctx, params)
+		clusters, err := emrService.DescribeInstances(ctx, params)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
+			}
+		}
+
+		if len(clusters) > 0 {
+			status := *(clusters[0].Status)
+			if status != EmrInternetStatusCreated {
+				return resource.RetryableError(
+					fmt.Errorf("%v create cluster endpoint  status still is %v", instanceId, status))
 			}
 		}
 
@@ -254,7 +267,7 @@ func resourceTencentCloudEmrInstanceCreate(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceTencentCloudEmrInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_emr_instance.delete")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -269,7 +282,52 @@ func resourceTencentCloudEmrInstanceDelete(d *schema.ResourceData, meta interfac
 	instances := make([]string, 0)
 	instances = append(instances, instanceId)
 	params["instance_ids"] = instances
+	params["display_strategy"] = DisplayStrategyIsclusterList
 	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		clusters, err := emrService.DescribeInstances(ctx, params)
+
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+
+		if len(clusters) > 0 {
+			status := *(clusters[0].Status)
+			if status != EmrInternetStatusDeleted {
+				return resource.RetryableError(
+					fmt.Errorf("%v create cluster endpoint  status still is %v", instanceId, status))
+			}
+		}
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface{}) error {
+	return nil
+}
+
+func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	emrService := EMRService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	params := make(map[string]interface{})
+	var displayStrategy string
+	if v, ok := d.GetOk("display_strategy"); ok {
+		displayStrategy = v.(string)
+	}
+	params["display_strategy"] = displayStrategy
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, err := emrService.DescribeInstances(ctx, params)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -286,13 +344,5 @@ func resourceTencentCloudEmrInstanceDelete(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func resourceTencentCloudEmrInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	return nil
-}
-
-func resourceTencentCloudEmrInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }

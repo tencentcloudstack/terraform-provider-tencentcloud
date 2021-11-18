@@ -44,7 +44,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		topicName := rs.Primary.Attributes["topic_name"]
-		instance, err := clsService.DeleteTopicsByTopicName(ctx, topicName)
+		instance, err := clsService.DescribeTopicsById(ctx, topicName)
 		if err != nil {
 			return err
 		}
