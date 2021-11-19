@@ -552,7 +552,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-			Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+			Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
