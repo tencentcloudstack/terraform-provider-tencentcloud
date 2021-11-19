@@ -5,37 +5,37 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_emr_cluster" "emrrrr" {
-	product_id=4
-	display_strategy="clusterList"
-	vpc_settings={vpc_id:"vpc-fuwly8x5", subnet_id:"subnet-d830wfso"}
-	softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
-    support_ha=0
-    instance_name="emr-test"
-	resource_spec {
-	    master_resource_spec {
-	        mem_size=8192
-	        cpu=4
-	        disk_size=100
-	        disk_type="CLOUD_PREMIUM"
-	        spec="CVM.S2"
-	        storage_type=5
-	    }
-	    core_resource_spec {
-	        mem_size=8192
-	        cpu=4
-	        disk_size=100
-	        disk_type="CLOUD_PREMIUM"
-	        spec="CVM.S2"
-	        storage_type=5
-	    }
-	    master_count=1
-	    core_count=2
+  product_id=4
+  display_strategy="clusterList"
+  vpc_settings={vpc_id:"vpc-fuwly8x5", subnet_id:"subnet-d830wfso"}
+  softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
+  support_ha=0
+  instance_name="emr-test"
+  resource_spec {
+    master_resource_spec {
+      mem_size=8192
+      cpu=4
+      disk_size=100
+      disk_type="CLOUD_PREMIUM"
+      spec="CVM.S2"
+      storage_type=5
 	}
-	login_settings={password:"tencent@cloud123"}
-	time_span=1
-	time_unit="m"
-    pay_mode=1
-    placement={zone:"ap-guangzhou-3", project_id:0}
+    core_resource_spec {
+      mem_size=8192
+      cpu=4
+      disk_size=100
+      disk_type="CLOUD_PREMIUM"
+      spec="CVM.S2"
+      storage_type=5
+	}
+    master_count=1
+    core_count=2
+  }
+  login_settings={password:"tencent@cloud123"}
+  time_span=1
+  time_unit="m"
+  pay_mode=1
+  placement={zone:"ap-guangzhou-3", project_id:0}
 }
 ```
 */
@@ -54,7 +54,6 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEmrClusterCreate,
 		Read:   resourceTencentCloudEmrClusterRead,
-		Update: resourceTencentCloudEmrClusterUpdate,
 		Delete: resourceTencentCloudEmrClusterDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -63,76 +62,39 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"display_strategy": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Display strategy of EMR instance.",
 			},
 			"product_id": {
 				Type:         schema.TypeInt,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(1, 30),
 				Description:  "The product id of EMR instance.",
 			},
 			"vpc_settings": {
 				Type:        schema.TypeMap,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The private net config of EMR instance.",
 			},
 			"softwares": {
 				Type:        schema.TypeList,
 				Required:    true,
+				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "The softwares of a EMR instance.",
 			},
 			"resource_spec": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"master_resource_spec": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"spec":         {Type: schema.TypeString, Optional: true},
-									"storage_type": {Type: schema.TypeInt, Optional: true},
-									"disk_type":    {Type: schema.TypeString, Optional: true},
-									"mem_size":     {Type: schema.TypeInt, Optional: true},
-									"cpu":          {Type: schema.TypeInt, Optional: true},
-									"disk_size":    {Type: schema.TypeInt, Optional: true},
-								},
-							},
-						},
-						"core_resource_spec": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"spec":         {Type: schema.TypeString, Optional: true},
-									"storage_type": {Type: schema.TypeInt, Optional: true},
-									"disk_type":    {Type: schema.TypeString, Optional: true},
-									"mem_size":     {Type: schema.TypeInt, Optional: true},
-									"cpu":          {Type: schema.TypeInt, Optional: true},
-									"disk_size":    {Type: schema.TypeInt, Optional: true},
-								},
-							},
-						},
-						"task_resource_spec": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"spec":         {Type: schema.TypeString, Optional: true},
-									"storage_type": {Type: schema.TypeInt, Optional: true},
-									"disk_type":    {Type: schema.TypeString, Optional: true},
-									"mem_size":     {Type: schema.TypeInt, Optional: true},
-									"cpu":          {Type: schema.TypeInt, Optional: true},
-									"disk_size":    {Type: schema.TypeInt, Optional: true},
-								},
-							},
-						},
+						"master_resource_spec": buildResourceSpecSchema(),
+						"core_resource_spec":   buildResourceSpecSchema(),
+						"task_resource_spec":   buildResourceSpecSchema(),
 						"master_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
@@ -175,39 +137,46 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"support_ha": {
 				Type:         schema.TypeInt,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(0, 1),
 				Description:  "The flag whether the instance support high availability.(0=>not support, 1=>support).",
 			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(6, 36),
 				Description:  "Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).",
 			},
 			"pay_mode": {
 				Type:         schema.TypeInt,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(0, 1),
 				Description:  "The pay mode of instance. 0 is pay on an annual basis, 1 is pay on a measure basis.",
 			},
 			"placement": {
 				Type:        schema.TypeMap,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The location of the instance.",
 			},
 			"time_span": {
 				Type:        schema.TypeInt,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.\nWhen TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.",
 			},
 			"time_unit": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).",
 			},
 			"login_settings": {
 				Type:        schema.TypeMap,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance login settings.",
 			},
 			"instance_id": {
@@ -308,10 +277,6 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
