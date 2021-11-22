@@ -548,6 +548,10 @@ VPN
     tencentcloud_vpn_gateway
     tencentcloud_vpn_gateway_route
     tencentcloud_vpn_connection
+
+DNSPOD
+  Resource
+    tencentcloud_dnspod_domain_instance
 */
 package tencentcloud
 
@@ -995,6 +999,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
+			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
