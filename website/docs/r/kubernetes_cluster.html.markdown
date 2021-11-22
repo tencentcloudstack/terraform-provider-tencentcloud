@@ -519,7 +519,7 @@ The `master_config` object supports the following:
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
+* `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 The `node_pool_global_config` object supports the following:
@@ -560,7 +560,7 @@ The `worker_config` object supports the following:
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: HDD cloud disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
+* `system_disk_type` - (Optional, ForceNew) System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference

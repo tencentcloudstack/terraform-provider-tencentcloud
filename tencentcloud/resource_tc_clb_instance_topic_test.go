@@ -48,6 +48,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 		if err != nil {
 			return err
 		}
+
 		if instance == nil {
 			return fmt.Errorf("[CHECK][CLB topic][Exists] id %s is not exist", rs.Primary.ID)
 		}

@@ -31,6 +31,7 @@ import (
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -100,6 +101,7 @@ type TencentCloudClient struct {
 	apiConn            *api.Client
 	emrConn            *emr.Client
 	clsConn            *cls.Client
+	dnsPodConn         *dnspod.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -648,4 +650,16 @@ func (me *TencentCloudClient) UseClsClient() *cls.Client {
 	me.clsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clsConn
+}
+
+// UseDnsPodClient return DnsPod client for service
+func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
+	if me.dnsPodConn != nil {
+		return me.dnsPodConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.dnsPodConn, _ = dnspod.NewClient(me.Credential, me.Region, cpf)
+	me.dnsPodConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dnsPodConn
 }

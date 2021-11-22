@@ -328,6 +328,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
     tencentcloud_eks_cluster
+    tencentcloud_eks_container_instance
     tencentcloud_kubernetes_auth_attachment
 
 TDMQ
@@ -556,6 +557,9 @@ EMR
   Resource
     tencentcloud_emr_cluster
 
+DNSPOD
+  Resource
+    tencentcloud_dnspod_domain_instance
 */
 package tencentcloud
 
@@ -883,7 +887,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
-			"tencentcloud_eks_cluster":                             resourceTencentcloudEksCluster(),
+			"tencentcloud_eks_cluster":                             resourceTencentCloudEksCluster(),
+			"tencentcloud_eks_container_instance":                  resourceTencentCloudEksContainerInstance(),
 			"tencentcloud_kubernetes_auth_attachment":              resourceTencentCloudTKEAuthAttachment(),
 			"tencentcloud_kubernetes_as_scaling_group":             ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":                 resourceTencentCloudTkeScaleWorker(),
@@ -1005,6 +1010,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret":                              resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
+			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
