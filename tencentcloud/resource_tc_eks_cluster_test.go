@@ -12,8 +12,6 @@ import (
 func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 	t.Parallel()
 
-	fmt.Printf("file====:\n$%s", testAccEksCluster)
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
