@@ -7,7 +7,10 @@ Example Usage
 resource "tencentcloud_emr_cluster" "emrrrr" {
   product_id=4
   display_strategy="clusterList"
-  vpc_settings={vpc_id:"vpc-fuwly8x5", subnet_id:"subnet-d830wfso"}
+  vpc_settings={
+    vpc_id="vpc-fuwly8x5"
+    subnet_id:"subnet-d830wfso"
+  }
   softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
   support_ha=0
   instance_name="emr-test"
@@ -19,7 +22,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
       disk_type="CLOUD_PREMIUM"
       spec="CVM.S2"
       storage_type=5
-	}
+    }
     core_resource_spec {
       mem_size=8192
       cpu=4
@@ -27,15 +30,20 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
       disk_type="CLOUD_PREMIUM"
       spec="CVM.S2"
       storage_type=5
-	}
+    }
     master_count=1
     core_count=2
   }
-  login_settings={password:"tencent@cloud123"}
+  login_settings={
+    password="tencent@cloud123"
+  }
   time_span=1
   time_unit="m"
   pay_mode=1
-  placement={zone:"ap-guangzhou-3", project_id:0}
+  placement={
+    zone="ap-guangzhou-3"
+    project_id=0
+  }
 }
 ```
 */
@@ -116,12 +124,36 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"spec":         {Type: schema.TypeString, Optional: true},
-									"storage_type": {Type: schema.TypeInt, Optional: true},
-									"disk_type":    {Type: schema.TypeString, Optional: true},
-									"mem_size":     {Type: schema.TypeInt, Optional: true},
-									"cpu":          {Type: schema.TypeInt, Optional: true},
-									"disk_size":    {Type: schema.TypeInt, Optional: true},
+									"spec": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The node specification description.",
+									},
+									"storage_type": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "The type of storage.",
+									},
+									"disk_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The disk type.",
+									},
+									"mem_size": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "The mem size.",
+									},
+									"cpu": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "The number of CPU cores.",
+									},
+									"disk_size": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "The disk size.",
+									},
 								},
 							},
 						},
@@ -195,21 +227,17 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 	emrService := EMRService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	if err := emrService.CreateInstance(ctx, d); err != nil {
+	instanceId, err := emrService.CreateInstance(ctx, d)
+	if err != nil {
 		return err
 	}
-	instanceId := d.Id()
-	params := make(map[string]interface{})
-	instances := make([]string, 0)
-	instances = append(instances, instanceId)
-	params["instance_ids"] = instances
+	d.SetId(instanceId)
 	var displayStrategy string
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)
 	}
-	params["display_strategy"] = displayStrategy
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-		clusters, err := emrService.DescribeInstances(ctx, params)
+	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, displayStrategy)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
@@ -247,13 +275,8 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 	instanceId := d.Id()
-	params := make(map[string]interface{})
-	instances := make([]string, 0)
-	instances = append(instances, instanceId)
-	params["instance_ids"] = instances
-	params["display_strategy"] = DisplayStrategyIsclusterList
 	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-		clusters, err := emrService.DescribeInstances(ctx, params)
+		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
@@ -286,14 +309,9 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	emrService := EMRService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	params := make(map[string]interface{})
-	var displayStrategy string
-	if v, ok := d.GetOk("display_strategy"); ok {
-		displayStrategy = v.(string)
-	}
-	params["display_strategy"] = displayStrategy
+	instanceId := d.Id()
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, err := emrService.DescribeInstances(ctx, params)
+		_, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {

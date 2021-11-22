@@ -34,7 +34,7 @@ func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData
 	return nil
 }
 
-func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) error {
+func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) (id string, err error) {
 	logId := getLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
 	if v, ok := d.GetOk("product_id"); ok {
@@ -148,12 +148,10 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return
 	}
-	instanceId := *response.Response.InstanceId
-	d.SetId(instanceId)
-	d.Set("instance_id", instanceId)
-	return nil
+	id = *response.Response.InstanceId
+	return
 }
 
 func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]interface{}) (clusters []*emr.ClusterInstancesInfo, errRet error) {
@@ -178,6 +176,30 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 	if v, ok := filters["project_id"]; ok {
 		request.ProjectId = common.Int64Ptr(v.(int64))
 	}
+
+	response, err := me.client.UseEmrClient().DescribeInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	clusters = response.Response.ClusterList
+	return
+}
+
+func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId string, displayStrategy string) (clusters []*emr.ClusterInstancesInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := emr.NewDescribeInstancesRequest()
+
+	ratelimit.Check(request.GetAction())
+	// API: https://cloud.tencent.com/document/api/589/41707
+	request.InstanceIds = make([]*string, 0)
+	request.InstanceIds = append(request.InstanceIds, common.StringPtr(instanceId))
+	request.DisplayStrategy = common.StringPtr(displayStrategy)
 
 	response, err := me.client.UseEmrClient().DescribeInstances(request)
 	if err != nil {
