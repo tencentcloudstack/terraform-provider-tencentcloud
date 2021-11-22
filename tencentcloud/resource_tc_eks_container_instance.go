@@ -865,14 +865,14 @@ func resourceTencentCloudEksContainerInstance() *schema.Resource {
 			// DNSConfig
 			"dns_names_servers": {
 				Type:        schema.TypeList,
-				ForceNew: true,
+				ForceNew:    true,
 				Optional:    true,
 				Description: "IP Addresses of DNS Servers.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"dns_searches": {
 				Type:        schema.TypeList,
-				ForceNew: true,
+				ForceNew:    true,
 				Optional:    true,
 				Description: "List of DNS Search Domain.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -914,7 +914,7 @@ func resourceTencentCloudEksContainerInstance() *schema.Resource {
 			"eip_max_bandwidth_out": {
 				Type:          schema.TypeInt,
 				Optional:      true,
-				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). Conflict with `existed_eip_ids`.",
+				Description:   "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). Conflict with `existed_eip_ids`.",
 				ConflictsWith: []string{"existed_eip_ids"},
 			},
 			"cam_role_name": {

@@ -193,7 +193,6 @@ func (me *EksService) DescribeEksContainerInstanceById(ctx context.Context, id s
 	return
 }
 
-
 func (me *EksService) DescribeEksContainerInstancesByFilter(ctx context.Context, filters []*tke.Filter, limit uint64, offset uint64) (instances []*tke.EksCi, errRet error) {
 	logId := getLogId(ctx)
 
@@ -277,7 +276,7 @@ func (me *EksService) CreateEksContainerInstances(ctx context.Context, request *
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response != nil && len(response.Response.EksCiIds) > 0{
+	if response.Response != nil && len(response.Response.EksCiIds) > 0 {
 		id = *response.Response.EksCiIds[0]
 	}
 

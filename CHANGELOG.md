@@ -1,3 +1,18 @@
+## 1.60.10 (November 22, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_eks_container_instance`
+* **New Resource**: `tencentcloud_dnspod_domain_instance`
+
+BUGFIXES:
+
+* Resource `tencentcloud_monitor_alarm_policy` remove alarm policy binding check
+
+DEPRECATED:
+
+* Disk type `CLOUD_BASIC` which referenced by CVM/TKE/CBS was no longer available
+
 ## 1.60.9 (November 16, 2021)
 
 BUGFIXES:

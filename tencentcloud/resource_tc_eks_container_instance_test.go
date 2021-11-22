@@ -53,7 +53,7 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckEksCiDestroy (s *terraform.State) error {
+func testAccCheckEksCiDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
