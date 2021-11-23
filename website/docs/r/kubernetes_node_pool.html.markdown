@@ -106,7 +106,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 
 The following arguments are supported:
 
-* `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
+* `auto_scaling_config` - (Required) Auto scaling config parameters.
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `max_size` - (Required) Maximum number of node.
 * `min_size` - (Required) Minimum number of node.
@@ -135,17 +135,17 @@ The `auto_scaling_config` object supports the following:
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
 * `backup_instance_types` - (Optional) Backup CVM instance types if specified instance type sold out or mismatch.
 * `bandwidth_package_id` - (Optional) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
-* `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `data_disk` - (Optional) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_charge_type` - (Optional) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, ForceNew) ID list of keys.
 * `password` - (Optional, ForceNew) Password to access.
-* `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
-* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
+* `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
+* `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
+* `system_disk_size` - (Optional) Volume of system disk in GB. Default is `50`.
+* `system_disk_type` - (Optional) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
 The `data_disk` object supports the following:
 

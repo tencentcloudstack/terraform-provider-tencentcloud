@@ -98,6 +98,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -150,7 +151,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"system_disk_type": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ForceNew:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
 			Description:  "Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.",
@@ -158,7 +158,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"system_disk_size": {
 			Type:         schema.TypeInt,
 			Optional:     true,
-			ForceNew:     true,
 			Default:      50,
 			ValidateFunc: validateIntegerInRange(50, 500),
 			Description:  "Volume of system disk in GB. Default is `50`.",
@@ -166,8 +165,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"data_disk": {
 			Type:        schema.TypeList,
 			Optional:    true,
-			ForceNew:    true,
-			MaxItems:    11,
 			Description: "Configurations of data disk.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
@@ -198,7 +195,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"internet_charge_type": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ForceNew:     true,
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
 			Description:  "Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
@@ -217,7 +213,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"public_ip_assigned": {
 			Type:        schema.TypeBool,
 			Optional:    true,
-			ForceNew:    true,
 			Description: "Specify whether to assign an Internet IP address.",
 		},
 		"password": {
@@ -240,7 +235,6 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"security_group_ids": {
 			Type:        schema.TypeList,
 			Optional:    true,
-			ForceNew:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Security groups to which a CVM instance belongs.",
 		},
@@ -350,7 +344,6 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"auto_scaling_config": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: composedKubernetesAsScalingConfigPara(),
@@ -519,7 +512,7 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 	return result, errRet
 }
 
-//this function is similar to kubernetesAsScalingConfigParaSerial, but less parameter
+//This function is used to specify tke as group launch config, similar to kubernetesAsScalingConfigParaSerial, but less parameter
 func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
 	var (
 		result string
@@ -633,6 +626,71 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 
 	result = request.ToJsonString()
 	return result, errRet
+}
+
+func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId string) *as.ModifyLaunchConfigurationAttributesRequest {
+	launchConfigRaw := d.Get("auto_scaling_config").([]interface{})
+	dMap := launchConfigRaw[0].(map[string]interface{})
+	request := as.NewModifyLaunchConfigurationAttributesRequest()
+	request.LaunchConfigurationId = &launchConfigId
+
+	request.SystemDisk = &as.SystemDisk{}
+	if v, ok := dMap["system_disk_type"]; ok {
+		request.SystemDisk.DiskType = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["system_disk_size"]; ok {
+		request.SystemDisk.DiskSize = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := dMap["data_disk"]; ok {
+		dataDisks := v.([]interface{})
+		request.DataDisks = make([]*as.DataDisk, 0, len(dataDisks))
+		for _, d := range dataDisks {
+			value := d.(map[string]interface{})
+			diskType := value["disk_type"].(string)
+			diskSize := uint64(value["disk_size"].(int))
+			snapshotId := value["snapshot_id"].(string)
+			dataDisk := as.DataDisk{
+				DiskType: &diskType,
+				DiskSize: &diskSize,
+			}
+			if snapshotId != "" {
+				dataDisk.SnapshotId = &snapshotId
+			}
+			request.DataDisks = append(request.DataDisks, &dataDisk)
+		}
+	} else {
+		request.DataDisks = []*as.DataDisk{}
+	}
+
+	request.InternetAccessible = &as.InternetAccessible{}
+	if v, ok := dMap["internet_charge_type"]; ok {
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+	}
+	if v, ok := dMap["bandwidth_package_id"]; ok {
+		if v.(string) != "" {
+			request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+		}
+	}
+	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))
+	}
+	if v, ok := dMap["public_ip_assigned"]; ok {
+		publicIpAssigned := v.(bool)
+		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
+	}
+
+	if v, ok := dMap["security_group_ids"]; ok {
+		securityGroups := v.([]interface{})
+		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+		for i := range securityGroups {
+			securityGroup := securityGroups[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
+		}
+	}
+
+	return request
 }
 
 func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) error {
@@ -955,8 +1013,9 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 	var (
 		logId     = getLogId(contextNil)
 		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		client    = meta.(*TencentCloudClient).apiV3Conn
+		service   = TkeService{client: client}
+		asService = AsService{client: client}
 		items     = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
@@ -967,6 +1026,24 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 
 	d.Partial(true)
 
+	// LaunchConfig
+	if d.HasChange("auto_scaling_config") {
+		nodePool, _, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
+		if err != nil {
+			return err
+		}
+		launchConfigId := *nodePool.LaunchConfigurationId
+		request := composeAsLaunchConfigModifyRequest(d, launchConfigId)
+		_, err = client.UseAsClient().ModifyLaunchConfigurationAttributes(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return err
+		}
+		d.SetPartial("auto_scaling_config")
+	}
+
+	// ModifyClusterNodePool
 	if d.HasChange("min_size") || d.HasChange("max_size") || d.HasChange("name") || d.HasChange("labels") || d.HasChange("taints") || d.HasChange("enable_auto_scale") || d.HasChange("node_os_type") || d.HasChange("node_os") {
 		maxSize := int64(d.Get("max_size").(int))
 		minSize := int64(d.Get("min_size").(int))
@@ -996,6 +1073,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("taints")
 	}
 
+	// ModifyScalingGroup
 	if d.HasChange("scaling_group_name") ||
 		d.HasChange("zones") ||
 		d.HasChange("scaling_group_project_id") ||
