@@ -51,11 +51,14 @@ package tencentcloud
 
 import (
 	"context"
+	innerErr "errors"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 )
 
 func resourceTencentCloudEmrCluster() *schema.Resource {
@@ -63,6 +66,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 		Create: resourceTencentCloudEmrClusterCreate,
 		Read:   resourceTencentCloudEmrClusterRead,
 		Delete: resourceTencentCloudEmrClusterDelete,
+		Update: resourceTencentCloudEmrClusterUpdate,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -96,7 +100,6 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"resource_spec": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -118,48 +121,11 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 							Optional:    true,
 							Description: "The number of core node.",
 						},
-						"common_resource_spec": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"spec": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "The node specification description.",
-									},
-									"storage_type": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The type of storage.",
-									},
-									"disk_type": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "The disk type.",
-									},
-									"mem_size": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The mem size.",
-									},
-									"cpu": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The number of CPU cores.",
-									},
-									"disk_size": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The disk size.",
-									},
-								},
-							},
-						},
+						"common_resource_spec": buildResourceSpecSchema(),
 						"common_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "The number of common node.",
 						},
 					},
@@ -183,7 +149,6 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"pay_mode": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(0, 1),
 				Description:  "The pay mode of instance. 0 is pay on an annual basis, 1 is pay on a measure basis.",
 			},
@@ -196,13 +161,11 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 			"time_span": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.\nWhen TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.",
 			},
 			"time_unit": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).",
 			},
 			"login_settings": {
@@ -220,6 +183,70 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 	}
 }
 
+func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_emr_instance.update")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	emrService := EMRService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	instanceId := d.Id()
+	timeUnit, hasTimeUnit := d.GetOkExists("time_unit")
+	timeSpan, hasTimeSpan := d.GetOkExists("time_span")
+	payMode, hasPayMode := d.GetOkExists("pay_mode")
+	if !hasTimeUnit || !hasTimeSpan || !hasPayMode {
+		return innerErr.New("Time_unit, time_span or pay_mode must be set.")
+	}
+	request := emr.NewScaleOutInstanceRequest()
+	request.TimeUnit = common.StringPtr(timeUnit.(string))
+	request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
+	request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
+	request.InstanceId = common.StringPtr(instanceId)
+
+	tmpResourceSpec := d.Get("resource_spec").([]interface{})
+	resourceSpec := tmpResourceSpec[0].(map[string]interface{})
+
+	if d.HasChange("resource_spec.0.master_count") {
+		request.MasterCount = common.Uint64Ptr((uint64)(resourceSpec["master_count"].(int)))
+	}
+	if d.HasChange("resource_spec.0.task_count") {
+		request.TaskCount = common.Uint64Ptr((uint64)(resourceSpec["task_count"].(int)))
+	}
+	if d.HasChange("resource_spec.0.core_count") {
+		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
+	}
+	_, err := emrService.UpdateInstance(ctx, request)
+	if err != nil {
+		return err
+	}
+	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+
+		if len(clusters) > 0 {
+			status := *(clusters[0].Status)
+			if status != EmrInternetStatusCreated {
+				return resource.RetryableError(
+					fmt.Errorf("%v create cluster endpoint  status still is %v", instanceId, status))
+			}
+		}
+
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_emr_instance.create")()
 	logId := getLogId(contextNil)
@@ -232,6 +259,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 	d.SetId(instanceId)
+	d.Set("instance_id", instanceId)
 	var displayStrategy string
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)

@@ -9,12 +9,24 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type EMRService struct {
 	client *connectivity.TencentCloudClient
+}
+
+func (me *EMRService) UpdateInstance(ctx context.Context, request *emr.ScaleOutInstanceRequest) (id string, err error) {
+	logId := getLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseEmrClient().ScaleOutInstance(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	id = *response.Response.InstanceId
+	return
 }
 
 func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData) error {
@@ -71,15 +83,15 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		for k, v := range resourceSpec {
 			if k == "master_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.MasterResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					request.ResourceSpec.MasterResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
 				}
 			} else if k == "core_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.CoreResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					request.ResourceSpec.CoreResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
 				}
 			} else if k == "task_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.TaskResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					request.ResourceSpec.TaskResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
 				}
 			} else if k == "master_count" {
 				request.ResourceSpec.MasterCount = common.Int64Ptr((int64)(v.(int)))
@@ -89,7 +101,7 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 				request.ResourceSpec.TaskCount = common.Int64Ptr((int64)(v.(int)))
 			} else if k == "common_resource_spec" {
 				if len(v.([]interface{})) > 0 {
-					request.ResourceSpec.CommonResourceSpec = helper.ParseResource(v.([]interface{})[0].(map[string]interface{}))
+					request.ResourceSpec.CommonResourceSpec = ParseResource(v.([]interface{})[0].(map[string]interface{}))
 				}
 			} else if k == "common_count" {
 				request.ResourceSpec.CommonCount = common.Int64Ptr((int64)(v.(int)))
