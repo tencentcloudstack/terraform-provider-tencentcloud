@@ -34,6 +34,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.294
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.199

@@ -550,6 +550,13 @@ VPN
     tencentcloud_vpn_gateway_route
     tencentcloud_vpn_connection
 
+EMR
+  Data Source
+    tencentcloud_emr
+
+  Resource
+    tencentcloud_emr_cluster
+
 DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
@@ -667,6 +674,7 @@ func Provider() terraform.ResourceProvider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_regions":                     dataSourceTencentCloudAvailabilityRegions(),
+			"tencentcloud_emr":                                      dataSourceTencentCloudEmr(),
 			"tencentcloud_availability_zones":                       dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":            dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_instances":                                dataSourceTencentCloudInstances(),
@@ -825,6 +833,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"tencentcloud_emr_cluster":                             resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                resourceTencentCloudInstance(),
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),
