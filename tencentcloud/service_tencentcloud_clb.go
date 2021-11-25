@@ -1421,3 +1421,72 @@ func (me *ClbService) CreateClbLogSet(ctx context.Context, name string, logsetTy
 	}
 	return
 }
+
+func (me *ClbService) DescribeLbCustomizedConfigById(ctx context.Context, configId string) (customizedConfig *clb.ConfigListItem, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeCustomizedConfigListRequest()
+	request.UconfigIds = []*string{&configId}
+	request.ConfigType = helper.String("CLB")
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeCustomizedConfigList(request)
+	if err != nil {
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ConfigList) < 1 {
+		return
+	}
+	customizedConfig = response.Response.ConfigList[0]
+	return
+}
+
+func (me *ClbService) DeleteLbCustomizedConfigById(ctx context.Context, configId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewSetCustomizedConfigForLoadBalancerRequest()
+	request.OperationType = helper.String("DELETE")
+	request.UconfigId = helper.String(configId)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().SetCustomizedConfigForLoadBalancer(request)
+	if err != nil {
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *ClbService) BindOrUnBindCustomizedConfigWithLbId(ctx context.Context, action string,
+	configId string, lbIdsList []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewSetCustomizedConfigForLoadBalancerRequest()
+	request.OperationType = helper.String(action)
+	request.UconfigId = helper.String(configId)
+	request.LoadBalancerIds = make([]*string, 0, len(lbIdsList))
+	for i := range lbIdsList {
+		lbId := lbIdsList[i].(string)
+		request.LoadBalancerIds = append(request.LoadBalancerIds, &lbId)
+	}
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().SetCustomizedConfigForLoadBalancer(request)
+	if err != nil {
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func extractBindClbList(itemlist []*clb.BindDetailItem) (lbList []interface{}) {
+	result := make([]interface{}, 0, len(itemlist))
+	for _, v := range itemlist {
+		target := v.LoadBalancerId
+		result = append(result, target)
+	}
+	return result
+}
