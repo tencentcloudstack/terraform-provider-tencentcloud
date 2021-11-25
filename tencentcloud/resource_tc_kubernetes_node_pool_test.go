@@ -26,6 +26,9 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "50"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "10"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "taints.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test2", "test2"),
@@ -47,6 +50,9 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "100"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "2"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "20"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
@@ -148,6 +154,8 @@ data "tencentcloud_vpc_subnets" "vpc" {
     availability_zone = var.availability_zone
 }
 
+data "tencentcloud_security_groups" "sg" {}
+
 variable "default_instance_type" {
   default = "S1.SMALL1"
 }
@@ -205,7 +213,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    security_group_ids = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -238,7 +246,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     ]
   }
 }
-
 `
 
 const testAccTkeNodePoolClusterUpdate string = testAccTkeNodePoolClusterBasic + `
@@ -261,16 +268,20 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   auto_scaling_config {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    system_disk_size   = "100"
+    security_group_ids = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 100
+    }
 
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
+    internet_max_bandwidth_out = 20
     public_ip_assigned         = true
     password                   = "test123#"
     enhanced_security_service  = false
