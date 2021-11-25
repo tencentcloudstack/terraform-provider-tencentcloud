@@ -1,3 +1,14 @@
+## 1.60.11 (November 25, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_emr_cluster`
+* **New Resource**: `tencentcloud_clb_customized_config`
+
+BUGFIXES:
+
+* Resource `tencentcloud_kubernetes_node_pool` support launch config attributes modify
+
 ## 1.60.10 (November 22, 2021)
 
 FEATURES:
