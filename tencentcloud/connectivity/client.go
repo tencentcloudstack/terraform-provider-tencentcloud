@@ -39,6 +39,7 @@ import (
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
+	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -102,6 +103,7 @@ type TencentCloudClient struct {
 	emrConn            *emr.Client
 	clsConn            *cls.Client
 	dnsPodConn         *dnspod.Client
+	privateDnsConn     *privatedns.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -662,4 +664,16 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 	me.dnsPodConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dnsPodConn
+}
+
+// UsePrivateDnsClient return PrivateDns client for service
+func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
+	if me.dnsPodConn != nil {
+		return me.privateDnsConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.privateDnsConn, _ = privatedns.NewClient(me.Credential, me.Region, cpf)
+	me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.privateDnsConn
 }
