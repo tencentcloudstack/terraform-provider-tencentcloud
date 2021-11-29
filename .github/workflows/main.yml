@@ -17,7 +17,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: one
         run: |
-          if [ -d terraform-provider-tencentcloud]; then
+          if [ -d terraform-provider-tencentcloud ]; then
             rm -rf terraform-provider-tencentcloud
           fi
           get clone https://github.com/tongyiming/terraform-provider-tencentcloud.git
