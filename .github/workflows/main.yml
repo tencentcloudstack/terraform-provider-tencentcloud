@@ -20,7 +20,7 @@ jobs:
           if [ -d terraform-provider-tencentcloud ]; then
             rm -rf terraform-provider-tencentcloud
           fi
-          get clone https://github.com/tongyiming/terraform-provider-tencentcloud.git
+          git clone https://github.com/tongyiming/terraform-provider-tencentcloud.git
       - name: two
         run: |
           cd terraform-provider-tencentcloud
