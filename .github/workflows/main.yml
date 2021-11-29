@@ -29,4 +29,4 @@ jobs:
           git fetch --all
           git reset --hard tgit_origin/master
           git push -u tgit_origin master
-          git push --tags git_origin master
+          git push --tags tgit_origin master
