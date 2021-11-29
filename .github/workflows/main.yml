@@ -27,5 +27,5 @@ jobs:
           git remote add tgit_origin https://mikatong:ABCabc456$%\^@git.code.tencent.com/mikatong/terraform-provider-tencentcloud.git
           git fetch --all
           git branch main
-          git push -u tgit_origin master
-          git push --tags tgit_origin master
+          git push -u tgit_origin main
+          git push --tags tgit_origin main
