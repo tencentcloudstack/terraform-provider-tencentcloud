@@ -28,4 +28,5 @@ jobs:
           git checkout master
           git fetch --all
           git reset --hard tgit_origin/master
-          git push -u --tags tgit_origin master
+          git push -u tgit_origin master
+          git push --tags git_origin master
