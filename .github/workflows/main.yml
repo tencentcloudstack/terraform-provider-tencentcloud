@@ -25,8 +25,5 @@ jobs:
         run: |
           cd terraform-provider-tencentcloud
           git remote add tgit_origin https://mikatong:ABCabc456$%\^@git.code.tencent.com/mikatong/terraform-provider-tencentcloud.git
-          git checkout master
-          git fetch --all
-          git reset --hard tgit_origin/master
           git push -u tgit_origin master
           git push --tags tgit_origin master
