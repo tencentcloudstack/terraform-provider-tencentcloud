@@ -16,4 +16,16 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: one
-        run: echo 123
+        run: |
+          if [ -d terraform-provider-tencentcloud]; then
+            rm -rf terraform-provider-tencentcloud
+          fi
+          get clone https://github.com/tongyiming/terraform-provider-tencentcloud.git
+      - name: two
+        run: |
+          cd terraform-provider-tencentcloud
+          git remote add tgit_origin https://${USERNAME}:${PASSWORD}@git.woa.com/iac/terraform-provider-tencentcloud.git
+          git checkout master
+          git fetch --all
+          git reset --hard tgit_origin/master
+          git push -u --tags tgit_origin master
