@@ -561,6 +561,10 @@ EMR
 DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
+
+PRIVATE DNS
+  Resource
+    tencentcloud_private_dns_zone
 */
 package tencentcloud
 
@@ -1013,6 +1017,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
+			"tencentcloud_private_dns_zone":                        resourceTencentCloudPrivateDnsZone(),
 		},
 
 		ConfigureFunc: providerConfigure,
