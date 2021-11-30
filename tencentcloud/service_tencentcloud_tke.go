@@ -1460,3 +1460,47 @@ func (me *TkeService) ModifyClusterAuthenticationOptions(ctx context.Context, re
 
 	return
 }
+
+func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, enable bool) (errRet error) {
+	var (
+		logId = getLogId(ctx)
+	    action string
+	)
+
+	if enable {
+		request := tke.NewEnableClusterDeletionProtectionRequest()
+		request.ClusterId = &id
+		action = request.GetAction()
+		ratelimit.Check(action)
+		response, err := me.client.UseTkeClient().EnableClusterDeletionProtection(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	} else {
+		request := tke.NewDisableClusterDeletionProtectionRequest()
+		request.ClusterId = &id
+		action = request.GetAction()
+		ratelimit.Check(action)
+		response, err := me.client.UseTkeClient().DisableClusterDeletionProtection(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+				logId, action, errRet.Error())
+		}
+	}()
+
+	return
+}

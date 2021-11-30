@@ -328,6 +328,19 @@ func (r *AddVpcCniSubnetsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type AppChart struct {
+
+	// chart名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// chart的标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Label *string `json:"Label,omitempty" name:"Label"`
+
+	// chart的版本
+	LatestVersion *string `json:"LatestVersion,omitempty" name:"LatestVersion"`
+}
+
 type AutoScalingGroupRange struct {
 
 	// 伸缩组最小实例数
@@ -4951,6 +4964,52 @@ func (r *DescribeVpcCniPodLimitsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DisableClusterDeletionProtectionRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DisableClusterDeletionProtectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableClusterDeletionProtectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableClusterDeletionProtectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DisableClusterDeletionProtectionResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisableClusterDeletionProtectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableClusterDeletionProtectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DisableVpcCniNetworkTypeRequest struct {
 	*tchttp.BaseRequest
 
@@ -5182,6 +5241,52 @@ type EksCluster struct {
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
 }
 
+type EnableClusterDeletionProtectionRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *EnableClusterDeletionProtectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableClusterDeletionProtectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableClusterDeletionProtectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type EnableClusterDeletionProtectionResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *EnableClusterDeletionProtectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableClusterDeletionProtectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type EnableVpcCniNetworkTypeRequest struct {
 	*tchttp.BaseRequest
 
@@ -5407,6 +5512,137 @@ type Filter struct {
 
 	// 字段的过滤值。
 	Values []*string `json:"Values,omitempty" name:"Values"`
+}
+
+type ForwardApplicationRequestV3Request struct {
+	*tchttp.BaseRequest
+
+	// 请求集群addon的访问
+	Method *string `json:"Method,omitempty" name:"Method"`
+
+	// 请求集群addon的路径
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// 请求集群addon后允许接收的数据格式
+	Accept *string `json:"Accept,omitempty" name:"Accept"`
+
+	// 请求集群addon的数据格式
+	ContentType *string `json:"ContentType,omitempty" name:"ContentType"`
+
+	// 请求集群addon的数据
+	RequestBody *string `json:"RequestBody,omitempty" name:"RequestBody"`
+
+	// 集群名称
+	ClusterName *string `json:"ClusterName,omitempty" name:"ClusterName"`
+
+	// 是否编码请求内容
+	EncodedBody *string `json:"EncodedBody,omitempty" name:"EncodedBody"`
+}
+
+func (r *ForwardApplicationRequestV3Request) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ForwardApplicationRequestV3Request) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Method")
+	delete(f, "Path")
+	delete(f, "Accept")
+	delete(f, "ContentType")
+	delete(f, "RequestBody")
+	delete(f, "ClusterName")
+	delete(f, "EncodedBody")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ForwardApplicationRequestV3Request has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ForwardApplicationRequestV3Response struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 请求集群addon后返回的数据
+		ResponseBody *string `json:"ResponseBody,omitempty" name:"ResponseBody"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ForwardApplicationRequestV3Response) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ForwardApplicationRequestV3Response) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetTkeAppChartListRequest struct {
+	*tchttp.BaseRequest
+
+	// app类型，取值log,scheduler,network,storage,monitor,dns,image,other,invisible
+	Kind *string `json:"Kind,omitempty" name:"Kind"`
+
+	// app支持的操作系统，取值arm32、arm64、amd64
+	Arch *string `json:"Arch,omitempty" name:"Arch"`
+
+	// 集群类型，取值tke、eks
+	ClusterType *string `json:"ClusterType,omitempty" name:"ClusterType"`
+}
+
+func (r *GetTkeAppChartListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetTkeAppChartListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Kind")
+	delete(f, "Arch")
+	delete(f, "ClusterType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetTkeAppChartListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetTkeAppChartListResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 所支持的chart列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		AppCharts []*AppChart `json:"AppCharts,omitempty" name:"AppCharts"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetTkeAppChartListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetTkeAppChartListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type GetUpgradeInstanceProgressRequest struct {
@@ -7100,6 +7336,130 @@ type RunSecurityServiceEnabled struct {
 
 	// 是否开启[云安全](/document/product/296)服务。取值范围：<br><li>TRUE：表示开启云安全服务<br><li>FALSE：表示不开启云安全服务<br><br>默认取值：TRUE。
 	Enabled *bool `json:"Enabled,omitempty" name:"Enabled"`
+}
+
+type ScaleInClusterMasterRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群实例ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// master缩容选项
+	ScaleInMasters []*ScaleInMaster `json:"ScaleInMasters,omitempty" name:"ScaleInMasters"`
+}
+
+func (r *ScaleInClusterMasterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleInClusterMasterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "ScaleInMasters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ScaleInClusterMasterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ScaleInClusterMasterResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ScaleInClusterMasterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleInClusterMasterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ScaleInMaster struct {
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 缩容的实例角色：MASTER,ETCD,MASTER_ETCD
+	NodeRole *string `json:"NodeRole,omitempty" name:"NodeRole"`
+
+	// 实例的保留模式
+	InstanceDeleteMode *string `json:"InstanceDeleteMode,omitempty" name:"InstanceDeleteMode"`
+}
+
+type ScaleOutClusterMasterRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群实例ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 新建节点参数
+	RunInstancesForNode []*RunInstancesForNode `json:"RunInstancesForNode,omitempty" name:"RunInstancesForNode"`
+
+	// 添加已有节点相关参数
+	ExistedInstancesForNode []*ExistedInstancesForNode `json:"ExistedInstancesForNode,omitempty" name:"ExistedInstancesForNode"`
+
+	// 实例高级设置
+	InstanceAdvancedSettings *InstanceAdvancedSettings `json:"InstanceAdvancedSettings,omitempty" name:"InstanceAdvancedSettings"`
+
+	// 集群master组件自定义参数
+	ExtraArgs *ClusterExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
+}
+
+func (r *ScaleOutClusterMasterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleOutClusterMasterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "RunInstancesForNode")
+	delete(f, "ExistedInstancesForNode")
+	delete(f, "InstanceAdvancedSettings")
+	delete(f, "ExtraArgs")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ScaleOutClusterMasterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ScaleOutClusterMasterResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ScaleOutClusterMasterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleOutClusterMasterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type SecurityContext struct {

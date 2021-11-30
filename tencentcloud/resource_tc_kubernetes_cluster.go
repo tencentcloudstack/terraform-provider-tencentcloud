@@ -2733,6 +2733,14 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("auth_options")
 	}
 
+	if d.HasChange("deletion_protection") {
+		enable := d.Get("deletion_protection").(bool)
+		if err := tkeService.ModifyDeletionProtection(ctx, id, enable); err != nil {
+			return err
+		}
+		d.SetPartial("deletion_protection")
+	}
+
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
