@@ -42,6 +42,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.291
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.199
@@ -52,11 +53,10 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.264
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.302
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.31-0.20210902132439-360bc9b1be6b
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
