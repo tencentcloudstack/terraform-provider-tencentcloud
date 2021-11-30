@@ -206,7 +206,6 @@ func resourceTencentCloudClbCustomizedConfigUpdate(d *schema.ResourceData, meta 
 		request.ConfigContent = &configContent
 	}
 
-	var response *clb.SetCustomizedConfigForLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().SetCustomizedConfigForLoadBalancer(request)
 		if e != nil {
@@ -220,7 +219,6 @@ func resourceTencentCloudClbCustomizedConfigUpdate(d *schema.ResourceData, meta 
 				return retryError(errors.WithStack(retryErr))
 			}
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
