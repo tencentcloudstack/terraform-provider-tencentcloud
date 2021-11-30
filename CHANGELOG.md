@@ -1,3 +1,14 @@
+## 1.60.12 (November 30, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_private_dns_zone`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_monitor_policy_binding_object`  support  import
+* resource `tencentcloud_kubernetes_cluster` support modify enableClusterDeletionProtection
+
 ## 1.60.11 (November 25, 2021)
 
 FEATURES:
