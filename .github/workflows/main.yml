@@ -20,6 +20,6 @@ jobs:
       - name: secondly
         run: |
           cd terraform-provider-tencentcloud
-          git remote add tgit_origin https://${{ USERNAME }}:${{ PASSWORD }}@git.code.tencent.com/mikatong/terraform-provider-tencentcloud.git
+          git remote add tgit_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/mikatong/terraform-provider-tencentcloud.git
           git fetch --all
           git push -u --tags tgit_origin master:main 
