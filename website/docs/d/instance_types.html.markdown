@@ -47,7 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `cpu_core_count` - The number of CPU cores of the instance.
   * `family` - Type series of the instance.
   * `gpu_core_count` - The number of GPU cores of the instance.
+  * `instance_charge_type` - Charge type of the instance.
   * `instance_type` - Type of the instance.
   * `memory_size` - Instance memory capacity, unit in GB.
+  * `status` - Sell status of the instance.
 
 

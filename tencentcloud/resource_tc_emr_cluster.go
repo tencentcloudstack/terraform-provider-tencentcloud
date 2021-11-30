@@ -67,9 +67,6 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 		Read:   resourceTencentCloudEmrClusterRead,
 		Delete: resourceTencentCloudEmrClusterDelete,
 		Update: resourceTencentCloudEmrClusterUpdate,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"display_strategy": {
 				Type:        schema.TypeString,
