@@ -51,6 +51,14 @@ resource "tencentcloud_monitor_policy_binding_object" "binding" {
     dimensions_json = "{\"unInstanceId\":\"${data.tencentcloud_instances.instances.instance_list[0].instance_id}\"}"
   }
 }
+
+```
+Import
+
+Monitor Policy Binding Object can be imported, e.g.
+
+```
+$ terraform import tencentcloud_monitor_policy_binding_object.binding policyId
 ```
 
 */
@@ -75,6 +83,9 @@ func resourceTencentMonitorPolicyBindingObject() *schema.Resource {
 		Create: resourceTencentMonitorPolicyBindingObjectCreate,
 		Read:   resourceTencentMonitorPolicyBindingObjectRead,
 		Delete: resourceTencentMonitorPolicyBindingObjectDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -169,31 +180,8 @@ func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(helper.DataResourceIdsHash(idSeeds))
+	d.SetId(policyId)
 	time.Sleep(3 * time.Second)
-
-	//check if binding success
-	//objects, err := monitorService.DescribeBindingAlarmPolicyObjectList(ctx, policyId)
-	//
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//successDimensionsJsonMap := make(map[string]bool)
-	//bindingFails := make([]string, 0, len(request.Dimensions))
-	//for _, v := range objects {
-	//	successDimensionsJsonMap[*v.Dimensions] = true
-	//}
-	//for _, v := range request.Dimensions {
-	//	if !successDimensionsJsonMap[*v.Dimensions] {
-	//		bindingFails = append(bindingFails, *v.Dimensions)
-	//	}
-	//}
-	//
-	//if len(bindingFails) > 0 {
-	//	return fmt.Errorf("bind objects to policy has partial failure,Please check if it is an instance of this region `%s`,[%s]",
-	//		monitorService.client.Region, helper.SliceFieldSerialize(bindingFails))
-	//}
 
 	return resourceTencentMonitorPolicyBindingObjectRead(d, meta)
 }
@@ -205,8 +193,10 @@ func resourceTencentMonitorPolicyBindingObjectRead(d *schema.ResourceData, meta 
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		policyId       = d.Get("policy_id").(string)
+		policyId = d.Id()
 	)
+
+	d.Set("policy_id", policyId)
 
 	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
 	if err != nil {
@@ -222,35 +212,15 @@ func resourceTencentMonitorPolicyBindingObjectRead(d *schema.ResourceData, meta 
 		return err
 	}
 
-	getUniqueId := func(dimensionsJson string) (has bool, uniqueId string) {
-		for _, item := range objects {
-			if *item.Dimensions == dimensionsJson {
-				uniqueId = *item.UniqueId
-				has = true
-				return
-			}
-		}
-		return
-	}
+	newDimensions := make([]interface{}, 0, 10)
 
-	dimensions := d.Get("dimensions").(*schema.Set).List()
-	newDimensions := make([]interface{}, 0, len(dimensions))
-
-	for _, v := range dimensions {
-		m := v.(map[string]interface{})
-		var dimensionsJson = m["dimensions_json"].(string)
-		var has, uniqueId = getUniqueId(dimensionsJson)
-		if has {
-			newDimensions = append(newDimensions, map[string]interface{}{
-				"dimensions_json": dimensionsJson,
-				"unique_id":       uniqueId,
-			})
-		}
-	}
-
-	if len(newDimensions) == 0 {
-		d.SetId("")
-		return nil
+	for _, item := range objects {
+		dimensionsJson := item.Dimensions
+		uniqueId := item.UniqueId
+		newDimensions = append(newDimensions, map[string]interface{}{
+			"dimensions_json": dimensionsJson,
+			"unique_id":       uniqueId,
+		})
 	}
 
 	return d.Set("dimensions", newDimensions)
@@ -263,7 +233,7 @@ func resourceTencentMonitorPolicyBindingObjectDelete(d *schema.ResourceData, met
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		policyId       = d.Get("policy_id").(string)
+		policyId = d.Id()
 	)
 
 	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
@@ -299,11 +269,6 @@ func resourceTencentMonitorPolicyBindingObjectDelete(d *schema.ResourceData, met
 		if has {
 			uniqueIds = append(uniqueIds, &uniqueId)
 		}
-	}
-
-	if len(uniqueIds) == 0 {
-		d.SetId("")
-		return nil
 	}
 
 	var (

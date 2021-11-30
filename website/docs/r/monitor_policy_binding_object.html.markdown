@@ -82,3 +82,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+Monitor Policy Binding Object can be imported, e.g.
+
+```
+$ terraform import tencentcloud_monitor_policy_binding_object.binding policyId
+```
+
