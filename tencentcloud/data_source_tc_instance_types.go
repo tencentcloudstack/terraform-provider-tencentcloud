@@ -120,6 +120,16 @@ func dataSourceInstanceTypes() *schema.Resource {
 							Computed:    true,
 							Description: "Type series of the instance.",
 						},
+						"instance_charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Charge type of the instance.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Sell status of the instance.",
+						},
 					},
 				},
 			},
@@ -252,12 +262,14 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 
 			if flag {
 				mapping := map[string]interface{}{
-					"availability_zone": instanceType.Zone,
-					"cpu_core_count":    instanceType.Cpu,
-					"gpu_core_count":    instanceType.Gpu,
-					"memory_size":       instanceType.Memory,
-					"family":            instanceType.InstanceFamily,
-					"instance_type":     instanceType.InstanceType,
+					"availability_zone":    instanceType.Zone,
+					"cpu_core_count":       instanceType.Cpu,
+					"gpu_core_count":       instanceType.Gpu,
+					"memory_size":          instanceType.Memory,
+					"family":               instanceType.InstanceFamily,
+					"instance_type":        instanceType.InstanceType,
+					"instance_charge_type": instanceType.InstanceChargeType,
+					"status":               instanceType.Status,
 				}
 				typeList = append(typeList, mapping)
 				ids = append(ids, *instanceType.InstanceType)
