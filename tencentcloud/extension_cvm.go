@@ -54,6 +54,10 @@ const (
 
 	CVM_STOP_MODE_KEEP_CHARGING = "KEEP_CHARGING"
 	CVM_STOP_MODE_STOP_CHARGING = "STOP_CHARGING"
+	CVM_SELL_STATUS             = "SELL"
+	CVM_SOLD_OUT_STATUS         = "SOLD_OUT"
+	MIDLINE                     = "-"
+	UNDERLINE                   = "_"
 )
 
 var CVM_CHARGE_TYPE = []string{
