@@ -19,6 +19,20 @@ data "tencentcloud_instance_types" "foo" {
   cpu_core_count    = 2
   memory_size       = 4
 }
+
+data tencentcloud_instance_types "t1c1g" {
+  cpu_core_count   = 1
+  memory_size      = 1
+  exclude_sold_out = true
+  filter {
+    name   = "instance-charge-type"
+    values = ["POSTPAID_BY_HOUR"]
+  }
+  filter {
+    name   = "zone"
+    values = ["ap-shanghai-2"]
+  }
+}
 ```
 
 ## Argument Reference
@@ -35,7 +49,7 @@ The following arguments are supported:
 
 The `filter` object supports the following:
 
-* `name` - (Required) The filter name. Valid values: `zone` and `instance-family`.
+* `name` - (Required) The filter name. Valid values: `zone`, `instance-family` and `instance-charge-type`.
 * `values` - (Required) The filter values.
 
 ## Attributes Reference
