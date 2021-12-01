@@ -1,3 +1,11 @@
+## 1.60.13 (December 1, 2021)
+
+ENHANCEMENTS:
+
+* resource `resource_tc_security_group_rule`  remove cidr validate
+* resource `resource_tc_monitor_alarm_policy` support manage tke rules
+* datasource `tencentcloud_instance_types ` support filter by  charge type
+
 ## 1.60.12 (November 30, 2021)
 
 FEATURES:
