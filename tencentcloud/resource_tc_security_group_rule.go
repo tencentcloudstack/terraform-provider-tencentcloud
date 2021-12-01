@@ -91,17 +91,17 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ConflictsWith: []string{
 					"source_sgid",
 				},
-				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
-					if _, err := validateIp(v, k); len(err) == 0 {
-						return
-					}
-
-					if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
-						errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
-							k, v))
-					}
-					return
-				},
+				//ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
+				//	if _, err := validateIp(v, k); len(err) == 0 {
+				//		return
+				//	}
+				//
+				//	if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
+				//		errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
+				//			k, v))
+				//	}
+				//	return
+				//},
 				Description: "An IP address network or segment, and conflict with `source_sgid` and `address_template`.",
 			},
 			"ip_protocol": {
