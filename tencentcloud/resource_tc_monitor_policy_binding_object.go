@@ -193,7 +193,7 @@ func resourceTencentMonitorPolicyBindingObjectRead(d *schema.ResourceData, meta 
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		policyId = d.Id()
+		policyId       = d.Id()
 	)
 
 	d.Set("policy_id", policyId)
@@ -233,7 +233,7 @@ func resourceTencentMonitorPolicyBindingObjectDelete(d *schema.ResourceData, met
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		policyId = d.Id()
+		policyId       = d.Id()
 	)
 
 	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
