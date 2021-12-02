@@ -321,6 +321,7 @@ Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
     tencentcloud_eks_clusters
+    tencentcloud_kubernetes_charts
 
   Resource
     tencentcloud_kubernetes_cluster

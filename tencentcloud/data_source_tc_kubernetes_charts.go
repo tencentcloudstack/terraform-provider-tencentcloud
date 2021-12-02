@@ -4,12 +4,9 @@ Use this data source to query detailed information of kubernetes cluster addons.
 Example Usage
 
 ```hcl
-data "tencentcloud_kubernetes_charts" "name" {
-  kind = "other"
-}
+data "tencentcloud_kubernetes_charts" "name" {}
 ```
 */
-
 package tencentcloud
 
 import (
@@ -32,7 +29,7 @@ func dataSourceTencentCloudKubernetesCharts() *schema.Resource {
 			"arch": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Operation system app supported. Available values: `arm32`, `arm64`, `amd64`",
+				Description: "Operation system app supported. Available values: `arm32`, `arm64`, `amd64`.",
 			},
 			"cluster_type": {
 				Type:        schema.TypeString,
