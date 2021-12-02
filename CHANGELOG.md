@@ -1,3 +1,9 @@
+## 1.60.14 (December 2, 2021)
+
+ENHANCEMENTS:
+
+* resource `resource_tc_monitor_alarm_policy` support change name and remark
+
 ## 1.60.13 (December 1, 2021)
 
 ENHANCEMENTS:
