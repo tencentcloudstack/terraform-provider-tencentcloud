@@ -14,6 +14,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -55,7 +56,7 @@ func dataSourceTencentCloudKubernetesCharts() *schema.Resource {
 							Description: "Name of chart.",
 						},
 						"label": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeMap,
 							Computed:    true,
 							Description: "Label of chart.",
 						},
@@ -109,9 +110,16 @@ func dataSourceTencentCloudKubernetesChartsRead(d *schema.ResourceData, meta int
 		item := response[i]
 		chart := map[string]interface{}{
 			"name":           item.Name,
-			"label":          item.Label,
 			"latest_version": item.LatestVersion,
 		}
+
+		label := make(map[string]interface{})
+
+		if err := json.Unmarshal([]byte(*item.Label), &label); err != nil {
+			return err
+		}
+
+		chart["label"] = label
 
 		chartList = append(chartList, chart)
 	}
@@ -124,7 +132,10 @@ func dataSourceTencentCloudKubernetesChartsRead(d *schema.ResourceData, meta int
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		return writeToFile(output.(string), chartList)
+		err := writeToFile(output.(string), chartList)
+		if err != nil {
+			return err
+		}
 	}
 
 	ids := []string{kind, arch, clusterType}
