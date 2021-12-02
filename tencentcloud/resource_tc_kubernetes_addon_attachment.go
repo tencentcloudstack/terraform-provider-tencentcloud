@@ -64,6 +64,31 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
   cluster_id = "cls-xxxxxxxx"
   name = "cbs"
   version = "1.0.0"
+  values = [
+    "rootdir=/var/lib/kubelet"
+  ]
+}
+
+resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
+  name = "tcr"
+  version = "1.0.0"
+  values = [
+    # imagePullSecretsCrs is an array which can configure image pull
+    "global.imagePullSecretsCrs[0].name=sample-vpc",
+    "global.imagePullSecretsCrs[0].namespaces=tcr-assistant-system",
+    "global.imagePullSecretsCrs[0].serviceAccounts=*",
+    "global.imagePullSecretsCrs[0].type=docker",
+    "global.imagePullSecretsCrs[0].dockerUsername=100012345678",
+    "global.imagePullSecretsCrs[0].dockerPassword=a.b.tcr-token",
+    "global.imagePullSecretsCrs[0].dockerServer=xxxx.tencentcloudcr.com",
+    "global.imagePullSecretsCrs[1].name=sample-public",
+    "global.imagePullSecretsCrs[1].namespaces=*",
+    "global.imagePullSecretsCrs[1].serviceAccounts=*",
+    "global.imagePullSecretsCrs[1].type=docker",
+    "global.imagePullSecretsCrs[1].dockerUsername=100012345678",
+    "global.imagePullSecretsCrs[1].dockerPassword=a.b.tcr-token",
+    "global.imagePullSecretsCrs[1].dockerServer=sample",
+  ]
 }
 ```
 
@@ -87,6 +112,8 @@ package tencentcloud
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"strings"
@@ -105,17 +132,18 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of chart.",
+				Description: "Name of addon.",
 			},
 			"version": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				Description:   "Chart version, default latest version. Conflict with `request_body`.",
+				Description:   "Addon version, default latest version. Conflict with `request_body`.",
 				ConflictsWith: []string{"request_body"},
 			},
 			"values": {
 				Type:          schema.TypeList,
 				Optional:      true,
+				Computed:      true,
 				Description:   "Values the addon passthroughs. Conflict with `request_body`.",
 				ConflictsWith: []string{"request_body"},
 				Elem:          &schema.Schema{Type: schema.TypeString},
@@ -130,6 +158,11 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Addon response body.",
+			},
+			"status": {
+			    Type: schema.TypeMap,
+			    Computed: true,
+			    Description: "Addon current status.",
 			},
 		},
 		Create: resourceTencentCloudTkeAddonAttachmentCreate,
@@ -160,7 +193,7 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	if reqBody == "" {
 		var reqErr error
 		v := helper.InterfacesStringsPoint(values)
-		reqBody, reqErr = service.GetAddonPostReqBody(addonName, version, v)
+		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v)
 		if reqErr != nil {
 			return reqErr
 		}
@@ -187,19 +220,43 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	clusterId := split[0]
 	addonName := split[1]
 
-	response, err := service.DescribeExtensionAddon(ctx, clusterId, addonName)
+	var (
+		err error
+		response string
+		addonResponseData = &AddonResponseData{}
+		status = make(map[string]*string)
+	)
+
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err = service.DescribeExtensionAddon(ctx, clusterId, addonName)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if err = json.Unmarshal([]byte(response), addonResponseData); err != nil {
+			return resource.NonRetryableError(err)
+		}
+		status = addonResponseData.Status
+
+		phase := status["phase"]
+
+		if phase == nil {
+			return nil
+		}
+
+		if *phase == "Upgrading" || *phase == "Installing" {
+			return resource.RetryableError(fmt.Errorf("Addon %s is %s, Retry", addonName, *phase))
+		}
+
+		return nil
+	})
 
 	if err != nil {
+		d.SetId("")
 		return err
 	}
 
 	_ = d.Set("response_body", response)
-
-	addonResponseData := &AddonResponseData{}
-
-	if err := json.Unmarshal([]byte(response), addonResponseData); err != nil {
-		return err
-	}
 
 	spec := addonResponseData.Spec
 
@@ -209,6 +266,13 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 		_ = d.Set("version", spec.Chart.ChartVersion)
 		if spec.Values != nil && len(spec.Values.Values) > 0 {
 			_ = d.Set("values", helper.StringsInterfaces(spec.Values.Values))
+		}
+	}
+
+	if status != nil {
+		err := d.Set("status", status)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -235,7 +299,7 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 	)
 
 	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") {
-		reqBody, err = service.GetAddonPatchReqBody(addonName, version, helper.InterfacesStringsPoint(values))
+		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values))
 	}
 
 	if err != nil {

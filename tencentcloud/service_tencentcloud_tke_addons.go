@@ -48,6 +48,7 @@ type AddonResponseData struct {
 	ApiVersion *string            `json:"apiVersion,omitempty"`
 	Metadata   *AddonResponseMeta `json:"metadata,omitempty"`
 	Spec       *AddonSpec         `json:"spec,omitempty"`
+	Status     map[string]*string `json:"status,omitempty"`
 }
 
 func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTkeAppChartListRequest) (info []*tke.AppChart, errRet error) {
@@ -111,7 +112,7 @@ func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, a
 	return
 }
 
-func (me *TkeService) GetAddonPostReqBody(addon, version string, values []*string) (string, error) {
+func (me *TkeService) GetAddonReqBody(addon, version string, values []*string) (string, error) {
 	var reqBody = &AddonRequestBody{}
 	//reqBody.Kind = helper.String("App") // Optional
 	//reqBody.ApiVersion = helper.String("application.tkestack.io/v1") // Optional
@@ -124,28 +125,6 @@ func (me *TkeService) GetAddonPostReqBody(addon, version string, values []*strin
 
 	if len(values) > 0 {
 		reqBody.Spec.Values = &AddonSpecValues{
-			RawValuesType: helper.String("yaml"),
-			Values:        values,
-		}
-	}
-
-	result, err := json.Marshal(reqBody)
-	if err != nil {
-		return "", err
-	}
-	return string(result), nil
-}
-
-func (me *TkeService) GetAddonPatchReqBody(addon, version string, values []*string) (string, error) {
-	var reqBody = &AddonSpec{
-		Chart: &AddonSpecChart{
-			ChartName:    &addon,
-			ChartVersion: &version,
-		},
-	}
-
-	if len(values) > 0 {
-		reqBody.Values = &AddonSpecValues{
 			RawValuesType: helper.String("yaml"),
 			Values:        values,
 		}
