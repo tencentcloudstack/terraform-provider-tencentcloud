@@ -20,7 +20,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
   version = "1.0.0"
   values = [
     # imagePullSecretsCrs is an array which can configure image pull
-    "global.imagePullSecretsCrs[0].name=sample-vpc",
+    "global.imagePullSecretsCrs[0].name=unique-sample-vpc",
     "global.imagePullSecretsCrs[0].namespaces=tcr-assistant-system",
     "global.imagePullSecretsCrs[0].serviceAccounts=*",
     "global.imagePullSecretsCrs[0].type=docker",
@@ -173,7 +173,7 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	phase, has, err := service.PollingAddonsPhase(ctx, clusterId, addonName, resData)
 
 	if resData.Status != nil && resData.Status["reason"] != nil {
-		reason = *resData.Status["reason"]
+		reason = resData.Status["reason"].(string)
 	}
 
 	if !has {
@@ -202,6 +202,9 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	id := d.Id()
 	has := false
 	split := strings.Split(id, FILED_SP)
+	if len(split) < 2 {
+		return fmt.Errorf("id expected format: cluster_id#addon_name but no addon_name provided")
+	}
 	clusterId := split[0]
 	addonName := split[1]
 
@@ -321,7 +324,7 @@ func getFilteredValues(d *schema.ResourceData, values []*string) []string {
 		kv := strings.Split(*value, "=")
 		key := kv[0]
 
-		if IsContains(TKE_ADDON_DEFAULT_VALUES_KEY, key) || !IsContains(rawValues, *value) {
+		if IsContains(TKE_ADDON_DEFAULT_VALUES_KEY, key) || IsContains(rawValues, *value) {
 			continue
 		}
 		rawValues = append(rawValues, *value)
