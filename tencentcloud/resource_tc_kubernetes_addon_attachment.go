@@ -321,7 +321,7 @@ func getFilteredValues(d *schema.ResourceData, values []*string) []string {
 		kv := strings.Split(*value, "=")
 		key := kv[0]
 
-		if IsContains(TKE_ADDON_DEFAULT_VALUES_KEY, key) && !IsContains(rawValues, *value) {
+		if IsContains(TKE_ADDON_DEFAULT_VALUES_KEY, key) || !IsContains(rawValues, *value) {
 			continue
 		}
 		rawValues = append(rawValues, *value)
