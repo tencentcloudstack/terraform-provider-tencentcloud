@@ -321,6 +321,7 @@ Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
     tencentcloud_eks_clusters
+    tencentcloud_kubernetes_charts
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -331,6 +332,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_eks_cluster
     tencentcloud_eks_container_instance
     tencentcloud_kubernetes_auth_attachment
+    tencentcloud_kubernetes_addon_attachment
 
 TDMQ
   Resource
@@ -719,6 +721,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_security_group":                           dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups":                          dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_kubernetes_clusters":                      dataSourceTencentCloudKubernetesClusters(),
+			"tencentcloud_kubernetes_charts":                        dataSourceTencentCloudKubernetesCharts(),
 			"tencentcloud_eks_clusters":                             dataSourceTencentCloudEKSClusters(),
 			"tencentcloud_container_clusters":                       dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances":              dataSourceTencentCloudContainerClusterInstances(),
@@ -895,6 +898,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
 			"tencentcloud_eks_cluster":                             resourceTencentCloudEksCluster(),
 			"tencentcloud_eks_container_instance":                  resourceTencentCloudEksContainerInstance(),
+			"tencentcloud_kubernetes_addon_attachment":             resourceTencentCloudTkeAddonAttachment(),
 			"tencentcloud_kubernetes_auth_attachment":              resourceTencentCloudTKEAuthAttachment(),
 			"tencentcloud_kubernetes_as_scaling_group":             ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":                 resourceTencentCloudTkeScaleWorker(),

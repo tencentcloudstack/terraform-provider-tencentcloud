@@ -1463,8 +1463,8 @@ func (me *TkeService) ModifyClusterAuthenticationOptions(ctx context.Context, re
 
 func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, enable bool) (errRet error) {
 	var (
-		logId = getLogId(ctx)
-	    action string
+		logId  = getLogId(ctx)
+		action string
 	)
 
 	if enable {
@@ -1479,7 +1479,7 @@ func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, e
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	} else {
 		request := tke.NewDisableClusterDeletionProtectionRequest()
 		request.ClusterId = &id
@@ -1492,7 +1492,7 @@ func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, e
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 
 	defer func() {
