@@ -45,11 +45,11 @@ type AddonResponseMeta struct {
 }
 
 type AddonResponseData struct {
-	Kind       *string            `json:"kind,omitempty"`
-	ApiVersion *string            `json:"apiVersion,omitempty"`
-	Metadata   *AddonResponseMeta `json:"metadata,omitempty"`
-	Spec       *AddonSpec         `json:"spec,omitempty"`
-	Status     map[string]*string `json:"status,omitempty"`
+	Kind       *string                `json:"kind,omitempty"`
+	ApiVersion *string                `json:"apiVersion,omitempty"`
+	Metadata   *AddonResponseMeta     `json:"metadata,omitempty"`
+	Spec       *AddonSpec             `json:"spec,omitempty"`
+	Status     map[string]interface{} `json:"status,omitempty"`
 }
 
 func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTkeAppChartListRequest) (info []*tke.AppChart, errRet error) {
@@ -79,10 +79,10 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 
 func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {
 	var (
-		err error
-		phase string
+		err      error
+		phase    string
 		response string
-		has bool
+		has      bool
 	)
 
 	if addonResponseData == nil {
@@ -104,13 +104,13 @@ func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonNa
 
 		reason := addonResponseData.Status["reason"]
 		if addonResponseData.Status["phase"] != nil {
-			phase = *addonResponseData.Status["phase"]
+			phase = addonResponseData.Status["phase"].(string)
 		}
 		if reason == nil {
 			reason = helper.String("unknown error")
 		}
 
-		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating"{
+		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating" {
 			return resource.RetryableError(fmt.Errorf("addon %s is %s, retrying", addonName, phase))
 		}
 

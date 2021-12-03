@@ -29,7 +29,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
   version    = "1.0.0"
   values = [
     # imagePullSecretsCrs is an array which can configure image pull
-    "global.imagePullSecretsCrs[0].name=sample-vpc",
+    "global.imagePullSecretsCrs[0].name=unique-sample-vpc",
     "global.imagePullSecretsCrs[0].namespaces=tcr-assistant-system",
     "global.imagePullSecretsCrs[0].serviceAccounts=*",
     "global.imagePullSecretsCrs[0].type=docker",
