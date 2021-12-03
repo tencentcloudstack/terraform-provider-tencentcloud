@@ -4,61 +4,6 @@ Provide a resource to configure kubernetes cluster app addons.
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "cluster_cidr" {
-  default = "172.16.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
-}
-
-data "tencentcloud_images" "default" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
-  availability_zone = var.availability_zone
-}
-
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.31.0.0/16"
-  cluster_max_pod_num     = 32
-  cluster_name            = "keep"
-  cluster_desc            = "test cluster desc"
-  cluster_version         = "1.20.6"
-  cluster_max_service_num = 32
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}
 
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
   cluster_id = "cls-xxxxxxxx"
@@ -70,6 +15,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
 }
 
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
+  cluster_id = "cls-xxxxxxxx"
   name = "tcr"
   version = "1.0.0"
   values = [
@@ -92,11 +38,27 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
 }
 ```
 
-Install new addon by passing spec json to `req_body` directly
-```
+Install new addon by passing spec json to req_body directly
+
+```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
   cluster_id = "cls-xxxxxxxx"
-  req_body = {\"spec\":{\"chart\":{\"chartName\":\"cbs\",\"chartVersion\":\"1.0.0\"},\"values\":{\"rawValuesType\":\"yaml\",\"values\":[]}}}
+  request_body = <<EOF
+  {
+    "spec":{
+        "chart":{
+            "chartName":"cbs",
+            "chartVersion":"1.0.0"
+        },
+        "values":{
+            "rawValuesType":"yaml",
+            "values":[
+              "rootdir=/var/lib/kubelet"
+            ]
+        }
+    }
+  }
+EOF
 }
 ```
 
@@ -111,11 +73,10 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 	"strings"
 )
 
@@ -206,6 +167,29 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	}
 
 	d.SetId(clusterId + FILED_SP + addonName)
+
+	resData := &AddonResponseData{}
+	reason := "unknown error"
+	phase, has, err := service.PollingAddonsPhase(ctx, clusterId, addonName, resData)
+
+	if resData.Status != nil && resData.Status["reason"] != nil {
+		reason = *resData.Status["reason"]
+	}
+
+	if !has {
+		return fmt.Errorf("addon %s not exists", addonName)
+	}
+
+	if phase == "ChartFetchFailed" || phase == "Failed" || phase == "RollbackFailed" || phase == "SyncFailed" {
+		msg := fmt.Sprintf("Unexpected chart phase `%s`, reason: %s", phase, reason)
+		log.Printf(msg)
+		if err := resourceTencentCloudTkeAddonAttachmentDelete(d, meta); err != nil {
+			return err
+		}
+		d.SetId("")
+		return fmt.Errorf(msg)
+	}
+
 	return resourceTencentCloudTkeAddonAttachmentRead(d, meta)
 }
 
@@ -216,6 +200,7 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
+	has := false
 	split := strings.Split(id, FILED_SP)
 	clusterId := split[0]
 	addonName := split[1]
@@ -228,30 +213,9 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	)
 
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, err = service.DescribeExtensionAddon(ctx, clusterId, addonName)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if err = json.Unmarshal([]byte(response), addonResponseData); err != nil {
-			return resource.NonRetryableError(err)
-		}
-		status = addonResponseData.Status
+	_, has, err = service.PollingAddonsPhase(ctx, clusterId, addonName, addonResponseData)
 
-		phase := status["phase"]
-
-		if phase == nil {
-			return nil
-		}
-
-		if *phase == "Upgrading" || *phase == "Installing" {
-			return resource.RetryableError(fmt.Errorf("Addon %s is %s, Retry", addonName, *phase))
-		}
-
-		return nil
-	})
-
-	if err != nil {
+	if err != nil || !has {
 		d.SetId("")
 		return err
 	}
@@ -265,7 +229,10 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 		_ = d.Set("name", spec.Chart.ChartName)
 		_ = d.Set("version", spec.Chart.ChartVersion)
 		if spec.Values != nil && len(spec.Values.Values) > 0 {
-			_ = d.Set("values", helper.StringsInterfaces(spec.Values.Values))
+
+			// Filter auto-filled values from addon creation
+			filteredValues := getFilteredValues(d, spec.Values.Values)
+			_ = d.Set("values", filteredValues)
 		}
 	}
 
@@ -330,11 +297,34 @@ func resourceTencentCloudTkeAddonAttachmentDelete(d *schema.ResourceData, meta i
 		split     = strings.Split(id, FILED_SP)
 		clusterId = split[0]
 		addonName = split[1]
+		has         bool
 	)
 
 	if err := service.DeleteExtensionAddon(ctx, clusterId, addonName); err != nil {
 		return err
 	}
 
+	// check if addon terminating or still exists
+	_, has, _ = service.PollingAddonsPhase(ctx, clusterId, addonName, nil)
+
+	if has {
+		return fmt.Errorf("addon %s still exists", addonName)
+	}
+
 	return nil
+}
+
+func getFilteredValues(d *schema.ResourceData, values []*string) []string {
+	rawValues := helper.InterfacesStrings(d.Get("values").([]interface{}))
+
+	for _, value := range values {
+		kv := strings.Split(*value, "=")
+		key := kv[0]
+
+		if IsContains(TKE_ADDON_DEFAULT_VALUES_KEY, key) && !IsContains(rawValues, *value) {
+			continue
+		}
+		rawValues = append(rawValues, *value)
+	}
+	return rawValues
 }

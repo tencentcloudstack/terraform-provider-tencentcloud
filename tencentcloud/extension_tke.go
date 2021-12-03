@@ -108,7 +108,7 @@ const (
 	DefaultAuthenticationOptionsIssuer = "https://kubernetes.default.svc.cluster.local"
 )
 
-// This
+// This use to filter default values the addon returns.
 var TKE_ADDON_DEFAULT_VALUES_KEY = []string{
 	"global.image.host",
 	"global.cluster.id",

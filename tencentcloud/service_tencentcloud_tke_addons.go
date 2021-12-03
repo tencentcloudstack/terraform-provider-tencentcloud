@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -76,6 +77,49 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 	return
 }
 
+func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {
+	var (
+		err error
+		phase string
+		response string
+		has bool
+	)
+
+	if addonResponseData == nil {
+		addonResponseData = &AddonResponseData{}
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, has, err = me.DescribeExtensionAddon(ctx, clusterId, addonName)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if err = json.Unmarshal([]byte(response), addonResponseData); err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		if addonResponseData.Status == nil {
+			return nil
+		}
+
+		reason := addonResponseData.Status["reason"]
+		if addonResponseData.Status["phase"] != nil {
+			phase = *addonResponseData.Status["phase"]
+		}
+		if reason == nil {
+			reason = helper.String("unknown error")
+		}
+
+		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating"{
+			return resource.RetryableError(fmt.Errorf("addon %s is %s, retrying", addonName, phase))
+		}
+
+		return nil
+	})
+
+	return phase, has, err
+}
+
 func (me *TkeService) ProcessExtensionAddons(ctx context.Context, request *tke.ForwardApplicationRequestV3Request) (response *tke.ForwardApplicationRequestV3Response, err error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -98,7 +142,7 @@ func (me *TkeService) ProcessExtensionAddons(ctx context.Context, request *tke.F
 	return
 }
 
-func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, addon string) (result string, errRet error) {
+func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, addon string) (result string, has bool, errRet error) {
 	request := tke.NewForwardApplicationRequestV3Request()
 	request.Method = helper.String("GET")
 	request.ClusterName = &clusterName
@@ -108,6 +152,7 @@ func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, a
 		errRet = err
 		return
 	}
+	has = true
 	result = *response.Response.ResponseBody
 	return
 }
