@@ -34,7 +34,7 @@ func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, 
     return
 }
 
-func NewClient(credential *common.Credential, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
+func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
     client = &Client{}
     client.Init(region).
         WithCredential(credential).
@@ -48,6 +48,7 @@ func NewAddDBInstanceToReadOnlyGroupRequest() (request *AddDBInstanceToReadOnlyG
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "AddDBInstanceToReadOnlyGroup")
+    
     return
 }
 
@@ -97,6 +98,7 @@ func NewCloseDBExtranetAccessRequest() (request *CloseDBExtranetAccessRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CloseDBExtranetAccess")
+    
     return
 }
 
@@ -143,6 +145,7 @@ func NewCloseServerlessDBExtranetAccessRequest() (request *CloseServerlessDBExtr
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CloseServerlessDBExtranetAccess")
+    
     return
 }
 
@@ -208,6 +211,7 @@ func NewCreateDBInstancesRequest() (request *CreateDBInstancesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CreateDBInstances")
+    
     return
 }
 
@@ -270,6 +274,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORDFORMAT = "InvalidParameterValue.InvalidPasswordFormat"
 //  INVALIDPARAMETERVALUE_INVALIDPID = "InvalidParameterValue.InvalidPid"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
@@ -301,6 +306,7 @@ func NewCreateInstancesRequest() (request *CreateInstancesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CreateInstances")
+    
     return
 }
 
@@ -367,6 +373,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORDLENGTHERROR = "InvalidParameterValue.InvalidPasswordLengthError"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORDVALUEERROR = "InvalidParameterValue.InvalidPasswordValueError"
 //  INVALIDPARAMETERVALUE_INVALIDPID = "InvalidParameterValue.InvalidPid"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
@@ -398,6 +405,7 @@ func NewCreateReadOnlyDBInstanceRequest() (request *CreateReadOnlyDBInstanceRequ
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyDBInstance")
+    
     return
 }
 
@@ -494,6 +502,7 @@ func NewCreateReadOnlyGroupRequest() (request *CreateReadOnlyGroupRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyGroup")
+    
     return
 }
 
@@ -545,6 +554,7 @@ func NewCreateServerlessDBInstanceRequest() (request *CreateServerlessDBInstance
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "CreateServerlessDBInstance")
+    
     return
 }
 
@@ -605,6 +615,7 @@ func NewDeleteReadOnlyGroupRequest() (request *DeleteReadOnlyGroupRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteReadOnlyGroup")
+    
     return
 }
 
@@ -648,6 +659,7 @@ func NewDeleteServerlessDBInstanceRequest() (request *DeleteServerlessDBInstance
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteServerlessDBInstance")
+    
     return
 }
 
@@ -697,6 +709,7 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeAccounts")
+    
     return
 }
 
@@ -736,6 +749,7 @@ func NewDescribeDBBackupsRequest() (request *DescribeDBBackupsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBBackups")
+    
     return
 }
 
@@ -783,6 +797,7 @@ func NewDescribeDBErrlogsRequest() (request *DescribeDBErrlogsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBErrlogs")
+    
     return
 }
 
@@ -827,6 +842,7 @@ func NewDescribeDBInstanceAttributeRequest() (request *DescribeDBInstanceAttribu
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstanceAttribute")
+    
     return
 }
 
@@ -868,11 +884,45 @@ func (c *Client) DescribeDBInstanceAttribute(request *DescribeDBInstanceAttribut
     return
 }
 
+func NewDescribeDBInstanceParametersRequest() (request *DescribeDBInstanceParametersRequest) {
+    request = &DescribeDBInstanceParametersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstanceParameters")
+    
+    return
+}
+
+func NewDescribeDBInstanceParametersResponse() (response *DescribeDBInstanceParametersResponse) {
+    response = &DescribeDBInstanceParametersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDBInstanceParameters
+// 获取实例可修改参数列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBInstanceParameters(request *DescribeDBInstanceParametersRequest) (response *DescribeDBInstanceParametersResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceParametersRequest()
+    }
+    response = NewDescribeDBInstanceParametersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
     request = &DescribeDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstances")
+    
     return
 }
 
@@ -922,6 +972,7 @@ func NewDescribeDBSlowlogsRequest() (request *DescribeDBSlowlogsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBSlowlogs")
+    
     return
 }
 
@@ -933,7 +984,7 @@ func NewDescribeDBSlowlogsResponse() (response *DescribeDBSlowlogsResponse) {
 }
 
 // DescribeDBSlowlogs
-// 本接口（DescribeDBSlowlogs）用于获取慢查询日志。
+// 本接口（DescribeDBSlowlogs）用于获取慢查询日志。已于2021.09.01日正式废弃，后续此接口将不再返回任何数据，新接口为DescribeSlowQueryList，详细请查看：https://cloud.tencent.com/document/product/409/60540
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -965,6 +1016,7 @@ func NewDescribeDBXlogsRequest() (request *DescribeDBXlogsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBXlogs")
+    
     return
 }
 
@@ -1013,6 +1065,7 @@ func NewDescribeDatabasesRequest() (request *DescribeDatabasesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDatabases")
+    
     return
 }
 
@@ -1062,6 +1115,7 @@ func NewDescribeOrdersRequest() (request *DescribeOrdersRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeOrders")
+    
     return
 }
 
@@ -1098,11 +1152,45 @@ func (c *Client) DescribeOrders(request *DescribeOrdersRequest) (response *Descr
     return
 }
 
+func NewDescribeParamsEventRequest() (request *DescribeParamsEventRequest) {
+    request = &DescribeParamsEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeParamsEvent")
+    
+    return
+}
+
+func NewDescribeParamsEventResponse() (response *DescribeParamsEventResponse) {
+    response = &DescribeParamsEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeParamsEvent
+// 获取参数修改事件详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeParamsEvent(request *DescribeParamsEventRequest) (response *DescribeParamsEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeParamsEventRequest()
+    }
+    response = NewDescribeParamsEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeProductConfigRequest() (request *DescribeProductConfigRequest) {
     request = &DescribeProductConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeProductConfig")
+    
     return
 }
 
@@ -1145,6 +1233,7 @@ func NewDescribeReadOnlyGroupsRequest() (request *DescribeReadOnlyGroupsRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeReadOnlyGroups")
+    
     return
 }
 
@@ -1185,6 +1274,7 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeRegions")
+    
     return
 }
 
@@ -1227,6 +1317,7 @@ func NewDescribeServerlessDBInstancesRequest() (request *DescribeServerlessDBIns
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeServerlessDBInstances")
+    
     return
 }
 
@@ -1274,11 +1365,76 @@ func (c *Client) DescribeServerlessDBInstances(request *DescribeServerlessDBInst
     return
 }
 
+func NewDescribeSlowQueryAnalysisRequest() (request *DescribeSlowQueryAnalysisRequest) {
+    request = &DescribeSlowQueryAnalysisRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeSlowQueryAnalysis")
+    
+    return
+}
+
+func NewDescribeSlowQueryAnalysisResponse() (response *DescribeSlowQueryAnalysisResponse) {
+    response = &DescribeSlowQueryAnalysisResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSlowQueryAnalysis
+// 此接口（DescribeSlowQueryAnalysis）用于统计指定时间范围内的所有慢查询，根据SQL语句抽象参数后，进行聚合分析，并返回同类SQL列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
+func (c *Client) DescribeSlowQueryAnalysis(request *DescribeSlowQueryAnalysisRequest) (response *DescribeSlowQueryAnalysisResponse, err error) {
+    if request == nil {
+        request = NewDescribeSlowQueryAnalysisRequest()
+    }
+    response = NewDescribeSlowQueryAnalysisResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSlowQueryListRequest() (request *DescribeSlowQueryListRequest) {
+    request = &DescribeSlowQueryListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeSlowQueryList")
+    
+    return
+}
+
+func NewDescribeSlowQueryListResponse() (response *DescribeSlowQueryListResponse) {
+    response = &DescribeSlowQueryListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSlowQueryList
+// 此接口（DescribeSlowQueryList）用于查询指定时间范围内的所有慢查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeSlowQueryList(request *DescribeSlowQueryListRequest) (response *DescribeSlowQueryListResponse, err error) {
+    if request == nil {
+        request = NewDescribeSlowQueryListRequest()
+    }
+    response = NewDescribeSlowQueryListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
     request = &DescribeZonesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeZones")
+    
     return
 }
 
@@ -1321,6 +1477,7 @@ func NewDestroyDBInstanceRequest() (request *DestroyDBInstanceRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DestroyDBInstance")
+    
     return
 }
 
@@ -1340,6 +1497,7 @@ func NewDestroyDBInstanceResponse() (response *DestroyDBInstanceResponse) {
 //  FAILEDOPERATION_CMQRESPONSEERROR = "FailedOperation.CMQResponseError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DELETERESOURCEPROJECTTAGERROR = "FailedOperation.DeleteResourceProjectTagError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_LIMITOPERATION = "FailedOperation.LimitOperation"
 //  FAILEDOPERATION_POSTPAIDUNBLOCKERROR = "FailedOperation.PostPaidUnblockError"
@@ -1379,6 +1537,7 @@ func NewDisIsolateDBInstancesRequest() (request *DisIsolateDBInstancesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "DisIsolateDBInstances")
+    
     return
 }
 
@@ -1443,6 +1602,7 @@ func NewInitDBInstancesRequest() (request *InitDBInstancesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "InitDBInstances")
+    
     return
 }
 
@@ -1497,6 +1657,7 @@ func NewInquiryPriceCreateDBInstancesRequest() (request *InquiryPriceCreateDBIns
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceCreateDBInstances")
+    
     return
 }
 
@@ -1525,10 +1686,12 @@ func NewInquiryPriceCreateDBInstancesResponse() (response *InquiryPriceCreateDBI
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_SPECNOTRECOGNIZEDERROR = "InvalidParameterValue.SpecNotRecognizedError"
 //  INVALIDPID = "InvalidPid"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_PAYMODEERROR = "OperationDenied.PayModeError"
 func (c *Client) InquiryPriceCreateDBInstances(request *InquiryPriceCreateDBInstancesRequest) (response *InquiryPriceCreateDBInstancesResponse, err error) {
     if request == nil {
         request = NewInquiryPriceCreateDBInstancesRequest()
@@ -1543,6 +1706,7 @@ func NewInquiryPriceRenewDBInstanceRequest() (request *InquiryPriceRenewDBInstan
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceRenewDBInstance")
+    
     return
 }
 
@@ -1589,6 +1753,7 @@ func NewInquiryPriceUpgradeDBInstanceRequest() (request *InquiryPriceUpgradeDBIn
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceUpgradeDBInstance")
+    
     return
 }
 
@@ -1640,6 +1805,7 @@ func NewIsolateDBInstancesRequest() (request *IsolateDBInstancesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "IsolateDBInstances")
+    
     return
 }
 
@@ -1683,6 +1849,7 @@ func NewIsolateDBInstancesResponse() (response *IsolateDBInstancesResponse) {
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  REGIONNOTSUPPORTED = "RegionNotSupported"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) IsolateDBInstances(request *IsolateDBInstancesRequest) (response *IsolateDBInstancesResponse, err error) {
     if request == nil {
         request = NewIsolateDBInstancesRequest()
@@ -1697,6 +1864,7 @@ func NewModifyAccountRemarkRequest() (request *ModifyAccountRemarkRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyAccountRemark")
+    
     return
 }
 
@@ -1738,6 +1906,7 @@ func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceName")
+    
     return
 }
 
@@ -1778,11 +1947,44 @@ func (c *Client) ModifyDBInstanceName(request *ModifyDBInstanceNameRequest) (res
     return
 }
 
+func NewModifyDBInstanceParametersRequest() (request *ModifyDBInstanceParametersRequest) {
+    request = &ModifyDBInstanceParametersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceParameters")
+    
+    return
+}
+
+func NewModifyDBInstanceParametersResponse() (response *ModifyDBInstanceParametersResponse) {
+    response = &ModifyDBInstanceParametersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDBInstanceParameters
+// 批量修改参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBInstanceParameters(request *ModifyDBInstanceParametersRequest) (response *ModifyDBInstanceParametersResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceParametersRequest()
+    }
+    response = NewModifyDBInstanceParametersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBInstanceReadOnlyGroupRequest() (request *ModifyDBInstanceReadOnlyGroupRequest) {
     request = &ModifyDBInstanceReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceReadOnlyGroup")
+    
     return
 }
 
@@ -1825,11 +2027,49 @@ func (c *Client) ModifyDBInstanceReadOnlyGroup(request *ModifyDBInstanceReadOnly
     return
 }
 
+func NewModifyDBInstanceSpecRequest() (request *ModifyDBInstanceSpecRequest) {
+    request = &ModifyDBInstanceSpecRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceSpec")
+    
+    return
+}
+
+func NewModifyDBInstanceSpecResponse() (response *ModifyDBInstanceSpecResponse) {
+    response = &ModifyDBInstanceSpecResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDBInstanceSpec
+// 本接口（ModifyDBInstanceSpec）用于调整实例规格，包括内存、磁盘。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_PAYORDERFAILED = "FailedOperation.PayOrderFailed"
+//  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+func (c *Client) ModifyDBInstanceSpec(request *ModifyDBInstanceSpecRequest) (response *ModifyDBInstanceSpecResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceSpecRequest()
+    }
+    response = NewModifyDBInstanceSpecResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBInstancesProjectRequest() (request *ModifyDBInstancesProjectRequest) {
     request = &ModifyDBInstancesProjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstancesProject")
+    
     return
 }
 
@@ -1874,6 +2114,7 @@ func NewModifyReadOnlyGroupConfigRequest() (request *ModifyReadOnlyGroupConfigRe
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyReadOnlyGroupConfig")
+    
     return
 }
 
@@ -1918,11 +2159,53 @@ func (c *Client) ModifyReadOnlyGroupConfig(request *ModifyReadOnlyGroupConfigReq
     return
 }
 
+func NewModifySwitchTimePeriodRequest() (request *ModifySwitchTimePeriodRequest) {
+    request = &ModifySwitchTimePeriodRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifySwitchTimePeriod")
+    
+    return
+}
+
+func NewModifySwitchTimePeriodResponse() (response *ModifySwitchTimePeriodResponse) {
+    response = &ModifySwitchTimePeriodResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifySwitchTimePeriod
+// 当升级完成后，对处于等待切换状态下的实例，强制实例立即切换。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
+//  FAILEDOPERATION_CAMCHECKRESOURCEFAILED = "FailedOperation.CamCheckResourceFailed"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNKNOWNERROR = "UnknownError"
+func (c *Client) ModifySwitchTimePeriod(request *ModifySwitchTimePeriodRequest) (response *ModifySwitchTimePeriodResponse, err error) {
+    if request == nil {
+        request = NewModifySwitchTimePeriodRequest()
+    }
+    response = NewModifySwitchTimePeriodResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewOpenDBExtranetAccessRequest() (request *OpenDBExtranetAccessRequest) {
     request = &OpenDBExtranetAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "OpenDBExtranetAccess")
+    
     return
 }
 
@@ -1968,6 +2251,7 @@ func NewOpenServerlessDBExtranetAccessRequest() (request *OpenServerlessDBExtran
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "OpenServerlessDBExtranetAccess")
+    
     return
 }
 
@@ -2032,6 +2316,7 @@ func NewRebalanceReadOnlyGroupRequest() (request *RebalanceReadOnlyGroupRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "RebalanceReadOnlyGroup")
+    
     return
 }
 
@@ -2076,6 +2361,7 @@ func NewRemoveDBInstanceFromReadOnlyGroupRequest() (request *RemoveDBInstanceFro
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "RemoveDBInstanceFromReadOnlyGroup")
+    
     return
 }
 
@@ -2123,6 +2409,7 @@ func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "RenewInstance")
+    
     return
 }
 
@@ -2180,6 +2467,7 @@ func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "ResetAccountPassword")
+    
     return
 }
 
@@ -2227,6 +2515,7 @@ func NewRestartDBInstanceRequest() (request *RestartDBInstanceRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "RestartDBInstance")
+    
     return
 }
 
@@ -2272,6 +2561,7 @@ func NewSetAutoRenewFlagRequest() (request *SetAutoRenewFlagRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "SetAutoRenewFlag")
+    
     return
 }
 
@@ -2317,6 +2607,7 @@ func NewUpgradeDBInstanceRequest() (request *UpgradeDBInstanceRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("postgres", APIVersion, "UpgradeDBInstance")
+    
     return
 }
 
@@ -2328,7 +2619,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 }
 
 // UpgradeDBInstance
-// 本接口（UpgradeDBInstance）用于升级实例。
+// 本接口（UpgradeDBInstance）用于升级实例配置。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"

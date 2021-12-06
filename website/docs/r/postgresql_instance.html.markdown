@@ -66,6 +66,8 @@ The following arguments are supported:
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.
+* `max_standby_archive_delay` - (Optional) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
+* `max_standby_streaming_delay` - (Optional) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
 * `project_id` - (Optional) Project id, default value is `0`.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.

@@ -94,6 +94,48 @@ func (r *AddDBInstanceToReadOnlyGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type AnalysisItems struct {
+
+	// 慢SQL查询的数据库名
+	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
+
+	// 慢SQL执行的用户名
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 抽象参数之后的慢SQL
+	NormalQuery *string `json:"NormalQuery,omitempty" name:"NormalQuery"`
+
+	// 慢SQL执行的客户端地址
+	ClientAddr *string `json:"ClientAddr,omitempty" name:"ClientAddr"`
+
+	// 在选定时间范围内慢SQL语句执行的次数
+	CallNum *uint64 `json:"CallNum,omitempty" name:"CallNum"`
+
+	// 在选定时间范围内，慢SQL语句执行的次数占所有慢SQL的比例（小数返回）
+	CallPercent *float64 `json:"CallPercent,omitempty" name:"CallPercent"`
+
+	// 在选定时间范围内，慢SQL执行的总时间
+	CostTime *float64 `json:"CostTime,omitempty" name:"CostTime"`
+
+	// 在选定时间范围内，慢SQL语句执行的总时间占所有慢SQL的比例（小数返回）
+	CostPercent *float64 `json:"CostPercent,omitempty" name:"CostPercent"`
+
+	// 在选定时间范围内，慢SQL语句执行的耗时最短的时间（单位：ms）
+	MinCostTime *float64 `json:"MinCostTime,omitempty" name:"MinCostTime"`
+
+	// 在选定时间范围内，慢SQL语句执行的耗时最长的时间（单位：ms）
+	MaxCostTime *float64 `json:"MaxCostTime,omitempty" name:"MaxCostTime"`
+
+	// 在选定时间范围内，慢SQL语句执行的耗时平均时间（单位：ms）
+	AvgCostTime *float64 `json:"AvgCostTime,omitempty" name:"AvgCostTime"`
+
+	// 在选定时间范围内，慢SQL第一条开始执行的时间戳
+	FirstTime *string `json:"FirstTime,omitempty" name:"FirstTime"`
+
+	// 在选定时间范围内，慢SQL最后一条开始执行的时间戳
+	LastTime *string `json:"LastTime,omitempty" name:"LastTime"`
+}
+
 type CloseDBExtranetAccessRequest struct {
 	*tchttp.BaseRequest
 
@@ -377,7 +419,7 @@ type CreateInstancesRequest struct {
 	// 实例名。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 是否需要支持Ipv6，1：是，0：否。
+	// 是否需要支持Ipv6，1：是，0：否（默认）。
 	NeedSupportIpv6 *uint64 `json:"NeedSupportIpv6,omitempty" name:"NeedSupportIpv6"`
 
 	// 实例需要绑定的Tag信息，默认为空。
@@ -815,7 +857,7 @@ type DBInstance struct {
 	// 实例名称
 	DBInstanceName *string `json:"DBInstanceName,omitempty" name:"DBInstanceName"`
 
-	// 实例状态，分别为：applying（申请中）、init(待初始化)、initing(初始化中)、running(运行中)、limited run（受限运行）、isolated（已隔离）、recycling（回收中）、recycled（已回收）、job running（任务执行中）、offline（下线）、migrating（迁移中）、expanding（扩容中）、readonly（只读）、restarting（重启中）
+	// 实例状态，分别为：applying（申请中）、init(待初始化)、initing(初始化中)、running(运行中)、limited run（受限运行）、isolated（已隔离）、recycling（回收中）、recycled（已回收）、job running（任务执行中）、offline（下线）、migrating（迁移中）、expanding（扩容中）、waitSwitch（等待切换）、switching（切换中）、readonly（只读）、restarting（重启中）、network changing（网络变更中）
 	DBInstanceStatus *string `json:"DBInstanceStatus,omitempty" name:"DBInstanceStatus"`
 
 	// 实例分配的内存大小，单位：GB
@@ -839,7 +881,7 @@ type DBInstance struct {
 	// 实例DB字符集
 	DBCharset *string `json:"DBCharset,omitempty" name:"DBCharset"`
 
-	// PostgreSQL内核版本
+	// PostgreSQL主版本
 	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
 
 	// 实例创建时间
@@ -894,6 +936,14 @@ type DBInstance struct {
 	// 下线时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OfflineTime *string `json:"OfflineTime,omitempty" name:"OfflineTime"`
+
+	// 数据库内核版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DBKernelVersion *string `json:"DBKernelVersion,omitempty" name:"DBKernelVersion"`
+
+	// 实例网络信息列表（此字段已废弃）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetworkAccessList []*NetworkAccess `json:"NetworkAccessList,omitempty" name:"NetworkAccessList"`
 }
 
 type DBInstanceNetInfo struct {
@@ -910,8 +960,16 @@ type DBInstanceNetInfo struct {
 	// 网络类型，1、inner（基础网络内网地址）；2、private（私有网络内网地址）；3、public（基础网络或私有网络的外网地址）；
 	NetType *string `json:"NetType,omitempty" name:"NetType"`
 
-	// 网络连接状态
+	// 网络连接状态，1、initing（未开通）；2、opened（已开通）；3、closed（已关闭）；4、opening（开通中）；5、closing（关闭中）；
 	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 私有网络ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 }
 
 type DeleteReadOnlyGroupRequest struct {
@@ -1279,6 +1337,62 @@ func (r *DescribeDBInstanceAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDBInstanceParametersRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 查询指定参数详情。ParamName为空或不传，默认返回全部参数列表
+	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
+}
+
+func (r *DescribeDBInstanceParametersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBInstanceParametersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ParamName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBInstanceParametersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDBInstanceParametersResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 参数列表总数
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 参数列表返回详情
+		Detail []*ParamInfo `json:"Detail,omitempty" name:"Detail"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDBInstanceParametersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBInstanceParametersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -1601,6 +1715,58 @@ func (r *DescribeOrdersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeParamsEventRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例DB ID
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+}
+
+func (r *DescribeParamsEventRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeParamsEventRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeParamsEventRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeParamsEventResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 参数修改事件总数，以参数为统计粒度
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 实例参数修改事件详情
+		EventItems []*EventItem `json:"EventItems,omitempty" name:"EventItems"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeParamsEventResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeParamsEventResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeProductConfigRequest struct {
 	*tchttp.BaseRequest
 
@@ -1832,6 +1998,171 @@ func (r *DescribeServerlessDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeSlowQueryAnalysisRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 查询起始时间戳，格式 “YYYY-MM-DD HH:mm:ss” ，日志保留时间默认为7天，起始时间不能超出保留时间范围。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间戳，格式 “YYYY-MM-DD HH:mm:ss”。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 根据数据库名进行筛选，可以为空。
+	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
+
+	// 排序维度。 可选参数，取值范围[CallNum,CostTime,AvgCostTime]。默认CallNum。
+	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
+
+	// 排序类型。升序asc、降序desc。默认desc。
+	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
+
+	// 分页大小。取值范围[1,100]。默认50。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页偏移。取值范围[0,INF)。默认0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *DescribeSlowQueryAnalysisRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlowQueryAnalysisRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "DatabaseName")
+	delete(f, "OrderBy")
+	delete(f, "OrderByType")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSlowQueryAnalysisRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSlowQueryAnalysisResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 查询总条数。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 慢SQL统计分析接口返回详情。
+		Detail *Detail `json:"Detail,omitempty" name:"Detail"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeSlowQueryAnalysisResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlowQueryAnalysisResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSlowQueryListRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 查询起始时间戳，格式 “YYYY-MM-DD HH:mm:ss” ，日志保留时间默认为7天，起始时间不能超出保留时间范围。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间戳，格式 “YYYY-MM-DD HH:mm:ss”。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 根据数据库名进行筛选，可以为空。
+	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
+
+	// 排序类型。升序asc、降序desc。默认为desc。
+	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
+
+	// 排序维度。 可选参数，取值范围[SessionStartTime,Duration]，默认为SessionStartTime。
+	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
+
+	// 分页大小。取值范围[1,100],默认为20。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页偏移。取值范围[0,INF)，默认为0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *DescribeSlowQueryListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlowQueryListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "DatabaseName")
+	delete(f, "OrderByType")
+	delete(f, "OrderBy")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSlowQueryListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSlowQueryListResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 选定时间范围内慢SQL总条数。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 指定时间范围内，慢SQL耗时分段分析。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		DurationAnalysis []*DurationAnalysis `json:"DurationAnalysis,omitempty" name:"DurationAnalysis"`
+
+		// 指定时间范围内 慢SQL流水。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		RawSlowQueryList []*RawSlowQuery `json:"RawSlowQueryList,omitempty" name:"RawSlowQueryList"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeSlowQueryListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSlowQueryListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeZonesRequest struct {
 	*tchttp.BaseRequest
 }
@@ -1926,6 +2257,19 @@ func (r *DestroyDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type Detail struct {
+
+	// 输入时间范围内所有慢sql执行的总时间，单位毫秒（ms）
+	TotalTime *float64 `json:"TotalTime,omitempty" name:"TotalTime"`
+
+	// 输入时间范围内所有慢sql总条数
+	TotalCallNum *uint64 `json:"TotalCallNum,omitempty" name:"TotalCallNum"`
+
+	// 慢SQL统计分析列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AnalysisItems []*AnalysisItems `json:"AnalysisItems,omitempty" name:"AnalysisItems"`
+}
+
 type DisIsolateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -1984,6 +2328,15 @@ func (r *DisIsolateDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DurationAnalysis struct {
+
+	// 慢SQL耗时，时段
+	TimeSegment *string `json:"TimeSegment,omitempty" name:"TimeSegment"`
+
+	// 对应时段区间慢SQL 条数
+	Count *int64 `json:"Count,omitempty" name:"Count"`
+}
+
 type ErrLogDetail struct {
 
 	// 用户名
@@ -1997,6 +2350,56 @@ type ErrLogDetail struct {
 
 	// 错误消息
 	ErrMsg *string `json:"ErrMsg,omitempty" name:"ErrMsg"`
+}
+
+type EventInfo struct {
+
+	// 参数名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
+
+	// 原参数值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OldValue *string `json:"OldValue,omitempty" name:"OldValue"`
+
+	// 本次修改期望参数值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NewValue *string `json:"NewValue,omitempty" name:"NewValue"`
+
+	// 后台参数修改开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
+
+	// 后台参数生效开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EffectiveTime *string `json:"EffectiveTime,omitempty" name:"EffectiveTime"`
+
+	// 修改状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	State *string `json:"State,omitempty" name:"State"`
+
+	// 操作者（一般为用户sub UIN）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Operator *string `json:"Operator,omitempty" name:"Operator"`
+
+	// 时间日志。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventLog *string `json:"EventLog,omitempty" name:"EventLog"`
+}
+
+type EventItem struct {
+
+	// 参数名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
+
+	// 修改事件数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventCount *int64 `json:"EventCount,omitempty" name:"EventCount"`
+
+	// 修改时间详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventDetail []*EventInfo `json:"EventDetail,omitempty" name:"EventDetail"`
 }
 
 type Filter struct {
@@ -2415,6 +2818,56 @@ func (r *ModifyDBInstanceNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyDBInstanceParametersRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 待修改参数及期望值
+	ParamList []*ParamEntry `json:"ParamList,omitempty" name:"ParamList"`
+}
+
+func (r *ModifyDBInstanceParametersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceParametersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ParamList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceParametersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyDBInstanceParametersResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyDBInstanceParametersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceParametersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyDBInstanceReadOnlyGroupRequest struct {
 	*tchttp.BaseRequest
 
@@ -2469,6 +2922,90 @@ func (r *ModifyDBInstanceReadOnlyGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceReadOnlyGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyDBInstanceSpecRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如：postgres-6bwgamo3。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 修改后的实例内存大小，单位GiB。
+	Memory *uint64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 修改后的实例磁盘大小，单位GiB。
+	Storage *uint64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 是否自动使用代金券,1是,0否，默认不使用。
+	AutoVoucher *uint64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID列表，目前仅支持指定一张代金券。
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
+
+	// 活动ID。
+	ActivityId *uint64 `json:"ActivityId,omitempty" name:"ActivityId"`
+
+	// 指定实例配置完成变更后的切换时间，默认为 立即切换，入参为 0 ：立即切换 。1：指定时间切换。
+	SwitchTag *uint64 `json:"SwitchTag,omitempty" name:"SwitchTag"`
+
+	// 切换开始时间，时间格式：HH:MM:SS，例如：01:00:00。
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换截止时间，时间格式：HH:MM:SS，例如：01:30:00。
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
+}
+
+func (r *ModifyDBInstanceSpecRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceSpecRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "Memory")
+	delete(f, "Storage")
+	delete(f, "AutoVoucher")
+	delete(f, "VoucherIds")
+	delete(f, "ActivityId")
+	delete(f, "SwitchTag")
+	delete(f, "SwitchStartTime")
+	delete(f, "SwitchEndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceSpecRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyDBInstanceSpecResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 订单号。
+		DealName *string `json:"DealName,omitempty" name:"DealName"`
+
+		// 冻结流水号。
+		BillId *string `json:"BillId,omitempty" name:"BillId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyDBInstanceSpecResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceSpecResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2597,6 +3134,91 @@ func (r *ModifyReadOnlyGroupConfigResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ModifyReadOnlyGroupConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifySwitchTimePeriodRequest struct {
+	*tchttp.BaseRequest
+
+	// 处于等待切换状态中的实例ID
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 入参取值为 0 ，代表立即切换。
+	SwitchTag *uint64 `json:"SwitchTag,omitempty" name:"SwitchTag"`
+}
+
+func (r *ModifySwitchTimePeriodRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySwitchTimePeriodRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "SwitchTag")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySwitchTimePeriodRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifySwitchTimePeriodResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifySwitchTimePeriodResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySwitchTimePeriodResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type NetworkAccess struct {
+
+	// 网络资源id，实例id或RO组id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
+
+	// 资源类型，1-实例 2-RO组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceType *uint64 `json:"ResourceType,omitempty" name:"ResourceType"`
+
+	// 私有网络ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// IPV4地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// IPV6地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Vip6 *string `json:"Vip6,omitempty" name:"Vip6"`
+
+	// 访问端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Vport *int64 `json:"Vport,omitempty" name:"Vport"`
+
+	// 子网ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 网络状态，1-申请中，2-使用中，3-删除中，4-已删除
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcStatus *int64 `json:"VpcStatus,omitempty" name:"VpcStatus"`
 }
 
 type NormalQueryItem struct {
@@ -2750,6 +3372,89 @@ func (r *OpenServerlessDBExtranetAccessResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ParamEntry struct {
+
+	// 参数名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 修改参数值。入参均以字符串形式传递，例如：小数”0.1“、整数”1000“、枚举”replica“
+	ExpectedValue *string `json:"ExpectedValue,omitempty" name:"ExpectedValue"`
+}
+
+type ParamInfo struct {
+
+	// 参数ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ID *int64 `json:"ID,omitempty" name:"ID"`
+
+	// 参数名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 参数值类型：integer（整型）、real（浮点型）、bool（布尔型）、enum（枚举类型）、mutil_enum（枚举类型、支持多选）。
+	// 当参数类型为integer（整型）、real（浮点型）时，参数的取值范围根据返回值的Max、Min确定； 
+	// 当参数类型为bool（布尔型）时，参数设置值取值范围是true | false； 
+	// 当参数类型为enum（枚举类型）、mutil_enum（多枚举类型）时，参数的取值范围由返回值中的EnumValue确定。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ParamValueType *string `json:"ParamValueType,omitempty" name:"ParamValueType"`
+
+	// 参数值 单位。参数没有单位是，该字段返回空
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Unit *string `json:"Unit,omitempty" name:"Unit"`
+
+	// 参数默认值。以字符串形式返回
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
+
+	// 参数当前运行值。以字符串形式返回
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentValue *string `json:"CurrentValue,omitempty" name:"CurrentValue"`
+
+	// 枚举类型参数，取值范围
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnumValue []*string `json:"EnumValue,omitempty" name:"EnumValue"`
+
+	// 数值类型（integer、real）参数，取值下界
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Max *float64 `json:"Max,omitempty" name:"Max"`
+
+	// 数值类型（integer、real）参数，取值上界
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Min *float64 `json:"Min,omitempty" name:"Min"`
+
+	// 参数中文描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ParamDescriptionCH *string `json:"ParamDescriptionCH,omitempty" name:"ParamDescriptionCH"`
+
+	// 参数英文描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ParamDescriptionEN *string `json:"ParamDescriptionEN,omitempty" name:"ParamDescriptionEN"`
+
+	// 参数修改，是否重启生效。（true为需要，false为不需要）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NeedReboot *bool `json:"NeedReboot,omitempty" name:"NeedReboot"`
+
+	// 参数中文分类
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClassificationCN *string `json:"ClassificationCN,omitempty" name:"ClassificationCN"`
+
+	// 参数英文分类
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClassificationEN *string `json:"ClassificationEN,omitempty" name:"ClassificationEN"`
+
+	// 是否和规格相关。（true为相关，false为不想关）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SpecRelated *bool `json:"SpecRelated,omitempty" name:"SpecRelated"`
+
+	// 是否为重点参数。（true为重点参数，修改是需要重点关注，可能会影响实例性能）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Advanced *bool `json:"Advanced,omitempty" name:"Advanced"`
+
+	// 参数最后一次修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LastModifyTime *string `json:"LastModifyTime,omitempty" name:"LastModifyTime"`
+}
+
 type PgDeal struct {
 
 	// 订单名
@@ -2769,6 +3474,27 @@ type PgDeal struct {
 
 	// 实例ID数组
 	DBInstanceIdSet []*string `json:"DBInstanceIdSet,omitempty" name:"DBInstanceIdSet"`
+}
+
+type RawSlowQuery struct {
+
+	// 慢SQL 语句
+	RawQuery *string `json:"RawQuery,omitempty" name:"RawQuery"`
+
+	// 慢SQL 查询的数据库
+	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
+
+	// 慢SQL执行 耗时
+	Duration *float64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 执行慢SQL的客户端
+	ClientAddr *string `json:"ClientAddr,omitempty" name:"ClientAddr"`
+
+	// 执行慢SQL的用户名
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 慢SQL执行的开始时间
+	SessionStartTime *string `json:"SessionStartTime,omitempty" name:"SessionStartTime"`
 }
 
 type ReadOnlyGroup struct {
@@ -2829,6 +3555,10 @@ type ReadOnlyGroup struct {
 
 	// 网络信息
 	DBInstanceNetInfo []*DBInstanceNetInfo `json:"DBInstanceNetInfo,omitempty" name:"DBInstanceNetInfo"`
+
+	// 只读组网络信息列表（此字段已废弃）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetworkAccessList []*NetworkAccess `json:"NetworkAccessList,omitempty" name:"NetworkAccessList"`
 }
 
 type RebalanceReadOnlyGroupRequest struct {
@@ -3189,6 +3919,10 @@ type ServerlessDBInstance struct {
 	// 实例绑定的标签数组
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagList []*Tag `json:"TagList,omitempty" name:"TagList"`
+
+	// 数据库内核版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DBKernelVersion *string `json:"DBKernelVersion,omitempty" name:"DBKernelVersion"`
 }
 
 type ServerlessDBInstanceNetInfo struct {
@@ -3353,6 +4087,15 @@ type UpgradeDBInstanceRequest struct {
 
 	// 活动ID
 	ActivityId *int64 `json:"ActivityId,omitempty" name:"ActivityId"`
+
+	// 指定实例配置完成变更后的切换时间，默认为 立即切换，入参为 0 ：立即切换 。1：指定时间切换。
+	SwitchTag *int64 `json:"SwitchTag,omitempty" name:"SwitchTag"`
+
+	// 切换开始时间
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换截止时间
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
 }
 
 func (r *UpgradeDBInstanceRequest) ToJsonString() string {
@@ -3373,6 +4116,9 @@ func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "AutoVoucher")
 	delete(f, "VoucherIds")
 	delete(f, "ActivityId")
+	delete(f, "SwitchTag")
+	delete(f, "SwitchStartTime")
+	delete(f, "SwitchEndTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeDBInstanceRequest has unknown keys!", "")
 	}
