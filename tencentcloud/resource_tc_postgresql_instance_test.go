@@ -136,7 +136,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"
   subnet_id = "subnet-pyio7yog"
-  engine_version		= "9.3.5"
+  engine_version		= "10.4"
   root_password                 = "1qaA2k1wgvfa3ZZZ"
   charset = "LATIN1"
   project_id = 0
@@ -156,7 +156,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"
   subnet_id = "subnet-pyio7yog"
-  engine_version		= "9.3.5"
+  engine_version		= "10.4"
   root_password                 = "1qaA2k1wgvfa3ZZZZ"
   charset = "LATIN1"
   project_id = 1154137

@@ -40,7 +40,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "9.3.5"
+  engine_version    = "10.4"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
@@ -65,7 +65,7 @@ The following arguments are supported:
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `9.3.5`, `9.5.4`, `10.4`.
+* `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.
 * `project_id` - (Optional) Project id, default value is `0`.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
