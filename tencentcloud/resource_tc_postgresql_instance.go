@@ -30,7 +30,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "9.3.5"
+  engine_version    = "10.4"
   root_user         = "root123"
   root_password     = "Root123$"
   charset           = "UTF8"
@@ -96,8 +96,8 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Default:     "9.3.5",
-				Description: "Version of the postgresql database engine. Valid values: `9.3.5`, `9.5.4`, `10.4`.",
+				Default:     "10.4",
+				Description: "Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
