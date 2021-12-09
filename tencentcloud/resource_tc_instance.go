@@ -178,7 +178,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				Default:      1,
 				Deprecated:   "It has been deprecated from version 1.59.18. Use built-in `count` instead.",
 				ValidateFunc: validateIntegerInRange(1, 100),
 				Description:  "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
