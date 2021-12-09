@@ -244,7 +244,12 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	memSize, projectId, port int64,
 	securityGroups []string,
 	redisShardNum,
-	redisReplicasNum int, chargeTypeID int64, chargePeriod uint64, nodeInfo []*redis.RedisNodeInfo) (instanceIds []*string, errRet error) {
+	redisReplicasNum int,
+	chargeTypeID int64,
+	chargePeriod uint64,
+	nodeInfo []*redis.RedisNodeInfo,
+	noAuth bool,
+) (instanceIds []*string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
@@ -314,6 +319,10 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 
 	if len(nodeInfo) > 0 {
 		request.NodeSet = nodeInfo
+	}
+
+	if noAuth {
+		request.NoAuth = &noAuth
 	}
 
 	ratelimit.Check(request.GetAction())
