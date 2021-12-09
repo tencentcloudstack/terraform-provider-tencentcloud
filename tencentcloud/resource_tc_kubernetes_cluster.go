@@ -996,7 +996,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:        schema.TypeBool,
 			Default:     false,
 			Optional:    true,
-			Description: "Open internet access or not.",
+			Description: "Open internet access or not." +
+				" If this field is set 'true', the field below `worker_config` must be set." +
+				" Because only cluster with node is allowed enable access endpoint.",
 		},
 		"cluster_intranet": {
 			Type:        schema.TypeBool,
