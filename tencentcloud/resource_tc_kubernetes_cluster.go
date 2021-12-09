@@ -1561,7 +1561,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 
-	if v, ok := dMap["img_id"]; ok {
+	if v, ok := dMap["img_id"]; ok && v.(string) != "" {
 		request.ImageId = helper.String(v.(string))
 	}
 
