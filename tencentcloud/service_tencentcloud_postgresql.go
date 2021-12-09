@@ -454,3 +454,76 @@ func (me *PostgresqlService) DescribeRootUser(ctx context.Context, instanceId st
 
 	return accounts, errRet
 }
+
+func (me *PostgresqlService) ModifyPgParams(ctx context.Context, instanceId string, paramEntrys map[string]string) (err error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewModifyDBInstanceParametersRequest()
+	request.DBInstanceId = &instanceId
+	request.ParamList = make([]*postgresql.ParamEntry, 0)
+
+	for key, value := range paramEntrys {
+		request.ParamList = append(request.ParamList, &postgresql.ParamEntry{
+			Name:          helper.String(key),
+			ExpectedValue: helper.String(value),
+		})
+	}
+	_, err = me.client.UsePostgresqlClient().ModifyDBInstanceParameters(request)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify pgInstance parameter failed, reason: %v", logId, err)
+		return err
+	}
+	return nil
+}
+
+func (me *PostgresqlService) DescribePgParams(ctx context.Context, instanceId string) (params map[string]string, err error) {
+	logId := getLogId(ctx)
+	stateCheckRequest := postgresql.NewDescribeParamsEventRequest()
+	stateCheckRequest.DBInstanceId = &instanceId
+
+	// wait for param effective
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		stateCheckResponse, inErr := me.client.UsePostgresqlClient().DescribeParamsEvent(stateCheckRequest)
+		if inErr != nil {
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				return nil
+			}
+			return retryError(inErr)
+		}
+
+		for _, eventItem := range stateCheckResponse.Response.EventItems {
+			eventDetail := eventItem.EventDetail
+			if eventDetail == nil {
+				continue
+			}
+			for _, eventDetailItem := range eventDetail {
+				if *(eventDetailItem.State) != "success" {
+					return resource.RetryableError(
+						fmt.Errorf("params is updating!"))
+				}
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return
+	}
+
+	request := postgresql.NewDescribeDBInstanceParametersRequest()
+	request.DBInstanceId = &instanceId
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceParameters(request)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s fetch pg instance parameter failed, reason: %v", logId, err)
+		return
+	}
+	detail := response.Response.Detail
+	params = make(map[string]string)
+	for _, item := range detail {
+		params[*item.Name] = *item.CurrentValue
+	}
+
+	return
+}

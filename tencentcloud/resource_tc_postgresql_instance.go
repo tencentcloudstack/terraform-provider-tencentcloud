@@ -57,7 +57,9 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 
@@ -175,6 +177,16 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "The available tags within this postgresql.",
+			},
+			"max_standby_archive_delay": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.",
+			},
+			"max_standby_streaming_delay": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.",
 			},
 			// Computed values
 			"public_access_host": {
@@ -381,6 +393,30 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
+	// set pg params
+	paramEntrys := make(map[string]string)
+	if v, ok := d.GetOkExists("max_standby_archive_delay"); ok {
+		paramEntrys["max_standby_archive_delay"] = strconv.Itoa(v.(int))
+	}
+	if v, ok := d.GetOkExists("max_standby_streaming_delay"); ok {
+		paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
+	}
+
+	if len(paramEntrys) != 0 {
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
+		}
+		// 10s is required to synchronize the data(`DescribeParamsEvent`).
+		time.Sleep(10 * time.Second)
+	}
+
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
 }
 
@@ -536,6 +572,34 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 		d.SetPartial("tags")
 	}
+	paramEntrys := make(map[string]string)
+	if d.HasChange("max_standby_archive_delay") {
+		if v, ok := d.GetOkExists("max_standby_archive_delay"); ok {
+			paramEntrys["max_standby_archive_delay"] = strconv.Itoa(v.(int))
+		}
+	}
+	if d.HasChange("max_standby_streaming_delay") {
+		if v, ok := d.GetOkExists("max_standby_streaming_delay"); ok {
+			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
+		}
+	}
+	if len(paramEntrys) != 0 {
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
+		}
+		for key := range paramEntrys {
+			d.SetPartial(key)
+		}
+		// 10s is required to synchronize the data(`DescribeParamsEvent`).
+		time.Sleep(10 * time.Second)
+	}
 
 	d.Partial(false)
 
@@ -649,6 +713,33 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 	_ = d.Set("tags", tags)
+
+	// pg params
+	var parmas map[string]string
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		parmas, inErr = postgresqlService.DescribePgParams(ctx, d.Id())
+		if inErr != nil {
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				return nil
+			}
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	maxStandbyStreamingDelayValue, err := strconv.Atoi(parmas["max_standby_streaming_delay"])
+	if err != nil {
+		return err
+	}
+	maxStandbyArchiveDelayValue, err := strconv.Atoi(parmas["max_standby_archive_delay"])
+	if err != nil {
+		return err
+	}
+	_ = d.Set("max_standby_streaming_delay", maxStandbyStreamingDelayValue)
+	_ = d.Set("max_standby_archive_delay", maxStandbyArchiveDelayValue)
 
 	return nil
 }

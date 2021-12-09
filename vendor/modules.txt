@@ -553,7 +553,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.291
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.264
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.306
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -581,7 +581,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.291
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.306
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
