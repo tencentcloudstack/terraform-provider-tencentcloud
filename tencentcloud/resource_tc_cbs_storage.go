@@ -54,7 +54,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Type of CBS medium. Valid values: CLOUD_BASIC, CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.",
+				Description: "Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.",
 			},
 			"storage_size": {
 				Type:         schema.TypeInt,
