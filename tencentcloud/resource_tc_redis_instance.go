@@ -154,10 +154,16 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			},
 			"password": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				Sensitive:    true,
 				ValidateFunc: validateMysqlPassword,
-				Description:  "Password for a Redis user, which should be 8 to 16 characters.",
+				Description:  "Password for a Redis user, which should be 8 to 16 characters. NOTE: Only `no_auth=true` specified can make password empty.",
+			},
+			"no_auth": {
+				Type:         schema.TypeBool,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
 			},
 			"mem_size": {
 				Type:        schema.TypeInt,
@@ -267,6 +273,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	redisShardNum := d.Get("redis_shard_num").(int)
 	redisReplicasNum := d.Get("redis_replicas_num").(int)
 	password := d.Get("password").(string)
+	noAuth := d.Get("no_auth").(bool)
 	memSize := d.Get("mem_size").(int)
 	vpcId := d.Get("vpc_id").(string)
 	subnetId := d.Get("subnet_id").(string)
@@ -286,6 +293,14 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	if (typeId == 0 && redisType == "") || (typeId != 0 && redisType != "") {
 		return fmt.Errorf("`type_id` and `type` set one item and only one item")
+	}
+
+	if password == "" && !noAuth {
+		return fmt.Errorf("`password` must not be empty unless `no_auth` is `true`")
+	}
+
+	if noAuth && (vpcId == "" || subnetId == "") {
+		return fmt.Errorf("cannot set `no_auth=true` if `vpc_id` and `subnet_id` is empty")
 	}
 
 	for id, name := range REDIS_NAMES {
@@ -401,6 +416,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		chargeTypeID,
 		chargePeriod,
 		nodeInfo,
+		noAuth,
 	)
 
 	if err != nil {
@@ -519,6 +535,12 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("port", info.Port)
 	_ = d.Set("ip", info.WanIp)
 	_ = d.Set("create_time", info.Createtime)
+
+	// only true or user explicit declared will set for import case.
+	if _, ok := d.GetOk("no_auth"); ok || *info.NoAuth {
+		_ = d.Set("no_auth", info.NoAuth)
+	}
+
 	if d.Get("vpc_id").(string) != "" {
 		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
 		if err != nil {
