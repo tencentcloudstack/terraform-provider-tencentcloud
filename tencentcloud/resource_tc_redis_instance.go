@@ -295,6 +295,14 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("`type_id` and `type` set one item and only one item")
 	}
 
+	if password == "" && !noAuth {
+		return fmt.Errorf("`password` must not be empty unless `no_auth` is `true`")
+	}
+
+	if noAuth && (vpcId == "" || subnetId == "") {
+		return fmt.Errorf("cannot set `no_auth=true` if `vpc_id` and `subnet_id` is empty")
+	}
+
 	for id, name := range REDIS_NAMES {
 		if redisType == name {
 			typeId = id
