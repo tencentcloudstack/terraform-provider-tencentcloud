@@ -25,7 +25,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.310
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.283
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.291
