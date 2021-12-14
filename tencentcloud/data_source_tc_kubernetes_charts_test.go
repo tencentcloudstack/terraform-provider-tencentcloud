@@ -23,7 +23,6 @@ func TestAccTencentCloudKubernetesChartsDataSource(t *testing.T) {
 	})
 }
 
-
 const testAccDataSourceKubernetesCharts = `
 data "tencentcloud_kubernetes_charts" "test" {
 }

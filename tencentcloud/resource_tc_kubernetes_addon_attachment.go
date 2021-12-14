@@ -125,9 +125,9 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Description: "Addon response body.",
 			},
 			"status": {
-			    Type: schema.TypeMap,
-			    Computed: true,
-			    Description: "Addon current status.",
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: "Addon current status.",
 			},
 		},
 		Create: resourceTencentCloudTkeAddonAttachmentCreate,
@@ -213,12 +213,11 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	addonName := split[1]
 
 	var (
-		err error
-		response string
+		err               error
+		response          string
 		addonResponseData = &AddonResponseData{}
-		status = make(map[string]*string)
+		status            = make(map[string]*string)
 	)
-
 
 	_, has, err = service.PollingAddonsPhase(ctx, clusterId, addonName, addonResponseData)
 
@@ -304,7 +303,7 @@ func resourceTencentCloudTkeAddonAttachmentDelete(d *schema.ResourceData, meta i
 		split     = strings.Split(id, FILED_SP)
 		clusterId = split[0]
 		addonName = split[1]
-		has         bool
+		has       bool
 	)
 
 	if err := service.DeleteExtensionAddon(ctx, clusterId, addonName); err != nil {
