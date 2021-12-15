@@ -160,10 +160,10 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Description:  "Password for a Redis user, which should be 8 to 16 characters. NOTE: Only `no_auth=true` specified can make password empty.",
 			},
 			"no_auth": {
-				Type:         schema.TypeBool,
-				Optional:     true,
-				ForceNew:     true,
-				Description:  "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
 			},
 			"mem_size": {
 				Type:        schema.TypeInt,
