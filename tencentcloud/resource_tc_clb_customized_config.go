@@ -53,7 +53,6 @@ func resourceTencentCloudClbCustomizedConfig() *schema.Resource {
 			"config_content": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Content of Customized Config.",
 			},
 			"load_balancer_ids": {
