@@ -805,12 +805,14 @@ func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interf
 				if m["filter"] != nil {
 					filters := m["filter"].([]interface{})
 					// Max Items is 1
-					filter := filters[0].(map[string]interface{})
-					alarmPolicyFilter := monitor.AlarmPolicyFilter{
-						Type:       helper.String(filter["type"].(string)),
-						Dimensions: helper.String(filter["dimensions"].(string)),
+					if len(filters) > 0 {
+						filter := filters[0].(map[string]interface{})
+						alarmPolicyFilter := monitor.AlarmPolicyFilter{
+							Type:       helper.String(filter["type"].(string)),
+							Dimensions: helper.String(filter["dimensions"].(string)),
+						}
+						alarmPolicyRule.Filter = &alarmPolicyFilter
 					}
-					alarmPolicyRule.Filter = &alarmPolicyFilter
 				}
 				if m["description"] != nil {
 					alarmPolicyRule.Description = helper.String(m["description"].(string))
@@ -855,12 +857,14 @@ func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interf
 				if m["filter"] != nil {
 					filters := m["filter"].([]interface{})
 					// Max Items is 1
-					filter := filters[0].(map[string]interface{})
-					alarmPolicyFilter := monitor.AlarmPolicyFilter{
-						Type:       helper.String(filter["type"].(string)),
-						Dimensions: helper.String(filter["dimensions"].(string)),
+					if len(filters) > 0 {
+						filter := filters[0].(map[string]interface{})
+						alarmPolicyFilter := monitor.AlarmPolicyFilter{
+							Type:       helper.String(filter["type"].(string)),
+							Dimensions: helper.String(filter["dimensions"].(string)),
+						}
+						alarmPolicyRule.Filter = &alarmPolicyFilter
 					}
-					alarmPolicyRule.Filter = &alarmPolicyFilter
 				}
 				if m["description"] != nil {
 					alarmPolicyRule.Description = helper.String(m["description"].(string))
