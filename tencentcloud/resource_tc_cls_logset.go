@@ -193,5 +193,3 @@ func resourceTencentCloudClsLogUpdate(d *schema.ResourceData, meta interface{}) 
 	}
 	return resourceTencentCloudClsLogRead(d, meta)
 }
-
-//asdad

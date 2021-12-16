@@ -190,5 +190,3 @@ func flattenDataTagMappings(list []*cls.Tag) []map[string]interface{} {
 	}
 	return result
 }
-
-//asd

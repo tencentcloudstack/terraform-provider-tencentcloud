@@ -5,7 +5,7 @@ sidebar_current: "docs-tencentcloud-datasource-cls_logset"
 description: |-
 Use this data source to query detailed information of CLS logset
 ---
-//asdadd
+
 # tencentcloud_cls_logset
 
 Use this data source to query detailed information of CLS logset

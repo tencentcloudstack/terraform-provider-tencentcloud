@@ -45,5 +45,3 @@ const testAccClsLogset_update = `
       }
 }
 `
-
-//asdad
