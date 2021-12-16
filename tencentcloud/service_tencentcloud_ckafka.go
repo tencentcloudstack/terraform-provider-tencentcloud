@@ -18,6 +18,88 @@ type CkafkaService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *CkafkaService) CheckCkafkaInstanceReady(ctx context.Context,
+	instanceId string) (has bool, ready bool, errRet error) {
+	logId := getLogId(ctx)
+	var (
+		request  = ckafka.NewDescribeInstancesDetailRequest()
+		response = ckafka.NewDescribeInstancesDetailResponse()
+		info     *ckafka.InstanceDetail
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, err := me.client.UseCkafkaClient().DescribeInstancesDetail(request)
+		if err != nil {
+			return retryError(err)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read ckafka instance failed, reason: %v", logId, err)
+		return false, false, err
+	}
+	if len(response.Response.Result.InstanceList) < 1 {
+		return
+	}
+	has = true
+	info = response.Response.Result.InstanceList[0]
+	if *info.Status == 1 {
+		ready = true
+	}
+	return
+}
+
+func (me *CkafkaService) ModifyCkafkaInstanceAttributes(ctx context.Context,
+	request *ckafka.ModifyInstanceAttributesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseCkafkaClient().ModifyInstanceAttributes(request)
+	if err != nil {
+		return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+			request.GetAction(), request.ToJsonString(), err.Error())
+	}
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaInstanceById(ctx context.Context,
+	instanceId string) (info *ckafka.InstanceDetail, has bool, errRet error) {
+	logId := getLogId(ctx)
+	var (
+		request  = ckafka.NewDescribeInstancesDetailRequest()
+		response = ckafka.NewDescribeInstancesDetailResponse()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, err := me.client.UseCkafkaClient().DescribeInstancesDetail(request)
+		if err != nil {
+			return retryError(err)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read ckafka instance failed, reason: %v", logId, err)
+		return nil, false, err
+	}
+	if len(response.Response.Result.InstanceList) < 1 {
+		return
+	}
+	has = true
+	info = response.Response.Result.InstanceList[0]
+	return
+}
+
 func (me *CkafkaService) CreateUser(ctx context.Context, instanceId, user, password string) (errRet error) {
 	logId := getLogId(ctx)
 	request := ckafka.NewCreateUserRequest()
