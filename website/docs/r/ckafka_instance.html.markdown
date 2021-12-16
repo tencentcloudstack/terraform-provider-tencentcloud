@@ -11,6 +11,8 @@ description: |-
 
 Use this resource to create ckafka instance.
 
+~> **NOTE:** It only support create profession ckafka instance.
+
 ## Example Usage
 
 ```hcl
@@ -20,7 +22,11 @@ resource "tencentcloud_ckafka_instance" "foo" {
   period             = 1
   vpc_id             = "vpc-boi1ah65"
   subnet_id          = "subnet-7ros461e"
-  msg_retention_time = 1440
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "1.1.1"
+  disk_size          = 500
+  disk_type          = "CLOUD_BASIC"
 
   config {
     auto_create_topic_enable   = true

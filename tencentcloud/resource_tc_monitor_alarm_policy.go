@@ -433,14 +433,16 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 			if m["is_power_notice"] != nil {
 				alarmPolicyRule.IsPowerNotice = helper.IntInt64(m["is_power_notice"].(int))
 			}
-			if m["filter"] != nil {
-				filters := m["filter"].([]interface{})
-				filter := filters[0].(map[string]interface{})
-				alarmPolicyFilter := monitor.AlarmPolicyFilter{
-					Type:       helper.String(filter["type"].(string)),
-					Dimensions: helper.String(filter["dimensions"].(string)),
+			if v, ok := m["filter"]; ok {
+				filters := v.([]interface{})
+				if len(filters) > 0 {
+					filter := filters[0].(map[string]interface{})
+					alarmPolicyFilter := monitor.AlarmPolicyFilter{
+						Type:       helper.String(filter["type"].(string)),
+						Dimensions: helper.String(filter["dimensions"].(string)),
+					}
+					alarmPolicyRule.Filter = &alarmPolicyFilter
 				}
-				alarmPolicyRule.Filter = &alarmPolicyFilter
 			}
 
 			if m["description"] != nil {
@@ -486,12 +488,14 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 			}
 			if m["filter"] != nil {
 				filters := m["filter"].([]interface{})
-				filter := filters[0].(map[string]interface{})
-				alarmPolicyFilter := monitor.AlarmPolicyFilter{
-					Type:       helper.String(filter["type"].(string)),
-					Dimensions: helper.String(filter["dimensions"].(string)),
+				if len(filters) > 0 {
+					filter := filters[0].(map[string]interface{})
+					alarmPolicyFilter := monitor.AlarmPolicyFilter{
+						Type:       helper.String(filter["type"].(string)),
+						Dimensions: helper.String(filter["dimensions"].(string)),
+					}
+					alarmPolicyRule.Filter = &alarmPolicyFilter
 				}
-				alarmPolicyRule.Filter = &alarmPolicyFilter
 			}
 			if m["description"] != nil {
 				alarmPolicyRule.Description = helper.String(m["description"].(string))
@@ -610,14 +614,16 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 			"unit":             rule.Unit,
 			"rule_type":        rule.RuleType,
 		}
-		if rule.Filter != nil {
+		if *rule.Filter.Type != "" || *rule.Filter.Dimensions != "" {
 			var filter = make([]interface{}, 0, 10)
 			alarmPolicyFilter := map[string]interface{}{
 				"type":       rule.Filter.Type,
 				"dimensions": rule.Filter.Dimensions,
 			}
 			filter = append(filter, alarmPolicyFilter)
-			m["filter"] = filter
+			if len(filter) > 0 {
+				m["filter"] = filter
+			}
 		}
 
 		rules = append(rules, m)
@@ -651,14 +657,16 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		m["unit"] = eventRule.Unit
 		m["rule_type"] = eventRule.RuleType
 
-		if eventRule.Filter != nil {
+		if *eventRule.Filter.Type != "" || *eventRule.Filter.Dimensions != "" {
 			var filter = make([]interface{}, 0, 10)
 			alarmPolicyFilter := map[string]interface{}{
 				"type":       eventRule.Filter.Type,
 				"dimensions": eventRule.Filter.Dimensions,
 			}
 			filter = append(filter, alarmPolicyFilter)
-			m["filter"] = filter
+			if len(filter) > 0 {
+				m["filter"] = filter
+			}
 		}
 		eventConditions = append(eventConditions, m)
 	}
