@@ -1063,7 +1063,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	// Reset Instance
 	// Keep Login Info
 	if d.HasChange("image_id") ||
-		d.HasChange("host_name") ||
+		d.HasChange("hostname") ||
 		d.HasChange("disable_security_service") ||
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("keep_image_login") {
