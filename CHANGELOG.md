@@ -1,3 +1,52 @@
+## 1.60.20 (December 16, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_monitor_alarm_policy` fix filter bug
+* resource `tencentcloud_clb_customized_config` remove content length validate
+* resource `tencentcloud_ckafka_instance` modify docs
+
+## 1.60.19 (December 16, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_ckafka_instance`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_addon_attachment` add tcr example values
+* resource  `tencentcloud_instance` supprt cvm import params
+* datasource `tencentcloud_kubernetes_charts`fix domain 404
+
+## 1.60.18 (December 10, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_redis_instance` support no-auth access
+
+## 1.60.17 (December 9, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_cluster` modify docs.
+* resource `tencentcloud_kubernetes_cluster` ignore `ImageId` JSON if user make it empty.
+* resource `tencentcloud_cbs_storage` remove `CLOUD_BASIC` type
+* resource `tencentcloud_postgresql_instance` change available versions
+* resource `tencentcloud_postgresql_instance` support `max_standby_*` params
+
+## 1.60.16 (December 3, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_addon_attachment` fix tke_addon - npe error
+
+## 1.60.15 (December 3, 2021)
+
+FEATURES:
+
+* **New Datasource** `tencentcloud_kubernetes_charts`
+* **New Resource** `tencentcloud_kubernetes_addon_attachment`
+
 ## 1.60.14 (December 2, 2021)
 
 ENHANCEMENTS:
