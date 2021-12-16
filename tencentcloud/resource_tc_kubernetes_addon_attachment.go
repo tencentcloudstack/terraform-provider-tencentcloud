@@ -34,6 +34,10 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
     "global.imagePullSecretsCrs[1].dockerUsername=100012345678",
     "global.imagePullSecretsCrs[1].dockerPassword=a.b.tcr-token",
     "global.imagePullSecretsCrs[1].dockerServer=sample",
+    # Specify global hosts
+	"global.hosts[0].domain=sample-vpc.tencentcloudcr.com",
+	"global.hosts[0].ip=10.16.0.49",
+	"global.hosts[0].disabled=false",
   ]
 }
 ```
