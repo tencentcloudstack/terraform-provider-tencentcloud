@@ -839,6 +839,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
+			"tencentcloud_cls_logsets":                              dataSourceTencentCloudClsLogset(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1024,6 +1025,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_private_dns_zone":                        resourceTencentCloudPrivateDnsZone(),
+			"tencentcloud_cls_logset":                              resourceTencentCloudClsLogSet(),
 		},
 
 		ConfigureFunc: providerConfigure,
