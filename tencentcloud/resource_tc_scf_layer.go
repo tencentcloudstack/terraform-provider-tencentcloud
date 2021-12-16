@@ -30,11 +30,12 @@ package tencentcloud
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/mitchellh/go-homedir"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/mitchellh/go-homedir"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"

@@ -993,9 +993,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description:  "Vpc Id of the cluster.",
 		},
 		"cluster_internet": {
-			Type:        schema.TypeBool,
-			Default:     false,
-			Optional:    true,
+			Type:     schema.TypeBool,
+			Default:  false,
+			Optional: true,
 			Description: "Open internet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint.",
