@@ -13,6 +13,7 @@ import (
 
 func resourceTencentCloudClsLogSet() *schema.Resource {
 	return &schema.Resource{
+
 		Create: resourceTencentCloudClsLogSetCreate,
 		Read:   resourceTencentCloudClsLogRead,
 		Update: resourceTencentCloudClsLogUpdate,

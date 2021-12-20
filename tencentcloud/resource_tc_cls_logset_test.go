@@ -38,6 +38,7 @@ resource "tencentcloud_cls_logset" "logset_basic" {
 `
 const testAccClsLogset_update = `
 	resource "tencentcloud_cls_logset" "logset_basic" {
+
   	logset_name    = "cls9999"
 	tags{
 		 key = "ccc"

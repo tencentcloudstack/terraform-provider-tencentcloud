@@ -23,6 +23,7 @@ const testAccClsLogSetDataSource_basic = `
 resource "tencentcloud_cls_logset" "logset_basic"{
     logset_name = "test"
 	tags{
+
 		 key = "aaa"
 		 value = "bbb"
       }
