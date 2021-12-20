@@ -9,6 +9,7 @@ import (
 var testDataTCRInstancesNameAll = "data.tencentcloud_tcr_instances.all_test"
 
 func TestAccTencentCloudDataTCRInstances(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

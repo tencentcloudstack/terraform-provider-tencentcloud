@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudTke(t *testing.T) {
+	t.Parallel()
 
 	key := "data.tencentcloud_kubernetes_clusters.name"
 
@@ -28,6 +29,7 @@ func TestAccDataSourceTencentCloudTke(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudTkeTags(t *testing.T) {
+	t.Parallel()
 
 	key := "data.tencentcloud_kubernetes_clusters.tags"
 

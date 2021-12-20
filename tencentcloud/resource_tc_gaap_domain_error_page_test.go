@@ -13,6 +13,7 @@ import (
 )
 
 func TestAccTencentCloudGaapDomainErrorPage_basic(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)
@@ -37,6 +38,7 @@ func TestAccTencentCloudGaapDomainErrorPage_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapDomainErrorPage_singleErrorCode(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)
@@ -60,6 +62,7 @@ func TestAccTencentCloudGaapDomainErrorPage_singleErrorCode(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapDomainErrorPage_newErrorCode(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)
@@ -84,6 +87,7 @@ func TestAccTencentCloudGaapDomainErrorPage_newErrorCode(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapDomainErrorPage_clearHeaders(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)
@@ -109,6 +113,7 @@ func TestAccTencentCloudGaapDomainErrorPage_clearHeaders(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapDomainErrorPage_setHeaders(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)
@@ -133,6 +138,7 @@ func TestAccTencentCloudGaapDomainErrorPage_setHeaders(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapDomainErrorPage_full(t *testing.T) {
+	t.Parallel()
 	listenerId := new(string)
 	domain := new(string)
 	id := new(string)

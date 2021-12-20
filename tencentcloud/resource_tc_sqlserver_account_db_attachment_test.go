@@ -14,6 +14,7 @@ var testSqlserverAccountDBAttachmentResourceName = "tencentcloud_sqlserver_accou
 var testSqlserverAccountDBAttachmentResourceKey = testSqlserverAccountDBAttachmentResourceName + ".test"
 
 func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

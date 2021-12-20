@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudGaapLayer7Listeners_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -57,6 +58,7 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapLayer7Listeners_https(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

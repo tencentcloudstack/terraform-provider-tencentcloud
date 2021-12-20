@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudCynosdbReadonlyInstanceResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

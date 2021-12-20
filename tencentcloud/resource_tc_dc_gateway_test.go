@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
+	t.Parallel()
 
 	var rKey = "tencentcloud_dc_gateway.ccn_main"
 

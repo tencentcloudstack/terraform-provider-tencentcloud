@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudVpcV2RouteEntryBasic(t *testing.T) {
+	t.Parallel()
 	var reId string
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

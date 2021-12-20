@@ -15,6 +15,7 @@ var testAPIGatewayUsagePlanAttachmentResourceName = "tencentcloud_api_gateway_us
 var testAPIGatewayUsagePlanAttachmentResourceKey = testAPIGatewayUsagePlanAttachmentResourceName + ".attach_service"
 
 func TestAccTencentCloudAPIGateWayUsagePlanAttachmentResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

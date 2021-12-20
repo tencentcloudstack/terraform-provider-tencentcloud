@@ -13,6 +13,7 @@ var testReadonlySqlserverInstanceResourceName = "tencentcloud_sqlserver_readonly
 var testReadonlySqlserverInstanceResourceKey = testReadonlySqlserverInstanceResourceName + ".test"
 
 func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

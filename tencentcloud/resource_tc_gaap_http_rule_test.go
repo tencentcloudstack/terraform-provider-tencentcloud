@@ -13,6 +13,7 @@ import (
 )
 
 func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -49,6 +50,7 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -109,6 +111,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -146,6 +149,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -175,6 +179,7 @@ func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -207,6 +212,7 @@ func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_noRealserver(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -243,6 +249,7 @@ func TestAccTencentCloudGaapHttpRule_noRealserver(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpRule_deleteRealserver(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

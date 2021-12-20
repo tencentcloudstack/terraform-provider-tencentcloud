@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -51,6 +52,7 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -94,6 +96,7 @@ func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -122,6 +125,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.
 }
 
 func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -149,6 +153,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -193,6 +198,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 }
 
 func TestAccTencentCloudGaapLayer7Listener_httpsCcToPoly(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

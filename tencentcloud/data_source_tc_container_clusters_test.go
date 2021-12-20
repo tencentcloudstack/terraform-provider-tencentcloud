@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccTencentCloudDataSourceContainerClusters(t *testing.T) {
+	t.Parallel()
 	key := "data.tencentcloud_container_clusters.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

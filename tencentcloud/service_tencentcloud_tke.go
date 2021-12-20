@@ -475,9 +475,11 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ExtensionAddons = extensionAddons
 	}
 
-	if len(overrideSettings.Master)+len(overrideSettings.Work) > 0 &&
-		len(overrideSettings.Master)+len(overrideSettings.Work) != (len(cvms.Master)+len(cvms.Work)) {
-		return "", fmt.Errorf("len(overrideSettings) != (len(cvms.Master)+len(cvms.Work))")
+	if overrideSettings != nil {
+		if len(overrideSettings.Master)+len(overrideSettings.Work) > 0 &&
+			len(overrideSettings.Master)+len(overrideSettings.Work) != (len(cvms.Master)+len(cvms.Work)) {
+			return "", fmt.Errorf("len(overrideSettings) != (len(cvms.Master)+len(cvms.Work))")
+		}
 	}
 
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
@@ -490,7 +492,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_INDEPENDENT)
 		for v := range cvms.Master {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Master[v])
-			if len(overrideSettings.Master) != 0 {
+			if overrideSettings != nil && len(overrideSettings.Master) != 0 {
 				node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings.Master[v])
 			}
 		}
@@ -506,7 +508,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		node.RunInstancesPara = []*string{}
 		for v := range cvms.Work {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
-			if len(overrideSettings.Work) != 0 {
+			if overrideSettings != nil && len(overrideSettings.Work) != 0 {
 				node.InstanceAdvancedSettingsOverrides = append(node.InstanceAdvancedSettingsOverrides, &overrideSettings.Work[v])
 			}
 		}

@@ -9,6 +9,7 @@ import (
 var testAPIGatewayAPIKeysDataSourceName = "data.tencentcloud_api_gateway_api_keys"
 
 func TestAccTencentAPIGatewayAPIKeysDataSource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

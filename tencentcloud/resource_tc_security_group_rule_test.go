@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 
 	resource.Test(t, resource.TestCase{
@@ -34,6 +35,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 
 	resource.Test(t, resource.TestCase{
@@ -57,6 +59,7 @@ func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 
 	resource.Test(t, resource.TestCase{
@@ -81,6 +84,7 @@ func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 
 	resource.Test(t, resource.TestCase{
@@ -104,6 +108,7 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 
 	resource.Test(t, resource.TestCase{
@@ -127,6 +132,7 @@ func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_addressTemplate(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -157,6 +163,7 @@ func TestAccTencentCloudSecurityGroupRule_addressTemplate(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupRule_protocolTemplate(t *testing.T) {
+	t.Parallel()
 	var sgrId string
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

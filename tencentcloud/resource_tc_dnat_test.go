@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudDnat_basic(t *testing.T) {
+	t.Parallel()
 	var dnatId string
 
 	resource.Test(t, resource.TestCase{

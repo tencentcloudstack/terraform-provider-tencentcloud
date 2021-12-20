@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudGaapSecurityPolicy_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -36,6 +37,7 @@ func TestAccTencentCloudGaapSecurityPolicy_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityPolicy_disable(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -63,6 +65,7 @@ func TestAccTencentCloudGaapSecurityPolicy_disable(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityPolicy_drop(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

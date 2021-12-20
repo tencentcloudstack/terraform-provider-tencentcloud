@@ -14,6 +14,7 @@ var testDayuDdosPolicyCaseResourceName = "tencentcloud_dayu_ddos_policy_case"
 var testDayuDdosPolicyCaseResourceKey = testDayuDdosPolicyCaseResourceName + ".test_policy_case"
 
 func TestAccTencentCloudDayuDdosPolicyCaseResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -16,6 +16,7 @@ var testDayuL4RuleResourceNameUdp = "tencentcloud_dayu_l4_rule"
 var testDayuL4RuleResourceKeyUdp = testDayuL4RuleResourceNameUdp + ".test_rule"
 
 func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -71,6 +72,7 @@ func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
 }
 
 func TestAccTencentCloudDayuL4RuleResource_UDP(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

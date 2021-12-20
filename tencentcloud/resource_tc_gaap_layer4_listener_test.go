@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -47,6 +48,7 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -76,6 +78,7 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -130,6 +133,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer4Listener_udp(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -166,6 +170,7 @@ func TestAccTencentCloudGaapLayer4Listener_udp(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -194,6 +199,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

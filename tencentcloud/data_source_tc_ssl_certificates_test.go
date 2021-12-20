@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -36,6 +37,7 @@ func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -63,6 +65,7 @@ func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSslCertificates_id(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

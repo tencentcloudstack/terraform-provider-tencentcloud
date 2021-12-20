@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsOuter(t *testing.T) {
+	t.Parallel()
 	keyName := "data.tencentcloud_ccn_bandwidth_limits.limit"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -28,6 +29,7 @@ func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsOuter(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsInter(t *testing.T) {
+	t.Parallel()
 	keyName := "data.tencentcloud_ccn_bandwidth_limits.limit"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

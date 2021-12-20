@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -24,6 +25,7 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudInstanceTypesDataSource_sell(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

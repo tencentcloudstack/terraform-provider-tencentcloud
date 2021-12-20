@@ -8,6 +8,7 @@ import (
 )
 
 func TestAccTencentCloudAsScalingGroupsDataSource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -54,6 +55,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudAsScalingGroupsDataSource_full(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

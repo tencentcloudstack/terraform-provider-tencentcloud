@@ -13,6 +13,7 @@ var testTcaplusTableResourceName = "tencentcloud_tcaplus_table"
 var testTcaplusTableResourceNameResourceKey = testTcaplusTableResourceName + ".test_table"
 
 func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

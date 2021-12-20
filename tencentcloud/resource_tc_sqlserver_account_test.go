@@ -14,6 +14,7 @@ var testSqlserverAccountResourceName = "tencentcloud_sqlserver_account"
 var testSqlserverAccountResourceKey = testSqlserverAccountResourceName + ".test"
 
 func TestAccTencentCloudSqlserverAccountResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

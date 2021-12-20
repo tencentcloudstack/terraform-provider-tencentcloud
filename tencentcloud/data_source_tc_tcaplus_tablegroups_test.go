@@ -9,6 +9,7 @@ import (
 var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_tablegroups.id_test"
 
 func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

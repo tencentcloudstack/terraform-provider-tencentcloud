@@ -9,6 +9,7 @@ import (
 var testDataDayuDdosPoliciesName = "data.tencentcloud_dayu_ddos_policies.id_test"
 
 func TestAccTencentCloudDataDayuDdosPolicies(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

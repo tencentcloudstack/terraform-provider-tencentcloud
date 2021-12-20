@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -76,6 +77,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 }
 
 func TestAccTencentCloudReadonlyMysqlPrepaid(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

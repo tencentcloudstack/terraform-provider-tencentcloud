@@ -13,6 +13,7 @@ import (
 const TestAccTencentCloudMysqlMasterInstance_availability_zone = "ap-guangzhou-3"
 
 func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -35,6 +36,7 @@ func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
 }
 
 func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -140,6 +142,7 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 }
 
 func TestAccTencentCloudMysqlPrepaid(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

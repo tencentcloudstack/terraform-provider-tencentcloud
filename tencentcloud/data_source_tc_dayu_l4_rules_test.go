@@ -10,6 +10,7 @@ import (
 var testDataDayuL4RulesName = "data.tencentcloud_dayu_l4_rules.id_test"
 
 func TestAccTencentCloudDataDayuL4Rules(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
