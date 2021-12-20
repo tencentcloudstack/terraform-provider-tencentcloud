@@ -1,5 +1,5 @@
 ---
-subcategory: "PRIVATE DNS"
+subcategory: "PrivateDNS"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_private_dns_zone"
 sidebar_current: "docs-tencentcloud-resource-private_dns_zone"
