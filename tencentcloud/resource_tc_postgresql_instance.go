@@ -209,6 +209,11 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Port for private access.",
 			},
+			"uid": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Uid of the postgresql instance.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -703,6 +708,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("status", instance.DBInstanceStatus)
 	_ = d.Set("memory", instance.DBInstanceMemory)
 	_ = d.Set("storage", instance.DBInstanceStorage)
+	_ = d.Set("uid", instance.Uid)
 
 	// ignore spec_code
 	// qcs::postgres:ap-guangzhou:uin/123435236:DBInstanceId/postgres-xxx
