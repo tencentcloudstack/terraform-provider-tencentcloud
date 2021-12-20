@@ -565,9 +565,10 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
 
-PRIVATE DNS
+PrivateDNS
   Resource
     tencentcloud_private_dns_zone
+	tencentcloud_private_dns_record
 */
 package tencentcloud
 
@@ -1024,6 +1025,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_private_dns_zone":                        resourceTencentCloudPrivateDnsZone(),
+			"tencentcloud_private_dns_record":                      resourceTencentCloudPrivateDnsRecord(),
 		},
 
 		ConfigureFunc: providerConfigure,

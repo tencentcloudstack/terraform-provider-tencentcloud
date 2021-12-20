@@ -1,42 +1,35 @@
 /*
-Provide a resource to create a Private Dns Zone.
+Provide a resource to create a Private Dns Record.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_private_dns_zone" "foo" {
-  domain = "domain.com"
-  tag_set {
-    tag_key = "created_by"
-    tag_value = "tag"
-  }
-  vpc_set {
-    region = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
-  }
-  remark = "test"
-  dns_forward_status = "DISABLED"
-  account_vpc_set {
-    uin = "454xxxxxxx"
-    region = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
-    vpc_name = "test-redis"
-  }
+resource "tencentcloud_private_dns_record" "foo" {
+  zone_id      = "zone-rqndjnki"
+  record_type  = "A"
+  record_value = "192.168.1.2"
+  sub_domain   = "www"
+  ttl          = 300
+  weight       = 1
+  mx           = 0
 }
 ```
 
 Import
 
-Private Dns Zone can be imported, e.g.
+Private Dns Record can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_private_dns_zone.foo zone_id
+$ terraform import tencentcloud_private_dns_zone.foo zone_id#record_id
 ```
 */
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -45,335 +38,249 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 )
 
-func resourceTencentCloudPrivateDnsZone() *schema.Resource {
+func resourceTencentCloudPrivateDnsRecord() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDPrivateDnsZoneCreate,
-		Read:   resourceTencentCloudDPrivateDnsZoneRead,
-		Update: resourceTencentCloudDPrivateDnsZoneUpdate,
-		Delete: resourceTencentCloudDPrivateDnsZoneDelete,
+		Create: resourceTencentCloudDPrivateDnsRecordCreate,
+		Read:   resourceTencentCloudDPrivateDnsRecordRead,
+		Update: resourceTencentCloudDPrivateDnsRecordUpdate,
+		Delete: resourceTencentCloudDPrivateDnsRecordDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
-			"domain": {
+			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Domain name, which must be in the format of standard TLD.",
+				Description: "Private domain ID.",
 			},
-			"tag_set": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Tags the private domain when it is created.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"tag_key": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Key of Tag.",
-						},
-						"tag_value": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Value of Tag.",
-						},
-					},
-				},
-			},
-			"vpc_set": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Associates the private domain to a VPC when it is created.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"uniq_vpc_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "VPC ID.",
-						},
-						"region": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "VPC REGION.",
-						},
-					},
-				},
-			},
-			"remark": {
+			"record_type": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Remarks.",
+				Required:    true,
+				Description: "Record type. Valid values: \"A\", \"AAAA\", \"CNAME\", \"MX\", \"TXT\", \"PTR\".",
 			},
-			"dns_forward_status": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(PRIVATE_DNS_FORWARD_STATUS),
-				Description:  "Whether to enable subdomain recursive DNS. Valid values: ENABLED, DISABLED. Default value: DISABLED.",
+			"sub_domain": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Subdomain, such as \"www\", \"m\", and \"@\".",
 			},
-			"account_vpc_set": {
-				Type:        schema.TypeList,
+			"record_value": {
+				Type:     schema.TypeString,
+				Required: true,
+				Description: "Record value, such as IP: 192.168.10.2," +
+					" CNAME: cname.qcloud.com, and MX: mail.qcloud.com..",
+			},
+			"weight": {
+				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "List of authorized accounts' VPCs to associate with the private domain.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"uin": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "UIN of the VPC account.",
-						},
-						"uniq_vpc_id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "VPC ID.",
-						},
-						"region": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Region.",
-						},
-						"vpc_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "VPC NAME.",
-						},
-					},
-				},
+				Description: "Record weight. Value range: 1~100.",
+			},
+			"mx": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Description: "MX priority, which is required when the record type is MX." +
+					" Valid values: 5, 10, 15, 20, 30, 40, 50.",
+			},
+			"ttl": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Description: "Record cache time. The smaller the value, the faster the record will take effect." +
+					" Value range: 1~86400s.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.create")()
+func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_private_dns_record.create")()
 
 	logId := getLogId(contextNil)
 
-	request := privatedns.NewCreatePrivateZoneRequest()
+	request := privatedns.NewCreatePrivateZoneRecordRequest()
 
-	domain := d.Get("domain").(string)
-	request.Domain = &domain
+	zoneId := d.Get("zone_id").(string)
+	request.ZoneId = &zoneId
 
-	if v, ok := d.GetOk("tag_set"); ok {
-		tagSet := make([]*privatedns.TagInfo, 0, 10)
-		for _, item := range v.([]interface{}) {
-			m := item.(map[string]interface{})
-			tagInfo := privatedns.TagInfo{
-				TagKey:   helper.String(m["tag_key"].(string)),
-				TagValue: helper.String(m["tag_value"].(string)),
-			}
-			tagSet = append(tagSet, &tagInfo)
-		}
-		request.TagSet = tagSet
+	recordType := d.Get("record_type").(string)
+	request.RecordType = &recordType
+
+	subDomain := d.Get("sub_domain").(string)
+	request.SubDomain = &subDomain
+
+	recordValue := d.Get("record_value").(string)
+	request.RecordValue = &recordValue
+
+	if v, ok := d.GetOk("weight"); ok {
+		request.Weight = helper.Int64(int64(v.(int)))
 	}
 
-	if v, ok := d.GetOk("vpc_set"); ok {
-		vpcSet := make([]*privatedns.VpcInfo, 0, 10)
-		for _, item := range v.([]interface{}) {
-			m := item.(map[string]interface{})
-			vpcInfo := privatedns.VpcInfo{
-				UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
-				Region:    helper.String(m["region"].(string)),
-			}
-			vpcSet = append(vpcSet, &vpcInfo)
-		}
-		request.VpcSet = vpcSet
+	if v, ok := d.GetOk("mx"); ok {
+		request.MX = helper.Int64(int64(v.(int)))
+	}
+	if v, ok := d.GetOk("ttl"); ok {
+		request.TTL = helper.Int64(int64(v.(int)))
 	}
 
-	if v, ok := d.GetOk("remark"); ok {
-		remark := v.(string)
-		request.Remark = helper.String(remark)
-	}
-
-	if v, ok := d.GetOk("dns_forward_status"); ok {
-		dnsForwardStatus := v.(string)
-		request.DnsForwardStatus = helper.String(dnsForwardStatus)
-	}
-
-	if v, ok := d.GetOk("account_vpc_set"); ok {
-		accountVpcSet := make([]*privatedns.AccountVpcInfo, 0, 10)
-		for _, item := range v.([]interface{}) {
-			m := item.(map[string]interface{})
-			accountVpcInfo := privatedns.AccountVpcInfo{
-				Uin:       helper.String(m["uin"].(string)),
-				UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
-				Region:    helper.String(m["region"].(string)),
-				VpcName:   helper.String(m["vpc_name"].(string)),
-			}
-			accountVpcSet = append(accountVpcSet, &accountVpcInfo)
-		}
-		request.AccountVpcSet = accountVpcSet
-	}
-
-	result, err := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().CreatePrivateZone(request)
+	result, err := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().CreatePrivateZoneRecord(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create PrivateDns failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s create PrivateDns record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	var response *privatedns.CreatePrivateZoneResponse
+	var response *privatedns.CreatePrivateZoneRecordResponse
 	response = result
-	d.SetId(*response.Response.ZoneId)
 
-	return resourceTencentCloudDPrivateDnsZoneRead(d, meta)
+	recordId := *response.Response.RecordId
+	d.SetId(strings.Join([]string{zoneId, recordId}, FILED_SP))
+
+	return resourceTencentCloudDPrivateDnsRecordRead(d, meta)
 }
 
-func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_private_dns_zone.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	id := d.Id()
+	service := PrivateDnsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 
-	request := privatedns.NewDescribePrivateZoneRequest()
-	request.ZoneId = helper.String(id)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
+	}
+	zoneId := idSplit[0]
+	recordId := idSplit[1]
 
-	var response *privatedns.DescribePrivateZoneResponse
-
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DescribePrivateZone(request)
-		if e != nil {
-			return retryError(e)
-		}
-
-		response = result
-		return nil
-	})
+	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, "")
 	if err != nil {
-		log.Printf("[CRITAL]%s read DnsPod Domain failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	info := response.Response.PrivateZone
-	d.SetId(*info.ZoneId)
-
-	_ = d.Set("domain", info.Domain)
-
-	tagSets := make([]map[string]interface{}, 0, len(info.Tags))
-	for _, item := range info.Tags {
-		tagSets = append(tagSets, map[string]interface{}{
-			"tag_key":   item.TagKey,
-			"tag_value": item.TagValue,
-		})
+	if len(records) < 1 {
+		return fmt.Errorf("private dns record not exists.")
 	}
-	_ = d.Set("tag_set", tagSets)
 
-	vpcSet := make([]map[string]interface{}, 0, len(info.VpcSet))
-	for _, item := range info.VpcSet {
-		vpcSet = append(vpcSet, map[string]interface{}{
-			"uniq_vpc_id": item.UniqVpcId,
-			"region":      item.Region,
-		})
+	var record *privatedns.PrivateZoneRecord
+	for _, item := range records {
+		if *item.RecordId == recordId {
+			record = item
+		}
 	}
-	_ = d.Set("vpc_set", vpcSet)
-	_ = d.Set("remark", info.Remark)
-	_ = d.Set("dns_forward_status", info.DnsForwardStatus)
+	_ = d.Set("zone_id", record.ZoneId)
+	_ = d.Set("record_type", record.RecordType)
+	_ = d.Set("sub_domain", record.SubDomain)
+	_ = d.Set("record_value", record.RecordValue)
+	_ = d.Set("weight", record.Weight)
+	_ = d.Set("mx", record.MX)
+	_ = d.Set("ttl", record.TTL)
 
-	accountVpcSet := make([]map[string]interface{}, 0, len(info.AccountVpcSet))
-	for _, item := range info.AccountVpcSet {
-		accountVpcSet = append(accountVpcSet, map[string]interface{}{
-			"uin":         item.Uin,
-			"uniq_vpc_id": item.UniqVpcId,
-			"region":      item.Region,
-		})
-	}
-	_ = d.Set("account_vpc_set", accountVpcSet)
 	return nil
 }
 
-func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.update")()
+func resourceTencentCloudDPrivateDnsRecordUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_private_dns_record.update")()
 
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
+	}
 	logId := getLogId(contextNil)
-	id := d.Id()
+	zoneId := idSplit[0]
+	recordId := idSplit[1]
 
-	if d.HasChange("remark") || d.HasChange("dns_forward_status") {
-		request := privatedns.NewModifyPrivateZoneRequest()
-		request.ZoneId = helper.String(id)
-		if v, ok := d.GetOk("remark"); ok {
-			request.Remark = helper.String(v.(string))
+	request := privatedns.NewModifyPrivateZoneRecordRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RecordId = helper.String(recordId)
+
+	needModify := false
+	if d.HasChange("record_type") {
+		needModify = true
+	}
+
+	if d.HasChange("sub_domain") {
+		needModify = true
+	}
+
+	if d.HasChange("record_value") {
+		needModify = true
+	}
+
+	if d.HasChange("weight") {
+		needModify = true
+		if v, ok := d.GetOk("weight"); ok {
+			request.Weight = helper.Int64(int64(v.(int)))
 		}
-		if v, ok := d.GetOk("dns_forward_status"); ok {
-			request.DnsForwardStatus = helper.String(v.(string))
+	}
+
+	if d.HasChange("mx") {
+		needModify = true
+		if v, ok := d.GetOk("mx"); ok {
+			request.MX = helper.Int64(int64(v.(int)))
+		}
+	}
+
+	if d.HasChange("ttl") {
+		needModify = true
+		if v, ok := d.GetOk("ttl"); ok {
+			request.TTL = helper.Int64(int64(v.(int)))
+		}
+	}
+
+	if needModify {
+		if v, ok := d.GetOk("record_type"); ok {
+			request.RecordType = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("sub_domain"); ok {
+			request.SubDomain = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("record_value"); ok {
+			request.RecordValue = helper.String(v.(string))
 		}
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZone(request)
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZoneRecord(request)
 			if e != nil {
 				return retryError(e)
 			}
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify privateDns zone info failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s modify privateDns record info failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
 
-	if d.HasChange("vpc_set") || d.HasChange("account_vpc_set") {
-		request := privatedns.NewModifyPrivateZoneVpcRequest()
-		request.ZoneId = helper.String(id)
-		if v, ok := d.GetOk("vpc_set"); ok {
-			var vpcSets = make([]*privatedns.VpcInfo, 0)
-			items := v.([]interface{})
-			for _, item := range items {
-				value := item.(map[string]interface{})
-				vpcInfo := &privatedns.VpcInfo{
-					UniqVpcId: helper.String(value["uniq_vpc_id"].(string)),
-					Region:    helper.String(value["region"].(string)),
-				}
-				vpcSets = append(vpcSets, vpcInfo)
-			}
-			request.VpcSet = vpcSets
-		}
-
-		if v, ok := d.GetOk("account_vpc_set"); ok {
-			var accVpcSets = make([]*privatedns.AccountVpcInfo, 0)
-			items := v.([]interface{})
-			for _, item := range items {
-				value := item.(map[string]interface{})
-				accVpcInfo := &privatedns.AccountVpcInfo{
-					UniqVpcId: helper.String(value["uniq_vpc_id"].(string)),
-					Region:    helper.String(value["region"].(string)),
-					Uin:       helper.String(value["uin"].(string)),
-					VpcName:   helper.String(value["vpc_name"].(string)),
-				}
-				accVpcSets = append(accVpcSets, accVpcInfo)
-			}
-			request.AccountVpcSet = accVpcSets
-		}
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZoneVpc(request)
-			if e != nil {
-				return retryError(e)
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s modify privateDns zone vpc failed, reason:%s\n", logId, err.Error())
-			return err
-		}
-	}
-	return resourceTencentCloudDPrivateDnsZoneRead(d, meta)
+	return resourceTencentCloudDPrivateDnsRecordRead(d, meta)
 }
 
-func resourceTencentCloudDPrivateDnsZoneDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.delete")()
+func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_private_dns_record.delete")()
 
 	logId := getLogId(contextNil)
 
-	request := privatedns.NewDeletePrivateZoneRequest()
-	request.ZoneId = helper.String(d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("record id strategy is can't read, id is borken, id is %s", d.Id())
+	}
+	zoneId := idSplit[0]
+	recordId := idSplit[1]
+
+	request := privatedns.NewDeletePrivateZoneRecordRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RecordId = helper.String(recordId)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DeletePrivateZone(request)
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DeletePrivateZoneRecord(request)
 		if e != nil {
 			return retryError(e)
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete privateDns zone failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s delete privateDns record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil
