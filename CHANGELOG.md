@@ -1,3 +1,13 @@
+## 1.60.21 (December 20, 2021)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_private_dns_record`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_postgresql_instance` add computed attribute uid
+
 ## 1.60.20 (December 16, 2021)
 
 ENHANCEMENTS:
