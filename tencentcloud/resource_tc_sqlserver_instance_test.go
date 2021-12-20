@@ -13,6 +13,7 @@ var testSqlserverInstanceResourceName = "tencentcloud_sqlserver_instance"
 var testSqlserverInstanceResourceKey = testSqlserverInstanceResourceName + ".test"
 
 func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -75,6 +76,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 }
 
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

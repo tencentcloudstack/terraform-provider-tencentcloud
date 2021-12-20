@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
+	t.Parallel()
 	keyName := "data.tencentcloud_ccn_instances.name_instances"
 	keyId := "data.tencentcloud_ccn_instances.id_instances"
 	resource.Test(t, resource.TestCase{

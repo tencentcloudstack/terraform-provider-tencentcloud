@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -40,6 +41,7 @@ func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -63,6 +65,7 @@ func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -93,6 +96,7 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

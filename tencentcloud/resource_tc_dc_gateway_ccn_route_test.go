@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudDcgV3RouteBasic(t *testing.T) {
+	t.Parallel()
 
 	var rKey = "tencentcloud_dc_gateway_ccn_route.route"
 

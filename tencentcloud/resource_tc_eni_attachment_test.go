@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudEniAttachmentBasic(t *testing.T) {
+	t.Parallel()
 	var (
 		eniId string
 		cvmId string

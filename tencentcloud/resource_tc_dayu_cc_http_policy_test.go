@@ -14,6 +14,7 @@ var testDayuCCHttpPolicyResourceName = "tencentcloud_dayu_cc_http_policy"
 var testDayuCCHttpPolicyResourceKey = testDayuCCHttpPolicyResourceName + ".test_policy"
 
 func TestAccTencentCloudDayuCCHttpPolicyResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -48,6 +49,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource(t *testing.T) {
 }
 
 func TestAccTencentCloudDayuCCHttpPolicyResource_BGP(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -71,6 +73,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_BGP(t *testing.T) {
 }
 
 func TestAccTencentCloudDayuCCHttpPolicyResource_NET(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -94,6 +97,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_NET(t *testing.T) {
 }
 
 func TestAccTencentCloudDayuCCHttpPolicyResource_BGPMUL(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -14,6 +14,7 @@ var testTcaplusIdlResourceName = "tencentcloud_tcaplus_idl"
 var testTcaplusIdlResourceNameResourceKey = testTcaplusIdlResourceName + ".test_idl"
 
 func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

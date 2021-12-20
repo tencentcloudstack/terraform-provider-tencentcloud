@@ -13,6 +13,7 @@ var testAPIGatewayServiceResourceName = "tencentcloud_api_gateway_service"
 var testAPIGatewayServiceResourceKey = testAPIGatewayServiceResourceName + ".service"
 
 func TestAccTencentCloudAPIGateWayServiceResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

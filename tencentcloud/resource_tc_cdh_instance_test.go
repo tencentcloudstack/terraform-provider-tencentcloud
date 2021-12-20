@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudCdhInstance_basic(t *testing.T) {
+	t.Parallel()
 	resourceName := "tencentcloud_cdh_instance.foo"
 
 	resource.Test(t, resource.TestCase{

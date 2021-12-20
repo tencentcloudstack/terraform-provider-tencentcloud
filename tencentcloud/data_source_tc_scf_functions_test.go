@@ -8,6 +8,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -40,6 +41,7 @@ func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudScfFunctions_namespace(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -72,6 +74,7 @@ func TestAccDataSourceTencentCloudScfFunctions_namespace(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudScfFunctions_Desc(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -105,6 +108,7 @@ func TestAccDataSourceTencentCloudScfFunctions_Desc(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudScfFunctions_tag(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

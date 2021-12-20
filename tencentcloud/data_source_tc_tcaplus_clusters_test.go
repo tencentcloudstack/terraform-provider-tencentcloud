@@ -9,6 +9,7 @@ import (
 var testDataTcaplusClustersName = "data.tencentcloud_tcaplus_clusters.id_test"
 
 func TestAccTencentCloudDataTcaplusClusters(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -10,6 +10,7 @@ import (
 var testDataDayuCCHttpsPoliciesName = "data.tencentcloud_dayu_cc_https_policies.id_test"
 
 func TestAccTencentCloudDataDayuCCHttpsPolicies(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

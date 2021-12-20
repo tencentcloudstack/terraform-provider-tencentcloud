@@ -13,6 +13,7 @@ import (
 )
 
 func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -44,6 +45,7 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpDomain_https(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -75,6 +77,7 @@ func TestAccTencentCloudGaapHttpDomain_https(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -117,6 +120,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -151,6 +155,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 }
 
 func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -186,6 +191,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -230,6 +236,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 }
 
 func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.T) {
+	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

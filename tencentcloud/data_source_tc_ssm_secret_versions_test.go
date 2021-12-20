@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccTencentCloudSsmSecretVersionsDataSource(t *testing.T) {
+	t.Parallel()
 	dataSourceName := "data.tencentcloud_ssm_secret_versions.secret_version"
 
 	resource.Test(t, resource.TestCase{

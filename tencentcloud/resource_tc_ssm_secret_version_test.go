@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
+	t.Parallel()
 	resourceName := "tencentcloud_ssm_secret_version.v1"
 
 	resource.Test(t, resource.TestCase{

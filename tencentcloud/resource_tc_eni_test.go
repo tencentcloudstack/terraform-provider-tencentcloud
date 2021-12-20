@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudEni_basic(t *testing.T) {
+	t.Parallel()
 	var eniId string
 
 	resource.Test(t, resource.TestCase{
@@ -46,6 +47,7 @@ func TestAccTencentCloudEni_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudEni_updateAttr(t *testing.T) {
+	t.Parallel()
 	var eniId string
 
 	resource.Test(t, resource.TestCase{
@@ -92,6 +94,7 @@ func TestAccTencentCloudEni_updateAttr(t *testing.T) {
 }
 
 func TestAccTencentCloudEni_updateCount(t *testing.T) {
+	t.Parallel()
 	var eniId string
 
 	resource.Test(t, resource.TestCase{
@@ -138,6 +141,7 @@ func TestAccTencentCloudEni_updateCount(t *testing.T) {
 }
 
 func TestAccTencentCloudEni_updateManually(t *testing.T) {
+	t.Parallel()
 	var eniId string
 
 	resource.Test(t, resource.TestCase{

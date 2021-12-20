@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudEip_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -70,6 +71,7 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudEip_anycast(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -88,6 +90,7 @@ func TestAccTencentCloudEip_anycast(t *testing.T) {
 }
 
 func TestAccTencentCloudEip_provider(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -106,6 +109,7 @@ func TestAccTencentCloudEip_provider(t *testing.T) {
 }
 
 func TestAccTencentCloudEip_bandwidth(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

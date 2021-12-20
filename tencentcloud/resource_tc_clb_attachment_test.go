@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -41,6 +42,7 @@ func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
 }
 
 func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

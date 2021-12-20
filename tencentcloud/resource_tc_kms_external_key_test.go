@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccKmsExternalKey_basic(t *testing.T) {
+	t.Parallel()
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resourceName := "tencentcloud_kms_external_key.test"
 

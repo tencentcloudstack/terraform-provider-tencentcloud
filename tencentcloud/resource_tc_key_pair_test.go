@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudKeyPair(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: "tencentcloud_key_pair.foo",

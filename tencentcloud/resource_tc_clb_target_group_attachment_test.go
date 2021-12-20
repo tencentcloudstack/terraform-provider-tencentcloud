@@ -14,6 +14,7 @@ import (
 const clbTargetGroupAttachment = "tencentcloud_clb_target_group_attachment.group"
 
 func TestAccTencentClbTargetGroupAttachmentResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -38,6 +39,7 @@ func TestAccTencentClbTargetGroupAttachmentResource(t *testing.T) {
 }
 
 func TestAccTencentClbTargetGroupAttachmentHttpResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

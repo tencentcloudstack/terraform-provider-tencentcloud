@@ -14,6 +14,7 @@ var testTkeClusterNodePoolName = "tencentcloud_kubernetes_node_pool"
 var testTkeClusterNodePoolResourceKey = testTkeClusterNodePoolName + ".np_test"
 
 func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

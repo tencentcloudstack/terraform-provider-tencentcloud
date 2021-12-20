@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -33,6 +34,7 @@ func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
 	})
 }
 func TestAccTencentCloudVpcAclRulesUpdate(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -14,6 +14,7 @@ var testTkeClusterAsName = "tencentcloud_kubernetes_as_scaling_group"
 var testTkeClusterAsResourceKey = testTkeClusterAsName + ".as_test"
 
 func TestAccTencentCloudTkeAsResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

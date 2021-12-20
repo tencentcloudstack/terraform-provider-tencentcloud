@@ -9,6 +9,7 @@ import (
 )
 
 func TestAccTencentCloudKmsKeyDataSource(t *testing.T) {
+	t.Parallel()
 	dataSourceName := "data.tencentcloud_kms_keys.test"
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 

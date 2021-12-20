@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudScfNamespace_basic(t *testing.T) {
+	t.Parallel()
 	var nsId string
 
 	resource.Test(t, resource.TestCase{
@@ -39,6 +40,7 @@ func TestAccTencentCloudScfNamespace_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudScfNamespace_desc(t *testing.T) {
+	t.Parallel()
 	var nsId string
 
 	resource.Test(t, resource.TestCase{

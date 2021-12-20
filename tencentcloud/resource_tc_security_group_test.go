@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudSecurityGroup_basic(t *testing.T) {
+	t.Parallel()
 	var sgId string
 
 	resource.Test(t, resource.TestCase{
@@ -36,6 +37,7 @@ func TestAccTencentCloudSecurityGroup_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
+	t.Parallel()
 	var sgId string
 
 	resource.Test(t, resource.TestCase{
@@ -64,6 +66,7 @@ func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroup_tags(t *testing.T) {
+	t.Parallel()
 	var sgId string
 
 	resource.Test(t, resource.TestCase{

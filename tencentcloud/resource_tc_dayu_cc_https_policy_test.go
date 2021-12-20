@@ -14,6 +14,7 @@ var testDayuCCHttpsPolicyResourceName = "tencentcloud_dayu_cc_https_policy"
 var testDayuCCHttpsPolicyResourceKey = testDayuCCHttpsPolicyResourceName + ".test_policy"
 
 func TestAccTencentCloudDayuCCHttpsPolicyResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

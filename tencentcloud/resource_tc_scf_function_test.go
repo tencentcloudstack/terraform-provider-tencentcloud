@@ -17,6 +17,7 @@ import (
 )
 
 func TestAccTencentCloudScfFunction_basic(t *testing.T) {
+	t.Parallel()
 	var fnId string
 
 	resource.Test(t, resource.TestCase{
@@ -92,6 +93,7 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudScfFunction_cos(t *testing.T) {
+	t.Parallel()
 	var fnId string
 
 	path := scfFunctionCodeFile("first.zip")
@@ -162,6 +164,7 @@ func TestAccTencentCloudScfFunction_cos(t *testing.T) {
 }
 
 func TestAccTencentCloudScfFunction_role(t *testing.T) {
+	t.Parallel()
 	var fnId string
 
 	resource.Test(t, resource.TestCase{
@@ -221,6 +224,7 @@ func TestAccTencentCloudScfFunction_role(t *testing.T) {
 }
 
 func TestAccTencentCloudScfFunction_trigger(t *testing.T) {
+	t.Parallel()
 	var fnId string
 
 	resource.Test(t, resource.TestCase{
@@ -290,6 +294,7 @@ func TestAccTencentCloudScfFunction_trigger(t *testing.T) {
 }
 
 func TestAccTencentCloudScfFunction_customNamespace(t *testing.T) {
+	t.Parallel()
 	var fnId string
 
 	resource.Test(t, resource.TestCase{
