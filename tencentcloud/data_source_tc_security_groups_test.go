@@ -8,6 +8,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudSecurityGroups_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -29,6 +30,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSecurityGroups_searchByName(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -45,6 +47,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_searchByName(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSecurityGroups_emptyResult(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -63,6 +66,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_emptyResult(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSecurityGroups_tags(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -80,6 +84,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_tags(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudSecurityGroups_searchByProjectId(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

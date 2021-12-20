@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudDcgV3InstancesBasic(t *testing.T) {
+	t.Parallel()
 
 	var nameKey = "data.tencentcloud_dc_gateway_instances.name_select"
 	var idKey = "data.tencentcloud_dc_gateway_instances.id_select"

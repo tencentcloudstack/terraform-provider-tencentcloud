@@ -9,6 +9,7 @@ import (
 var testDataSqlserverBasicInstancesName = "data.tencentcloud_sqlserver_basic_instances.id_test"
 
 func TestAccTencentCloudDataSqlserverBasicInstances(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

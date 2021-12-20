@@ -86,6 +86,7 @@ In addition to all arguments above, the following attributes are exported:
 * `private_access_port` - Port for private access.
 * `public_access_host` - Host for public access.
 * `public_access_port` - Port for public access.
+* `uid` - Uid of the postgresql instance.
 
 
 ## Import

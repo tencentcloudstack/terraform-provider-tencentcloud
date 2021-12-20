@@ -58,6 +58,7 @@ func testSweepKmsKeys(region string) error {
 }
 
 func TestAccKmsKey_basic(t *testing.T) {
+	t.Parallel()
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resourceName := "tencentcloud_kms_key.test"
 
@@ -96,6 +97,7 @@ func TestAccKmsKey_basic(t *testing.T) {
 }
 
 func TestAccKmsKey_asymmetricKey(t *testing.T) {
+	t.Parallel()
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resourceName := "tencentcloud_kms_key.test"
 

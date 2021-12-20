@@ -12,6 +12,7 @@ import (
 const keyNameLimit1 = "tencentcloud_ccn_bandwidth_limit.limit1"
 
 func TestAccTencentCloudCcnV3BandwidthLimitOuter(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -40,6 +41,7 @@ func TestAccTencentCloudCcnV3BandwidthLimitOuter(t *testing.T) {
 }
 
 func TestAccTencentCloudCcnV3BandwidthLimitInter(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

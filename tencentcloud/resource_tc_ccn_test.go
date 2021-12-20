@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudCcnV3Basic(t *testing.T) {
+	t.Parallel()
 	keyName := "tencentcloud_ccn.main"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -63,6 +64,7 @@ func TestAccTencentCloudCcnV3Basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCcnV3Update(t *testing.T) {
+	t.Parallel()
 	keyName := "tencentcloud_ccn.main"
 
 	resource.Test(t, resource.TestCase{

@@ -9,6 +9,7 @@ import (
 var testDataProtocolTemplateGroupsNameAll = "data.tencentcloud_protocol_template_groups.all_test"
 
 func TestAccTencentCloudDataProtocolTemplateGroups(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

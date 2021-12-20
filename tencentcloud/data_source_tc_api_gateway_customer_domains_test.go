@@ -9,6 +9,7 @@ import (
 var testAPIGatewayDomainSourceName = "data.tencentcloud_api_gateway_customer_domains"
 
 func TestAccTencentAPIGatewayCustomerDomain(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

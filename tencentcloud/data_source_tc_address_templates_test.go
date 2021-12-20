@@ -9,6 +9,7 @@ import (
 var testDataAddressTemplatesNameAll = "data.tencentcloud_address_templates.all_test"
 
 func TestAccTencentCloudDataAddressTemplates(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
+	t.Parallel()
 	keyName := "tencentcloud_ccn_attachment.attachment"
 	keyNameVpngw := "tencentcloud_ccn_attachment.vpngw_ccn_attachment"
 	resource.Test(t, resource.TestCase{

@@ -92,6 +92,7 @@ func TestAccTencentCloudClbListener_tcp(t *testing.T) {
 }
 
 func TestAccTencentCloudClbListenerTCPWithTCP(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -145,6 +146,7 @@ func TestAccTencentCloudClbListenerTCPWithTCP(t *testing.T) {
 }
 
 func TestAccTencentCloudClbListenerTCPWithHTTP(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -208,6 +210,7 @@ func TestAccTencentCloudClbListenerTCPWithHTTP(t *testing.T) {
 }
 
 func TestAccTencentCloudClbListenerTCPWithCustomer(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

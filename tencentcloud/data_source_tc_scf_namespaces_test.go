@@ -8,6 +8,7 @@ import (
 )
 
 func TestAccDataSourceTencentCloudScfNamespaces_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -29,6 +30,7 @@ func TestAccDataSourceTencentCloudScfNamespaces_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudScfNamespaces_desc(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

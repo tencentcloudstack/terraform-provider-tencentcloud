@@ -13,6 +13,7 @@ var testSqlserverBasicInstanceResourceName = "tencentcloud_sqlserver_basic_insta
 var testSqlserverBasicInstanceResourceKey = testSqlserverBasicInstanceResourceName + ".test"
 
 func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

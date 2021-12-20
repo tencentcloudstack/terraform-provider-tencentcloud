@@ -15,6 +15,7 @@ var testTkeScaleWorkerResourceName = "tencentcloud_kubernetes_scale_worker"
 var testTkeScaleWorkerResourceKey = testTkeScaleWorkerResourceName + ".test_scale"
 
 func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

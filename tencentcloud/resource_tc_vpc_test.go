@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccTencentCloudVpcV3Basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -37,6 +38,7 @@ func TestAccTencentCloudVpcV3Basic(t *testing.T) {
 }
 
 func TestAccTencentCloudVpcV3Update(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -76,6 +78,7 @@ func TestAccTencentCloudVpcV3Update(t *testing.T) {
 }
 
 func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

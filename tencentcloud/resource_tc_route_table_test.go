@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccTencentCloudVpcV3RouteTableBasic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -39,6 +40,7 @@ func TestAccTencentCloudVpcV3RouteTableBasic(t *testing.T) {
 }
 
 func TestAccTencentCloudVpcV3RouteTableUpdate(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -75,6 +77,7 @@ func TestAccTencentCloudVpcV3RouteTableUpdate(t *testing.T) {
 }
 
 func TestAccTencentCloudVpcV3RouteTableWithTags(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

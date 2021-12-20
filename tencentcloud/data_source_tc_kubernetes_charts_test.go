@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccTencentCloudKubernetesChartsDataSource(t *testing.T) {
+	t.Parallel()
 	dataSourceName := "data.tencentcloud_kubernetes_charts.test"
 
 	resource.Test(t, resource.TestCase{

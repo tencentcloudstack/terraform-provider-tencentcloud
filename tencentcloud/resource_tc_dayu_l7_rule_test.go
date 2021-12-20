@@ -14,6 +14,7 @@ var testDayuL7RuleResourceName = "tencentcloud_dayu_l7_rule"
 var testDayuL7RuleResourceKey = testDayuL7RuleResourceName + ".test_rule"
 
 func TestAccTencentCloudDayuL7RuleResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

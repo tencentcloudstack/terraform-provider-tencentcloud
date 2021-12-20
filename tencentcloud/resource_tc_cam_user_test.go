@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudCamUser_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -62,6 +63,7 @@ func TestAccTencentCloudCamUser_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCamUser_nilPassword(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -87,6 +89,7 @@ func TestAccTencentCloudCamUser_nilPassword(t *testing.T) {
 }
 
 func TestAccTencentCloudCamUser_withoutKey(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -10,6 +10,7 @@ import (
 )
 
 func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
+	t.Parallel()
 	id := "tencentcloud_eip_association.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -39,6 +40,7 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 }
 
 func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
+	t.Parallel()
 	id := "tencentcloud_eip_association.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

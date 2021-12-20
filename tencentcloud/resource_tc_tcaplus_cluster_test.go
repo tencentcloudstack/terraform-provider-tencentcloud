@@ -13,6 +13,7 @@ var testTcaplusClusterResourceName = "tencentcloud_tcaplus_cluster"
 var testTcaplusClusterResourceKey = testTcaplusClusterResourceName + ".test_cluster"
 
 func TestAccTencentCloudTcaplusClusterResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -9,6 +9,7 @@ import (
 var testDataTcaplusTablesName = "data.tencentcloud_tcaplus_tables.id_test"
 
 func TestAccTencentCloudDataTcaplusTables(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
