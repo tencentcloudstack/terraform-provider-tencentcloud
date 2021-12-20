@@ -197,24 +197,32 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 		}
 		var zoneConfig = make(map[string]interface{})
 		zoneConfig["name"] = *sellItem.Zone
-		zoneConfig["hour_instance_sale_max_num"] = *sellItem.HourInstanceSaleMaxNum
-
-		if *sellItem.IsDefaultZone {
-			zoneConfig["is_default"] = 1
-		} else {
-			zoneConfig["is_default"] = 0
+		if sellItem.HourInstanceSaleMaxNum != nil {
+			zoneConfig["hour_instance_sale_max_num"] = *sellItem.HourInstanceSaleMaxNum
 		}
 
-		if *sellItem.IsSupportDr {
-			zoneConfig["is_support_disaster_recovery"] = 1
-		} else {
-			zoneConfig["is_support_disaster_recovery"] = 0
+		if sellItem.IsDefaultZone != nil {
+			if *sellItem.IsDefaultZone {
+				zoneConfig["is_default"] = 1
+			} else {
+				zoneConfig["is_default"] = 0
+			}
 		}
 
-		if *sellItem.IsSupportVpc {
-			zoneConfig["is_support_vpc"] = 1
-		} else {
-			zoneConfig["is_support_vpc"] = 0
+		if sellItem.IsSupportDr != nil {
+			if *sellItem.IsSupportDr {
+				zoneConfig["is_support_disaster_recovery"] = 1
+			} else {
+				zoneConfig["is_support_disaster_recovery"] = 0
+			}
+		}
+
+		if sellItem.IsSupportVpc != nil {
+			if *sellItem.IsSupportVpc {
+				zoneConfig["is_support_vpc"] = 1
+			} else {
+				zoneConfig["is_support_vpc"] = 0
+			}
 		}
 
 		payTypes := make([]int, len(sellItem.PayType))
