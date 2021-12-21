@@ -614,15 +614,17 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 			"unit":             rule.Unit,
 			"rule_type":        rule.RuleType,
 		}
-		if *rule.Filter.Type != "" || *rule.Filter.Dimensions != "" {
-			var filter = make([]interface{}, 0, 10)
-			alarmPolicyFilter := map[string]interface{}{
-				"type":       rule.Filter.Type,
-				"dimensions": rule.Filter.Dimensions,
-			}
-			filter = append(filter, alarmPolicyFilter)
-			if len(filter) > 0 {
-				m["filter"] = filter
+		if rule.Filter != nil {
+			if *rule.Filter.Type != "" || *rule.Filter.Dimensions != "" {
+				var filter = make([]interface{}, 0, 10)
+				alarmPolicyFilter := map[string]interface{}{
+					"type":       rule.Filter.Type,
+					"dimensions": rule.Filter.Dimensions,
+				}
+				filter = append(filter, alarmPolicyFilter)
+				if len(filter) > 0 {
+					m["filter"] = filter
+				}
 			}
 		}
 
@@ -637,12 +639,6 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 
 	eventConditions := make([]map[string]interface{}, 0, len(policy.EventCondition.Rules))
 	for _, eventRule := range policy.EventCondition.Rules {
-		var filter = make([]interface{}, 0, 10)
-		alarmPolicyFilter := map[string]interface{}{
-			"type":       eventRule.Filter.Type,
-			"dimensions": eventRule.Filter.Dimensions,
-		}
-		filter = append(filter, alarmPolicyFilter)
 
 		m := make(map[string]interface{}, 5)
 		m["metric_name"] = eventRule.MetricName
@@ -656,16 +652,17 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		m["description"] = eventRule.Description
 		m["unit"] = eventRule.Unit
 		m["rule_type"] = eventRule.RuleType
-
-		if *eventRule.Filter.Type != "" || *eventRule.Filter.Dimensions != "" {
-			var filter = make([]interface{}, 0, 10)
-			alarmPolicyFilter := map[string]interface{}{
-				"type":       eventRule.Filter.Type,
-				"dimensions": eventRule.Filter.Dimensions,
-			}
-			filter = append(filter, alarmPolicyFilter)
-			if len(filter) > 0 {
-				m["filter"] = filter
+		if eventRule.Filter != nil {
+			if *eventRule.Filter.Type != "" || *eventRule.Filter.Dimensions != "" {
+				var filter = make([]interface{}, 0, 10)
+				alarmPolicyFilter := map[string]interface{}{
+					"type":       eventRule.Filter.Type,
+					"dimensions": eventRule.Filter.Dimensions,
+				}
+				filter = append(filter, alarmPolicyFilter)
+				if len(filter) > 0 {
+					m["filter"] = filter
+				}
 			}
 		}
 		eventConditions = append(eventConditions, m)
