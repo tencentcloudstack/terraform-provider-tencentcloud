@@ -70,8 +70,14 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 	instanceRole := "ro"
 	request.InstanceRole = &instanceRole
 
-	period := int64(d.Get("period").(int))
-	request.Period = &period
+	payType, ok := d.GetOk("pay_type")
+	var period int
+	if !ok || payType == -1 {
+		period = d.Get("prepaid_period").(int)
+	} else {
+		period = d.Get("period").(int)
+	}
+	request.Period = helper.IntInt64(period)
 
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
