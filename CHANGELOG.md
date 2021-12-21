@@ -1,3 +1,9 @@
+## 1.60.22 (December 21, 2021)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_mysql_readonly_instance` fix create prepaid instance
+
 ## 1.60.21 (December 20, 2021)
 
 FEATURES:
