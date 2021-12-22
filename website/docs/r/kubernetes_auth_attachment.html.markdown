@@ -11,7 +11,7 @@ description: |-
 
 Provide a resource to configure kubernetes cluster authentication info.
 
-~> **NOTE:** Only avaliable for cluster version >= 1.20
+~> **NOTE:** Only available for cluster version >= 1.20
 
 ## Example Usage
 

@@ -98,7 +98,6 @@ resource "tencentcloud_clb_instance" "open_clb1" {
   clb_name       = "hello"
   master_zone_id = "ap-guangzhou-3"
 }
-~
 ```
 
 CREATE instance with log

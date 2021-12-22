@@ -122,7 +122,7 @@ func resourceTencentCloudCamRole() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicade whether the CAM role can login or not.",
+				Description: "Indicates whether the CAM role can login or not.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,

@@ -13,12 +13,12 @@ var appid string = os.Getenv("TENCENTCLOUD_APPID")
 
 const (
 	defaultRegion      = "ap-guangzhou"
-	defaultVpcId       = "vpc-h70b6b49"
+	defaultVpcId       = "vpc-86v957zb"
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
 	defaultAZone          = "ap-guangzhou-3"
-	defaultSubnetId       = "subnet-1uwh63so"
+	defaultSubnetId       = "subnet-rdng6k36"
 	defaultSubnetCidr     = "172.16.0.0/20"
 	defaultSubnetCidrLess = "172.16.0.0/22"
 

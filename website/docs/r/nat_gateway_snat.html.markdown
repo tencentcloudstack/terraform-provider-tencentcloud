@@ -139,12 +139,12 @@ In addition to all arguments above, the following attributes are exported:
 VPN gateway route can be imported using the id, the id format must be '{nat_gateway_id}#{resource_id}', resource_id range `subnet_id`, `instance_id`, e.g.
 
 SUBNET SNat
-```hcl
+```
 $ terraform import tencentcloud_nat_gateway_snat.my_snat nat-r4ip1cwt#subnet-2ap74y35
 ```
 
 NETWORKINTERFACT SNat
-```hcl
+```
 $ terraform import tencentcloud_nat_gateway_snat.my_snat nat-r4ip1cwt#ins-da412f5a
 ```
 
