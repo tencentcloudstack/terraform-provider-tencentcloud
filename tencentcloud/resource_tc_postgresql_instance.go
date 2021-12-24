@@ -57,6 +57,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -708,7 +710,28 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("status", instance.DBInstanceStatus)
 	_ = d.Set("memory", instance.DBInstanceMemory)
 	_ = d.Set("storage", instance.DBInstanceStorage)
-	_ = d.Set("uid", instance.Uid)
+
+	// Uid, must use
+	var filters = make([]*postgresql.Filter, 0, 10)
+	idFilter := &postgresql.Filter{
+		Name:   helper.String("db-instance-id"),
+		Values: []*string{helper.String(d.Id())},
+	}
+	filters = append(filters, idFilter)
+
+	instanceList, err := postgresqlService.DescribePostgresqlInstances(ctx, filters)
+	if err != nil {
+		log.Printf("[CRITAL]%s query postgreSql  error, reason:%s\n", logId, err.Error())
+		return err
+	}
+	if len(instanceList) == 0 {
+		return fmt.Errorf("no postgresql instance find by id: %s\n.", d.Id())
+	}
+	if len(instanceList) > 1 {
+		return fmt.Errorf("find more than one postgresql instance find by id: %s\n.", d.Id())
+	}
+
+	_ = d.Set("uid", instanceList[0].Uid)
 
 	// ignore spec_code
 	// qcs::postgres:ap-guangzhou:uin/123435236:DBInstanceId/postgres-xxx

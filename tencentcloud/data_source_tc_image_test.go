@@ -65,7 +65,7 @@ data "tencentcloud_image" "public_image" {
 
 const testAccTencentCloudDataSourceImageBaseWithOsName = `
 data "tencentcloud_image" "public_image" {
-  os_name = "CentOS 7.5"
+  os_name = "TencentOS Server 3.2"
 
   filter {
     name   = "image-type"
@@ -76,7 +76,7 @@ data "tencentcloud_image" "public_image" {
 
 const testAccTencentCloudDataSourceImageBaseWithImageNameRegex = `
 data "tencentcloud_image" "public_image" {
-  image_name_regex = "^CentOS\\s+7\\.5\\s+64\\w*"
+  image_name_regex = "^Windows\\s.*$"
 
   filter {
     name   = "image-type"
