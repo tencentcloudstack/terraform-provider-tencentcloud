@@ -41,6 +41,7 @@ data "tencentcloud_images" "my_image" {
 data "tencentcloud_instance_types" "my_instance_types" {
   cpu_core_count = 1
   memory_size    = 1
+  availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name 
 }
 
 # Create EIP
@@ -80,7 +81,7 @@ resource "tencentcloud_route_table_entry" "my_route_entry" {
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id            = data.tencentcloud_vpc.my_vpc.id
   name              = "terraform test"
-  cidr_block        = "172.29.23.0/24"
+  cidr_block        = "172.16.16.0/20"
   availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
   route_table_id    = tencentcloud_route_table.my_route_table.id
 }
@@ -110,7 +111,7 @@ resource "tencentcloud_instance" "my_instance" {
   project_id                 = 0
   vpc_id                     = data.tencentcloud_vpc.my_vpc.id
   subnet_id                  = tencentcloud_subnet.my_subnet.id
-  internet_max_bandwidth_out = 20
+  //internet_max_bandwidth_out = 20
 }
 
 # NetWorkInterface Nat gateway snat

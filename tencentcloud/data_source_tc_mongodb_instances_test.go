@@ -29,14 +29,14 @@ func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.vip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.vport"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.create_time"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.engine_version", "MONGO_36_WT"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.engine_version", "MONGO_40_WT"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.cpu"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.memory", "4"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.volume", "100"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.machine_type", MONGODB_MACHINE_TYPE_HIO10G),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.shard_quantity"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.tags.test", "test"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.charge_type", "POSTPAID"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.charge_type", "POSTPAID_BY_HOUR"),
 				),
 			},
 		},
@@ -48,7 +48,7 @@ resource "tencentcloud_mongodb_instance" "mongodb_instance" {
   instance_name  = "tf-mongodb-test"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_36_WT"
+  engine_version = "MONGO_40_WT"
   machine_type   = "TGIO"
   available_zone = "ap-guangzhou-3"
   project_id     = 0

@@ -233,7 +233,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	// must wait for creating gateway finished
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
 	statRequest.VpnGatewayIds = []*string{helper.String(gatewayId)}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

@@ -264,7 +264,7 @@ func (me *PostgresqlService) DescribePostgresqlInstances(ctx context.Context, fi
 		}
 	}()
 
-	var offset, limit uint64 = 0, 200
+	var offset, limit uint64 = 0, 10
 
 	for {
 		request.Offset = &offset
