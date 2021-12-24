@@ -104,12 +104,12 @@ func testAccCheckEmrExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testEmrBasic = `
-resource "tencentcloud_emr_instance" "emrrrr" {
+const testEmrBasic = defaultVpcVariable + `
+resource "tencentcloud_emr_cluster" "emrrrr" {
 	product_id=4
 	display_strategy="clusterList"
-	vpc_settings={vpc_id:"vpc-fuwly8x5", subnet_id:"subnet-d830wfso"}
-	softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
+	vpc_settings={vpc_id: var.vpc_id, subnet_id: var.subnet_id }
+	softwares=["zookeeper-3.5.5"]
     support_ha=0
     instance_name="emr-test"
 	resource_spec {

@@ -183,6 +183,7 @@ func resourceTencentcloudEKSClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("tags", cluster.Tags)
 	_ = d.Set("subnet_ids", cluster.SubnetIds)
 	_ = d.Set("need_delete_cbs", cluster.NeedDeleteCbs)
+	_ = d.Set("enable_vpc_core_dns", cluster.EnableVpcCoreDNS)
 
 	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -33,7 +34,7 @@ func TestAccTencentCloudVpnGatewayRoute_basic(t *testing.T) {
 			{
 				Config: testVpnGatewayRouteUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVpnGatewayRouteExists("tencentcloud_vpn_gateway.my_cgw"),
+					testAccCheckVpnGatewayRouteExists("tencentcloud_vpn_gateway_route.route1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway_route.route1", "destination_cidr_block", "10.0.0.0/16"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway_route.route1", "instance_type", "VPNCONN"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway_route.route1", "priority", "100"),
@@ -55,7 +56,8 @@ func testAccCheckVpnGatewayRouteDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vpn_gateway_route" {
 			continue
 		}
-		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, rs.Primary.ID, nil)
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN gateway route failed, reason:%s\n", logId, err.Error())
 			ee, ok := err.(*errors.TencentCloudSDKError)
@@ -89,7 +91,8 @@ func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("VPN gateway route id is not set")
 		}
-		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, rs.Primary.ID, nil)
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN gateway failed, reason:%s\n", logId, err.Error())
 			return err
@@ -107,14 +110,16 @@ data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"
 }
 
-data "tencentcloud_vpn_gateway_connections" "conns" {
+data "tencentcloud_vpn_gateways" "foo" {}
+
+data "tencentcloud_vpn_connections" "conns" {
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
   destination_cidr_block = "10.0.0.0/16"
   instance_type = "VPNCONN"
-  instance_id = data.tencentcloud_vpn_gateway_connections.conns.connection_list.0.id
+  instance_id = data.tencentcloud_vpn_connections.conns.connection_list.0.id
   priority = "100"
   status = "ENABLE"
 }
@@ -125,14 +130,16 @@ data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"
 }
 
-data "tencentcloud_vpn_gateway_connections" "conns" {
+data "tencentcloud_vpn_connections" "conns" {
 }
+
+data "tencentcloud_vpn_gateways" "foo" {}
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
   destination_cidr_block = "10.0.0.0/16"
   instance_type = "VPNCONN"
-  instance_id = data.tencentcloud_vpn_gateway_connections.conns.connection_list.0.id
+  instance_id = data.tencentcloud_vpn_connections.conns.connection_list.0.id
   priority = "100"
   status = "DISABLE"
 }

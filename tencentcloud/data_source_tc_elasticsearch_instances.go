@@ -265,7 +265,7 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 				}
 				infos = append(infos, info)
 			}
-			mapping["multi_zone_info"] = infos
+			mapping["multi_zone_infos"] = infos
 		}
 		if instance.NodeInfoList != nil && len(instance.NodeInfoList) > 0 {
 			infos := make([]map[string]interface{}, 0, len(instance.NodeInfoList))

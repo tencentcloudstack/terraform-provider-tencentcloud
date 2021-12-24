@@ -21,8 +21,8 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "available_zone", "ap-guangzhou-4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "vpc_id", "vpc-h70b6b49"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-q6fhy1mi"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "vpc_id", "vpc-c5giv773"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-3hcc9h8e"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_type", "MYSQL"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_version", "5.7"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "storage_limit", "1000"),
@@ -75,13 +75,31 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit"},
 			},
+		},
+	})
+}
+
+/*
+func TestAccTencentCloudCynosdbClusterResourcePrePaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCynosdbClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit"},
+			},
 			{
 				Config: testAccCynosdbClusterPrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.bar"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "available_zone", "ap-guangzhou-4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "vpc_id", "vpc-h70b6b49"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "subnet_id", "subnet-q6fhy1mi"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "vpc_id", "vpc-c5giv773"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "subnet_id", "subnet-3hcc9h8e"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_type", "MYSQL"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_version", "5.7"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "storage_limit", "1000"),
@@ -120,6 +138,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
@@ -177,11 +196,11 @@ variable "availability_zone" {
 }
 
 variable "my_vpc" {
-  default = "` + defaultVpcId + `"
+  default = "vpc-c5giv773"
 }
 
 variable "my_subnet" {
-  default = "subnet-q6fhy1mi"
+  default = "subnet-3hcc9h8e"
 }
 `
 
@@ -217,10 +236,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   force_delete = true
 
   rw_group_sg = [
-    "sg-nltpbqg1",
+    "` + defaultSecurityGroup + `",
   ]
   ro_group_sg = [
-    "sg-nltpbqg1",
+    "` + defaultSecurityGroup + `",
   ]
 }
 `
@@ -256,10 +275,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   force_delete = true
 
   rw_group_sg = [
-    "sg-cf1u18wb",
+    "` + defaultSecurityGroup2 + `",
   ]
   ro_group_sg = [
-    "sg-cf1u18wb",
+    "` + defaultSecurityGroup2 + `",
   ]
 }
 `
@@ -296,10 +315,10 @@ resource "tencentcloud_cynosdb_cluster" "bar" {
   force_delete = true
 
   rw_group_sg = [
-    "sg-nltpbqg1",
+    "` + defaultSecurityGroup + `",
   ]
   ro_group_sg = [
-    "sg-nltpbqg1",
+    "` + defaultSecurityGroup + `",
   ]
 
   charge_type = "PREPAID"

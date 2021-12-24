@@ -181,7 +181,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 }
 
 func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_instance.update")()
+	defer logElapsed("resource.tencentcloud_emr_cluster.update")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	emrService := EMRService{
@@ -245,7 +245,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_instance.create")()
+	defer logElapsed("resource.tencentcloud_emr_cluster.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	emrService := EMRService{
@@ -290,7 +290,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_instance.delete")()
+	defer logElapsed("resource.tencentcloud_emr_cluster.delete")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	emrService := EMRService{
