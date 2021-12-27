@@ -30,7 +30,8 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 		}
 
 		if result != nil && result.Response != nil {
-			if len(result.Response.InstanceDetails) != 0 && *result.Response.InstanceDetails[0].Status == MONGODB_INSTANCE_STATUS_PROCESSING {
+			if len(result.Response.InstanceDetails) != 0 && (*result.Response.InstanceDetails[0].Status == MONGODB_INSTANCE_STATUS_PROCESSING ||
+				*result.Response.InstanceDetails[0].Status == MONGODB_INSTANCE_STATUS_INITIAL) {
 				return resource.RetryableError(fmt.Errorf("mongodb instance status is processing"))
 			}
 			response = result
