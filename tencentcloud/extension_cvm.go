@@ -1,9 +1,5 @@
 package tencentcloud
 
-import (
-	"time"
-)
-
 const (
 	CVM_CHARGE_TYPE_PREPAID  = "PREPAID"
 	CVM_CHARGE_TYPE_POSTPAID = "POSTPAID_BY_HOUR"
@@ -102,24 +98,4 @@ var CVM_PLACEMENT_GROUP_TYPE = []string{
 
 var CVM_SPOT_INSTANCE_TYPE = []string{
 	CVM_SPOT_INSTANCE_TYPE_ONE_TIME,
-}
-
-func DeltaMonth(t1, t2 string) (deltaMonth int, err error) {
-	// t1-t2
-	timeTemplate := "2006-01-02T15:04:05Z"
-	tt1, err := time.Parse(timeTemplate, t1)
-	if err != nil {
-		return
-	}
-	tt2, err := time.Parse(timeTemplate, t2)
-	if err != nil {
-		return
-	}
-	tt1Month := int(tt1.Month())
-	tt2Month := int(tt2.Month())
-	deltaMonth = tt1Month - tt2Month
-	if deltaMonth < 0 {
-		deltaMonth += 12
-	}
-	return
 }
