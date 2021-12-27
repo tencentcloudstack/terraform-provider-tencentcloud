@@ -10,7 +10,7 @@ Example Usage
 ```hcl
 data "tencentcloud_images" "my_favorite_image" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
+  os_name    = "Tencent Linux release 3.2 (Final)"
 }
 
 data "tencentcloud_instance_types" "my_favorite_instance_types" {
@@ -51,9 +51,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   project_id                 = 0
   vpc_id                     = tencentcloud_vpc.app.id
   subnet_id                  = tencentcloud_subnet.app.id
-  internet_max_bandwidth_out = 20
   count                      = 2
-  cam_role_name              = "CVM_QcsRole"
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -146,7 +144,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1439,7 +1436,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		//when state is terminating, do not delete but check exist
 		if errRet != nil {
 			//check InvalidInstanceState.Terminating
-			ee, ok := errRet.(*errors.TencentCloudSDKError)
+			ee, ok := errRet.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return retryError(errRet)
 			}
