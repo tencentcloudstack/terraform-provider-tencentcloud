@@ -886,16 +886,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if d.Get("image_id").(string) == "" || !IsContains(cvmImages, *instance.ImageId) {
 		_ = d.Set("image_id", instance.ImageId)
 	}
-	expiredTime := instance.ExpiredTime
-	createdTime := instance.CreatedTime
-	if expiredTime != nil && createdTime != nil {
-		deltaMonth, err := DeltaMonth(*instance.ExpiredTime, *instance.CreatedTime)
-		if err != nil {
-			return err
-		}
-		_ = d.Set("instance_charge_type_prepaid_period", deltaMonth)
-
-	}
 
 	_ = d.Set("availability_zone", instance.Placement.Zone)
 	_ = d.Set("instance_name", instance.InstanceName)
