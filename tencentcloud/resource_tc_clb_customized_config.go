@@ -51,9 +51,9 @@ func resourceTencentCloudClbCustomizedConfig() *schema.Resource {
 				Description: "Name of Customized Config.",
 			},
 			"config_content": {
-				Type:         schema.TypeString,
-				Required:     true,
-				Description:  "Content of Customized Config.",
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Content of Customized Config.",
 			},
 			"load_balancer_ids": {
 				Type:        schema.TypeSet,

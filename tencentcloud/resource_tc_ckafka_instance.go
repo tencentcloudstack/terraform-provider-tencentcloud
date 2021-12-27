@@ -44,11 +44,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudCkafkaInstance() *schema.Resource {
@@ -180,8 +181,8 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 								"3 will be used by default.",
 						},
 						"default_replication_factor": {
-							Type:        schema.TypeInt,
-							Required:    true,
+							Type:     schema.TypeInt,
+							Required: true,
 							Description: "If auto.create.topic.enable is set to true but this value is not set, " +
 								"2 will be used by default.",
 						},
