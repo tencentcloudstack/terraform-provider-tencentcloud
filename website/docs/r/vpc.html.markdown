@@ -26,12 +26,28 @@ resource "tencentcloud_vpc" "foo" {
 }
 ```
 
+Using Assistant CIDR
+
+```hcl
+resource "tencentcloud_vpc" "foo" {
+  name           = "ci-temp-test-updated"
+  cidr_block     = "10.0.0.0/16"
+  is_multicast   = false
+  assistant_cidr = ["172.16.0.0/24"]
+
+  tags = {
+    "test" = "test"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `cidr_block` - (Required, ForceNew) A network address block which should be a subnet of the three internal network segments (10.0.0.0/16, 172.16.0.0/12 and 192.168.0.0/16).
 * `name` - (Required) The name of the VPC.
+* `assistant_cidrs` - (Optional) List of Assistant CIDR.
 * `dns_servers` - (Optional) The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.
 * `is_multicast` - (Optional) Indicates whether VPC multicast is enabled. The default value is 'true'.
 * `tags` - (Optional) Tags of the VPC.

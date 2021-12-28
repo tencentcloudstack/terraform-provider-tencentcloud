@@ -16,6 +16,20 @@ resource "tencentcloud_vpc" "foo" {
 }
 ```
 
+Using Assistant CIDR
+```hcl
+resource "tencentcloud_vpc" "foo" {
+  name         = "ci-temp-test-updated"
+  cidr_block   = "10.0.0.0/16"
+  is_multicast = false
+  assistant_cidr = ["172.16.0.0/24"]
+
+  tags = {
+    "test" = "test"
+  }
+}
+```
+
 Import
 
 Vpc instance can be imported, e.g.
@@ -30,6 +44,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -77,6 +93,14 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 				Optional:    true,
 				Default:     true,
 				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'.",
+			},
+			"assistant_cidrs": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of Assistant CIDR.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -147,6 +171,17 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 
 	d.SetId(vpcId)
+
+	if v, ok := d.GetOk("assistant_cidrs"); ok {
+		assistantCidrs := v.([]interface{})
+		request := vpc.NewCreateAssistantCidrRequest()
+		request.VpcId = &vpcId
+		request.CidrBlocks = helper.InterfacesStringsPoint(assistantCidrs)
+		_, err := vpcService.CreateAssistantCidr(ctx, request)
+		if err != nil {
+			return err
+		}
+	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -223,6 +258,7 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("is_multicast", info.isMulticast)
 		_ = d.Set("create_time", info.createTime)
 		_ = d.Set("is_default", info.isDefault)
+		_ = d.Set("assistant_cidrs", info.assistantCidrs)
 		_ = d.Set("tags", tags)
 
 		return nil
@@ -298,6 +334,18 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	for _, attr := range updateAttr {
 		d.SetPartial(attr)
+	}
+
+	if d.HasChange("assistant_cidrs") {
+		old, now := d.GetChange("assistant_cidrs")
+		request := vpc.NewModifyAssistantCidrRequest()
+		request.VpcId = &id
+		request.NewCidrBlocks = helper.InterfacesStringsPoint(now.([]interface{}))
+		request.OldCidrBlocks = helper.InterfacesStringsPoint(old.([]interface{}))
+		if err := vpcService.ModifyAssistantCidr(ctx, request); err != nil {
+			return err
+		}
+		d.SetPartial("assistant_cidrs")
 	}
 
 	if d.HasChange("tags") {

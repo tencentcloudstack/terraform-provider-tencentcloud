@@ -57,11 +57,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 
