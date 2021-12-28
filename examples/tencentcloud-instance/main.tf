@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    tencentcloud = {
+      source = "tencentcloudstack/tencentcloud"
+    }
+  }
+}
+
 data "tencentcloud_images" "my_favorate_image" {
   image_type = ["PUBLIC_IMAGE"]
   os_name    = "centos"
