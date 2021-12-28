@@ -27,14 +27,15 @@ var eipUnattachLocker = &sync.Mutex{}
 
 // VPC basic information
 type VpcBasicInfo struct {
-	vpcId       string
-	name        string
-	cidr        string
-	isMulticast bool
-	isDefault   bool
-	dnsServers  []string
-	createTime  string
-	tags        []*vpc.Tag
+	vpcId          string
+	name           string
+	cidr           string
+	isMulticast    bool
+	isDefault      bool
+	dnsServers     []string
+	createTime     string
+	tags           []*vpc.Tag
+	assistantCidrs []string
 }
 
 // subnet basic information
@@ -337,6 +338,13 @@ getMoreData:
 			return
 		}
 		hasVpc[basicInfo.vpcId] = true
+
+		if len(item.AssistantCidrSet) > 0 {
+			for i := range item.AssistantCidrSet {
+				cidr := item.AssistantCidrSet[i].CidrBlock
+				basicInfo.assistantCidrs = append(basicInfo.assistantCidrs, *cidr)
+			}
+		}
 
 		if len(item.TagSet) > 0 {
 			basicInfo.tags = item.TagSet
@@ -4153,4 +4161,130 @@ func (me *VpcService) DescribeNatGatewaySnats(ctx context.Context, natGatewayId 
 		}
 		offset = offset + limit
 	}
+}
+
+func (me *VpcService) DescribeAssistantCidr(ctx context.Context, vpcId string) (info []*vpc.AssistantCidr, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeAssistantCidrRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.VpcIds = []*string{&vpcId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeAssistantCidr(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	info = response.Response.AssistantCidrSet
+
+	return
+}
+
+// CheckAssistantCidr used for check if cidr conflict
+func (me *VpcService) CheckAssistantCidr(ctx context.Context, request *vpc.CheckAssistantCidrRequest) (info []*vpc.ConflictSource, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CheckAssistantCidr(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	info = response.Response.ConflictSourceSet
+
+	return
+}
+
+func (me *VpcService) CreateAssistantCidr(ctx context.Context, request *vpc.CreateAssistantCidrRequest) (info []*vpc.AssistantCidr, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateAssistantCidr(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	info = response.Response.AssistantCidrSet
+
+	return
+}
+
+func (me *VpcService) ModifyAssistantCidr(ctx context.Context, request *vpc.ModifyAssistantCidrRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ModifyAssistantCidr(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DeleteAssistantCidr(ctx context.Context, request *vpc.DeleteAssistantCidrRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DeleteAssistantCidr(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
