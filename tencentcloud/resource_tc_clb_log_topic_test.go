@@ -58,7 +58,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbInstanceTopic = `
-resource "tencentcloud_clb_instances_topic" "topic" {
+resource "tencentcloud_clb_log_topic" "topic" {
     topic_name="clb-topic-test"
     partition_count=3
 }

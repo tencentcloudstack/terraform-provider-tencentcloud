@@ -21,14 +21,14 @@ func TestAccTencentCloudClbLogset_basic(t *testing.T) {
 			{
 				Config: testAccClbLogset_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbLogsetExists("tencentcloud_clb_logset.test_logset"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_logset.test_logset", "create_time"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_logset.test_logset", "name", "clb_logset"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_logset.test_logset", "period", "7"),
+					testAccCheckClbLogsetExists("tencentcloud_clb_log_set.test_logset"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_log_set.test_logset", "create_time"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_set.test_logset", "name", "clb_logset"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_set.test_logset", "period", "7"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_clb_logset.test_logset",
+				ResourceName:      "tencentcloud_clb_log_set.test_logset",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -85,7 +85,7 @@ func testAccCheckClbLogsetExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbLogset_basic = `
-resource "tencentcloud_clb_logset" "test_logset" {
+resource "tencentcloud_clb_log_set" "test_logset" {
   period = 7
 }
 `
