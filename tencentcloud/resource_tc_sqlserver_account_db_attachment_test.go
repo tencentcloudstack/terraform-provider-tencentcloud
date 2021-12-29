@@ -125,14 +125,14 @@ resource "tencentcloud_sqlserver_account" "test" {
 }
 
 resource "tencentcloud_sqlserver_db" "test" {
-  instance_id = "mssql-3cdq7kx5"
+  instance_id = tencentcloud_sqlserver_instance.test.id
   name        = "test111"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }
 
 resource "tencentcloud_sqlserver_account_db_attachment" "test" {
-  instance_id = "mssql-3cdq7kx5"
+  instance_id = tencentcloud_sqlserver_instance.test.id
   account_name = tencentcloud_sqlserver_account.test.name
   db_name = tencentcloud_sqlserver_db.test.name
   privilege = "ReadOnly"

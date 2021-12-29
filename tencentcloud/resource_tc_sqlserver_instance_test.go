@@ -171,7 +171,7 @@ data "tencentcloud_availability_zones_by_product" "zone" {
 const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance"
-  availability_zone             = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
+  availability_zone             = data.tencentcloud_availability_zones_by_product.zone.zones[1].name
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = "` + defaultVpcId + `"
   subnet_id                     = "` + defaultSubnetId + `"
@@ -181,7 +181,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = ["sg-nltpbqg1"]
+  security_groups               = ["` + defaultSecurityGroup + `"]
 
   tags = {
     "test"                      = "test"
