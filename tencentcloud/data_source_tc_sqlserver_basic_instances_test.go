@@ -72,7 +72,7 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	memory                  = 2
 	storage                 = 20
 	cpu                     = 1
-	security_groups         = ["sg-nltpbqg1"]
+	security_groups         = ["` + defaultSecurityGroup + `"]
 
 	tags = {
 		"test" = "test"
