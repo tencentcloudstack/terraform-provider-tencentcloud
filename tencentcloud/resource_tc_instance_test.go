@@ -133,7 +133,7 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithNetwork("false", 1),
+				Config: testAccTencentCloudInstanceWithNetworkFalse("false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -608,6 +608,23 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
+func testAccTencentCloudInstanceWithNetworkFalse(hasPublicIp string) string {
+	return fmt.Sprintf(
+		defaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  allocate_public_ip         = %s
+  system_disk_type           = "CLOUD_PREMIUM"
+}
+`,
+		hasPublicIp,
+	)
+}
+
 func testAccTencentCloudInstanceWithNetwork(hasPublicIp string, maxBandWidthOut int64) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
@@ -673,7 +690,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_max_bandwidth_out = 1
   password                   = "%s"
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -761,7 +777,6 @@ resource "tencentcloud_instance" "foo" {
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
-  internet_max_bandwidth_out = 1
   security_groups            = %s
 }
 `,
