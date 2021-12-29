@@ -87,6 +87,24 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete"},
 			},
+		},
+	})
+}
+
+/*
+func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				ResourceName:            "tencentcloud_redis_instance.redis_instance_test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete"},
+			},
 			{
 				Config: testAccRedisInstancePrepaidBasic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -107,6 +125,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {

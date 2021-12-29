@@ -184,11 +184,13 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"max_standby_archive_delay": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.",
 			},
 			"max_standby_streaming_delay": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.",
 			},
 			// Computed values

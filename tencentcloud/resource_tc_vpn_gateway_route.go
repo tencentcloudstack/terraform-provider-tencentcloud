@@ -140,8 +140,8 @@ func resourceTencentCloudVpnGatewayRouteCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(helper.IdFormat(vpnGatewayId, *(routeList[0].RouteId)))
 
-	setRouteInfo(d, vpnGatewayId, route)
-	return nil
+	//setRouteInfo(d, vpnGatewayId, route)
+	return resourceTencentCloudVpnGatewayRouteRead(d, meta)
 }
 
 func resourceTencentCloudVpnGatewayRouteRead(d *schema.ResourceData, meta interface{}) error {

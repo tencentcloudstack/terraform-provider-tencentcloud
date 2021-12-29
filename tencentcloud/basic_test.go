@@ -18,7 +18,7 @@ const (
 	defaultVpcCidrLess = "172.16.0.0/18"
 
 	defaultAZone          = "ap-guangzhou-3"
-	defaultSubnetId       = "subnet-rdng6k36"
+	defaultSubnetId       = "subnet-enm92y0m"
 	defaultSubnetCidr     = "172.16.0.0/20"
 	defaultSubnetCidrLess = "172.16.0.0/22"
 
@@ -34,6 +34,11 @@ const (
 	defaultDayuNet    = "net-0000007e"
 
 	defaultGaapProxyId = "link-9ck3lzq7"
+
+	defaultSecurityGroup  = "sg-275zwjwh"
+	defaultSecurityGroup2 = "sg-4xsjqjrj"
+
+	defaultProjectId = "1250480"
 )
 
 /*
@@ -108,7 +113,7 @@ const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
-  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  image_id                   = data.tencentcloud_images.default.images.1.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50

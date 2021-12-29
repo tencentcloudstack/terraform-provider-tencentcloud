@@ -108,7 +108,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   charge_type = "PREPAID"
   prepaid_period = 1
   host_name = "unit-test-modify"
-  project_id = 1154137
+  project_id = ` + defaultProjectId + `
   prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
 `

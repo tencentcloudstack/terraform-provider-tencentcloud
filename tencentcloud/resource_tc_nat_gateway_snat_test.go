@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -19,19 +20,19 @@ func TestAccTencentCloudNatGatewaySnat_basic(t *testing.T) {
 			{
 				Config: testAccNatGatewaySnatConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNatGatewaySnatExists("tencentcloud_nat_gateway.my_subnet_snat"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "resource_type", "SUBNET"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "description", "terraform test"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "public_ip_addr.#", "2"),
+					testAccCheckNatGatewaySnatExists("tencentcloud_nat_gateway_snat.my_subnet_snat"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "resource_type", "SUBNET"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "description", "terraform test"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "public_ip_addr.#", "2"),
 				),
 			},
 			{
 				Config: testAccNatGatewaySnatConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNatGatewaySnatExists("tencentcloud_nat_gateway.my_subnet_snat"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "resource_type", "SUBNET"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "description", "terraform test2"),
-					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_subnet_snat", "public_ip_addr.#", "1"),
+					testAccCheckNatGatewaySnatExists("tencentcloud_nat_gateway_snat.my_subnet_snat"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "resource_type", "SUBNET"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "description", "terraform test2"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway_snat.my_subnet_snat", "public_ip_addr.#", "1"),
 				),
 			},
 		},
@@ -67,11 +68,15 @@ func testAccCheckNatGatewaySnatExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("nat gateway snat instance %s is not found", n)
 		}
+
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("nat gateway snat id is not set")
 		}
+
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		err, result := service.DescribeNatGatewaySnats(contextNil, rs.Primary.ID, nil)
+		err, result := service.DescribeNatGatewaySnats(contextNil, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read nat gateway snat failed, reason:%s\n ", logId, err.Error())
 			return err
@@ -136,7 +141,7 @@ resource "tencentcloud_route_table_entry" "my_route_entry" {
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id            = data.tencentcloud_vpc.my_vpc.id
   name              = "terraform test"
-  cidr_block        = "172.29.23.0/24"
+  cidr_block        = "172.16.128.0/24"
   availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
   route_table_id    = tencentcloud_route_table.my_route_table.id
 }
@@ -207,7 +212,7 @@ resource "tencentcloud_route_table_entry" "my_route_entry" {
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id            = data.tencentcloud_vpc.my_vpc.id
   name              = "terraform test"
-  cidr_block        = "172.29.23.0/24"
+  cidr_block        = "172.16.128.0/24"
   availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
   route_table_id    = tencentcloud_route_table.my_route_table.id
 }

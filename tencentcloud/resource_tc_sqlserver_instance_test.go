@@ -61,7 +61,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "maintenance_time_span", "4"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "storage", "20"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "create_time"),
-					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "project_id", "1154137"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "project_id", defaultProjectId),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "availability_zone"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vip"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
@@ -196,7 +196,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   charge_type               = "POSTPAID_BY_HOUR"
   vpc_id                    = "` + defaultVpcId + `"
   subnet_id                 = "` + defaultSubnetId + `"
-  project_id                = 1154137
+  project_id                = ` + defaultProjectId + `
   memory                    = 4
   storage                   = 20
   maintenance_week_set      = [2,3,4]
