@@ -163,15 +163,15 @@ func testAccCheckSqlserverInstanceExists(n string) resource.TestCheckFunc {
 }
 
 const testAccSqlserverInstanceBasic = `
-variable "availability_zone"{
-  default = "ap-guangzhou-2"
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "sqlserver"
 }
 `
 
 const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance"
-  availability_zone             = var.availability_zone
+  availability_zone             = data.tencentcloud_availability_zones_by_product.zone.zones[1].name
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = "` + defaultVpcId + `"
   subnet_id                     = "` + defaultSubnetId + `"
@@ -181,7 +181,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = ["sg-nltpbqg1"]
+  security_groups               = ["` + defaultSecurityGroup + `"]
 
   tags = {
     "test"                      = "test"
@@ -192,7 +192,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
 const testAccSqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                      = "tf_sqlserver_instance_update"
-  availability_zone         = var.availability_zone
+  availability_zone         = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
   charge_type               = "POSTPAID_BY_HOUR"
   vpc_id                    = "` + defaultVpcId + `"
   subnet_id                 = "` + defaultSubnetId + `"
@@ -212,7 +212,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
 const testAccSqlserverInstanceMultiCluster string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
-  availability_zone             = var.availability_zone
+  availability_zone             = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
   charge_type                   = "POSTPAID_BY_HOUR"
   engine_version                = "2017"
   vpc_id                        = "` + defaultVpcId + `"

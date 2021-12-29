@@ -151,7 +151,7 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	charge_type             = "POSTPAID_BY_HOUR"
 	vpc_id                  = tencentcloud_vpc.foo.id
 	subnet_id               = tencentcloud_subnet.foo.id
-	security_groups         = ["sg-nltpbqg1"]
+	security_groups         = ["` + defaultSecurityGroup + `"]
 	project_id              = 0
 	memory                  = 2
 	storage                 = 20
@@ -174,7 +174,7 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	charge_type             = "POSTPAID_BY_HOUR"
 	vpc_id                  = tencentcloud_vpc.foo.id
 	subnet_id               = tencentcloud_subnet.foo.id
-	security_groups         = ["sg-nltpbqg1"]
+	security_groups         = ["` + defaultSecurityGroup + `"]
 	project_id              = 0
 	memory                  = 4
 	storage                 = 100

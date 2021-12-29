@@ -579,7 +579,7 @@ resource "tencentcloud_cos_bucket" "bucket_website" {
 func testAccBucket_MAZ(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_maz" {
-  bucket   = "tf-bucket-website-%s"
+  bucket   = "tf-bucket-maz-%s"
   acl      = "public-read"
   multi_az = true
 }
@@ -589,7 +589,7 @@ resource "tencentcloud_cos_bucket" "bucket_maz" {
 func testAccBucket_originPull(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-origin-%s"
   acl    = "private"
   origin_pull_rules {
     priority = 1
@@ -611,7 +611,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 func testAccBucket_originPullUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-origin-%s"
   acl    = "private"
   origin_pull_rules {
     priority = 1
@@ -633,7 +633,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 func testAccBucket_originDomain(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-domain-%s"
   acl    = "private"
   origin_domain_rules {
 	status = "ENABLED"
@@ -646,7 +646,7 @@ resource "tencentcloud_cos_bucket" "with_domain" {
 func testAccBucket_originDomainUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-domain-%s"
   acl    = "private"
   origin_domain_rules {
 	status = "DISABLED"

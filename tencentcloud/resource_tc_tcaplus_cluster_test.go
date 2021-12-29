@@ -117,7 +117,7 @@ func testAccCheckTcaplusClusterExists(n string) resource.TestCheckFunc {
 
 const testAccTcaplusClusterBaic = `
 variable "availability_zone" {
-default = "ap-shanghai-2"
+default = "ap-guangzhou-3"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
