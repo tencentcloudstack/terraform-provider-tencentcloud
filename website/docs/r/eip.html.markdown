@@ -30,7 +30,7 @@ The following arguments are supported:
 * `internet_service_provider` - (Optional, ForceNew) Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.
 * `name` - (Optional) The name of eip.
 * `tags` - (Optional) The tags of eip.
-* `type` - (Optional, ForceNew) The type of eip. Valid value:  `EIP` and `AnycastEIP`. Default is `EIP`.
+* `type` - (Optional, ForceNew) The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.
 
 ## Attributes Reference
 
