@@ -39,8 +39,8 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_logset_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_topic_id", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "triggers.#", "0"),
@@ -122,8 +122,8 @@ func TestAccTencentCloudScfFunction_cos(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_logset_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_topic_id", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
 					resource.TestCheckNoResourceAttr("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cos_bucket_name"),
@@ -186,8 +186,8 @@ func TestAccTencentCloudScfFunction_role(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", "scf-role-test"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_logset_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_topic_id", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "modify_time"),
@@ -246,8 +246,8 @@ func TestAccTencentCloudScfFunction_trigger(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_logset_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_topic_id", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "triggers.#", "2"),
@@ -316,8 +316,8 @@ func TestAccTencentCloudScfFunction_customNamespace(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "ci-test-scf"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_logset_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cls_topic_id", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "triggers.#", "0"),
@@ -434,6 +434,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 
@@ -449,6 +450,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "second.do_it_second"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   description = "test"
   mem_size    = 1536
@@ -487,6 +489,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "ci-test-function-cos"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   cos_bucket_name   = tencentcloud_cos_bucket.foo.id
   cos_object_name   = tencentcloud_cos_bucket_object.myobject.key
@@ -524,6 +527,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   cos_bucket_name   = tencentcloud_cos_bucket.bar.id
   cos_object_name   = tencentcloud_cos_bucket_object.bar.key
@@ -559,6 +563,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler = "first.do_it_first"
   runtime = "Python3.6"
   role    = tencentcloud_cam_role.foo.name
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -599,6 +604,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler = "first.do_it_first"
   runtime = "Python3.6"
   role    = tencentcloud_cam_role.bar.name
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -614,6 +620,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 
@@ -647,6 +654,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 
@@ -676,6 +684,7 @@ resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 }

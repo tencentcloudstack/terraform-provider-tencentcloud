@@ -215,7 +215,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether public net config enabled.",
+				Description: "Indicates whether public net config enabled. NOTE: only `vpc_id` specified can disable public net config.",
 			},
 			"enable_eip_config": {
 				Type:        schema.TypeBool,
