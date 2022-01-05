@@ -5,6 +5,7 @@ name: SYNC_CODE
 on:
   push:
     branches: [ master ]
+    tags: v*
 
 jobs:
   build:
