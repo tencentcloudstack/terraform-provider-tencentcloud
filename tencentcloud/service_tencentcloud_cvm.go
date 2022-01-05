@@ -1027,3 +1027,30 @@ func (me *CvmService) ModifyRenewParam(ctx context.Context, instanceId string, r
 
 	return nil
 }
+
+func (me *CvmService) ModifyInstanceChargeType(ctx context.Context, instanceId string, chargeType string, period int,
+	renewFlag string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyInstancesChargeTypeRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.InstanceChargeType = &chargeType
+	request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
+	if period != -1 {
+		request.InstanceChargePrepaid.Period = helper.IntInt64(period)
+	}
+	if renewFlag != "" {
+		request.InstanceChargePrepaid.RenewFlag = &renewFlag
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyInstancesChargeType(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
