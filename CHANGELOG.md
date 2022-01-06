@@ -1,3 +1,31 @@
+## 1.60.26 (January 6, 2022)
+
+COMMON:
+
+* fix testcases
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_vpc` support vpc assistant CIDR
+* resource `tencentcloud_eip` support create HighQualityEIP
+* resource `tencentcloud_instance` support charge type update
+
+## 1.60.25 (December 27, 2021)
+
+BUGFIXES:
+
+* Resource `tencentcloud_instance` rollback instance_charge_type_prepaid_period
+
+## 1.60.24 (December 27, 2021)
+
+COMMON:
+
+* add testcases basic required resource
+
+BUGFIXES:
+
+* fix service mongodb status query 
+
 ## 1.60.23 (December 24, 2021)
 
 ENHANCEMENTS:
