@@ -25,7 +25,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: MR INFO
         run: |
-          env
-          echo "============"
-          cd $GITHUB_EVENT_PATH
-          ls
+          git fetch origin main
+          git branch | cat
+          git diff --name-status origin/main | awk '{print $2}'
