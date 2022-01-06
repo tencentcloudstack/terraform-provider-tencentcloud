@@ -969,7 +969,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("instance_charge_type") {
 		old, chargeType := d.GetChange("instance_charge_type")
-		if old.(string) != CVM_CHARGE_TYPE_POSTPAID || chargeType.(string) != CVM_CHARGE_TYPE_PREPAID  {
+		if old.(string) != CVM_CHARGE_TYPE_POSTPAID || chargeType.(string) != CVM_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("Only support change chargeType from POSTPAID_BY_HOUR to PREPAID.")
 		}
 		var (
