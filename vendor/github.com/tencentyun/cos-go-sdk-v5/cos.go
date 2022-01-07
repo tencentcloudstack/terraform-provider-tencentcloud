@@ -13,6 +13,7 @@ import (
 	"reflect"
 	"strings"
 	"text/template"
+	"time"
 
 	"strconv"
 
@@ -22,7 +23,7 @@ import (
 
 const (
 	// Version current go sdk version
-	Version               = "0.7.31"
+	Version               = "0.7.33"
 	userAgent             = "cos-go-sdk-v5/" + Version
 	contentTypeXML        = "application/xml"
 	defaultServiceBaseURL = "http://service.cos.myqcloud.com"
@@ -44,6 +45,8 @@ type BaseURL struct {
 	BatchURL *url.URL
 	// 访问 CI 的基础 URL
 	CIURL *url.URL
+	// 访问 Fetch Task 的基础 URL
+	FetchURL *url.URL
 }
 
 // NewBucketURL 生成 BaseURL 所需的 BucketURL
@@ -51,12 +54,18 @@ type BaseURL struct {
 //   bucketName: bucket名称, bucket的命名规则为{name}-{appid} ，此处填写的存储桶名称必须为此格式
 //   Region: 区域代码: ap-beijing-1,ap-beijing,ap-shanghai,ap-guangzhou...
 //   secure: 是否使用 https
-func NewBucketURL(bucketName, region string, secure bool) *url.URL {
+func NewBucketURL(bucketName, region string, secure bool) (*url.URL, error) {
 	schema := "https"
 	if !secure {
 		schema = "http"
 	}
 
+	if region == "" {
+		return nil, fmt.Errorf("region[%v] is invalid", region)
+	}
+	if bucketName == "" || !strings.ContainsAny(bucketName, "-") {
+		return nil, fmt.Errorf("bucketName[%v] is invalid", bucketName)
+	}
 	w := bytes.NewBuffer(nil)
 	bucketURLTemplate.Execute(w, struct {
 		Schema     string
@@ -67,12 +76,18 @@ func NewBucketURL(bucketName, region string, secure bool) *url.URL {
 	})
 
 	u, _ := url.Parse(w.String())
-	return u
+	return u, nil
 }
 
+type RetryOptions struct {
+	Count      int
+	Interval   time.Duration
+	StatusCode []int
+}
 type Config struct {
 	EnableCRC        bool
 	RequestBodyClose bool
+	RetryOpt         RetryOptions
 }
 
 // Client is a client manages communication with the COS API.
@@ -110,6 +125,7 @@ func NewClient(uri *BaseURL, httpClient *http.Client) *Client {
 		baseURL.ServiceURL = uri.ServiceURL
 		baseURL.BatchURL = uri.BatchURL
 		baseURL.CIURL = uri.CIURL
+		baseURL.FetchURL = uri.FetchURL
 	}
 	if baseURL.ServiceURL == nil {
 		baseURL.ServiceURL, _ = url.Parse(defaultServiceBaseURL)
@@ -122,6 +138,10 @@ func NewClient(uri *BaseURL, httpClient *http.Client) *Client {
 		Conf: &Config{
 			EnableCRC:        true,
 			RequestBodyClose: false,
+			RetryOpt: RetryOptions{
+				Count:    3,
+				Interval: time.Duration(0),
+			},
 		},
 	}
 	c.common.client = c
@@ -306,14 +326,31 @@ func (c *Client) doRetry(ctx context.Context, opt *sendOptions) (resp *Response,
 			return
 		}
 	}
+	count := 1
+	if count < c.Conf.RetryOpt.Count {
+		count = c.Conf.RetryOpt.Count
+	}
 	nr := 0
-	for nr < 3 {
+	interval := c.Conf.RetryOpt.Interval
+	for nr < count {
 		resp, err = c.send(ctx, opt)
 		if err != nil {
 			if resp != nil && resp.StatusCode <= 499 {
-				break
+				dobreak := true
+				for _, v := range c.Conf.RetryOpt.StatusCode {
+					if resp.StatusCode == v {
+						dobreak = false
+						break
+					}
+				}
+				if dobreak {
+					break
+				}
 			}
 			nr++
+			if interval > 0 && nr < count {
+				time.Sleep(interval)
+			}
 			continue
 		}
 		break

@@ -375,6 +375,51 @@ func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCosBucket_replication(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBucketReplication(appid, ownerUin, ownerUin),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", fmt.Sprintf("qcs::cam::uin/%s:uin/%s", ownerUin, ownerUin)),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.id", "test-rep1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.status", "Enabled"),
+				),
+			},
+			{
+				Config: testAccBucketReplicationUpdate(appid, ownerUin, ownerUin),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.status", "Disabled"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.prefix", "dist"),
+				),
+			},
+			{
+				Config: testAccBucketReplicationRemove(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", ""),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "0"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.with_replication",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl", "replica_role"},
+			},
+		},
+	})
+}
+
 func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -657,4 +702,65 @@ resource "tencentcloud_cos_bucket" "with_domain" {
   }
 }
 `, appid)
+}
+
+func testAccBucketReplication(appid, ownerUin, subUin string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket = "tf-replica-foo-%s"
+  acl    = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket = "tf-bucket-replica-%s"
+  acl    = "private"
+  versioning_enable = true
+  replica_role = "qcs::cam::uin/%s:uin/%s"
+  replica_rules {
+	id = "test-rep1"
+    status = "Enabled"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+`, appid, appid, ownerUin, subUin, defaultRegion)
+}
+
+func testAccBucketReplicationUpdate(appid, ownerUin, subUin string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket = "tf-replica-foo-%s"
+  acl    = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket = "tf-bucket-replica-%s"
+  acl    = "private"
+  versioning_enable = true
+  replica_role = "qcs::cam::uin/%s:uin/%s"
+  replica_rules {
+	id = "test-rep1"
+    status = "Disabled"
+    prefix = "dist"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+`, appid, appid, ownerUin, subUin, defaultRegion)
+}
+
+func testAccBucketReplicationRemove(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket = "tf-replica-foo-%s"
+  acl    = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket = "tf-bucket-replica-%s"
+  acl    = "private"
+  versioning_enable = true
+}
+`, appid, appid)
 }

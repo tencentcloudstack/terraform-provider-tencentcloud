@@ -10,6 +10,7 @@ the following must be changed to your resource id.
 */
 
 var appid string = os.Getenv("TENCENTCLOUD_APPID")
+var ownerUin string = os.Getenv("TENCENTCLOUD_OWNER_UIN")
 
 const (
 	defaultRegion      = "ap-guangzhou"

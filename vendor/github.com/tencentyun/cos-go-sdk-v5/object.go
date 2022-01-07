@@ -1,6 +1,7 @@
 package cos
 
 import (
+	"bytes"
 	"context"
 	"crypto/md5"
 	"encoding/hex"
@@ -114,23 +115,34 @@ func (s *ObjectService) GetObjectURL(name string) *url.URL {
 }
 
 type PresignedURLOptions struct {
-	Query  *url.Values  `xml:"-" url:"-" header:"-"`
-	Header *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+	Query      *url.Values  `xml:"-" url:"-" header:"-"`
+	Header     *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+	SignMerged bool         `xml:"-" url:"-" header:"-"`
 }
 
 // GetPresignedURL get the object presigned to down or upload file by url
-func (s *ObjectService) GetPresignedURL(ctx context.Context, httpMethod, name, ak, sk string, expired time.Duration, opt interface{}) (*url.URL, error) {
+// 预签名函数，signHost: 默认签入Header Host, 您也可以选择不签入Header Host，但可能导致请求失败或安全漏洞
+func (s *ObjectService) GetPresignedURL(ctx context.Context, httpMethod, name, ak, sk string, expired time.Duration, opt interface{}, signHost ...bool) (*url.URL, error) {
+	// 兼容 name 以 / 开头的情况
+	if strings.HasPrefix(name, "/") {
+		name = encodeURIComponent("/") + encodeURIComponent(name[1:], []byte{'/'})
+	} else {
+		name = encodeURIComponent(name, []byte{'/'})
+	}
+
 	sendOpt := sendOptions{
 		baseURL:   s.client.BaseURL.BucketURL,
-		uri:       "/" + encodeURIComponent(name),
+		uri:       "/" + name,
 		method:    httpMethod,
 		optQuery:  opt,
 		optHeader: opt,
 	}
 	if popt, ok := opt.(*PresignedURLOptions); ok {
-		qs := popt.Query.Encode()
-		if qs != "" {
-			sendOpt.uri = fmt.Sprintf("%s?%s", sendOpt.uri, qs)
+		if popt != nil && popt.Query != nil {
+			qs := popt.Query.Encode()
+			if qs != "" {
+				sendOpt.uri = fmt.Sprintf("%s?%s", sendOpt.uri, qs)
+			}
 		}
 	}
 	req, err := s.client.newRequest(ctx, sendOpt.baseURL, sendOpt.uri, sendOpt.method, sendOpt.body, sendOpt.optQuery, sendOpt.optHeader)
@@ -147,7 +159,24 @@ func (s *ObjectService) GetPresignedURL(ctx context.Context, httpMethod, name, a
 	if authTime == nil {
 		authTime = NewAuthTime(expired)
 	}
-	authorization := newAuthorization(ak, sk, req, authTime)
+	signedHost := true
+	if len(signHost) > 0 {
+		signedHost = signHost[0]
+	}
+	authorization := newAuthorization(ak, sk, req, authTime, signedHost)
+	if opt != nil {
+		if opt, ok := opt.(*PresignedURLOptions); ok {
+			if opt.SignMerged {
+				sign := encodeURIComponent(authorization)
+				if req.URL.RawQuery == "" {
+					req.URL.RawQuery = fmt.Sprintf("sign=%s", sign)
+				} else {
+					req.URL.RawQuery = fmt.Sprintf("%s&sign=%s", req.URL.RawQuery, sign)
+				}
+				return req.URL, nil
+			}
+		}
+	}
 	sign := encodeURIComponent(authorization, []byte{'&', '='})
 
 	if req.URL.RawQuery == "" {
@@ -429,6 +458,17 @@ func (s *ObjectService) Head(ctx context.Context, name string, opt *ObjectHeadOp
 	}
 
 	return resp, err
+}
+
+func (s *ObjectService) IsExist(ctx context.Context, name string, id ...string) (bool, error) {
+	_, err := s.Head(ctx, name, nil, id...)
+	if err == nil {
+		return true, nil
+	}
+	if IsNotFoundError(err) {
+		return false, nil
+	}
+	return false, err
 }
 
 // ObjectOptionsOptions is the option of object options
@@ -1427,4 +1467,89 @@ func (s *ObjectService) DeleteTagging(ctx context.Context, name string, id ...st
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
+}
+
+type PutFetchTaskOptions struct {
+	Url                string       `json:"Url,omitempty" header:"-" xml:"-"`
+	Key                string       `json:"Key,omitempty" header:"-" xml:"-"`
+	MD5                string       `json:"MD5,omitempty" header:"-" xml:"-"`
+	OnKeyExist         string       `json:"OnKeyExist,omitempty" header:"-" xml:"-"`
+	IgnoreSameKey      bool         `json:"IgnoreSameKey,omitempty" header:"-" xml:"-"`
+	SuccessCallbackUrl string       `json:"SuccessCallbackUrl,omitempty" header:"-" xml:"-"`
+	FailureCallbackUrl string       `json:"FailureCallbackUrl,omitempty" header:"-" xml:"-"`
+	XOptionHeader      *http.Header `json:"-", xml:"-" header:"-,omitempty"`
+}
+
+type PutFetchTaskResult struct {
+	Code      int    `json:"code,omitempty"`
+	Message   string `json:"message,omitempty"`
+	RequestId string `json:"request_id,omitempty"`
+	Data      struct {
+		TaskId string `json:"taskId,omitempty"`
+	} `json:"Data,omitempty"`
+}
+
+type GetFetchTaskResult struct {
+	Code      int    `json:"code,omitempty"`
+	Message   string `json:"message,omitempty"`
+	RequestId string `json:"request_id,omitempty"`
+	Data      struct {
+		Code    string `json:"code,omitempty"`
+		Message string `json:"msg,omitempty"`
+		Percent int    `json:"percent,omitempty"`
+		Status  string `json:"status,omitempty"`
+	} `json:"data,omitempty"`
+}
+
+type innerFetchTaskHeader struct {
+	XOptionHeader *http.Header `json:"-", xml:"-" header:"-,omitempty"`
+}
+
+func (s *ObjectService) PutFetchTask(ctx context.Context, bucket string, opt *PutFetchTaskOptions) (*PutFetchTaskResult, *Response, error) {
+	var buf bytes.Buffer
+	var res PutFetchTaskResult
+	if opt == nil {
+		opt = &PutFetchTaskOptions{}
+	}
+	header := innerFetchTaskHeader{
+		XOptionHeader: &http.Header{},
+	}
+	if opt.XOptionHeader != nil {
+		header.XOptionHeader = cloneHeader(opt.XOptionHeader)
+	}
+	header.XOptionHeader.Set("Content-Type", "application/json")
+	bs, err := json.Marshal(opt)
+	if err != nil {
+		return nil, nil, err
+	}
+	reader := bytes.NewBuffer(bs)
+	sendOpt := &sendOptions{
+		baseURL:   s.client.BaseURL.FetchURL,
+		uri:       fmt.Sprintf("/%s/", bucket),
+		method:    http.MethodPost,
+		optHeader: &header,
+		body:      reader,
+		result:    &buf,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	if buf.Len() > 0 {
+		err = json.Unmarshal(buf.Bytes(), &res)
+	}
+	return &res, resp, err
+}
+
+func (s *ObjectService) GetFetchTask(ctx context.Context, bucket string, taskid string) (*GetFetchTaskResult, *Response, error) {
+	var buf bytes.Buffer
+	var res GetFetchTaskResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.FetchURL,
+		uri:     fmt.Sprintf("/%s/%s", bucket, encodeURIComponent(taskid)),
+		method:  http.MethodGet,
+		result:  &buf,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	if buf.Len() > 0 {
+		err = json.Unmarshal(buf.Bytes(), &res)
+	}
+	return &res, resp, err
 }
