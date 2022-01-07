@@ -133,6 +133,28 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
+Using replication
+```hcl
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket = "tf-replica-foo-1234567890"
+  acl    = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket = "tf-bucket-replica-1234567890"
+  acl    = "private"
+  versioning_enable = true
+  replica_role = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_rules {
+    id = "test-rep1"
+    status = "Enabled"
+    prefix = "dist"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+```
+
 Setting log status
 
 ```hcl
@@ -389,7 +411,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				RequiredWith: []string{"replica_rules", "versioning_enable"},
-				Description:  "Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>.`. NOTE: only `versioning_enable` is true can configure this argument.",
+				Description:  "Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.",
 			},
 			"replica_rules": {
 				Type:         schema.TypeList,

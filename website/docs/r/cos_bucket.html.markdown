@@ -145,6 +145,29 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
+Using replication
+
+```hcl
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket            = "tf-replica-foo-1234567890"
+  acl               = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket            = "tf-bucket-replica-1234567890"
+  acl               = "private"
+  versioning_enable = true
+  replica_role      = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_rules {
+    id                 = "test-rep1"
+    status             = "Enabled"
+    prefix             = "dist"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+```
+
 Setting log status
 
 ```hcl
@@ -211,7 +234,7 @@ The following arguments are supported:
 * `multi_az` - (Optional, ForceNew) Indicates whether to create a bucket of multi available zone.
 * `origin_domain_rules` - (Optional) Bucket Origin Domain settings.
 * `origin_pull_rules` - (Optional) Bucket Origin-Pull settings.
-* `replica_role` - (Optional) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>.`. NOTE: only `versioning_enable` is true can configure this argument.
+* `replica_role` - (Optional) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
 * `replica_rules` - (Optional) List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.
 * `tags` - (Optional) The tags of a bucket.
 * `versioning_enable` - (Optional) Enable bucket versioning.
