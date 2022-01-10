@@ -15,6 +15,8 @@ terraform-provider-qcloud
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfstate.lock.info
+terraform_private.txt
+terraform_public.txt
 dist/
 gendoc/gendoc
 .vscode/
