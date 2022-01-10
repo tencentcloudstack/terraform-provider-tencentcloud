@@ -26,5 +26,4 @@ jobs:
       - name: MR INFO
         run: |
           git fetch origin master
-          git branch | cat
-          git diff --name-status origin/master | awk '{print $2}'
+          sh .githooks/pre-commit
