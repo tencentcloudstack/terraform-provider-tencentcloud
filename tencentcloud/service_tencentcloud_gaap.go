@@ -775,10 +775,10 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 	deleteRequest := gaap.NewDestroyProxiesRequest()
 	deleteRequest.ProxyIds = []*string{&id}
 	deleteRequest.Force = helper.IntInt64(0)
-	deleteRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
+		deleteRequest.ClientToken = helper.String(helper.BuildToken())
 
 		response, err := client.DestroyProxies(deleteRequest)
 		if err != nil {
