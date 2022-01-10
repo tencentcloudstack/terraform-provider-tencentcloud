@@ -6,17 +6,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-make test-build
-if [ $? -ne 0 ]; then
-    printf "COMMIT FAILED\n"
-    exit 1
-fi
-
-make lint
-if [ $? -ne 0 ]; then
-    printf "COMMIT FAILED\n"
-    exit 1
-fi
+#make test-build
+#if [ $? -ne 0 ]; then
+#    printf "COMMIT FAILED\n"
+#    exit 1
+#fi
+#
+#make lint
+#if [ $? -ne 0 ]; then
+#    printf "COMMIT FAILED\n"
+#    exit 1
+#fi
 
 printf "==> Generating docs for tencentcloud provider...\n"
 doc=`make doc 2>&1`
@@ -26,11 +26,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-make website-lint
-if [ $? -ne 0 ]; then
-    printf "COMMIT FAILED\n"
-    exit 1
-fi
+#make website-lint
+#if [ $? -ne 0 ]; then
+#    printf "COMMIT FAILED\n"
+#    exit 1
+#fi
 
 diff=`git diff --name-only website/docs/`
 if [ "$diff" != "" ]; then
@@ -38,6 +38,21 @@ if [ "$diff" != "" ]; then
     printf "COMMIT FAILED\n"
     exit 1
 fi
+
+# go test check
+delta_test_files=`git diff --name-status origin/master | egrep "_test\.go$" | awk '{print $2}'`
+for delta_test_file in ${delta_test_files}; do
+    test_casts=`egrep "func TestAcc.+\(" ./tencentcloud/data_source_tc_gaap_proxies_test.go | awk -F "(" '{print $1}' | awk '{print $2}'`
+    for test_cast in ${test_casts}; do
+        go_test_cmd="go test -v -run ${test_cast} -timeout=0 ./tencentcloud/"
+        echo ${go_test_cmd}
+        $go_test_cmd
+        if [ $? -ne 0 ]; then
+            printf "[GO TEST FILED] ${go_test_cmd}"
+            exit 1
+        fi
+    done
+done
 
 printf "COMMIT READY\n"
 exit 0
