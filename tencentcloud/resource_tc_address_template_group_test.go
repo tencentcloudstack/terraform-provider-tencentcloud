@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+//test pre-commit
 func TestAccTencentCloudAddressTemplateGroup_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
