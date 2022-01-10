@@ -33,5 +33,4 @@ jobs:
           export TENCENTCLOUD_SECRET_ID=${{ secrets.TENCENTCLOUD_SECRET_ID }}
           export TENCENTCLOUD_APPID=${{ secrets.TENCENTCLOUD_APPID }}
           export TENCENTCLOUD_OWNER_UIN=${{ secrets.TENCENTCLOUD_OWNER_UIN }}
-          env
-          git diff --name-status origin/master | egrep "_test\.go$" | awk '{print $2}'
+          sh .githooks/pre-commit
