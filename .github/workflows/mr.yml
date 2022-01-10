@@ -26,4 +26,12 @@ jobs:
       - name: MR INFO
         run: |
           git fetch origin master
+          
+          export TF_ACC=true
+          export TENCENTCLOUD_REGION=ap-guangzhou
+          export TENCENTCLOUD_SECRET_KEY=${{ secrets.TENCENTCLOUD_SECRET_KEY }}
+          export TENCENTCLOUD_SECRET_ID=${{ secrets.TENCENTCLOUD_SECRET_ID }}
+          export TENCENTCLOUD_APPID=${{ secrets.TENCENTCLOUD_APPID }}
+          export TENCENTCLOUD_OWNER_UIN=${{ secrets.TENCENTCLOUD_OWNER_UIN }}
+          env
           sh .githooks/pre-commit
