@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: MR-CHECK
+name: MR_CHECK
 
 # Controls when the workflow will run
 on:
@@ -25,6 +25,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: MR INFO
         run: |
-          git fetch origin main
+          git fetch origin master
           git branch | cat
-          git diff --name-status origin/main | awk '{print $2}'
+          git diff --name-status origin/master | awk '{print $2}'
