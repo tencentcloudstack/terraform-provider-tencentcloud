@@ -21,8 +21,8 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "available_zone", "ap-guangzhou-4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "vpc_id", "vpc-c5giv773"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-3hcc9h8e"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "vpc_id", "vpc-4owdpnwr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-qpxez62e"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_type", "MYSQL"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_version", "5.7"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "storage_limit", "1000"),
@@ -32,7 +32,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_weekdays.#", "7"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_cpu_core", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_memory_size", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test"),
+					//resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "force_delete", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "rw_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "ro_group_sg.#", "1"),
@@ -64,7 +64,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_weekdays.#", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_cpu_core", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_memory_size", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test-update"),
+					//resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "rw_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "ro_group_sg.#", "1"),
 				),
@@ -98,8 +98,8 @@ func TestAccTencentCloudCynosdbClusterResourcePrePaid(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.bar"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "available_zone", "ap-guangzhou-4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "vpc_id", "vpc-c5giv773"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "subnet_id", "subnet-3hcc9h8e"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "vpc_id", "vpc-4owdpnwr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "subnet_id", "subnet-qpxez62e"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_type", "MYSQL"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_version", "5.7"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "storage_limit", "1000"),
@@ -196,11 +196,11 @@ variable "availability_zone" {
 }
 
 variable "my_vpc" {
-  default = "vpc-c5giv773"
+  default = "vpc-4owdpnwr"
 }
 
 variable "my_subnet" {
-  default = "subnet-3hcc9h8e"
+  default = "subnet-qpxez62e"
 }
 `
 
@@ -229,9 +229,9 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   instance_cpu_core    = 1
   instance_memory_size = 2
 
-  tags = {
-    test = "test"
-  }
+#  tags = {
+#    test = "test"
+#  }
 
   force_delete = true
 
@@ -268,9 +268,9 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   instance_cpu_core    = 2
   instance_memory_size = 4
 
-  tags = {
-    test = "test-update"
-  }
+#  tags = {
+#    test = "test-update"
+#  }
 
   force_delete = true
 

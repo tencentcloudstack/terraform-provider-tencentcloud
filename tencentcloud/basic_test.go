@@ -36,8 +36,8 @@ const (
 
 	defaultGaapProxyId = "link-9ck3lzq7"
 
-	defaultSecurityGroup  = "sg-275zwjwh"
-	defaultSecurityGroup2 = "sg-4xsjqjrj"
+	defaultSecurityGroup  = "sg-ijato2x1"
+	defaultSecurityGroup2 = "sg-51rgzop1"
 
 	defaultProjectId = "1250480"
 )
