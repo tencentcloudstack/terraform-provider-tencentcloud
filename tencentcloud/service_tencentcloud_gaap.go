@@ -336,7 +336,7 @@ func (me *GaapService) CreateProxy(
 		})
 	}
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(createRequest.GetAction())
 
 		response, err := client.CreateProxy(createRequest)
@@ -774,7 +774,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 
 	deleteRequest := gaap.NewDestroyProxiesRequest()
 	deleteRequest.ProxyIds = []*string{&id}
-	deleteRequest.Force = helper.IntInt64(0)
+	deleteRequest.Force = helper.IntInt64(1)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
