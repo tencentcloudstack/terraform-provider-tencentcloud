@@ -1,3 +1,21 @@
+## 1.60.27 (January 11, 2022)
+
+COMMON:
+* add `terraform {}` block to provider doc example
+* add `pre-commit` status check
+
+BUGFIXES:
+
+* resource `tencentcloud_scf_function` add COS trigger `bucketUrl` field
+* resource `tencentcloud_eip` fix NAT gateway detach error
+* service `tencentcloud_gaap` destroy error
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_vpc` add assistant CIDR
+* resource `tencentcloud_cos_bucket` support bucket replication
+
+
 ## 1.60.26 (January 6, 2022)
 
 COMMON:
