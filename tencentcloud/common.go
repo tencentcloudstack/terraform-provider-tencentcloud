@@ -74,7 +74,10 @@ func getEnvDefault(key string, defVal int) int {
 	if !ex {
 		return defVal
 	}
-	int, _ := strconv.Atoi(val)
+	int, err := strconv.Atoi(val)
+	if err != nil {
+		panic("TENCENTCLOUD_READ_RETRY_TIMEOUT or TENCENTCLOUD_WRITE_RETRY_TIMEOUT must be int.")
+	}
 	return int
 }
 
