@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/user"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -27,14 +28,23 @@ type contextLogId string
 
 const logIdKey = contextLogId("logId")
 
+const (
+	PROVIDER_READ_RETRY_TIMEOUT  = "TENCENTCLOUD_READ_RETRY_TIMEOUT"
+	PROVIDER_WRITE_RETRY_TIMEOUT = "TENCENTCLOUD_WRITE_RETRY_TIMEOUT"
+)
+
 var logFirstTime = ""
 var logAtomicId int64 = 0
 
 // readRetryTimeout is read retry timeout
-const readRetryTimeout = 3 * time.Minute
+//const readRetryTimeout = 3 * time.Minute
+var readRetry = getEnvDefault(PROVIDER_READ_RETRY_TIMEOUT, 3)
+var readRetryTimeout = time.Duration(readRetry) * time.Minute
 
 // writeRetryTimeout is write retry timeout
-const writeRetryTimeout = 5 * time.Minute
+//const writeRetryTimeout = 5 * time.Minute
+var writeRetry = getEnvDefault(PROVIDER_WRITE_RETRY_TIMEOUT, 5)
+var writeRetryTimeout = time.Duration(writeRetry) * time.Minute
 
 // InternalError common internalError, do not add in retryableErrorCode,
 // because when some product return this error, retry won't fix anything.
@@ -57,6 +67,18 @@ var retryableErrorCode = []string{
 
 func init() {
 	logFirstTime = fmt.Sprintf("%d", time.Now().UnixNano()/int64(time.Millisecond))
+}
+
+func getEnvDefault(key string, defVal int) int {
+	val, ex := os.LookupEnv(key)
+	if !ex {
+		return defVal
+	}
+	int, err := strconv.Atoi(val)
+	if err != nil {
+		panic("TENCENTCLOUD_READ_RETRY_TIMEOUT or TENCENTCLOUD_WRITE_RETRY_TIMEOUT must be int.")
+	}
+	return int
 }
 
 // getLogId get logId for trace, return a new logId if ctx is nil
