@@ -320,8 +320,8 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := vpcService.DeleteEip(ctx, eipId)
-		if err != nil {
-			return retryError(errRet)
+		if errRet != nil {
+			return retryError(errRet, "DesOperation.MutexTaskRunning")
 		}
 		return nil
 	})

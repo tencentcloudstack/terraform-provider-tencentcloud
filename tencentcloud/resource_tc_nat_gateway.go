@@ -240,6 +240,8 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_nat_gateway.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	d.Partial(true)
 	natGatewayId := d.Id()
@@ -343,10 +345,8 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 
 				if len(unassignedRequest.PublicIpAddresses) > 0 {
 					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-						_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisassociateNatGatewayAddress(unassignedRequest)
+						e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 						if e != nil {
-							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-								logId, unassignedRequest.GetAction(), unassignedRequest.ToJsonString(), e.Error())
 							return retryError(e)
 						}
 						return nil
@@ -403,10 +403,8 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 				unassignedRequest.NatGatewayId = &natGatewayId
 				unassignedRequest.PublicIpAddresses = []*string{&backUpOldIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisassociateNatGatewayAddress(unassignedRequest)
+					e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 					if e != nil {
-						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-							logId, unassignedRequest.GetAction(), unassignedRequest.ToJsonString(), e.Error())
 						return retryError(e)
 					}
 					return nil
@@ -440,7 +438,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")

@@ -145,9 +145,6 @@ data "tencentcloud_vpc_instances" "foo" {
 # Create EIP 
 resource "tencentcloud_eip" "eip_dev_dnat" {
 	name = "terraform_test"
-  }
-resource "tencentcloud_eip" "eip_test_dnat" {
-	name = "terraform_test"
 }
 resource "tencentcloud_eip" "new_eip" {
   name = "terraform_test"

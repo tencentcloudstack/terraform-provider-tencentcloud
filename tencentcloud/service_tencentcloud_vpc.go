@@ -2025,6 +2025,91 @@ func (me *VpcService) AttachEip(ctx context.Context, eipId, instanceId string) e
 	return nil
 }
 
+func (me *VpcService) DescribeNatGatewayById(ctx context.Context, natGateWayId string) (natGateWay *vpc.NatGateway, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeNatGatewaysRequest()
+	request.NatGatewayIds = []*string{&natGateWayId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeNatGateways(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NatGatewaySet) > 0 {
+		natGateWay = response.Response.NatGatewaySet[0]
+	}
+
+	return
+}
+
+func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request *vpc.DisassociateNatGatewayAddressRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	// Check if Nat Gateway Ip still associate
+	gateway, err := me.DescribeNatGatewayById(ctx, *request.NatGatewayId)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if gateway == nil || len(gateway.PublicIpAddressSet) == 0 {
+		return
+	}
+
+	var gatewayAddresses []string
+	var candidates []*string
+
+	for i := range gateway.PublicIpAddressSet {
+		addr := gateway.PublicIpAddressSet[i].PublicIpAddress
+		gatewayAddresses = append(gatewayAddresses, *addr)
+	}
+
+	for i := range request.PublicIpAddresses {
+		addr := request.PublicIpAddresses[i]
+		if helper.StringsContain(gatewayAddresses, *addr) {
+			candidates = append(candidates, addr)
+		}
+	}
+
+	if len(candidates) == 0 {
+		return nil
+	}
+
+	request.PublicIpAddresses = candidates
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DisassociateNatGatewayAddress(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 	eipUnattachLocker.Lock()
 	defer eipUnattachLocker.Unlock()
@@ -2036,6 +2121,32 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 	}
 	if eip == nil || *eip.AddressStatus == EIP_STATUS_UNBIND {
 		return nil
+	}
+
+	// DisassociateAddress Doesn't support Disassociate NAT Address
+	if strings.HasPrefix(*eip.InstanceId, "nat-") {
+		request := vpc.NewDisassociateNatGatewayAddressRequest()
+		request.NatGatewayId = eip.InstanceId
+		request.PublicIpAddresses = []*string{eip.AddressIp}
+		err := me.DisassociateNatGatewayAddress(ctx, request)
+		if err != nil {
+			return err
+		}
+
+		outErr := resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+			eip, err := me.DescribeEipById(ctx, eipId)
+			if err != nil {
+				return retryError(err)
+			}
+			if eip != nil && *eip.AddressStatus != EIP_STATUS_UNBIND {
+				return resource.RetryableError(fmt.Errorf("eip is still %s", EIP_STATUS_UNBIND))
+			}
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
 	}
 
 	request := vpc.NewDisassociateAddressRequest()
