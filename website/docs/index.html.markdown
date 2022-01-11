@@ -18,6 +18,14 @@ Use the navigation on the left to read about the available resources.
 ## Example Usage
 
 ```hcl
+terraform {
+  required_providers {
+    tencentcloud = {
+      source = "tencentcloudstack/tencentcloud"
+    }
+  }
+}
+
 # Configure the TencentCloud Provider
 provider "tencentcloud" {
   secret_id  = "my-secret-id"
