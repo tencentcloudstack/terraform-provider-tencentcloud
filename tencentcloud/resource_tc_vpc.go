@@ -98,6 +98,7 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "List of Assistant CIDR.",
+				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
