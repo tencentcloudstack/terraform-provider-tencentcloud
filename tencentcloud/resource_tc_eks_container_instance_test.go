@@ -20,7 +20,7 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 			{
 				Config: testAccEksCi,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEipExists("tencentcloud_eks_container_instance.eci"),
+					testAccCheckTencentCloudDataSourceID("tencentcloud_eks_container_instance.eci"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "name", "foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu", "foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "memory", "foo"),
