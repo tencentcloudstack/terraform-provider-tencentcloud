@@ -162,3 +162,6 @@ endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
+
+diff-test:
+	./scripts/diff-test.sh
