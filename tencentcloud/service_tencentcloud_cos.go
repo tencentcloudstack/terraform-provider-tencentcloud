@@ -1084,3 +1084,91 @@ func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket strin
 
 	return nil
 }
+
+func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (result *cos.GetBucketReplicationResult, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+				logId, "GetBucketReplication", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("GetBucketReplication")
+	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetBucketReplication(ctx)
+
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetBucketReplication", response.StatusCode)
+		return
+	}
+
+	resp, _ := json.Marshal(response)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
+		logId, "GetBucketReplication", resp)
+
+	return
+}
+
+func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, role string, rules []cos.BucketReplicationRule) (errRet error) {
+	logId := getLogId(ctx)
+
+	option := &cos.PutBucketReplicationOptions{
+		Role: role,
+		Rule: rules,
+	}
+
+	request, _ := xml.Marshal(option)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request: %s reason[%s]\n",
+				logId, "PutBucketReplication", request, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("PutBucketReplication")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutBucketReplication(ctx, option)
+
+	resp, _ := json.Marshal(response)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
+		logId, "PutBucketReplication", resp)
+
+	return
+}
+
+func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+				logId, "DeleteBucketReplication", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DeleteBucketReplication")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteBucketReplication(ctx)
+
+	resp, _ := json.Marshal(response)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
+		logId, "DeleteBucketReplication", resp)
+
+	return
+}

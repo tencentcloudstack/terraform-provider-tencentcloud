@@ -145,6 +145,29 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
+Using replication
+
+```hcl
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket            = "tf-replica-foo-1234567890"
+  acl               = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket            = "tf-bucket-replica-1234567890"
+  acl               = "private"
+  versioning_enable = true
+  replica_role      = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_rules {
+    id                 = "test-rep1"
+    status             = "Enabled"
+    prefix             = "dist"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+```
+
 Setting log status
 
 ```hcl
@@ -211,6 +234,8 @@ The following arguments are supported:
 * `multi_az` - (Optional, ForceNew) Indicates whether to create a bucket of multi available zone.
 * `origin_domain_rules` - (Optional) Bucket Origin Domain settings.
 * `origin_pull_rules` - (Optional) Bucket Origin-Pull settings.
+* `replica_role` - (Optional) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
+* `replica_rules` - (Optional) List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.
 * `tags` - (Optional) The tags of a bucket.
 * `versioning_enable` - (Optional) Enable bucket versioning.
 * `website` - (Optional) A website object(documented below).
@@ -251,6 +276,14 @@ The `origin_pull_rules` object supports the following:
 * `prefix` - (Optional) Triggers the origin-pull rule when the requested file name matches this prefix.
 * `protocol` - (Optional) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
 * `sync_back_to_source` - (Optional) If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
+
+The `replica_rules` object supports the following:
+
+* `destination_bucket` - (Required) Destination bucket identifier, format: `qcs::cos:<region>::<bucketname-appid>`. NOTE: destination bucket must enable versioning.
+* `status` - (Required) Status identifier, available values: `Enabled`, `Disabled`.
+* `destination_storage_class` - (Optional) Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.
+* `id` - (Optional) Name of a specific rule.
+* `prefix` - (Optional) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
 
 The `transition` object supports the following:
 

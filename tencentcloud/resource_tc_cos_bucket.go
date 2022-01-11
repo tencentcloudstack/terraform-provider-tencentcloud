@@ -133,6 +133,28 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
+Using replication
+```hcl
+resource "tencentcloud_cos_bucket" "replica1" {
+  bucket = "tf-replica-foo-1234567890"
+  acl    = "private"
+  versioning_enable = true
+}
+
+resource "tencentcloud_cos_bucket" "with_replication" {
+  bucket = "tf-bucket-replica-1234567890"
+  acl    = "private"
+  versioning_enable = true
+  replica_role = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_rules {
+    id = "test-rep1"
+    status = "Enabled"
+    prefix = "dist"
+    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+  }
+}
+```
+
 Setting log status
 
 ```hcl
@@ -385,6 +407,47 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Default:     false,
 				Description: "Enable bucket versioning.",
 			},
+			"replica_role": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				RequiredWith: []string{"replica_rules", "versioning_enable"},
+				Description:  "Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.",
+			},
+			"replica_rules": {
+				Type:         schema.TypeList,
+				Optional:     true,
+				Description:  "List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.",
+				RequiredWith: []string{"replica_role", "versioning_enable"},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Name of a specific rule.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Status identifier, available values: `Enabled`, `Disabled`.",
+						},
+						"prefix": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.",
+						},
+						"destination_bucket": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Destination bucket identifier, format: `qcs::cos:<region>::<bucketname-appid>`. NOTE: destination bucket must enable versioning.",
+						},
+						"destination_storage_class": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.",
+						},
+					},
+				},
+			},
 			"cors_rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -569,17 +632,17 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Computed:    true,
 				Description: "The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.",
 			},
-			//computed
-			"cos_bucket_url": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The URL of this cos bucket.",
-			},
 			"multi_az": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
 				Description: "Indicates whether to create a bucket of multi available zone.",
+			},
+			//computed
+			"cos_bucket_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The URL of this cos bucket.",
 			},
 		},
 	}
@@ -595,6 +658,17 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
+	role, roleOk := d.GetOk("replica_role")
+	rule, ruleOk := d.GetOk("replica_rules")
+	versioning, versioningOk := d.GetOk("versioning_enable")
+
+	if v := versioning.(bool); !versioningOk || !v {
+		if roleOk || role.(string) != "" {
+			return fmt.Errorf("cannot configure role unless versioning enable")
+		} else if ruleOk || len(rule.([]interface{})) > 0 {
+			return fmt.Errorf("cannot configure replica rule unless versioning enable")
+		}
+	}
 
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -713,6 +787,18 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting versioning_enable error: %v", err)
 	}
 
+	replicaResult, err := cosService.GetBucketReplication(ctx, bucket)
+	if err != nil {
+		return err
+	}
+
+	if replicaResult != nil {
+		err := setBucketReplication(d, *replicaResult)
+		if err != nil {
+			return err
+		}
+	}
+
 	//read the log
 	logEnable, logTargetBucket, logPrefix, err := cosService.GetBucketLogStatus(ctx, bucket)
 	if err != nil {
@@ -821,6 +907,14 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 		d.SetPartial("versioning_enable")
+	}
+
+	if d.HasChange("replica_role") || d.HasChange("replica_rules") {
+		err := resourceTencentCloudCosBucketReplicaUpdate(ctx, cosService, d)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -945,6 +1039,40 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "put bucket encryption", request.String(), response.String())
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
+	bucket := d.Get("bucket").(string)
+	oldRole, newRole := d.GetChange("replica_role")
+	oldRules, newRules := d.GetChange("replica_rules")
+	oldRuleLength := len(oldRules.([]interface{}))
+	newRuleLength := len(newRules.([]interface{}))
+
+	// check if remove
+	if oldRole.(string) != "" && newRole.(string) == "" || oldRuleLength > 0 && newRuleLength == 0 {
+		result, err := service.GetBucketReplication(ctx, bucket)
+		if err != nil {
+			return err
+		}
+
+		if result != nil {
+			err := service.DeleteBucketReplication(ctx, d.Get("bucket").(string))
+			if err != nil {
+				return err
+			}
+		}
+	} else if newRole.(string) != "" || newRuleLength > 0 {
+		role, rules, _ := getBucketReplications(d)
+		err := service.PutBucketReplication(ctx, d.Get("bucket").(string), role, rules)
+		if err != nil {
+			return err
+		}
+	}
+
+	d.SetPartial("replica_role")
+	d.SetPartial("replica_rules")
 
 	return nil
 }
@@ -1470,4 +1598,55 @@ func transitionHash(v interface{}) int {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
 	return hashcode.String(buf.String())
+}
+
+func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.BucketReplicationRule, err error) {
+	role = d.Get("replica_role").(string)
+	replicaRules := d.Get("replica_rules").([]interface{})
+	for i := range replicaRules {
+		item := replicaRules[i].(map[string]interface{})
+		rule := cos.BucketReplicationRule{
+			Status: item["status"].(string),
+			Destination: &cos.ReplicationDestination{
+				Bucket: item["destination_bucket"].(string),
+			},
+		}
+		if v, ok := item["prefix"].(string); ok {
+			rule.Prefix = v
+		}
+		if v, ok := item["id"].(string); ok {
+			rule.ID = v
+		}
+		if v, ok := item["destination_storage_class"].(string); ok {
+			rule.Destination.StorageClass = v
+		}
+		rules = append(rules, rule)
+	}
+	return
+}
+
+func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicationResult) (err error) {
+	if result.Role != "" {
+		err = d.Set("replica_role", result.Role)
+	}
+	rules := make([]map[string]interface{}, 0)
+	if len(result.Rule) > 0 {
+		for i := range result.Rule {
+			item := result.Rule[i]
+			rule := map[string]interface{}{
+				"status":                    item.Status,
+				"destination_bucket":        item.Destination.Bucket,
+				"destination_storage_class": item.Destination.StorageClass,
+			}
+			if item.ID != "" {
+				rule["id"] = item.ID
+			}
+			if item.Prefix != "" {
+				rule["prefix"] = item.Prefix
+			}
+			rules = append(rules, rule)
+		}
+	}
+	err = d.Set("replica_rules", rules)
+	return
 }
