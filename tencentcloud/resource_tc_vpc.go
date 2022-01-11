@@ -208,6 +208,10 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
+	log.Printf("==============timeout")
+	log.Print(readRetryTimeout)
+	log.Print(writeRetryTimeout)
+	log.Printf("==============timeout")
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeVpc(ctx, id, "", "")
 		if e != nil {
