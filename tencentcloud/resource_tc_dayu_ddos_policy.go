@@ -32,7 +32,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
     syn_limit          = 100
   }
 
-  port_limits {
+  port_filters {
     start_port = "2000"
     end_port   = "2500"
     protocol   = "all"
