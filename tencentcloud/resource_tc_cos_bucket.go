@@ -12,6 +12,18 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
+
+Creation of multiple available zone bucket
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket   = "mycos-1258798060"
+  acl      = "private"
+  multi_az = true
+  versioning_enable = true
+}
+```
+
 Using verbose acl
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
