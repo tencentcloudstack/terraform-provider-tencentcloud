@@ -20,6 +20,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   bucket   = "mycos-1258798060"
   acl      = "private"
   multi_az = true
+  versioning_enable = true
 }
 ```
 
