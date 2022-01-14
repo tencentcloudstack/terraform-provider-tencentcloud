@@ -131,6 +131,87 @@ resource "tencentcloud_monitor_alarm_policy" "policy" {
 }
 ```
 
+cvm_device alarm policy binding cvm by tag
+```
+resource "tencentcloud_monitor_alarm_policy" "policy" {
+  enable       = 1
+  monitor_type = "MT_QCE"
+  namespace    = "cvm_device"
+  notice_ids   = [
+    "notice-l9ziyxw6",
+  ]
+  policy_name  = "policy"
+  project_id   = 0
+
+  conditions {
+    is_union_rule = 0
+
+    rules {
+      continue_period  = 5
+      description      = "CPUUtilization"
+      is_power_notice  = 0
+      metric_name      = "CpuUsage"
+      notice_frequency = 7200
+      operator         = "gt"
+      period           = 60
+      rule_type        = "STATIC"
+      unit             = "%"
+      value            = "95"
+    }
+    rules {
+      continue_period  = 5
+      description      = "PublicBandwidthUtilization"
+      is_power_notice  = 0
+      metric_name      = "Outratio"
+      notice_frequency = 7200
+      operator         = "gt"
+      period           = 60
+      rule_type        = "STATIC"
+      unit             = "%"
+      value            = "95"
+    }
+    rules {
+      continue_period  = 5
+      description      = "MemoryUtilization"
+      is_power_notice  = 0
+      metric_name      = "MemUsage"
+      notice_frequency = 7200
+      operator         = "gt"
+      period           = 60
+      rule_type        = "STATIC"
+      unit             = "%"
+      value            = "95"
+    }
+    rules {
+      continue_period  = 5
+      description      = "DiskUtilization"
+      is_power_notice  = 0
+      metric_name      = "CvmDiskUsage"
+      notice_frequency = 7200
+      operator         = "gt"
+      period           = 60
+      rule_type        = "STATIC"
+      unit             = "%"
+      value            = "95"
+    }
+  }
+
+  event_conditions {
+    continue_period  = 0
+    description      = "DiskReadonly"
+    is_power_notice  = 0
+    metric_name      = "disk_readonly"
+    notice_frequency = 0
+    period           = 0
+  }
+
+  policy_tag {
+    key   = "test-tag"
+    value = "unit-test"
+  }
+}
+```
+
 Import
 
 Alarm policy instance can be imported, e.g.
@@ -349,6 +430,26 @@ func resourceTencentMonitorAlarmPolicy() *schema.Resource {
 					},
 				},
 			},
+			"policy_tag": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Policy tag to bind object.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
+			},
 			// compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -387,8 +488,9 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 	//	request.Enable = helper.IntInt64(v.(int))
 	//}
 
-	if v, ok := d.GetOk("project_id"); ok {
-		request.ProjectId = helper.IntInt64(v.(int))
+	projectId := d.Get("project_id").(int)
+	if projectId != -1 {
+		request.ProjectId = helper.IntInt64(projectId)
 	}
 
 	if v, ok := d.GetOk("conditon_template_id"); ok {
@@ -532,6 +634,7 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 		request.TriggerTasks = tasks
 	}
 
+	var groupId *string
 	var policyId *string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -545,11 +648,48 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		policyId = response.Response.PolicyId
+		groupId = response.Response.OriginId
 		return nil
 	}); err != nil {
 		return err
 	}
 	d.SetId(fmt.Sprintf("%s", *policyId))
+
+	// binding tag
+	if v, ok := d.GetOk("policy_tag"); ok {
+		request := monitor.NewBindingPolicyTagRequest()
+
+		request.Module = helper.String("monitor")
+		request.PolicyId = helper.String(*policyId)
+		request.ServiceType = helper.String(d.Get("namespace").(string))
+		request.GroupId = helper.String(*groupId)
+		tagSet := make([]*monitor.PolicyTag, 0, 10)
+		for _, item := range v.([]interface{}) {
+			m := item.(map[string]interface{})
+			tagInfo := monitor.PolicyTag{
+				Key:   helper.String(m["key"].(string)),
+				Value: helper.String(m["value"].(string)),
+			}
+			tagSet = append(tagSet, &tagInfo)
+		}
+		request.Tag = tagSet[0]
+
+		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := monitorService.client.UseMonitorClient().BindingPolicyTag(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				return retryError(err, InternalError)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			return nil
+		}); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentMonitorAlarmPolicyRead(d, meta)
 }
 
@@ -682,6 +822,15 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		triggerTasks = append(triggerTasks, m)
 	}
 	errs = append(errs, d.Set("trigger_tasks", triggerTasks))
+
+	tagSets := make([]map[string]interface{}, 0, len(policy.TagInstances))
+	for _, item := range policy.TagInstances {
+		tagSets = append(tagSets, map[string]interface{}{
+			"key":   item.Key,
+			"value": item.Value,
+		})
+	}
+	_ = d.Set("policy_tag", tagSets)
 
 	if len(errs) > 0 {
 		return errs[0]

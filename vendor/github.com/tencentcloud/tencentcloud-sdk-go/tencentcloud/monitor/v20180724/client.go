@@ -15,6 +15,7 @@
 package v20180724
 
 import (
+    "context"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -49,6 +50,7 @@ func NewBindingPolicyObjectRequest() (request *BindingPolicyObjectRequest) {
     }
     request.Init().WithApiInfo("monitor", APIVersion, "BindingPolicyObject")
     
+    
     return
 }
 
@@ -69,7 +71,77 @@ func (c *Client) BindingPolicyObject(request *BindingPolicyObjectRequest) (respo
     if request == nil {
         request = NewBindingPolicyObjectRequest()
     }
+    
     response = NewBindingPolicyObjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// BindingPolicyObject
+// 将告警策略绑定到特定对象
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BindingPolicyObjectWithContext(ctx context.Context, request *BindingPolicyObjectRequest) (response *BindingPolicyObjectResponse, err error) {
+    if request == nil {
+        request = NewBindingPolicyObjectRequest()
+    }
+    request.SetContext(ctx)
+    
+    response = NewBindingPolicyObjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBindingPolicyTagRequest() (request *BindingPolicyTagRequest) {
+    request = &BindingPolicyTagRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("monitor", APIVersion, "BindingPolicyTag")
+    
+    
+    return
+}
+
+func NewBindingPolicyTagResponse() (response *BindingPolicyTagResponse) {
+    response = &BindingPolicyTagResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// BindingPolicyTag
+// 策略绑定标签
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) BindingPolicyTag(request *BindingPolicyTagRequest) (response *BindingPolicyTagResponse, err error) {
+    if request == nil {
+        request = NewBindingPolicyTagRequest()
+    }
+    
+    response = NewBindingPolicyTagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// BindingPolicyTag
+// 策略绑定标签
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) BindingPolicyTagWithContext(ctx context.Context, request *BindingPolicyTagRequest) (response *BindingPolicyTagResponse, err error) {
+    if request == nil {
+        request = NewBindingPolicyTagRequest()
+    }
+    request.SetContext(ctx)
+    
+    response = NewBindingPolicyTagResponse()
     err = c.Send(request, response)
     return
 }
@@ -79,6 +151,7 @@ func NewCreateAlarmNoticeRequest() (request *CreateAlarmNoticeRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlarmNotice")
+    
     
     return
 }
@@ -105,6 +178,29 @@ func (c *Client) CreateAlarmNotice(request *CreateAlarmNoticeRequest) (response 
     if request == nil {
         request = NewCreateAlarmNoticeRequest()
     }
+    
+    response = NewCreateAlarmNoticeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// CreateAlarmNotice
+// 创建通知模板
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAlarmNoticeWithContext(ctx context.Context, request *CreateAlarmNoticeRequest) (response *CreateAlarmNoticeResponse, err error) {
+    if request == nil {
+        request = NewCreateAlarmNoticeRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewCreateAlarmNoticeResponse()
     err = c.Send(request, response)
     return
@@ -115,6 +211,7 @@ func NewCreateAlarmPolicyRequest() (request *CreateAlarmPolicyRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlarmPolicy")
+    
     
     return
 }
@@ -141,6 +238,29 @@ func (c *Client) CreateAlarmPolicy(request *CreateAlarmPolicyRequest) (response 
     if request == nil {
         request = NewCreateAlarmPolicyRequest()
     }
+    
+    response = NewCreateAlarmPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// CreateAlarmPolicy
+// 创建告警策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAlarmPolicyWithContext(ctx context.Context, request *CreateAlarmPolicyRequest) (response *CreateAlarmPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateAlarmPolicyRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewCreateAlarmPolicyResponse()
     err = c.Send(request, response)
     return
@@ -151,6 +271,7 @@ func NewCreateAlertRuleRequest() (request *CreateAlertRuleRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlertRule")
+    
     
     return
 }
@@ -186,6 +307,38 @@ func (c *Client) CreateAlertRule(request *CreateAlertRuleRequest) (response *Cre
     if request == nil {
         request = NewCreateAlertRuleRequest()
     }
+    
+    response = NewCreateAlertRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// CreateAlertRule
+// 创建 Prometheus 告警规则。
+//
+// 
+//
+// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateAlertRuleWithContext(ctx context.Context, request *CreateAlertRuleRequest) (response *CreateAlertRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateAlertRuleRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewCreateAlertRuleResponse()
     err = c.Send(request, response)
     return
@@ -196,6 +349,7 @@ func NewCreatePolicyGroupRequest() (request *CreatePolicyGroupRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "CreatePolicyGroup")
+    
     
     return
 }
@@ -228,6 +382,35 @@ func (c *Client) CreatePolicyGroup(request *CreatePolicyGroupRequest) (response 
     if request == nil {
         request = NewCreatePolicyGroupRequest()
     }
+    
+    response = NewCreatePolicyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// CreatePolicyGroup
+// 增加策略组
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreatePolicyGroupWithContext(ctx context.Context, request *CreatePolicyGroupRequest) (response *CreatePolicyGroupResponse, err error) {
+    if request == nil {
+        request = NewCreatePolicyGroupRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewCreatePolicyGroupResponse()
     err = c.Send(request, response)
     return
@@ -238,6 +421,7 @@ func NewCreateServiceDiscoveryRequest() (request *CreateServiceDiscoveryRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "CreateServiceDiscovery")
+    
     
     return
 }
@@ -272,6 +456,37 @@ func (c *Client) CreateServiceDiscovery(request *CreateServiceDiscoveryRequest) 
     if request == nil {
         request = NewCreateServiceDiscoveryRequest()
     }
+    
+    response = NewCreateServiceDiscoveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// CreateServiceDiscovery
+// 在腾讯云容器服务下创建 Prometheus 服务发现。
+//
+// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
+//
+// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TKECLIENTAUTHFAIL = "FailedOperation.TKEClientAuthFail"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateServiceDiscoveryWithContext(ctx context.Context, request *CreateServiceDiscoveryRequest) (response *CreateServiceDiscoveryResponse, err error) {
+    if request == nil {
+        request = NewCreateServiceDiscoveryRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewCreateServiceDiscoveryResponse()
     err = c.Send(request, response)
     return
@@ -282,6 +497,7 @@ func NewDeleteAlarmNoticesRequest() (request *DeleteAlarmNoticesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlarmNotices")
+    
     
     return
 }
@@ -306,6 +522,27 @@ func (c *Client) DeleteAlarmNotices(request *DeleteAlarmNoticesRequest) (respons
     if request == nil {
         request = NewDeleteAlarmNoticesRequest()
     }
+    
+    response = NewDeleteAlarmNoticesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DeleteAlarmNotices
+// 云监控告警删除告警通知模板
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteAlarmNoticesWithContext(ctx context.Context, request *DeleteAlarmNoticesRequest) (response *DeleteAlarmNoticesResponse, err error) {
+    if request == nil {
+        request = NewDeleteAlarmNoticesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDeleteAlarmNoticesResponse()
     err = c.Send(request, response)
     return
@@ -316,6 +553,7 @@ func NewDeleteAlarmPolicyRequest() (request *DeleteAlarmPolicyRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlarmPolicy")
+    
     
     return
 }
@@ -340,6 +578,27 @@ func (c *Client) DeleteAlarmPolicy(request *DeleteAlarmPolicyRequest) (response 
     if request == nil {
         request = NewDeleteAlarmPolicyRequest()
     }
+    
+    response = NewDeleteAlarmPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DeleteAlarmPolicy
+// 删除告警策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteAlarmPolicyWithContext(ctx context.Context, request *DeleteAlarmPolicyRequest) (response *DeleteAlarmPolicyResponse, err error) {
+    if request == nil {
+        request = NewDeleteAlarmPolicyRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDeleteAlarmPolicyResponse()
     err = c.Send(request, response)
     return
@@ -350,6 +609,7 @@ func NewDeleteAlertRulesRequest() (request *DeleteAlertRulesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlertRules")
+    
     
     return
 }
@@ -381,6 +641,34 @@ func (c *Client) DeleteAlertRules(request *DeleteAlertRulesRequest) (response *D
     if request == nil {
         request = NewDeleteAlertRulesRequest()
     }
+    
+    response = NewDeleteAlertRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DeleteAlertRules
+// 批量删除 Prometheus 报警规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteAlertRulesWithContext(ctx context.Context, request *DeleteAlertRulesRequest) (response *DeleteAlertRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteAlertRulesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDeleteAlertRulesResponse()
     err = c.Send(request, response)
     return
@@ -391,6 +679,7 @@ func NewDeletePolicyGroupRequest() (request *DeletePolicyGroupRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DeletePolicyGroup")
+    
     
     return
 }
@@ -446,6 +735,58 @@ func (c *Client) DeletePolicyGroup(request *DeletePolicyGroupRequest) (response 
     if request == nil {
         request = NewDeletePolicyGroupRequest()
     }
+    
+    response = NewDeletePolicyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DeletePolicyGroup
+// 删除告警策略组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeletePolicyGroupWithContext(ctx context.Context, request *DeletePolicyGroupRequest) (response *DeletePolicyGroupResponse, err error) {
+    if request == nil {
+        request = NewDeletePolicyGroupRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDeletePolicyGroupResponse()
     err = c.Send(request, response)
     return
@@ -456,6 +797,7 @@ func NewDeleteServiceDiscoveryRequest() (request *DeleteServiceDiscoveryRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteServiceDiscovery")
+    
     
     return
 }
@@ -489,6 +831,36 @@ func (c *Client) DeleteServiceDiscovery(request *DeleteServiceDiscoveryRequest) 
     if request == nil {
         request = NewDeleteServiceDiscoveryRequest()
     }
+    
+    response = NewDeleteServiceDiscoveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DeleteServiceDiscovery
+// 删除在腾讯云容器服务下创建的 Prometheus 服务发现。
+//
+// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
+//
+// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteServiceDiscoveryWithContext(ctx context.Context, request *DeleteServiceDiscoveryRequest) (response *DeleteServiceDiscoveryResponse, err error) {
+    if request == nil {
+        request = NewDeleteServiceDiscoveryRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDeleteServiceDiscoveryResponse()
     err = c.Send(request, response)
     return
@@ -499,6 +871,7 @@ func NewDescribeAccidentEventListRequest() (request *DescribeAccidentEventListRe
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAccidentEventList")
+    
     
     return
 }
@@ -523,6 +896,27 @@ func (c *Client) DescribeAccidentEventList(request *DescribeAccidentEventListReq
     if request == nil {
         request = NewDescribeAccidentEventListRequest()
     }
+    
+    response = NewDescribeAccidentEventListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAccidentEventList
+// 获取平台事件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAccidentEventListWithContext(ctx context.Context, request *DescribeAccidentEventListRequest) (response *DescribeAccidentEventListResponse, err error) {
+    if request == nil {
+        request = NewDescribeAccidentEventListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAccidentEventListResponse()
     err = c.Send(request, response)
     return
@@ -533,6 +927,7 @@ func NewDescribeAlarmEventsRequest() (request *DescribeAlarmEventsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmEvents")
+    
     
     return
 }
@@ -554,6 +949,24 @@ func (c *Client) DescribeAlarmEvents(request *DescribeAlarmEventsRequest) (respo
     if request == nil {
         request = NewDescribeAlarmEventsRequest()
     }
+    
+    response = NewDescribeAlarmEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmEvents
+// 查询告警事件列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmEventsWithContext(ctx context.Context, request *DescribeAlarmEventsRequest) (response *DescribeAlarmEventsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmEventsRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmEventsResponse()
     err = c.Send(request, response)
     return
@@ -564,6 +977,7 @@ func NewDescribeAlarmHistoriesRequest() (request *DescribeAlarmHistoriesRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmHistories")
+    
     
     return
 }
@@ -593,6 +1007,32 @@ func (c *Client) DescribeAlarmHistories(request *DescribeAlarmHistoriesRequest) 
     if request == nil {
         request = NewDescribeAlarmHistoriesRequest()
     }
+    
+    response = NewDescribeAlarmHistoriesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmHistories
+// 查询告警历史
+//
+// 
+//
+// 请注意，**如果使用子用户进行告警历史的查询，只能查询到被授权项目下的告警历史**，或不区分项目的产品的告警历史。如何对子账户授予项目的权限，请参考 [访问管理-项目与标签](https://cloud.tencent.com/document/product/598/32738)。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmHistoriesWithContext(ctx context.Context, request *DescribeAlarmHistoriesRequest) (response *DescribeAlarmHistoriesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmHistoriesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmHistoriesResponse()
     err = c.Send(request, response)
     return
@@ -603,6 +1043,7 @@ func NewDescribeAlarmMetricsRequest() (request *DescribeAlarmMetricsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmMetrics")
+    
     
     return
 }
@@ -624,6 +1065,24 @@ func (c *Client) DescribeAlarmMetrics(request *DescribeAlarmMetricsRequest) (res
     if request == nil {
         request = NewDescribeAlarmMetricsRequest()
     }
+    
+    response = NewDescribeAlarmMetricsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmMetrics
+// 查询告警指标列表
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmMetricsWithContext(ctx context.Context, request *DescribeAlarmMetricsRequest) (response *DescribeAlarmMetricsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmMetricsRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmMetricsResponse()
     err = c.Send(request, response)
     return
@@ -634,6 +1093,7 @@ func NewDescribeAlarmNoticeRequest() (request *DescribeAlarmNoticeRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNotice")
+    
     
     return
 }
@@ -660,6 +1120,29 @@ func (c *Client) DescribeAlarmNotice(request *DescribeAlarmNoticeRequest) (respo
     if request == nil {
         request = NewDescribeAlarmNoticeRequest()
     }
+    
+    response = NewDescribeAlarmNoticeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmNotice
+// 查询单个通知模板的详情
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmNoticeWithContext(ctx context.Context, request *DescribeAlarmNoticeRequest) (response *DescribeAlarmNoticeResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmNoticeRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmNoticeResponse()
     err = c.Send(request, response)
     return
@@ -670,6 +1153,7 @@ func NewDescribeAlarmNoticeCallbacksRequest() (request *DescribeAlarmNoticeCallb
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNoticeCallbacks")
+    
     
     return
 }
@@ -696,6 +1180,29 @@ func (c *Client) DescribeAlarmNoticeCallbacks(request *DescribeAlarmNoticeCallba
     if request == nil {
         request = NewDescribeAlarmNoticeCallbacksRequest()
     }
+    
+    response = NewDescribeAlarmNoticeCallbacksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmNoticeCallbacks
+// 云监控告警获取告警通知模板所有回调URL
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmNoticeCallbacksWithContext(ctx context.Context, request *DescribeAlarmNoticeCallbacksRequest) (response *DescribeAlarmNoticeCallbacksResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmNoticeCallbacksRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmNoticeCallbacksResponse()
     err = c.Send(request, response)
     return
@@ -706,6 +1213,7 @@ func NewDescribeAlarmNoticesRequest() (request *DescribeAlarmNoticesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNotices")
+    
     
     return
 }
@@ -732,6 +1240,29 @@ func (c *Client) DescribeAlarmNotices(request *DescribeAlarmNoticesRequest) (res
     if request == nil {
         request = NewDescribeAlarmNoticesRequest()
     }
+    
+    response = NewDescribeAlarmNoticesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmNotices
+// 查询通知模板列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmNoticesWithContext(ctx context.Context, request *DescribeAlarmNoticesRequest) (response *DescribeAlarmNoticesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmNoticesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmNoticesResponse()
     err = c.Send(request, response)
     return
@@ -742,6 +1273,7 @@ func NewDescribeAlarmPoliciesRequest() (request *DescribeAlarmPoliciesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmPolicies")
+    
     
     return
 }
@@ -764,6 +1296,25 @@ func (c *Client) DescribeAlarmPolicies(request *DescribeAlarmPoliciesRequest) (r
     if request == nil {
         request = NewDescribeAlarmPoliciesRequest()
     }
+    
+    response = NewDescribeAlarmPoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmPolicies
+// 查询告警策略列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmPoliciesWithContext(ctx context.Context, request *DescribeAlarmPoliciesRequest) (response *DescribeAlarmPoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmPoliciesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmPoliciesResponse()
     err = c.Send(request, response)
     return
@@ -774,6 +1325,7 @@ func NewDescribeAlarmPolicyRequest() (request *DescribeAlarmPolicyRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmPolicy")
+    
     
     return
 }
@@ -797,6 +1349,26 @@ func (c *Client) DescribeAlarmPolicy(request *DescribeAlarmPolicyRequest) (respo
     if request == nil {
         request = NewDescribeAlarmPolicyRequest()
     }
+    
+    response = NewDescribeAlarmPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlarmPolicy
+// 获取单个告警策略详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAlarmPolicyWithContext(ctx context.Context, request *DescribeAlarmPolicyRequest) (response *DescribeAlarmPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlarmPolicyRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlarmPolicyResponse()
     err = c.Send(request, response)
     return
@@ -807,6 +1379,7 @@ func NewDescribeAlertRulesRequest() (request *DescribeAlertRulesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlertRules")
+    
     
     return
 }
@@ -838,6 +1411,34 @@ func (c *Client) DescribeAlertRules(request *DescribeAlertRulesRequest) (respons
     if request == nil {
         request = NewDescribeAlertRulesRequest()
     }
+    
+    response = NewDescribeAlertRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAlertRules
+// Prometheus 报警规则查询接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeAlertRulesWithContext(ctx context.Context, request *DescribeAlertRulesRequest) (response *DescribeAlertRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlertRulesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAlertRulesResponse()
     err = c.Send(request, response)
     return
@@ -848,6 +1449,7 @@ func NewDescribeAllNamespacesRequest() (request *DescribeAllNamespacesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAllNamespaces")
+    
     
     return
 }
@@ -868,6 +1470,23 @@ func (c *Client) DescribeAllNamespaces(request *DescribeAllNamespacesRequest) (r
     if request == nil {
         request = NewDescribeAllNamespacesRequest()
     }
+    
+    response = NewDescribeAllNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeAllNamespaces
+// 查询所有名字空间
+//
+// 可能返回的错误码:
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAllNamespacesWithContext(ctx context.Context, request *DescribeAllNamespacesRequest) (response *DescribeAllNamespacesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAllNamespacesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeAllNamespacesResponse()
     err = c.Send(request, response)
     return
@@ -878,6 +1497,7 @@ func NewDescribeBaseMetricsRequest() (request *DescribeBaseMetricsRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBaseMetrics")
+    
     
     return
 }
@@ -898,6 +1518,23 @@ func (c *Client) DescribeBaseMetrics(request *DescribeBaseMetricsRequest) (respo
     if request == nil {
         request = NewDescribeBaseMetricsRequest()
     }
+    
+    response = NewDescribeBaseMetricsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeBaseMetrics
+// 获取基础指标属性
+//
+// 可能返回的错误码:
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBaseMetricsWithContext(ctx context.Context, request *DescribeBaseMetricsRequest) (response *DescribeBaseMetricsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBaseMetricsRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeBaseMetricsResponse()
     err = c.Send(request, response)
     return
@@ -908,6 +1545,7 @@ func NewDescribeBasicAlarmListRequest() (request *DescribeBasicAlarmListRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBasicAlarmList")
+    
     
     return
 }
@@ -933,6 +1571,28 @@ func (c *Client) DescribeBasicAlarmList(request *DescribeBasicAlarmListRequest) 
     if request == nil {
         request = NewDescribeBasicAlarmListRequest()
     }
+    
+    response = NewDescribeBasicAlarmListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeBasicAlarmList
+// 获取基础告警列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBasicAlarmListWithContext(ctx context.Context, request *DescribeBasicAlarmListRequest) (response *DescribeBasicAlarmListResponse, err error) {
+    if request == nil {
+        request = NewDescribeBasicAlarmListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeBasicAlarmListResponse()
     err = c.Send(request, response)
     return
@@ -943,6 +1603,7 @@ func NewDescribeBindingPolicyObjectListRequest() (request *DescribeBindingPolicy
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBindingPolicyObjectList")
+    
     
     return
 }
@@ -1000,6 +1661,60 @@ func (c *Client) DescribeBindingPolicyObjectList(request *DescribeBindingPolicyO
     if request == nil {
         request = NewDescribeBindingPolicyObjectListRequest()
     }
+    
+    response = NewDescribeBindingPolicyObjectListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeBindingPolicyObjectList
+// 获取已绑定对象列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DIVISIONBYZERO = "FailedOperation.DivisionByZero"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DRUIDTABLENOTFOUND = "FailedOperation.DruidTableNotFound"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBindingPolicyObjectListWithContext(ctx context.Context, request *DescribeBindingPolicyObjectListRequest) (response *DescribeBindingPolicyObjectListResponse, err error) {
+    if request == nil {
+        request = NewDescribeBindingPolicyObjectListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeBindingPolicyObjectListResponse()
     err = c.Send(request, response)
     return
@@ -1010,6 +1725,7 @@ func NewDescribeMonitorTypesRequest() (request *DescribeMonitorTypesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeMonitorTypes")
+    
     
     return
 }
@@ -1030,6 +1746,23 @@ func (c *Client) DescribeMonitorTypes(request *DescribeMonitorTypesRequest) (res
     if request == nil {
         request = NewDescribeMonitorTypesRequest()
     }
+    
+    response = NewDescribeMonitorTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeMonitorTypes
+// 云监控支持多种类型的监控，此接口列出支持的所有类型
+//
+// 可能返回的错误码:
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeMonitorTypesWithContext(ctx context.Context, request *DescribeMonitorTypesRequest) (response *DescribeMonitorTypesResponse, err error) {
+    if request == nil {
+        request = NewDescribeMonitorTypesRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeMonitorTypesResponse()
     err = c.Send(request, response)
     return
@@ -1040,6 +1773,7 @@ func NewDescribePolicyConditionListRequest() (request *DescribePolicyConditionLi
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyConditionList")
+    
     
     return
 }
@@ -1095,6 +1829,58 @@ func (c *Client) DescribePolicyConditionList(request *DescribePolicyConditionLis
     if request == nil {
         request = NewDescribePolicyConditionListRequest()
     }
+    
+    response = NewDescribePolicyConditionListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribePolicyConditionList
+// 获取基础告警策略条件
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePolicyConditionListWithContext(ctx context.Context, request *DescribePolicyConditionListRequest) (response *DescribePolicyConditionListResponse, err error) {
+    if request == nil {
+        request = NewDescribePolicyConditionListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribePolicyConditionListResponse()
     err = c.Send(request, response)
     return
@@ -1105,6 +1891,7 @@ func NewDescribePolicyGroupInfoRequest() (request *DescribePolicyGroupInfoReques
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyGroupInfo")
+    
     
     return
 }
@@ -1160,6 +1947,58 @@ func (c *Client) DescribePolicyGroupInfo(request *DescribePolicyGroupInfoRequest
     if request == nil {
         request = NewDescribePolicyGroupInfoRequest()
     }
+    
+    response = NewDescribePolicyGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribePolicyGroupInfo
+// 获取基础策略组详情
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePolicyGroupInfoWithContext(ctx context.Context, request *DescribePolicyGroupInfoRequest) (response *DescribePolicyGroupInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribePolicyGroupInfoRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribePolicyGroupInfoResponse()
     err = c.Send(request, response)
     return
@@ -1170,6 +2009,7 @@ func NewDescribePolicyGroupListRequest() (request *DescribePolicyGroupListReques
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyGroupList")
+    
     
     return
 }
@@ -1225,6 +2065,58 @@ func (c *Client) DescribePolicyGroupList(request *DescribePolicyGroupListRequest
     if request == nil {
         request = NewDescribePolicyGroupListRequest()
     }
+    
+    response = NewDescribePolicyGroupListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribePolicyGroupList
+// 获取基础策略告警组列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePolicyGroupListWithContext(ctx context.Context, request *DescribePolicyGroupListRequest) (response *DescribePolicyGroupListResponse, err error) {
+    if request == nil {
+        request = NewDescribePolicyGroupListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribePolicyGroupListResponse()
     err = c.Send(request, response)
     return
@@ -1235,6 +2127,7 @@ func NewDescribeProductEventListRequest() (request *DescribeProductEventListRequ
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeProductEventList")
+    
     
     return
 }
@@ -1262,6 +2155,30 @@ func (c *Client) DescribeProductEventList(request *DescribeProductEventListReque
     if request == nil {
         request = NewDescribeProductEventListRequest()
     }
+    
+    response = NewDescribeProductEventListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeProductEventList
+// 分页获取产品事件的列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeProductEventListWithContext(ctx context.Context, request *DescribeProductEventListRequest) (response *DescribeProductEventListResponse, err error) {
+    if request == nil {
+        request = NewDescribeProductEventListRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeProductEventListResponse()
     err = c.Send(request, response)
     return
@@ -1272,6 +2189,7 @@ func NewDescribeProductListRequest() (request *DescribeProductListRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeProductList")
+    
     
     return
 }
@@ -1302,7 +2220,114 @@ func (c *Client) DescribeProductList(request *DescribeProductListRequest) (respo
     if request == nil {
         request = NewDescribeProductListRequest()
     }
+    
     response = NewDescribeProductListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeProductList
+// 查询云监控产品列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeProductListWithContext(ctx context.Context, request *DescribeProductListRequest) (response *DescribeProductListResponse, err error) {
+    if request == nil {
+        request = NewDescribeProductListRequest()
+    }
+    request.SetContext(ctx)
+    
+    response = NewDescribeProductListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePrometheusInstancesRequest() (request *DescribePrometheusInstancesRequest) {
+    request = &DescribePrometheusInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusInstances")
+    
+    
+    return
+}
+
+func NewDescribePrometheusInstancesResponse() (response *DescribePrometheusInstancesResponse) {
+    response = &DescribePrometheusInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribePrometheusInstances
+// 本接口 (DescribePrometheusInstances) 用于查询一个或多个实例的详细信息。
+//
+// <ul>
+//
+// <li>可以根据实例ID、实例名称或者实例状态等信息来查询实例的详细信息</li>
+//
+// <li>如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的实例。</li>
+//
+// </ul>
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribePrometheusInstances(request *DescribePrometheusInstancesRequest) (response *DescribePrometheusInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribePrometheusInstancesRequest()
+    }
+    
+    response = NewDescribePrometheusInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribePrometheusInstances
+// 本接口 (DescribePrometheusInstances) 用于查询一个或多个实例的详细信息。
+//
+// <ul>
+//
+// <li>可以根据实例ID、实例名称或者实例状态等信息来查询实例的详细信息</li>
+//
+// <li>如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的实例。</li>
+//
+// </ul>
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribePrometheusInstancesWithContext(ctx context.Context, request *DescribePrometheusInstancesRequest) (response *DescribePrometheusInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribePrometheusInstancesRequest()
+    }
+    request.SetContext(ctx)
+    
+    response = NewDescribePrometheusInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1312,6 +2337,7 @@ func NewDescribeServiceDiscoveryRequest() (request *DescribeServiceDiscoveryRequ
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeServiceDiscovery")
+    
     
     return
 }
@@ -1343,6 +2369,34 @@ func (c *Client) DescribeServiceDiscovery(request *DescribeServiceDiscoveryReque
     if request == nil {
         request = NewDescribeServiceDiscoveryRequest()
     }
+    
+    response = NewDescribeServiceDiscoveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeServiceDiscovery
+// 列出在腾讯云容器服务下创建的 Prometheus 服务发现。
+//
+// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
+//
+// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_INSTANCENOTRUNNING = "FailedOperation.InstanceNotRunning"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeServiceDiscoveryWithContext(ctx context.Context, request *DescribeServiceDiscoveryRequest) (response *DescribeServiceDiscoveryResponse, err error) {
+    if request == nil {
+        request = NewDescribeServiceDiscoveryRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeServiceDiscoveryResponse()
     err = c.Send(request, response)
     return
@@ -1353,6 +2407,7 @@ func NewDescribeStatisticDataRequest() (request *DescribeStatisticDataRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeStatisticData")
+    
     
     return
 }
@@ -1417,6 +2472,67 @@ func (c *Client) DescribeStatisticData(request *DescribeStatisticDataRequest) (r
     if request == nil {
         request = NewDescribeStatisticDataRequest()
     }
+    
+    response = NewDescribeStatisticDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// DescribeStatisticData
+// 根据维度条件查询监控数据
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATACOLUMNNOTFOUND = "FailedOperation.DataColumnNotFound"
+//  FAILEDOPERATION_DATAQUERYFAILED = "FailedOperation.DataQueryFailed"
+//  FAILEDOPERATION_DATATABLENOTFOUND = "FailedOperation.DataTableNotFound"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DIVISIONBYZERO = "FailedOperation.DivisionByZero"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLBACKFAIL = "InternalError.CallbackFail"
+//  INTERNALERROR_DEPENDSAPI = "InternalError.DependsApi"
+//  INTERNALERROR_DEPENDSDB = "InternalError.DependsDb"
+//  INTERNALERROR_DEPENDSMQ = "InternalError.DependsMq"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INTERNALERROR_SYSTEM = "InternalError.System"
+//  INTERNALERROR_TASKRESULTFORMAT = "InternalError.TaskResultFormat"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPTASK = "InvalidParameter.DupTask"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETER_MISSAKSK = "InvalidParameter.MissAKSK"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SECRETIDORSECRETKEYERROR = "InvalidParameter.SecretIdOrSecretKeyError"
+//  INVALIDPARAMETER_UNSUPPORTEDPRODUCT = "InvalidParameter.UnsupportedProduct"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DASHBOARDNAMEEXISTS = "InvalidParameterValue.DashboardNameExists"
+//  INVALIDPARAMETERVALUE_VERSIONMISMATCH = "InvalidParameterValue.VersionMismatch"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_NOTEXISTTASK = "ResourceNotFound.NotExistTask"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeStatisticDataWithContext(ctx context.Context, request *DescribeStatisticDataRequest) (response *DescribeStatisticDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeStatisticDataRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewDescribeStatisticDataResponse()
     err = c.Send(request, response)
     return
@@ -1427,6 +2543,7 @@ func NewGetMonitorDataRequest() (request *GetMonitorDataRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "GetMonitorData")
+    
     
     return
 }
@@ -1454,6 +2571,30 @@ func (c *Client) GetMonitorData(request *GetMonitorDataRequest) (response *GetMo
     if request == nil {
         request = NewGetMonitorDataRequest()
     }
+    
+    response = NewGetMonitorDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// GetMonitorData
+// 获取云产品的监控数据。此接口不适用于拉取容器服务监控数据，如需拉取容器服务监控数据，请使用[根据维度条件查询监控数据](https://cloud.tencent.com/document/product/248/51845)接口。
+//
+// 传入产品的命名空间、对象维度描述和监控指标即可获得相应的监控数据。
+//
+// 接口调用频率限制为：20次/秒，1200次/分钟。单请求最多可支持批量拉取10个实例的监控数据，单请求的数据点数限制为1440个。
+//
+// 若您需要调用的指标、对象较多，可能存在因限频出现拉取失败的情况，建议尽量将请求按时间维度均摊。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) GetMonitorDataWithContext(ctx context.Context, request *GetMonitorDataRequest) (response *GetMonitorDataResponse, err error) {
+    if request == nil {
+        request = NewGetMonitorDataRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewGetMonitorDataResponse()
     err = c.Send(request, response)
     return
@@ -1464,6 +2605,7 @@ func NewModifyAlarmNoticeRequest() (request *ModifyAlarmNoticeRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmNotice")
+    
     
     return
 }
@@ -1489,6 +2631,28 @@ func (c *Client) ModifyAlarmNotice(request *ModifyAlarmNoticeRequest) (response 
     if request == nil {
         request = NewModifyAlarmNoticeRequest()
     }
+    
+    response = NewModifyAlarmNoticeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmNotice
+// 云监控告警编辑告警通知模板
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAlarmNoticeWithContext(ctx context.Context, request *ModifyAlarmNoticeRequest) (response *ModifyAlarmNoticeResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmNoticeRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmNoticeResponse()
     err = c.Send(request, response)
     return
@@ -1499,6 +2663,7 @@ func NewModifyAlarmPolicyConditionRequest() (request *ModifyAlarmPolicyCondition
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyCondition")
+    
     
     return
 }
@@ -1524,6 +2689,28 @@ func (c *Client) ModifyAlarmPolicyCondition(request *ModifyAlarmPolicyConditionR
     if request == nil {
         request = NewModifyAlarmPolicyConditionRequest()
     }
+    
+    response = NewModifyAlarmPolicyConditionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmPolicyCondition
+// 修改告警策略触发条件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAlarmPolicyConditionWithContext(ctx context.Context, request *ModifyAlarmPolicyConditionRequest) (response *ModifyAlarmPolicyConditionResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmPolicyConditionRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmPolicyConditionResponse()
     err = c.Send(request, response)
     return
@@ -1534,6 +2721,7 @@ func NewModifyAlarmPolicyInfoRequest() (request *ModifyAlarmPolicyInfoRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyInfo")
+    
     
     return
 }
@@ -1559,6 +2747,28 @@ func (c *Client) ModifyAlarmPolicyInfo(request *ModifyAlarmPolicyInfoRequest) (r
     if request == nil {
         request = NewModifyAlarmPolicyInfoRequest()
     }
+    
+    response = NewModifyAlarmPolicyInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmPolicyInfo
+// 告警2.0编辑告警策略基本信息，包括策略名、备注
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAlarmPolicyInfoWithContext(ctx context.Context, request *ModifyAlarmPolicyInfoRequest) (response *ModifyAlarmPolicyInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmPolicyInfoRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmPolicyInfoResponse()
     err = c.Send(request, response)
     return
@@ -1569,6 +2779,7 @@ func NewModifyAlarmPolicyNoticeRequest() (request *ModifyAlarmPolicyNoticeReques
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyNotice")
+    
     
     return
 }
@@ -1592,6 +2803,26 @@ func (c *Client) ModifyAlarmPolicyNotice(request *ModifyAlarmPolicyNoticeRequest
     if request == nil {
         request = NewModifyAlarmPolicyNoticeRequest()
     }
+    
+    response = NewModifyAlarmPolicyNoticeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmPolicyNotice
+// 云监控告警修改告警策略绑定的告警通知模板
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAlarmPolicyNoticeWithContext(ctx context.Context, request *ModifyAlarmPolicyNoticeRequest) (response *ModifyAlarmPolicyNoticeResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmPolicyNoticeRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmPolicyNoticeResponse()
     err = c.Send(request, response)
     return
@@ -1602,6 +2833,7 @@ func NewModifyAlarmPolicyStatusRequest() (request *ModifyAlarmPolicyStatusReques
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyStatus")
+    
     
     return
 }
@@ -1627,6 +2859,28 @@ func (c *Client) ModifyAlarmPolicyStatus(request *ModifyAlarmPolicyStatusRequest
     if request == nil {
         request = NewModifyAlarmPolicyStatusRequest()
     }
+    
+    response = NewModifyAlarmPolicyStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmPolicyStatus
+// 启停告警策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAlarmPolicyStatusWithContext(ctx context.Context, request *ModifyAlarmPolicyStatusRequest) (response *ModifyAlarmPolicyStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmPolicyStatusRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmPolicyStatusResponse()
     err = c.Send(request, response)
     return
@@ -1637,6 +2891,7 @@ func NewModifyAlarmPolicyTasksRequest() (request *ModifyAlarmPolicyTasksRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyTasks")
+    
     
     return
 }
@@ -1661,6 +2916,27 @@ func (c *Client) ModifyAlarmPolicyTasks(request *ModifyAlarmPolicyTasksRequest) 
     if request == nil {
         request = NewModifyAlarmPolicyTasksRequest()
     }
+    
+    response = NewModifyAlarmPolicyTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmPolicyTasks
+// 云监控告警修改告警策略的触发任务，TriggerTasks字段放触发任务列表，TriggerTasks传空数组时，代表解绑该策略的所有触发任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAlarmPolicyTasksWithContext(ctx context.Context, request *ModifyAlarmPolicyTasksRequest) (response *ModifyAlarmPolicyTasksResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmPolicyTasksRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmPolicyTasksResponse()
     err = c.Send(request, response)
     return
@@ -1671,6 +2947,7 @@ func NewModifyAlarmReceiversRequest() (request *ModifyAlarmReceiversRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmReceivers")
+    
     
     return
 }
@@ -1695,6 +2972,27 @@ func (c *Client) ModifyAlarmReceivers(request *ModifyAlarmReceiversRequest) (res
     if request == nil {
         request = NewModifyAlarmReceiversRequest()
     }
+    
+    response = NewModifyAlarmReceiversResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyAlarmReceivers
+// 修改告警接收人
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAlarmReceiversWithContext(ctx context.Context, request *ModifyAlarmReceiversRequest) (response *ModifyAlarmReceiversResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmReceiversRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyAlarmReceiversResponse()
     err = c.Send(request, response)
     return
@@ -1705,6 +3003,7 @@ func NewModifyPolicyGroupRequest() (request *ModifyPolicyGroupRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyPolicyGroup")
+    
     
     return
 }
@@ -1746,6 +3045,44 @@ func (c *Client) ModifyPolicyGroup(request *ModifyPolicyGroupRequest) (response 
     if request == nil {
         request = NewModifyPolicyGroupRequest()
     }
+    
+    response = NewModifyPolicyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// ModifyPolicyGroup
+// 更新策略组
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyPolicyGroupWithContext(ctx context.Context, request *ModifyPolicyGroupRequest) (response *ModifyPolicyGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyPolicyGroupRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewModifyPolicyGroupResponse()
     err = c.Send(request, response)
     return
@@ -1756,6 +3093,7 @@ func NewPutMonitorDataRequest() (request *PutMonitorDataRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "PutMonitorData")
+    
     
     return
 }
@@ -1804,6 +3142,51 @@ func (c *Client) PutMonitorData(request *PutMonitorDataRequest) (response *PutMo
     if request == nil {
         request = NewPutMonitorDataRequest()
     }
+    
+    response = NewPutMonitorDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// PutMonitorData
+// 默认接口请求频率限制：50次/秒。
+//
+// 默认单租户指标上限：100个。
+//
+// 单次上报最多 30 个指标/值对，请求返回错误时，请求中所有的指标/值均不会被保存。
+//
+// 
+//
+// 上报的时间戳为期望保存的时间戳，建议构造整数分钟时刻的时间戳。
+//
+// 时间戳时间范围必须为当前时间到 300 秒前之间。
+//
+// 同一 IP 指标对的数据需按分钟先后顺序上报。
+//
+// 可能返回的错误码:
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) PutMonitorDataWithContext(ctx context.Context, request *PutMonitorDataRequest) (response *PutMonitorDataResponse, err error) {
+    if request == nil {
+        request = NewPutMonitorDataRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewPutMonitorDataResponse()
     err = c.Send(request, response)
     return
@@ -1814,6 +3197,7 @@ func NewSendCustomAlarmMsgRequest() (request *SendCustomAlarmMsgRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "SendCustomAlarmMsg")
+    
     
     return
 }
@@ -1841,6 +3225,30 @@ func (c *Client) SendCustomAlarmMsg(request *SendCustomAlarmMsgRequest) (respons
     if request == nil {
         request = NewSendCustomAlarmMsgRequest()
     }
+    
+    response = NewSendCustomAlarmMsgResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// SendCustomAlarmMsg
+// 发送自定义消息告警
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) SendCustomAlarmMsgWithContext(ctx context.Context, request *SendCustomAlarmMsgRequest) (response *SendCustomAlarmMsgResponse, err error) {
+    if request == nil {
+        request = NewSendCustomAlarmMsgRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewSendCustomAlarmMsgResponse()
     err = c.Send(request, response)
     return
@@ -1851,6 +3259,7 @@ func NewSetDefaultAlarmPolicyRequest() (request *SetDefaultAlarmPolicyRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "SetDefaultAlarmPolicy")
+    
     
     return
 }
@@ -1878,6 +3287,30 @@ func (c *Client) SetDefaultAlarmPolicy(request *SetDefaultAlarmPolicyRequest) (r
     if request == nil {
         request = NewSetDefaultAlarmPolicyRequest()
     }
+    
+    response = NewSetDefaultAlarmPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// SetDefaultAlarmPolicy
+// 设置一个策略为该告警策略类型、该项目的默认告警策略。
+//
+// 同一项目下相同的告警策略类型，就会被设置为非默认。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) SetDefaultAlarmPolicyWithContext(ctx context.Context, request *SetDefaultAlarmPolicyRequest) (response *SetDefaultAlarmPolicyResponse, err error) {
+    if request == nil {
+        request = NewSetDefaultAlarmPolicyRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewSetDefaultAlarmPolicyResponse()
     err = c.Send(request, response)
     return
@@ -1888,6 +3321,7 @@ func NewUnBindingAllPolicyObjectRequest() (request *UnBindingAllPolicyObjectRequ
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "UnBindingAllPolicyObject")
+    
     
     return
 }
@@ -1943,6 +3377,58 @@ func (c *Client) UnBindingAllPolicyObject(request *UnBindingAllPolicyObjectReque
     if request == nil {
         request = NewUnBindingAllPolicyObjectRequest()
     }
+    
+    response = NewUnBindingAllPolicyObjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// UnBindingAllPolicyObject
+// 删除全部的关联对象
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UnBindingAllPolicyObjectWithContext(ctx context.Context, request *UnBindingAllPolicyObjectRequest) (response *UnBindingAllPolicyObjectResponse, err error) {
+    if request == nil {
+        request = NewUnBindingAllPolicyObjectRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewUnBindingAllPolicyObjectResponse()
     err = c.Send(request, response)
     return
@@ -1953,6 +3439,7 @@ func NewUnBindingPolicyObjectRequest() (request *UnBindingPolicyObjectRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "UnBindingPolicyObject")
+    
     
     return
 }
@@ -2010,6 +3497,60 @@ func (c *Client) UnBindingPolicyObject(request *UnBindingPolicyObjectRequest) (r
     if request == nil {
         request = NewUnBindingPolicyObjectRequest()
     }
+    
+    response = NewUnBindingPolicyObjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// UnBindingPolicyObject
+// 删除策略的关联对象
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ALERTFILTERRULEDELETEFAILED = "FailedOperation.AlertFilterRuleDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYCREATEFAILED = "FailedOperation.AlertPolicyCreateFailed"
+//  FAILEDOPERATION_ALERTPOLICYDELETEFAILED = "FailedOperation.AlertPolicyDeleteFailed"
+//  FAILEDOPERATION_ALERTPOLICYDESCRIBEFAILED = "FailedOperation.AlertPolicyDescribeFailed"
+//  FAILEDOPERATION_ALERTPOLICYMODIFYFAILED = "FailedOperation.AlertPolicyModifyFailed"
+//  FAILEDOPERATION_ALERTTRIGGERRULEDELETEFAILED = "FailedOperation.AlertTriggerRuleDeleteFailed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_DBTRANSACTIONBEGINFAILED = "FailedOperation.DbTransactionBeginFailed"
+//  FAILEDOPERATION_DBTRANSACTIONCOMMITFAILED = "FailedOperation.DbTransactionCommitFailed"
+//  FAILEDOPERATION_DIMQUERYREQUESTFAILED = "FailedOperation.DimQueryRequestFailed"
+//  FAILEDOPERATION_DRUIDQUERYFAILED = "FailedOperation.DruidQueryFailed"
+//  FAILEDOPERATION_DUPLICATENAME = "FailedOperation.DuplicateName"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_NOTEXISTTASK = "ResourceNotFound.NotExistTask"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UnBindingPolicyObjectWithContext(ctx context.Context, request *UnBindingPolicyObjectRequest) (response *UnBindingPolicyObjectResponse, err error) {
+    if request == nil {
+        request = NewUnBindingPolicyObjectRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewUnBindingPolicyObjectResponse()
     err = c.Send(request, response)
     return
@@ -2020,6 +3561,7 @@ func NewUpdateAlertRuleRequest() (request *UpdateAlertRuleRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateAlertRule")
+    
     
     return
 }
@@ -2055,6 +3597,38 @@ func (c *Client) UpdateAlertRule(request *UpdateAlertRuleRequest) (response *Upd
     if request == nil {
         request = NewUpdateAlertRuleRequest()
     }
+    
+    response = NewUpdateAlertRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// UpdateAlertRule
+// 更新 Prometheus 的报警规则。
+//
+// 
+//
+// 请注意，**告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description**，，请参考 [Prometheus Rule更多配置请参考](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateAlertRuleWithContext(ctx context.Context, request *UpdateAlertRuleRequest) (response *UpdateAlertRuleResponse, err error) {
+    if request == nil {
+        request = NewUpdateAlertRuleRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewUpdateAlertRuleResponse()
     err = c.Send(request, response)
     return
@@ -2065,6 +3639,7 @@ func NewUpdateAlertRuleStateRequest() (request *UpdateAlertRuleStateRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateAlertRuleState")
+    
     
     return
 }
@@ -2096,6 +3671,34 @@ func (c *Client) UpdateAlertRuleState(request *UpdateAlertRuleStateRequest) (res
     if request == nil {
         request = NewUpdateAlertRuleStateRequest()
     }
+    
+    response = NewUpdateAlertRuleStateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// UpdateAlertRuleState
+// 更新 Prometheus 报警策略状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateAlertRuleStateWithContext(ctx context.Context, request *UpdateAlertRuleStateRequest) (response *UpdateAlertRuleStateResponse, err error) {
+    if request == nil {
+        request = NewUpdateAlertRuleStateRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewUpdateAlertRuleStateResponse()
     err = c.Send(request, response)
     return
@@ -2106,6 +3709,7 @@ func NewUpdateServiceDiscoveryRequest() (request *UpdateServiceDiscoveryRequest)
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateServiceDiscovery")
+    
     
     return
 }
@@ -2137,6 +3741,34 @@ func (c *Client) UpdateServiceDiscovery(request *UpdateServiceDiscoveryRequest) 
     if request == nil {
         request = NewUpdateServiceDiscoveryRequest()
     }
+    
+    response = NewUpdateServiceDiscoveryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+// UpdateServiceDiscovery
+// 在腾讯云容器服务下更新 Prometheus 服务发现。
+//
+// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
+//
+// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateServiceDiscoveryWithContext(ctx context.Context, request *UpdateServiceDiscoveryRequest) (response *UpdateServiceDiscoveryResponse, err error) {
+    if request == nil {
+        request = NewUpdateServiceDiscoveryRequest()
+    }
+    request.SetContext(ctx)
+    
     response = NewUpdateServiceDiscoveryResponse()
     err = c.Send(request, response)
     return
