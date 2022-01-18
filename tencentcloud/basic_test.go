@@ -34,7 +34,7 @@ const (
 	defaultDayuBgpIp  = "bgpip-00000294"
 	defaultDayuNet    = "net-0000007e"
 
-	defaultGaapProxyId = "link-9ck3lzq7"
+	defaultGaapProxyId = "link-5b4g19qx"
 
 	defaultSecurityGroup  = "sg-ijato2x1"
 	defaultSecurityGroup2 = "sg-51rgzop1"
