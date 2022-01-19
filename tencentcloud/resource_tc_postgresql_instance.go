@@ -271,7 +271,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 						"zone": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Indicates the node available zone. NOTE: Zone set must equal to `availability_zone`.",
+							Description: "Indicates the node available zone.",
 						},
 					},
 				},

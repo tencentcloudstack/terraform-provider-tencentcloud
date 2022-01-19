@@ -125,7 +125,7 @@ The following arguments are supported:
 
 The `db_node_set` object supports the following:
 
-* `zone` - (Required) Indicates the node available zone. NOTE: Zone set must equal to `availability_zone`.
+* `zone` - (Required) Indicates the node available zone.
 * `role` - (Optional) Indicates node type, available values:`Primary`, `Standby`. Default: `Standby`.
 
 ## Attributes Reference
