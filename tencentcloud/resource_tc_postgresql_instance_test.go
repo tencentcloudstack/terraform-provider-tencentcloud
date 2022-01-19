@@ -74,6 +74,43 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudPostgresqlMAZInstanceResource(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPostgresqlMAZInstance,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					// SDK 1.0 cannot provide set test expected "db_node_set.*.role" , "Primary"
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-6"),
+				),
+			},
+			{
+				ResourceName:            testPostgresqlInstanceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset"},
+			},
+
+			{
+				Config: testAccPostgresqlMAZInstanceUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-7"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckPostgresqlInstanceDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != testPostgresqlInstanceResourceName {
@@ -164,6 +201,83 @@ resource "tencentcloud_postgresql_instance" "test" {
   public_access_switch = true
   memory = 4
   storage = 250
+
+	tags = {
+		tf = "teest"
+	}
+}
+`
+
+const testAccPostgresqlMAZInstance string = `
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/24"
+  name       = "test-pg-vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.0.0/24"
+  name              = "pg-sub1"
+  vpc_id            = tencentcloud_vpc.vpc.id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_maz_instance"
+  availability_zone = "ap-guangzhou-6"
+  charge_type = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  engine_version		= "10.4"
+  root_password                 = "t1qaA2k1wgvfa3?ZZZ"
+  charset = "LATIN1"
+  memory = 4
+  storage = 100
+  db_node_set {
+    role = "Primary"
+    zone = "ap-guangzhou-6"
+  }
+  db_node_set {
+    zone = "ap-guangzhou-7"
+  }
+
+	tags = {
+		tf = "test"
+	}
+}
+`
+
+const testAccPostgresqlMAZInstanceUpdate string = `
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/24"
+  name       = "test-pg-vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "ap-guangzhou-7"
+  cidr_block        = "10.0.0.0/24"
+  name              = "pg-sub1"
+  vpc_id            = tencentcloud_vpc.vpc.id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_maz_instance"
+  availability_zone = "ap-guangzhou-6"
+  charge_type = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  engine_version		= "10.4"
+  root_password                 = "t1qaA2k1wgvfa3?ZZZ"
+  charset = "LATIN1"
+  public_access_switch = true
+  memory = 4
+  storage = 250
+  db_node_set {
+    zone = "ap-guangzhou-6"
+  }
+  db_node_set {
+    role = "Primary"
+    zone = "ap-guangzhou-7"
+  }
 
 	tags = {
 		tf = "teest"
