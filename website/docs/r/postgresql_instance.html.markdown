@@ -57,6 +57,14 @@ resource "tencentcloud_postgresql_instance" "foo" {
 Create a multi available zone bucket
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+variable "standby_availability_zone" {
+  default = "ap-guangzhou-7"
+}
+
 # create vpc
 resource "tencentcloud_vpc" "vpc" {
   name       = "guagua_vpc_instance_test"
@@ -65,18 +73,11 @@ resource "tencentcloud_vpc" "vpc" {
 
 # create vpc subnet
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = "ap-guangzhou-6"
-  db_node_set {
-    role = "Primary"
-    zone = "ap-guanghzou-6"
-  }
-  db_node_set {
-    zone = "ap-guangzhou-7"
-  }
-  name         = "guagua_vpc_subnet_test"
-  vpc_id       = tencentcloud_vpc.vpc.id
-  cidr_block   = "10.0.20.0/28"
-  is_multicast = false
+  availability_zone = var.availability_zone
+  name              = "guagua_vpc_subnet_test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 
 # create postgresql
@@ -93,6 +94,14 @@ resource "tencentcloud_postgresql_instance" "foo" {
   project_id        = 0
   memory            = 2
   storage           = 10
+
+  db_node_set {
+    role = "Primary"
+    zone = var.availability_zone
+  }
+  db_node_set {
+    zone = var.standby_availability_zone
+  }
 
   tags = {
     test = "tf"

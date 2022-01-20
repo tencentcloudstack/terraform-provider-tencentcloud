@@ -30,3 +30,11 @@ var POSTSQL_DB_CHARSET = []string{POSTGRESQL_DB_CHARSET_UTF8, POSTGRESQL_DB_CHAR
 const (
 	POSTGRESQL_STAUTS_RUNNING = "running"
 )
+
+var POSTGRES_RETRYABLE_STATUS = []string{
+	"initing",
+	"expanding",
+	"switching",
+	// deployment changing not exposed at response struct but actually exists
+	"deployment changing",
+}

@@ -47,6 +47,13 @@ resource "tencentcloud_postgresql_instance" "foo" {
 Create a multi available zone bucket
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+variable "standby_availability_zone" {
+  default = "ap-guangzhou-7"
+}
 
 # create vpc
 resource "tencentcloud_vpc" "vpc" {
@@ -56,14 +63,7 @@ resource "tencentcloud_vpc" "vpc" {
 
 # create vpc subnet
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = "ap-guangzhou-6"
-  db_node_set {
-    role = "Primary"
-    zone = "ap-guanghzou-6"
-  }
-  db_node_set {
-    zone = "ap-guangzhou-7"
-  }
+  availability_zone = var.availability_zone
   name              = "guagua_vpc_subnet_test"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.20.0/28"
@@ -84,6 +84,14 @@ resource "tencentcloud_postgresql_instance" "foo" {
   project_id        = 0
   memory            = 2
   storage           = 10
+
+  db_node_set {
+    role = "Primary"
+    zone = var.availability_zone
+  }
+  db_node_set {
+    zone = var.standby_availability_zone
+  }
 
   tags = {
     test = "tf"
@@ -781,8 +789,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 			}
 			return retryError(inErr)
 		}
-		// deployment changing not exposed here but actually exists
-		if *instance.DBInstanceStatus == "deployment changing" || *instance.DBInstanceStatus == "switching" {
+		if IsContains(POSTGRES_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
 			return resource.RetryableError(fmt.Errorf("instance %s is %s, retrying", *instance.DBInstanceId, *instance.DBInstanceStatus))
 		}
 		return nil
