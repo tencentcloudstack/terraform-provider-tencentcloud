@@ -44,6 +44,61 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
+Create a multi available zone bucket
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+variable "standby_availability_zone" {
+  default = "ap-guangzhou-7"
+}
+
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "guagua_vpc_instance_test"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "guagua_vpc_subnet_test"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create postgresql
+resource "tencentcloud_postgresql_instance" "foo" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  engine_version    = "10.4"
+  root_user         = "root123"
+  root_password     = "Root123$"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  storage           = 10
+
+  db_node_set {
+    role = "Primary"
+    zone = var.availability_zone
+  }
+  db_node_set {
+    zone = var.standby_availability_zone
+  }
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
 Import
 
 postgresql instance can be imported using the id, e.g.
@@ -143,10 +198,26 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
+				Required:    true,
 				ForceNew:    true,
-				Optional:    true,
-				Computed:    true,
-				Description: "Availability zone.",
+				Description: "Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.",
+				DiffSuppressFunc: func(k, o, n string, d *schema.ResourceData) bool {
+					if o == "" {
+						return false
+					}
+					raw, ok := d.GetOk("db_node_set")
+					if !ok {
+						return n == o
+					}
+					nodeZones := raw.(*schema.Set).List()
+					for i := range nodeZones {
+						item := nodeZones[i].(map[string]interface{})
+						if zone, ok := item["zone"].(string); ok && zone == n {
+							return true
+						}
+					}
+					return n == o
+				},
 			},
 			"root_user": {
 				Type:        schema.TypeString,
@@ -192,6 +263,26 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.",
+			},
+			"db_node_set": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Specify instance node info for disaster migration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "Standby",
+							Description: "Indicates node type, available values:`Primary`, `Standby`. Default: `Standby`.",
+						},
+						"zone": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Indicates the node available zone.",
+						},
+					},
+				},
 			},
 			// Computed values
 			"public_access_host": {
@@ -250,6 +341,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		username       = d.Get("root_user").(string)
 		password       = d.Get("root_password").(string)
 		charset        = d.Get("charset").(string)
+		nodeSet        = d.Get("db_node_set").(*schema.Set).List()
 	)
 
 	var period = 1
@@ -265,8 +357,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
-	// get speccode with engine_version and memory
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	// get specCode with engine_version and memory
+	outErr = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
 		if inErr != nil {
 			return retryError(inErr)
@@ -301,6 +393,28 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return fmt.Errorf(`The "memory" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
 	}
 
+	var dbNodeSet []*postgresql.DBNode
+	if len(nodeSet) > 0 {
+
+		for i := range nodeSet {
+			var (
+				item = nodeSet[i].(map[string]interface{})
+				role = item["role"].(string)
+				zone = item["zone"].(string)
+				node = &postgresql.DBNode{
+					Role: &role,
+					Zone: &zone,
+				}
+			)
+			dbNodeSet = append(dbNodeSet, node)
+		}
+
+		// check if availability_zone and node_set consists
+		if include, z, nzs := checkZoneSetInclude(d); !include {
+			return fmt.Errorf("`availability_zone`: %s is not included in `db_node_set`: %s", z, nzs)
+		}
+	}
+
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = postgresqlService.CreatePostgresqlInstance(ctx,
 			name,
@@ -316,7 +430,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			storage,
 			username,
 			password,
-			charset)
+			charset,
+			dbNodeSet,
+		)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -568,6 +684,40 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("security_groups")
 	}
 
+	if d.HasChange("db_node_set") {
+
+		if include, z, nzs := checkZoneSetInclude(d); !include {
+			return fmt.Errorf("`availability_zone`: %s is not included in `db_node_set`: %s", z, nzs)
+		}
+
+		nodeSet := d.Get("db_node_set").(*schema.Set).List()
+		request := postgresql.NewModifyDBInstanceDeploymentRequest()
+		request.DBInstanceId = helper.String(d.Id())
+		request.SwitchTag = helper.Int64(0)
+		for i := range nodeSet {
+			var (
+				node = nodeSet[i].(map[string]interface{})
+				role = node["role"].(string)
+				zone = node["zone"].(string)
+			)
+			request.DBNodeSet = append(request.DBNodeSet, &postgresql.DBNode{
+				Role: &role,
+				Zone: &zone,
+			})
+		}
+
+		if err := postgresqlService.ModifyDBInstanceDeployment(ctx, request); err != nil {
+			return err
+		}
+
+		d.SetPartial("db_node_set")
+	}
+
+	if d.HasChange("zone") {
+		log.Printf("[WARN] argument `zone` modified, skip process")
+		d.SetPartial("zone")
+	}
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -622,22 +772,28 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var outErr, inErr error
+	var (
+		instance *postgresql.DBInstance
+		has      bool
+		outErr,
+		inErr error
+	)
+	// Check if import
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instance, has, outErr := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-	if outErr != nil {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-			if inErr != nil {
-				ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
-				if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
-					return nil
-				}
-				return retryError(inErr)
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+		if inErr != nil {
+			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				return nil
 			}
-			return nil
-		})
-	}
+			return retryError(inErr)
+		}
+		if IsContains(POSTGRES_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+			return resource.RetryableError(fmt.Errorf("instance %s is %s, retrying", *instance.DBInstanceId, *instance.DBInstanceStatus))
+		}
+		return nil
+	})
 	if outErr != nil {
 		return outErr
 	}
@@ -708,6 +864,35 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("security_groups", sg)
 	}
 
+	attrRequest := postgresql.NewDescribeDBInstanceAttributeRequest()
+	attrRequest.DBInstanceId = helper.String(d.Id())
+
+	ins, err := postgresqlService.DescribeDBInstanceAttribute(ctx, attrRequest)
+	if err != nil {
+		return err
+	}
+	nodeSet := ins.DBNodeSet
+	zoneSet := schema.NewSet(schema.HashString, nil)
+	if nodeCount := len(nodeSet); nodeCount > 0 {
+		var dbNodeSet = make([]interface{}, 0, nodeCount)
+		for i := range nodeSet {
+			item := nodeSet[i]
+			node := map[string]interface{}{
+				"role": item.Role,
+				"zone": item.Zone,
+			}
+			zoneSet.Add(*item.Zone)
+			dbNodeSet = append(dbNodeSet, node)
+		}
+
+		// skip default set (single AZ and zone includes)
+		_, nodeSetOk := d.GetOk("db_node_set")
+		importedMaz := zoneSet.Len() > 1 && zoneSet.Contains(*instance.Zone)
+
+		if nodeSetOk || importedMaz {
+			_ = d.Set("db_node_set", dbNodeSet)
+		}
+	}
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("status", instance.DBInstanceStatus)
@@ -856,4 +1041,21 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	}
 
 	return nil
+}
+
+// check availability_zone included in db_node_set
+func checkZoneSetInclude(d *schema.ResourceData) (included bool, zone string, nodeZoneList []string) {
+	zone = d.Get("availability_zone").(string)
+	dbNodeSet := d.Get("db_node_set").(*schema.Set).List()
+
+	for i := range dbNodeSet {
+		item := dbNodeSet[i].(map[string]interface{})
+		nodeZone := item["zone"].(string)
+		if nodeZone == zone {
+			included = true
+		}
+		nodeZoneList = append(nodeZoneList, nodeZone)
+	}
+
+	return
 }

@@ -19,7 +19,14 @@ type PostgresqlService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string, securityGroups []string, storage int, username, password, charset string) (instanceId string, errRet error) {
+func (me *PostgresqlService) CreatePostgresqlInstance(
+	ctx context.Context,
+	name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string,
+	securityGroups []string,
+	storage int,
+	username, password, charset string,
+	dbNodeSet []*postgresql.DBNode,
+) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
 	defer func() {
@@ -48,6 +55,10 @@ func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name,
 		for v := range securityGroups {
 			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroups[v])
 		}
+	}
+
+	if len(dbNodeSet) > 0 {
+		request.DBNodeSet = dbNodeSet
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -524,6 +535,54 @@ func (me *PostgresqlService) DescribePgParams(ctx context.Context, instanceId st
 	for _, item := range detail {
 		params[*item.Name] = *item.CurrentValue
 	}
+
+	return
+}
+
+func (me *PostgresqlService) ModifyDBInstanceDeployment(ctx context.Context, request *postgresql.ModifyDBInstanceDeploymentRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().ModifyDBInstanceDeployment(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) DescribeDBInstanceAttribute(ctx context.Context, request *postgresql.DescribeDBInstanceAttributeRequest) (ins *postgresql.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ins = response.Response.DBInstance
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
