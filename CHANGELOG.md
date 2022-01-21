@@ -1,3 +1,27 @@
+## 1.61.2 (January 21, 2022)
+
+COMMON:
+
+* testcase fix `defaultGaapProxyId` 
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_postgresql_instance` support `db_node_set` for multiple available zone.
+
+## 1.61.1 (January 14, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_monitor_alarm_policy` support policy tag
+
+## 1.61.0 (January 11, 2022)
+
+COMMON:
+* add env variable `TENCENTCLOUD_READ_RETRY_TIMEOUT`  and `TENCENTCLOUD_WRITE_RETRY_TIMEOUT`
+
+BUGFIXES:
+* resource `tencentcloud_gaap_proxy` fix destroy error
+
 ## 1.60.27 (January 11, 2022)
 
 COMMON:
