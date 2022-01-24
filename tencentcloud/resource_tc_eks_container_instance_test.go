@@ -20,12 +20,12 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 			{
 				Config: testAccEksCi,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_eks_container_instance.eci"),
+					testAccCheckTencentCloudDataSourceID("tencentcloud_eks_container_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "name", "foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu", "foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "memory", "foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu_type", "foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "restart_policy", "foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "memory", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu_type", "intel"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "restart_policy", "Always"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "security_groups.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.name", "nginx"),
@@ -45,7 +45,6 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.readiness_probe.0.failure_threshold", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.readiness_probe.0.tcp_socket_port", "81"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "init_container.#", "1"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eks_container_instance.foo", "cbs_volume.0.disk_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_container_instance.foo", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_container_instance.foo", "subnet_id"),
 				),
@@ -93,7 +92,7 @@ func testAccCheckEksCiDestroy(s *terraform.State) error {
 const testAccEksCi = defaultVpcVariable + `
 data "tencentcloud_security_groups" "group" {}
 
-resource "tencentcloud_eks_container_instance" "eci" {
+resource "tencentcloud_eks_container_instance" "foo" {
   name = "foo"
   vpc_id = var.vpc_id
   subnet_id = var.subnet_id

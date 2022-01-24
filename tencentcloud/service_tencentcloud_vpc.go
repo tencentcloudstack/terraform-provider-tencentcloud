@@ -1598,11 +1598,15 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 			}
 
 			liteRule := VpcSecurityGroupLiteRule{
-				protocol:        strings.ToUpper(*in.Protocol),
+				//protocol:        strings.ToUpper(*in.Protocol),
 				port:            *in.Port,
 				cidrIp:          *in.CidrBlock,
 				action:          *in.Action,
 				securityGroupId: *in.SecurityGroupId,
+			}
+
+			if in.Protocol != nil {
+				liteRule.protocol = strings.ToUpper(*in.Protocol)
 			}
 
 			if in.AddressTemplate != nil {
