@@ -1,3 +1,9 @@
+## 1.61.3 (January 25, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_as_scaling_config` support `instance_name_settings` and `cam_role_name`.
+
 ## 1.61.2 (January 21, 2022)
 
 COMMON:
