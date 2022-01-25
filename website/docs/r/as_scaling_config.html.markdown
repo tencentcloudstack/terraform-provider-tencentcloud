@@ -48,10 +48,12 @@ The following arguments are supported:
 * `configuration_name` - (Required) Name of a launch configuration.
 * `image_id` - (Required) An available image ID for a cvm instance.
 * `instance_types` - (Required) Specified types of CVM instances.
+* `cam_role_name` - (Optional) CAM role name authorized to access.
 * `data_disk` - (Optional) Configurations of data disk.
 * `disk_type_policy` - (Optional) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_monitor_service` - (Optional) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is `TRUE`.
+* `instance_name_settings` - (Optional) Settings of CVM instance names.
 * `instance_tags` - (Optional) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
@@ -70,6 +72,11 @@ The `data_disk` object supports the following:
 * `disk_size` - (Optional) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
 * `snapshot_id` - (Optional) Data disk snapshot ID.
+
+The `instance_name_settings` object supports the following:
+
+* `instance_name` - (Required) CVM instance name.
+* `instance_name_style` - (Optional) Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default is `ORIGINAL`.
 
 ## Attributes Reference
 

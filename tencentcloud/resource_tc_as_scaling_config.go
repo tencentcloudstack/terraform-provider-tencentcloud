@@ -204,7 +204,33 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(SCALING_DISK_TYPE_ALLOW_POLICY),
 				Description:  "Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.",
 			},
-
+			"cam_role_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CAM role name authorized to access.",
+			},
+			"instance_name_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Settings of CVM instance names.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "CVM instance name.",
+						},
+						"instance_name_style": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateAllowedStringValue(INSTANCE_NAME_STYLE),
+							Default:      INSTANCE_NAME_ORIGINAL,
+							Description:  "Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default is `ORIGINAL`.",
+						},
+					},
+				},
+			},
 			// Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -354,6 +380,26 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.DiskTypePolicy = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("cam_role_name"); ok {
+		request.CamRoleName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_name_settings"); ok {
+		settings := make([]*as.InstanceNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.InstanceNameSettings{}
+			if instanceName, ok := dMap["instance_name"]; ok {
+				settingsInfo.InstanceName = helper.String(instanceName.(string))
+			}
+			if instanceNameStyle, ok := dMap["instance_name_style"]; ok {
+				settingsInfo.InstanceNameStyle = helper.String(instanceNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.InstanceNameSettings = settings[0]
+	}
+
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().CreateLaunchConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -408,6 +454,17 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("user_data", helper.PString(config.UserData))
 		_ = d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
 		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
+
+		_ = d.Set("cam_role_name", *config.CamRoleName)
+		if config.InstanceNameSettings != nil {
+			settings := make([]map[string]interface{}, 0)
+			settings = append(settings, map[string]interface{}{
+				"instance_name":       config.InstanceNameSettings.InstanceName,
+				"instance_name_style": config.InstanceNameSettings.InstanceNameStyle,
+			})
+			_ = d.Set("instance_name_settings", settings)
+		}
+
 		if config.SystemDisk.DiskType != nil {
 			_ = d.Set("system_disk_type", *config.SystemDisk.DiskType)
 		}
@@ -555,6 +612,26 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 
 	if v, ok := d.GetOk("disk_type_policy"); ok {
 		request.DiskTypePolicy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cam_role_name"); ok {
+		request.CamRoleName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_name_settings"); ok {
+		settings := make([]*as.InstanceNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.InstanceNameSettings{}
+			if instanceName, ok := dMap["instance_name"]; ok {
+				settingsInfo.InstanceName = helper.String(instanceName.(string))
+			}
+			if instanceNameStyle, ok := dMap["instance_name_style"]; ok {
+				settingsInfo.InstanceNameStyle = helper.String(instanceNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.InstanceNameSettings = settings[0]
 	}
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().UpgradeLaunchConfiguration(request)
