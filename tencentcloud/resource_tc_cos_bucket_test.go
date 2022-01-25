@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"testing"
 
@@ -340,7 +341,13 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
-	t.Parallel()
+
+	oldRegion := os.Getenv(PROVIDER_REGION)
+	os.Setenv(PROVIDER_REGION, "ap-tokyo")
+
+	t.Cleanup(func() {
+		os.Setenv(PROVIDER_REGION, oldRegion)
+	})
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -677,6 +684,9 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 
 func testAccBucket_originDomain(appid string) string {
 	return fmt.Sprintf(`
+provider "tencentcloud" {
+  region = "ap-singapore"
+}
 resource "tencentcloud_cos_bucket" "with_domain" {
   bucket = "tf-bucket-domain-%s"
   acl    = "private"
@@ -690,6 +700,9 @@ resource "tencentcloud_cos_bucket" "with_domain" {
 
 func testAccBucket_originDomainUpdate(appid string) string {
 	return fmt.Sprintf(`
+provider "tencentcloud" {
+  region = "ap-singapore"
+}
 resource "tencentcloud_cos_bucket" "with_domain" {
   bucket = "tf-bucket-domain-%s"
   acl    = "private"
