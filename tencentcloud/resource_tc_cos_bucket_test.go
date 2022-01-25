@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"testing"
 
@@ -284,7 +283,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
 			},
 		},
 	})
@@ -342,12 +341,7 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 
 func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 
-	oldRegion := os.Getenv(PROVIDER_REGION)
-	os.Setenv(PROVIDER_REGION, "ap-tokyo")
-
-	t.Cleanup(func() {
-		os.Setenv(PROVIDER_REGION, oldRegion)
-	})
+	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
