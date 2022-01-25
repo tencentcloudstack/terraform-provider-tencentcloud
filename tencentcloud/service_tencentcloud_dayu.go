@@ -7,6 +7,7 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1325,6 +1326,199 @@ func (me *DayuService) SetRuleSwitch(ctx context.Context, resourceType string, r
 		}
 	}
 	return
+}
+func (me *DayuService) DescribeNewL4Rules(ctx context.Context, business string, extendParams map[string]interface{}) (infos []*dayu.NewL4RuleEntry, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeNewL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = common.StringPtr(business)
+
+	var offset, limit uint64 = 0, 20
+	request.Offset = common.Uint64Ptr(offset)
+	request.Limit = common.Uint64Ptr(limit)
+
+	if ip, ok := extendParams["ip"]; ok {
+		request.Ip = common.StringPtr(ip.(string))
+	}
+	if virtualPort, ok := extendParams["virtual_port"]; ok {
+		request.VirtualPort = common.Uint64Ptr(uint64(virtualPort.(int)))
+	}
+
+	response, errRet := me.client.UseDayuClient().DescribeNewL4Rules(request)
+	if errRet != nil {
+		return
+	}
+	infos = response.Response.Rules
+	return
+
+}
+
+func (me *DayuService) DeleteNewL4Rules(ctx context.Context, business string, id string, ip string, ruleIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteNewL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = common.StringPtr(business)
+	request.Rule = []*dayu.L4DelRule{
+		{
+			Id:         common.StringPtr(id),
+			Ip:         common.StringPtr(ip),
+			RuleIdList: common.StringPtrs(ruleIds),
+		},
+	}
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().DeleteNewL4Rules(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if *response.Response.Success.Code == "Success" {
+			return
+		}
+	}
+}
+
+func (me *DayuService) ModifyNewL4Rule(ctx context.Context, business string, id string, singleRule interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyNewL4RuleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	rule := singleRule.(map[string]interface{})
+	tmpRule := dayu.L4RuleEntry{}
+	tmpRule.Protocol = common.StringPtr(rule["protocol"].(string))
+	tmpRule.SourcePort = common.Uint64Ptr((uint64(rule["source_port"].(int))))
+	tmpRule.VirtualPort = common.Uint64Ptr((uint64(rule["virtual_port"].(int))))
+	tmpRule.KeepTime = common.Uint64Ptr((uint64(rule["keeptime"].(int))))
+	tmpRule.RuleId = common.StringPtr((rule["rule_id"].(string)))
+	tmpRule.LbType = common.Uint64Ptr((uint64(rule["lb_type"].(int))))
+	if rule["keep_enable"].(bool) {
+		tmpRule.KeepEnable = common.Uint64Ptr((uint64(1)))
+	} else {
+		tmpRule.KeepEnable = common.Uint64Ptr((uint64(0)))
+	}
+	tmpRule.SourceType = common.Uint64Ptr((uint64(rule["source_type"].(int))))
+	if rule["remove_switch"].(bool) {
+		tmpRule.RemoveSwitch = common.Uint64Ptr((uint64(1)))
+	} else {
+		tmpRule.RemoveSwitch = common.Uint64Ptr((uint64(0)))
+	}
+	sourceList := rule["source_list"].([]interface{})
+	tmpRule.SourceList = make([]*dayu.L4RuleSource, 0)
+	for _, singleSource := range sourceList {
+		source := singleSource.(map[string]interface{})
+		tSource := source["source"].(string)
+		tWeight := uint64(source["weight"].(int))
+		tmpRule.SourceList = append(tmpRule.SourceList, &dayu.L4RuleSource{Source: &tSource, Weight: &tWeight})
+	}
+
+	request.Business = common.StringPtr(business)
+	request.Id = common.StringPtr(id)
+	request.Rule = &tmpRule
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().ModifyNewL4Rule(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if *response.Response.Success.Code == "Success" {
+			return
+		}
+	}
+}
+
+func (me *DayuService) CreateNewL4Rules(ctx context.Context, business string, id string, vip string, ruleList []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateNewL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	rules := make([]*dayu.L4RuleEntry, 0)
+	for _, singleRule := range ruleList {
+		rule := singleRule.(map[string]interface{})
+		tmpRule := dayu.L4RuleEntry{}
+		tmpRule.Protocol = common.StringPtr(rule["protocol"].(string))
+		tmpRule.SourcePort = common.Uint64Ptr((uint64(rule["source_port"].(int))))
+		tmpRule.VirtualPort = common.Uint64Ptr((uint64(rule["virtual_port"].(int))))
+		tmpRule.KeepTime = common.Uint64Ptr((uint64(rule["keeptime"].(int))))
+		tmpRule.RuleName = common.StringPtr((rule["rule_name"].(string)))
+		tmpRule.LbType = common.Uint64Ptr((uint64(rule["lb_type"].(int))))
+		if rule["keep_enable"].(bool) {
+			tmpRule.KeepEnable = common.Uint64Ptr((uint64(1)))
+		} else {
+			tmpRule.KeepEnable = common.Uint64Ptr((uint64(0)))
+		}
+		tmpRule.SourceType = common.Uint64Ptr((uint64(rule["source_type"].(int))))
+		if rule["remove_switch"].(bool) {
+			tmpRule.RemoveSwitch = common.Uint64Ptr((uint64(1)))
+		} else {
+			tmpRule.RemoveSwitch = common.Uint64Ptr((uint64(0)))
+		}
+		sourceList := rule["source_list"].([]interface{})
+		tmpRule.SourceList = make([]*dayu.L4RuleSource, 0)
+		for _, singleSource := range sourceList {
+			source := singleSource.(map[string]interface{})
+			tSource := source["source"].(string)
+			tWeight := uint64(source["weight"].(int))
+			tmpRule.SourceList = append(tmpRule.SourceList, &dayu.L4RuleSource{Source: &tSource, Weight: &tWeight})
+		}
+		rules = append(rules, &tmpRule)
+	}
+	request.Business = common.StringPtr(business)
+	request.IdList = common.StringPtrs([]string{id})
+	request.VipList = common.StringPtrs([]string{vip})
+	request.Rules = rules
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().CreateNewL4Rules(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if *response.Response.Success.Code == "Success" {
+			return
+		}
+	}
 }
 
 func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string, resourceId string, ruleName string, ruleId string) (infos []*dayu.L4RuleEntry, healths []*dayu.L4RuleHealth, has bool, errRet error) {
