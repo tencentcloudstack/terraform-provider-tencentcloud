@@ -634,6 +634,7 @@ resource "tencentcloud_cos_bucket" "bucket_maz" {
   bucket   = "tf-bucket-maz-%s"
   acl      = "public-read"
   multi_az = true
+  versioning_enable = true
 }
 `, appid)
 }
