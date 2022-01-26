@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -1823,5 +1824,199 @@ func (me *DayuService) SetSession(ctx context.Context, resourceType string, reso
 		return
 	}
 
+	return
+}
+
+func (me *DayuService) DescribeL7RulesV2(ctx context.Context, business string, offset int, limit int, extendParams map[string]interface{}) (rules []*dayu.NewL7RuleEntry, healths []*dayu.L7RuleHealth, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribleNewL7RulesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = &business
+	if v, ok := extendParams["protocol"]; ok {
+		protocol := v.(string)
+		if protocol != "" {
+			request.ProtocolList = []*string{&protocol}
+		}
+	}
+	if v, ok := extendParams["domain"]; ok {
+		domain := v.(string)
+		if domain != "" {
+			request.Domain = &domain
+		}
+	}
+	offsetUint64 := uint64(offset)
+	request.Offset = &offsetUint64
+	limitUint64 := uint64(limit)
+	request.Limit = &limitUint64
+	var response *dayu.DescribleNewL7RulesResponse
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseDayuClient().DescribleNewL7Rules(request)
+
+		if e, ok := errRet.(*sdkError.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if errRet != nil {
+			return resource.RetryableError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+	rules = response.Response.Rules
+	healths = response.Response.Healths
+	return
+
+}
+
+func (me *DayuService) CreateL7RuleV2(ctx context.Context, business string, resourceId string, resourceIp string, ruleList []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateNewL7RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	rule := ruleList[0].(map[string]interface{})
+	keeptime := uint64(rule["keeptime"].(int))
+	domain := rule["domain"].(string)
+	protocol := rule["protocol"].(string)
+	sourceType := uint64(rule["source_type"].(int))
+	lbType := uint64(rule["lb_type"].(int))
+	keepEnable := uint64(rule["keep_enable"].(int))
+	certType := uint64(rule["cert_type"].(int))
+	sslId := rule["ssl_id"].(string)
+	ccEnable := uint64(rule["cc_enable"].(int))
+	httpsToHttpEnable := uint64(rule["https_to_http_enable"].(int))
+
+	sourceList := rule["source_list"].([]interface{})
+	sources := make([]*dayu.L4RuleSource, 0)
+	for _, source := range sourceList {
+		sourceItem := source.(map[string]interface{})
+		weight := uint64(sourceItem["weight"].(int))
+		subSource := sourceItem["source"].(string)
+		tmpSource := dayu.L4RuleSource{
+			Source: &subSource,
+			Weight: &weight,
+		}
+		sources = append(sources, &tmpSource)
+	}
+
+	ruleEntry := dayu.L7RuleEntry{
+		KeepTime:          &keeptime,
+		Domain:            &domain,
+		Protocol:          &protocol,
+		SourceType:        &sourceType,
+		LbType:            &lbType,
+		KeepEnable:        &keepEnable,
+		SourceList:        sources,
+		CertType:          &certType,
+		SSLId:             &sslId,
+		CCEnable:          &ccEnable,
+		HttpsToHttpEnable: &httpsToHttpEnable,
+	}
+
+	request.IdList = []*string{&resourceId}
+	request.VipList = []*string{&resourceIp}
+	request.Business = &business
+	request.Rules = []*dayu.L7RuleEntry{&ruleEntry}
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet := me.client.UseDayuClient().CreateNewL7Rules(request)
+
+		if e, ok := errRet.(*sdkError.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if errRet != nil {
+			return resource.RetryableError(errRet)
+		}
+		if *response.Response.Success.Code != "Success" {
+			errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+			return resource.RetryableError(errRet)
+		}
+		return nil
+	})
+	return
+}
+
+func (me *DayuService) ModifyL7RuleV2(ctx context.Context, resourceType string, resourceId string, rule *dayu.NewL7RuleEntry) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyNewDomainRulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Rule = rule
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet := me.client.UseDayuClient().ModifyNewDomainRules(request)
+
+		if e, ok := errRet.(*sdkError.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if errRet != nil {
+			return resource.RetryableError(errRet)
+		}
+		if *response.Response.Success.Code != "Success" {
+			errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+			return resource.RetryableError(errRet)
+		}
+		return nil
+	})
+
+	return
+}
+
+func (me *DayuService) DeleteL7RulesV2(ctx context.Context, resourceType string, resourceId string, resourceIp string, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteNewL7RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Business = &resourceType
+	request.Rule = []*dayu.L4DelRule{
+		{
+			Id:         &resourceId,
+			Ip:         &resourceIp,
+			RuleIdList: []*string{&ruleId},
+		},
+	}
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet := me.client.UseDayuClient().DeleteNewL7Rules(request)
+
+		if e, ok := errRet.(*sdkError.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if errRet != nil {
+			return resource.RetryableError(errRet)
+		}
+		if *response.Response.Success.Code != "Success" {
+			errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+			return resource.RetryableError(errRet)
+		}
+		return nil
+	})
 	return
 }

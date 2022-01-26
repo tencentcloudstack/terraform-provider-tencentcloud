@@ -39,7 +39,9 @@ const (
 	defaultSecurityGroup  = "sg-ijato2x1"
 	defaultSecurityGroup2 = "sg-51rgzop1"
 
-	defaultProjectId = "1250480"
+	defaultProjectId   = "1250480"
+	defaultDayuBgpIdV2 = "bgpip-000004x0"
+	defaultDayuBgpIpV2 = "119.28.217.253"
 )
 
 /*

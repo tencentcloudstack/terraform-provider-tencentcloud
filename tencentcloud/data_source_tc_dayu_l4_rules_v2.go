@@ -1,5 +1,5 @@
 /*
-Use this data source to query dayu layer 4 rules
+Use this data source to query dayu new layer 4 rules
 
 Example Usage
 
@@ -208,7 +208,9 @@ func dataSourceTencentCloudDayuL4RulesReadV2(d *schema.ResourceData, meta interf
 		list = append(list, tmpRule)
 	}
 	ids := make([]string, 0, len(list))
-
+	for _, listItem := range list {
+		ids = append(ids, listItem["rule_id"].(string))
+	}
 	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set rules fail, reason:%s\n", logId, e.Error())
