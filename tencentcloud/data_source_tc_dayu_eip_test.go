@@ -11,7 +11,7 @@ var testDataDayuEip = "data.tencentcloud_dayu_eip.test"
 func TestAccTencentCloudDataDayuEip(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCTUNT_TYPE_INTERNATION) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuEipDestroy,
 		Steps: []resource.TestStep{

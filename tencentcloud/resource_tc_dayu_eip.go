@@ -112,7 +112,6 @@ func resourceTencentCloudDayuEip() *schema.Resource {
 
 func resourceTencentCloudDayuEipCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dayu_l4_rule.create")()
-
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
