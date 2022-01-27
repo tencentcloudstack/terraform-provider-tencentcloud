@@ -40,19 +40,11 @@ if [ "$diff" != "" ]; then
 fi
 
 # go test check
-delta_test_files=`git diff --name-status origin/master | egrep "_test\.go$" | awk '{print $2}'`
-for delta_test_file in ${delta_test_files}; do
-    test_casts=`egrep "func TestAcc.+\(" ${delta_test_file} | awk -F "(" '{print $1}' | awk '{print $2}'`
-    for test_cast in ${test_casts}; do
-        go_test_cmd="go test -v -run ${test_cast} -timeout=0 ./tencentcloud/"
-        echo ${go_test_cmd}
-        $go_test_cmd
-        if [ $? -ne 0 ]; then
-            printf "[GO TEST FILED] ${go_test_cmd}"
-            exit 1
-        fi
-    done
-done
+make deltatest
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
 
 printf "COMMIT READY\n"
 exit 0
