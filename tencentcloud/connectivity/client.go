@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
@@ -104,6 +105,7 @@ type TencentCloudClient struct {
 	clsConn            *cls.Client
 	dnsPodConn         *dnspod.Client
 	privateDnsConn     *privatedns.Client
+	antiddosConn       *antiddos.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -677,4 +679,17 @@ func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
 	me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privateDnsConn
+}
+
+// UseAntiddosClient returns antiddos client for service
+func (me *TencentCloudClient) UseAntiddosClient() *antiddos.Client {
+	if me.antiddosConn != nil {
+		return me.antiddosConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.antiddosConn, _ = antiddos.NewClient(me.Credential, me.Region, cpf)
+	me.antiddosConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.antiddosConn
 }

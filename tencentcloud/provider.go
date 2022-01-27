@@ -44,6 +44,16 @@ Provider Data Sources
   tencentcloud_availability_regions
   tencentcloud_availability_zones_by_product
   tencentcloud_availability_zones
+Anti-DDoS(DayuV2)
+  Data Source
+    tencentcloud_dayu_eip
+	tencentcloud_dayu_l4_rules_v2
+	tencentcloud_dayu_l7_rules_v2
+
+  Resource
+	tencentcloud_dayu_eip
+	tencentcloud_dayu_l4_rule
+	tencentcloud_dayu_l7_rule_v2
 
 Anti-DDoS(Dayu)
   Data Source
@@ -604,6 +614,13 @@ const (
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	ACCTUNT_TYPE_INTERNATION              = "INTERNATION"
+	ACCTUNT_TYPE_PREPAY                   = "PREPAY"
+	ACCTUNT_TYPE_COMMON                   = "COMMON"
+	INTERNATION_PROVIDER_SECRET_ID        = "TENCENTCLOUD_SECRET_ID_INTERNATION"
+	INTERNATION_PROVIDER_SECRET_KEY       = "TENCENTCLOUD_SECRET_KEY_INTERNATION"
+	PREPAY_PROVIDER_SECRET_ID             = "TENCENTCLOUD_SECRET_ID_PREPAY"
+	PREPAY_PROVIDER_SECRET_KEY            = "TENCENTCLOUD_SECRET_KEY_PREPAY"
 )
 
 type TencentCloudClient struct {
@@ -766,7 +783,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_ddos_policy_cases":                   dataSourceTencentCloudDayuDdosPolicyCases(),
 			"tencentcloud_dayu_ddos_policy_attachments":             dataSourceTencentCloudDayuDdosPolicyAttachments(),
 			"tencentcloud_dayu_l4_rules":                            dataSourceTencentCloudDayuL4Rules(),
+			"tencentcloud_dayu_l4_rules_v2":                         dataSourceTencentCloudDayuL4RulesV2(),
 			"tencentcloud_dayu_l7_rules":                            dataSourceTencentCloudDayuL7Rules(),
+			"tencentcloud_dayu_l7_rules_v2":                         dataSourceTencentCloudDayuL7RulesV2(),
 			"tencentcloud_gaap_proxies":                             dataSourceTencentCloudGaapProxies(),
 			"tencentcloud_gaap_realservers":                         dataSourceTencentCloudGaapRealservers(),
 			"tencentcloud_gaap_layer4_listeners":                    dataSourceTencentCloudGaapLayer4Listeners(),
@@ -848,6 +867,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secrets":                              dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
+			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -942,7 +962,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_ddos_policy_case":                   resourceTencentCloudDayuDdosPolicyCase(),
 			"tencentcloud_dayu_ddos_policy_attachment":             resourceTencentCloudDayuDdosPolicyAttachment(),
 			"tencentcloud_dayu_l4_rule":                            resourceTencentCloudDayuL4Rule(),
+			"tencentcloud_dayu_l4_rule_v2":                         resourceTencentCloudDayuL4RuleV2(),
 			"tencentcloud_dayu_l7_rule":                            resourceTencentCloudDayuL7Rule(),
+			"tencentcloud_dayu_l7_rule_v2":                         resourceTencentCloudDayuL7RuleV2(),
+			"tencentcloud_dayu_eip":                                resourceTencentCloudDayuEip(),
 			"tencentcloud_gaap_proxy":                              resourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                         resourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                    resourceTencentCloudGaapLayer4Listener(),
