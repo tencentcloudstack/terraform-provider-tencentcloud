@@ -158,6 +158,9 @@ func testAccCheckDayuL4RuleExists(n string) resource.TestCheckFunc {
 
 		_, _, has, err := service.DescribeL4Rule(ctx, resourceType, resourceId, ruleId)
 		if err != nil {
+			_, _, has, err = service.DescribeL4Rule(ctx, resourceType, resourceId, ruleId)
+		}
+		if err != nil {
 			return err
 		}
 		if has {
