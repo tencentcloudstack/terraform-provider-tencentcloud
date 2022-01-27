@@ -127,7 +127,7 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Whether to open the ip whitelist, `true`: open, `false`: close.",
+				Description: "Instance bandwidth in Mbps.",
 			},
 			"partition": {
 				Type:        schema.TypeInt,

@@ -49,7 +49,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, ForceNew) Subnet id.
 * `vpc_id` - (Required, ForceNew) Vpc id.
 * `zone_id` - (Required, ForceNew) Available zone id.
-* `band_width` - (Optional, ForceNew) Whether to open the ip whitelist, `true`: open, `false`: close.
+* `band_width` - (Optional, ForceNew) Instance bandwidth in Mbps.
 * `config` - (Optional) Instance configuration.
 * `disk_size` - (Optional, ForceNew) Disk Size.
 * `disk_type` - (Optional, ForceNew) Type of disk.
