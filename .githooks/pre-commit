@@ -1,24 +1,19 @@
 #!/bin/sh
-
+printf "==> Step 1: Gofmt Check...\n"
 make fmtcheck
 if [ $? -ne 0 ]; then
     printf "COMMIT FAILED\n"
     exit 1
 fi
 
-#make test-build
-#if [ $? -ne 0 ]; then
-#    printf "COMMIT FAILED\n"
-#    exit 1
-#fi
-#
+
 #make lint
 #if [ $? -ne 0 ]; then
 #    printf "COMMIT FAILED\n"
 #    exit 1
 #fi
 
-printf "==> Generating docs for tencentcloud provider...\n"
+printf "==> Step 2: Generating docs for tencentcloud provider...\n"
 doc=`make doc 2>&1`
 if [ $? -ne 0 ]; then
     echo "$doc"| tail -n 4|head -n 2
@@ -32,6 +27,7 @@ fi
 #    exit 1
 #fi
 
+printf "==> Step 3: Doc Check...\n"
 diff=`git diff --name-only website/docs/`
 if [ "$diff" != "" ]; then
     printf "There are docs updated when checking, 'git add' it first.\n"
@@ -39,6 +35,7 @@ if [ "$diff" != "" ]; then
     exit 1
 fi
 
+printf "==> Step 4: Incremental unit tests...\n"
 # go test check
 make deltatest
 if [ $? -ne 0 ]; then
