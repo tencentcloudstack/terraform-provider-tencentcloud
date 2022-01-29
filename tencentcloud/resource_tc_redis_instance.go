@@ -619,13 +619,13 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("mem_size") {
 
-		oldInter, newInter := d.GetChange("mem_size")
+		_, newInter := d.GetChange("mem_size")
 		newMemSize := newInter.(int)
-		oldMemSize := oldInter.(int)
+		//oldMemSize := oldInter.(int)
 
-		if oldMemSize >= newMemSize {
-			return fmt.Errorf("redis mem_size can only increase")
-		}
+		//if oldMemSize >= newMemSize {
+		//	return fmt.Errorf("redis mem_size can only increase")
+		//}
 
 		if newMemSize < 1 {
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
