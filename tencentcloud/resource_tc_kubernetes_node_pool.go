@@ -47,6 +47,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 4
   enable_auto_scale    = true
+  multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
     instance_type      = var.default_instance_type
@@ -332,6 +333,14 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 					" If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking)" +
 					".",
 			},
+			"multi_zone_subnet_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				ValidateFunc: validateAllowedStringValue([]string{MultiZoneSubnetPolicyPriority,
+					MultiZoneSubnetPolicyEquality}),
+				Description: "Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.",
+			},
 			"node_config": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -505,6 +514,10 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 
 	if v, ok := d.GetOk("scaling_mode"); ok {
 		request.ServiceSettings = &as.ServiceSettings{ScalingMode: helper.String(v.(string))}
+	}
+
+	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok {
+		request.MultiZoneSubnetPolicy = helper.String(v.(string))
 	}
 
 	result = request.ToJsonString()
@@ -893,6 +906,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("vpc_id", asg.VpcId)
 		_ = d.Set("retry_policy", asg.RetryPolicy)
 		_ = d.Set("subnet_ids", helper.StringsInterfaces(asg.SubnetIdSet))
+		_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
 	}
 
 	taints := make([]map[string]interface{}, len(nodePool.Taints))

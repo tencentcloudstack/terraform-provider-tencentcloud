@@ -1,3 +1,27 @@
+## 1.61.6 (February 5, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_node_pool` support set `multi_zone_subnet_policy`
+
+
+## 1.61.5 (January 29, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_redis_instance` remove change redis mem_size limit
+
+## 1.61.4 (January 27, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_dayu_eip` support create new ddos eip rules
+* resource `tencentcloud_dayu_l4_rule_v2` support create new ddos l4 rules
+* resource `tencentcloud_dayu_l7_rule_v2` support create new ddos l7 rules
+* data source `tencentcloud_dayu_eip` support query new ddos eip rules
+* data source `tencentcloud_dayu_l4_rules_v2` support query new ddos l4 rules
+* data source `tencentcloud_dayu_l7_rules_v2` support query new ddos l7 rules
+
 ## 1.61.3 (January 25, 2022)
 
 ENHANCEMENTS:
