@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -14,7 +15,7 @@ func TestAccTencentCloudCamRolesDataSource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCamRoleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRolesDataSource_basic,
+				Config: testAccCamRolesDataSource_basic(ownerUin),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCamRoleExists("tencentcloud_cam_role.role"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_roles.roles", "role_list.#", "1"),
@@ -31,15 +32,16 @@ func TestAccTencentCloudCamRolesDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccCamRolesDataSource_basic = `
+func testAccCamRolesDataSource_basic(uin string) string {
+	return fmt.Sprintf(`
 resource "tencentcloud_cam_role" "role" {
   name          = "cam-role-test11"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
   description   = "test"
   console_login = true
 }
   
 data "tencentcloud_cam_roles" "roles" {
   role_id = tencentcloud_cam_role.role.id
+}`, uin, uin)
 }
-`

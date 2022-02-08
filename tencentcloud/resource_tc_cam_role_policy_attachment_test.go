@@ -17,7 +17,7 @@ func TestAccTencentCloudCamRolePolicyAttachment_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCamRolePolicyAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRolePolicyAttachment_basic,
+				Config: testAccCamRolePolicyAttachment_basic(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamRolePolicyAttachmentExists("tencentcloud_cam_role_policy_attachment.role_policy_attachment_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment.role_policy_attachment_basic", "role_id"),
@@ -80,10 +80,11 @@ func testAccCheckCamRolePolicyAttachmentExists(n string) resource.TestCheckFunc 
 }
 
 //need to add policy resource definition
-const testAccCamRolePolicyAttachment_basic = `
+func testAccCamRolePolicyAttachment_basic(uin string) string {
+	return fmt.Sprintf(`
 resource "tencentcloud_cam_role" "role" {
   name          = "cam-role-test"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
   description   = "test"
   console_login = true
 }
@@ -97,5 +98,5 @@ resource "tencentcloud_cam_policy" "policy" {
 resource "tencentcloud_cam_role_policy_attachment" "role_policy_attachment_basic" {
   role_id   = tencentcloud_cam_role.role.id
   policy_id = tencentcloud_cam_policy.policy.id
+}`, uin, uin)
 }
-`
