@@ -214,7 +214,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
