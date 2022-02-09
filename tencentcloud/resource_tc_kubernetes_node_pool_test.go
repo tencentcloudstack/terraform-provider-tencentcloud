@@ -261,7 +261,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   desired_capacity     = 2
   enable_auto_scale    = false
   node_os = "ubuntu18.04.1x86_64"
-  delete_keep_instance = true
+  delete_keep_instance = false
   scaling_group_name 	   = "basic_group_test"
   default_cooldown 		   = 350
   termination_policies 	   = ["NEWEST_INSTANCE"]
