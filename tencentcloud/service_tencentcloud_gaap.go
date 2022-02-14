@@ -842,7 +842,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 func (me *GaapService) CreateTCPListener(
 	ctx context.Context,
 	name, scheduler, realserverType, proxyId string,
-	port, interval, connectTimeout int,
+	port, interval, connectTimeout, clientIPMethod int,
 	healthCheck bool,
 ) (id string, err error) {
 	logId := getLogId(ctx)
@@ -861,6 +861,7 @@ func (me *GaapService) CreateTCPListener(
 	}
 	request.DelayLoop = helper.IntUint64(interval)
 	request.ConnectTimeout = helper.IntUint64(connectTimeout)
+	request.ClientIPMethod = helper.IntInt64(clientIPMethod)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1237,7 +1238,7 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeTCPListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == fmt.Sprintf("ListenerId(%s) Not Exist.", id)) {
 						return nil
 					}
 				}
@@ -1269,7 +1270,7 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeUDPListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == fmt.Sprintf("ListenerId(%s) Not Exist.", id)) {
 						return nil
 					}
 				}

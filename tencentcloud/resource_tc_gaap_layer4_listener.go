@@ -135,6 +135,12 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(2, 60),
 				Description:  "Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
 			},
+			"client_ip_method": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "The way the listener gets the client IP, 0 for TOA, 1 for Proxy Protocol. NOTES: Only supports listeners of `TCP` protocol.",
+			},
 			"realserver_bind_set": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -219,6 +225,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 	if protocol == "TCP" && connectTimeout >= interval {
 		return errors.New("connect_timeout must be less than interval")
 	}
+	clientIPMethod := d.Get("client_ip_method").(int)
 
 	var realservers []gaapRealserverBind
 	if raw, ok := d.GetOk("realserver_bind_set"); ok {
@@ -249,7 +256,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 
 	switch protocol {
 	case "TCP":
-		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, healthCheck)
+		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, clientIPMethod, healthCheck)
 		if err != nil {
 			return err
 		}

@@ -11,7 +11,7 @@ var testDataDayuL7RulesV2Name = "data.tencentcloud_dayu_l7_rules_v2.test"
 func TestAccTencentCloudDataDayuL7V2Rules(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCTUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuL7RuleV2Destroy,
 		Steps: []resource.TestStep{

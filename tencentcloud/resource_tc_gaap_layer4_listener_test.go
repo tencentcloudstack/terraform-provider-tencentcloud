@@ -16,7 +16,7 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
