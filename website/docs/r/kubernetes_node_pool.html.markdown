@@ -103,6 +103,51 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 }
 ```
 
+Using Spot CVM Instance
+
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
+  name                     = "mynodepool"
+  cluster_id               = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size                 = 6
+  min_size                 = 1
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids               = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  desired_capacity         = 4
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+
+  auto_scaling_config {
+    instance_type        = var.default_instance_type
+    system_disk_type     = "CLOUD_PREMIUM"
+    system_disk_size     = "50"
+    security_group_ids   = ["sg-24vswocp"]
+    instance_charge_type = "SPOTPAID"
+    spot_instance_type   = "one-time"
+    spot_max_price       = "1000"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -140,12 +185,17 @@ The `auto_scaling_config` object supports the following:
 * `data_disk` - (Optional) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
+* `instance_charge_type_prepaid_period` - (Optional) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `instance_charge_type_prepaid_renew_flag` - (Optional) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
+* `instance_charge_type` - (Optional) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `internet_charge_type` - (Optional) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, ForceNew) ID list of keys.
 * `password` - (Optional, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
+* `spot_instance_type` - (Optional) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `spot_max_price` - (Optional) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
