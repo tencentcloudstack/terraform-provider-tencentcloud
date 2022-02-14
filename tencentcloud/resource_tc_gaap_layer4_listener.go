@@ -138,8 +138,9 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 			"client_ip_method": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      0,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "The way the listener gets the client IP, 0 for TOA, 1 for Proxy Protocol. NOTES: Only supports listeners of `TCP` protocol.",
+				Description:  "The way the listener gets the client IP, 0 for TOA, 1 for Proxy Protocol, default value is 0. NOTES: Only supports listeners of `TCP` protocol.",
 			},
 			"realserver_bind_set": {
 				Type:     schema.TypeSet,
