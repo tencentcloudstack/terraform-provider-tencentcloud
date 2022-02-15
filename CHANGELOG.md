@@ -1,3 +1,16 @@
+## 1.61.7 (February 15, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_node_pool` support CVM instance charge type
+
+BUGFIXES
+
+* Fix testcases CamPolicies
+* Fix testcases CamRole
+* Fix testcases TcaplusDB
+* Fix testcases EKSCluster
+
 ## 1.61.6 (February 5, 2022)
 
 ENHANCEMENTS:
