@@ -17,7 +17,7 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -44,12 +44,12 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_https(t *testing.T) {
+func TestAccTencentCloudGaapHttpDomain_https_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -81,7 +81,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -108,7 +108,6 @@ func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id", regexp.MustCompile("cert-.")),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain", "qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "true"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth_id", regexp.MustCompile("cert-.")),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "true"),
@@ -124,7 +123,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -159,7 +158,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -195,7 +194,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -210,7 +209,6 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain", "qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 				),
@@ -226,7 +224,6 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_ids.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain", "qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 				),
@@ -240,7 +237,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
@@ -255,7 +252,6 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_ids.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain", "qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 				),
@@ -271,7 +267,6 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_ids.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain", "qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "basic_auth", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 				),

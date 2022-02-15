@@ -49,7 +49,7 @@ The following arguments are supported:
 * `gaap_auth_id` - (Optional) ID of the SSL certificate.
 * `gaap_auth` - (Optional) Indicates whether SSL certificate authentication is enable, default value is `false`.
 * `realserver_auth` - (Optional) Indicates whether realserver authentication is enable, default value is `false`.
-* `realserver_certificate_domain` - (Optional) CA certificate domain of the realserver.
+* `realserver_certificate_domain` - (Optional) CA certificate domain of the realserver. It has been deprecated.
 * `realserver_certificate_id` - (Optional, **Deprecated**) It has been deprecated from version 1.28.0. Set `realserver_certificate_ids` instead. CA certificate ID of the realserver.
 * `realserver_certificate_ids` - (Optional) CA certificate ID list of the realserver.
 

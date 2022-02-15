@@ -384,15 +384,9 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 			polyClientCertificateIds []string
 		)
 
-		if d.HasChange("name") {
-			name = helper.String(d.Get("name").(string))
-		}
-		if d.HasChange("certificate_id") {
-			certificateId = helper.String(d.Get("certificate_id").(string))
-		}
-		if d.HasChange("forward_protocol") {
-			forwardProtocol = helper.String(d.Get("forward_protocol").(string))
-		}
+		name = helper.String(d.Get("name").(string))
+		certificateId = helper.String(d.Get("certificate_id").(string))
+		forwardProtocol = helper.String(d.Get("forward_protocol").(string))
 
 		if d.HasChange("client_certificate_id") {
 			if raw, ok := d.GetOk("client_certificate_id"); ok {

@@ -16,7 +16,7 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTP"),
 		Steps: []resource.TestStep{
@@ -51,12 +51,12 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
+func TestAccTencentCloudGaapLayer7Listener_https_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
@@ -100,7 +100,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
@@ -129,7 +129,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
@@ -157,7 +157,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
@@ -185,14 +185,14 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "2"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"proxy_id",
-				},
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// 	ImportStateVerifyIgnore: []string{
+			// 		"proxy_id",
+			// 	},
+			// },
 		},
 	})
 }
@@ -202,7 +202,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsCcToPoly(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{

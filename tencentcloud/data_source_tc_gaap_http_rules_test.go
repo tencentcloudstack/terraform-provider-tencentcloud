@@ -10,7 +10,7 @@ import (
 func TestAccDataSourceTencentCloudGaapHttpRules_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -40,7 +40,7 @@ func TestAccDataSourceTencentCloudGaapHttpRules_basic(t *testing.T) {
 func TestAccDataSourceTencentCloudGaapHttpRules_path(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -70,7 +70,7 @@ func TestAccDataSourceTencentCloudGaapHttpRules_path(t *testing.T) {
 func TestAccDataSourceTencentCloudGaapHttpRules_forwardHost(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -110,9 +110,14 @@ resource "tencentcloud_gaap_realserver" "foo" {
   name = "ci-test-gaap-realserver"
 }
 
-resource tencentcloud_gaap_http_rule "foo" {
+resource "tencentcloud_gaap_http_domain" "foo" {
+	listener_id = tencentcloud_gaap_layer7_listener.foo.id
+	domain      = "www.qq.com"
+}
+
+resource "tencentcloud_gaap_http_rule" "foo" {
   listener_id     = tencentcloud_gaap_layer7_listener.foo.id
-  domain          = "www.qq.com"
+  domain          = tencentcloud_gaap_http_domain.foo.domain
   path            = "/"
   realserver_type = "IP"
   health_check    = true

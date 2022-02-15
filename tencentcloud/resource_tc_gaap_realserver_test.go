@@ -16,7 +16,7 @@ func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{
@@ -45,7 +45,7 @@ func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{
@@ -69,7 +69,7 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{
@@ -100,7 +100,7 @@ func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{

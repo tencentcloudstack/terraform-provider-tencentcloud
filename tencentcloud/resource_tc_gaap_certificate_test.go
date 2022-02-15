@@ -16,7 +16,7 @@ func TestAccTencentCloudGaapCertificate_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -49,7 +49,7 @@ func TestAccTencentCloudGaapCertificate_clientCA(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -77,7 +77,7 @@ func TestAccTencentCloudGaapCertificate_ServerSSL(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -105,7 +105,7 @@ func TestAccTencentCloudGaapCertificate_realserverCA(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -133,7 +133,7 @@ func TestAccTencentCloudGaapCertificate_ProxySSL(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -161,7 +161,7 @@ func TestAccTencentCloudGaapCertificate_updateName(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapCertificateDestroy(id),
 		Steps: []resource.TestStep{

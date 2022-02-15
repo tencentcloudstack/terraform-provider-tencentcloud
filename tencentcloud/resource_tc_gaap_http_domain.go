@@ -133,7 +133,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "CA certificate domain of the realserver.",
+				Description: "CA certificate domain of the realserver. It has been deprecated.",
 			},
 			"gaap_auth": {
 				Type:        schema.TypeBool,
@@ -284,15 +284,16 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 		id := fmt.Sprintf("%s+%s+%s", listenerId, protocol, domain)
 		d.SetId(id)
-
-		if err := service.SetAdvancedAuth(
-			ctx,
-			listenerId, domain,
-			realserverAuth, basicAuth, gaapAuth,
-			realserverCertificateIds,
-			realserverCertificateDomain, basicAuthId, gaapCertificateId,
-		); err != nil {
-			return err
+		if realserverAuth || basicAuth || gaapAuth {
+			if err := service.SetAdvancedAuth(
+				ctx,
+				listenerId, domain,
+				realserverAuth, basicAuth, gaapAuth,
+				realserverCertificateIds,
+				realserverCertificateDomain, basicAuthId, gaapCertificateId,
+			); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -377,8 +378,6 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 		realserverCertificateId = realserverCertificateIds[0]
 	}
 	_ = d.Set("realserver_certificate_id", realserverCertificateId)
-
-	_ = d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
 
 	if httpDomain.GaapAuth == nil {
 		httpDomain.GaapAuth = helper.IntInt64(0)

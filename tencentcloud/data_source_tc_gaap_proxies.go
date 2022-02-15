@@ -50,14 +50,14 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
-				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
+				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "Beijing", "EastChina", "Shanghai", "SouthChina", "Guangzhou", "SouthwestChina", "Chengdu", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
 				Description:   "Access region of the GAAP proxy to be queried. Conflict with `ids`.",
 			},
 			"realserver_region": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
-				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
+				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "Beijing", "EastChina", "Shanghai", "SouthChina", "Guangzhou", "SouthwestChina", "Chengdu", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
 				Description:   "Region of the GAAP realserver to be queried. Conflict with `ids`.",
 			},
 			"tags": {

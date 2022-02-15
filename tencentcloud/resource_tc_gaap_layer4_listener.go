@@ -301,6 +301,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		status         *uint64
 		createTime     string
 		realservers    []map[string]interface{}
+		clientIpMethod *uint64
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -320,7 +321,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		protocol = "TCP"
 
 		listener := tcpListeners[0]
-
+		clientIpMethod = listener.ClientIPMethod
 		name = listener.ListenerName
 		port = listener.Port
 		scheduler = listener.Scheduler
@@ -366,6 +367,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		healthCheck = helper.Bool(false)
 		connectTimeout = helper.IntUint64(2)
 		interval = helper.IntUint64(5)
+		clientIpMethod = helper.IntUint64(0)
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
@@ -399,6 +401,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	_ = d.Set("health_check", healthCheck)
 	_ = d.Set("interval", interval)
 	_ = d.Set("connect_timeout", connectTimeout)
+	_ = d.Set("client_ip_method", clientIpMethod)
 	_ = d.Set("realserver_bind_set", realservers)
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
