@@ -93,6 +93,51 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   }
 }
 ```
+
+Using Spot CVM Instance
+```hcl
+resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
+  name = "mynodepool"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  max_size = 6
+  min_size = 1
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 4
+  enable_auto_scale    = true
+  multi_zone_subnet_policy = "EQUALITY"
+
+  auto_scaling_config {
+    instance_type      = var.default_instance_type
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+    security_group_ids = ["sg-24vswocp"]
+	instance_charge_type = "SPOTPAID"
+    spot_instance_type = "one-time"
+    spot_max_price = "1000"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+}
+
+```
 */
 package tencentcloud
 
@@ -192,6 +237,38 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 					},
 				},
 			},
+		},
+		// payment
+		"instance_charge_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+		},
+		"instance_charge_type_prepaid_period": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
+			Description:  "The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+		},
+		"instance_charge_type_prepaid_renew_flag": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Computed:     true,
+			ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
+			Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+		},
+		"spot_instance_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateAllowedStringValue([]string{"one-time"}),
+			Description:  "Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.",
+		},
+		"spot_max_price": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateStringNumber,
+			Description:  "Max price of a spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
 		},
 		"internet_charge_type": {
 			Type:         schema.TypeString,
@@ -634,7 +711,32 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		}
 	}
 
-	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
+	chargeType, ok := dMap["instance_charge_type"].(string)
+	if !ok || chargeType == "" {
+		chargeType = INSTANCE_CHARGE_TYPE_POSTPAID
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_SPOTPAID {
+		spotMaxPrice := dMap["spot_max_price"].(string)
+		spotInstanceType := dMap["spot_instance_type"].(string)
+		request.InstanceMarketOptions = &as.InstanceMarketOptionsRequest{
+			MarketType: helper.String("spot"),
+			SpotOptions: &as.SpotMarketOptions{
+				MaxPrice:         &spotMaxPrice,
+				SpotInstanceType: &spotInstanceType,
+			},
+		}
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_PREPAID {
+		period := dMap["instance_charge_type_prepaid_period"].(int)
+		renewFlag := dMap["instance_charge_type_prepaid_renew_flag"].(string)
+		request.InstanceChargePrepaid = &as.InstanceChargePrepaid{
+			Period:    helper.IntInt64(period),
+			RenewFlag: &renewFlag,
+		}
+	}
+
 	request.InstanceChargeType = &chargeType
 
 	result = request.ToJsonString()
@@ -703,6 +805,35 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		}
 	}
 
+	chargeType, ok := dMap["instance_charge_type"].(string)
+
+	if !ok || chargeType == "" {
+		chargeType = INSTANCE_CHARGE_TYPE_POSTPAID
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_SPOTPAID {
+		spotMaxPrice := dMap["spot_max_price"].(string)
+		spotInstanceType := dMap["spot_instance_type"].(string)
+		request.InstanceMarketOptions = &as.InstanceMarketOptionsRequest{
+			MarketType: helper.String("spot"),
+			SpotOptions: &as.SpotMarketOptions{
+				MaxPrice:         &spotMaxPrice,
+				SpotInstanceType: &spotInstanceType,
+			},
+		}
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_PREPAID {
+		period := dMap["instance_charge_type_prepaid_period"].(int)
+		renewFlag := dMap["instance_charge_type_prepaid_renew_flag"].(string)
+		request.InstanceChargePrepaid = &as.InstanceChargePrepaid{
+			Period:    helper.IntInt64(period),
+			RenewFlag: &renewFlag,
+		}
+	}
+
+	request.InstanceChargeType = &chargeType
+
 	return request
 }
 
@@ -745,19 +876,27 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("cluster_id", clusterId)
 
 	//Describe Node Pool
-	nodePool, has, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, err = service.DescribeNodePool(ctx, clusterId, nodePoolId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	var (
+		nodePool *tke.NodePool
+	)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		nodePool, has, err = service.DescribeNodePool(ctx, clusterId, nodePoolId)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		status := *nodePool.AutoscalingGroupStatus
+
+		if status == "enabling" || status == "disabling" {
+			return resource.RetryableError(fmt.Errorf("node pool status is %s, retrying", status))
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return nil
+		return err
 	}
 
 	if !has {
@@ -803,9 +942,12 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 	if hasLC > 0 {
 		launchConfig := make(map[string]interface{})
 		if launchCfg.InstanceTypes != nil {
-			backupInsTypes := launchCfg.InstanceTypes
-			launchConfig["instance_type"] = backupInsTypes[0]
-			launchConfig["backup_instance_types"] = helper.StringsInterfaces(backupInsTypes[1:])
+			insTypes := launchCfg.InstanceTypes
+			launchConfig["instance_type"] = insTypes[0]
+			backupInsTypes := insTypes[1:]
+			if len(backupInsTypes) > 0 {
+				launchConfig["backup_instance_types"] = helper.StringsInterfaces(backupInsTypes)
+			}
 		} else {
 			launchConfig["instance_type"] = launchCfg.InstanceType
 		}
@@ -826,6 +968,17 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 		if launchCfg.InternetAccessible.PublicIpAssigned != nil {
 			launchConfig["public_ip_assigned"] = launchCfg.InternetAccessible.PublicIpAssigned
+		}
+		if launchCfg.InstanceChargeType != nil {
+			launchConfig["instance_charge_type"] = launchCfg.InstanceChargeType
+			if *launchCfg.InstanceChargeType == INSTANCE_CHARGE_TYPE_SPOTPAID && launchCfg.InstanceMarketOptions != nil {
+				launchConfig["spot_instance_type"] = launchCfg.InstanceMarketOptions.SpotOptions.SpotInstanceType
+				launchConfig["spot_max_price"] = launchCfg.InstanceMarketOptions.SpotOptions.MaxPrice
+			}
+			if *launchCfg.InstanceChargeType == INSTANCE_CHARGE_TYPE_PREPAID && launchCfg.InstanceChargePrepaid != nil {
+				launchConfig["instance_charge_type_prepaid_period"] = launchCfg.InstanceChargePrepaid.Period
+				launchConfig["instance_charge_type_prepaid_renew_flag"] = launchCfg.InstanceChargePrepaid.RenewFlag
+			}
 		}
 		if len(launchCfg.DataDisks) > 0 {
 			dataDisks := make([]map[string]interface{}, 0, len(launchCfg.DataDisks))
@@ -906,7 +1059,11 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("vpc_id", asg.VpcId)
 		_ = d.Set("retry_policy", asg.RetryPolicy)
 		_ = d.Set("subnet_ids", helper.StringsInterfaces(asg.SubnetIdSet))
-		_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
+
+		// If not check, the diff between computed and default empty value leads to force replacement
+		if _, ok := d.GetOk("multi_zone_subnet_policy"); ok {
+			_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
+		}
 	}
 
 	taints := make([]map[string]interface{}, len(nodePool.Taints))

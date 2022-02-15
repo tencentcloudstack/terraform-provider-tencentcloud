@@ -54,13 +54,16 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "100"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "20"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.instance_charge_type", "SPOTPAID"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_instance_type", "one-time"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_max_price", "1000"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", "ubuntu18.04.1x86_64"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group_test"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
@@ -155,7 +158,9 @@ data "tencentcloud_vpc_subnets" "vpc" {
     availability_zone = var.availability_zone
 }
 
-data "tencentcloud_security_groups" "sg" {}
+data "tencentcloud_security_groups" "sg" {
+  name = "test_preset_sg"
+}
 
 variable "default_instance_type" {
   default = "S1.SMALL1"
@@ -169,6 +174,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
   cluster_version         = "1.18.4"
+  cluster_os              = "tlinux2.2(tkernel3)x86_64"
 
   worker_config {
     count                      = 1
@@ -214,7 +220,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -261,7 +267,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   desired_capacity     = 2
   enable_auto_scale    = false
   node_os = "ubuntu18.04.1x86_64"
-  delete_keep_instance = true
+  delete_keep_instance = false
   scaling_group_name 	   = "basic_group_test"
   default_cooldown 		   = 350
   termination_policies 	   = ["NEWEST_INSTANCE"]
@@ -270,7 +276,10 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
-    security_group_ids = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
+	instance_charge_type = "SPOTPAID"
+    spot_instance_type = "one-time"
+    spot_max_price = "1000"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -289,7 +298,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     enhanced_monitor_service   = false
 
   }
-  unschedulable = 1
+  unschedulable = 0
   labels = {
     "test3" = "test3",
     "test2" = "test2",
