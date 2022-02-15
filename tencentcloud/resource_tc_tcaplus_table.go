@@ -373,8 +373,6 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 	_ = d.Set("table_type", tableInfo.TableType)
 	_ = d.Set("description", tableInfo.Memo)
 	_ = d.Set("table_idl_type", tableInfo.TableIdlType)
-	_ = d.Set("reserved_read_cu", tableInfo.ReservedReadQps)
-	_ = d.Set("reserved_write_cu", tableInfo.ReservedWriteQps)
 	_ = d.Set("reserved_volume", tableInfo.ReservedVolume)
 	_ = d.Set("create_time", tableInfo.CreatedTime)
 	if tableInfo.Error != nil && tableInfo.Error.Message != nil {

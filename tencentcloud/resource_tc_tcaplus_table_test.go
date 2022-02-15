@@ -33,8 +33,6 @@ func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_type", "GENERIC"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "description", "test"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_read_cu", "1000"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_write_cu", "20"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_volume", "1"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "error", ""),
 				),
