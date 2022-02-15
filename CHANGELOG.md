@@ -142,7 +142,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource `tencentcloud_kubernetes_addon_attachment` add tcr example values
-* resource  `tencentcloud_instance` supprt cvm import params
+* resource  `tencentcloud_instance` support cvm import params
 * datasource `tencentcloud_kubernetes_charts`fix domain 404
 
 ## 1.60.18 (December 10, 2021)

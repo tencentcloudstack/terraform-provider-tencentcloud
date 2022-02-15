@@ -20,6 +20,7 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 			{
 				Config: testAccEksCluster,
 				Check: resource.ComposeTestCheckFunc(
+					testAccTencentCloudEKSClusterExists("tencentcloud_eks_cluster.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "cluster_name", "tf-eks-test"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "k8s_version", "1.18.4"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "cluster_desc", "test eks cluster created by terraform"),
@@ -29,7 +30,7 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.0", "10.0.0.1:80"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.1", "10.0.0.1:81"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "enable_vpc_core_dns", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "tags.test", "tf"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "subnet_ids.0"),
@@ -49,7 +50,7 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.0", "10.0.0.1:82"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.1", "10.0.0.1:83"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "enable_vpc_core_dns", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "tags.test", "tf"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "subnet_ids.0"),
@@ -158,7 +159,7 @@ resource "tencentcloud_eks_cluster" "foo" {
     servers = ["10.0.0.1:80", "10.0.0.1:81"]
   }
   enable_vpc_core_dns = true
-  need_delete_cbs = true
+  need_delete_cbs = false
   tags = {
     test = "tf"
   }
@@ -180,7 +181,7 @@ resource "tencentcloud_eks_cluster" "foo" {
     servers = ["10.0.0.1:82", "10.0.0.1:83"]
   }
   enable_vpc_core_dns = false
-  need_delete_cbs = false
+  need_delete_cbs = true
   tags = {
     test = "tf"
   }
