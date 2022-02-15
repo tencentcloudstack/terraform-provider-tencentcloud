@@ -17,14 +17,14 @@ func TestAccTencentCloudCamRole_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCamRoleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRole_basic,
+				Config: testAccCamRole_basic(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamRoleExists("tencentcloud_cam_role.role_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role.role_basic", "name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role.role_basic", "document"),
 				),
 			}, {
-				Config: testAccCamRole_update,
+				Config: testAccCamRole_update(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamRoleExists("tencentcloud_cam_role.role_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role.role_basic", "name"),
@@ -86,19 +86,21 @@ func testAccCheckCamRoleExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCamRole_basic = `
+func testAccCamRole_basic(uin string) string {
+	return fmt.Sprintf(`
 resource "tencentcloud_cam_role" "role_basic" {
-  name          = "cam-role-test1"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
-  description   = "test"
-  console_login = true
+	name          = "cam-role-test1"
+	document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
+	description   = "test"
+	console_login = true
+}`, uin, uin)
 }
-`
 
-const testAccCamRole_update = `
+func testAccCamRole_update(uin string) string {
+	return fmt.Sprintf(`
 resource "tencentcloud_cam_role" "role_basic" {
   name          = "cam-role-test1"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}},{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}},{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
   console_login = false
+}`, uin, uin, uin, uin)
 }
-`
