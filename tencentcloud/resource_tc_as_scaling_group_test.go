@@ -222,7 +222,6 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   instance_types     = ["SA1.SMALL1"]
   instance_name_settings {
     instance_name = "test-ins-name-full"
-    # instance_name_style
   }
 }
 
@@ -253,6 +252,9 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-full"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
+  instance_name_settings {
+    instance_name = "test-ins-name-full"
+  }
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {

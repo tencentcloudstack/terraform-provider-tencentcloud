@@ -80,7 +80,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "data_disk.0.disk_type", "CLOUD_SSD"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "data_disk.0.disk_size", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "internet_max_bandwidth_out", "20"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "public_ip_assigned", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "public_ip_assigned", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_monitor_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "user_data", "dGVzdA=="),
@@ -197,7 +197,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 20
-  public_ip_assigned         = false
+  public_ip_assigned         = true
   password                   = "test123#"
   enhanced_security_service  = true
   enhanced_monitor_service   = true
