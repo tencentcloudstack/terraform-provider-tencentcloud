@@ -120,6 +120,9 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.0", "OLDEST_INSTANCE"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "retry_policy", "IMMEDIATE_RETRY"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "scaling_mode", "WAKE_UP_STOPPED_SCALING"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_monitor_unhealthy", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_load_balancer_unhealthy", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.abc", "abc"),
 				),
@@ -193,6 +196,10 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-basic"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
+  instance_name_settings {
+    instance_name = "test-ins-name"
+    # instance_name_style
+  }
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
@@ -207,23 +214,16 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 }
 
 func testAccAsScalingGroup_full() string {
-	return `
-resource "tencentcloud_vpc" "vpc" {
-  name       = "tf-as-vpc"
-  cidr_block = "10.2.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "tf-as-subnet"
-  cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
-}
+	return fmt.Sprintf(`
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-full"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
+  instance_name_settings {
+    instance_name = "test-ins-name-full"
+    # instance_name_style
+  }
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
@@ -231,8 +231,8 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   configuration_id     = tencentcloud_as_scaling_config.launch_configuration.id
   max_size             = 1
   min_size             = 0
-  vpc_id               = tencentcloud_vpc.vpc.id
-  subnet_ids           = [tencentcloud_subnet.subnet.id]
+  vpc_id               = "%s"
+  subnet_ids           = ["%s"]
   project_id           = 0
   default_cooldown     = 400
   desired_capacity     = 1
@@ -243,22 +243,11 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
     "test" = "test"
   }
 }
-`
+`, defaultVpcId, defaultSubnetId)
 }
 
 func testAccAsScalingGroup_update() string {
-	return `
-resource "tencentcloud_vpc" "vpc" {
-  name       = "tf-as-vpc"
-  cidr_block = "10.2.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "tf-as-subnet"
-  cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
-}
+	return fmt.Sprintf(`
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-full"
@@ -271,17 +260,20 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   configuration_id     = tencentcloud_as_scaling_config.launch_configuration.id
   max_size             = 2
   min_size             = 0
-  vpc_id               = tencentcloud_vpc.vpc.id
-  subnet_ids           = [tencentcloud_subnet.subnet.id]
+  vpc_id               = "%s"
+  subnet_ids           = ["%s"]
   project_id           = 0
   default_cooldown     = 300
   desired_capacity     = 0
   termination_policies = ["OLDEST_INSTANCE"]
   retry_policy         = "IMMEDIATE_RETRY"
+  scaling_mode		   = "WAKE_UP_STOPPED_SCALING"
+  replace_monitor_unhealthy       = true
+  replace_load_balancer_unhealthy = true
 
   tags = {
     "abc" = "abc"
   }
 }
-`
+`, defaultVpcId, defaultSubnetId)
 }

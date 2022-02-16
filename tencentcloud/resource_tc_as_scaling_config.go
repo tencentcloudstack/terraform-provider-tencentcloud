@@ -458,11 +458,16 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("cam_role_name", *config.CamRoleName)
 		if config.InstanceNameSettings != nil {
 			settings := make([]map[string]interface{}, 0)
-			settings = append(settings, map[string]interface{}{
+			setting := map[string]interface{}{
 				"instance_name":       config.InstanceNameSettings.InstanceName,
 				"instance_name_style": config.InstanceNameSettings.InstanceNameStyle,
-			})
-			_ = d.Set("instance_name_settings", settings)
+			}
+			name, nameOk := setting["instance_name"].(string)
+			style, styleOk := setting["instance_name_style"].(string)
+			if nameOk && name != "" || styleOk && style != "" {
+				settings = append(settings, setting)
+				_ = d.Set("instance_name_settings", settings)
+			}
 		}
 
 		if config.SystemDisk.DiskType != nil {

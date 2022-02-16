@@ -55,7 +55,10 @@ The following arguments are supported:
 * `load_balancer_ids` - (Optional) ID list of traditional load balancers.
 * `multi_zone_subnet_policy` - (Optional) Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
 * `project_id` - (Optional) Specifies to which project the scaling group belongs.
+* `replace_load_balancer_unhealthy` - (Optional) Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.
+* `replace_monitor_unhealthy` - (Optional) Enables unhealthy instance replacement. If set to `true`, AS will replace instances that are flagged as unhealthy by Cloud Monitor.
 * `retry_policy` - (Optional) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
+* `scaling_mode` - (Optional) Indicates scaling mode which creates and terminates instances (classic method), or method first tries to start stopped instances (wake up stopped) to perform scaling operations. Available values: `CLASSIC_SCALING`, `WAKE_UP_STOPPED_SCALING`. Default: `CLASSIC_SCALING`.
 * `subnet_ids` - (Optional) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional) Tags of a scaling group.
 * `termination_policies` - (Optional) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
