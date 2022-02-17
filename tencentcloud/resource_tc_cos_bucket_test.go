@@ -283,7 +283,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
 			},
 		},
 	})
@@ -339,8 +339,13 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 	})
 }
 
+// TODO this case is now disabled until domain configured
+/*
 func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
+
 	t.Parallel()
+
+	randomName := acctest.RandInt()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -348,7 +353,7 @@ func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucket_originDomain(appid),
+				Config: testAccBucket_originDomain(appid, randomName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "ENABLED"),
@@ -356,7 +361,7 @@ func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccBucket_originDomainUpdate(appid),
+				Config: testAccBucket_originDomainUpdate(appid, randomName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_domain"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_domain", "origin_domain_rules.0.status", "DISABLED"),
@@ -374,6 +379,7 @@ func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 		},
 	})
 }
+*/
 
 func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 	t.Parallel()
@@ -627,6 +633,7 @@ resource "tencentcloud_cos_bucket" "bucket_maz" {
   bucket   = "tf-bucket-maz-%s"
   acl      = "public-read"
   multi_az = true
+  versioning_enable = true
 }
 `, appid)
 }
@@ -675,23 +682,29 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 `, appid)
 }
 
-func testAccBucket_originDomain(appid string) string {
+func testAccBucket_originDomain(appid string, randomName int) string {
 	return fmt.Sprintf(`
+provider "tencentcloud" {
+  region = "ap-singapore"
+}
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-%s"
+  bucket = "tf-bucket-domain-%d-%s"
   acl    = "private"
   origin_domain_rules {
 	status = "ENABLED"
 	domain = "www.example.com"
   }
 }
-`, appid)
+`, randomName, appid)
 }
 
-func testAccBucket_originDomainUpdate(appid string) string {
+func testAccBucket_originDomainUpdate(appid string, randomName int) string {
 	return fmt.Sprintf(`
+provider "tencentcloud" {
+  region = "ap-singapore"
+}
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-%s"
+  bucket = "tf-bucket-domain-%d-%s"
   acl    = "private"
   origin_domain_rules {
 	status = "DISABLED"
@@ -701,7 +714,7 @@ resource "tencentcloud_cos_bucket" "with_domain" {
 	domain = "test.example1.com"
   }
 }
-`, appid)
+`, randomName, appid)
 }
 
 func testAccBucketReplication(appid, ownerUin, subUin string) string {

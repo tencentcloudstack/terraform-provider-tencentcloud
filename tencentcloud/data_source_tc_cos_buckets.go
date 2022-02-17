@@ -311,10 +311,27 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 
 	bucketList := make([]map[string]interface{}, 0, len(buckets))
 
-LOOP:
 	for _, v := range buckets {
 		bucket := make(map[string]interface{})
 		if prefix != "" && !strings.HasPrefix(*v.Name, prefix) {
+			continue
+		}
+
+		respTags, err := cosService.GetBucketTags(ctx, *v.Name)
+		if err != nil {
+			return err
+		}
+
+		var matchTags bool
+
+		for k, v := range tags {
+			if respTags[k] == v {
+				matchTags = true
+				break
+			}
+		}
+
+		if len(tags) != 0 && !matchTags {
 			continue
 		}
 
@@ -354,17 +371,6 @@ LOOP:
 			return err
 		}
 		bucket["acl_body"] = aclBody
-
-		respTags, err := cosService.GetBucketTags(ctx, *v.Name)
-		if err != nil {
-			return err
-		}
-
-		for k, v := range tags {
-			if respTags[k] != v {
-				continue LOOP
-			}
-		}
 
 		bucket["tags"] = respTags
 		bucket["cos_bucket_url"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", *v.Name, meta.(*TencentCloudClient).apiV3Conn.Region)

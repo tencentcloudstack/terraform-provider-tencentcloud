@@ -17,14 +17,14 @@ func TestAccTencentCloudCosBucketPolicy(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucketPolicyBasic,
+				Config: testAccCosBucketPolicyBasic(appid, ownerUin, ownerUin),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCosBucketPolicyExists("tencentcloud_cos_bucket_policy.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "bucket"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "policy"),
 				),
 			}, {
-				Config: testAccCosBucketPolicyUpdate,
+				Config: testAccCosBucketPolicyUpdate(appid),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCosBucketPolicyExists("tencentcloud_cos_bucket_policy.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "bucket"),
@@ -86,16 +86,82 @@ func testAccCheckCosBucketPolicyExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCosBucketPolicyBasic = `
-resource "tencentcloud_cos_bucket_policy" "foo" {
-  bucket        = "bucket-for-terraform-state-1259649581"
-  policy        = "{\"version\":\"2.0\",\"Statement\":[{\"Action\":[\"name/cos:DeleteBucket\"],\"Effect\":\"allow\",\"Resource\":[\"qcs::cos:ap-guangzhou:uid/1259649581:bucket-for-terraform-state-1259649581/*\"],\"Principal\":{\"qcs\":[\"qcs::cam::uin/100010835595:uin/100014918835\"]}}]}"
+func testAccCosBucketPolicyBasic(id, uin, targetUin string) string {
+	bucket := "for-terraform-policy-" + id
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket" {
+  bucket = "%s"
+  acl    = "private"
 }
-`
 
-const testAccCosBucketPolicyUpdate = `
 resource "tencentcloud_cos_bucket_policy" "foo" {
-  bucket        = "bucket-for-terraform-state-1259649581"
-  policy        = "{\"version\":\"2.0\",\"Statement\":[{\"Action\":[\"name/cos:PutBucketACL\"],\"Effect\":\"allow\",\"Resource\":[\"qcs::cos:ap-guangzhou:uid/1259649581:bucket-for-terraform-state-1259649581/*\"],\"Principal\":{\"qcs\":[\"qcs::cam::uin/100010835595:uin/100014918835\"]}}]}"
+  bucket        = tencentcloud_cos_bucket.bucket.bucket
+  policy        = <<EOF
+{
+  "Statement": [
+    {
+      "Principal": {
+        "service": [
+          "cvm.cloud.tencent.com"
+        ]
+      },
+      "Effect": "Allow",
+      "Action": [
+        "name/cos:HeadBucket",
+        "name/cos:ListMultipartUploads",
+        "name/cos:ListParts",
+        "name/cos:GetObject",
+        "name/cos:HeadObject",
+        "name/cos:OptionsObject"
+      ],
+      "Resource": [
+        "qcs::cos:ap-guangzhou:uid/%s:%s/*"
+      ]
+    }
+  ],
+  "version": "2.0"
 }
-`
+EOF
+}
+`,
+		bucket, id, bucket)
+}
+func testAccCosBucketPolicyUpdate(id string) string {
+	bucket := "for-terraform-policy-" + id
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket" {
+  bucket = "%s"
+  acl    = "private"
+}
+
+resource "tencentcloud_cos_bucket_policy" "foo" {
+  bucket        = tencentcloud_cos_bucket.bucket.bucket
+  policy        = <<EOF
+{
+  "Statement": [
+    {
+      "Principal": {
+        "service": [
+          "cvm.cloud.tencent.com"
+        ]
+      },
+      "Effect": "Deny",
+      "Action": [
+        "name/cos:HeadBucket",
+        "name/cos:ListMultipartUploads",
+        "name/cos:ListParts",
+        "name/cos:GetObject",
+        "name/cos:HeadObject",
+        "name/cos:OptionsObject"
+      ],
+      "Resource": [
+        "qcs::cos:ap-guangzhou:uid/%s:%s/*"
+      ]
+    }
+  ],
+  "version": "2.0"
+}
+EOF
+}
+`, bucket, id, bucket)
+}
