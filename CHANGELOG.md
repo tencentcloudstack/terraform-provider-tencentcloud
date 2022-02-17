@@ -1,10 +1,21 @@
+## 1.61.8 (February 17, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_as_scaling_group` support Service Settings
+
+BUGFIXES:
+
+* resource `tencentcloud_mysql_privilege` update global privileges check
+* Fix testcases COS Bucket
+
 ## 1.61.7 (February 15, 2022)
 
 ENHANCEMENTS:
 
 * resource `tencentcloud_kubernetes_node_pool` support CVM instance charge type
 
-BUGFIXES
+BUGFIXES:
 
 * Fix testcases CamPolicies
 * Fix testcases CamRole
