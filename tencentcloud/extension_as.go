@@ -170,3 +170,8 @@ const (
 	MultiZoneSubnetPolicyPriority = "PRIORITY"
 	MultiZoneSubnetPolicyEquality = "EQUALITY"
 )
+
+const (
+	SCALING_MODE_CLASSIC         = "CLASSIC_SCALING"
+	SCALING_MODE_WAKE_UP_STOPPED = "WAKE_UP_STOPPED_SCALING"
+)

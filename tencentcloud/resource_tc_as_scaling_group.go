@@ -194,6 +194,22 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
 			},
+			"scaling_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Indicates scaling mode which creates and terminates instances (classic method), or method first tries to start stopped instances (wake up stopped) to perform scaling operations. Available values: `CLASSIC_SCALING`, `WAKE_UP_STOPPED_SCALING`. Default: `CLASSIC_SCALING`.",
+			},
+			// Service Settings
+			"replace_monitor_unhealthy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enables unhealthy instance replacement. If set to `true`, AS will replace instances that are flagged as unhealthy by Cloud Monitor.",
+			},
+			"replace_load_balancer_unhealthy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -314,6 +330,24 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		request.MultiZoneSubnetPolicy = helper.String(v.(string))
 	}
 
+	var (
+		scalingMode             = d.Get("scaling_mode").(string)
+		replaceMonitorUnhealthy = d.Get("replace_monitor_unhealthy").(bool)
+		replaceLBUnhealthy      = d.Get("replace_load_balancer_unhealthy").(bool)
+	)
+
+	if scalingMode != "" || replaceMonitorUnhealthy || replaceLBUnhealthy {
+		if scalingMode == "" {
+			scalingMode = SCALING_MODE_CLASSIC
+		}
+
+		request.ServiceSettings = &as.ServiceSettings{
+			ScalingMode:                  &scalingMode,
+			ReplaceMonitorUnhealthy:      &replaceMonitorUnhealthy,
+			ReplaceLoadBalancerUnhealthy: &replaceLBUnhealthy,
+		}
+	}
+
 	var id string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -419,7 +453,21 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("termination_policies", helper.StringsInterfaces(scalingGroup.TerminationPolicySet))
 	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
 	_ = d.Set("create_time", scalingGroup.CreatedTime)
-	_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
+	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok && v.(string) != "" {
+		_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
+	}
+
+	if v := d.Get("scaling_mode"); v != "" {
+		_ = d.Set("scaling_mode", v.(string))
+	}
+
+	if v, ok := d.GetOk("replace_monitor_unhealthy"); ok {
+		_ = d.Set("replace_monitor_unhealthy", v.(bool))
+	}
+
+	if v, ok := d.GetOk("replace_load_balancer_unhealthy"); ok {
+		_ = d.Set("replace_load_balancer_unhealthy", v.(bool))
+	}
 
 	if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
 		forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
@@ -536,6 +584,23 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("multi_zone_subnet_policy") {
 		updateAttrs = append(updateAttrs, "multi_zone_subnet_policy")
 		request.MultiZoneSubnetPolicy = helper.String(d.Get("multi_zone_subnet_policy").(string))
+	}
+
+	if d.HasChange("scaling_mode") ||
+		d.HasChange("replace_monitor_unhealthy") ||
+		d.HasChange("replace_load_balancer_unhealthy") {
+		updateAttrs = append(updateAttrs, "scaling_mode", "replace_monitor_unhealthy", "replace_load_balancer_unhealthy")
+		scalingMode := d.Get("scaling_mode").(string)
+		if scalingMode == "" {
+			scalingMode = SCALING_MODE_CLASSIC
+		}
+		replaceMonitor := d.Get("replace_monitor_unhealthy").(bool)
+		replaceLB := d.Get("replace_load_balancer_unhealthy").(bool)
+		request.ServiceSettings = &as.ServiceSettings{
+			ScalingMode:                  &scalingMode,
+			ReplaceMonitorUnhealthy:      &replaceMonitor,
+			ReplaceLoadBalancerUnhealthy: &replaceLB,
+		}
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
