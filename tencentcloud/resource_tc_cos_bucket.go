@@ -233,6 +233,7 @@ package tencentcloud
 import (
 	"bytes"
 	"context"
+	"encoding/xml"
 	"fmt"
 	"log"
 	"time"
@@ -737,6 +738,27 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
+
+	// acl
+
+	aclResult, err := cosService.GetBucketACL(ctx, bucket)
+
+	if err != nil {
+		return err
+	}
+
+	aclBody, err := xml.Marshal(aclResult)
+
+	if err != nil {
+		log.Printf("[WARN] Marshal XML Error: %s", err.Error())
+	} else {
+		_ = d.Set("acl_body", string(aclBody))
+	}
+
+	acl := GetBucketPublicACL(aclResult)
+
+	_ = d.Set("acl", acl)
+
 	// read the cors
 	corsRules, err := cosService.GetBucketCors(ctx, bucket)
 	if err != nil {

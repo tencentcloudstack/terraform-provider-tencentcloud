@@ -22,6 +22,8 @@ type CosService struct {
 	client *connectivity.TencentCloudClient
 }
 
+const PUBLIC_GRANTEE = "http://cam.qcloud.com/groups/global/AllUsers"
+
 func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info *s3.HeadObjectOutput, errRet error) {
 	logId := getLogId(ctx)
 
@@ -823,7 +825,7 @@ func (me *CosService) DeleteBucketPolicy(ctx context.Context, bucket string) (er
 	return nil
 }
 
-func (me *CosService) GetBucketACLXML(ctx context.Context, bucket string) (result *string, errRet error) {
+func (me *CosService) GetBucketACL(ctx context.Context, bucket string) (result *cos.BucketGetACLResult, errRet error) {
 	logId := getLogId(ctx)
 
 	defer func() {
@@ -834,11 +836,11 @@ func (me *CosService) GetBucketACLXML(ctx context.Context, bucket string) (resul
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucketACL")
-	acl, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetACL(ctx)
+	acl, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetACL(ctx)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos [GetBucketACL] error: %s, bucket: %s", err.Error(), bucket)
-		return nil, errRet
+		return
 	}
 
 	aclXML, err := xml.Marshal(acl)
@@ -848,12 +850,38 @@ func (me *CosService) GetBucketACLXML(ctx context.Context, bucket string) (resul
 		return nil, errRet
 	}
 
-	resp, _ := json.Marshal(response)
+	log.Printf("[DEBUG]%s api[%s] success, response body:\n%s\n",
+		logId, "GetBucketACL", aclXML)
 
-	log.Printf("[DEBUG]%s api[%s] success, request body response body [%s]\n",
-		logId, "GetBucketACL", resp)
+	result = acl
 
-	return helper.String(string(aclXML)), nil
+	return
+}
+
+func GetBucketPublicACL(acl *cos.BucketGetACLResult) string {
+	var publicRead, publicWrite bool
+
+	for i := range acl.AccessControlList {
+		item := acl.AccessControlList[i]
+
+		if item.Grantee.URI == PUBLIC_GRANTEE && item.Permission == "READ" {
+			publicRead = true
+		}
+
+		if item.Grantee.URI == PUBLIC_GRANTEE && item.Permission == "WRITE" {
+			publicWrite = true
+		}
+	}
+
+	if publicRead && !publicWrite {
+		return s3.ObjectCannedACLPublicRead
+	}
+
+	if publicRead && publicWrite {
+		return s3.ObjectCannedACLPublicReadWrite
+	}
+
+	return s3.ObjectCannedACLPrivate
 }
 
 func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (result []map[string]interface{}, errRet error) {
