@@ -769,7 +769,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 
 	if err != nil {
 		log.Printf("[WARN] Marshal XML Error: %s", err.Error())
-	} else {
+	} else if v, ok := d.Get("acl_body").(string); ok && v != "" {
 		_ = d.Set("acl_body", string(aclBody))
 	}
 
