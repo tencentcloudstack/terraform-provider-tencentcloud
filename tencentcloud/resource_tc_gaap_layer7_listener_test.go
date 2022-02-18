@@ -185,14 +185,14 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "2"),
 				),
 			},
-			// {
-			// 	ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// 	ImportStateVerifyIgnore: []string{
-			// 		"proxy_id",
-			// 	},
-			// },
+			{
+				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"proxy_id",
+				},
+			},
 		},
 	})
 }
