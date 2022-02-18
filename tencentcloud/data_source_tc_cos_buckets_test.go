@@ -152,7 +152,7 @@ resource "tencentcloud_cos_bucket" "bucket_full" {
     }
 
 	non_current_expiration {
-      days = 600
+      non_current_days = 600
     }
 
 	non_current_transition {
