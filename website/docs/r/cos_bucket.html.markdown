@@ -37,7 +37,8 @@ Using verbose acl
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
-  bucket   = "mycos-1258798060"
+  bucket = "mycos-1258798060"
+  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
   acl_body = <<EOF
 <AccessControlPolicy>
     <Owner>
@@ -53,12 +54,14 @@ resource "tencentcloud_cos_bucket" "with_acl_body" {
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
             </Grantee>
             <Permission>WRITE</Permission>
         </Grant>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
             </Grantee>
             <Permission>READ_ACP</Permission>
         </Grant>
@@ -234,7 +237,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 The following arguments are supported:
 
 * `bucket` - (Required, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
-* `acl_body` - (Optional) ACL XML body for multiple grant info.
+* `acl_body` - (Optional) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
 * `acl` - (Optional) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `encryption_algorithm` - (Optional) The server-side encryption algorithm to use. Valid value is `AES256`.
