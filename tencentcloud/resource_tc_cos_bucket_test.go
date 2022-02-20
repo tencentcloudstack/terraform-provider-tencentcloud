@@ -512,7 +512,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
 
 func testAccCosBucket_basicUpdate(appid string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "bucket_acl" {
+resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket               = "tf-bucket-basic-%s"
   acl                  = "private"
   encryption_algorithm = "AES256"
