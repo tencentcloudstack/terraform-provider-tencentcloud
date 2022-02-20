@@ -120,9 +120,10 @@ func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cos_bucket.bucket_acl",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_cos_bucket.bucket_acl",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl_body"},
 			},
 		},
 	})

@@ -273,10 +273,15 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 								},
 							},
 						},
+						"acl": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Bucket access control configurations.",
+						},
 						"acl_body": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Bucket acl configurations.",
+							Description: "Bucket verbose acl configurations.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,

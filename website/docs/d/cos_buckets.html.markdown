@@ -33,7 +33,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `bucket_list` - A list of bucket. Each element contains the following attributes:
-  * `acl_body` - Bucket acl configurations.
+  * `acl_body` - Bucket verbose acl configurations.
+  * `acl` - Bucket access control configurations.
   * `bucket` - Bucket name, the format likes `<bucket>-<appid>`.
   * `cors_rules` - A list of CORS rule configurations.
     * `allowed_headers` - Specifies which headers are allowed.
