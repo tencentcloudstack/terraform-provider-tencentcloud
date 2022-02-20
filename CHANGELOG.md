@@ -1,3 +1,9 @@
+## 1.61.9 (February 21, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_cos_bucket` support Multi-AZ bucket import, Non-Current Version Lifecycle and ACL body
+
 ## 1.61.8 (February 17, 2022)
 
 ENHANCEMENTS:
