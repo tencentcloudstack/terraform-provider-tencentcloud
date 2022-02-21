@@ -115,7 +115,24 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
-					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
+					//TODO: snapshot is pre-paid required
+					//resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceWithDataDiskUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "system_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "150"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "150"),
+					//resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
 				),
 			},
 		},
@@ -584,7 +601,7 @@ const testAccTencentCloudInstanceWithDataDisk = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
-  image_id          = data.tencentcloud_images.default.images.0.image_id
+  image_id          = data.tencentcloud_images.default.images.1.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
@@ -593,13 +610,41 @@ resource "tencentcloud_instance" "foo" {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 100
     delete_with_instance  = true
-	encrypt = true
+	// encrypt = true
   } 
    
   data_disks {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 100
-    data_disk_snapshot_id = "snap-nvzu3dmh"
+    # data_disk_snapshot_id = "snap-nvzu3dmh"
+    delete_with_instance  = true
+  }
+
+  disable_security_service = true
+  disable_monitor_service  = true
+}
+`
+
+const testAccTencentCloudInstanceWithDataDiskUpdate = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.1.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+
+  system_disk_type = "CLOUD_PREMIUM"
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+	// encrypt = true
+  } 
+   
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    # data_disk_snapshot_id = "snap-nvzu3dmh"
     delete_with_instance  = true
   }
 

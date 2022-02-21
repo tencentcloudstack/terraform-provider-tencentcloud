@@ -16,9 +16,21 @@ type CbsService struct {
 }
 
 func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk *cbs.Disk, errRet error) {
+	disks, err := me.DescribeDiskList(ctx, []*string{&diskId})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(disks) > 0 {
+		disk = disks[0]
+	}
+	return
+}
+
+func (me *CbsService) DescribeDiskList(ctx context.Context, diskIds []*string) (disk []*cbs.Disk, errRet error) {
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
-	request.DiskIds = []*string{&diskId}
+	request.DiskIds = diskIds
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DescribeDisks(request)
 	if err != nil {
@@ -31,7 +43,7 @@ func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.DiskSet) > 0 {
-		disk = response.Response.DiskSet[0]
+		disk = response.Response.DiskSet
 	}
 	return
 }
