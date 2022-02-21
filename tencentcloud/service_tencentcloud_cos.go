@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
@@ -224,6 +225,29 @@ func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet err
 		logId, "head bucket", request.String(), response.String())
 
 	return nil
+}
+
+func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string) (code int, header http.Header, errRet error) {
+	logId := getLogId(ctx)
+
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.Head(ctx)
+
+	if response != nil {
+		code = response.StatusCode
+		header = response.Header
+	}
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n",
+			logId, "HeadBucket", err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success\n",
+		logId, "HeadBucket")
+
+	return
 }
 
 func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet error) {

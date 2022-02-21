@@ -245,7 +245,6 @@ import (
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -712,7 +711,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicates whether to create a bucket of multi available zone.",
+				Description: "Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.",
 			},
 			//computed
 			"cos_bucket_url": {
@@ -736,13 +735,17 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	acl := d.Get("acl").(string)
 	role, roleOk := d.GetOk("replica_role")
 	rule, ruleOk := d.GetOk("replica_rules")
-	versioning, versioningOk := d.GetOk("versioning_enable")
+	versioning := d.Get("versioning_enable").(bool)
+	isMAZ := d.Get("multi_az").(bool)
 
-	if v := versioning.(bool); !versioningOk || !v {
+	if !versioning {
 		if roleOk || role.(string) != "" {
 			return fmt.Errorf("cannot configure role unless versioning enable")
 		} else if ruleOk || len(rule.([]interface{})) > 0 {
 			return fmt.Errorf("cannot configure replica rule unless versioning enable")
+		}
+		if isMAZ {
+			return fmt.Errorf("cannot create MAZ bucket unless versioning enable")
 		}
 	}
 
@@ -780,15 +783,19 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	bucket := d.Id()
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := cosService.HeadBucket(ctx, bucket)
+	code, header, err := cosService.TencentcloudHeadBucket(ctx, bucket)
 	if err != nil {
-		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
+		if code == 404 {
 			log.Printf("[WARN]%s bucket (%s) not found, error code (404)", logId, bucket)
 			d.SetId("")
 			return nil
 		} else {
 			return err
 		}
+	}
+
+	if header != nil && len(header["X-Cos-Bucket-Az-Type"]) > 0 && header["X-Cos-Bucket-Az-Type"][0] == "MAZ" {
+		_ = d.Set("multi_az", true)
 	}
 
 	cosBucketUrl := fmt.Sprintf("%s.cos.%s.myqcloud.com", d.Id(), meta.(*TencentCloudClient).apiV3Conn.Region)
