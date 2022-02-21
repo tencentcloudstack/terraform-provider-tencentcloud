@@ -28,6 +28,7 @@ Using verbose acl
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
   bucket = "mycos-1258798060"
+  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
   acl_body = <<EOF
 <AccessControlPolicy>
     <Owner>
@@ -43,12 +44,14 @@ resource "tencentcloud_cos_bucket" "with_acl_body" {
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
             </Grantee>
             <Permission>WRITE</Permission>
         </Grant>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
             </Grantee>
             <Permission>READ_ACP</Permission>
         </Grant>
@@ -233,8 +236,10 @@ package tencentcloud
 import (
 	"bytes"
 	"context"
+	"encoding/xml"
 	"fmt"
 	"log"
+	"reflect"
 	"time"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -404,9 +409,24 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Description: "The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.",
 			},
 			"acl_body": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ACL XML body for multiple grant info.",
+				Type:     schema.TypeString,
+				Optional: true,
+
+				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+					var oldXML cos.BucketGetACLResult
+					err := xml.Unmarshal([]byte(olds), &oldXML)
+					if err != nil {
+						return olds == news
+					}
+					var newXML cos.BucketGetACLResult
+					err = xml.Unmarshal([]byte(news), &newXML)
+					if err != nil {
+						return olds == news
+					}
+					suppress := reflect.DeepEqual(oldXML, newXML)
+					return suppress
+				},
+				Description: "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
@@ -737,6 +757,26 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
+
+	// acl
+	aclResult, err := cosService.GetBucketACL(ctx, bucket)
+
+	if err != nil {
+		return err
+	}
+
+	aclBody, err := xml.Marshal(aclResult)
+
+	if err != nil {
+		log.Printf("[WARN] Marshal XML Error: %s", err.Error())
+	} else if v, ok := d.Get("acl_body").(string); ok && v != "" {
+		_ = d.Set("acl_body", string(aclBody))
+	}
+
+	acl := GetBucketPublicACL(aclResult)
+
+	_ = d.Set("acl", acl)
+
 	// read the cors
 	corsRules, err := cosService.GetBucketCors(ctx, bucket)
 	if err != nil {

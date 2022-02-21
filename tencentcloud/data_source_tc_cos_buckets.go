@@ -14,7 +14,9 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/xml"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -271,10 +273,15 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 								},
 							},
 						},
+						"acl": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Bucket access control configurations.",
+						},
 						"acl_body": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Bucket acl configurations.",
+							Description: "Bucket verbose acl configurations.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,
@@ -366,11 +373,20 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 			bucket["origin_domain_rules"] = domainRules
 		}
 
-		aclBody, err := cosService.GetBucketACLXML(ctx, *v.Name)
+		aclBody, err := cosService.GetBucketACL(ctx, *v.Name)
+
 		if err != nil {
 			return err
 		}
-		bucket["acl_body"] = aclBody
+
+		aclXML, err := xml.Marshal(aclBody)
+
+		if err != nil {
+			log.Printf("WARN: acl body marshal failed: %s", err.Error())
+		} else {
+			bucket["acl"] = GetBucketPublicACL(aclBody)
+			bucket["acl_body"] = string(aclXML)
+		}
 
 		bucket["tags"] = respTags
 		bucket["cos_bucket_url"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", *v.Name, meta.(*TencentCloudClient).apiV3Conn.Region)

@@ -86,10 +86,44 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_basic",
+				ResourceName:      "tencentcloud_cos_bucket.bucket_basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCosBucket_ACL(appid, ownerUin),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "public-read"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_acl", "acl_body"),
+				),
+			},
+			// test update bucket acl
+			{
+				Config: testAccCosBucket_ACLUpdate(appid, ownerUin),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "private"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_acl", "acl_body"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_acl",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl_body"},
 			},
 		},
 	})
@@ -485,6 +519,64 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
   versioning_enable    = true
 }
 `, appid)
+}
+
+func testAccCosBucket_ACL(appid, uin string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_acl" {
+  bucket	= "tf-bucket-acl-%s"
+  acl       = "public-read"
+  acl_body 	= <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
+		<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+            </Grantee>
+            <Permission>READ</Permission>
+        </Grant>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
+				<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+            </Grantee>
+            <Permission>FULL_CONTROL</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}
+`, appid, uin)
+}
+
+func testAccCosBucket_ACLUpdate(appid, uin string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_acl" {
+  bucket	= "tf-bucket-acl-%s"
+  acl 		= "private"
+  acl_body	= <<EOF
+<AccessControlPolicy>
+    <Owner>
+        <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
+		<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+    </Owner>
+    <AccessControlList>
+        <Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+                <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
+				<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+            </Grantee>
+            <Permission>FULL_CONTROL</Permission>
+        </Grant>
+    </AccessControlList>
+</AccessControlPolicy>
+EOF
+}
+`, appid, uin)
 }
 
 func testAccCosBucket_tags(appid string) string {
