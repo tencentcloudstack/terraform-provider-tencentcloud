@@ -367,7 +367,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Type:     schema.TypeInt,
 							Required: true,
 							//ForceNew:    true,
-							Description: "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000]. NOTE: Modifying will cause instance stop and restart.",
+							Description: "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
 						"data_disk_snapshot_id": {
 							Type:        schema.TypeString,
