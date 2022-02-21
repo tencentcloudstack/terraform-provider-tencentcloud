@@ -271,7 +271,19 @@ The `lifecycle_rules` object supports the following:
 
 * `filter_prefix` - (Required) Object key prefix identifying one or more objects to which the rule applies.
 * `expiration` - (Optional) Specifies a period in the object's expire (documented below).
+* `id` - (Optional) A unique identifier for the rule. It can be up to 255 characters.
+* `non_current_expiration` - (Optional) Specifies when non current object versions shall expire.
+* `non_current_transition` - (Optional) Specifies a period in the non current object's transitions.
 * `transition` - (Optional) Specifies a period in the object's transitions (documented below).
+
+The `non_current_expiration` object supports the following:
+
+* `non_current_days` - (Optional) Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.
+
+The `non_current_transition` object supports the following:
+
+* `storage_class` - (Required) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `non_current_days` - (Optional) Number of days after non current object creation when the specific rule action takes effect.
 
 The `origin_domain_rules` object supports the following:
 

@@ -148,6 +148,39 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 											},
 										},
 									},
+									"non_current_transition": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Specifies when to transition objects of non current versions and the target storage class.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"non_current_days": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Number of days after non current object creation when the specific rule action takes effect.",
+												},
+												"storage_class": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Specifies the storage class to which you want the non current object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.",
+												},
+											},
+										},
+									},
+									"non_current_expiration": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Specifies when non current object versions shall expire.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"non_current_days": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.",
+												},
+											},
+										},
+									},
 								},
 							},
 						},

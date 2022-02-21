@@ -562,6 +562,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Description: "A configuration of object lifecycle management (documented below).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "A unique identifier for the rule. It can be up to 255 characters.",
+						},
 						"filter_prefix": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -614,6 +619,45 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 										Optional:     true,
 										ValidateFunc: validateIntegerMin(0),
 										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
+									},
+								},
+							},
+						},
+						"non_current_transition": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Set:         nonCurrentTransitionHash,
+							Description: "Specifies a period in the non current object's transitions.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"non_current_days": {
+										Type:         schema.TypeInt,
+										Optional:     true,
+										ValidateFunc: validateIntegerMin(0),
+										Description:  "Number of days after non current object creation when the specific rule action takes effect.",
+									},
+									"storage_class": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
+										Description:  "Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
+									},
+								},
+							},
+						},
+						"non_current_expiration": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Set:         nonCurrentExpirationHash,
+							MaxItems:    1,
+							Description: "Specifies when non current object versions shall expire.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"non_current_days": {
+										Type:         schema.TypeInt,
+										Optional:     true,
+										ValidateFunc: validateIntegerMin(0),
+										Description:  "Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.",
 									},
 								},
 							},
@@ -1285,6 +1329,37 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 
 				rule.Expiration = e
 			}
+
+			// Non Current Transitions
+			nonCurrentTransitions := d.Get(fmt.Sprintf("lifecycle_rules.%d.non_current_transition", i)).(*schema.Set).List()
+			if len(nonCurrentTransitions) > 0 {
+				rule.NoncurrentVersionTransitions = make([]*s3.NoncurrentVersionTransition, 0, len(transitions))
+				for _, transition := range nonCurrentTransitions {
+					transitionValue := transition.(map[string]interface{})
+					t := &s3.NoncurrentVersionTransition{}
+					if val, ok := transitionValue["non_current_days"].(int); ok && val >= 0 {
+						t.NoncurrentDays = aws.Int64(int64(val))
+					}
+					if val, ok := transitionValue["storage_class"].(string); ok && val != "" {
+						t.StorageClass = aws.String(val)
+					}
+
+					rule.NoncurrentVersionTransitions = append(rule.NoncurrentVersionTransitions, t)
+				}
+			}
+
+			// Non Current Expiration
+			nonCurrentExpirations := d.Get(fmt.Sprintf("lifecycle_rules.%d.non_current_expiration", i)).(*schema.Set).List()
+			if len(nonCurrentExpirations) > 0 {
+				nonCurrentExpiration := nonCurrentExpirations[0].(map[string]interface{})
+				e := &s3.NoncurrentVersionExpiration{}
+
+				if val, ok := nonCurrentExpiration["non_current_days"].(int); ok && val > 0 {
+					e.NoncurrentDays = aws.Int64(int64(val))
+				}
+
+				rule.NoncurrentVersionExpiration = e
+			}
 			rules = append(rules, rule)
 		}
 
@@ -1637,6 +1712,15 @@ func expirationHash(v interface{}) int {
 	return hashcode.String(buf.String())
 }
 
+func nonCurrentExpirationHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["non_current_days"]; ok {
+		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
+	}
+	return hashcode.String(buf.String())
+}
+
 func transitionHash(v interface{}) int {
 	var buf bytes.Buffer
 	m := v.(map[string]interface{})
@@ -1644,6 +1728,18 @@ func transitionHash(v interface{}) int {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
 	if v, ok := m["days"]; ok {
+		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
+	}
+	if v, ok := m["storage_class"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	return hashcode.String(buf.String())
+}
+
+func nonCurrentTransitionHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["non_current_days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
 	if v, ok := m["storage_class"]; ok {

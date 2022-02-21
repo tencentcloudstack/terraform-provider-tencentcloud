@@ -249,6 +249,8 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.2000431762.storage_class", "STANDARD_IA"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.1139768587.days", "90"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.1139768587.storage_class", "ARCHIVE"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition.#", "2"),
 				),
 			},
 			{
@@ -686,6 +688,20 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
     }
     transition {
       days          = 90
+      storage_class = "ARCHIVE"
+    }
+
+    non_current_expiration {
+      non_current_days = 600
+    }
+
+	non_current_transition {
+      non_current_days = 90
+      storage_class = "STANDARD_IA"
+    }
+
+    non_current_transition {
+      non_current_days = 180
       storage_class = "ARCHIVE"
     }
   }

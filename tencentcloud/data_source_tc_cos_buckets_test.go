@@ -80,6 +80,10 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 						"bucket_list.0.lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
 						"bucket_list.0.lifecycle_rules.0.transition.#", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
+						"bucket_list.0.lifecycle_rules.0.non_current_expiration.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
+						"bucket_list.0.lifecycle_rules.0.non_current_transition.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.0.index_document", "index.html"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.0.error_document", "error.html"),
@@ -144,6 +148,20 @@ resource "tencentcloud_cos_bucket" "bucket_full" {
 
     transition {
       days          = 60
+      storage_class = "ARCHIVE"
+    }
+
+	non_current_expiration {
+      non_current_days = 600
+    }
+
+	non_current_transition {
+      non_current_days = 90
+      storage_class = "STANDARD_IA"
+    }
+
+    non_current_transition {
+      non_current_days = 180
       storage_class = "ARCHIVE"
     }
   }

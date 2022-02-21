@@ -355,6 +355,30 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 				rule["expiration"] = schema.NewSet(expirationHash, []interface{}{e})
 			}
 
+			// transition
+			if len(value.NoncurrentVersionTransitions) > 0 {
+				transitions := make([]interface{}, 0, len(value.NoncurrentVersionTransitions))
+				for _, v := range value.NoncurrentVersionTransitions {
+					t := make(map[string]interface{})
+					if v.NoncurrentDays != nil {
+						t["non_current_days"] = int(*v.NoncurrentDays)
+					}
+					if v.StorageClass != nil {
+						t["storage_class"] = *v.StorageClass
+					}
+					transitions = append(transitions, t)
+				}
+				rule["non_current_transition"] = schema.NewSet(transitionHash, transitions)
+			}
+			// non current expiration
+			if value.NoncurrentVersionExpiration != nil {
+				e := make(map[string]interface{})
+				if value.NoncurrentVersionExpiration.NoncurrentDays != nil {
+					e["non_current_days"] = int(*value.NoncurrentVersionExpiration.NoncurrentDays)
+				}
+				rule["non_current_expiration"] = schema.NewSet(nonCurrentExpirationHash, []interface{}{e})
+			}
+
 			lifecycleRules = append(lifecycleRules, rule)
 		}
 	}
@@ -426,6 +450,29 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 					e["days"] = int(*value.Expiration.Days)
 				}
 				rule["expiration"] = []interface{}{e}
+			}
+			// non current transition
+			if len(value.NoncurrentVersionTransitions) > 0 {
+				transitions := make([]interface{}, 0, len(value.NoncurrentVersionTransitions))
+				for _, v := range value.NoncurrentVersionTransitions {
+					t := make(map[string]interface{})
+					if v.NoncurrentDays != nil {
+						t["non_current_days"] = int(*v.NoncurrentDays)
+					}
+					if v.StorageClass != nil {
+						t["storage_class"] = *v.StorageClass
+					}
+					transitions = append(transitions, t)
+				}
+				rule["non_current_transition"] = transitions
+			}
+			// non current expiration
+			if value.NoncurrentVersionExpiration != nil {
+				e := make(map[string]interface{})
+				if value.NoncurrentVersionExpiration.NoncurrentDays != nil {
+					e["non_current_days"] = int(*value.NoncurrentVersionExpiration.NoncurrentDays)
+				}
+				rule["non_current_expiration"] = []interface{}{e}
 			}
 
 			lifecycleRules = append(lifecycleRules, rule)
