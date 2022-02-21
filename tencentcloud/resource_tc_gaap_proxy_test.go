@@ -62,10 +62,10 @@ func TestAccTencentCloudGaapProxy_update(t *testing.T) {
 		CheckDestroy: testAccCheckGaapProxyDestroy(id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapProxyBasic,
+				Config: testAccGaapProxyUpdateBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy-update"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
@@ -182,6 +182,16 @@ func testAccCheckGaapProxyExists(n string, id *string) resource.TestCheckFunc {
 const testAccGaapProxyBasic = `
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
+}
+`
+
+const testAccGaapProxyUpdateBasic = `
+resource tencentcloud_gaap_proxy "foo" {
+  name              = "ci-test-gaap-proxy-update"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "Guangzhou"
