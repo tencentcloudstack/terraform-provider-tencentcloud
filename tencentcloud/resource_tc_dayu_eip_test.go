@@ -16,7 +16,7 @@ var testDayuEipResourceKey = testDayuEipResourceName + ".test"
 func TestAccTencentCloudDayuEipResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCTUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuEipDestroy,
 		Steps: []resource.TestStep{

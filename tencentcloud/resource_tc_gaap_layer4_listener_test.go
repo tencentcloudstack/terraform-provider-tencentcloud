@@ -16,7 +16,7 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
@@ -52,7 +52,7 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
@@ -82,7 +82,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
@@ -132,12 +132,12 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapLayer4Listener_udp(t *testing.T) {
+func TestAccTencentCloudGaapLayer4Listener_udp_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
@@ -174,7 +174,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
@@ -203,7 +203,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{

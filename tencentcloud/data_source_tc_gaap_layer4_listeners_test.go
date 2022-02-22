@@ -11,7 +11,7 @@ import (
 func TestAccDataSourceTencentCloudGaapLayer4Listeners_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -39,7 +39,7 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_basic(t *testing.T) {
 func TestAccDataSourceTencentCloudGaapLayer4Listeners_tcp(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -81,7 +81,7 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_tcp(t *testing.T) {
 func TestAccDataSourceTencentCloudGaapLayer4Listeners_UDP(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{

@@ -11,7 +11,7 @@ func TestAccDataSourceTencentCloudGaapProxies_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -24,8 +24,8 @@ func TestAccDataSourceTencentCloudGaapProxies_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.foo", "proxies.0.ip"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.bandwidth", "10"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.concurrent", "2"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.access_region", "SouthChina"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.realserver_region", "NorthChina"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.access_region", "Guangzhou"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.realserver_region", "Beijing"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.project_id", "0"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.foo", "proxies.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.foo", "proxies.0.status"),
@@ -43,7 +43,7 @@ func TestAccDataSourceTencentCloudGaapProxies_filter(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -77,7 +77,7 @@ func TestAccDataSourceTencentCloudGaapProxies_filter(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.bandwidth"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.concurrent"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.access", "proxies.0.access_region", "SouthChina"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.access", "proxies.0.access_region", "Guangzhou"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.realserver_region"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.project_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.access", "proxies.0.create_time"),
@@ -99,7 +99,7 @@ func TestAccDataSourceTencentCloudGaapProxies_filter(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.bandwidth"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.concurrent"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.access_region"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.realserver", "proxies.0.realserver_region", "NorthChina"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_proxies.realserver", "proxies.0.realserver_region", "Beijing"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.project_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.realserver", "proxies.0.status"),
@@ -118,8 +118,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 
 data tencentcloud_gaap_proxies "foo" {
@@ -132,8 +132,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 
 data tencentcloud_gaap_proxies "projectId" {
@@ -146,8 +146,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 
 data tencentcloud_gaap_proxies "access" {
@@ -160,8 +160,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 
 data tencentcloud_gaap_proxies "realserver" {

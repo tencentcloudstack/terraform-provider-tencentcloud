@@ -17,7 +17,7 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -49,12 +49,12 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
+func TestAccTencentCloudGaapHttpRule_httpUpdate_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -115,7 +115,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -153,7 +153,7 @@ func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -183,7 +183,7 @@ func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -216,7 +216,7 @@ func TestAccTencentCloudGaapHttpRule_noRealserver(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -253,7 +253,7 @@ func TestAccTencentCloudGaapHttpRule_deleteRealserver(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{

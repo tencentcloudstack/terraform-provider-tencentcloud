@@ -50,7 +50,7 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		os.Setenv(PROVIDER_REGION, defaultRegion)
 	}
 	switch {
-	case accountType == ACCTUNT_TYPE_INTERNATION:
+	case accountType == ACCOUNT_TYPE_INTERNATION:
 		secretId := os.Getenv(INTERNATION_PROVIDER_SECRET_ID)
 		secretKey := os.Getenv(INTERNATION_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {
@@ -58,7 +58,7 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
-	case accountType == ACCTUNT_TYPE_PREPAY:
+	case accountType == ACCOUNT_TYPE_PREPAY:
 		secretId := os.Getenv(PREPAY_PROVIDER_SECRET_ID)
 		secretKey := os.Getenv(PREPAY_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {

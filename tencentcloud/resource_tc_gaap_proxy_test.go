@@ -17,7 +17,7 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapProxyDestroy(id),
 		Steps: []resource.TestStep{
@@ -29,8 +29,8 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "SouthChina"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "NorthChina"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Guangzhou"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Beijing"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
@@ -57,20 +57,20 @@ func TestAccTencentCloudGaapProxy_update(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapProxyDestroy(id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapProxyBasic,
+				Config: testAccGaapProxyUpdateBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy-update"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "SouthChina"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "NorthChina"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Guangzhou"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Beijing"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
@@ -184,8 +184,18 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
+}
+`
+
+const testAccGaapProxyUpdateBasic = `
+resource tencentcloud_gaap_proxy "foo" {
+  name              = "ci-test-gaap-proxy-update"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 `
 
@@ -194,8 +204,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 `
 
@@ -204,8 +214,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 `
 
@@ -214,8 +224,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
 }
 `
 
@@ -224,8 +234,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
   enable            = false
 }
 `
@@ -235,8 +245,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 10
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
+  access_region     = "Guangzhou"
+  realserver_region = "Beijing"
   enable            = false
 
   tags = {

@@ -15,7 +15,7 @@ func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -43,7 +43,7 @@ func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -66,7 +66,7 @@ func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -97,7 +97,7 @@ func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -120,7 +120,7 @@ func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
@@ -143,7 +143,7 @@ func TestAccTencentCloudGaapSecurityRule_AllPorts(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{

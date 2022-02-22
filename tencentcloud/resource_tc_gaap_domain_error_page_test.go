@@ -19,7 +19,7 @@ func TestAccTencentCloudGaapDomainErrorPage_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{
@@ -44,7 +44,7 @@ func TestAccTencentCloudGaapDomainErrorPage_singleErrorCode(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{
@@ -68,7 +68,7 @@ func TestAccTencentCloudGaapDomainErrorPage_newErrorCode(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{
@@ -93,7 +93,7 @@ func TestAccTencentCloudGaapDomainErrorPage_clearHeaders(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{
@@ -119,7 +119,7 @@ func TestAccTencentCloudGaapDomainErrorPage_setHeaders(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{
@@ -144,7 +144,7 @@ func TestAccTencentCloudGaapDomainErrorPage_full(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckGaapDomainErrorPageDestroy(listenerId, domain, id),
 		Steps: []resource.TestStep{

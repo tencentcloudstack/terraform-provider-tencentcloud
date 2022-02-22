@@ -10,7 +10,7 @@ import (
 func TestAccDataSourceTencentCloudGaapDomainErrorPages_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -37,7 +37,7 @@ func TestAccDataSourceTencentCloudGaapDomainErrorPages_basic(t *testing.T) {
 func TestAccDataSourceTencentCloudGaapDomainErrorPages_Ids(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
