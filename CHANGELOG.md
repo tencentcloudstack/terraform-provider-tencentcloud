@@ -1,3 +1,10 @@
+## 1.61.10 (February 22, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_instance` support Data Disk size modification
+* resource generic gaap support client_ip_method
+
 ## 1.61.9 (February 21, 2022)
 
 ENHANCEMENTS:
