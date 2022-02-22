@@ -364,9 +364,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Description: "Data disk type. For more information about limits on different data disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_SSD`: SSD, `CLOUD_HSSD`: Enhanced SSD. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							ForceNew:    true,
+							Type:     schema.TypeInt,
+							Required: true,
+							//ForceNew:    true,
 							Description: "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
 						"data_disk_snapshot_id": {
@@ -918,11 +918,37 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 
 	//set data_disks
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
+	diskSizeMap := map[string]*uint64{}
+	if len(instance.DataDisks) > 0 {
+		var diskIds []*string
+		cbsService := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		for i := range instance.DataDisks {
+			disk := instance.DataDisks[i]
+			diskIds = append(diskIds, disk.DiskId)
+		}
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			disks, err := cbsService.DescribeDiskList(ctx, diskIds)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			for i := range disks {
+				disk := disks[i]
+				if *disk.DiskState == "EXPANDING" {
+					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
+				}
+				diskSizeMap[*disk.DiskId] = disk.DiskSize
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
 	for _, disk := range instance.DataDisks {
 		dataDisk := make(map[string]interface{}, 5)
 		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 		dataDisk["data_disk_type"] = disk.DiskType
-		dataDisk["data_disk_size"] = disk.DiskSize
+		dataDisk["data_disk_size"] = diskSizeMap[*disk.DiskId]
 		dataDisk["data_disk_id"] = disk.DiskId
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
 		dataDisk["encrypt"] = disk.Encrypt
@@ -1232,6 +1258,53 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			d.SetPartial("key_name")
 		}
 	}
+	/* not available now
+	if d.HasChange("system_disk_size") {
+		size := d.Get("system_disk_size").(int)
+		//diskId := d.Get("system_disk_id").(string)
+		req := cvm.NewResizeInstanceDisksRequest()
+		req.InstanceId = &instanceId
+		req.SystemDisk = &cvm.SystemDisk{
+			DiskSize: helper.IntInt64(size),
+		}
+
+		err := cvmService.ResizeInstanceDisks(ctx, req)
+		if err != nil {
+			return fmt.Errorf("error: an error occured when modifying system_disk, reason: %s", err.Error())
+		}
+		instanceStoppedByDiskResize = true
+		d.SetPartial("system_disk_size")
+	}*/
+	if d.HasChange("data_disks") {
+		o, n := d.GetChange("data_disks")
+		ov := o.([]interface{})
+		nv := n.([]interface{})
+
+		if len(nv) != len(nv) {
+			return fmt.Errorf("error: data disk count has changed (%d -> %d) but doesn't support add or remove for now", len(ov), len(nv))
+		}
+
+		cbsService := CbsService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+
+		for i := range nv {
+			sizeKey := fmt.Sprintf("data_disks.%d.data_disk_size", i)
+			idKey := fmt.Sprintf("data_disks.%d.data_disk_id", i)
+			if !d.HasChange(sizeKey) {
+				continue
+			}
+			size := d.Get(sizeKey).(int)
+			diskId := d.Get(idKey).(string)
+
+			err := cbsService.ResizeDisk(ctx, diskId, size)
+
+			if err != nil {
+				return fmt.Errorf("an error occured when modifying %s, reason: %s", sizeKey, err.Error())
+			}
+			d.SetPartial(sizeKey)
+		}
+	}
 
 	var flag bool
 	if d.HasChange("running_flag") {
@@ -1372,7 +1445,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 		}
 		//tag disk ids
-		if dataDisks, ok := d.GetOk("date_disk"); ok {
+		if dataDisks, ok := d.GetOk("data_disks"); ok {
 			dataDiskList := dataDisks.([]map[string]interface{})
 			for _, disk := range dataDiskList {
 				dataDiskId := disk["data_disk_id"].(string)
