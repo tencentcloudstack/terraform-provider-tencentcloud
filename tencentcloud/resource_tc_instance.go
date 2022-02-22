@@ -330,17 +330,15 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CVM_DISK_TYPE_CLOUD_PREMIUM,
-				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
-				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
+				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage. NOTE: 1. `CLOUD_BASIC`, `LOCAL_BASIC` and `LOCAL_SSD` are deprecated; 2. If modified, the instance may force stop.",
 			},
 			"system_disk_size": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      50,
-				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(50, 1000),
-				Description:  "Size of the system disk. Valid value ranges: (50~1000). and unit is GB. Default is 50GB.",
+				Description:  "Size of the system disk. Valid value ranges: (50~1000). and unit is GB. Default is 50GB. If modified, the instance may force stop.",
 			},
 			"system_disk_id": {
 				Type:        schema.TypeString,
@@ -841,12 +839,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	cvmService := CvmService{
 		client: client,
 	}
+	cbsService := CbsService{client: client}
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, errRet = cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
+		}
+		if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == "OPERATING" {
+			return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", *instance.InstanceId))
 		}
 		return nil
 	})
@@ -921,7 +923,6 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	diskSizeMap := map[string]*uint64{}
 	if len(instance.DataDisks) > 0 {
 		var diskIds []*string
-		cbsService := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		for i := range instance.DataDisks {
 			disk := instance.DataDisks[i]
 			diskIds = append(diskIds, disk.DiskId)
@@ -1258,23 +1259,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			d.SetPartial("key_name")
 		}
 	}
-	/* not available now
-	if d.HasChange("system_disk_size") {
-		size := d.Get("system_disk_size").(int)
-		//diskId := d.Get("system_disk_id").(string)
-		req := cvm.NewResizeInstanceDisksRequest()
-		req.InstanceId = &instanceId
-		req.SystemDisk = &cvm.SystemDisk{
-			DiskSize: helper.IntInt64(size),
-		}
 
-		err := cvmService.ResizeInstanceDisks(ctx, req)
-		if err != nil {
-			return fmt.Errorf("error: an error occured when modifying system_disk, reason: %s", err.Error())
-		}
-		instanceStoppedByDiskResize = true
-		d.SetPartial("system_disk_size")
-	}*/
 	if d.HasChange("data_disks") {
 		o, n := d.GetChange("data_disks")
 		ov := o.([]interface{})
@@ -1309,45 +1294,59 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	var flag bool
 	if d.HasChange("running_flag") {
 		flag = d.Get("running_flag").(bool)
-		if flag {
-			err = cvmService.StartInstance(ctx, instanceId)
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return retryError(errRet, InternalError)
-				}
-				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
-					return nil
-				}
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
-			if err != nil {
-				return err
-			}
-		} else {
-			stoppedMode := d.Get("stopped_mode").(string)
-			err = cvmService.StopInstance(ctx, instanceId, stoppedMode)
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return retryError(errRet, InternalError)
-				}
-				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
-					return nil
-				}
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
-			if err != nil {
-				return err
-			}
+		if err := switchInstance(&cvmService, ctx, d, flag); err != nil {
+			return err
 		}
 		d.SetPartial("running_flag")
+	}
+
+	if d.HasChange("system_disk_size") || d.HasChange("system_disk_type") {
+
+		size := d.Get("system_disk_size").(int)
+		diskType := d.Get("system_disk_type").(string)
+		//diskId := d.Get("system_disk_id").(string)
+		req := cvm.NewResizeInstanceDisksRequest()
+		req.InstanceId = &instanceId
+		req.ForceStop = helper.Bool(true)
+		req.SystemDisk = &cvm.SystemDisk{
+			DiskSize: helper.IntInt64(size),
+			DiskType: &diskType,
+		}
+
+		err := cvmService.ResizeInstanceDisks(ctx, req)
+		if err != nil {
+			return fmt.Errorf("an error occured when modifying system_disk, reason: %s", err.Error())
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if instance != nil && instance.LatestOperationState != nil {
+				if *instance.InstanceState == "FAILED" {
+					return resource.NonRetryableError(fmt.Errorf("instance operation failed"))
+				}
+				if *instance.InstanceState == "OPERATING" {
+					return resource.RetryableError(fmt.Errorf("instance operating"))
+				}
+			}
+			if instance != nil && instance.SystemDisk != nil {
+				//wait until disk result as expected
+				if *instance.SystemDisk.DiskType != diskType || int(*instance.SystemDisk.DiskSize) != size {
+					return resource.RetryableError(fmt.Errorf("waiting for expanding success"))
+				}
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		d.SetPartial("system_disk_size")
+		d.SetPartial("system_disk_type")
+
 	}
 
 	if d.HasChange("instance_type") {
@@ -1579,5 +1578,77 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	return nil
+}
+
+func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.ResourceData, flag bool) (err error) {
+	instanceId := d.Id()
+	if flag {
+		err = cvmService.StartInstance(ctx, instanceId)
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+		})
+		if err != nil {
+			return err
+		}
+	} else {
+		stoppedMode := d.Get("stopped_mode").(string)
+		skipStopApi := false
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			// when retry polling instance status, stop instance should skipped
+			if !skipStopApi {
+				err := cvmService.StopInstance(ctx, instanceId, stoppedMode)
+				if err != nil {
+					return resource.NonRetryableError(err)
+				}
+			}
+			instance, err := cvmService.DescribeInstanceById(ctx, instanceId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if instance == nil {
+				return resource.NonRetryableError(fmt.Errorf("instance %s not found", instanceId))
+			}
+
+			if instance.LatestOperationState != nil {
+				operationState := *instance.LatestOperationState
+				if operationState == "OPERATING" {
+					skipStopApi = true
+					return resource.RetryableError(fmt.Errorf("instance %s stop operating, retrying", instanceId))
+				}
+				if operationState == "FAILED" {
+					skipStopApi = false
+					return resource.RetryableError(fmt.Errorf("instance %s stop failed, retrying", instanceId))
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+		})
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
