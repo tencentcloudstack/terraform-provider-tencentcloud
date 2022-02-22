@@ -5,12 +5,97 @@ import (
 	"fmt"
 	"testing"
 
+	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 const TestAccTencentCloudMysqlMasterInstance_availability_zone = "ap-guangzhou-3"
+const TestAccTencentCloudMysqlInstanceName = "testAccMysql"
+const TestAccTencentCloudMysqlInstanceNameVersion1 = "testAccMysql-version1"
+const TestAccTencentCloudMysqlInstanceNamePrepaid = "testAccMysqlPrepaid"
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_mysql_instance", &resource.Sweeper{
+		Name: "tencentcloud_mysql_instance",
+		F:    testSweepMySQLInstance,
+	})
+}
+
+func testSweepMySQLInstance(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, err := sharedClientForRegion(region)
+	if err != nil {
+		return err
+	}
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := MysqlService{client: client}
+
+	request := cdb.NewDescribeDBInstancesRequest()
+	request.InstanceNames = []*string{
+		helper.String(TestAccTencentCloudMysqlInstanceName),
+		helper.String(TestAccTencentCloudMysqlInstanceNameVersion1),
+		helper.String(TestAccTencentCloudMysqlInstanceNamePrepaid),
+	}
+	request.Limit = helper.IntUint64(2000)
+
+	response, err := client.UseMysqlClient().DescribeDBInstances(request)
+	if err != nil {
+		return err
+	}
+
+	if len(response.Response.Items) == 0 {
+		return nil
+	}
+
+	for _, v := range response.Response.Items {
+		id := *v.InstanceId
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.IsolateDBInstance(ctx, id)
+			if err != nil {
+				//for the pay order wait
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+			mysqlInfo, err := service.DescribeDBInstanceById(ctx, id)
+
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if mysqlInfo == nil {
+				return nil
+			}
+			if *mysqlInfo.Status == MYSQL_STATUS_ISOLATING || *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("mysql isolating."))
+			}
+			if *mysqlInfo.Status == MYSQL_STATUS_ISOLATED {
+				return nil
+			}
+			return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance mysql Status is %d", *mysqlInfo.Status))
+		})
+
+		err = service.OfflineIsolatedInstances(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
 	t.Parallel()
@@ -23,7 +108,7 @@ func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
 				Config: testAccMysqlMasterInstance_fullslave(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_master"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", "testAccMysql"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", TestAccTencentCloudMysqlInstanceName),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_deploy_mode", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_sync_mode", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
@@ -46,7 +131,7 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 				Config: testAccMysqlMasterInstance_basic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_master"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", "testAccMysql"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", TestAccTencentCloudMysqlInstanceName),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "mem_size", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "volume_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "intranet_port", "3360"),

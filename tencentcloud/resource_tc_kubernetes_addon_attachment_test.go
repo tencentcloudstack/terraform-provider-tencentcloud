@@ -84,6 +84,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 
 resource "tencentcloud_kubernetes_addon_attachment" "cbs" {
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
   name = "cbs"
   version = "1.0.0"
 }

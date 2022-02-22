@@ -26,7 +26,7 @@ func testSweepCvmInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(TencentCloudClient)
+	client := sharedClient.(*TencentCloudClient)
 
 	cvmService := CvmService{
 		client: client.apiV3Conn,
@@ -467,6 +467,7 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 	})
 }
 
+/* Skip prepaid for now
 func TestAccTencentCloudInstanceWithPrepaidChargeType(t *testing.T) {
 	t.Parallel()
 
@@ -493,6 +494,8 @@ func TestAccTencentCloudInstanceWithPrepaidChargeType(t *testing.T) {
 		},
 	})
 }
+
+*/
 
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
