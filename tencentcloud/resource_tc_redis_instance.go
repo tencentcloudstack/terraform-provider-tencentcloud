@@ -251,6 +251,14 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"auto_renew_flag": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
+				Default:      0,
+				Description:  "Auto-renew flag. 0 - default state (manual renewal); 1 - automatic renewal; 2 - explicit no automatic renewal.",
+			},
 		},
 	}
 }
@@ -281,6 +289,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	projectId := d.Get("project_id").(int)
 	port := d.Get("port").(int)
 	chargeType := d.Get("charge_type").(string)
+	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var chargePeriod uint64 = 1
 	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
@@ -417,6 +426,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		chargePeriod,
 		nodeInfo,
 		noAuth,
+		autoRenewFlag,
 	)
 
 	if err != nil {
@@ -535,6 +545,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("port", info.Port)
 	_ = d.Set("ip", info.WanIp)
 	_ = d.Set("create_time", info.Createtime)
+	_ = d.Set("auto_renew_flag", info.AutoRenewFlag)
 
 	// only true or user explicit declared will set for import case.
 	if _, ok := d.GetOk("no_auth"); ok || *info.NoAuth {

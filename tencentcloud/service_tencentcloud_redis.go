@@ -249,6 +249,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	chargePeriod uint64,
 	nodeInfo []*redis.RedisNodeInfo,
 	noAuth bool,
+	autoRenewFlag int,
 ) (instanceIds []*string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -324,7 +325,9 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	if noAuth {
 		request.NoAuth = &noAuth
 	}
-
+	if chargeTypeID == REDIS_CHARGE_TYPE_ID[REDIS_CHARGE_TYPE_PREPAID] {
+		request.AutoRenew = helper.IntUint64(autoRenewFlag)
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().CreateInstances(request)
 	if err != nil {
