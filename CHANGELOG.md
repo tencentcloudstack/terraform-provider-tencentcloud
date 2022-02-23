@@ -1,4 +1,11 @@
-## 1.61.11 (February 22, 2022)
+## 1.61.12 (February 23, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_instance` fix testcase default image 
+
+
+## 1.61.11 (February 23, 2022)
 
 ENHANCEMENTS:
 
