@@ -1,3 +1,9 @@
+## 1.61.11 (February 22, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_instance` support System Disk size and DiskType modification
+
 ## 1.61.10 (February 22, 2022)
 
 ENHANCEMENTS:

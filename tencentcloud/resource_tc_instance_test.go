@@ -125,7 +125,7 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr(id, "system_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "system_disk_size", "100"),
 					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "150"),
@@ -633,6 +633,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
+  system_disk_size = 100
 
   data_disks {
     data_disk_type        = "CLOUD_PREMIUM"
