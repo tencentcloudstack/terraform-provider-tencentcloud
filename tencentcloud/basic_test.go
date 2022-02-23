@@ -98,7 +98,7 @@ data "tencentcloud_availability_zones" "default" {
 
 data "tencentcloud_images" "default" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
+  image_name_regex = "Final"
 }
 
 data "tencentcloud_instance_types" "default" {
