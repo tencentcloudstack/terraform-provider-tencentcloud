@@ -1076,34 +1076,14 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew: true,
 			Optional: true,
 			Default:  256,
-			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-				value := v.(int)
-				if value%16 != 0 {
-					errors = append(errors, fmt.Errorf(
-						"%q  has to be a multiple of 16 ", k))
-				}
-				if value < 32 {
-					errors = append(errors, fmt.Errorf(
-						"%q cannot be lower than %d: %d", k, 32, value))
-				}
-				return
-			},
-			Description: "The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.",
+			Description: "The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.",
 		},
 		"cluster_max_service_num": {
 			Type:     schema.TypeInt,
 			ForceNew: true,
 			Optional: true,
 			Default:  256,
-			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-				value := v.(int)
-				if value%16 != 0 {
-					errors = append(errors, fmt.Errorf(
-						"%q  has to be a multiple of 16 ", k))
-				}
-				return
-			},
-			Description: "The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.",
+			Description: "The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.",
 		},
 		"service_cidr": {
 			Type:        schema.TypeString,
