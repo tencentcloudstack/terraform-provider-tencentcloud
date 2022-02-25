@@ -116,7 +116,7 @@ resource "tencentcloud_clb_target_group" "test"{
 `
 
 const testAccClbInstanceTargetGroup = `
-resource "tencentcloud_clb_instance" "target_group" {
+resource "tencentcloud_clb_target_group" "target_group" {
     target_group_name = "tgt_grp_test"
     port              = 33
     target_group_instances {
@@ -127,7 +127,7 @@ resource "tencentcloud_clb_instance" "target_group" {
 `
 
 const testAccClbInstanceTargetGroupUpdate = `
-resource "tencentcloud_clb_instance" "target_group" {
+resource "tencentcloud_clb_target_group" "target_group" {
     target_group_name = "tgt_grp_test"
     port              = 44
     target_group_instances {

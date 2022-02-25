@@ -145,7 +145,7 @@ resource "tencentcloud_vpc" "foo" {
 
   resource "tencentcloud_clb_instance" "clb_basic" {
 	network_type = "OPEN"
-	clb_name     = "tf-clb-basic"
+	clb_name     = "tf-clb-attach-basic"
 	vpc_id       = tencentcloud_vpc.foo.id
   }
 
