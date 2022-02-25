@@ -144,7 +144,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		},
 		"storage_limit": {
 			Type:        schema.TypeInt,
-			Required:    true,
+			Optional:    true,
 			ForceNew:    true,
 			Description: "Storage limit of CynosDB cluster instance, unit in GB.",
 		},
