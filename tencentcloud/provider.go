@@ -54,6 +54,7 @@ Anti-DDoS(DayuV2)
 	tencentcloud_dayu_eip
 	tencentcloud_dayu_l4_rule
 	tencentcloud_dayu_l7_rule_v2
+	tencentcloud_dayu_ddos_policy_v2
 
 Anti-DDoS(Dayu)
   Data Source
@@ -959,6 +960,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_cc_http_policy":                     resourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                    resourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                        resourceTencentCloudDayuDdosPolicy(),
+			"tencentcloud_dayu_ddos_policy_v2":                     resourceTencentCloudDayuDdosPolicyV2(),
 			"tencentcloud_dayu_ddos_policy_case":                   resourceTencentCloudDayuDdosPolicyCase(),
 			"tencentcloud_dayu_ddos_policy_attachment":             resourceTencentCloudDayuDdosPolicyAttachment(),
 			"tencentcloud_dayu_l4_rule":                            resourceTencentCloudDayuL4Rule(),
