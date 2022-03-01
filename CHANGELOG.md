@@ -1,3 +1,24 @@
+## 1.62.0 (March 1, 2022)
+
+FEATURES:
+
+* new resource `tencentcloud_dayu_ddos_policy_v2`
+
+BUGFIXES:
+
+* datasource `tencentcloud_postgresql_instances` fix query id parameter
+* resource `tencentcloud_cynosdb_cluster` make `storage_limit` optional and update description
+
+DEPRECATED:
+
+* datasource `tencentcloud_redis_zone_config`: The argument `mem_sizes` was deprecated, use `shard_memories` instead.
+
+## 1.61.13 (February 24, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_redis_instance` support `auto_renew_flag`.
+
 ## 1.61.12 (February 23, 2022)
 
 ENHANCEMENTS:
