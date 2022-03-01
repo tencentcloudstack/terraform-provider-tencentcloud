@@ -64,7 +64,6 @@ The following arguments are supported:
 * `instance_cpu_core` - (Required) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_memory_size` - (Required) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `password` - (Required, ForceNew) Password of `root` account.
-* `storage_limit` - (Required, ForceNew) Storage limit of CynosDB cluster instance, unit in GB.
 * `subnet_id` - (Required, ForceNew) ID of the subnet within this VPC.
 * `vpc_id` - (Required, ForceNew) ID of the VPC.
 * `auto_renew_flag` - (Optional, ForceNew) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
@@ -78,6 +77,7 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.
+* `storage_limit` - (Optional, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `tags` - (Optional) The tags of the CynosDB cluster.
 
 ## Attributes Reference

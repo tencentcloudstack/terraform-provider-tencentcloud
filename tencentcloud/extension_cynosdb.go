@@ -144,9 +144,9 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		},
 		"storage_limit": {
 			Type:        schema.TypeInt,
-			Required:    true,
+			Optional:    true,
 			ForceNew:    true,
-			Description: "Storage limit of CynosDB cluster instance, unit in GB.",
+			Description: "Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.",
 		},
 		"cluster_name": {
 			Type:        schema.TypeString,

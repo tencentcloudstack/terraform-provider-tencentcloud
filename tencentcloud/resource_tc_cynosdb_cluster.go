@@ -102,10 +102,13 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	request.Port = helper.IntInt64(d.Get("port").(int))
 	request.DbType = helper.String(d.Get("db_type").(string))
 	request.DbVersion = helper.String(d.Get("db_version").(string))
-	request.StorageLimit = helper.IntInt64(d.Get("storage_limit").(int))
 	request.ClusterName = helper.String(d.Get("cluster_name").(string))
 	request.AdminPassword = helper.String(d.Get("password").(string))
 	request.RollbackStrategy = helper.String("noneRollback")
+
+	if v, ok := d.GetOk("storage_limit"); ok {
+		request.StorageLimit = helper.IntInt64(v.(int))
+	}
 
 	// instance info
 	request.Cpu = helper.IntInt64(d.Get("instance_cpu_core").(int))
