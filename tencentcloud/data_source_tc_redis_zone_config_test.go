@@ -22,6 +22,7 @@ func TestAccDataSourceRedisZoneConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.version"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.mem_sizes.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.shard_memories.#"),
 				),
 			},
 			{
@@ -33,6 +34,7 @@ func TestAccDataSourceRedisZoneConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.type_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.version"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.mem_sizes.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.shard_memories.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.redis_shard_nums.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.redis_replicas_nums.#"),
 				),

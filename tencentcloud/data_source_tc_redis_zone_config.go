@@ -74,7 +74,14 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.26.0. Use `shard_memories` instead.",
 							Description: "The memory volume of an available instance(in MB).",
+						},
+						"shard_memories": {
+							Type:        schema.TypeList,
+							Description: "The memory volume list of an available instance shard(in MB).",
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
 						},
 						"redis_shard_nums": {
 							Type:        schema.TypeList,
@@ -160,7 +167,17 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 				memSizes = append(memSizes, temp*1024)
 			}
 
+			shardMemories := make([]int64, 0, len(products.ShardSize))
+			for _, size := range products.ShardSize {
+				temp, err := strconv.ParseInt(*size, 10, 64)
+				if err != nil {
+					continue
+				}
+				shardMemories = append(shardMemories, temp*1024)
+			}
+
 			zoneConfigures["mem_sizes"] = memSizes
+			zoneConfigures["shard_memories"] = shardMemories
 			zoneConfigures["type"] = REDIS_NAMES[*products.Type]
 
 			var redisShardNums []int64
