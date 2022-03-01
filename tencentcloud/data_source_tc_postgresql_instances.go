@@ -216,7 +216,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		listItem["public_access_host"] = ""
 
 		// rootUser
-		accounts, outErr := service.DescribeRootUser(ctx, d.Id())
+		accounts, outErr := service.DescribeRootUser(ctx, *v.DBInstanceId)
 		if outErr != nil {
 			return outErr
 		}
