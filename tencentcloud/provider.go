@@ -153,6 +153,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_saml_providers
     tencentcloud_cam_user_policy_attachments
     tencentcloud_cam_users
+    tencentcloud_user_info
 
   Resource
     tencentcloud_cam_role
@@ -807,6 +808,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_user_policy_attachments":              dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments":             dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                       dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_user_info":                                datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                              dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_scf_functions":                            dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                           dataSourceTencentCloudScfNamespaces(),

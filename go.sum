@@ -458,6 +458,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.199 h1:6g9q97yB
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.199/go.mod h1:boLdxUceAK+98OfetsfVEX6RV1leu/JGyEtsrTf4kIY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.199 h1:caDwMPzGsG+WUZ9tJVnTxbD7nc6Uj8K+xop5xxvV0DQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.199/go.mod h1:ys+65P4jdhUP5rQFSPI9O8/5s0lNcPycl5IPOTaZyVU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.357 h1:USpuZLFRHacOVo4urhDJcCIH2hb6DqNx0YmLvLt+w2Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.357/go.mod h1:Whw7AWuWHNYQIdgwhl0/cf2DQ2N7JD9HUj9PvgiwRrQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199 h1:MkIdFgEGF+baYAU9Z/PUmudfuamCGtLsedQpopwyHNU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199/go.mod h1:PTp058qpOV//RukBVdYQT962rZg71lIt6eHLK1zdvEc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.199 h1:7ReZOKl95X+9SkPPtrAoUt4ZPJSIjiSxq4g/M54JmtU=
@@ -489,6 +491,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.351 h1:BpVJ
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.351/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.353 h1:rFkcKuLFxt2xolSWbyeznetTBw9Cyhe1ycILmEkE1Pk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.353/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.357 h1:uaMtRfV/OYPolAldcOuChMPAnmYnG+CONdDAFcaOQGU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.357/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199 h1:ajgJogYSIQ5u1PIbiV5nsvr5K0fYpm1/T7Dy+mxEM6U=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.351 h1:zqJsH5pxGT57La7NAOOyMQxsuM11pupNBwV1dzXcT24=

@@ -17,6 +17,9 @@ package v20190116
 const (
 	// 此产品的特有错误码
 
+	// 没有权限。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -43,6 +46,9 @@ const (
 
 	// 设置的用户没有权限。
 	FAILEDOPERATION_USERUNBINDNOPERMISSION = "FailedOperation.UserUnbindNoPermission"
+
+	// 内部错误。
+	INTERNALERROR = "InternalError"
 
 	// 内部错误。
 	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -221,6 +227,9 @@ const (
 	// 用户对象不存在。
 	INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 
+	// 用户的Uin和Uid不能都为空。
+	INVALIDPARAMETER_USERUINANDUINNOTALLNULL = "InvalidParameter.UserUinAndUinNotAllNull"
+
 	// 策略文档的Version字段不合法。
 	INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 
@@ -247,6 +256,9 @@ const (
 
 	// 创建子用户频率超过限制。
 	REQUESTLIMITEXCEEDED_CREATEUSER = "RequestLimitExceeded.CreateUser"
+
+	// 用户账号超出了限制。
+	REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
 
 	// 用户组不存在。
 	RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
