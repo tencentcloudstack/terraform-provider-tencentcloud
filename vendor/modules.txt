@@ -529,7 +529,7 @@ github.com/stretchr/testify/mock
 github.com/subosito/gotenv
 # github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.334
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.353
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106
@@ -555,7 +555,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.291
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.351
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.353
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
