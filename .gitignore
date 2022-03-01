@@ -20,3 +20,4 @@ terraform_public.txt
 dist/
 gendoc/gendoc
 .vscode/
+examples/**/.terraform*

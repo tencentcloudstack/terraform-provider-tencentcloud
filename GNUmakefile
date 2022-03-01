@@ -122,6 +122,9 @@ test-build-x86:
 	GOARCH=386 go build -o terraform-provider-tencentcloud-386
 	rm -f terraform-provider-tencentcloud-386
 
+binary-test:
+	./scripts/build-fs-mirror.sh $(git describe --tags --abbrev=0)
+
 doc:
 	cd gendoc && go run ./... && cd ..
 
