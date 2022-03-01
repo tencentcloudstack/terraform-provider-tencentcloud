@@ -77,7 +77,7 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.
-* `storage_limit` - (Optional, ForceNew) Storage limit of CynosDB cluster instance, unit in GB.
+* `storage_limit` - (Optional, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `tags` - (Optional) The tags of the CynosDB cluster.
 
 ## Attributes Reference
