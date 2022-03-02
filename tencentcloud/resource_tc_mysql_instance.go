@@ -564,7 +564,11 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
-	d.SetId(*response.Response.InstanceIds[0])
+
+	id := *response.Response.InstanceIds[0]
+
+	d.SetId(id)
+
 	return nil
 }
 
@@ -616,6 +620,46 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	// Initialize mysql instance
+	var (
+		service   = MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		password  = d.Get("password").(string)
+		charset   = d.Get("parameters.character_set_server").(string)
+		lowercase = d.Get("parameters.lower_case_table_names").(string)
+	)
+
+	aReqId, err := service.InitDBInstances(ctx, mysqlID, password, charset, lowercase)
+
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		// Available status：INITIAL, RUNNING, SUCCESS, FAILED, KILLED, REMOVED, PAUSED
+		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, aReqId)
+
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+			return nil
+		}
+		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+		}
+		err = fmt.Errorf("initialize db task status is %s,we won't wait for it finish ,it show message:%s", ",",
+			message)
+		return resource.NonRetryableError(err)
+	})
+
+	if err != nil {
+		log.Printf("[WARN] initial DB error: %s", err.Error())
 	}
 
 	//internet service
