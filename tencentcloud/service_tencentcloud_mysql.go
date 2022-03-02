@@ -941,8 +941,8 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, 
 	}
 
 	paramsMap := map[string]string{
-		"character_set_server":   "utf8mb4", // ["utf8","latin1","gbk","utf8mb4"]
-		"lower_case_table_names": "1",       // ["0","1"]
+		"character_set_server":   "LATIN1", // ["utf8","latin1","gbk","utf8mb4"]
+		"lower_case_table_names": "1",      // ["0","1"]
 	}
 
 	if charset != "" {

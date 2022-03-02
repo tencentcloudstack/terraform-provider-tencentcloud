@@ -624,13 +624,12 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	// Initialize mysql instance
 	var (
-		service   = MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-		password  = d.Get("password").(string)
+		password  = d.Get("root_password").(string)
 		charset   = d.Get("parameters.character_set_server").(string)
 		lowercase = d.Get("parameters.lower_case_table_names").(string)
 	)
 
-	aReqId, err := service.InitDBInstances(ctx, mysqlID, password, charset, lowercase)
+	aReqId, err := mysqlService.InitDBInstances(ctx, mysqlID, password, charset, lowercase)
 
 	if err != nil {
 		return err
@@ -638,7 +637,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		// Available status：INITIAL, RUNNING, SUCCESS, FAILED, KILLED, REMOVED, PAUSED
-		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, aReqId)
+		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, aReqId)
 
 		if err != nil {
 			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
