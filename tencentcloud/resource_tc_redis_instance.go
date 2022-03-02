@@ -165,6 +165,13 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
 			},
+			"replicas_read_only": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     false,
+				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
+			},
 			"mem_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
@@ -291,6 +298,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	chargeType := d.Get("charge_type").(string)
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
+	replicasReadonly := d.Get("replicas_read_only").(bool)
 	var chargePeriod uint64 = 1
 	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
 		if period, ok := d.GetOk("prepaid_period"); ok {
@@ -427,6 +435,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		nodeInfo,
 		noAuth,
 		autoRenewFlag,
+		replicasReadonly,
 	)
 
 	if err != nil {
@@ -546,6 +555,12 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("ip", info.WanIp)
 	_ = d.Set("create_time", info.Createtime)
 	_ = d.Set("auto_renew_flag", info.AutoRenewFlag)
+	slaveReadWeight := *info.SlaveReadWeight
+	if slaveReadWeight == 0 {
+		_ = d.Set("replicas_read_only", false)
+	} else if slaveReadWeight == 100 {
+		_ = d.Set("replicas_read_only", true)
+	}
 
 	// only true or user explicit declared will set for import case.
 	if _, ok := d.GetOk("no_auth"); ok || *info.NoAuth {

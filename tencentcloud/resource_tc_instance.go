@@ -1577,7 +1577,81 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
-
+	if v, ok := d.GetOk("data_disks"); ok {
+		dataDisks := v.([]interface{})
+		for _, d := range dataDisks {
+			value := d.(map[string]interface{})
+			diskId := value["data_disk_id"].(string)
+			deleteWithInstance := value["delete_with_instance"].(bool)
+			if deleteWithInstance {
+				cbsService := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+				err := resource.Retry(readRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return retryError(e, InternalError)
+					}
+					if *diskInfo.DiskState != CBS_STORAGE_STATUS_UNATTACHED {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					e := cbsService.DeleteDiskById(ctx, diskId)
+					if e != nil {
+						return retryError(e, InternalError)
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+				err = resource.Retry(readRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return retryError(e, InternalError)
+					}
+					if *diskInfo.DiskState == CBS_STORAGE_STATUS_TORECYCLE {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					e := cbsService.DeleteDiskById(ctx, diskId)
+					if e != nil {
+						return retryError(e, InternalError)
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s delete cbs failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+				err = resource.Retry(readRetryTimeout*2, func() *resource.RetryError {
+					diskInfo, e := cbsService.DescribeDiskById(ctx, diskId)
+					if e != nil {
+						return retryError(e, InternalError)
+					}
+					if diskInfo != nil {
+						return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *diskInfo.DiskState))
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s read cbs status failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+			}
+		}
+	}
 	return nil
 }
 
