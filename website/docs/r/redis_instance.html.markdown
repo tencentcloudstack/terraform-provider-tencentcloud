@@ -81,6 +81,7 @@ The following arguments are supported:
 * `redis_replicas_num` - (Optional, ForceNew) The number of instance copies. This is not required for standalone and master slave versions.
 * `redis_shard_num` - (Optional, ForceNew) The number of instance shard. This is not required for standalone and master slave versions.
 * `replica_zone_ids` - (Optional, ForceNew) ID of replica nodes available zone. This is not required for standalone and master slave versions.
+* `replicas_read_only` - (Optional, ForceNew) Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.
 * `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, ForceNew) Specifies which subnet the instance should belong to.
 * `tags` - (Optional) Instance tags.
