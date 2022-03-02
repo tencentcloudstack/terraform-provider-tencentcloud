@@ -1,3 +1,14 @@
+## 1.63.0 (March 2, 2022)
+
+FEATURES:
+
+* new resource `tencentcloud_user_info`
+
+BUGFIXES:
+
+* resource `tencentcloud_instance` support data disk `delete_with_instance` on cvm remove
+* resource `tencentcloud_redis_instance` support `replicas_read_only
+
 ## 1.62.0 (March 1, 2022)
 
 FEATURES:
