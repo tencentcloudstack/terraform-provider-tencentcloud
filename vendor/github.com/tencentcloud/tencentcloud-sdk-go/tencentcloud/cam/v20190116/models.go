@@ -131,7 +131,7 @@ func (r *AddUserResponse) FromJsonString(s string) error {
 type AddUserToGroupRequest struct {
 	*tchttp.BaseRequest
 
-	// 添加的子用户 UID 和用户组 ID 关联关系
+	// 添加的子用户 UIN/UID 和用户组 ID 关联关系
 	Info []*GroupIdOfUidInfo `json:"Info,omitempty" name:"Info"`
 }
 
@@ -428,6 +428,48 @@ type AttachedPolicyOfRole struct {
 	// 策略描述
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
+type AttachedUserPolicy struct {
+
+	// 策略ID
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 策略名
+	PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
+
+	// 策略描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 创建时间
+	AddTime *string `json:"AddTime,omitempty" name:"AddTime"`
+
+	// 策略类型(1表示自定义策略，2表示预设策略)
+	StrategyType *string `json:"StrategyType,omitempty" name:"StrategyType"`
+
+	// 创建模式(1表示按产品或项目权限创建的策略，其他表示策略语法创建的策略)
+	CreateMode *string `json:"CreateMode,omitempty" name:"CreateMode"`
+
+	// 随组关联信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Groups []*AttachedUserPolicyGroupInfo `json:"Groups,omitempty" name:"Groups"`
+
+	// 是否已下线(0:否 1:是)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Deactived *uint64 `json:"Deactived,omitempty" name:"Deactived"`
+
+	// 已下线的产品列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeactivedDetail []*string `json:"DeactivedDetail,omitempty" name:"DeactivedDetail"`
+}
+
+type AttachedUserPolicyGroupInfo struct {
+
+	// 分组ID
+	GroupId *uint64 `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 分组名称
+	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 }
 
 type ConsumeCustomMFATokenRequest struct {
@@ -821,6 +863,52 @@ func (r *CreateServiceLinkedRoleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateServiceLinkedRoleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateUserSAMLConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// SAML元数据文档，需要base64 encode
+	SAMLMetadataDocument *string `json:"SAMLMetadataDocument,omitempty" name:"SAMLMetadataDocument"`
+}
+
+func (r *CreateUserSAMLConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUserSAMLConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SAMLMetadataDocument")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserSAMLConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateUserSAMLConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateUserSAMLConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUserSAMLConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1369,6 +1457,57 @@ func (r *DescribeSafeAuthFlagCollResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeSafeAuthFlagIntlRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeSafeAuthFlagIntlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSafeAuthFlagIntlRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSafeAuthFlagIntlRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSafeAuthFlagIntlResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 登录保护设置
+		LoginFlag *LoginActionFlagIntl `json:"LoginFlag,omitempty" name:"LoginFlag"`
+
+		// 敏感操作保护设置
+		ActionFlag *LoginActionFlagIntl `json:"ActionFlag,omitempty" name:"ActionFlag"`
+
+		// 异地登录保护设置
+		OffsiteFlag *OffsiteFlag `json:"OffsiteFlag,omitempty" name:"OffsiteFlag"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeSafeAuthFlagIntlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSafeAuthFlagIntlResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeSafeAuthFlagRequest struct {
 	*tchttp.BaseRequest
 }
@@ -1466,6 +1605,54 @@ func (r *DescribeSubAccountsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeSubAccountsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeUserSAMLConfigRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeUserSAMLConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSAMLConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserSAMLConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeUserSAMLConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// SAML元数据文档
+		SAMLMetadata *string `json:"SAMLMetadata,omitempty" name:"SAMLMetadata"`
+
+		// 状态：0:未设置，1:已开启，2:已禁用
+		Status *uint64 `json:"Status,omitempty" name:"Status"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeUserSAMLConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUserSAMLConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1624,6 +1811,66 @@ func (r *DetachUserPolicyResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DetachUserPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetAccountSummaryRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *GetAccountSummaryRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetAccountSummaryRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetAccountSummaryRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetAccountSummaryResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 策略数
+		Policies *uint64 `json:"Policies,omitempty" name:"Policies"`
+
+		// 角色数
+		Roles *uint64 `json:"Roles,omitempty" name:"Roles"`
+
+		// 身份提供商数
+		Idps *uint64 `json:"Idps,omitempty" name:"Idps"`
+
+		// 子账户数
+		User *uint64 `json:"User,omitempty" name:"User"`
+
+		// 分组数
+		Group *uint64 `json:"Group,omitempty" name:"Group"`
+
+		// 分组用户总数
+		Member *uint64 `json:"Member,omitempty" name:"Member"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetAccountSummaryResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetAccountSummaryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1824,7 +2071,7 @@ type GetPolicyVersionRequest struct {
 	// 策略ID
 	PolicyId *uint64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 策略版本号
+	// 策略版本号，可由ListPolicyVersions获取
 	VersionId *uint64 `json:"VersionId,omitempty" name:"VersionId"`
 }
 
@@ -1869,6 +2116,72 @@ func (r *GetPolicyVersionResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetPolicyVersionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetRolePermissionBoundaryRequest struct {
+	*tchttp.BaseRequest
+
+	// 角色ID
+	RoleId *string `json:"RoleId,omitempty" name:"RoleId"`
+}
+
+func (r *GetRolePermissionBoundaryRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetRolePermissionBoundaryRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RoleId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetRolePermissionBoundaryRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetRolePermissionBoundaryResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 策略ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
+
+		// 策略名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
+
+		// 策略语法
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyDocument *string `json:"PolicyDocument,omitempty" name:"PolicyDocument"`
+
+		// 策略类型：1.自定义策略，2.预设策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyType *int64 `json:"PolicyType,omitempty" name:"PolicyType"`
+
+		// 创建方式：1.按产品功能或项目权限创建，2.按策略语法创建，3.按策略生成器创建，4.按标签授权创建，5.按权限边界规则创建
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		CreateMode *int64 `json:"CreateMode,omitempty" name:"CreateMode"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetRolePermissionBoundaryResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetRolePermissionBoundaryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1986,6 +2299,55 @@ func (r *GetSAMLProviderResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GetSecurityLastUsedRequest struct {
+	*tchttp.BaseRequest
+
+	// 查询密钥ID列表。最多支持10个。
+	SecretIdList []*string `json:"SecretIdList,omitempty" name:"SecretIdList"`
+}
+
+func (r *GetSecurityLastUsedRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetSecurityLastUsedRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SecretIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetSecurityLastUsedRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetSecurityLastUsedResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 密钥ID最近访问列表
+		SecretIdLastUsedRows []*SecretIdLastUsed `json:"SecretIdLastUsedRows,omitempty" name:"SecretIdLastUsedRows"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetSecurityLastUsedResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetSecurityLastUsedResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type GetServiceLinkedRoleDeletionStatusRequest struct {
 	*tchttp.BaseRequest
 
@@ -2046,6 +2408,123 @@ func (r *GetServiceLinkedRoleDeletionStatusResponse) FromJsonString(s string) er
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GetUserAppIdRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *GetUserAppIdRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetUserAppIdRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetUserAppIdRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetUserAppIdResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 当前账号Uin
+		Uin *string `json:"Uin,omitempty" name:"Uin"`
+
+		// 当前账号OwnerUin
+		OwnerUin *string `json:"OwnerUin,omitempty" name:"OwnerUin"`
+
+		// 当前账号AppId
+		AppId *uint64 `json:"AppId,omitempty" name:"AppId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetUserAppIdResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetUserAppIdResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetUserPermissionBoundaryRequest struct {
+	*tchttp.BaseRequest
+
+	// 子账号Uin
+	TargetUin *int64 `json:"TargetUin,omitempty" name:"TargetUin"`
+}
+
+func (r *GetUserPermissionBoundaryRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetUserPermissionBoundaryRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TargetUin")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetUserPermissionBoundaryRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetUserPermissionBoundaryResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 策略ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
+
+		// 策略名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
+
+		// 策略语法
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyDocument *string `json:"PolicyDocument,omitempty" name:"PolicyDocument"`
+
+		// 策略类型：1.自定义策略，2.预设策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		PolicyType *int64 `json:"PolicyType,omitempty" name:"PolicyType"`
+
+		// 创建方式：1.按产品功能或项目权限创建，2.按策略语法创建，3.按策略生成器创建，4.按标签授权创建，5.按权限边界规则创建
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		CreateMode *int64 `json:"CreateMode,omitempty" name:"CreateMode"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetUserPermissionBoundaryResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetUserPermissionBoundaryResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type GetUserRequest struct {
 	*tchttp.BaseRequest
 
@@ -2086,9 +2565,10 @@ type GetUserResponse struct {
 		Uid *uint64 `json:"Uid,omitempty" name:"Uid"`
 
 		// 子用户备注
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		Remark *string `json:"Remark,omitempty" name:"Remark"`
 
-		// 子用户能否登录控制台
+		// 子用户能否登录控制台 0-无法登录控制台，1-可以登录控制台
 		ConsoleLogin *uint64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
 
 		// 手机号
@@ -2118,11 +2598,14 @@ func (r *GetUserResponse) FromJsonString(s string) error {
 
 type GroupIdOfUidInfo struct {
 
+	// 用户组 ID
+	GroupId *uint64 `json:"GroupId,omitempty" name:"GroupId"`
+
 	// 子用户 UID
 	Uid *uint64 `json:"Uid,omitempty" name:"Uid"`
 
-	// 用户组 ID
-	GroupId *uint64 `json:"GroupId,omitempty" name:"GroupId"`
+	// 子用户 Uin，Uid和Uin至少有一个必填
+	Uin *uint64 `json:"Uin,omitempty" name:"Uin"`
 }
 
 type GroupInfo struct {
@@ -2157,22 +2640,22 @@ type GroupMemberInfo struct {
 	// 手机区域代码。
 	CountryCode *string `json:"CountryCode,omitempty" name:"CountryCode"`
 
-	// 是否已验证手机。
+	// 是否已验证手机。0-未验证  1-验证
 	PhoneFlag *uint64 `json:"PhoneFlag,omitempty" name:"PhoneFlag"`
 
 	// 邮箱地址。
 	Email *string `json:"Email,omitempty" name:"Email"`
 
-	// 是否已验证邮箱。
+	// 是否已验证邮箱。0-未验证  1-验证
 	EmailFlag *uint64 `json:"EmailFlag,omitempty" name:"EmailFlag"`
 
-	// 用户类型。
+	// 用户类型。1-全局协作者 2-项目协作者 3-消息接收者
 	UserType *uint64 `json:"UserType,omitempty" name:"UserType"`
 
 	// 创建时间。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 
-	// 是否为主消息接收人。
+	// 是否为主消息接收人。0-否 1-是
 	IsReceiverOwner *uint64 `json:"IsReceiverOwner,omitempty" name:"IsReceiverOwner"`
 }
 
@@ -2237,6 +2720,9 @@ type ListAttachedGroupPoliciesRequest struct {
 
 	// 每页大小，默认值是 20
 	Rp *uint64 `json:"Rp,omitempty" name:"Rp"`
+
+	// 搜索关键字
+	Keyword *string `json:"Keyword,omitempty" name:"Keyword"`
 }
 
 func (r *ListAttachedGroupPoliciesRequest) ToJsonString() string {
@@ -2254,6 +2740,7 @@ func (r *ListAttachedGroupPoliciesRequest) FromJsonString(s string) error {
 	delete(f, "TargetGroupId")
 	delete(f, "Page")
 	delete(f, "Rp")
+	delete(f, "Keyword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListAttachedGroupPoliciesRequest has unknown keys!", "")
 	}
@@ -2303,6 +2790,9 @@ type ListAttachedRolePoliciesRequest struct {
 
 	// 按策略类型过滤，User表示仅查询自定义策略，QCS表示仅查询预设策略
 	PolicyType *string `json:"PolicyType,omitempty" name:"PolicyType"`
+
+	// 搜索关键字
+	Keyword *string `json:"Keyword,omitempty" name:"Keyword"`
 }
 
 func (r *ListAttachedRolePoliciesRequest) ToJsonString() string {
@@ -2322,6 +2812,7 @@ func (r *ListAttachedRolePoliciesRequest) FromJsonString(s string) error {
 	delete(f, "RoleId")
 	delete(f, "RoleName")
 	delete(f, "PolicyType")
+	delete(f, "Keyword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListAttachedRolePoliciesRequest has unknown keys!", "")
 	}
@@ -2351,6 +2842,78 @@ func (r *ListAttachedRolePoliciesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ListAttachedRolePoliciesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ListAttachedUserAllPoliciesRequest struct {
+	*tchttp.BaseRequest
+
+	// 目标用户ID
+	TargetUin *uint64 `json:"TargetUin,omitempty" name:"TargetUin"`
+
+	// 每页数量，必须大于 0 且小于或等于 200
+	Rp *uint64 `json:"Rp,omitempty" name:"Rp"`
+
+	// 页码，从 1开始，不能大于 200
+	Page *uint64 `json:"Page,omitempty" name:"Page"`
+
+	// 0:返回直接关联和随组关联策略，1:只返回直接关联策略，2:只返回随组关联策略
+	AttachType *uint64 `json:"AttachType,omitempty" name:"AttachType"`
+
+	// 策略类型
+	StrategyType *uint64 `json:"StrategyType,omitempty" name:"StrategyType"`
+
+	// 搜索关键字
+	Keyword *string `json:"Keyword,omitempty" name:"Keyword"`
+}
+
+func (r *ListAttachedUserAllPoliciesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListAttachedUserAllPoliciesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TargetUin")
+	delete(f, "Rp")
+	delete(f, "Page")
+	delete(f, "AttachType")
+	delete(f, "StrategyType")
+	delete(f, "Keyword")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListAttachedUserAllPoliciesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ListAttachedUserAllPoliciesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 策略列表数据
+		PolicyList []*AttachedUserPolicy `json:"PolicyList,omitempty" name:"PolicyList"`
+
+		// 策略总数
+		TotalNum *uint64 `json:"TotalNum,omitempty" name:"TotalNum"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ListAttachedUserAllPoliciesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListAttachedUserAllPoliciesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2536,6 +3099,51 @@ func (r *ListEntitiesForPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ListGrantServiceAccessActionNode struct {
+
+	// 接口名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 接口描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
+type ListGrantServiceAccessNode struct {
+
+	// 服务
+	Service *ListGrantServiceAccessService `json:"Service,omitempty" name:"Service"`
+
+	// 接口信息
+	Action []*ListGrantServiceAccessActionNode `json:"Action,omitempty" name:"Action"`
+
+	// 授权的策略
+	Policy []*ListGrantServiceAccessPolicy `json:"Policy,omitempty" name:"Policy"`
+}
+
+type ListGrantServiceAccessPolicy struct {
+
+	// 策略ID
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 策略名
+	PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
+
+	// 策略类型: Custom自定义策略，Presetting预设策略
+	PolicyType *string `json:"PolicyType,omitempty" name:"PolicyType"`
+
+	// 策略描述
+	PolicyDescription *string `json:"PolicyDescription,omitempty" name:"PolicyDescription"`
+}
+
+type ListGrantServiceAccessService struct {
+
+	// 服务
+	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
+
+	// 服务名
+	ServiceName *string `json:"ServiceName,omitempty" name:"ServiceName"`
+}
+
 type ListGroupsForUserRequest struct {
 	*tchttp.BaseRequest
 
@@ -2657,6 +3265,67 @@ func (r *ListGroupsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ListGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ListPoliciesGrantingServiceAccessRequest struct {
+	*tchttp.BaseRequest
+
+	// 子账号uin，与RoleId、GroupId三选一必传
+	TargetUin *uint64 `json:"TargetUin,omitempty" name:"TargetUin"`
+
+	// 角色ID，与TargetUin、GroupId三选一必传
+	RoleId *uint64 `json:"RoleId,omitempty" name:"RoleId"`
+
+	// 用户组ID，与TargetUin、RoleId三选一必传
+	GroupId *uint64 `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 服务名，查看服务授权接口详情时需传该字段
+	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
+}
+
+func (r *ListPoliciesGrantingServiceAccessRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListPoliciesGrantingServiceAccessRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TargetUin")
+	delete(f, "RoleId")
+	delete(f, "GroupId")
+	delete(f, "ServiceType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListPoliciesGrantingServiceAccessRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ListPoliciesGrantingServiceAccessResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 列表
+		List []*ListGrantServiceAccessNode `json:"List,omitempty" name:"List"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ListPoliciesGrantingServiceAccessResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListPoliciesGrantingServiceAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3014,6 +3683,27 @@ type LoginActionFlag struct {
 	Custom *uint64 `json:"Custom,omitempty" name:"Custom"`
 }
 
+type LoginActionFlagIntl struct {
+
+	// 手机
+	Phone *uint64 `json:"Phone,omitempty" name:"Phone"`
+
+	// 硬token
+	Token *uint64 `json:"Token,omitempty" name:"Token"`
+
+	// 软token
+	Stoken *uint64 `json:"Stoken,omitempty" name:"Stoken"`
+
+	// 微信
+	Wechat *uint64 `json:"Wechat,omitempty" name:"Wechat"`
+
+	// 自定义
+	Custom *uint64 `json:"Custom,omitempty" name:"Custom"`
+
+	// 邮件
+	Mail *uint64 `json:"Mail,omitempty" name:"Mail"`
+}
+
 type LoginActionMfaFlag struct {
 
 	// 手机
@@ -3185,7 +3875,7 @@ func (r *PutUserPermissionsBoundaryResponse) FromJsonString(s string) error {
 type RemoveUserFromGroupRequest struct {
 	*tchttp.BaseRequest
 
-	// 要删除的用户 UID和用户组 ID对应数组
+	// 要删除的用户 UIN/UID和用户组 ID对应数组
 	Info []*GroupIdOfUidInfo `json:"Info,omitempty" name:"Info"`
 }
 
@@ -3279,13 +3969,23 @@ type SAMLProviderInfo struct {
 	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
 }
 
+type SecretIdLastUsed struct {
+
+	// 密钥ID
+	SecretId *string `json:"SecretId,omitempty" name:"SecretId"`
+
+	// 最后访问日期(有1天延迟)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LastUsedDate *string `json:"LastUsedDate,omitempty" name:"LastUsedDate"`
+}
+
 type SetDefaultPolicyVersionRequest struct {
 	*tchttp.BaseRequest
 
 	// 策略ID
 	PolicyId *uint64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 策略版本号
+	// 策略版本号，可由ListPolicyVersions获取
 	VersionId *uint64 `json:"VersionId,omitempty" name:"VersionId"`
 }
 
@@ -3427,6 +4127,18 @@ type StrategyInfo struct {
 	// 是否是服务相关角色策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsServiceLinkedPolicy *uint64 `json:"IsServiceLinkedPolicy,omitempty" name:"IsServiceLinkedPolicy"`
+
+	// 关联策略实体数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AttachEntityCount *int64 `json:"AttachEntityCount,omitempty" name:"AttachEntityCount"`
+
+	// 关联权限边界实体数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AttachEntityBoundaryCount *int64 `json:"AttachEntityBoundaryCount,omitempty" name:"AttachEntityBoundaryCount"`
+
+	// 最后编辑时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
 type SubAccountInfo struct {
@@ -3458,6 +4170,10 @@ type SubAccountInfo struct {
 	// 创建时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 昵称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NickName *string `json:"NickName,omitempty" name:"NickName"`
 }
 
 type SubAccountUser struct {
@@ -3468,7 +4184,7 @@ type SubAccountUser struct {
 	// 子用户用户名
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 子用户 UID
+	// 子用户 UID，UID是用户作为消息接收人时的唯一标识，和 UIN 一样可以唯一标识一个用户，可通过接口https://cloud.tencent.com/document/api/598/53486 获取
 	Uid *uint64 `json:"Uid,omitempty" name:"Uid"`
 
 	// 子用户备注
@@ -3478,7 +4194,7 @@ type SubAccountUser struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 
-	// 用户类型(1:主账号;2:子用户;3:企业微信子用户;4:协作者;5:消息接收人)
+	// 用户类型(2:子用户;3:企业微信子用户;4:协作者;5:消息接收人)
 	UserType *uint64 `json:"UserType,omitempty" name:"UserType"`
 
 	// 最近登录IP
@@ -3669,10 +4385,10 @@ type UpdateRoleConsoleLoginRequest struct {
 	// 是否可登录，可登录：1，不可登录：0
 	ConsoleLogin *int64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
 
-	// 角色ID
+	// 角色ID，入参 RoleId 与 RoleName 二选一
 	RoleId *int64 `json:"RoleId,omitempty" name:"RoleId"`
 
-	// 角色名
+	// 角色名，入参 RoleId 与 RoleName 二选一
 	RoleName *string `json:"RoleName,omitempty" name:"RoleName"`
 }
 
@@ -3896,6 +4612,56 @@ func (r *UpdateUserResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateUserResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateUserSAMLConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 修改的操作类型:enable:启用,disable:禁用,updateSAML:修改元数据文档
+	Operate *string `json:"Operate,omitempty" name:"Operate"`
+
+	// 元数据文档，需要base64 encode，仅当Operate为updateSAML时需要此参数
+	SAMLMetadataDocument *string `json:"SAMLMetadataDocument,omitempty" name:"SAMLMetadataDocument"`
+}
+
+func (r *UpdateUserSAMLConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUserSAMLConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Operate")
+	delete(f, "SAMLMetadataDocument")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUserSAMLConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateUserSAMLConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateUserSAMLConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUserSAMLConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
