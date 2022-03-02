@@ -1133,29 +1133,3 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 	}
 	return nil
 }
-
-func (me *CamService) GetUserAppId(ctx context.Context) (result *cam.GetUserAppIdResponse, errRet error) {
-	logId := getLogId(ctx)
-	request := cam.NewGetUserAppIdRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCamClient().GetUserAppId(request)
-
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	result = response
-
-	return
-}

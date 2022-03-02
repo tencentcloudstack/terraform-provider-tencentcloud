@@ -13,8 +13,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 	"strconv"
+
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -62,9 +66,21 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 
-	service := CamService{client: client}
+	logId = getLogId(ctx)
+	request := cam.NewGetUserAppIdRequest()
 
-	response, err := service.GetUserAppId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := client.UseCamClient().GetUserAppId(request)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if err != nil {
 		return err
 	}
