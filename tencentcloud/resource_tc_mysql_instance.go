@@ -627,9 +627,16 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		password  = d.Get("root_password").(string)
 		charset   = d.Get("parameters.character_set_server").(string)
 		lowercase = d.Get("parameters.lower_case_table_names").(string)
+		vPort     int
 	)
 
-	aReqId, err := mysqlService.InitDBInstances(ctx, mysqlID, password, charset, lowercase)
+	port, portOk := d.GetOk("intranet_port")
+
+	if portOk && port.(int) != 0 {
+		vPort = port.(int)
+	}
+
+	aReqId, err := mysqlService.InitDBInstances(ctx, mysqlID, password, charset, lowercase, vPort)
 
 	if err != nil {
 		return err

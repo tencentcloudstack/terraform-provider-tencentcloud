@@ -932,12 +932,16 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 	return
 }
 
-func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, charset, lowerCase string) (asyncRequestId string, errRet error) {
+func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, charset, lowerCase string, port int) (asyncRequestId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cdb.NewInitDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 	if password != "" {
 		request.NewPassword = &password
+	}
+
+	if port != 0 {
+		request.Vport = helper.IntInt64(port)
 	}
 
 	paramsMap := map[string]string{
