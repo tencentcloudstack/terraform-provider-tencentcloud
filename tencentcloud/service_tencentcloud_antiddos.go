@@ -331,7 +331,6 @@ func (me *AntiddosService) DescribeListDDoSGeoIPBlockConfig(ctx context.Context,
 		}
 		offset += limit
 	}
-	return
 }
 
 func (me *AntiddosService) DescribeListDDoSSpeedLimitConfig(ctx context.Context, instanceId string) (result []*antiddos.DDoSSpeedLimitConfigRelation, err error) {
@@ -359,7 +358,6 @@ func (me *AntiddosService) DescribeListDDoSSpeedLimitConfig(ctx context.Context,
 		offset += limit
 	}
 
-	return
 }
 
 func (me *AntiddosService) DescribeListPacketFilterConfig(ctx context.Context, instanceId string) (result []*antiddos.PacketFilterRelation, err error) {
@@ -870,6 +868,516 @@ func (me *AntiddosService) DeleteyDDoSLevel(ctx context.Context, business, insta
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, err := me.client.UseAntiddosClient().ModifyDDoSLevel(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCCThresholdList(ctx context.Context, business, instanceId string) (result []*antiddos.CCThresholdPolicy, err error) {
+	request := antiddos.NewDescribeCCThresholdListRequest()
+	request.Business = &business
+	request.InstanceId = &instanceId
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCCThresholdList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		thresholdList := response.Response.ThresholdList
+		if len(thresholdList) > 0 {
+			result = append(result, thresholdList...)
+		}
+		if len(thresholdList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) ModifyCCThresholdPolicy(ctx context.Context, instanceId, protocol, ip, domain string, threshold int) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewModifyCCThresholdPolicyRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Protocol = &protocol
+	request.Threshold = helper.IntInt64(threshold)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().ModifyCCThresholdPolicy(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceUnavailable" {
+					return nil
+				}
+			}
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCcGeoIPBlockConfigList(ctx context.Context, business, instanceId string) (result []*antiddos.CcGeoIpPolicyNew, err error) {
+	request := antiddos.NewDescribeCcGeoIPBlockConfigListRequest()
+	request.Business = &business
+	request.InstanceId = &instanceId
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCcGeoIPBlockConfigList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		ccGeoIpPolicyNew := response.Response.CcGeoIpPolicyList
+		if len(ccGeoIpPolicyNew) > 0 {
+			result = append(result, ccGeoIpPolicyNew...)
+		}
+		if len(ccGeoIpPolicyNew) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) CreateCcGeoIPBlockConfig(ctx context.Context, instanceId, protocol, ip, domain string, ccGeoIPBlockConfig antiddos.CcGeoIPBlockConfig) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewCreateCcGeoIPBlockConfigRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.IP = &ip
+	request.Protocol = &protocol
+	request.CcGeoIPBlockConfig = &ccGeoIPBlockConfig
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().CreateCcGeoIPBlockConfig(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DeleteCcGeoIPBlockConfig(ctx context.Context, instanceId string, ccGeoIPBlockConfig antiddos.CcGeoIPBlockConfig) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCcGeoIPBlockConfigRequest()
+	request.InstanceId = &instanceId
+	request.CcGeoIPBlockConfig = &ccGeoIPBlockConfig
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCcGeoIPBlockConfig(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCcBlackWhiteIpList(ctx context.Context, business, instanceId string) (result []*antiddos.CcBlackWhiteIpPolicy, err error) {
+	request := antiddos.NewDescribeCcBlackWhiteIpListRequest()
+	request.Business = &business
+	request.InstanceId = &instanceId
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCcBlackWhiteIpList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		ccBlackWhiteIpList := response.Response.CcBlackWhiteIpList
+		if len(ccBlackWhiteIpList) > 0 {
+			result = append(result, ccBlackWhiteIpList...)
+		}
+		if len(ccBlackWhiteIpList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) CreateCcBlackWhiteIpList(ctx context.Context, instanceId, protocol, ip, domain, ipType string, posIps []string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewCreateCcBlackWhiteIpListRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Protocol = &protocol
+	request.Type = &ipType
+	ipLists := make([]*antiddos.IpSegment, 0)
+	for _, posIp := range posIps {
+		ipLists = append(ipLists, &antiddos.IpSegment{
+			Ip:   &posIp,
+			Mask: helper.IntUint64(0),
+		})
+	}
+	request.IpList = ipLists
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().CreateCcBlackWhiteIpList(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DeleteCcBlackWhiteIpList(ctx context.Context, instanceId, policyId string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCcBlackWhiteIpListRequest()
+	request.InstanceId = &instanceId
+	request.PolicyId = &policyId
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCcBlackWhiteIpList(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCCPrecisionPlyList(ctx context.Context, business, instanceId string) (result []*antiddos.CCPrecisionPolicy, err error) {
+	request := antiddos.NewDescribeCCPrecisionPlyListRequest()
+	request.Business = &business
+	request.InstanceId = &instanceId
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCCPrecisionPlyList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		precisionPolicyList := response.Response.PrecisionPolicyList
+		if len(precisionPolicyList) > 0 {
+			result = append(result, precisionPolicyList...)
+		}
+		if len(precisionPolicyList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) CreateCCPrecisionPolicy(ctx context.Context, instanceId, protocol, ip, domain, policyAction string, policyList []*antiddos.CCPrecisionPlyRecord) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewCreateCCPrecisionPolicyRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Protocol = &protocol
+	request.PolicyAction = &policyAction
+	request.PolicyList = policyList
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().CreateCCPrecisionPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DeleteCCPrecisionPolicy(ctx context.Context, instanceId, policyId string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCCPrecisionPolicyRequest()
+	request.InstanceId = &instanceId
+	request.PolicyId = &policyId
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCCPrecisionPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) ModifyCCLevelPolicy(ctx context.Context, instanceId, ip, domain, protocol, level string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewModifyCCLevelPolicyRequest()
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Domain = &domain
+	request.Protocol = &protocol
+	request.Level = &level
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().ModifyCCLevelPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCCReqLimitPolicyList(ctx context.Context, business, instanceId string) (result []*antiddos.CCReqLimitPolicy, err error) {
+	request := antiddos.NewDescribeCCReqLimitPolicyListRequest()
+	request.Business = &business
+	request.InstanceId = &instanceId
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCCReqLimitPolicyList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		requestLimitPolicyList := response.Response.RequestLimitPolicyList
+		if len(requestLimitPolicyList) > 0 {
+			result = append(result, requestLimitPolicyList...)
+		}
+		if len(requestLimitPolicyList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) CreateCCReqLimitPolicy(ctx context.Context, instanceId, protocol, ip, domain string, ccReqLimitPolicyRecord antiddos.CCReqLimitPolicyRecord) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewCreateCCReqLimitPolicyRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Protocol = &protocol
+	request.Policy = &ccReqLimitPolicyRecord
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().CreateCCReqLimitPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DeleteCCRequestLimitPolicy(ctx context.Context, instanceId, policyId string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCCRequestLimitPolicyRequest()
+	request.InstanceId = &instanceId
+	request.PolicyId = &policyId
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCCRequestLimitPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeCCLevelPolicy(ctx context.Context, domain, instanceId, ip, protocol string) (level string, err error) {
+	request := antiddos.NewDescribeCCLevelPolicyRequest()
+	request.Domain = &domain
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Protocol = &protocol
+
+	ratelimit.Check(request.GetAction())
+	response, e := me.client.UseAntiddosClient().DescribeCCLevelPolicy(request)
+	if e != nil {
+		err = e
+		return
+	}
+	level = *response.Response.Level
+	return
+}
+
+func (me *AntiddosService) DescribeListBGPIPInstanceById(ctx context.Context, business, instanceId string) (result []*antiddos.BGPIPInstance, err error) {
+
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request := antiddos.NewDescribeListBGPIPInstancesRequest()
+	request.Limit = &limit
+	request.Offset = &offset
+	request.FilterInstanceId = &instanceId
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
+		if e != nil {
+			err = e
+			return
+		}
+		bgpipInstanceList := response.Response.InstanceList
+		if len(bgpipInstanceList) > 0 {
+			result = append(result, bgpipInstanceList...)
+		}
+		if len(bgpipInstanceList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) DescribeListBGPInstanceById(ctx context.Context, business, instanceId string) (result []*antiddos.BGPInstance, err error) {
+
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request := antiddos.NewDescribeListBGPInstancesRequest()
+	request.Limit = &limit
+	request.Offset = &offset
+	request.FilterInstanceId = &instanceId
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeListBGPInstances(request)
+		if e != nil {
+			err = e
+			return
+		}
+		bgpipInstanceList := response.Response.InstanceList
+		if len(bgpipInstanceList) > 0 {
+			result = append(result, bgpipInstanceList...)
+		}
+		if len(bgpipInstanceList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) DescribeCCLevelList(ctx context.Context, business, instanceId string) (result []*antiddos.CCLevelPolicy, err error) {
+
+	var limit uint64 = 10
+	var offset uint64 = 0
+	request := antiddos.NewDescribeCCLevelListRequest()
+	request.Limit = &limit
+	request.Offset = &offset
+	request.InstanceId = &instanceId
+	request.Business = &business
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeCCLevelList(request)
+		if e != nil {
+			err = e
+			return
+		}
+		bgpipInstanceList := response.Response.LevelList
+		if len(bgpipInstanceList) > 0 {
+			result = append(result, bgpipInstanceList...)
+		}
+		if len(bgpipInstanceList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) DeleteCCLevelPolicy(ctx context.Context, instanceId, ip, domain string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCCLevelPolicyRequest()
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Domain = &domain
+	request.Protocol = common.StringPtr("http")
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCCLevelPolicy(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DeleteCCThresholdPolicy(ctx context.Context, instanceId, ip, domain string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteCCThresholdPolicyRequest()
+	request.InstanceId = &instanceId
+	request.Ip = &ip
+	request.Domain = &domain
+	request.Protocol = common.StringPtr("http")
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteCCThresholdPolicy(request)
 		if err != nil {
 			return resource.RetryableError(err)
 		}
