@@ -17,7 +17,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mozillazg/go-httpheader v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.353
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.358
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.199
@@ -30,7 +30,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.283
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.291
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.357
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.358
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.351
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
