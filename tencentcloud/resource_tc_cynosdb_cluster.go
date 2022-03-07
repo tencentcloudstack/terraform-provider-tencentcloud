@@ -28,6 +28,11 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   instance_cpu_core    = 1
   instance_memory_size = 2
 
+  param_item {
+    name = "character_set_server"
+    current_value = "utf8mb4"
+  }
+
   tags = {
     test = "test"
   }
@@ -57,6 +62,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -108,6 +115,24 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("storage_limit"); ok {
 		request.StorageLimit = helper.IntInt64(v.(int))
+	}
+
+	// set params
+	if v, ok := d.GetOk("param_items"); ok {
+		paramItems := v.([]interface{})
+		request.ClusterParams = make([]*cynosdb.ParamItem, 0, len(paramItems))
+
+		for i := range paramItems {
+			item := paramItems[i].(map[string]interface{})
+			name := item["name"].(string)
+			value := item["current_value"].(string)
+			param := &cynosdb.ParamItem{
+				ParamName:    &name,
+				CurrentValue: &value,
+			}
+
+			request.ClusterParams = append(request.ClusterParams, param)
+		}
 	}
 
 	// instance info
@@ -480,6 +505,74 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		d.SetPartial("instance_maintain_duration")
 	}
 
+	// update param
+	if d.HasChange("param_items") {
+		o, n := d.GetChange("param_items")
+		oldParams := o.([]interface{})
+		newParams := n.([]interface{})
+
+		if len(oldParams) > len(newParams) {
+			return fmt.Errorf("`param_items` dosen't support remove for now")
+		}
+
+		request := cynosdb.NewModifyClusterParamRequest()
+		request.ClusterId = &clusterId
+		request.IsInMaintainPeriod = helper.String("no")
+
+		for i := range newParams {
+			item := newParams[i].(map[string]interface{})
+			name := item["name"].(string)
+			oldVal, ok := item["old_value"].(string)
+			currVal := item["current_value"].(string)
+			param := &cynosdb.ParamItem{
+				ParamName:    &name,
+				CurrentValue: &currVal,
+			}
+			if ok {
+				param.OldValue = &oldVal
+			}
+			request.ParamList = append(request.ParamList, param)
+		}
+
+		var (
+			asyncRequestId string
+		)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			aReqId, modifyErr := cynosdbService.ModifyClusterParam(ctx, request)
+			if modifyErr != nil {
+				err := modifyErr.(*sdkErrors.TencentCloudSDKError)
+				if err.Code == "FailedOperation.OperationFailedError" {
+					return resource.RetryableError(err)
+				}
+				return resource.NonRetryableError(err)
+			}
+			asyncRequestId = aReqId
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		mysqlService := MysqlService{client: client}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("%s modify params task  status is %s", clusterId, taskStatus))
+			}
+			err = fmt.Errorf("%s create account task status is %s,we won't wait for it finish ,it show message:%s", clusterId, taskStatus, message)
+			return resource.NonRetryableError(err)
+		})
+
+		d.SetPartial("param_items")
+	}
+
 	// update tags
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
@@ -534,8 +627,12 @@ func resourceTencentCloudCynosdbClusterDelete(d *schema.ResourceData, meta inter
 	}
 
 	forceDelete := d.Get("force_delete").(bool)
-	var err error
-	if err = cynosdbService.IsolateCluster(ctx, clusterID); err != nil {
+	var (
+		err error
+	)
+	_, err = cynosdbService.IsolateCluster(ctx, clusterID)
+
+	if err != nil {
 		return err
 	}
 

@@ -379,6 +379,7 @@ MySQL
     tencentcloud_mysql_backup_list
     tencentcloud_mysql_instance
     tencentcloud_mysql_parameter_list
+    tencentcloud_mysql_default_params
     tencentcloud_mysql_zone_config
 
   Resource
@@ -758,6 +759,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_backup_list":                        dataSourceTencentMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":                        dataSourceTencentMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":                     dataSourceTencentCloudMysqlParameterList(),
+			"tencentcloud_mysql_default_params":                     datasourceTencentCloudMysqlDefaultParams(),
 			"tencentcloud_mysql_instance":                           dataSourceTencentCloudMysqlInstance(),
 			"tencentcloud_cos_bucket_object":                        dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                              dataSourceTencentCloudCosBuckets(),

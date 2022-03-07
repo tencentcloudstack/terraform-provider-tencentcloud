@@ -54,6 +54,9 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.port"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "ro_group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.name", "character_set_server"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8"),
 				),
 			},
 			{
@@ -67,13 +70,17 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					//resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "rw_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "ro_group_sg.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.name", "character_set_server"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.old_value", "utf8"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8mb4"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit"},
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items"},
 			},
 		},
 	})
@@ -228,6 +235,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 
   instance_cpu_core    = 1
   instance_memory_size = 2
+  param_items {
+    name = "character_set_server"
+    current_value = "utf8"
+  }
 
 #  tags = {
 #    test = "test"
@@ -267,6 +278,12 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 
   instance_cpu_core    = 2
   instance_memory_size = 4
+
+  param_items {
+    name = "character_set_server"
+    old_value = "utf8"
+    current_value = "utf8mb4"
+  }
 
 #  tags = {
 #    test = "test-update"

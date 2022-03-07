@@ -316,6 +316,30 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 				},
 			},
 		},
+		"param_items": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Specify parameter list of database. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Name of param, e.g. `character_set_server`.",
+					},
+					"old_value": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Param old value, indicates the value which already set, this value is required when modifying current_value.",
+					},
+					"current_value": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Param expected value to set.",
+					},
+				},
+			},
+		},
 	}
 
 	for k, v := range TencentCynosdbInstanceBaseInfo() {
