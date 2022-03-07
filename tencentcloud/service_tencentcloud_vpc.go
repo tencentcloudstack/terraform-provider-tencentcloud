@@ -3537,6 +3537,71 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 	return
 }
 
+func (me *VpcService) DescribeVpnGwByFilter(ctx context.Context, filters map[string]string) (instances []*vpc.VpnGateway, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeVpnGatewaysRequest()
+	)
+	request.Filters = make([]*vpc.FilterObject, 0, len(filters))
+	for k, v := range filters {
+		filter := vpc.FilterObject{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances = make([]*vpc.VpnGateway, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeVpnGateways(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.VpnGatewaySet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.VpnGatewaySet...)
+		if len(response.Response.VpnGatewaySet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *VpcService) DeleteVpnGateway(ctx context.Context, vpnGatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteVpnGatewayRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.VpnGatewayId = &vpnGatewayId
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteVpnGateway(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
+}
+
 func (me *VpcService) CreateAddressTemplate(ctx context.Context, name string, addresses []interface{}) (templateId string, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewCreateAddressTemplateRequest()
