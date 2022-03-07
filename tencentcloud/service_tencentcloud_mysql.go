@@ -932,16 +932,31 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 	return
 }
 
-func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, password string) (asyncRequestId string, errRet error) {
+func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, charset, lowerCase string, port int) (asyncRequestId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cdb.NewInitDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
-	request.NewPassword = &password
+	if password != "" {
+		request.NewPassword = &password
+	}
+
+	if port != 0 {
+		request.Vport = helper.IntInt64(port)
+	}
 
 	paramsMap := map[string]string{
-		"character_set_server":   "utf8mb4", // ["utf8","latin1","gbk","utf8mb4"]
-		"lower_case_table_names": "1",       // ["0","1"]
+		"character_set_server":   "LATIN1", // ["utf8","latin1","gbk","utf8mb4"]
+		"lower_case_table_names": "1",      // ["0","1"]
 	}
+
+	if charset != "" {
+		paramsMap["character_set_server"] = charset // ["utf8","latin1","gbk","utf8mb4"]
+	}
+
+	if lowerCase != "" {
+		paramsMap["lower_case_table_names"] = lowerCase // ["0","1"]
+	}
+
 	request.Parameters = make([]*cdb.ParamInfo, 0, len(paramsMap))
 	for k, v := range paramsMap {
 		name := k
