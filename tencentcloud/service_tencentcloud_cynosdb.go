@@ -186,7 +186,7 @@ func (me *CynosdbService) ModifyMaintainPeriodConfig(ctx context.Context, instan
 	return
 }
 
-func (me *CynosdbService) IsolateCluster(ctx context.Context, clusterId string) (errRet error) {
+func (me *CynosdbService) IsolateCluster(ctx context.Context, clusterId string) (flowId int64, errRet error) {
 	logId := getLogId(ctx)
 	request := cynosdb.NewIsolateClusterRequest()
 
@@ -194,7 +194,7 @@ func (me *CynosdbService) IsolateCluster(ctx context.Context, clusterId string) 
 
 	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, errRet = me.client.UseCynosdbClient().IsolateCluster(request)
+		response, errRet := me.client.UseCynosdbClient().IsolateCluster(request)
 		if errRet != nil {
 			// isolate after creation immediately will encounter this error
 			if ee, ok := errRet.(*sdkErrors.TencentCloudSDKError); ok {
@@ -205,6 +205,9 @@ func (me *CynosdbService) IsolateCluster(ctx context.Context, clusterId string) 
 
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
 			return retryError(errRet)
+		}
+		if response.Response.FlowId != nil {
+			flowId = *response.Response.FlowId
 		}
 		return nil
 	})
@@ -394,6 +397,31 @@ func (me *CynosdbService) ModifyInsGrpSecurityGroups(ctx context.Context, insGrp
 	if errRet != nil {
 		return
 	}
+
+	return
+}
+
+func (me *CynosdbService) ModifyClusterParam(ctx context.Context, request *cynosdb.ModifyClusterParamRequest) (asyncReqId string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().ModifyClusterParam(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	asyncReqId = *response.Response.AsyncRequestId
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

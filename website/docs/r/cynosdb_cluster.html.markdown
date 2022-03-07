@@ -38,6 +38,11 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   instance_cpu_core    = 1
   instance_memory_size = 2
 
+  param_item {
+    name          = "character_set_server"
+    current_value = "utf8mb4"
+  }
+
   tags = {
     test = "test"
   }
@@ -72,6 +77,7 @@ The following arguments are supported:
 * `instance_maintain_duration` - (Optional) Duration time for maintenance, unit in second. `3600` by default.
 * `instance_maintain_start_time` - (Optional) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
+* `param_items` - (Optional) Specify parameter list of database. Use `data.tencentcloud_mysql_default_params` to query available parameter details.
 * `port` - (Optional, ForceNew) Port of CynosDB cluster.
 * `prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, ForceNew) ID of the project. `0` by default.
@@ -79,6 +85,12 @@ The following arguments are supported:
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.
 * `storage_limit` - (Optional, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `tags` - (Optional) The tags of the CynosDB cluster.
+
+The `param_items` object supports the following:
+
+* `current_value` - (Required) Param expected value to set.
+* `name` - (Required) Name of param, e.g. `character_set_server`.
+* `old_value` - (Optional) Param old value, indicates the value which already set, this value is required when modifying current_value.
 
 ## Attributes Reference
 
