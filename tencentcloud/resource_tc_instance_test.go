@@ -26,7 +26,7 @@ func testSweepCvmInstance(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(TencentCloudClient)
+	client := sharedClient.(*TencentCloudClient)
 
 	cvmService := CvmService{
 		client: client.apiV3Conn,
