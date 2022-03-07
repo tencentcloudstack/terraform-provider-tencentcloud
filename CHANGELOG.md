@@ -1,3 +1,20 @@
+## 1.64.0 (March 7, 2022)
+
+FEATURES:
+
+* new datasource `tencentcloud_mysql_default_params`
+* new resource `tencentcloud_dayu_cc_policy_v2`
+
+BUGFIXES:
+
+* resource `tencentcloud_mysql_instance` init database after create
+* resource `tencentcloud_emr_cluster` pay_mode can not use 0
+* testcases - add vpngw sweeper and fix cvm sweeper
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_cynosdb_cluster` support `param_items` as parameter
+
 ## 1.63.0 (March 2, 2022)
 
 FEATURES:
