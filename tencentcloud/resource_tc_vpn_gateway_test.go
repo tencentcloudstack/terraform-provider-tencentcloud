@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"testing"
@@ -10,6 +11,49 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_vpn_gateway", &resource.Sweeper{
+		Name: "tencentcloud_vpn_gateway",
+		F:    testSweepVpnGateway,
+	})
+}
+
+func testSweepVpnGateway(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeVpnGwByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		vpnGwId := *v.VpnGatewayId
+
+		//if !strings.HasPrefix(instanceName, defaultInsName) {
+		//	continue
+		//}
+
+		instanceId := *v.VpnGatewayId
+
+		if err = vpcService.DeleteVpnGateway(ctx, vpnGwId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudVpnGateway_basic(t *testing.T) {
 	t.Parallel()
