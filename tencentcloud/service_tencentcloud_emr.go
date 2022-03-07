@@ -119,9 +119,8 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		request.InstanceName = common.StringPtr(v.(string))
 	}
 
-	if v, ok := d.GetOk("pay_mode"); ok {
-		request.PayMode = common.Uint64Ptr((uint64)(v.(int)))
-	}
+	payMode := d.Get("pay_mode")
+	request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
 	if v, ok := d.GetOk("placement"); ok {
 		request.Placement = &emr.Placement{}
 		placement := v.(map[string]interface{})
