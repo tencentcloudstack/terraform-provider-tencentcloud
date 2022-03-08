@@ -586,6 +586,7 @@ EMR
 DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
+    tencentcloud_dnspod_record
 
 PrivateDNS
   Resource
@@ -621,10 +622,13 @@ const (
 	ACCOUNT_TYPE_INTERNATION              = "INTERNATION"
 	ACCOUNT_TYPE_PREPAY                   = "PREPAY"
 	ACCOUNT_TYPE_COMMON                   = "COMMON"
+	ACCOUNT_TYPE_PRIVATE                  = "PRIVATE"
 	INTERNATION_PROVIDER_SECRET_ID        = "TENCENTCLOUD_SECRET_ID_INTERNATION"
 	INTERNATION_PROVIDER_SECRET_KEY       = "TENCENTCLOUD_SECRET_KEY_INTERNATION"
 	PREPAY_PROVIDER_SECRET_ID             = "TENCENTCLOUD_SECRET_ID_PREPAY"
 	PREPAY_PROVIDER_SECRET_KEY            = "TENCENTCLOUD_SECRET_KEY_PREPAY"
+	PRIVATE_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_PRIVATE"
+	PRIVATE_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_PRIVATE"
 )
 
 type TencentCloudClient struct {
@@ -1063,6 +1067,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_version":                      resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_cdh_instance":                            resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                  resourceTencentCloudDnspodDomainInstance(),
+			"tencentcloud_dnspod_record":                           resourceTencentCloudDnspodRecord(),
 			"tencentcloud_private_dns_zone":                        resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                      resourceTencentCloudPrivateDnsRecord(),
 		},
