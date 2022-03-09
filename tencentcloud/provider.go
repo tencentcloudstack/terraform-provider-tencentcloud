@@ -575,6 +575,7 @@ VPN
     tencentcloud_vpn_gateway
     tencentcloud_vpn_gateway_route
     tencentcloud_vpn_connection
+	tencentcloud_vpn_ssl_server
 
 EMR
   Data Source
@@ -915,6 +916,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_gateway":                             resourceTencentCloudVpnGateway(),
 			"tencentcloud_vpn_gateway_route":                       resourceTencentCloudVpnGatewayRoute(),
 			"tencentcloud_vpn_connection":                          resourceTencentCloudVpnConnection(),
+			"tencentcloud_vpn_ssl_server":                          resourceTencentCloudVpnSslServer(),
 			"tencentcloud_ha_vip":                                  resourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":                   resourceTencentCloudHaVipEipAttachment(),
 			"tencentcloud_security_group":                          resourceTencentCloudSecurityGroup(),

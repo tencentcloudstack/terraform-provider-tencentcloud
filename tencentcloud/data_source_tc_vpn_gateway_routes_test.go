@@ -34,14 +34,14 @@ data "tencentcloud_vpn_gateways" "foo" {
   name = "Default-VPC"
 }
 
-data "tencentcloud_vpn_gateway_connections" "conns" {
+data "tencentcloud_vpn_connections" "conns" {
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
   destination_cidr_block = "10.0.0.0/16"
   instance_type = "VPNCONN"
-  instance_id = data.tencentcloud_vpn_gateway_connections.conns.connection_list.0.id
+  instance_id = data.tencentcloud_vpn_connection.conns.connection_list.0.id
   priority = "100"
   status = "ENABLE"
 }
