@@ -599,7 +599,6 @@ PrivateDNS
 package tencentcloud
 
 import (
-	"log"
 	"net/url"
 	"os"
 	"strconv"
@@ -1084,7 +1083,6 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	log.Printf("initializing provider...")
 	secretId := d.Get("secret_id").(string)
 	secretKey := d.Get("secret_key").(string)
 	securityToken := d.Get("security_token").(string)
