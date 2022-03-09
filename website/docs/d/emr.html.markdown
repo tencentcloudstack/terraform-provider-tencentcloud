@@ -17,10 +17,8 @@ The EMR data source fetch proper EMR from user's EMR pool.
 
 ```hcl
 data "tencentcloud_emr" "my_emr" {
-  filter {
-    name   = "address-status"
-    values = ["UNBIND"]
-  }
+  display_strategy = "clusterList"
+  instance_ids     = ["emr-rnzqrleq"]
 }
 ```
 
@@ -29,7 +27,7 @@ data "tencentcloud_emr" "my_emr" {
 The following arguments are supported:
 
 * `display_strategy` - (Required) Display strategy(e.g.:clusterList, monitorManage).
-* `prefix_instance_ids` - (Optional) fetch all instances with same prefix(e.g.:emr-xxxxxx).
+* `instance_ids` - (Optional) fetch all instances with same prefix(e.g.:emr-xxxxxx).
 * `project_id` - (Optional) Fetch all instances which owner same project. Default 0 meaning use default project id.
 * `result_output_file` - (Optional) Used to save results.
 

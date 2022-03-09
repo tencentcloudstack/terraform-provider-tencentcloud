@@ -7,8 +7,10 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -172,24 +174,27 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 	ratelimit.Check(request.GetAction())
 	// API: https://cloud.tencent.com/document/api/589/41707
 	if v, ok := filters["instance_ids"]; ok {
-		instances := v.([]string)
+		instances := v.([]interface{})
 		request.InstanceIds = make([]*string, 0)
 		for _, instance := range instances {
-			request.InstanceIds = append(request.InstanceIds, common.StringPtr(instance))
+			request.InstanceIds = append(request.InstanceIds, common.StringPtr(instance.(string)))
 		}
 	}
 	if v, ok := filters["display_strategy"]; ok {
 		request.DisplayStrategy = common.StringPtr(v.(string))
 	}
-	if v, ok := filters["prefix_instance_ids"]; ok {
-		request.InstanceIds = common.StringPtrs(v.([]string))
-	}
 	if v, ok := filters["project_id"]; ok {
 		request.ProjectId = common.Int64Ptr(v.(int64))
 	}
-
+	request.ProjectId = helper.IntInt64(-1)
 	response, err := me.client.UseEmrClient().DescribeInstances(request)
+
 	if err != nil {
+		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError.Code == "ResourceNotFound.ClusterNotFound" {
+				return
+			}
+		}
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
@@ -208,6 +213,7 @@ func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId stri
 
 	ratelimit.Check(request.GetAction())
 	// API: https://cloud.tencent.com/document/api/589/41707
+	request.ProjectId = helper.IntInt64(-1)
 	request.InstanceIds = make([]*string, 0)
 	request.InstanceIds = append(request.InstanceIds, common.StringPtr(instanceId))
 	request.DisplayStrategy = common.StringPtr(displayStrategy)
@@ -223,5 +229,33 @@ func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId stri
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	clusters = response.Response.ClusterList
+	return
+}
+
+func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, nodeFlag, hardwareResourceType string, offset, limit int) (nodes []*emr.NodeHardwareInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := emr.NewDescribeClusterNodesRequest()
+
+	ratelimit.Check(request.GetAction())
+	// API: https://cloud.tencent.com/document/api/589/41707
+	request.InstanceId = &instanceId
+	request.NodeFlag = &nodeFlag
+	request.HardwareResourceType = &hardwareResourceType
+	request.Limit = helper.IntInt64(limit)
+	request.Offset = helper.IntInt64(offset)
+	response, err := me.client.UseEmrClient().DescribeClusterNodes(request)
+
+	if err != nil {
+		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError.Code == "ResourceNotFound.ClusterNotFound" {
+				return
+			}
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	nodes = response.Response.NodeList
 	return
 }
