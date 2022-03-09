@@ -4346,6 +4346,107 @@ func (me *VpcService) DeleteVpnGatewaySslServer(ctx context.Context, SslServerId
 	return
 }
 
+func (me *VpcService) DescribeVpnSslClientById(ctx context.Context, sslId string) (has bool, gateway *vpc.SslVpnClient, err error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = vpc.NewDescribeVpnGatewaySslClientsRequest()
+		response *vpc.DescribeVpnGatewaySslClientsResponse
+	)
+	request.SslVpnClientIds = []*string{&sslId}
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err = me.client.UseVpcClient().DescribeVpnGatewaySslClients(request)
+		if err != nil {
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return retryError(err)
+			}
+			if ee.Code == VPCNotFound {
+				return nil
+			} else {
+				return retryError(err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]", logId, request.GetAction(), request.ToJsonString(), err)
+		return
+	}
+	if response == nil || response.Response == nil || len(response.Response.SslVpnClientSet) < 1 {
+		has = false
+		return
+	}
+
+	gateway = response.Response.SslVpnClientSet[0]
+	has = true
+	return
+}
+
+func (me *VpcService) DescribeVpnGwSslClientByFilter(ctx context.Context, filters map[string]string) (instances []*vpc.SslVpnClient, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeVpnGatewaySslClientsRequest()
+	)
+	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := vpc.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances = make([]*vpc.SslVpnClient, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeVpnGatewaySslClients(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SslVpnClientSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.SslVpnClientSet...)
+		if len(response.Response.SslVpnClientSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *VpcService) DeleteVpnGatewaySslClient(ctx context.Context, SslClientId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteVpnGatewaySslClientRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.SslVpnClientId = &SslClientId
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteVpnGatewaySslClient(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
+}
+
 func (me *VpcService) CreateNatGatewaySnat(ctx context.Context, natGatewayId string, snat *vpc.SourceIpTranslationNatRule) (errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewCreateNatGatewaySourceIpTranslationNatRuleRequest()
