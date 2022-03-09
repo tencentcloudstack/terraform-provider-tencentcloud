@@ -330,6 +330,12 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ForceNew:    true,
 			Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
 		},
+		"cam_role_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Name of cam role.",
+		},
 	}
 
 	return needSchema
@@ -739,6 +745,9 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 
 	request.InstanceChargeType = &chargeType
 
+	if v, ok := dMap["cam_role_name"]; ok {
+		request.CamRoleName =  helper.String(v.(string))
+	}
 	result = request.ToJsonString()
 	return result, errRet
 }
@@ -1011,6 +1020,9 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 		if _, ok := d.GetOk("enhanced_monitor_service"); ok || enableMonitor != nil {
 			launchConfig["enhanced_monitor_service"] = *enableMonitor
+		}
+		if _, ok := d.GetOk("cam_role_name"); ok || launchCfg.CamRoleName != nil {
+			launchConfig["cam_role_name"] = launchCfg.CamRoleName
 		}
 		asgConfig := make([]interface{}, 0, 1)
 		asgConfig = append(asgConfig, launchConfig)
