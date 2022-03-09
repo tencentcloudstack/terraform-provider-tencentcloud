@@ -21,3 +21,4 @@ dist/
 gendoc/gendoc
 .vscode/
 examples/**/.terraform*
+binary-test/vendor
