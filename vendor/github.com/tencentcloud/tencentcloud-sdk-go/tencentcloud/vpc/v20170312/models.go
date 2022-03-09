@@ -198,6 +198,56 @@ func (r *AddIp6RulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type AddTemplateMemberRequest struct {
+	*tchttp.BaseRequest
+
+	// 参数模板实例ID，支持IP地址、协议端口、IP地址组、协议端口组四种参数模板的实例ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 需要添加的参数模板成员信息，支持IP地址、协议端口、IP地址组、协议端口组四种类型，类型需要与TemplateId参数类型一致。
+	TemplateMember []*MemberInfo `json:"TemplateMember,omitempty" name:"TemplateMember"`
+}
+
+func (r *AddTemplateMemberRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddTemplateMemberRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateMember")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddTemplateMemberRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type AddTemplateMemberResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AddTemplateMemberResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddTemplateMemberResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type Address struct {
 
 	// `EIP`的`ID`，是`EIP`的唯一标识。
@@ -233,7 +283,7 @@ type Address struct {
 	// eip是否支持直通模式。true表示eip支持直通模式，false表示资源不支持直通模式
 	IsEipDirectConnection *bool `json:"IsEipDirectConnection,omitempty" name:"IsEipDirectConnection"`
 
-	// eip资源类型，包括"CalcIP","WanIP","EIP","AnycastEIP"。其中"CalcIP"表示设备ip，“WanIP”表示普通公网ip，“EIP”表示弹性公网ip，“AnycastEip”表示加速EIP
+	// EIP 资源类型，包括CalcIP、WanIP、EIP和AnycastEIP。其中：CalcIP 表示设备 IP，WanIP 表示普通公网 IP，EIP 表示弹性公网 IP，AnycastEip 表示加速 EIP。
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// eip是否在解绑后自动释放。true表示eip将会在解绑后自动释放，false表示eip在解绑后不会自动释放
@@ -254,6 +304,16 @@ type Address struct {
 
 	// 弹性公网IP的网络计费模式。注意，传统账户类型账户的弹性公网IP没有网络计费模式属性，值为空。
 	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 包括：
+	// <li><strong>BANDWIDTH_PREPAID_BY_MONTH</strong></li>
+	// <p style="padding-left: 30px;">表示包月带宽预付费。</p>
+	// <li><strong>TRAFFIC_POSTPAID_BY_HOUR</strong></li>
+	// <p style="padding-left: 30px;">表示按小时流量后付费。</p>
+	// <li><strong>BANDWIDTH_POSTPAID_BY_HOUR</strong></li>
+	// <p style="padding-left: 30px;">表示按小时带宽后付费。</p>
+	// <li><strong>BANDWIDTH_PACKAGE</strong></li>
+	// <p style="padding-left: 30px;">表示共享带宽包。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// 弹性公网IP关联的标签列表。
@@ -270,6 +330,16 @@ type AddressChargePrepaid struct {
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 }
 
+type AddressInfo struct {
+
+	// ip地址。
+	Address *string `json:"Address,omitempty" name:"Address"`
+
+	// 备注。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
 type AddressTemplate struct {
 
 	// IP地址模板名称。
@@ -283,6 +353,9 @@ type AddressTemplate struct {
 
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 带备注的IP地址信息。
+	AddressExtraSet []*AddressInfo `json:"AddressExtraSet,omitempty" name:"AddressExtraSet"`
 }
 
 type AddressTemplateGroup struct {
@@ -751,6 +824,9 @@ type AssociateAddressRequest struct {
 
 	// 要绑定的内网 IP。如果指定了 `NetworkInterfaceId` 则也必须指定 `PrivateIpAddress` ，表示将 EIP 绑定到指定弹性网卡的指定内网 IP 上。同时要确保指定的 `PrivateIpAddress` 是指定的 `NetworkInterfaceId` 上的一个内网 IP。指定弹性网卡的内网 IP 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`privateIpAddress`获取。
 	PrivateIpAddress *string `json:"PrivateIpAddress,omitempty" name:"PrivateIpAddress"`
+
+	// 指定绑定时是否设置直通。弹性公网 IP 直通请参见 [EIP 直通](https://cloud.tencent.com/document/product/1199/41709)。取值：True、False，默认值为 False。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 True。此参数目前处于内测中，如需使用，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&level3_id=1071&queue=96&scene_code=34639&step=2)。
+	EipDirectConnection *bool `json:"EipDirectConnection,omitempty" name:"EipDirectConnection"`
 }
 
 func (r *AssociateAddressRequest) ToJsonString() string {
@@ -769,6 +845,7 @@ func (r *AssociateAddressRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "NetworkInterfaceId")
 	delete(f, "PrivateIpAddress")
+	delete(f, "EipDirectConnection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssociateAddressRequest has unknown keys!", "")
 	}
@@ -1341,6 +1418,14 @@ type CCN struct {
 
 	// 是否支持云联网路由优先级的功能。False：不支持，True：支持。
 	RoutePriorityFlag *bool `json:"RoutePriorityFlag,omitempty" name:"RoutePriorityFlag"`
+
+	// 实例关联的路由表个数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteTableCount *uint64 `json:"RouteTableCount,omitempty" name:"RouteTableCount"`
+
+	// 是否开启云联网多路由表特性。False：未开启，True：开启。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteTableFlag *bool `json:"RouteTableFlag,omitempty" name:"RouteTableFlag"`
 }
 
 type CcnAttachedInstance struct {
@@ -1392,6 +1477,14 @@ type CcnAttachedInstance struct {
 
 	// 备注
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 路由表ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteTableId *string `json:"RouteTableId,omitempty" name:"RouteTableId"`
+
+	// 路由表名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 }
 
 type CcnBandwidthInfo struct {
@@ -1438,6 +1531,10 @@ type CcnInstance struct {
 
 	// 备注
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 实例关联的路由表ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteTableId *string `json:"RouteTableId,omitempty" name:"RouteTableId"`
 }
 
 type CcnRegionBandwidthLimit struct {
@@ -1800,10 +1897,10 @@ type ConflictSource struct {
 type CreateAddressTemplateGroupRequest struct {
 	*tchttp.BaseRequest
 
-	// IP地址模版集合名称。
+	// IP地址模板集合名称。
 	AddressTemplateGroupName *string `json:"AddressTemplateGroupName,omitempty" name:"AddressTemplateGroupName"`
 
-	// IP地址模版实例ID，例如：ipm-mdunqeb6。
+	// IP地址模板实例ID，例如：ipm-mdunqeb6。
 	AddressTemplateIds []*string `json:"AddressTemplateIds,omitempty" name:"AddressTemplateIds"`
 }
 
@@ -1853,11 +1950,14 @@ func (r *CreateAddressTemplateGroupResponse) FromJsonString(s string) error {
 type CreateAddressTemplateRequest struct {
 	*tchttp.BaseRequest
 
-	// IP地址模版名称
+	// IP地址模板名称。
 	AddressTemplateName *string `json:"AddressTemplateName,omitempty" name:"AddressTemplateName"`
 
-	// 地址信息，支持 IP、CIDR、IP 范围。
+	// 地址信息，支持 IP、CIDR、IP 范围。Addresses与AddressesExtra必填其一。
 	Addresses []*string `json:"Addresses,omitempty" name:"Addresses"`
+
+	// 地址信息，支持携带备注，支持 IP、CIDR、IP 范围。Addresses与AddressesExtra必填其一。
+	AddressesExtra []*AddressInfo `json:"AddressesExtra,omitempty" name:"AddressesExtra"`
 }
 
 func (r *CreateAddressTemplateRequest) ToJsonString() string {
@@ -1874,6 +1974,7 @@ func (r *CreateAddressTemplateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "AddressTemplateName")
 	delete(f, "Addresses")
+	delete(f, "AddressesExtra")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAddressTemplateRequest has unknown keys!", "")
 	}
@@ -2045,16 +2146,21 @@ func (r *CreateAssistantCidrResponse) FromJsonString(s string) error {
 type CreateBandwidthPackageRequest struct {
 	*tchttp.BaseRequest
 
-	// 带宽包类型，包括'HIGH_QUALITY_BGP', 'BGP'，'SINGLEISP'，'ANYCAST'
+	// 带宽包类型, 默认值: BGP, 可选值:
+	// <li>BGP: 普通BGP共享带宽包</li>
+	// <li>HIGH_QUALITY_BGP: 精品BGP共享带宽包</li>
 	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
 
-	// 带宽包计费类型，包括‘TOP5_POSTPAID_BY_MONTH’，‘PERCENT95_POSTPAID_BY_MONTH’
+	// 带宽包计费类型, 默认为: TOP5_POSTPAID_BY_MONTH, 可选值:
+	// <li>TOP5_POSTPAID_BY_MONTH: 按月后付费TOP5计费</li>
+	// <li>PERCENT95_POSTPAID_BY_MONTH: 按月后付费月95计费</li>
+	// <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
 	ChargeType *string `json:"ChargeType,omitempty" name:"ChargeType"`
 
-	// 带宽包名字
+	// 带宽包名称。
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包数量(传统账户类型只能填1)
+	// 带宽包数量(传统账户类型只能填1), 标准账户类型取值范围为1~20。
 	BandwidthPackageCount *uint64 `json:"BandwidthPackageCount,omitempty" name:"BandwidthPackageCount"`
 
 	// 带宽包限速大小。单位：Mbps，-1表示不限速。该功能当前内测中，暂不对外开放。
@@ -2096,10 +2202,10 @@ type CreateBandwidthPackageResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 带宽包唯一ID
+		// 带宽包唯一ID。
 		BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
 
-		// 带宽包唯一ID列表(申请数量大于1时有效)
+		// 带宽包唯一ID列表(申请数量大于1时有效)。
 		BandwidthPackageIds []*string `json:"BandwidthPackageIds,omitempty" name:"BandwidthPackageIds"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2482,6 +2588,9 @@ type CreateDirectConnectGatewayRequest struct {
 
 	// 专线网关可用区
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 专线网关高可用区容灾组ID
+	HaZoneGroupId *string `json:"HaZoneGroupId,omitempty" name:"HaZoneGroupId"`
 }
 
 func (r *CreateDirectConnectGatewayRequest) ToJsonString() string {
@@ -2502,6 +2611,7 @@ func (r *CreateDirectConnectGatewayRequest) FromJsonString(s string) error {
 	delete(f, "GatewayType")
 	delete(f, "ModeType")
 	delete(f, "Zone")
+	delete(f, "HaZoneGroupId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDirectConnectGatewayRequest has unknown keys!", "")
 	}
@@ -2534,13 +2644,10 @@ func (r *CreateDirectConnectGatewayResponse) FromJsonString(s string) error {
 type CreateFlowLogRequest struct {
 	*tchttp.BaseRequest
 
-	// 私用网络ID或者统一ID，建议使用统一ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
-
 	// 流日志实例名字
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE
+	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID
@@ -2549,14 +2656,23 @@ type CreateFlowLogRequest struct {
 	// 流日志采集类型，ACCEPT|REJECT|ALL
 	TrafficType *string `json:"TrafficType,omitempty" name:"TrafficType"`
 
-	// 流日志存储ID
-	CloudLogId *string `json:"CloudLogId,omitempty" name:"CloudLogId"`
+	// 私用网络ID或者统一ID，建议使用统一ID，当ResourceType为CCN时不填，其他类型必填。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// 流日志实例描述
 	FlowLogDescription *string `json:"FlowLogDescription,omitempty" name:"FlowLogDescription"`
 
+	// 流日志存储ID
+	CloudLogId *string `json:"CloudLogId,omitempty" name:"CloudLogId"`
+
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 消费端类型：cls、ckafka
+	StorageType *string `json:"StorageType,omitempty" name:"StorageType"`
+
+	// 流日志消费端信息，当消费端类型为ckafka时，必填。
+	FlowLogStorage *FlowLogStorage `json:"FlowLogStorage,omitempty" name:"FlowLogStorage"`
 }
 
 func (r *CreateFlowLogRequest) ToJsonString() string {
@@ -2571,14 +2687,16 @@ func (r *CreateFlowLogRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "VpcId")
 	delete(f, "FlowLogName")
 	delete(f, "ResourceType")
 	delete(f, "ResourceId")
 	delete(f, "TrafficType")
-	delete(f, "CloudLogId")
+	delete(f, "VpcId")
 	delete(f, "FlowLogDescription")
+	delete(f, "CloudLogId")
 	delete(f, "Tags")
+	delete(f, "StorageType")
+	delete(f, "FlowLogStorage")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateFlowLogRequest has unknown keys!", "")
 	}
@@ -3526,8 +3644,11 @@ type CreateServiceTemplateRequest struct {
 	// 协议端口模板名称
 	ServiceTemplateName *string `json:"ServiceTemplateName,omitempty" name:"ServiceTemplateName"`
 
-	// 支持单个端口、多个端口、连续端口及所有端口，协议支持：TCP、UDP、ICMP、GRE 协议。
+	// 支持单个端口、多个端口、连续端口及所有端口，协议支持：TCP、UDP、ICMP、GRE 协议。Services与ServicesExtra必填其一。
 	Services []*string `json:"Services,omitempty" name:"Services"`
+
+	// 支持添加备注，单个端口、多个端口、连续端口及所有端口，协议支持：TCP、UDP、ICMP、GRE 协议。Services与ServicesExtra必填其一。
+	ServicesExtra []*ServicesInfo `json:"ServicesExtra,omitempty" name:"ServicesExtra"`
 }
 
 func (r *CreateServiceTemplateRequest) ToJsonString() string {
@@ -3544,6 +3665,7 @@ func (r *CreateServiceTemplateRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ServiceTemplateName")
 	delete(f, "Services")
+	delete(f, "ServicesExtra")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServiceTemplateRequest has unknown keys!", "")
 	}
@@ -3963,9 +4085,6 @@ func (r *CreateVpcResponse) FromJsonString(s string) error {
 type CreateVpnConnectionRequest struct {
 	*tchttp.BaseRequest
 
-	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口返回值中的VpcId获取。
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
-
 	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
 
@@ -3977,6 +4096,10 @@ type CreateVpnConnectionRequest struct {
 
 	// 预共享密钥。
 	PreShareKey *string `json:"PreShareKey,omitempty" name:"PreShareKey"`
+
+	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口返回值中的VpcId获取。
+	// CCN VPN 形的通道 可以不传VPCID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// SPD策略组，例如：{"10.0.0.5/24":["172.123.10.5/16"]}，10.0.0.5/24是vpc内网段172.123.10.5/16是IDC网段。用户指定VPC内哪些网段可以和您IDC中哪些网段通信。
 	SecurityPolicyDatabases []*SecurityPolicyDatabase `json:"SecurityPolicyDatabases,omitempty" name:"SecurityPolicyDatabases"`
@@ -3998,6 +4121,21 @@ type CreateVpnConnectionRequest struct {
 
 	// 健康检查对端地址
 	HealthCheckRemoteIp *string `json:"HealthCheckRemoteIp,omitempty" name:"HealthCheckRemoteIp"`
+
+	// 通道类型, 例如:["STATIC", "StaticRoute", "Policy"]
+	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+
+	// 协商类型，默认为active（主动协商）。可选值：active（主动协商），passive（被动协商），flowTrigger（流量协商）
+	NegotiationType *string `json:"NegotiationType,omitempty" name:"NegotiationType"`
+
+	// DPD探测开关。默认为0，表示关闭DPD探测。可选值：0（关闭），1（开启）
+	DpdEnable *int64 `json:"DpdEnable,omitempty" name:"DpdEnable"`
+
+	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。默认30，单位为秒
+	DpdTimeout *string `json:"DpdTimeout,omitempty" name:"DpdTimeout"`
+
+	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
+	DpdAction *string `json:"DpdAction,omitempty" name:"DpdAction"`
 }
 
 func (r *CreateVpnConnectionRequest) ToJsonString() string {
@@ -4012,11 +4150,11 @@ func (r *CreateVpnConnectionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "VpcId")
 	delete(f, "VpnGatewayId")
 	delete(f, "CustomerGatewayId")
 	delete(f, "VpnConnectionName")
 	delete(f, "PreShareKey")
+	delete(f, "VpcId")
 	delete(f, "SecurityPolicyDatabases")
 	delete(f, "IKEOptionsSpecification")
 	delete(f, "IPSECOptionsSpecification")
@@ -4024,6 +4162,11 @@ func (r *CreateVpnConnectionRequest) FromJsonString(s string) error {
 	delete(f, "EnableHealthCheck")
 	delete(f, "HealthCheckLocalIp")
 	delete(f, "HealthCheckRemoteIp")
+	delete(f, "RouteType")
+	delete(f, "NegotiationType")
+	delete(f, "DpdEnable")
+	delete(f, "DpdTimeout")
+	delete(f, "DpdAction")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnConnectionRequest has unknown keys!", "")
 	}
@@ -4074,11 +4217,17 @@ type CreateVpnGatewayRequest struct {
 	// 可用区，如：ap-guangzhou-2。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
-	// VPN网关类型。值“CCN”云联网类型VPN网关
+	// VPN网关类型。值“CCN”云联网类型VPN网关，值SSL为SSL-VPN
 	Type *string `json:"Type,omitempty" name:"Type"`
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// CDC实例ID
+	CdcId *string `json:"CdcId,omitempty" name:"CdcId"`
+
+	// SSL-VPN 最大CLIENT 连接数。可选 [5, 10, 20, 50, 100]。仅SSL-VPN 需要选这个参数。
+	MaxConnection *uint64 `json:"MaxConnection,omitempty" name:"MaxConnection"`
 }
 
 func (r *CreateVpnGatewayRequest) ToJsonString() string {
@@ -4101,6 +4250,8 @@ func (r *CreateVpnGatewayRequest) FromJsonString(s string) error {
 	delete(f, "Zone")
 	delete(f, "Type")
 	delete(f, "Tags")
+	delete(f, "CdcId")
+	delete(f, "MaxConnection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewayRequest has unknown keys!", "")
 	}
@@ -4180,6 +4331,140 @@ func (r *CreateVpnGatewayRoutesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateVpnGatewayRoutesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVpnGatewaySslClientRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-SERVER 实例ID。
+	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
+
+	// name
+	SslVpnClientName *string `json:"SslVpnClientName,omitempty" name:"SslVpnClientName"`
+}
+
+func (r *CreateVpnGatewaySslClientRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVpnGatewaySslClientRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnServerId")
+	delete(f, "SslVpnClientName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewaySslClientRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVpnGatewaySslClientResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务ID。
+		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateVpnGatewaySslClientResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVpnGatewaySslClientResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVpnGatewaySslServerRequest struct {
+	*tchttp.BaseRequest
+
+	// VPN实例ID
+	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
+
+	// SSL_VPN_SERVER 实例名
+	SslVpnServerName *string `json:"SslVpnServerName,omitempty" name:"SslVpnServerName"`
+
+	// 本端地址网段
+	LocalAddress []*string `json:"LocalAddress,omitempty" name:"LocalAddress"`
+
+	// 客户端地址网段
+	RemoteAddress *string `json:"RemoteAddress,omitempty" name:"RemoteAddress"`
+
+	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	SslVpnProtocol *string `json:"SslVpnProtocol,omitempty" name:"SslVpnProtocol"`
+
+	// SSL VPN服务端监听协议端口。默认1194。
+	SslVpnPort *int64 `json:"SslVpnPort,omitempty" name:"SslVpnPort"`
+
+	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitempty" name:"IntegrityAlgorithm"`
+
+	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitempty" name:"EncryptAlgorithm"`
+
+	// 是否支持压缩。当前仅支持不支持压缩。默认False
+	Compress *bool `json:"Compress,omitempty" name:"Compress"`
+}
+
+func (r *CreateVpnGatewaySslServerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVpnGatewaySslServerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpnGatewayId")
+	delete(f, "SslVpnServerName")
+	delete(f, "LocalAddress")
+	delete(f, "RemoteAddress")
+	delete(f, "SslVpnProtocol")
+	delete(f, "SslVpnPort")
+	delete(f, "IntegrityAlgorithm")
+	delete(f, "EncryptAlgorithm")
+	delete(f, "Compress")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewaySslServerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVpnGatewaySslServerResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 创建SSL-VPN server 异步任务ID
+		TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateVpnGatewaySslServerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVpnGatewaySslServerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4752,11 +5037,11 @@ func (r *DeleteDirectConnectGatewayResponse) FromJsonString(s string) error {
 type DeleteFlowLogRequest struct {
 	*tchttp.BaseRequest
 
-	// 私用网络ID或者统一ID，建议使用统一ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
-
 	// 流日志唯一ID
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
+
+	// 私用网络ID或者统一ID，建议使用统一ID，删除云联网流日志时，可不填，其他流日志类型必填。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 }
 
 func (r *DeleteFlowLogRequest) ToJsonString() string {
@@ -4771,8 +5056,8 @@ func (r *DeleteFlowLogRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "VpcId")
 	delete(f, "FlowLogId")
+	delete(f, "VpcId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteFlowLogRequest has unknown keys!", "")
 	}
@@ -5562,6 +5847,56 @@ func (r *DeleteSubnetResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DeleteTemplateMemberRequest struct {
+	*tchttp.BaseRequest
+
+	// 参数模板实例ID，支持IP地址、协议端口、IP地址组、协议端口组四种参数模板的实例ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 需要添加的参数模板成员信息，支持IP地址、协议端口、IP地址组、协议端口组四种类型，类型需要与TemplateId参数类型一致。
+	TemplateMember []*MemberInfo `json:"TemplateMember,omitempty" name:"TemplateMember"`
+}
+
+func (r *DeleteTemplateMemberRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTemplateMemberRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateMember")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteTemplateMemberRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteTemplateMemberResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteTemplateMemberResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTemplateMemberResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DeleteVpcEndPointRequest struct {
 	*tchttp.BaseRequest
 
@@ -5896,6 +6231,104 @@ func (r *DeleteVpnGatewayRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DeleteVpnGatewaySslClientRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-CLIENT 实例ID。
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+}
+
+func (r *DeleteVpnGatewaySslClientRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteVpnGatewaySslClientRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnClientId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteVpnGatewaySslClientRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteVpnGatewaySslClientResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务ID。
+		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteVpnGatewaySslClientResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteVpnGatewaySslClientResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteVpnGatewaySslServerRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-SERVER 实例ID。
+	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
+}
+
+func (r *DeleteVpnGatewaySslServerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteVpnGatewaySslServerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnServerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteVpnGatewaySslServerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteVpnGatewaySslServerResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务ID。
+		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteVpnGatewaySslServerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteVpnGatewaySslServerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeAccountAttributesRequest struct {
 	*tchttp.BaseRequest
 }
@@ -6052,8 +6485,9 @@ type DescribeAddressTemplatesRequest struct {
 	*tchttp.BaseRequest
 
 	// 过滤条件。
-	// <li>address-template-name - String - （过滤条件）IP地址模板名称。</li>
-	// <li>address-template-id - String - （过滤条件）IP地址模板实例ID，例如：ipm-mdunqeb6。</li>
+	// <li>address-template-name - IP地址模板名称。</li>
+	// <li>address-template-id - IP地址模板实例ID，例如：ipm-mdunqeb6。</li>
+	// <li>address-ip - IP地址。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -6091,7 +6525,7 @@ type DescribeAddressTemplatesResponse struct {
 		// 符合条件的实例数量。
 		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-		// IP地址模版。
+		// IP地址模板。
 		AddressTemplateSet []*AddressTemplate `json:"AddressTemplateSet,omitempty" name:"AddressTemplateSet"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6116,7 +6550,7 @@ type DescribeAddressesRequest struct {
 	// 标识 EIP 的唯一 ID 列表。EIP 唯一 ID 形如：`eip-11112222`。参数不支持同时指定`AddressIds`和`Filters.address-id`。
 	AddressIds []*string `json:"AddressIds,omitempty" name:"AddressIds"`
 
-	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。详细的过滤条件如下：
 	// <li> address-id - String - 是否必填：否 - （过滤条件）按照 EIP 的唯一 ID 过滤。EIP 唯一 ID 形如：eip-11112222。</li>
 	// <li> address-name - String - 是否必填：否 - （过滤条件）按照 EIP 名称过滤。不支持模糊过滤。</li>
 	// <li> address-ip - String - 是否必填：否 - （过滤条件）按照 EIP 的 IP 地址过滤。</li>
@@ -6125,7 +6559,7 @@ type DescribeAddressesRequest struct {
 	// <li> private-ip-address - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的内网 IP 过滤。</li>
 	// <li> network-interface-id - String - 是否必填：否 - （过滤条件）按照 EIP 绑定的弹性网卡 ID 过滤。弹性网卡 ID 形如：eni-11112222。</li>
 	// <li> is-arrears - String - 是否必填：否 - （过滤条件）按照 EIP 是否欠费进行过滤。（TRUE：EIP 处于欠费状态|FALSE：EIP 费用状态正常）</li>
-	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'EIP'，'AnycastEIP'，'HighQualityEIP'</li>
+	// <li> address-type - String - 是否必填：否 - （过滤条件）按照 IP类型 进行过滤。可选值：'WanIP', 'EIP'，'AnycastEIP'，'HighQualityEIP'。默认值是'EIP'。</li>
 	// <li> address-isp - String - 是否必填：否 - （过滤条件）按照 运营商类型 进行过滤。可选值：'BGP'，'CMCC'，'CUCC', 'CTCC'</li>
 	// <li> dedicated-cluster-id - String - 是否必填：否 - （过滤条件）按照 CDC 的唯一 ID 过滤。CDC 唯一 ID 形如：cluster-11112222。</li>
 	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照标签键进行过滤。</li>
@@ -6194,7 +6628,7 @@ type DescribeAssistantCidrRequest struct {
 	// `VPC`实例`ID`数组。形如：[`vpc-6v2ht8q5`]
 	VpcIds []*string `json:"VpcIds,omitempty" name:"VpcIds"`
 
-	// 过滤条件，参数不支持同时指定NetworkInterfaceIds和Filters。
+	// 过滤条件，参数不支持同时指定VpcIds和Filters。
 	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
@@ -6628,6 +7062,7 @@ type DescribeCcnRoutesRequest struct {
 	// <li>instance-type - String -（过滤条件）下一跳类型。</li>
 	// <li>instance-region - String -（过滤条件）下一跳所属地域。</li>
 	// <li>instance-id - String -（过滤条件）下一跳实例ID。</li>
+	// <li>route-table-id - String -（过滤条件）路由表ID列表，形如ccntr-1234edfr，可以根据路由表ID 过滤。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量
@@ -7879,10 +8314,10 @@ func (r *DescribeIpGeolocationDatabaseUrlResponse) FromJsonString(s string) erro
 type DescribeIpGeolocationInfosRequest struct {
 	*tchttp.BaseRequest
 
-	// 查询IP地址列表，支持IPv4和IPv6。
+	// 需查询的IP地址列表，目前仅支持IPv4地址。查询的IP地址数量上限为100个。
 	AddressIps []*string `json:"AddressIps,omitempty" name:"AddressIps"`
 
-	// 查询IP地址的字段信息，包括"Country","Province","City","Region","Isp","AsName","AsId"
+	// 需查询的IP地址的字段信息。
 	Fields *IpField `json:"Fields,omitempty" name:"Fields"`
 }
 
@@ -7910,10 +8345,10 @@ type DescribeIpGeolocationInfosResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// IP地址信息列表
+		// IP地址信息列表。
 		AddressInfo []*IpGeolocationInfo `json:"AddressInfo,omitempty" name:"AddressInfo"`
 
-		// IP地址信息个数
+		// IP地址信息个数。
 		Total *int64 `json:"Total,omitempty" name:"Total"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -8062,6 +8497,70 @@ func (r *DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse) ToJsonS
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeNatGatewayDirectConnectGatewayRouteRequest struct {
+	*tchttp.BaseRequest
+
+	// nat的唯一标识
+	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
+
+	// vpc的唯一标识
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 0到200之间
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 大于0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *DescribeNatGatewayDirectConnectGatewayRouteRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNatGatewayDirectConnectGatewayRouteRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "NatGatewayId")
+	delete(f, "VpcId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNatGatewayDirectConnectGatewayRouteRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeNatGatewayDirectConnectGatewayRouteResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 路由数据
+		NatDirectConnectGatewayRouteSet []*NatDirectConnectGatewayRoute `json:"NatDirectConnectGatewayRouteSet,omitempty" name:"NatDirectConnectGatewayRouteSet"`
+
+		// 路由总数
+		Total *int64 `json:"Total,omitempty" name:"Total"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeNatGatewayDirectConnectGatewayRouteResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNatGatewayDirectConnectGatewayRouteResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8815,6 +9314,18 @@ type DescribeSecurityGroupPoliciesRequest struct {
 
 	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 过滤条件,不支持同时指定SecurityGroupId和Filters参数。
+	// <li>security-group-id - String - 安全组ID。</li>
+	// <li>ip - String - IP，支持IPV4和IPV6模糊匹配。</li>
+	// <li>address-module - String - IP地址模板或IP地址组模板ID。</li>
+	// <li>service-module - String - 协议端口模板或协议端口组模板ID。</li>
+	// <li>protocol-type - String - 安全组策略支持的协议，可选值：`TCP`, `UDP`, `ICMP`, `ICMPV6`, `GRE`, `ALL`。</li>
+	// <li>port - String - 是否必填：否 -协议端口，支持模糊匹配，值为`ALL`时，查询所有的端口。</li>
+	// <li>poly - String - 协议策略，可选值：`ALL`，所有策略；`ACCEPT`，允许；`DROP`，拒绝。</li>
+	// <li>direction - String - 协议规则，可选值：`ALL`，所有策略；`INBOUND`，入站规则；`OUTBOUND`，出站规则。</li>
+	// <li>description - String - 协议描述，该过滤条件支持模糊匹配。</li>
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribeSecurityGroupPoliciesRequest) ToJsonString() string {
@@ -8830,6 +9341,7 @@ func (r *DescribeSecurityGroupPoliciesRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "SecurityGroupId")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSecurityGroupPoliciesRequest has unknown keys!", "")
 	}
@@ -9044,8 +9556,9 @@ type DescribeServiceTemplatesRequest struct {
 	*tchttp.BaseRequest
 
 	// 过滤条件。
-	// <li>service-template-name - String - （过滤条件）协议端口模板名称。</li>
-	// <li>service-template-id - String - （过滤条件）协议端口模板实例ID，例如：ppm-e6dy460g。</li>
+	// <li>service-template-name - 协议端口模板名称。</li>
+	// <li>service-template-id - 协议端口模板实例ID，例如：ppm-e6dy460g。</li>
+	// <li>service-port- 协议端口。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -9753,19 +10266,73 @@ func (r *DescribeVpcResourceDashboardResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeVpcTaskResultRequest struct {
+	*tchttp.BaseRequest
+
+	// 异步任务请求返回的RequestId。
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+}
+
+func (r *DescribeVpcTaskResultRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpcTaskResultRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpcTaskResultRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpcTaskResultResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务执行结果。结果：SUCCESS、FAILED、RUNNING。3者其中之一。其中SUCCESS表示任务执行成功，FAILED表示任务执行失败，RUNNING表示任务执行中。
+		Status *string `json:"Status,omitempty" name:"Status"`
+
+		// 异步任务执行输出。
+		Output *string `json:"Output,omitempty" name:"Output"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeVpcTaskResultResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpcTaskResultResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeVpcsRequest struct {
 	*tchttp.BaseRequest
 
 	// VPC实例ID。形如：vpc-f49l6u0z。每次请求的实例的上限为100。参数不支持同时指定VpcIds和Filters。
 	VpcIds []*string `json:"VpcIds,omitempty" name:"VpcIds"`
 
-	// 过滤条件，参数不支持同时指定VpcIds和Filters。
-	// <li>vpc-name - String - （过滤条件）VPC实例名称。</li>
-	// <li>is-default - String - （过滤条件）是否默认VPC。</li>
-	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
-	// <li>cidr-block - String - （过滤条件）vpc的cidr。</li>
-	// <li>tag-key - String -是否必填：否- （过滤条件）按照标签键进行过滤。</li>
-	// <li>tag:tag-key - String - 是否必填：否 - （过滤条件）按照标签键值对进行过滤。 tag-key使用具体的标签键进行替换。使用请参考示例2。</li>
+	// 过滤条件，不支持同时指定VpcIds和Filters参数。
+	// 支持的过滤条件如下：
+	// <li>vpc-name：VPC实例名称。</li>
+	// <li>is-default ：是否默认VPC。</li>
+	// <li>vpc-id ：VPC实例ID，例如：vpc-f49l6u0z。</li>
+	// <li>cidr-block：VPC的CIDR。</li>
+	// <li>tag-key ：按照标签键进行过滤，非必填参数。</li>
+	// <li>tag:tag-key：按照标签键值对进行过滤，非必填参数。 其中 tag-key 请使用具体的标签键进行替换，可参考示例2。</li>
+	//   **说明：**若同一个过滤条件（Filter）存在多个Values，则同一Filter下Values间的关系为逻辑或（OR）关系；若存在多个过滤条件（Filter），Filter之间的关系为逻辑与（AND）关系。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -10010,6 +10577,144 @@ func (r *DescribeVpnGatewayRoutesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeVpnGatewayRoutesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpnGatewaySslClientsRequest struct {
+	*tchttp.BaseRequest
+
+	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。
+	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
+	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
+	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpngwSslClient-123456。</li>
+	// <li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li>
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 请求对象个数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// SSL-VPN-CLIENT实例ID。形如：vpngwSslClient-f49l6u0z。每次请求的实例的上限为100。参数不支持同时指定SslVpnClientIds和Filters。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
+}
+
+func (r *DescribeVpnGatewaySslClientsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpnGatewaySslClientsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SslVpnClientIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpnGatewaySslClientsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpnGatewaySslClientsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 符合条件的实例数量。
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 符合条件的实例个数。
+		SslVpnClientSet []*SslVpnClient `json:"SslVpnClientSet,omitempty" name:"SslVpnClientSet"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeVpnGatewaySslClientsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpnGatewaySslClientsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpnGatewaySslServersRequest struct {
+	*tchttp.BaseRequest
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 请求对象个数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// SSL-VPN-SERVER实例ID。形如：vpngwSslServer-12345678。每次请求的实例的上限为100。参数不支持同时指定SslVpnServerIds和Filters。
+	SslVpnServerIds []*string `json:"SslVpnServerIds,omitempty" name:"SslVpnServerIds"`
+
+	// 过滤条件，参数不支持同时指定SslVpnServerIds和Filters。
+	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
+	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
+	// <li>vpn-gateway-name - String - （过滤条件）VPN实例名称。</li>
+	// <li>ssl-vpn-server-name - String - （过滤条件）SSL-VPN-SERVER实例名称。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
+	Filters []*FilterObject `json:"Filters,omitempty" name:"Filters"`
+}
+
+func (r *DescribeVpnGatewaySslServersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpnGatewaySslServersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SslVpnServerIds")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVpnGatewaySslServersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpnGatewaySslServersResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 符合条件的实例数量。
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// SSL-VPN-SERVER 实例详细信息列表。
+		SslVpnSeverSet []*SslVpnSever `json:"SslVpnSeverSet,omitempty" name:"SslVpnSeverSet"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeVpnGatewaySslServersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVpnGatewaySslServersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10356,6 +11061,33 @@ type DirectConnectGateway struct {
 	// 专线网关所在可用区
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 网关流控明细启用状态：
+	// 0：关闭
+	// 1：开启
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableFlowDetails *uint64 `json:"EnableFlowDetails,omitempty" name:"EnableFlowDetails"`
+
+	// 开启、关闭网关流控明细时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlowDetailsUpdateTime *string `json:"FlowDetailsUpdateTime,omitempty" name:"FlowDetailsUpdateTime"`
+
+	// 是否支持开启网关流控明细
+	// 0：不支持
+	// 1：支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NewAfc *uint64 `json:"NewAfc,omitempty" name:"NewAfc"`
+
+	// 专线网关接入网络类型：
+	// <li>`VXLAN` - VXLAN类型。</li>
+	// <li>`MPLS` - MPLS类型。</li>
+	// <li>`Hybrid` - Hybrid类型。</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessNetworkType *string `json:"AccessNetworkType,omitempty" name:"AccessNetworkType"`
+
+	// 跨可用区容灾专线网关的可用区列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HaZoneList []*string `json:"HaZoneList,omitempty" name:"HaZoneList"`
 }
 
 type DirectConnectGatewayCcnRoute struct {
@@ -10368,6 +11100,21 @@ type DirectConnectGatewayCcnRoute struct {
 
 	// `BGP`的`AS-Path`属性。
 	ASPath []*string `json:"ASPath,omitempty" name:"ASPath"`
+
+	// 备注
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 最后更新时间
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+}
+
+type DirectConnectSubnet struct {
+
+	// 专线网关ID
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+
+	// IDC子网网段
+	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
 }
 
 type DisableCcnRoutesRequest struct {
@@ -10520,6 +11267,55 @@ func (r *DisableRoutesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DisableRoutesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DisableVpnGatewaySslClientCertRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-CLIENT 实例ID。
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+}
+
+func (r *DisableVpnGatewaySslClientCertRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableVpnGatewaySslClientCertRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnClientId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableVpnGatewaySslClientCertRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DisableVpnGatewaySslClientCertResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务实例ID。
+		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisableVpnGatewaySslClientCertResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableVpnGatewaySslClientCertResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10937,6 +11733,55 @@ func (r *DownloadCustomerGatewayConfigurationResponse) FromJsonString(s string) 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DownloadVpnGatewaySslClientCertRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-CLIENT 实例ID。
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+}
+
+func (r *DownloadVpnGatewaySslClientCertRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DownloadVpnGatewaySslClientCertRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnClientId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DownloadVpnGatewaySslClientCertRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DownloadVpnGatewaySslClientCertResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// SSL-VPN-CLIENT 证书配置
+		SslClientConfigsSet *string `json:"SslClientConfigsSet,omitempty" name:"SslClientConfigsSet"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DownloadVpnGatewaySslClientCertResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DownloadVpnGatewaySslClientCertResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type EnableCcnRoutesRequest struct {
 	*tchttp.BaseRequest
 
@@ -11144,6 +11989,55 @@ func (r *EnableVpcEndPointConnectResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type EnableVpnGatewaySslClientCertRequest struct {
+	*tchttp.BaseRequest
+
+	// SSL-VPN-CLIENT 实例ID。
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+}
+
+func (r *EnableVpnGatewaySslClientCertRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableVpnGatewaySslClientCertRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnClientId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableVpnGatewaySslClientCertRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type EnableVpnGatewaySslClientCertResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 异步任务实例ID。
+		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *EnableVpnGatewaySslClientCertResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableVpnGatewaySslClientCertResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type EndPoint struct {
 
 	// 终端节点ID。
@@ -11242,38 +12136,59 @@ type FilterObject struct {
 
 type FlowLog struct {
 
-	// 私用网络ID或者统一ID，建议使用统一ID
+	// 私用网络ID或者统一ID，建议使用统一ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 
-	// 流日志实例名字
+	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE
+	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN。
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
-	// 资源唯一ID
+	// 资源唯一ID。
 	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 
-	// 流日志采集类型，ACCEPT|REJECT|ALL
+	// 流日志采集类型，ACCEPT|REJECT|ALL。
 	TrafficType *string `json:"TrafficType,omitempty" name:"TrafficType"`
 
-	// 流日志存储ID
+	// 流日志存储ID。
 	CloudLogId *string `json:"CloudLogId,omitempty" name:"CloudLogId"`
 
-	// 流日志存储ID状态
+	// 流日志存储ID状态。
 	CloudLogState *string `json:"CloudLogState,omitempty" name:"CloudLogState"`
 
-	// 流日志描述信息
+	// 流日志描述信息。
 	FlowLogDescription *string `json:"FlowLogDescription,omitempty" name:"FlowLogDescription"`
 
-	// 流日志创建时间
+	// 流日志创建时间。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 
-	// 标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// 标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
 	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet"`
+
+	// 是否启用，true-启用，false-停用。
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 消费端类型：cls、ckafka。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StorageType *string `json:"StorageType,omitempty" name:"StorageType"`
+
+	// 消费端信息，当消费端类型为ckafka时返回
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlowLogStorage *FlowLogStorage `json:"FlowLogStorage,omitempty" name:"FlowLogStorage"`
+}
+
+type FlowLogStorage struct {
+
+	// 存储实例Id，当流日志存储类型为ckafka时，必填。
+	StorageId *string `json:"StorageId,omitempty" name:"StorageId"`
+
+	// 主题Id，当流日志存储类型为ckafka时，必填。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StorageTopic *string `json:"StorageTopic,omitempty" name:"StorageTopic"`
 }
 
 type GatewayFlowMonitorDetail struct {
@@ -12015,6 +12930,15 @@ type LocalGateway struct {
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
+type MemberInfo struct {
+
+	// 模板对象成员
+	Member *string `json:"Member,omitempty" name:"Member"`
+
+	// 模板对象成员描述信息
+	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
 type MigrateNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 
@@ -12250,6 +13174,9 @@ type ModifyAddressTemplateAttributeRequest struct {
 
 	// 地址信息，支持 IP、CIDR、IP 范围。
 	Addresses []*string `json:"Addresses,omitempty" name:"Addresses"`
+
+	// 支持添加备注的地址信息，支持 IP、CIDR、IP 范围。
+	AddressesExtra []*AddressInfo `json:"AddressesExtra,omitempty" name:"AddressesExtra"`
 }
 
 func (r *ModifyAddressTemplateAttributeRequest) ToJsonString() string {
@@ -12267,6 +13194,7 @@ func (r *ModifyAddressTemplateAttributeRequest) FromJsonString(s string) error {
 	delete(f, "AddressTemplateId")
 	delete(f, "AddressTemplateName")
 	delete(f, "Addresses")
+	delete(f, "AddressesExtra")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAddressTemplateAttributeRequest has unknown keys!", "")
 	}
@@ -12477,6 +13405,9 @@ type ModifyBandwidthPackageAttributeRequest struct {
 
 	// 带宽包计费模式
 	ChargeType *string `json:"ChargeType,omitempty" name:"ChargeType"`
+
+	// 退款时迁移为后付费带宽包。默认值：否
+	MigrateOnRefund *bool `json:"MigrateOnRefund,omitempty" name:"MigrateOnRefund"`
 }
 
 func (r *ModifyBandwidthPackageAttributeRequest) ToJsonString() string {
@@ -12494,6 +13425,7 @@ func (r *ModifyBandwidthPackageAttributeRequest) FromJsonString(s string) error 
 	delete(f, "BandwidthPackageId")
 	delete(f, "BandwidthPackageName")
 	delete(f, "ChargeType")
+	delete(f, "MigrateOnRefund")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBandwidthPackageAttributeRequest has unknown keys!", "")
 	}
@@ -12576,10 +13508,10 @@ type ModifyCcnAttributeRequest struct {
 	// CCN实例ID。形如：ccn-f49l6u0z。
 	CcnId *string `json:"CcnId,omitempty" name:"CcnId"`
 
-	// CCN名称，最大长度不能超过60个字节。
+	// CCN名称，最大长度不能超过60个字节，限制：CcnName和CcnDescription必须至少选择一个参数输入，否则报错。
 	CcnName *string `json:"CcnName,omitempty" name:"CcnName"`
 
-	// CCN描述信息，最大长度不能超过100个字节。
+	// CCN描述信息，最大长度不能超过100个字节，限制：CcnName和CcnDescription必须至少选择一个参数输入，否则报错。
 	CcnDescription *string `json:"CcnDescription,omitempty" name:"CcnDescription"`
 }
 
@@ -12835,11 +13767,11 @@ func (r *ModifyDirectConnectGatewayAttributeResponse) FromJsonString(s string) e
 type ModifyFlowLogAttributeRequest struct {
 	*tchttp.BaseRequest
 
-	// 私用网络ID或者统一ID，建议使用统一ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
-
 	// 流日志唯一ID
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
+
+	// 私用网络ID或者统一ID，建议使用统一ID，修改云联网流日志属性时可不填，其他流日志类型必填。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// 流日志实例名字
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
@@ -12860,8 +13792,8 @@ func (r *ModifyFlowLogAttributeRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "VpcId")
 	delete(f, "FlowLogId")
+	delete(f, "VpcId")
 	delete(f, "FlowLogName")
 	delete(f, "FlowLogDescription")
 	if len(f) > 0 {
@@ -13034,6 +13966,9 @@ func (r *ModifyIp6AddressesBandwidthRequest) FromJsonString(s string) error {
 type ModifyIp6AddressesBandwidthResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
+
+		// 任务ID
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -13455,6 +14390,7 @@ type ModifyNetDetectRequest struct {
 	// PEERCONNECTION：对等连接；
 	// NAT：NAT网关；
 	// NORMAL_CVM：普通云服务器；
+	// CCN：云联网网关；
 	NextHopType *string `json:"NextHopType,omitempty" name:"NextHopType"`
 
 	// 下一跳目的网关，取值与“下一跳类型”相关：
@@ -13463,6 +14399,7 @@ type ModifyNetDetectRequest struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-44csczop；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
 	// 网络探测描述。
@@ -13940,6 +14877,9 @@ type ModifyServiceTemplateAttributeRequest struct {
 
 	// 支持单个端口、多个端口、连续端口及所有端口，协议支持：TCP、UDP、ICMP、GRE 协议。
 	Services []*string `json:"Services,omitempty" name:"Services"`
+
+	// 支持添加备注的协议端口信息，支持单个端口、多个端口、连续端口及所有端口，协议支持：TCP、UDP、ICMP、GRE 协议。
+	ServicesExtra []*ServicesInfo `json:"ServicesExtra,omitempty" name:"ServicesExtra"`
 }
 
 func (r *ModifyServiceTemplateAttributeRequest) ToJsonString() string {
@@ -13957,6 +14897,7 @@ func (r *ModifyServiceTemplateAttributeRequest) FromJsonString(s string) error {
 	delete(f, "ServiceTemplateId")
 	delete(f, "ServiceTemplateName")
 	delete(f, "Services")
+	delete(f, "ServicesExtra")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyServiceTemplateAttributeRequest has unknown keys!", "")
 	}
@@ -14091,6 +15032,60 @@ func (r *ModifySubnetAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyTemplateMemberRequest struct {
+	*tchttp.BaseRequest
+
+	// 参数模板实例ID，支持IP地址、协议端口、IP地址组、协议端口组四种参数模板的实例ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 需要修改的参数模板成员信息，支持IP地址、协议端口、IP地址组、协议端口组四种类型，类型需要与TemplateId参数类型一致，修改顺序与TemplateMember参数顺序一一对应，入参长度需要与TemplateMember参数保持一致。
+	OriginalTemplateMember []*MemberInfo `json:"OriginalTemplateMember,omitempty" name:"OriginalTemplateMember"`
+
+	// 新的参数模板成员信息，支持IP地址、协议端口、IP地址组、协议端口组四种类型，类型需要与TemplateId参数类型一致，修改顺序与OriginalTemplateMember参数顺序一一对应，入参长度需要与OriginalTemplateMember参数保持一致。
+	TemplateMember []*MemberInfo `json:"TemplateMember,omitempty" name:"TemplateMember"`
+}
+
+func (r *ModifyTemplateMemberRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTemplateMemberRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "OriginalTemplateMember")
+	delete(f, "TemplateMember")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTemplateMemberRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyTemplateMemberResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyTemplateMemberResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTemplateMemberResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyVpcAttributeRequest struct {
 	*tchttp.BaseRequest
 
@@ -14219,7 +15214,7 @@ type ModifyVpcEndPointServiceAttributeRequest struct {
 	// 终端节点服务名称。
 	EndPointServiceName *string `json:"EndPointServiceName,omitempty" name:"EndPointServiceName"`
 
-	// 是否自动接受。
+	// 是否自动接受终端节点的连接请求。<ui><li>true：自动接受<li>false：不自动接受</ul>
 	AutoAcceptFlag *bool `json:"AutoAcceptFlag,omitempty" name:"AutoAcceptFlag"`
 
 	// 后端服务的ID，比如lb-xxx。
@@ -14352,6 +15347,18 @@ type ModifyVpnConnectionAttributeRequest struct {
 
 	// 对端通道探测ip
 	HealthCheckRemoteIp *string `json:"HealthCheckRemoteIp,omitempty" name:"HealthCheckRemoteIp"`
+
+	// 协商类型，默认为active（主动协商）。可选值：active（主动协商），passive（被动协商），flowTrigger（流量协商）
+	NegotiationType *string `json:"NegotiationType,omitempty" name:"NegotiationType"`
+
+	// DPD探测开关。默认为0，表示关闭DPD探测。可选值：0（关闭），1（开启）
+	DpdEnable *int64 `json:"DpdEnable,omitempty" name:"DpdEnable"`
+
+	// DPD超时时间。即探测确认对端不存在需要的时间。dpdEnable为1（开启）时有效。默认30，单位为秒
+	DpdTimeout *string `json:"DpdTimeout,omitempty" name:"DpdTimeout"`
+
+	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
+	DpdAction *string `json:"DpdAction,omitempty" name:"DpdAction"`
 }
 
 func (r *ModifyVpnConnectionAttributeRequest) ToJsonString() string {
@@ -14375,6 +15382,10 @@ func (r *ModifyVpnConnectionAttributeRequest) FromJsonString(s string) error {
 	delete(f, "EnableHealthCheck")
 	delete(f, "HealthCheckLocalIp")
 	delete(f, "HealthCheckRemoteIp")
+	delete(f, "NegotiationType")
+	delete(f, "DpdEnable")
+	delete(f, "DpdTimeout")
+	delete(f, "DpdAction")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpnConnectionAttributeRequest has unknown keys!", "")
 	}
@@ -14559,6 +15570,25 @@ func (r *ModifyVpnGatewayRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type NatDirectConnectGatewayRoute struct {
+
+	// 子网的 `IPv4` `CIDR`
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitempty" name:"DestinationCidrBlock"`
+
+	// 下一跳网关的类型，目前此接口支持的类型有：
+	// DIRECTCONNECT：专线网关
+	GatewayType *string `json:"GatewayType,omitempty" name:"GatewayType"`
+
+	// 下一跳网关ID
+	GatewayId *string `json:"GatewayId,omitempty" name:"GatewayId"`
+
+	// 路由的创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 路由的更新时间
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+}
+
 type NatGateway struct {
 
 	// NAT网关的ID。
@@ -14610,6 +15640,18 @@ type NatGateway struct {
 	// NAT网关绑定的安全组列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecurityGroupSet []*string `json:"SecurityGroupSet,omitempty" name:"SecurityGroupSet"`
+
+	// NAT网关的SNAT转发规则。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SourceIpTranslationNatRuleSet []*SourceIpTranslationNatRule `json:"SourceIpTranslationNatRuleSet,omitempty" name:"SourceIpTranslationNatRuleSet"`
+
+	// 是否独享型NAT。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsExclusive *bool `json:"IsExclusive,omitempty" name:"IsExclusive"`
+
+	// 独享型NAT所在的网关集群的带宽(单位:Mbps)，当IsExclusive为false时无此字段。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExclusiveGatewayBandwidth *uint64 `json:"ExclusiveGatewayBandwidth,omitempty" name:"ExclusiveGatewayBandwidth"`
 }
 
 type NatGatewayAddress struct {
@@ -15008,6 +16050,63 @@ type ReferredSecurityGroup struct {
 
 	// 引用安全组实例ID（SecurityGroupId）的所有安全组实例ID。
 	ReferredSecurityGroupIds []*string `json:"ReferredSecurityGroupIds,omitempty" name:"ReferredSecurityGroupIds"`
+}
+
+type RefreshDirectConnectGatewayRouteToNatGatewayRequest struct {
+	*tchttp.BaseRequest
+
+	// vpc的ID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// NAT网关ID
+	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
+
+	// 是否是预刷新；True:是， False:否
+	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
+}
+
+func (r *RefreshDirectConnectGatewayRouteToNatGatewayRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RefreshDirectConnectGatewayRouteToNatGatewayRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "NatGatewayId")
+	delete(f, "DryRun")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RefreshDirectConnectGatewayRouteToNatGatewayRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type RefreshDirectConnectGatewayRouteToNatGatewayResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// IDC子网信息
+		DirectConnectSubnetSet []*DirectConnectSubnet `json:"DirectConnectSubnetSet,omitempty" name:"DirectConnectSubnetSet"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RefreshDirectConnectGatewayRouteToNatGatewayResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RefreshDirectConnectGatewayRouteToNatGatewayResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type RejectAttachCcnInstancesRequest struct {
@@ -15997,6 +17096,7 @@ type Route struct {
 	GatewayId *string `json:"GatewayId,omitempty" name:"GatewayId"`
 
 	// 路由策略ID。IPv4路由策略ID是有意义的值，IPv6路由策略是无意义的值0。后续建议完全使用字符串唯一ID `RouteItemId`操作路由策略。
+	// 该字段在删除时必填，其他字段无需填写。
 	RouteId *uint64 `json:"RouteId,omitempty" name:"RouteId"`
 
 	// 路由策略描述。
@@ -16103,6 +17203,10 @@ type SecurityGroup struct {
 
 	// 标签键值对。
 	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet"`
+
+	// 安全组更新时间。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
 type SecurityGroupAssociationStatistics struct {
@@ -16159,6 +17263,7 @@ type SecurityGroupPolicy struct {
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 端口(all, 离散port,  range)。
+	// 说明：如果Protocol设置为ALL，则Port也需要设置为all。
 	Port *string `json:"Port,omitempty" name:"Port"`
 
 	// 协议端口ID或者协议端口组ID。ServiceTemplate和Protocol+Port互斥。
@@ -16220,6 +17325,9 @@ type ServiceTemplate struct {
 
 	// 创建时间。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 带备注的协议端口信息。
+	ServiceExtraSet []*ServicesInfo `json:"ServiceExtraSet,omitempty" name:"ServiceExtraSet"`
 }
 
 type ServiceTemplateGroup struct {
@@ -16247,6 +17355,16 @@ type ServiceTemplateSpecification struct {
 
 	// 协议端口组ID，例如：ppmg-f5n1f8da。
 	ServiceGroupId *string `json:"ServiceGroupId,omitempty" name:"ServiceGroupId"`
+}
+
+type ServicesInfo struct {
+
+	// 协议端口。
+	Service *string `json:"Service,omitempty" name:"Service"`
+
+	// 备注。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
 }
 
 type SetCcnRegionBandwidthLimitsRequest struct {
@@ -16335,6 +17453,103 @@ type SourceIpTranslationNatRule struct {
 	// NAT网关SNAT规则创建时间。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+}
+
+type SslVpnClient struct {
+
+	// VPC实例ID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// SSL-VPN-SERVER 实例ID
+	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
+
+	// 证书状态. 
+	// 0:创建中
+	// 1:正常
+	// 2:已停用
+	// 3.已过期
+	// 4.创建出错
+	CertStatus *uint64 `json:"CertStatus,omitempty" name:"CertStatus"`
+
+	// SSL-VPN-CLIENT 实例ID
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// 证书开始时间
+	CertBeginTime *string `json:"CertBeginTime,omitempty" name:"CertBeginTime"`
+
+	// 证书到期时间
+	CertEndTime *string `json:"CertEndTime,omitempty" name:"CertEndTime"`
+
+	// CLIENT NAME
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 创建CLIENT 状态。
+	// 0 创建中
+	// 1 创建出错
+	// 2 更新中
+	// 3 更新出错
+	// 4 销毁中
+	// 5 销毁出粗
+	// 6 已连通
+	// 7 未知
+	State *string `json:"State,omitempty" name:"State"`
+}
+
+type SslVpnSever struct {
+
+	// VPC实例ID.
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// SSL-VPN-SERVER 实例ID。
+	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
+
+	// VPN 实例ID。
+	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
+
+	// SSL-VPN-SERVER name。
+	SslVpnServerName *string `json:"SslVpnServerName,omitempty" name:"SslVpnServerName"`
+
+	// 本端地址段。
+	LocalAddress []*string `json:"LocalAddress,omitempty" name:"LocalAddress"`
+
+	// 客户端地址段。
+	RemoteAddress *string `json:"RemoteAddress,omitempty" name:"RemoteAddress"`
+
+	// 客户端最大连接数。
+	MaxConnection *uint64 `json:"MaxConnection,omitempty" name:"MaxConnection"`
+
+	// SSL-VPN 网关公网IP。
+	WanIp *string `json:"WanIp,omitempty" name:"WanIp"`
+
+	// SSL VPN服务端监听协议
+	SslVpnProtocol *string `json:"SslVpnProtocol,omitempty" name:"SslVpnProtocol"`
+
+	// SSL VPN服务端监听协议端口
+	SslVpnPort *uint64 `json:"SslVpnPort,omitempty" name:"SslVpnPort"`
+
+	// 加密算法。
+	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitempty" name:"EncryptAlgorithm"`
+
+	// 认证算法。
+	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitempty" name:"IntegrityAlgorithm"`
+
+	// 是否支持压缩。
+	Compress *uint64 `json:"Compress,omitempty" name:"Compress"`
+
+	// 创建时间。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// SSL-VPN-SERVER 创建状态。
+	// 0 创建中
+	// 1 创建出错
+	// 2 更新中
+	// 3 更新出错
+	// 4 销毁中
+	// 5 销毁出粗
+	// 6 已连通
+	// 7 未知
+	State *uint64 `json:"State,omitempty" name:"State"`
 }
 
 type Subnet struct {
@@ -16638,6 +17853,9 @@ type UnassignPrivateIpAddressesRequest struct {
 
 	// 指定的内网IP信息，单次最多指定10个。
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitempty" name:"PrivateIpAddresses"`
+
+	// 网卡绑定的子机实例ID，该参数仅用于指定网卡退还IP并解绑子机的场景，如果不涉及解绑子机，请勿填写。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 func (r *UnassignPrivateIpAddressesRequest) ToJsonString() string {
@@ -16654,6 +17872,7 @@ func (r *UnassignPrivateIpAddressesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "NetworkInterfaceId")
 	delete(f, "PrivateIpAddresses")
+	delete(f, "InstanceId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnassignPrivateIpAddressesRequest has unknown keys!", "")
 	}
@@ -16895,6 +18114,12 @@ type VpnGateway struct {
 
 	// Type值为CCN时，该值表示云联网实例ID
 	NetworkInstanceId *string `json:"NetworkInstanceId,omitempty" name:"NetworkInstanceId"`
+
+	// CDC 实例ID
+	CdcId *string `json:"CdcId,omitempty" name:"CdcId"`
+
+	// SSL-VPN 客户端连接数。
+	MaxConnection *uint64 `json:"MaxConnection,omitempty" name:"MaxConnection"`
 }
 
 type VpnGatewayQuota struct {
