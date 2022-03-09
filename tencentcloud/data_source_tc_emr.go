@@ -7,10 +7,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_emr" "my_emr" {
-  filter {
-    name   = "address-status"
-    values = ["UNBIND"]
-  }
+  display_strategy="clusterList"
+  instance_ids=["emr-rnzqrleq"]
 }
 ```
 */
@@ -36,7 +34,7 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 				Required:    true,
 				Description: "Display strategy(e.g.:clusterList, monitorManage).",
 			},
-			"prefix_instance_ids": {
+			"instance_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -139,8 +137,8 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("display_strategy"); ok {
 		filters["display_strategy"] = v.(string)
 	}
-	if v, ok := d.GetOk("prefix_instance_ids"); ok {
-		filters["prefix_instance_ids"] = v.(string)
+	if v, ok := d.GetOk("instance_ids"); ok {
+		filters["instance_ids"] = v.([]interface{})
 	}
 	if v, ok := d.GetOk("project_id"); ok {
 		filters["project_id"] = v.(int64)

@@ -579,6 +579,7 @@ VPN
 EMR
   Data Source
     tencentcloud_emr
+    tencentcloud_emr_nodes
 
   Resource
     tencentcloud_emr_cluster
@@ -717,6 +718,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_regions":                     dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_emr":                                      dataSourceTencentCloudEmr(),
+			"tencentcloud_emr_nodes":                                dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_availability_zones":                       dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":            dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_instances":                                dataSourceTencentCloudInstances(),
