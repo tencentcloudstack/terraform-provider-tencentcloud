@@ -17,7 +17,7 @@ const (
 func TestAccTencentCloudImageResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckImageDestroy,
 		Steps: []resource.TestStep{
@@ -27,7 +27,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageExists(ImageSnap),
 					resource.TestCheckResourceAttr(ImageSnap, "image_name", "image-snapshot-keep"),
-					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "2"),
+					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageSnap, "force_poweroff", "true"),
 					resource.TestCheckResourceAttr(ImageSnap, "image_description", "create image with snapshot"),
 				),
@@ -36,7 +36,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Config: testAccImageWithSnapShotUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(ImageSnap, "image_name", "image-snapshot-update-keep"),
-					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "2"),
+					resource.TestCheckResourceAttr(ImageSnap, "snapshot_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageSnap, "force_poweroff", "false"),
 					resource.TestCheckResourceAttr(ImageSnap, "image_description", "update image with snapshot"),
 				),
@@ -53,7 +53,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageExists(ImageInstance),
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-2ju245xg"),
+					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-fodds4y2"),
 					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "create image with instance"),
 				),
@@ -62,7 +62,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Config: testAccImageWithInstanceUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-update-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-2ju245xg"),
+					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-fodds4y2"),
 					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "update image with instance"),
 				),
@@ -137,7 +137,7 @@ const (
 	testAccImageWithSnapShot = `
 		resource "tencentcloud_image" "image_snap" {
   			image_name   		= "image-snapshot-keep"
-  			snapshot_ids 		= ["snap-nbp3xy1d", "snap-nvzu3dmh"]
+  			snapshot_ids 		= ["snap-8f2updnb"]
 			force_poweroff 		= true
 			image_description 	= "create image with snapshot"
 		}`
@@ -145,7 +145,7 @@ const (
 	testAccImageWithSnapShotUpdate = `
 		resource "tencentcloud_image" "image_snap" {
   			image_name   		= "image-snapshot-update-keep"
-  			snapshot_ids 		= ["snap-nbp3xy1d", "snap-nvzu3dmh"]
+  			snapshot_ids 		= ["snap-8f2updnb"]
   			force_poweroff   	= false
   			image_description 	= "update image with snapshot"
 		}`
@@ -153,16 +153,16 @@ const (
 	testAccImageWithInstance = `
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-keep"
-  			instance_id  		= "ins-2ju245xg"
-  			data_disk_ids 		= ["disk-gii0vtwi"]
+  			instance_id  		= "ins-fodds4y2"
+  			data_disk_ids 		= ["disk-mrnskm5i"]
   			image_description 	= "create image with instance"
 		}`
 
 	testAccImageWithInstanceUpdate = `
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-update-keep"
-  			instance_id  		= "ins-2ju245xg"
-  			data_disk_ids 		= ["disk-gii0vtwi"]
+  			instance_id  		= "ins-fodds4y2"
+  			data_disk_ids 		= ["disk-mrnskm5i"]
   			image_description 	= "update image with instance"
 		}`
 )
