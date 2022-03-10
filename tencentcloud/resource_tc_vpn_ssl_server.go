@@ -32,11 +32,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -99,9 +100,9 @@ func resourceTencentCloudVpnSslServer() *schema.Resource {
 				Description: "The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.",
 			},
 			"encrypt_algorithm": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE." +
 					"Default value: NONE.",
 			},
