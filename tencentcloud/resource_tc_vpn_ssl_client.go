@@ -24,11 +24,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -67,8 +68,8 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		vpcService   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request      = vpc.NewCreateVpnGatewaySslClientRequest()
+		vpcService     = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request        = vpc.NewCreateVpnGatewaySslClientRequest()
 		sslVpnServerId string
 	)
 

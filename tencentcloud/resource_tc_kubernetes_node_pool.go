@@ -746,7 +746,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := dMap["cam_role_name"]; ok {
-		request.CamRoleName =  helper.String(v.(string))
+		request.CamRoleName = helper.String(v.(string))
 	}
 	result = request.ToJsonString()
 	return result, errRet

@@ -30,6 +30,7 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "50"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "10"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "taints.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test2", "test2"),
@@ -57,6 +58,7 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.instance_charge_type", "SPOTPAID"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_instance_type", "one-time"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_max_price", "1000"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
@@ -150,7 +152,7 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "192.168.0.0/16"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -222,6 +224,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
 
+    cam_role_name = "TCB_QcsRole"
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
@@ -280,6 +283,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
+
+    cam_role_name = "TCB_QcsRole"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
