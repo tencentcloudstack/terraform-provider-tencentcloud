@@ -5,9 +5,42 @@ import (
 	"fmt"
 	"testing"
 
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_eks_cluster", &resource.Sweeper{
+		Name: "tencentcloud_eks_cluster",
+		F:    testSweepEksClusters,
+	})
+}
+
+func testSweepEksClusters(region string) error {
+	client, err := sharedClientForRegion(region)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if err != nil {
+		return err
+	}
+	service := EksService{client: client.(*TencentCloudClient).apiV3Conn}
+	clusters, err := service.DescribeEKSClusters(ctx, "", "tf-eks-test")
+	if err != nil {
+		return err
+	}
+	for _, c := range clusters {
+		id := c.ClusterId
+		req := tke.NewDeleteEKSClusterRequest()
+		req.ClusterId = &id
+		err := service.DeleteEksCluster(ctx, req)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 	t.Parallel()
