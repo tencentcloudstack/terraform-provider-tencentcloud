@@ -156,7 +156,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `max_size` - (Required) Maximum number of node.
 * `min_size` - (Required) Minimum number of node.
-* `name` - (Required, ForceNew) Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.
+* `name` - (Required) Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.
 * `vpc_id` - (Required, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
@@ -211,6 +211,7 @@ The `data_disk` object supports the following:
 
 The `data_disk` object supports the following:
 
+* `delete_with_instance` - (Optional) Indicates whether the disk remove after instance terminated.
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.

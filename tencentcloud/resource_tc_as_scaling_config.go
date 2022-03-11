@@ -127,6 +127,11 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 							Optional:    true,
 							Description: "Data disk snapshot ID.",
 						},
+						"delete_with_instance": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether the disk remove after instance terminated.",
+						},
 					},
 				},
 			},
@@ -287,9 +292,11 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 			diskType := value["disk_type"].(string)
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
+			deleteWithInstance := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
-				DiskType: &diskType,
-				DiskSize: &diskSize,
+				DiskType:           &diskType,
+				DiskSize:           &diskSize,
+				DeleteWithInstance: &deleteWithInstance,
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
@@ -526,9 +533,11 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 			diskType := value["disk_type"].(string)
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
+			deleteWithInstance := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
-				DiskType: &diskType,
-				DiskSize: &diskSize,
+				DiskType:           &diskType,
+				DiskSize:           &diskSize,
+				DeleteWithInstance: &deleteWithInstance,
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId

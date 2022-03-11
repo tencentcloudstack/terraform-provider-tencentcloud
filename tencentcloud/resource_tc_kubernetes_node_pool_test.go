@@ -3,8 +3,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
+
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -12,6 +17,52 @@ import (
 
 var testTkeClusterNodePoolName = "tencentcloud_kubernetes_node_pool"
 var testTkeClusterNodePoolResourceKey = testTkeClusterNodePoolName + ".np_test"
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_node_pool", &resource.Sweeper{
+		Name: "tencentcloud_node_pool",
+		F:    testNodePoolSweep,
+	})
+}
+
+func testNodePoolSweep(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	cli, err := sharedClientForRegion(region)
+	if err != nil {
+		return err
+	}
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := TkeService{client: client}
+
+	if err != nil {
+		return err
+	}
+
+	request := tke.NewDescribeClusterNodePoolsRequest()
+	request.ClusterId = helper.String(defaultTkeClusterId)
+	response, err := client.UseTkeClient().DescribeClusterNodePools(request)
+	if err != nil {
+		log.Printf("Query %s node pool fail: %s", defaultTkeClusterId, err.Error())
+	}
+	nodePools := response.Response.NodePoolSet
+	if len(nodePools) == 0 {
+		return nil
+	}
+	for i := range nodePools {
+		poolId := *nodePools[i].NodePoolId
+		poolName := nodePools[i].Name
+		if poolName == nil || (*poolName != "mynodepool" && *poolName != "mynodepoolupdate") {
+			continue
+		}
+		err := service.DeleteClusterNodePool(ctx, defaultTkeClusterId, poolId, false)
+		if err != nil {
+			continue
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 	t.Parallel()
@@ -54,6 +105,8 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "100"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "2"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.0.delete_with_instance", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.0.delete_with_instance", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "20"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.instance_charge_type", "SPOTPAID"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_instance_type", "one-time"),
@@ -64,7 +117,7 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", "ubuntu18.04.1x86_64"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", defaultTkeOSImageName),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group_test"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
@@ -100,6 +153,9 @@ func testAccCheckTkeNodePoolDestroy(s *terraform.State) error {
 
 	_, has, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
 	if err != nil {
+		if err.(*sdkErrors.TencentCloudSDKError).Code == "InternalError.UnexpectedInternal" {
+			return nil
+		}
 		return err
 	}
 	if !has {
@@ -168,45 +224,15 @@ variable "default_instance_type" {
   default = "S1.SMALL1"
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = var.cluster_cidr
-  cluster_max_pod_num     = 32
-  cluster_name            = "tf-tke-unit-test"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-  cluster_version         = "1.18.4"
-  cluster_os              = "tlinux2.2(tkernel3)x86_64"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}`
+variable "cluster_id" {
+  default = "` + defaultTkeClusterId + `"
+}
+`
 
 const testAccTkeNodePoolCluster string = testAccTkeNodePoolClusterBasic + `
 resource "tencentcloud_kubernetes_node_pool" "np_test" {
   name = "mynodepool"
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id = var.cluster_id
   max_size = 6
   min_size = 1
   vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
@@ -217,6 +243,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_name	   = "basic_group"
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
+  scaling_group_project_id = "` + defaultProjectId + `"
 
   auto_scaling_config {
     instance_type      = var.default_instance_type
@@ -261,7 +288,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 const testAccTkeNodePoolClusterUpdate string = testAccTkeNodePoolClusterBasic + `
 resource "tencentcloud_kubernetes_node_pool" "np_test" {
   name = "mynodepoolupdate"
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id = var.cluster_id
   max_size = 5
   min_size = 2
   vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
@@ -269,7 +296,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 2
   enable_auto_scale    = false
-  node_os = "ubuntu18.04.1x86_64"
+  node_os = "` + defaultTkeOSImageName + `"
+  scaling_group_project_id = "` + defaultProjectId + `"
   delete_keep_instance = false
   scaling_group_name 	   = "basic_group_test"
   default_cooldown 		   = 350
@@ -289,10 +317,12 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
+      delete_with_instance = true
     }
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 100
+      delete_with_instance = true
     }
 
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"

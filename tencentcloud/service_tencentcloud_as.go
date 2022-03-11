@@ -567,6 +567,12 @@ func flattenDataDiskMappings(list []*as.DataDisk) []map[string]interface{} {
 		if v.DiskType != nil {
 			disk["disk_type"] = *v.DiskType
 		}
+		if v.SnapshotId != nil {
+			disk["snapshot_id"] = *v.SnapshotId
+		}
+		if v.DeleteWithInstance != nil {
+			disk["delete_with_instance"] = *v.DeleteWithInstance
+		}
 		result = append(result, disk)
 	}
 	return result
