@@ -103,6 +103,11 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 										Computed:    true,
 										Description: "Data disk snapshot ID.",
 									},
+									"delete_with_instance": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Indicates whether the disk remove after instance terminated.",
+									},
 								},
 							},
 						},

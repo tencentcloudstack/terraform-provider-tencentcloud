@@ -21,7 +21,7 @@ func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "configuration_name", "tf-as-basic"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-9qabwvbn"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-2lr9q49h"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA1.SMALL1"),
 				),
@@ -48,7 +48,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "configuration_name", "tf-as-full"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-9qabwvbn"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "image_id", "img-2lr9q49h"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_types.0", "SA1.SMALL1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "project_id", "0"),
@@ -143,7 +143,7 @@ func testAccAsScalingConfig_basic() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	configuration_name = "tf-as-basic"
-	image_id = "img-9qabwvbn"
+	image_id = "img-2lr9q49h"
 	instance_types = ["SA1.SMALL1"]
 }
 	`
@@ -153,7 +153,7 @@ func testAccAsScalingConfig_full() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-full"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
@@ -184,7 +184,7 @@ func testAccAsScalingConfig_update() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-full-update"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["S4.SMALL2"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"

@@ -37,6 +37,7 @@ In addition to all arguments above, the following attributes are exported:
   * `configuration_name` - Launch configuration name.
   * `create_time` - The time when the launch configuration was created.
   * `data_disk` - Configurations of data disk.
+    * `delete_with_instance` - Indicates whether the disk remove after instance terminated.
     * `disk_size` - Volume of disk in GB. Default is `0`.
     * `disk_type` - Type of disk.
     * `snapshot_id` - Data disk snapshot ID.

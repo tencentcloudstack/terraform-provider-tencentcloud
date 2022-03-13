@@ -348,6 +348,16 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			request.Tags = append(request.Tags, &as.Tag{
+				ResourceType: helper.String("auto-scaling-group"),
+				Key:          &k,
+				Value:        &v,
+			})
+		}
+	}
+
 	var id string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -391,15 +401,6 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	})
 	if err != nil {
 		return err
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("as", "auto-scaling-group", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudAsScalingGroupRead(d, meta)

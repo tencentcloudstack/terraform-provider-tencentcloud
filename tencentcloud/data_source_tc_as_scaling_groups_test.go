@@ -103,7 +103,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["SA1.SMALL1"]
 }
 
@@ -150,7 +150,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["SA1.SMALL1"]
 }
 

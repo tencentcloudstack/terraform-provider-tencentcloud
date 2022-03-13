@@ -1,10 +1,16 @@
 package tencentcloud
 
 import (
+	"fmt"
+	"math/rand"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
+
+var scalingConfigNameRE = regexp.MustCompile("tf-as-config-basic")
+var scalingConfigNameFullRE = regexp.MustCompile("tf-as-config-full")
 
 func TestAccTencentCloudAsScalingConfigsDataSource_basic(t *testing.T) {
 	t.Parallel()
@@ -19,14 +25,14 @@ func TestAccTencentCloudAsScalingConfigsDataSource_basic(t *testing.T) {
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.configuration_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.configuration_name", "tf-as-config-basic"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.image_id", "img-9qabwvbn"),
+					resource.TestMatchResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.configuration_name", scalingConfigNameRE),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.image_id", defaultTkeOSImageId),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.instance_types.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.instance_types.0", "SA1.SMALL1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.configuration_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.configuration_name", "tf-as-config-basic"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.image_id", "img-9qabwvbn"),
+					resource.TestMatchResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.configuration_name", scalingConfigNameRE),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.image_id", defaultTkeOSImageId),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.instance_types.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs_name", "configuration_list.0.instance_types.0", "SA1.SMALL1"),
 				),
@@ -48,8 +54,8 @@ func TestAccTencentCloudAsScalingConfigsDataSource_full(t *testing.T) {
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.#", "1"),
 
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.configuration_name", "tf-as-config-full"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.image_id", "img-9qabwvbn"),
+					resource.TestMatchResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.configuration_name", scalingConfigNameFullRE),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.image_id", defaultTkeOSImageId),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.instance_types.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.instance_types.0", "SA1.SMALL1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.project_id", "0"),
@@ -72,10 +78,10 @@ func TestAccTencentCloudAsScalingConfigsDataSource_full(t *testing.T) {
 }
 
 func testAccAsScalingConfigsDataSource_basic() string {
-	return `
+	return fmt.Sprintf(`
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-config-basic"
-  image_id           = "img-9qabwvbn"
+  configuration_name = "tf-as-config-basic-%d"
+  image_id           = "%s"
   instance_types     = ["SA1.SMALL1"]
 }
 
@@ -86,14 +92,14 @@ data "tencentcloud_as_scaling_configs" "scaling_configs" {
 data "tencentcloud_as_scaling_configs" "scaling_configs_name" {
   configuration_name = tencentcloud_as_scaling_config.launch_configuration.configuration_name
 }
-`
+`, rand.Intn(1000), defaultTkeOSImageId)
 }
 
 func testAccAsScalingConfigsDataSource_full() string {
-	return `
+	return fmt.Sprintf(`
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-config-full"
-  image_id           = "img-9qabwvbn"
+  configuration_name = "tf-as-config-full-%d"
+  image_id           = "%s"
   instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
@@ -121,5 +127,5 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 data "tencentcloud_as_scaling_configs" "scaling_configs" {
   configuration_id = tencentcloud_as_scaling_config.launch_configuration.id
 }
-`
+`, rand.Intn(1000), defaultTkeOSImageId)
 }
