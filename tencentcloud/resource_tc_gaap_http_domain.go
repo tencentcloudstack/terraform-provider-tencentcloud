@@ -44,7 +44,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -473,13 +473,13 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		}
 
 		if d.HasChange("certificate_id") {
-			d.SetPartial("certificate_id")
+
 		}
 		if d.HasChange("client_certificate_id") {
-			d.SetPartial("client_certificate_id")
+
 		}
 		if d.HasChange("client_certificate_ids") {
-			d.SetPartial("client_certificate_ids")
+
 		}
 	}
 
@@ -591,10 +591,6 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 			realserverCertificateIds, realserverCertificateDomain, basicAuthId, gaapCertificateId,
 		); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAdvancedAttr {
-			d.SetPartial(attr)
 		}
 	}
 

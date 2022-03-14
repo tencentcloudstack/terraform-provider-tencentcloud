@@ -407,8 +407,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -2400,7 +2400,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	var (
@@ -2494,7 +2494,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			}
 		}
 
-		d.SetPartial("cluster_intranet")
 	}
 
 	if d.HasChange("cluster_internet") {
@@ -2626,7 +2625,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 				return err
 			}
 		}
-		d.SetPartial("cluster_internet")
+
 	}
 
 	if clusterInternet {
@@ -2637,10 +2636,10 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			if err := tkeService.ModifyClusterEndpointSP(ctx, id, securityPolicies); err != nil {
 				return err
 			}
-			d.SetPartial("managed_cluster_internet_security_policies")
+
 		}
 	} else {
-		d.SetPartial("managed_cluster_internet_security_policies")
+
 	}
 
 	if d.HasChange("project_id") || d.HasChange("cluster_name") || d.HasChange("cluster_desc") {
@@ -2650,9 +2649,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
-		d.SetPartial("cluster_name")
-		d.SetPartial("cluster_desc")
+
 	}
 
 	//upgrade k8s cluster version
@@ -2724,7 +2721,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("node_pool_global_config")
+
 	}
 
 	if d.HasChange("auth_options") {
@@ -2732,7 +2729,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
 			return err
 		}
-		d.SetPartial("auth_options")
+
 	}
 
 	if d.HasChange("deletion_protection") {
@@ -2740,7 +2737,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyDeletionProtection(ctx, id, enable); err != nil {
 			return err
 		}
-		d.SetPartial("deletion_protection")
+
 	}
 
 	d.Partial(false)

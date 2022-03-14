@@ -43,7 +43,7 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -246,8 +246,6 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 			return err
 		}
 
-		d.SetPartial("ingress")
-
 		ingress = nil
 	}
 
@@ -255,8 +253,6 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 		if err := service.DeleteLiteRules(ctx, id, egress, false); err != nil {
 			return err
 		}
-
-		d.SetPartial("egress")
 
 		egress = nil
 	}

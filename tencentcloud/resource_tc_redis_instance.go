@@ -69,11 +69,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/hashcode"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -640,7 +640,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("mem_size") {
@@ -697,7 +697,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("mem_size")
 	}
 
 	if d.HasChange("password") {
@@ -727,7 +726,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis change password fail, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("password")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -736,7 +735,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -748,7 +747,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

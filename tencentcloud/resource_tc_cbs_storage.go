@@ -33,8 +33,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -354,10 +354,10 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		if d.HasChange("storage_name") {
-			d.SetPartial("storage_name")
+
 		}
 		if d.HasChange("project_id") {
-			d.SetPartial("project_id")
+
 		}
 	}
 
@@ -396,7 +396,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("storage_size")
 	}
 
 	if d.HasChange("snapshot_id") {
@@ -428,7 +427,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("snapshot_id")
 	}
 
 	if d.HasChange("throughput_performance") {
@@ -445,7 +443,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("throughput_performance")
 	}
 
 	if d.HasChange("tags") {
@@ -460,7 +457,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	//charge type
 	//not support renew
@@ -491,7 +488,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("charge_type")
 	} else {
 
 		//only renew and change flag
@@ -522,7 +518,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 				log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 				return err
 			}
-			d.SetPartial("prepaid_renew_flag")
 
 		}
 	}

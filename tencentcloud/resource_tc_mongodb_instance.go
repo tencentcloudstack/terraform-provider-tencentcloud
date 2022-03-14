@@ -36,8 +36,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -421,8 +421,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -431,7 +429,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -440,7 +438,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("password") {
@@ -450,7 +448,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("tags") {
@@ -462,7 +459,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -476,7 +472,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
 	}
 
 	d.Partial(false)

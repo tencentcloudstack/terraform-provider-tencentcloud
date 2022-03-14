@@ -40,8 +40,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -217,8 +217,6 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 		partitions, remark, clusterId); err != nil {
 		return err
 	}
-	d.SetPartial("partitions")
-	d.SetPartial("remark")
 
 	d.Partial(false)
 	return resourceTencentCloudTdmqTopicRead(d, meta)

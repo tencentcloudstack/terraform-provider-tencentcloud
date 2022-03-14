@@ -87,7 +87,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -913,7 +913,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("protocol_block_config")
+
 	}
 
 	if d.HasChange("ddos_connect_limit") {
@@ -945,14 +945,14 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("ddos_connect_limit")
+
 	}
 	if d.HasChange("ddos_ai") {
 		err := antiddosService.CreateDDoSAI(ctx, resourceId, d.Get("ddos_ai").(string))
 		if err != nil {
 			return err
 		}
-		d.SetPartial("ddos_ai")
+
 	}
 
 	if d.HasChange("black_white_ips") {
@@ -989,7 +989,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("black_white_ips")
 	}
 
 	if d.HasChange("acls") {
@@ -1041,7 +1040,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("acls")
 	}
 
 	if d.HasChange("ddos_geo_ip_block_config") {
@@ -1092,7 +1090,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("ddos_geo_ip_block_config")
 	}
 
 	if d.HasChange("ddos_speed_limit_config") {
@@ -1152,7 +1149,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("ddos_speed_limit_config")
 	}
 
 	if d.HasChange("packet_filters") {
@@ -1237,7 +1233,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("packet_filters")
 	}
 
 	d.Partial(false)

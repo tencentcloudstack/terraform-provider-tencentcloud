@@ -15,7 +15,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cloud "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 )
 

@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 )
 
@@ -250,7 +250,7 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("enable_public_domain_dns")
+
 	}
 
 	if d.HasChange("enable_vpc_domain_dns") {
@@ -265,7 +265,7 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("enable_vpc_domain_dns")
+
 	}
 	d.Partial(false)
 

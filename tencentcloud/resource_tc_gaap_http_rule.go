@@ -74,9 +74,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/hashcode"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -369,49 +369,28 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	listenerId := d.Get("listener_id").(string)
 
 	var (
-		path       *string
-		scheduler  *string
-		updateAttr []string
+		path      *string
+		scheduler *string
 	)
 
 	if d.HasChange("path") {
-		updateAttr = append(updateAttr, "path")
 		path = helper.String(d.Get("path").(string))
 	}
 
 	if d.HasChange("scheduler") {
-		updateAttr = append(updateAttr, "scheduler")
 		scheduler = helper.String(d.Get("scheduler").(string))
 	}
 
-	if d.HasChange("health_check") {
-		updateAttr = append(updateAttr, "health_check")
-	}
 	healthCheck := d.Get("health_check").(bool)
 
-	if d.HasChange("interval") {
-		updateAttr = append(updateAttr, "interval")
-	}
 	interval := d.Get("interval").(int)
 
-	if d.HasChange("connect_timeout") {
-		updateAttr = append(updateAttr, "connect_timeout")
-	}
 	connectTimeout := d.Get("connect_timeout").(int)
 
-	if d.HasChange("health_check_path") {
-		updateAttr = append(updateAttr, "health_check_path")
-	}
 	healthCheckPath := d.Get("health_check_path").(string)
 
-	if d.HasChange("health_check_method") {
-		updateAttr = append(updateAttr, "health_check_method")
-	}
 	healthCheckMethod := d.Get("health_check_method").(string)
 
-	if d.HasChange("health_check_status_codes") {
-		updateAttr = append(updateAttr, "health_check_status_codes")
-	}
 	var healthCheckStatusCodes []int
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
 		statusCodeSet := raw.(*schema.Set)
@@ -460,17 +439,12 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 		return err
 	}
 
-	for _, attr := range updateAttr {
-		d.SetPartial(attr)
-	}
-
 	if d.HasChange("forward_host") {
 		forwardHost := d.Get("forward_host").(string)
 		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
 			return err
 		}
 
-		d.SetPartial("forward_host")
 	}
 
 	if realserverUpdate {
@@ -478,7 +452,6 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 			return err
 		}
 
-		d.SetPartial("realservers")
 	}
 
 	d.Partial(false)

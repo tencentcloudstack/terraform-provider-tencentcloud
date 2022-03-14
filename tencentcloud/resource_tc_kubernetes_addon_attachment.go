@@ -81,7 +81,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -285,10 +285,6 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 	if err != nil {
 		return err
 	}
-
-	d.SetPartial("version")
-	d.SetPartial("values")
-	d.SetPartial("request_body")
 
 	return resourceTencentCloudTkeAddonAttachmentRead(d, meta)
 }

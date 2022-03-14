@@ -5,7 +5,7 @@ The R008 analyzer reports usage of the deprecated [(helper/schema.ResourceData).
 ## Flagged Code
 
 ```go
-d.SetPartial("example"),
+,
 ```
 
 ## Passing Code
@@ -20,5 +20,5 @@ Singular reports can be ignored by adding the a `//lintignore:R008` Go code comm
 
 ```go
 //lintignore:R008
-d.SetPartial("example"),
+,
 ```

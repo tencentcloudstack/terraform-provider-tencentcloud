@@ -33,8 +33,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -386,10 +386,6 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		if !readyFlag {
 			return fmt.Errorf("Modify operation is timeout %s", ruleId)
 		}
-
-		for _, key := range ruleKey {
-			d.SetPartial(key)
-		}
 	}
 
 	healthFlag := false
@@ -439,10 +435,6 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		if !readyFlag {
 			return fmt.Errorf("Set health is timeout %s", ruleId)
 		}
-
-		for _, key := range healthKey {
-			d.SetPartial(key)
-		}
 	}
 
 	if d.HasChange("switch") {
@@ -485,7 +477,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 				return fmt.Errorf("Set switch is timeout %s", ruleId)
 			}
 		}
-		d.SetPartial("switch")
+
 	}
 
 	d.Partial(false)

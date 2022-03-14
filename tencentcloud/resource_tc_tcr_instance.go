@@ -44,8 +44,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -430,7 +430,7 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return err
 			}
 		}
-		d.SetPartial("security_policy")
+
 	}
 
 	if d.HasChange("tags") {
@@ -443,7 +443,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }

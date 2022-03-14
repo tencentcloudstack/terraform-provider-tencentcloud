@@ -142,8 +142,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1081,7 +1081,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		time.Sleep(readRetryTimeout)
-		d.SetPartial("instance_charge_type_prepaid_renew_flag")
+
 	}
 
 	if d.HasChange("instance_name") {
@@ -1089,7 +1089,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("security_groups") {
@@ -1102,7 +1102,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -1111,7 +1111,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	// Reset Instance
@@ -1182,11 +1182,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
 			return err
 		}
-
-		for _, attr := range updateAttr {
-			d.SetPartial(attr)
-		}
-
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
@@ -1194,7 +1189,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			d.SetPartial("password")
+
 			time.Sleep(10 * time.Second)
 			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
@@ -1256,7 +1251,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 					return err
 				}
 			}
-			d.SetPartial("key_name")
+
 		}
 	}
 
@@ -1287,7 +1282,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return fmt.Errorf("an error occured when modifying %s, reason: %s", sizeKey, err.Error())
 			}
-			d.SetPartial(sizeKey)
+
 		}
 	}
 
@@ -1297,7 +1292,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := switchInstance(&cvmService, ctx, d, flag); err != nil {
 			return err
 		}
-		d.SetPartial("running_flag")
+
 	}
 
 	if d.HasChange("system_disk_size") || d.HasChange("system_disk_type") {
@@ -1344,9 +1339,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		d.SetPartial("system_disk_size")
-		d.SetPartial("system_disk_type")
-
 	}
 
 	if d.HasChange("instance_type") {
@@ -1354,7 +1346,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_type")
 
 		// wait for status
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
@@ -1380,7 +1371,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cdh_instance_type")
 
 		// wait for status
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
@@ -1410,13 +1400,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
+
 		}
 		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
+
 		}
 		if d.HasChange("private_ip") {
-			d.SetPartial("private_ip")
+
 		}
 	}
 
@@ -1454,7 +1444,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				}
 			}
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -1467,7 +1457,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("internet_max_bandwidth_out")
+
 		time.Sleep(1 * time.Second)
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
