@@ -1390,8 +1390,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 			// Modifying instance type need restart the instance
 			// so status of CVM must be running when running flag is true
-			if instance != nil && instance.LatestOperationState != nil && (*instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING ||
-				(flag && *instance.InstanceState != CVM_STATUS_RUNNING)) {
+			if instance != nil && (instance.LatestOperationState != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING ||
+				(flag && instance.LatestOperationState != nil && *instance.InstanceState != CVM_STATUS_RUNNING)) {
 				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
 			}
 			return nil

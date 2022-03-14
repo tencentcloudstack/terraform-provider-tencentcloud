@@ -263,7 +263,7 @@ func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
+		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		IDRefreshName: id,
 		Providers:     testAccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
@@ -473,7 +473,7 @@ func TestAccTencentCloudInstanceWithPrepaidChargeType(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
+		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		IDRefreshName: id,
 		Providers:     testAccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
@@ -665,7 +665,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -682,7 +681,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = %d
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
@@ -757,7 +755,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.zoo.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_max_bandwidth_out = 1
   keep_image_login 			 = true
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -872,7 +869,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
   image_id             = data.tencentcloud_images.default.images.0.image_id
   instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  hostname             = var.instance_name
   system_disk_type     = "CLOUD_PREMIUM"
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "ONE-TIME"
