@@ -235,6 +235,11 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 						ForceNew:    true,
 						Description: "Data disk snapshot ID.",
 					},
+					"delete_with_instance": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Indicates whether the disk remove after instance terminated.",
+					},
 				},
 			},
 		},
@@ -357,7 +362,6 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Name of the node pool. The name does not exceed 25 characters, and only supports Chinese, English, numbers, underscores, separators (`-`) and decimal points.",
 			},
 			"max_size": {
@@ -637,12 +641,16 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			diskType := value["disk_type"].(string)
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
+			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
 				DiskSize: &diskSize,
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
+			}
+			if dOk {
+				dataDisk.DeleteWithInstance = &deleteWithInstance
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
@@ -775,12 +783,16 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 			diskType := value["disk_type"].(string)
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
+			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
 				DiskSize: &diskSize,
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
+			}
+			if dOk {
+				dataDisk.DeleteWithInstance = &deleteWithInstance
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
@@ -998,6 +1010,9 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 				disk["disk_size"] = *item.DiskSize
 				if item.SnapshotId != nil {
 					disk["snapshot_id"] = *item.SnapshotId
+				}
+				if item.DeleteWithInstance != nil {
+					disk["delete_with_instance"] = *item.DeleteWithInstance
 				}
 				dataDisks = append(dataDisks, disk)
 			}
@@ -1386,10 +1401,14 @@ func resourceKubernetesNodePoolDelete(d *schema.ResourceData, meta interface{}) 
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		nodePool, has, errRet := service.DescribeNodePool(ctx, clusterId, nodePoolId)
 		if errRet != nil {
+			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
+			if errCode == "InternalError.UnexpectedInternal" {
+				return nil
+			}
 			return retryError(errRet, InternalError)
 		}
 		if has {
-			resource.RetryableError(fmt.Errorf("node pool %s still alive, status %s", nodePoolId, *nodePool.LifeState))
+			return resource.RetryableError(fmt.Errorf("node pool %s still alive, status %s", nodePoolId, *nodePool.LifeState))
 		}
 		return nil
 	})

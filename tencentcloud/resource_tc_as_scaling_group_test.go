@@ -182,8 +182,8 @@ func testAccAsScalingGroup_basic() string {
 	return fmt.Sprintf(`
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-basic"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+  image_id           = "img-2lr9q49h"
+  instance_types     = ["SA1.SMALL1","SA2.SMALL1","SA2.SMALL2","SA2.SMALL4"]
   instance_name_settings {
     instance_name = "test-ins-name"
     # instance_name_style
@@ -206,8 +206,8 @@ func testAccAsScalingGroup_full() string {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-full"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+  image_id           = "img-2lr9q49h"
+  instance_types     = ["SA1.SMALL1","SA2.SMALL1","SA2.SMALL2","SA2.SMALL4"]
   instance_name_settings {
     instance_name = "test-ins-name-full"
   }
@@ -238,8 +238,8 @@ func testAccAsScalingGroup_update() string {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration-full"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+  image_id           = "img-2lr9q49h"
+  instance_types     = ["SA1.SMALL1","SA2.SMALL1","SA2.SMALL2","SA2.SMALL4"]
   instance_name_settings {
     instance_name = "test-ins-name-full"
   }

@@ -69,6 +69,7 @@ The following arguments are supported:
 
 The `data_disk` object supports the following:
 
+* `delete_with_instance` - (Optional) Indicates whether the disk remove after instance terminated.
 * `disk_size` - (Optional) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
 * `snapshot_id` - (Optional) Data disk snapshot ID.

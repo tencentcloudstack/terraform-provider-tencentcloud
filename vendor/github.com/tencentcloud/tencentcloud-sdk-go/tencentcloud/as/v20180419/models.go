@@ -69,6 +69,9 @@ type Activity struct {
 
 	// 伸缩活动中生命周期挂钩的执行结果。
 	LifecycleActionResultSet []*LifecycleActionResultInfo `json:"LifecycleActionResultSet,omitempty" name:"LifecycleActionResultSet"`
+
+	// 伸缩活动状态详细描述。
+	DetailedStatusMessageSet []*DetailedStatusMessage `json:"DetailedStatusMessageSet,omitempty" name:"DetailedStatusMessageSet"`
 }
 
 type ActivtyRelatedInstance struct {
@@ -82,6 +85,18 @@ type ActivtyRelatedInstance struct {
 	// <li>SUCCESSFUL：活动成功
 	// <li>FAILED：活动失败
 	InstanceStatus *string `json:"InstanceStatus,omitempty" name:"InstanceStatus"`
+}
+
+type Advice struct {
+
+	// 问题描述。
+	Problem *string `json:"Problem,omitempty" name:"Problem"`
+
+	// 问题详情。
+	Detail *string `json:"Detail,omitempty" name:"Detail"`
+
+	// 建议解决方案。
+	Solution *string `json:"Solution,omitempty" name:"Solution"`
 }
 
 type AttachInstancesRequest struct {
@@ -135,6 +150,72 @@ func (r *AttachInstancesResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *AttachInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type AttachLoadBalancersRequest struct {
+	*tchttp.BaseRequest
+
+	// 伸缩组ID
+	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
+
+	// 传统型负载均衡器ID列表，每个伸缩组绑定传统型负载均衡器数量上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
+
+	// 应用型负载均衡器列表，每个伸缩组绑定应用型负载均衡器数量上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
+}
+
+func (r *AttachLoadBalancersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AttachLoadBalancersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AutoScalingGroupId")
+	delete(f, "LoadBalancerIds")
+	delete(f, "ForwardLoadBalancers")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AttachLoadBalancersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type AttachLoadBalancersResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 伸缩活动ID
+		ActivityId *string `json:"ActivityId,omitempty" name:"ActivityId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AttachLoadBalancersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AttachLoadBalancersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type AutoScalingAdvice struct {
+
+	// 伸缩组ID。
+	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
+
+	// 伸缩组配置建议集合。
+	Advices []*Advice `json:"Advices,omitempty" name:"Advices"`
 }
 
 type AutoScalingGroup struct {
@@ -218,6 +299,26 @@ type AutoScalingGroup struct {
 	// <br><li> PRIORITY，按照可用区/子网列表的顺序，作为优先级来尝试创建实例，如果优先级最高的可用区/子网可以创建成功，则总在该可用区/子网创建。
 	// <br><li> EQUALITY：每次选择当前实例数最少的可用区/子网进行扩容，使得每个可用区/子网都有机会发生扩容，多次扩容出的实例会打散到多个可用区/子网。
 	MultiZoneSubnetPolicy *string `json:"MultiZoneSubnetPolicy,omitempty" name:"MultiZoneSubnetPolicy"`
+
+	// 伸缩组实例健康检查类型，取值如下：<br><li>CVM：根据实例网络状态判断实例是否处于不健康状态，不健康的网络状态即发生实例 PING 不可达事件，详细判断标准可参考[实例健康检查](https://cloud.tencent.com/document/product/377/8553)<br><li>CLB：根据 CLB 的健康检查状态判断实例是否处于不健康状态，CLB健康检查原理可参考[健康检查](https://cloud.tencent.com/document/product/214/6097)
+	HealthCheckType *string `json:"HealthCheckType,omitempty" name:"HealthCheckType"`
+
+	// CLB健康检查宽限期
+	LoadBalancerHealthCheckGracePeriod *uint64 `json:"LoadBalancerHealthCheckGracePeriod,omitempty" name:"LoadBalancerHealthCheckGracePeriod"`
+
+	// 实例分配策略，取值包括 LAUNCH_CONFIGURATION 和 SPOT_MIXED。
+	// <br><li> LAUNCH_CONFIGURATION，代表传统的按照启动配置模式。
+	// <br><li> SPOT_MIXED，代表竞价混合模式。目前仅支持启动配置为按量计费模式时使用混合模式，混合模式下，伸缩组将根据设定扩容按量或竞价机型。使用混合模式时，关联的启动配置的计费类型不可被修改。
+	InstanceAllocationPolicy *string `json:"InstanceAllocationPolicy,omitempty" name:"InstanceAllocationPolicy"`
+
+	// 竞价混合模式下，各计费类型实例的分配策略。
+	// 仅当 InstanceAllocationPolicy 取 SPOT_MIXED 时才会返回有效值。
+	SpotMixedAllocationPolicy *SpotMixedAllocationPolicy `json:"SpotMixedAllocationPolicy,omitempty" name:"SpotMixedAllocationPolicy"`
+
+	// 容量重平衡功能，仅对伸缩组内的竞价实例有效。取值范围：
+	// <br><li> TRUE，开启该功能，当伸缩组内的竞价实例即将被竞价实例服务自动回收前，AS 主动发起竞价实例销毁流程，如果有配置过缩容 hook，则销毁前 hook 会生效。销毁流程启动后，AS 会异步开启一个扩容活动，用于补齐期望实例数。
+	// <br><li> FALSE，不开启该功能，则 AS 等待竞价实例被销毁后才会去扩容补齐伸缩组期望实例数。
+	CapacityRebalance *bool `json:"CapacityRebalance,omitempty" name:"CapacityRebalance"`
 }
 
 type AutoScalingGroupAbstract struct {
@@ -242,6 +343,15 @@ type AutoScalingNotification struct {
 
 	// 事件通知ID。
 	AutoScalingNotificationId *string `json:"AutoScalingNotificationId,omitempty" name:"AutoScalingNotificationId"`
+
+	// 通知接收端类型。
+	TargetType *string `json:"TargetType,omitempty" name:"TargetType"`
+
+	// CMQ 队列名。
+	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
+
+	// CMQ 主题名。
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
 type ClearLaunchConfigurationAttributesRequest struct {
@@ -253,6 +363,14 @@ type ClearLaunchConfigurationAttributesRequest struct {
 	// 是否清空数据盘信息，非必填，默认为 false。
 	// 填 true 代表清空“数据盘”信息，清空后基于此新创建的云主机将不含有任何数据盘。
 	ClearDataDisks *bool `json:"ClearDataDisks,omitempty" name:"ClearDataDisks"`
+
+	// 是否清空云服务器主机名相关设置信息，非必填，默认为 false。
+	// 填 true 代表清空主机名设置信息，清空后基于此新创建的云主机将不设置主机名。
+	ClearHostNameSettings *bool `json:"ClearHostNameSettings,omitempty" name:"ClearHostNameSettings"`
+
+	// 是否清空云服务器实例名相关设置信息，非必填，默认为 false。
+	// 填 true 代表清空主机名设置信息，清空后基于此新创建的云主机将按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置。
+	ClearInstanceNameSettings *bool `json:"ClearInstanceNameSettings,omitempty" name:"ClearInstanceNameSettings"`
 }
 
 func (r *ClearLaunchConfigurationAttributesRequest) ToJsonString() string {
@@ -269,6 +387,8 @@ func (r *ClearLaunchConfigurationAttributesRequest) FromJsonString(s string) err
 	}
 	delete(f, "LaunchConfigurationId")
 	delete(f, "ClearDataDisks")
+	delete(f, "ClearHostNameSettings")
+	delete(f, "ClearInstanceNameSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ClearLaunchConfigurationAttributesRequest has unknown keys!", "")
 	}
@@ -449,10 +569,10 @@ type CreateAutoScalingGroupRequest struct {
 	// 传统负载均衡器ID列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 伸缩组内实例所属项目ID。该参数可以通过调用 [DescribeProject](https://cloud.tencent.com/document/api/378/4400) 的返回值中的`projectId`字段来获取。不填为默认项目。
+	// 伸缩组内实例所属项目ID。不填为默认项目。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 应用型负载均衡器列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 子网ID列表，VPC场景下必须指定子网。多个子网以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
@@ -491,13 +611,12 @@ type CreateAutoScalingGroupRequest struct {
 
 	// 多可用区/子网策略，取值包括 PRIORITY 和 EQUALITY，默认为 PRIORITY。
 	// <br><li> PRIORITY，按照可用区/子网列表的顺序，作为优先级来尝试创建实例，如果优先级最高的可用区/子网可以创建成功，则总在该可用区/子网创建。
-	// <br><li> EQUALITY：每次选择当前实例数最少的可用区/子网进行扩容，使得每个可用区/子网都有机会发生扩容，多次扩容出的实例会打散到多个可用区/子网。
+	// <br><li> EQUALITY：扩容出的实例会打散到多个可用区/子网，保证扩容后的各个可用区/子网实例数相对均衡。
 	// 
 	// 与本策略相关的注意点：
 	// <br><li> 当伸缩组为基础网络时，本策略适用于多可用区；当伸缩组为VPC网络时，本策略适用于多子网，此时不再考虑可用区因素，例如四个子网ABCD，其中ABC处于可用区1，D处于可用区2，此时考虑子网ABCD进行排序，而不考虑可用区1、2。
 	// <br><li> 本策略适用于多可用区/子网，不适用于启动配置的多机型。多机型按照优先级策略进行选择。
-	// <br><li> 创建实例时，先保证多机型的策略，后保证多可用区/子网的策略。例如多机型A、B，多子网1、2、3（按照PRIORITY策略），会按照A1、A2、A3、B1、B2、B3 进行尝试，如果A1售罄，会尝试A2（而非B1）。
-	// <br><li> 无论使用哪种策略，单次伸缩活动总是优先保持使用一种具体配置（机型 * 可用区/子网）。
+	// <br><li> 按照 PRIORITY 策略创建实例时，先保证多机型的策略，后保证多可用区/子网的策略。例如多机型A、B，多子网1、2、3，会按照A1、A2、A3、B1、B2、B3 进行尝试，如果A1售罄，会尝试A2（而非B1）。
 	MultiZoneSubnetPolicy *string `json:"MultiZoneSubnetPolicy,omitempty" name:"MultiZoneSubnetPolicy"`
 
 	// 伸缩组实例健康检查类型，取值如下：<br><li>CVM：根据实例网络状态判断实例是否处于不健康状态，不健康的网络状态即发生实例 PING 不可达事件，详细判断标准可参考[实例健康检查](https://cloud.tencent.com/document/product/377/8553)<br><li>CLB：根据 CLB 的健康检查状态判断实例是否处于不健康状态，CLB健康检查原理可参考[健康检查](https://cloud.tencent.com/document/product/214/6097) <br>如果选择了`CLB`类型，伸缩组将同时检查实例网络状态与CLB健康检查状态，如果出现实例网络状态不健康，实例将被标记为 UNHEALTHY 状态；如果出现 CLB 健康检查状态异常，实例将被标记为CLB_UNHEALTHY 状态，如果两个异常状态同时出现，实例`HealthStatus`字段将返回 UNHEALTHY|CLB_UNHEALTHY。默认值：CLB
@@ -505,6 +624,22 @@ type CreateAutoScalingGroupRequest struct {
 
 	// CLB健康检查宽限期，当扩容的实例进入`IN_SERVICE`后，在宽限期时间范围内将不会被标记为不健康`CLB_UNHEALTHY`。<br>默认值：0。取值范围[0, 7200]，单位：秒。
 	LoadBalancerHealthCheckGracePeriod *uint64 `json:"LoadBalancerHealthCheckGracePeriod,omitempty" name:"LoadBalancerHealthCheckGracePeriod"`
+
+	// 实例分配策略，取值包括 LAUNCH_CONFIGURATION 和 SPOT_MIXED，默认取 LAUNCH_CONFIGURATION。
+	// <br><li> LAUNCH_CONFIGURATION，代表传统的按照启动配置模式。
+	// <br><li> SPOT_MIXED，代表竞价混合模式。目前仅支持启动配置为按量计费模式时使用混合模式，混合模式下，伸缩组将根据设定扩容按量或竞价机型。使用混合模式时，关联的启动配置的计费类型不可被修改。
+	InstanceAllocationPolicy *string `json:"InstanceAllocationPolicy,omitempty" name:"InstanceAllocationPolicy"`
+
+	// 竞价混合模式下，各计费类型实例的分配策略。
+	// 仅当 InstanceAllocationPolicy 取 SPOT_MIXED 时可用。
+	SpotMixedAllocationPolicy *SpotMixedAllocationPolicy `json:"SpotMixedAllocationPolicy,omitempty" name:"SpotMixedAllocationPolicy"`
+
+	// 容量重平衡功能，仅对伸缩组内的竞价实例有效。取值范围：
+	// <br><li> TRUE，开启该功能，当伸缩组内的竞价实例即将被竞价实例服务自动回收前，AS 主动发起竞价实例销毁流程，如果有配置过缩容 hook，则销毁前 hook 会生效。销毁流程启动后，AS 会异步开启一个扩容活动，用于补齐期望实例数。
+	// <br><li> FALSE，不开启该功能，则 AS 等待竞价实例被销毁后才会去扩容补齐伸缩组期望实例数。
+	// 
+	// 默认取 FALSE。
+	CapacityRebalance *bool `json:"CapacityRebalance,omitempty" name:"CapacityRebalance"`
 }
 
 func (r *CreateAutoScalingGroupRequest) ToJsonString() string {
@@ -540,6 +675,9 @@ func (r *CreateAutoScalingGroupRequest) FromJsonString(s string) error {
 	delete(f, "MultiZoneSubnetPolicy")
 	delete(f, "HealthCheckType")
 	delete(f, "LoadBalancerHealthCheckGracePeriod")
+	delete(f, "InstanceAllocationPolicy")
+	delete(f, "SpotMixedAllocationPolicy")
+	delete(f, "CapacityRebalance")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAutoScalingGroupRequest has unknown keys!", "")
 	}
@@ -578,7 +716,7 @@ type CreateLaunchConfigurationRequest struct {
 	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-8toqc6s3`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，取返回信息中的`ImageId`字段。</li>
 	ImageId *string `json:"ImageId,omitempty" name:"ImageId"`
 
-	// 启动配置所属项目ID。该参数可以通过调用 [DescribeProject](https://cloud.tencent.com/document/api/378/4400) 的返回值中的`projectId`字段来获取。不填为默认项目。
+	// 启动配置所属项目ID。不填为默认项目。
 	// 注意：伸缩组内实例所属项目ID取伸缩组项目ID，与这里取值无关。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
@@ -806,6 +944,22 @@ type CreateNotificationConfigurationRequest struct {
 
 	// 通知组ID，即为用户组ID集合，用户组ID可以通过[ListGroups](https://cloud.tencent.com/document/product/598/34589)查询。
 	NotificationUserGroupIds []*string `json:"NotificationUserGroupIds,omitempty" name:"NotificationUserGroupIds"`
+
+	// 通知接收端类型，取值如下
+	// <br><li>USER_GROUP：用户组
+	// <br><li>CMQ_QUEUE：CMQ 队列
+	// <br><li>CMQ_TOPIC：CMQ 主题
+	// <br><li>TDMQ_CMQ_TOPIC：TDMQ CMQ 主题
+	// <br><li>TDMQ_CMQ_QUEUE：TDMQ CMQ 队列
+	// 
+	// 默认值为：`USER_GROUP`。
+	TargetType *string `json:"TargetType,omitempty" name:"TargetType"`
+
+	// CMQ 队列名称，如 TargetType 取值为 `CMQ_QUEUE` 或 `TDMQ_CMQ_QUEUE` 时，该字段必填。
+	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
+
+	// CMQ 主题名称，如 TargetType 取值为 `CMQ_TOPIC` 或 `TDMQ_CMQ_TOPIC` 时，该字段必填。
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
 func (r *CreateNotificationConfigurationRequest) ToJsonString() string {
@@ -823,6 +977,9 @@ func (r *CreateNotificationConfigurationRequest) FromJsonString(s string) error 
 	delete(f, "AutoScalingGroupId")
 	delete(f, "NotificationTypes")
 	delete(f, "NotificationUserGroupIds")
+	delete(f, "TargetType")
+	delete(f, "QueueName")
+	delete(f, "TopicName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNotificationConfigurationRequest has unknown keys!", "")
 	}
@@ -849,95 +1006,6 @@ func (r *CreateNotificationConfigurationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateNotificationConfigurationResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-type CreatePaiInstanceRequest struct {
-	*tchttp.BaseRequest
-
-	// PAI实例的域名。
-	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
-
-	// 公网带宽相关信息设置。
-	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitempty" name:"InternetAccessible"`
-
-	// 启动脚本的base64编码字符串。
-	InitScript *string `json:"InitScript,omitempty" name:"InitScript"`
-
-	// 可用区列表。
-	Zones []*string `json:"Zones,omitempty" name:"Zones"`
-
-	// VPC ID。
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
-
-	// 子网列表。
-	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
-
-	// 实例显示名称。
-	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
-
-	// 实例机型列表。
-	InstanceTypes []*string `json:"InstanceTypes,omitempty" name:"InstanceTypes"`
-
-	// 实例登录设置。
-	LoginSettings *LoginSettings `json:"LoginSettings,omitempty" name:"LoginSettings"`
-
-	// 实例计费类型。
-	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
-
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
-	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitempty" name:"InstanceChargePrepaid"`
-}
-
-func (r *CreatePaiInstanceRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreatePaiInstanceRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "DomainName")
-	delete(f, "InternetAccessible")
-	delete(f, "InitScript")
-	delete(f, "Zones")
-	delete(f, "VpcId")
-	delete(f, "SubnetIds")
-	delete(f, "InstanceName")
-	delete(f, "InstanceTypes")
-	delete(f, "LoginSettings")
-	delete(f, "InstanceChargeType")
-	delete(f, "InstanceChargePrepaid")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePaiInstanceRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-type CreatePaiInstanceResponse struct {
-	*tchttp.BaseResponse
-	Response *struct {
-
-		// 当通过本接口来创建实例时会返回该参数，表示一个或多个实例`ID`。返回实例`ID`列表并不代表实例创建成功，可根据 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询返回的InstancesSet中对应实例的`ID`的状态来判断创建是否完成；如果实例状态由“准备中”变为“正在运行”，则为创建成功。
-		InstanceIdSet []*string `json:"InstanceIdSet,omitempty" name:"InstanceIdSet"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
-}
-
-func (r *CreatePaiInstanceResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreatePaiInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1093,7 +1161,7 @@ func (r *CreateScheduledActionResponse) FromJsonString(s string) error {
 
 type DataDisk struct {
 
-	// 数据盘类型。数据盘类型限制详见[CVM实例配置](https://cloud.tencent.com/document/product/213/2177)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><br>默认取值：LOCAL_BASIC。
+	// 数据盘类型。数据盘类型限制详见[云硬盘类型](https://cloud.tencent.com/document/product/362/2353)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><br>默认取值与系统盘类型（SystemDisk.DiskType）保持一致。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
@@ -1104,6 +1172,10 @@ type DataDisk struct {
 	// 数据盘快照 ID，类似 `snap-l8psqwnt`。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotId *string `json:"SnapshotId,omitempty" name:"SnapshotId"`
+
+	// 数据盘是否随子机销毁。取值范围：<br><li>TRUE：子机销毁时，销毁数据盘，只支持按小时后付费云盘<br><li>FALSE：子机销毁时，保留数据盘
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeleteWithInstance *bool `json:"DeleteWithInstance,omitempty" name:"DeleteWithInstance"`
 }
 
 type DeleteAutoScalingGroupRequest struct {
@@ -1513,6 +1585,55 @@ func (r *DescribeAutoScalingActivitiesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeAutoScalingAdvicesRequest struct {
+	*tchttp.BaseRequest
+
+	// 待查询的伸缩组列表，上限100。
+	AutoScalingGroupIds []*string `json:"AutoScalingGroupIds,omitempty" name:"AutoScalingGroupIds"`
+}
+
+func (r *DescribeAutoScalingAdvicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAutoScalingAdvicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AutoScalingGroupIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAutoScalingAdvicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeAutoScalingAdvicesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 伸缩组配置建议集合。
+		AutoScalingAdviceSet []*AutoScalingAdvice `json:"AutoScalingAdviceSet,omitempty" name:"AutoScalingAdviceSet"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeAutoScalingAdvicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAutoScalingAdvicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeAutoScalingGroupLastActivitiesRequest struct {
 	*tchttp.BaseRequest
 
@@ -1637,7 +1758,7 @@ func (r *DescribeAutoScalingGroupsResponse) FromJsonString(s string) error {
 type DescribeAutoScalingInstancesRequest struct {
 	*tchttp.BaseRequest
 
-	// 待查询云服务器（CVM）的实例ID。参数不支持同时指定InstanceIds和Filters。
+	// 待查询云服务器（CVM）的实例ID。每次请求的上限为100。参数不支持同时指定InstanceIds和Filters。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
 	// 过滤条件。
@@ -1775,10 +1896,6 @@ type DescribeLifecycleHooksRequest struct {
 	// 按照一个或者多个生命周期挂钩ID查询。生命周期挂钩ID形如：`ash-8azjzxcl`。每次请求的上限为100。参数不支持同时指定`LifecycleHookIds`和`Filters`。
 	LifecycleHookIds []*string `json:"LifecycleHookIds,omitempty" name:"LifecycleHookIds"`
 
-	// 过滤条件。
-	// <li> lifecycle-hook-id - String - 是否必填：否 -（过滤条件）按照生命周期挂钩ID过滤。</li>
-	// <li> lifecycle-hook-name - String - 是否必填：否 -（过滤条件）按照生命周期挂钩名称过滤。</li>
-	// <li> auto-scaling-group-id - String - 是否必填：否 -（过滤条件）按照伸缩组ID过滤。</li>
 	// 过滤条件。
 	// <li> lifecycle-hook-id - String - 是否必填：否 -（过滤条件）按照生命周期挂钩ID过滤。</li>
 	// <li> lifecycle-hook-name - String - 是否必填：否 -（过滤条件）按照生命周期挂钩名称过滤。</li>
@@ -2160,6 +2277,87 @@ func (r *DetachInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DetachLoadBalancersRequest struct {
+	*tchttp.BaseRequest
+
+	// 伸缩组ID
+	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
+
+	// 传统负载均衡器ID列表，列表长度上限为20，LoadBalancerIds 和 ForwardLoadBalancerIdentifications 二者同时最多只能指定一个
+	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
+
+	// 应用型负载均衡器标识信息列表，列表长度上限为50，LoadBalancerIds 和 ForwardLoadBalancerIdentifications二者同时最多只能指定一个
+	ForwardLoadBalancerIdentifications []*ForwardLoadBalancerIdentification `json:"ForwardLoadBalancerIdentifications,omitempty" name:"ForwardLoadBalancerIdentifications"`
+}
+
+func (r *DetachLoadBalancersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DetachLoadBalancersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AutoScalingGroupId")
+	delete(f, "LoadBalancerIds")
+	delete(f, "ForwardLoadBalancerIdentifications")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DetachLoadBalancersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DetachLoadBalancersResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 伸缩活动ID
+		ActivityId *string `json:"ActivityId,omitempty" name:"ActivityId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DetachLoadBalancersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DetachLoadBalancersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DetailedStatusMessage struct {
+
+	// 错误类型。
+	Code *string `json:"Code,omitempty" name:"Code"`
+
+	// 可用区信息。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例计费类型。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 子网ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 错误描述。
+	Message *string `json:"Message,omitempty" name:"Message"`
+
+	// 实例类型。
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+}
+
 type DisableAutoScalingGroupRequest struct {
 	*tchttp.BaseRequest
 
@@ -2345,6 +2543,18 @@ type ForwardLoadBalancer struct {
 	Region *string `json:"Region,omitempty" name:"Region"`
 }
 
+type ForwardLoadBalancerIdentification struct {
+
+	// 负载均衡器ID
+	LoadBalancerId *string `json:"LoadBalancerId,omitempty" name:"LoadBalancerId"`
+
+	// 应用型负载均衡监听器 ID
+	ListenerId *string `json:"ListenerId,omitempty" name:"ListenerId"`
+
+	// 转发规则ID，注意：针对七层监听器此参数必填
+	LocationId *string `json:"LocationId,omitempty" name:"LocationId"`
+}
+
 type HostNameSettings struct {
 
 	// 云服务器的主机名。
@@ -2440,9 +2650,7 @@ type InstanceNameSettings struct {
 	// 云服务器的实例名。
 	// 
 	// 点号（.）和短横线（-）不能作为 InstanceName 的首尾字符，不能连续使用。
-	// 
-	// 其他类型（Linux 等）实例：字符长度为[2, 40]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。不允许为纯数字。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 字符长度为[2, 40]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。不允许为纯数字。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
 	// 云服务器实例名的风格，取值范围包括 ORIGINAL 和 UNIQUE，默认为 ORIGINAL。
@@ -2450,7 +2658,6 @@ type InstanceNameSettings struct {
 	// ORIGINAL，AS 直接将入参中所填的 InstanceName 传递给 CVM，CVM 可能会对 InstanceName 追加序列号，伸缩组中实例的 InstanceName 会出现冲突的情况。
 	// 
 	// UNIQUE，入参所填的 InstanceName 相当于实例名前缀，AS 和 CVM 会对其进行拓展，伸缩组中实例的 InstanceName 可以保证唯一。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceNameStyle *string `json:"InstanceNameStyle,omitempty" name:"InstanceNameStyle"`
 }
 
@@ -2725,15 +2932,14 @@ type ModifyAutoScalingGroupRequest struct {
 	// 实例具有IPv6地址数量的配置，取值包括0、1。
 	Ipv6AddressCount *int64 `json:"Ipv6AddressCount,omitempty" name:"Ipv6AddressCount"`
 
-	// 多可用区/子网策略，取值包括 PRIORITY 和 EQUALITY。
+	// 多可用区/子网策略，取值包括 PRIORITY 和 EQUALITY，默认为 PRIORITY。
 	// <br><li> PRIORITY，按照可用区/子网列表的顺序，作为优先级来尝试创建实例，如果优先级最高的可用区/子网可以创建成功，则总在该可用区/子网创建。
-	// <br><li> EQUALITY：每次选择当前实例数最少的可用区/子网进行扩容，使得每个可用区/子网都有机会发生扩容，多次扩容出的实例会打散到多个可用区/子网。
+	// <br><li> EQUALITY：扩容出的实例会打散到多个可用区/子网，保证扩容后的各个可用区/子网实例数相对均衡。
 	// 
 	// 与本策略相关的注意点：
 	// <br><li> 当伸缩组为基础网络时，本策略适用于多可用区；当伸缩组为VPC网络时，本策略适用于多子网，此时不再考虑可用区因素，例如四个子网ABCD，其中ABC处于可用区1，D处于可用区2，此时考虑子网ABCD进行排序，而不考虑可用区1、2。
 	// <br><li> 本策略适用于多可用区/子网，不适用于启动配置的多机型。多机型按照优先级策略进行选择。
-	// <br><li> 创建实例时，先保证多机型的策略，后保证多可用区/子网的策略。例如多机型A、B，多子网1、2、3（按照PRIORITY策略），会按照A1、A2、A3、B1、B2、B3 进行尝试，如果A1售罄，会尝试A2（而非B1）。
-	// <br><li> 无论使用哪种策略，单次伸缩活动总是优先保持使用一种具体配置（机型 * 可用区/子网）。
+	// <br><li> 按照 PRIORITY 策略创建实例时，先保证多机型的策略，后保证多可用区/子网的策略。例如多机型A、B，多子网1、2、3，会按照A1、A2、A3、B1、B2、B3 进行尝试，如果A1售罄，会尝试A2（而非B1）。
 	MultiZoneSubnetPolicy *string `json:"MultiZoneSubnetPolicy,omitempty" name:"MultiZoneSubnetPolicy"`
 
 	// 伸缩组实例健康检查类型，取值如下：<br><li>CVM：根据实例网络状态判断实例是否处于不健康状态，不健康的网络状态即发生实例 PING 不可达事件，详细判断标准可参考[实例健康检查](https://cloud.tencent.com/document/product/377/8553)<br><li>CLB：根据 CLB 的健康检查状态判断实例是否处于不健康状态，CLB健康检查原理可参考[健康检查](https://cloud.tencent.com/document/product/214/6097)
@@ -2741,6 +2947,20 @@ type ModifyAutoScalingGroupRequest struct {
 
 	// CLB健康检查宽限期。
 	LoadBalancerHealthCheckGracePeriod *uint64 `json:"LoadBalancerHealthCheckGracePeriod,omitempty" name:"LoadBalancerHealthCheckGracePeriod"`
+
+	// 实例分配策略，取值包括 LAUNCH_CONFIGURATION 和 SPOT_MIXED。
+	// <br><li> LAUNCH_CONFIGURATION，代表传统的按照启动配置模式。
+	// <br><li> SPOT_MIXED，代表竞价混合模式。目前仅支持启动配置为按量计费模式时使用混合模式，混合模式下，伸缩组将根据设定扩容按量或竞价机型。使用混合模式时，关联的启动配置的计费类型不可被修改。
+	InstanceAllocationPolicy *string `json:"InstanceAllocationPolicy,omitempty" name:"InstanceAllocationPolicy"`
+
+	// 竞价混合模式下，各计费类型实例的分配策略。
+	// 仅当 InstanceAllocationPolicy 取 SPOT_MIXED 时可用。
+	SpotMixedAllocationPolicy *SpotMixedAllocationPolicy `json:"SpotMixedAllocationPolicy,omitempty" name:"SpotMixedAllocationPolicy"`
+
+	// 容量重平衡功能，仅对伸缩组内的竞价实例有效。取值范围：
+	// <br><li> TRUE，开启该功能，当伸缩组内的竞价实例即将被竞价实例服务自动回收前，AS 主动发起竞价实例销毁流程，如果有配置过缩容 hook，则销毁前 hook 会生效。销毁流程启动后，AS 会异步开启一个扩容活动，用于补齐期望实例数。
+	// <br><li> FALSE，不开启该功能，则 AS 等待竞价实例被销毁后才会去扩容补齐伸缩组期望实例数。
+	CapacityRebalance *bool `json:"CapacityRebalance,omitempty" name:"CapacityRebalance"`
 }
 
 func (r *ModifyAutoScalingGroupRequest) ToJsonString() string {
@@ -2774,6 +2994,9 @@ func (r *ModifyAutoScalingGroupRequest) FromJsonString(s string) error {
 	delete(f, "MultiZoneSubnetPolicy")
 	delete(f, "HealthCheckType")
 	delete(f, "LoadBalancerHealthCheckGracePeriod")
+	delete(f, "InstanceAllocationPolicy")
+	delete(f, "SpotMixedAllocationPolicy")
+	delete(f, "CapacityRebalance")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAutoScalingGroupRequest has unknown keys!", "")
 	}
@@ -2808,6 +3031,12 @@ type ModifyDesiredCapacityRequest struct {
 
 	// 期望实例数
 	DesiredCapacity *uint64 `json:"DesiredCapacity,omitempty" name:"DesiredCapacity"`
+
+	// 最小实例数，取值范围为0-2000。
+	MinSize *uint64 `json:"MinSize,omitempty" name:"MinSize"`
+
+	// 最大实例数，取值范围为0-2000。
+	MaxSize *uint64 `json:"MaxSize,omitempty" name:"MaxSize"`
 }
 
 func (r *ModifyDesiredCapacityRequest) ToJsonString() string {
@@ -2824,6 +3053,8 @@ func (r *ModifyDesiredCapacityRequest) FromJsonString(s string) error {
 	}
 	delete(f, "AutoScalingGroupId")
 	delete(f, "DesiredCapacity")
+	delete(f, "MinSize")
+	delete(f, "MaxSize")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDesiredCapacityRequest has unknown keys!", "")
 	}
@@ -2860,7 +3091,7 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 	ImageId *string `json:"ImageId,omitempty" name:"ImageId"`
 
 	// 实例类型列表，不同实例机型指定了不同的资源规格，最多支持10种实例机型。
-	// 启动配置，通过 InstanceType 表示单一实例类型，通过 InstanceTypes 表示多实例类型。指定 InstanceTypes 成功启动配置后，原有的 InstanceType 自动失效。
+	// InstanceType 指定单一实例类型，通过设置 InstanceTypes可以指定多实例类型，并使原有的InstanceType失效。
 	InstanceTypes []*string `json:"InstanceTypes,omitempty" name:"InstanceTypes"`
 
 	// 实例类型校验策略，在实际修改 InstanceTypes 时发挥作用，取值包括 ALL 和 ANY，默认取值为ANY。
@@ -2874,7 +3105,7 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 	// 启动配置显示名称。名称仅支持中文、英文、数字、下划线、分隔符"-"、小数点，最大长度不能超60个字节。
 	LaunchConfigurationName *string `json:"LaunchConfigurationName,omitempty" name:"LaunchConfigurationName"`
 
-	// 经过 Base64 编码后的自定义数据，最大长度不超过16KB。如果要清空UserData，则指定其为空字符串
+	// 经过 Base64 编码后的自定义数据，最大长度不超过16KB。如果要清空UserData，则指定其为空字符串。
 	UserData *string `json:"UserData,omitempty" name:"UserData"`
 
 	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的`SecurityGroupId`字段来获取。
@@ -2882,7 +3113,7 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
 	// 公网带宽相关信息设置。
-	// 本字段属复杂类型，修改时采取整字段全覆盖模式。即只修改复杂类型内部一个子字段时，也请提供全部所需子字段。
+	// 当公网出带宽上限为0Mbps时，不支持修改为开通分配公网IP；相应的，当前为开通分配公网IP时，修改的公网出带宽上限值必须大于0Mbps。
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitempty" name:"InternetAccessible"`
 
 	// 实例计费类型。具体取值范围如下：
@@ -2893,12 +3124,14 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
 	// 若修改实例的付费模式为预付费，则该参数必传；从预付费修改为其他付费模式时，本字段原信息会自动丢弃。
-	// 本字段属复杂类型，修改时采取整字段全覆盖模式。即只修改复杂类型内部一个子字段时，也请提供全部所需子字段。
+	// 当新增该字段时，必须传递购买实例的时长，其它未传递字段会设置为默认值。
+	// 当修改本字段时，当前付费模式必须为预付费。
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitempty" name:"InstanceChargePrepaid"`
 
 	// 实例的市场相关选项，如竞价实例相关参数。
 	// 若修改实例的付费模式为竞价付费，则该参数必传；从竞价付费修改为其他付费模式时，本字段原信息会自动丢弃。
-	// 本字段属复杂类型，修改时采取整字段全覆盖模式。即只修改复杂类型内部一个子字段时，也请提供全部所需子字段。
+	// 当新增该字段时，必须传递竞价相关选项下的竞价出价，其它未传递字段会设置为默认值。
+	// 当修改本字段时，当前付费模式必须为竞价付费。
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitempty" name:"InstanceMarketOptions"`
 
 	// 云盘类型选择策略，取值范围：
@@ -2909,8 +3142,26 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 	// 实例系统盘配置信息。
 	SystemDisk *SystemDisk `json:"SystemDisk,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。最多支持指定11块数据盘。采取整体修改，因此请提供修改后的全部值。
+	// 实例数据盘配置信息。
+	// 最多支持指定11块数据盘。采取整体修改，因此请提供修改后的全部值。
+	// 数据盘类型默认与系统盘类型保持一致。
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks"`
+
+	// 云服务器主机名（HostName）的相关设置。
+	// 不支持windows实例设置主机名。
+	// 新增该属性时，必须传递云服务器的主机名，其它未传递字段会设置为默认值。
+	HostNameSettings *HostNameSettings `json:"HostNameSettings,omitempty" name:"HostNameSettings"`
+
+	// 云服务器（InstanceName）实例名的相关设置。 
+	// 如果用户在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 参照此字段进行设置，并传递给 CVM；如果用户未在启动配置中设置此字段，则伸缩组创建出的实例 InstanceName 按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置，并传递给 CVM。
+	// 新增该属性时，必须传递云服务器的实例名称，其它未传递字段会设置为默认值。
+	InstanceNameSettings *InstanceNameSettings `json:"InstanceNameSettings,omitempty" name:"InstanceNameSettings"`
+
+	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。
+	EnhancedService *EnhancedService `json:"EnhancedService,omitempty" name:"EnhancedService"`
+
+	// CAM角色名称。可通过DescribeRoleList接口返回值中的roleName获取。
+	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
 }
 
 func (r *ModifyLaunchConfigurationAttributesRequest) ToJsonString() string {
@@ -2939,6 +3190,10 @@ func (r *ModifyLaunchConfigurationAttributesRequest) FromJsonString(s string) er
 	delete(f, "DiskTypePolicy")
 	delete(f, "SystemDisk")
 	delete(f, "DataDisks")
+	delete(f, "HostNameSettings")
+	delete(f, "InstanceNameSettings")
+	delete(f, "EnhancedService")
+	delete(f, "CamRoleName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLaunchConfigurationAttributesRequest has unknown keys!", "")
 	}
@@ -2965,6 +3220,59 @@ func (r *ModifyLaunchConfigurationAttributesResponse) FromJsonString(s string) e
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyLoadBalancerTargetAttributesRequest struct {
+	*tchttp.BaseRequest
+
+	// 伸缩组ID
+	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
+
+	// 需修改目标规则属性的应用型负载均衡器列表，列表长度上限为50
+	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
+}
+
+func (r *ModifyLoadBalancerTargetAttributesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLoadBalancerTargetAttributesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AutoScalingGroupId")
+	delete(f, "ForwardLoadBalancers")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLoadBalancerTargetAttributesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyLoadBalancerTargetAttributesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 伸缩活动ID
+		ActivityId *string `json:"ActivityId,omitempty" name:"ActivityId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyLoadBalancerTargetAttributesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLoadBalancerTargetAttributesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyLoadBalancersRequest struct {
 	*tchttp.BaseRequest
 
@@ -2974,7 +3282,7 @@ type ModifyLoadBalancersRequest struct {
 	// 传统负载均衡器ID列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 负载均衡器校验策略，取值包括 ALL 和 DIFF，默认取值为 ALL。
@@ -3045,6 +3353,12 @@ type ModifyNotificationConfigurationRequest struct {
 
 	// 通知组ID，即为用户组ID集合，用户组ID可以通过[ListGroups](https://cloud.tencent.com/document/product/598/34589)查询。
 	NotificationUserGroupIds []*string `json:"NotificationUserGroupIds,omitempty" name:"NotificationUserGroupIds"`
+
+	// CMQ 队列或 TDMQ CMQ 队列名。
+	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
+
+	// CMQ 主题或 TDMQ CMQ 主题名。
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
 func (r *ModifyNotificationConfigurationRequest) ToJsonString() string {
@@ -3062,6 +3376,8 @@ func (r *ModifyNotificationConfigurationRequest) FromJsonString(s string) error 
 	delete(f, "AutoScalingNotificationId")
 	delete(f, "NotificationTypes")
 	delete(f, "NotificationUserGroupIds")
+	delete(f, "QueueName")
+	delete(f, "TopicName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyNotificationConfigurationRequest has unknown keys!", "")
 	}
@@ -3235,15 +3551,17 @@ func (r *ModifyScheduledActionResponse) FromJsonString(s string) error {
 
 type NotificationTarget struct {
 
-	// 目标类型，取值范围包括`CMQ_QUEUE`、`CMQ_TOPIC`。
+	// 目标类型，取值范围包括`CMQ_QUEUE`、`CMQ_TOPIC`、`TDMQ_CMQ_QUEUE`、`TDMQ_CMQ_TOPIC`。
 	// <li> CMQ_QUEUE，指腾讯云消息队列-队列模型。</li>
 	// <li> CMQ_TOPIC，指腾讯云消息队列-主题模型。</li>
+	// <li> TDMQ_CMQ_QUEUE，指腾讯云 TDMQ 消息队列-队列模型。</li>
+	// <li> TDMQ_CMQ_TOPIC，指腾讯云 TDMQ 消息队列-主题模型。</li>
 	TargetType *string `json:"TargetType,omitempty" name:"TargetType"`
 
-	// 队列名称，如果`TargetType`取值为`CMQ_QUEUE`，则本字段必填。
+	// 队列名称，如果`TargetType`取值为`CMQ_QUEUE` 或 `TDMQ_CMQ_QUEUE`，则本字段必填。
 	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
 
-	// 主题名称，如果`TargetType`取值为`CMQ_TOPIC`，则本字段必填。
+	// 主题名称，如果`TargetType`取值为`CMQ_TOPIC` 或 `TDMQ_CMQ_TOPIC`，则本字段必填。
 	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
@@ -3539,6 +3857,9 @@ type ScheduledAction struct {
 
 	// 定时任务的创建时间。取值为`UTC`时间，按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ssZ`。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 定时任务的执行类型。取值范围：<br><li>CRONTAB：代表定时任务为重复执行。<br><li>ONCE：代表定时任务为单次执行。
+	ScheduledType *string `json:"ScheduledType,omitempty" name:"ScheduledType"`
 }
 
 type ServiceSettings struct {
@@ -3565,7 +3886,7 @@ type SetInstancesProtectionRequest struct {
 	// 实例ID。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// 实例是否需要移出保护。
+	// 实例是否需要设置保护。
 	ProtectedFromScaleIn *bool `json:"ProtectedFromScaleIn,omitempty" name:"ProtectedFromScaleIn"`
 }
 
@@ -3618,6 +3939,32 @@ type SpotMarketOptions struct {
 	// 竞价请求类型，当前仅支持类型：one-time，默认值为one-time
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SpotInstanceType *string `json:"SpotInstanceType,omitempty" name:"SpotInstanceType"`
+}
+
+type SpotMixedAllocationPolicy struct {
+
+	// 混合模式下，基础容量的大小，基础容量部分固定为按量计费实例。默认值 0，最大不可超过伸缩组的最大实例数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BaseCapacity *uint64 `json:"BaseCapacity,omitempty" name:"BaseCapacity"`
+
+	// 超出基础容量部分，按量计费实例所占的比例。取值范围 [0, 100]，0 代表超出基础容量的部分仅生产竞价实例，100 代表仅生产按量实例，默认值为 70。按百分比计算按量实例数时，向上取整。
+	// 比如，总期望实例数取 3，基础容量取 1，超基础部分按量百分比取 1，则最终按量 2 台（1 台来自基础容量，1 台按百分比向上取整得到），竞价 1台。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OnDemandPercentageAboveBaseCapacity *uint64 `json:"OnDemandPercentageAboveBaseCapacity,omitempty" name:"OnDemandPercentageAboveBaseCapacity"`
+
+	// 混合模式下，竞价实例的分配策略。取值包括 COST_OPTIMIZED 和 CAPACITY_OPTIMIZED，默认取 COST_OPTIMIZED。
+	// <br><li> COST_OPTIMIZED，成本优化策略。对于启动配置内的所有机型，按照各机型在各可用区的每核单价由小到大依次尝试。优先尝试购买每核单价最便宜的，如果购买失败则尝试购买次便宜的，以此类推。
+	// <br><li> CAPACITY_OPTIMIZED，容量优化策略。对于启动配置内的所有机型，按照各机型在各可用区的库存情况由大到小依次尝试。优先尝试购买剩余库存最大的机型，这样可尽量降低竞价实例被动回收的发生概率。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SpotAllocationStrategy *string `json:"SpotAllocationStrategy,omitempty" name:"SpotAllocationStrategy"`
+
+	// 按量实例替补功能。取值范围：
+	// <br><li> TRUE，开启该功能，当所有竞价机型因库存不足等原因全部购买失败后，尝试购买按量实例。
+	// <br><li> FALSE，不开启该功能，伸缩组在需要扩容竞价实例时仅尝试所配置的竞价机型。
+	// 
+	// 默认取值： TRUE。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CompensateWithBaseInstance *bool `json:"CompensateWithBaseInstance,omitempty" name:"CompensateWithBaseInstance"`
 }
 
 type StartAutoScalingInstancesRequest struct {
@@ -3735,7 +4082,7 @@ func (r *StopAutoScalingInstancesResponse) FromJsonString(s string) error {
 
 type SystemDisk struct {
 
-	// 系统盘类型。系统盘类型限制详见[CVM实例配置](https://cloud.tencent.com/document/product/213/2177)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><br>默认取值：LOCAL_BASIC。
+	// 系统盘类型。系统盘类型限制详见[云硬盘类型](https://cloud.tencent.com/document/product/362/2353)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><br>默认取值：CLOUD_PREMIUM。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
@@ -3810,7 +4157,7 @@ type UpgradeLaunchConfigurationRequest struct {
 	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
 	LoginSettings *LoginSettings `json:"LoginSettings,omitempty" name:"LoginSettings"`
 
-	// 实例所属项目ID。该参数可以通过调用 [DescribeProject](https://cloud.tencent.com/document/api/378/4400) 的返回值中的`projectId`字段来获取。不填为默认项目。
+	// 实例所属项目ID。不填为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的`SecurityGroupId`字段来获取。若不指定该参数，则默认不绑定安全组。

@@ -106,7 +106,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-attachment-config"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["SA1.SMALL1"]
 }
 
@@ -122,7 +122,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 resource "tencentcloud_instance" "cvm_instance" {
   instance_name     = "tf_as_instance"
   availability_zone = "ap-guangzhou-3"
-  image_id          = "img-9qabwvbn"
+  image_id          = "img-2lr9q49h"
   instance_type     = "SA1.SMALL1"
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -152,7 +152,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-attachment-config"
-  image_id           = "img-9qabwvbn"
+  image_id           = "img-2lr9q49h"
   instance_types     = ["SA1.SMALL1"]
 }
 
@@ -168,7 +168,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 resource "tencentcloud_instance" "cvm_instance" {
   instance_name     = "tf_as_instance"
   availability_zone = "ap-guangzhou-3"
-  image_id          = "img-9qabwvbn"
+  image_id          = "img-2lr9q49h"
   instance_type     = "SA1.SMALL1"
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -178,7 +178,7 @@ resource "tencentcloud_instance" "cvm_instance" {
 resource "tencentcloud_instance" "cvm_instance_1" {
   instance_name     = "tf_as_instance_1"
   availability_zone = "ap-guangzhou-3"
-  image_id          = "img-9qabwvbn"
+  image_id          = "img-2lr9q49h"
   instance_type     = "SA1.SMALL1"
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id

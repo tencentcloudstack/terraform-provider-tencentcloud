@@ -42,6 +42,18 @@ const (
 	defaultProjectId   = "1250480"
 	defaultDayuBgpIdV2 = "bgpip-000004x0"
 	defaultDayuBgpIpV2 = "119.28.217.253"
+
+	defaultTkeOSImageId   = "img-2lr9q49h"
+	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
+)
+
+// Tke Exclusive Network Environment
+const (
+	tkeExclusiveVpcId     = "vpc-391sv4w3"
+	tkeExclusiveVpcName   = "tke_exclusive_vpc"
+	tkeExclusiveSubnetId  = "subnet-ljyn7h30"
+	defaultTkeClusterId   = "cls-ely08ic4"
+	defaultTkeClusterName = "preset_tke_cluster"
 )
 
 /*
