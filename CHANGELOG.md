@@ -1,3 +1,28 @@
+## 1.65.1 (March 14, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_node_pool` data_disk support `delete_with_instance` option
+* resource `tencentcloud_as_scaling_configs` data_disk support `delete_with_instance` option
+* datasource `tencentcloud_as_scaling_configs` data_disk add `delete_with_instance` field
+
+BUGFIXES:
+
+* testcases fixes: CVM,SG,MySQL,EKS
+* testcases tke use preset tke and tlinux image instead
+
+## 1.65.0 (March 7, 2022)
+
+FEATURES:
+
+* new datasource `tencentcloud_dnspod_record`
+* new resource `tencentcloud_vpn_ssl_server`
+* new resource `tencentcloud_vpn_ssl_client`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_node_pool` support `cam_role_name` as parameter
+
 ## 1.64.0 (March 7, 2022)
 
 FEATURES:
