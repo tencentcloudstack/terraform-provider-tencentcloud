@@ -1,9 +1,19 @@
-#!/bin/bash
-
-# This script construct local filesystem provider mirror
-# To make binary work, set the environment variable: TF_CONFIG_FILE=$PWD/.terraform
+#!/bin/sh
+# this script runs local filesystem provider mirror build and unit test
+# run "$ make build-target-test" directly
 
 set -eo pipefail
+
+configFile=$PWD/.terraform/prerelease.tfrc
+if [ $TF_CLI_CONFIG_FILE != $configFile  ]; then
+  echo "unexpected: EnvVar TF_CLI_CONFIG_FILE"
+  echo "expected: $configFile"
+  echo "actual:   $TF_CLI_CONFIG_FILE"
+  exit -1
+fi
+
+latest_tag=$(git describe --tags --abbrev=0)
+version=${latest_tag:1}
 
 provider_name=terraform-provider-tencentcloud
 # using `localtest` to make sure the provider fetch from local
@@ -11,12 +21,6 @@ namespace=localtest
 os=$(uname -s | tr "[:upper:]" "[:lower:]")
 arch=$(uname -m)
 os_arch="${os}_${arch}"
-version=$1
-#if [ -z $version ]; then
-#  echo "missing argument: tag_version"
-#  echo "example usage: ./scripts/build-artifact 1.0.0"
-#  exit -1
-#fi
 
 echo "building $provider_name $version filesystem_mirror"
 
@@ -56,3 +60,9 @@ provider_installation {
      }
 }
 EOF
+
+cd ./binary-test
+
+go mod vendor
+
+go test -v -run TestTerraformBasicExample -version=$version -source=localtest/tencentcloud

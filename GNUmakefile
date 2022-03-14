@@ -123,7 +123,7 @@ test-build-x86:
 	rm -f terraform-provider-tencentcloud-386
 
 build-target-test:
-	./binary-test/run.sh
+	./scripts/build-target-test.sh
 
 doc:
 	cd gendoc && go run ./... && cd ..
