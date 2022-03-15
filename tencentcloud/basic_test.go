@@ -147,6 +147,7 @@ resource "tencentcloud_mysql_instance" "default" {
   engine_version = "5.7"
   root_password = "0153Y474"
   availability_zone = var.availability_zone
+  force_delete = true
 }
 `
 const mysqlInstanceHighPerformanceTestCase = defaultVpcVariable + `

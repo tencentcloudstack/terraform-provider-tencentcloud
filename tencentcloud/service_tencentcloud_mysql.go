@@ -945,8 +945,7 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, 
 	}
 
 	paramsMap := map[string]string{
-		"character_set_server":   "LATIN1", // ["utf8","latin1","gbk","utf8mb4"]
-		"lower_case_table_names": "1",      // ["0","1"]
+		"character_set_server": "LATIN1", // ["utf8","latin1","gbk","utf8mb4"]
 	}
 
 	if charset != "" {
@@ -957,7 +956,6 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, 
 		paramsMap["lower_case_table_names"] = lowerCase // ["0","1"]
 	}
 
-	request.Parameters = make([]*cdb.ParamInfo, 0, len(paramsMap))
 	for k, v := range paramsMap {
 		name := k
 		value := v
