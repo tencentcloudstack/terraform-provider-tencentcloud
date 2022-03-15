@@ -37,7 +37,7 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.liveness_probe.0.failure_threshold", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.liveness_probe.0.http_get_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.liveness_probe.0.http_get_port", "80"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.liveness_probe.0.http_get_scheme", "http"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.liveness_probe.0.http_get_scheme", "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.readiness_probe.0.init_delay_seconds", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.readiness_probe.0.timeout_seconds", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "container.0.readiness_probe.0.period_seconds", "10"),
@@ -112,7 +112,7 @@ resource "tencentcloud_eks_container_instance" "foo" {
       failure_threshold = 3
       http_get_path = "/"
       http_get_port = 80
-      http_get_scheme = "http"
+      http_get_scheme = "HTTP"
     }
     readiness_probe {
       init_delay_seconds = 1

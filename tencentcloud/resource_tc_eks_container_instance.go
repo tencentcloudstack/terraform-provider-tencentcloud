@@ -54,7 +54,7 @@ resource "tencentcloud_eks_container_instance" "eci1" {
       failure_threshold = 3
       http_get_path = "/"
       http_get_port = 443
-      http_get_scheme = "https"
+      http_get_scheme = "HTTPS"
     }
     readiness_probe {
       init_delay_seconds = 1
