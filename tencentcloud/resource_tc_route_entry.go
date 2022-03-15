@@ -50,10 +50,12 @@ var routeTypeApiMap = map[string]int{
 	"vpn_gateway":        1,
 	"dc_gateway":         3,
 	"peering_connection": 4,
+	"havip":              5,
 	"sslvpn_gateway":     7,
 	"nat_gateway":        8,
 	"instance":           9,
 	"eip":                10,
+	"local_gateway":      11,
 }
 
 var routeTypeNewMap = map[string]string{
@@ -61,10 +63,12 @@ var routeTypeNewMap = map[string]string{
 	"vpn_gateway":        "VPN",
 	"dc_gateway":         "DIRECTCONNECT",
 	"peering_connection": "PEERCONNECTION",
+	"havip":              "HAVIP",
 	"sslvpn_gateway":     "SSLVPN",
 	"nat_gateway":        "NAT",
 	"instance":           "NORMAL_CVM",
 	"eip":                "EIP",
+	"local_gateway":      "LOCAL_GATEWAY",
 }
 
 func resourceTencentCloudRouteEntry() *schema.Resource {
@@ -110,7 +114,7 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 					}
 					return
 				},
-				Description: "The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway` and `instance`. `instance` points to CVM Instance.",
+				Description: "The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway`,`havip`,`local_gateway` and `instance`. `instance` points to CVM Instance.",
 			},
 			"next_hub": {
 				Type:        schema.TypeString,
