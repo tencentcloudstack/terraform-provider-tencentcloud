@@ -24,7 +24,7 @@ func TestAccTencentCloudMysqlParameterListDataSource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlParameterListDataSourceConfig(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlParameterListDataSourceConfig(CommonPresetMysql),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_parameter_list.mysql", "parameter_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_parameter_list.mysql", "parameter_list.0.parameter_name"),
@@ -49,7 +49,7 @@ func testAccMysqlParameterListDataSourceConfig(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 data "tencentcloud_mysql_parameter_list" "mysql" {
-	mysql_id = tencentcloud_mysql_instance.default.id
+	mysql_id = local.mysql_id
 }
 	`, commonTestCase)
 }
