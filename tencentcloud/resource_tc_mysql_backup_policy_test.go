@@ -19,7 +19,7 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 		CheckDestroy: testAccTencentCloudMysqlBackupPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlBackupPolicy(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlBackupPolicy(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
@@ -29,7 +29,7 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlBackupPolicyUpdate(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlBackupPolicyUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
@@ -105,22 +105,22 @@ func testAccTencentCloudMysqlBackupPolicyDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccMysqlBackupPolicy(commonTestCase string) string {
+func testAccMysqlBackupPolicy() string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
-  mysql_id         = tencentcloud_mysql_instance.default.id
+  mysql_id         = local.mysql_id
   retention_period = 56
   backup_time      = "10:00-14:00"
-}`, commonTestCase)
+}`, CommonPresetMysql)
 }
 
-func testAccMysqlBackupPolicyUpdate(commonTestCase string) string {
+func testAccMysqlBackupPolicyUpdate() string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
-  mysql_id         = tencentcloud_mysql_instance.default.id
+  mysql_id         = local.mysql_id
   retention_period = 80
   backup_time      = "06:00-10:00"
-}`, commonTestCase)
+}`, CommonPresetMysql)
 }

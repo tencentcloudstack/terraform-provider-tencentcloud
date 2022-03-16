@@ -227,38 +227,6 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMysqlPrepaid(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlMasterInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlMasterInstance_prepaid(),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "instance_name", "testAccMysqlPrepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "slave_deploy_mode", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "slave_sync_mode", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "first_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "auto_renew_flag", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
-				),
-			},
-			// update auto_renew_flag
-			{
-				Config: testAccMysqlMasterInstance_prepaidupdate(),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "auto_renew_flag", "1"),
-				),
-			},
-		},
-	})
-}
-
 func testAccCheckMysqlMasterInstanceDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -320,39 +288,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   force_delete      = true
-}`
-}
-
-func testAccMysqlMasterInstance_prepaid() string {
-	return `
-resource "tencentcloud_mysql_instance" "prepaid" {
-  charge_type 		= "PREPAID"
-  mem_size          = 1000
-  volume_size       = 50
-  instance_name     = "testAccMysqlPrepaid"
-  engine_version    = "5.7"
-  root_password     = "test1234"
-  intranet_port     = 3360
-  availability_zone = "ap-guangzhou-3"
-  first_slave_zone  = "ap-guangzhou-3"
-  force_delete = false
-}`
-}
-
-func testAccMysqlMasterInstance_prepaidupdate() string {
-	return `
-resource "tencentcloud_mysql_instance" "prepaid" {
-  charge_type 		= "PREPAID"
-  mem_size          = 1000
-  volume_size       = 50
-  auto_renew_flag	= 1
-  instance_name     = "testAccMysqlPrepaid"
-  engine_version    = "5.7"
-  root_password     = "test1234"
-  intranet_port     = 3360
-  availability_zone = "ap-guangzhou-3"
-  first_slave_zone  = "ap-guangzhou-3"
-  force_delete		= false
 }`
 }
 

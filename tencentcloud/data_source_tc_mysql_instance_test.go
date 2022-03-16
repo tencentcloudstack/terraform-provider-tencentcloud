@@ -14,13 +14,13 @@ func TestAccTencentCloudMysqlInstanceDataSource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudMysqlInstanceDataSourceConfig(mysqlInstanceCommonTestCase),
+				Config: testAccTencentCloudMysqlInstanceDataSourceConfig(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.instance_name", "tf-ci-test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.instance_name", defaultMySQLName),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.pay_type", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.memory_size", "1000"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.volume_size", "25"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.memory_size", "4000"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.volume_size", "200"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.engine_version", "5.7"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance.mysql", "instance_list.0.vpc_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance.mysql", "instance_list.0.subnet_id"),
@@ -31,12 +31,10 @@ func TestAccTencentCloudMysqlInstanceDataSource(t *testing.T) {
 	})
 }
 
-func testAccTencentCloudMysqlInstanceDataSourceConfig(commonTestCase string) string {
+func testAccTencentCloudMysqlInstanceDataSourceConfig() string {
 	return fmt.Sprintf(`
-%s
 data "tencentcloud_mysql_instance" "mysql" {
-	mysql_id = tencentcloud_mysql_instance.default.id
-	instance_name = tencentcloud_mysql_instance.default.instance_name
+	instance_name = "%s"
 }
-	`, commonTestCase)
+	`, defaultMySQLName)
 }
