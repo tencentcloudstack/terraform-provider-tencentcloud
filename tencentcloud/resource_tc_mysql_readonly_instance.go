@@ -80,6 +80,18 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 	}
 	request.Period = helper.IntInt64(period)
 
+	if v, ok := d.GetOk("mem_size"); ok {
+		request.Memory = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("volume_size"); ok {
+		request.Volume = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("cpu"); ok {
+		request.Cpu = helper.IntInt64(v.(int))
+	}
+
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
 
@@ -123,6 +135,18 @@ func mysqlCreateReadonlyInstancePayByUse(ctx context.Context, d *schema.Resource
 	// readonly group is not currently supported
 	defaultRoGroupMode := "allinone"
 	request.RoGroup = &cdb.RoGroup{RoGroupMode: &defaultRoGroupMode}
+
+	if v, ok := d.GetOk("mem_size"); ok {
+		request.Memory = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("volume_size"); ok {
+		request.Volume = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("cpu"); ok {
+		request.Cpu = helper.IntInt64(v.(int))
+	}
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err

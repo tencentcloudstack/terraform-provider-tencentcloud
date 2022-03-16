@@ -21,7 +21,7 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 		CheckDestroy: testAccMysqlAccountPrivilegeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlAccountPrivilege(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccountPrivilege(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlAccountPrivilegeExists("tencentcloud_mysql_account_privilege.mysql_account_privilege"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account_privilege.mysql_account_privilege", "mysql_id"),
@@ -36,7 +36,7 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlAccountPrivilegeUpdate(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccountPrivilegeUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlAccountPrivilegeExists("tencentcloud_mysql_account_privilege.mysql_account_privilege"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account_privilege.mysql_account_privilege", "mysql_id"),
@@ -177,41 +177,41 @@ func testAccMysqlAccountPrivilegeDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccMysqlAccountPrivilege(commonTestCase string) string {
+func testAccMysqlAccountPrivilege() string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = tencentcloud_mysql_instance.default.id
-  name        = "test"
+  mysql_id    = local.mysql_id
+  name        = "previlege_test"
   host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
-  mysql_id       = tencentcloud_mysql_instance.default.id
+  mysql_id       = local.mysql_id
   account_name   = tencentcloud_mysql_account.mysql_account.name
   account_host   = tencentcloud_mysql_account.mysql_account.host
   privileges     = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   database_names = ["test"]
-}`, commonTestCase)
+}`, CommonPresetMysql)
 }
 
-func testAccMysqlAccountPrivilegeUpdate(commonTestCase string) string {
+func testAccMysqlAccountPrivilegeUpdate() string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = tencentcloud_mysql_instance.default.id
-  name        = "test"
+  mysql_id    = local.mysql_id
+  name        = "previlege_test"
   host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
-  mysql_id       = tencentcloud_mysql_instance.default.id
+  mysql_id       = local.mysql_id
   account_name   = tencentcloud_mysql_account.mysql_account.name
   account_host   = tencentcloud_mysql_account.mysql_account.host
   privileges     = ["TRIGGER"]
   database_names = ["test"]
-}`, commonTestCase)
+}`, CommonPresetMysql)
 
 }

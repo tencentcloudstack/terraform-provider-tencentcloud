@@ -124,6 +124,21 @@ data "tencentcloud_instance_types" "default" {
 }
 `
 
+const (
+	defaultMySQLName = "preset_mysql"
+)
+
+// ref with `local.mysql_id`
+const CommonPresetMysql = `
+data "tencentcloud_mysql_instance" "mysql" {
+  instance_name = "` + defaultMySQLName + `"
+}
+
+locals {
+  mysql_id = data.tencentcloud_mysql_instance.mysql.instance_list.0.mysql_id
+}
+`
+
 const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
@@ -158,6 +173,7 @@ resource "tencentcloud_mysql_instance" "default" {
   engine_version = "5.7"
   root_password = "0153Y474"
   availability_zone = var.availability_zone
+  force_delete = true
 }
 `
 

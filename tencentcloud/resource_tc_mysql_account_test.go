@@ -20,7 +20,7 @@ func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
 		CheckDestroy: testAccCheckMysqlAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlAccount(mysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccount(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlAccountExists("tencentcloud_mysql_account.mysql_account"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),
@@ -123,15 +123,16 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccMysqlAccount(commonTestCase string) string {
+func testAccMysqlAccount() string {
 	return fmt.Sprintf(`
 %s
+
 resource "tencentcloud_mysql_account" "mysql_account" {
-	mysql_id = tencentcloud_mysql_instance.default.id
+	mysql_id = local.mysql_id
 	name    = "test"
     host = "192.168.0.%%"
 	password = "test1234"
 	description = "test from terraform"
 }
-	`, commonTestCase)
+	`, CommonPresetMysql)
 }

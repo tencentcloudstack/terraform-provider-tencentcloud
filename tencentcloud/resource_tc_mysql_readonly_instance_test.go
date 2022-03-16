@@ -18,13 +18,12 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 		CheckDestroy: testAccCheckMysqlReadonlyInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlReadonlyInstance(mysqlInstanceHighPerformanceTestCase),
+				Config: testAccMysqlReadonlyInstance(CommonPresetMysql),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "2000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
@@ -34,7 +33,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 			},
 			// add tag
 			{
-				Config: testAccMysqlReadonlyInstance_multiTags(mysqlInstanceHighPerformanceTestCase, "read"),
+				Config: testAccMysqlReadonlyInstance_multiTags(CommonPresetMysql, "read"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role", "read"),
@@ -42,7 +41,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 			},
 			// update tag
 			{
-				Config: testAccMysqlReadonlyInstance_multiTags(mysqlInstanceHighPerformanceTestCase, "readonly"),
+				Config: testAccMysqlReadonlyInstance_multiTags(CommonPresetMysql, "readonly"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role", "readonly"),
@@ -50,7 +49,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 			},
 			// remove tag
 			{
-				Config: testAccMysqlReadonlyInstance(mysqlInstanceHighPerformanceTestCase),
+				Config: testAccMysqlReadonlyInstance(CommonPresetMysql),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role"),
@@ -58,7 +57,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 			},
 			// update instance_name
 			{
-				Config: testAccMysqlReadonlyInstance_update(mysqlInstanceHighPerformanceTestCase, "mysql-readonly-update", "3360"),
+				Config: testAccMysqlReadonlyInstance_update(CommonPresetMysql, "mysql-readonly-update", "3360"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-update"),
@@ -66,46 +65,10 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 			},
 			// update intranet_port
 			{
-				Config: testAccMysqlReadonlyInstance_update(mysqlInstanceHighPerformanceTestCase, "mysql-readonly-update", "3361"),
+				Config: testAccMysqlReadonlyInstance_update(CommonPresetMysql, "mysql-readonly-update", "3361"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3361"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudReadonlyMysqlPrepaid(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlMasterInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlReadonlyInstancePrepaid(mysqlInstanceHighPerformancePrepaidTestCase),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "mem_size", "2000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "intranet_port", "3360"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "intranet_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "task_status"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "tags.test", "test-tf"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "auto_renew_flag", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "pay_type", "0"),
-				),
-			},
-			// update auto_renew_flag
-			{
-				Config: testAccMysqlReadonlyInstancePrepaid_update(mysqlInstanceHighPerformancePrepaidTestCase, 1),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "pay_type", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "auto_renew_flag", "1"),
 				),
 			},
 		},
@@ -165,9 +128,9 @@ func testAccMysqlReadonlyInstance(mysqlTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = tencentcloud_mysql_instance.default.id
+  master_instance_id = local.mysql_id
   mem_size           = 2000
-  volume_size        = 50
+  volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
   tags = {
@@ -181,9 +144,10 @@ func testAccMysqlReadonlyInstance_multiTags(mysqlTestCase, value string) string 
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = tencentcloud_mysql_instance.default.id
+  master_instance_id = local.mysql_id
   mem_size           = 2000
-  volume_size        = 50
+  cpu                = 1
+  volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
   tags = {
@@ -198,9 +162,10 @@ func testAccMysqlReadonlyInstance_update(mysqlTestCase, instance_name, instranet
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = tencentcloud_mysql_instance.default.id
+  master_instance_id = local.mysql_id
   mem_size           = 2000
-  volume_size        = 50
+  cpu                = 1
+  volume_size        = 200
   instance_name      = "%s"
   intranet_port      = %s 
   tags = {
@@ -214,9 +179,10 @@ func testAccMysqlReadonlyInstancePrepaid(mysqlTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly_prepaid" {
-  master_instance_id = tencentcloud_mysql_instance.default.id
+  master_instance_id = local.mysql_id
   mem_size           = 2000
-  volume_size        = 50
+  cpu                = 1
+  volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
   pay_type = 0
@@ -232,9 +198,9 @@ func testAccMysqlReadonlyInstancePrepaid_update(mysqlTestCase string, renewFlag 
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly_prepaid" {
-  master_instance_id = tencentcloud_mysql_instance.default.id
+  master_instance_id = local.mysql_id
   mem_size           = 2000
-  volume_size        = 50
+  volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
   auto_renew_flag    = %d
