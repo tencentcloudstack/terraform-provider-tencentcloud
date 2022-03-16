@@ -707,7 +707,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			err      error
 		)
 
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		// After redis spec modified, reset password may not successfully response immediately.
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			taskId, err = redisService.ResetPassword(ctx, id, password)
 			if err != nil {
 				log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
