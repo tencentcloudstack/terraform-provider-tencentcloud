@@ -15,6 +15,13 @@ const (
 	DisplayStrategyIsclusterList = "clusterList"
 )
 
+const (
+	EMR_MASTER_WAN_TYPE_NEED_MASTER_WAN     = "NEED_MASTER_WAN"
+	EMR_MASTER_WAN_TYPE_NOT_NEED_MASTER_WAN = "NOT_NEED_MASTER_WAN"
+)
+
+var EMR_MASTER_WAN_TYPES = []string{EMR_MASTER_WAN_TYPE_NEED_MASTER_WAN, EMR_MASTER_WAN_TYPE_NOT_NEED_MASTER_WAN}
+
 func buildResourceSpecSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,
