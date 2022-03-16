@@ -176,6 +176,17 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Computed:    true,
 				Description: "Created EMR instance id.",
 			},
+			"need_master_wan": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      EMR_MASTER_WAN_TYPE_NEED_MASTER_WAN,
+				ValidateFunc: validateAllowedStringValue(EMR_MASTER_WAN_TYPES),
+				Description: `Whether to enable the cluster Master node public network. Value range:
+				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
+				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
+				By default, the cluster Master node internet is enabled.`,
+			},
 		},
 	}
 }
@@ -305,6 +316,9 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
 			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+			if e.GetCode() == "UnauthorizedOperation" {
 				return nil
 			}
 		}

@@ -121,6 +121,8 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		request.InstanceName = common.StringPtr(v.(string))
 	}
 
+	needMasterWan := d.Get("need_master_wan").(string)
+	request.NeedMasterWan = common.StringPtr(needMasterWan)
 	payMode := d.Get("pay_mode")
 	request.PayMode = common.Uint64Ptr((uint64)(payMode.(int)))
 	if v, ok := d.GetOk("placement"); ok {
@@ -186,7 +188,6 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 	if v, ok := filters["project_id"]; ok {
 		request.ProjectId = common.Int64Ptr(v.(int64))
 	}
-	request.ProjectId = helper.IntInt64(-1)
 	response, err := me.client.UseEmrClient().DescribeInstances(request)
 
 	if err != nil {

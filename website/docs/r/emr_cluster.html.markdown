@@ -73,6 +73,10 @@ The following arguments are supported:
 When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.
 * `time_unit` - (Required) The unit of time in which the instance was purchased. When PayMode is 0, TimeUnit can only take values of s(second). When PayMode is 1, TimeUnit can only take the value m(month).
 * `vpc_settings` - (Required, ForceNew) The private net config of EMR instance.
+* `need_master_wan` - (Optional, ForceNew) Whether to enable the cluster Master node public network. Value range:
+				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
+				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
+				By default, the cluster Master node internet is enabled.
 * `resource_spec` - (Optional) Resource specification of EMR instance.
 
 The `resource_spec` object supports the following:
