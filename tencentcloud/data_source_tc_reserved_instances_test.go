@@ -9,7 +9,7 @@ import (
 func TestAccTencentCloudReservedInstancesDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -24,6 +24,6 @@ func TestAccTencentCloudReservedInstancesDataSource(t *testing.T) {
 
 const testAccReservedInstancesDataSource = `
 data "tencentcloud_reserved_instances" "instances" {
-  availability_zone = "ap-guangzhou-2"
+  availability_zone = "ap-guangzhou-3"
 }
 `

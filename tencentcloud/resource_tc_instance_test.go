@@ -108,15 +108,13 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr(id, "system_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "system_disk_size", "100"),
 					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
-					//TODO: snapshot is pre-paid required
-					//resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
 				),
 			},
 			{
@@ -132,7 +130,6 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "150"),
-					//resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
 				),
 			},
 		},
@@ -263,7 +260,7 @@ func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
+		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		IDRefreshName: id,
 		Providers:     testAccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
@@ -467,36 +464,6 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 	})
 }
 
-/* Skip prepaid for now
-func TestAccTencentCloudInstanceWithPrepaidChargeType(t *testing.T) {
-	t.Parallel()
-
-	id := "tencentcloud_instance.foo"
-	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
-		IDRefreshName: id,
-		Providers:     testAccProviders,
-		CheckDestroy:  testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccTencentCloudInstancePrepaidRenew,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudInstanceExists(id),
-					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_AUTO_RENEW"),
-				),
-			}, {
-				Config: testAccTencentCloudInstancePrepaidRenewUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudInstanceExists(id),
-					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
-				),
-			},
-		},
-	})
-}
-
-*/
-
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -608,6 +575,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
+  system_disk_size = 100
 
   data_disks {
     data_disk_type        = "CLOUD_PREMIUM"
@@ -665,7 +633,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -682,7 +649,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = %d
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
@@ -757,7 +723,6 @@ resource "tencentcloud_instance" "foo" {
   availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
   image_id                   = data.tencentcloud_images.zoo.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  internet_max_bandwidth_out = 1
   keep_image_login 			 = true
   system_disk_type           = "CLOUD_PREMIUM"
 }
@@ -872,40 +837,9 @@ resource "tencentcloud_instance" "foo" {
   availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
   image_id             = data.tencentcloud_images.default.images.0.image_id
   instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  hostname             = var.instance_name
   system_disk_type     = "CLOUD_PREMIUM"
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "ONE-TIME"
   spot_max_price       = "0.5"
-}
-`
-
-const testAccTencentCloudInstancePrepaidRenew = defaultInstanceVariable + `
-resource "tencentcloud_instance" "foo" {
-  instance_name        = var.instance_name
-  availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
-  image_id             = data.tencentcloud_images.default.images.0.image_id
-  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  hostname             = var.instance_name
-  system_disk_type     = "CLOUD_PREMIUM"
-  instance_charge_type = "PREPAID"
-  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
-  instance_charge_type_prepaid_period = 1
-  force_delete = true
-}
-`
-
-const testAccTencentCloudInstancePrepaidRenewUpdate = defaultInstanceVariable + `
-resource "tencentcloud_instance" "foo" {
-  instance_name        = var.instance_name
-  availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
-  image_id             = data.tencentcloud_images.default.images.0.image_id
-  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  hostname             = var.instance_name
-  system_disk_type     = "CLOUD_PREMIUM"
-  instance_charge_type = "PREPAID"
-  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
-  instance_charge_type_prepaid_period = 1
-  force_delete = true
 }
 `
