@@ -3,11 +3,51 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_cynosdb", &resource.Sweeper{
+		Name: "tencentcloud_cynosdb",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := CynosdbService{client: client}
+
+			instances, err := service.DescribeClusters(ctx, nil)
+
+			if err != nil {
+				return err
+			}
+
+			for _, v := range instances {
+				id := *v.ClusterId
+				name := *v.ClusterName
+				status := *v.Status
+				if status != "running" {
+					continue
+				}
+				if !strings.HasPrefix(name, "tf-cynosdb") {
+					continue
+				}
+				_, err := service.IsolateCluster(ctx, id)
+				if err != nil {
+					continue
+				}
+				if err = service.OfflineCluster(ctx, id); err != nil {
+					continue
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 	t.Parallel()
@@ -44,7 +84,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "instance_status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "instance_storage_size"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "charset"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "charset", "utf8"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "cluster_status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "storage_used"),
