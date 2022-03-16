@@ -37,6 +37,7 @@ func testSweepMySQLInstance(region string) error {
 
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceNames = []*string{
+		helper.String(defaultInsName),
 		helper.String(TestAccTencentCloudMysqlInstanceName),
 		helper.String(TestAccTencentCloudMysqlInstanceNameVersion1),
 		helper.String(TestAccTencentCloudMysqlInstanceNamePrepaid),
@@ -309,7 +310,7 @@ func testAccCheckMysqlMasterInstanceExists(n string) resource.TestCheckFunc {
 func testAccMysqlMasterInstance_basic() string {
 	return `
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysql"
@@ -318,6 +319,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   intranet_port     = 3360
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
+  force_delete      = true
 }`
 }
 
@@ -357,7 +359,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 func testAccMysqlMasterInstance_fullslave() string {
 	return `
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysql"
@@ -369,6 +371,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   first_slave_zone  = "ap-guangzhou-3"
   second_slave_zone = "ap-guangzhou-3"
   slave_sync_mode   = 2
+  force_delete      = true
 }`
 }
 
@@ -379,7 +382,7 @@ func testAccMysqlMasterInstance_internet_service(open bool) string {
 	}
 	return `
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysql"
@@ -389,6 +392,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   internet_service  = ` + tag + `
+  force_delete      = true
 }`
 
 }
@@ -396,7 +400,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 func testAccMysqlMasterInstance_parameters() string {
 	return `
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysql"
@@ -405,6 +409,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   intranet_port     = 3360
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
+  force_delete      = true
   
   parameters = {
     max_connections = "1000"
@@ -415,7 +420,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 func testAccMysqlMasterInstance_multiTags(value string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysql"
@@ -424,6 +429,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   intranet_port     = 3360
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
+  force_delete      = true
   tags = {
     test = "test-tf"
     role = "%s"
@@ -435,7 +441,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 func testAccMysqlMasterInstance_update(instance_name, instranet_port string) string {
 	tpl := `
 resource "tencentcloud_mysql_instance" "mysql_master" {
-  pay_type          = 1
+  charge_type       = "POSTPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "%s"
@@ -444,6 +450,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   intranet_port     = %s
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
+  force_delete      = true
 }`
 	return fmt.Sprintf(tpl, instance_name, instranet_port)
 }

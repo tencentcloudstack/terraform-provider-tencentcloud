@@ -701,12 +701,26 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	}
 
 	if d.HasChange("password") {
-		password := d.Get("password").(string)
-		taskId, err := redisService.ResetPassword(ctx, id, password)
+		var (
+			taskId   int64
+			password = d.Get("password").(string)
+			err      error
+		)
+
+		// After redis spec modified, reset password may not successfully response immediately.
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			taskId, err = redisService.ResetPassword(ctx, id, password)
+			if err != nil {
+				log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
+				return retryError(err, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+
 		if err != nil {
-			log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
 			return err
 		}
+
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			ok, err := redisService.DescribeTaskInfo(ctx, id, taskId)
 			if err != nil {

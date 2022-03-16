@@ -3,12 +3,140 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
 	"time"
+
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("redis_instance", &resource.Sweeper{
+		Name: "redis_instance",
+		F: func(region string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(region)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := RedisService{client: client}
+
+			instances, err := service.DescribeInstances(ctx, "ap-guangzhou-3", "", 0, 0)
+
+			if err != nil {
+				return err
+			}
+
+			for _, v := range instances {
+				name := v.Name
+				id := v.RedisId
+				if !strings.HasPrefix(name, "terrform_test") {
+					continue
+				}
+				// Collect infos before deleting action
+				var chargeType string
+				errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+					has, online, info, err := service.CheckRedisOnlineOk(ctx, id)
+					if err != nil {
+						log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
+						return resource.NonRetryableError(err)
+					}
+					if !has {
+						return nil
+					}
+					if online {
+						chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
+						return nil
+					} else {
+						return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
+					}
+				})
+				if errQuery != nil {
+					log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errQuery.Error())
+					return errQuery
+				}
+
+				var wait = func(action string, taskInfo interface{}) (errRet error) {
+
+					errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						var ok bool
+						var err error
+						switch v := taskInfo.(type) {
+						case int64:
+							ok, err = service.DescribeTaskInfo(ctx, id, v)
+						case string:
+							ok, _, err = service.DescribeInstanceDealDetail(ctx, v)
+						}
+						if err != nil {
+							if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+								return resource.RetryableError(err)
+							} else {
+								return resource.NonRetryableError(err)
+							}
+						}
+						if ok {
+							return nil
+						} else {
+							return resource.RetryableError(fmt.Errorf("%s timeout.", action))
+						}
+					})
+
+					if errRet != nil {
+						log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, errRet.Error())
+					}
+					return errRet
+				}
+
+				if chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+					taskId, err := service.DestroyPostpaidInstance(ctx, id)
+					if err != nil {
+						log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPostpaidInstance", err.Error())
+						return err
+					}
+					if err = wait("DestroyPostpaidInstance", taskId); err != nil {
+						return err
+					}
+
+				} else {
+					if _, err := service.DestroyPrepaidInstance(ctx, id); err != nil {
+						log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPrepaidInstance", err.Error())
+						return err
+					}
+
+					// Deal info only support create and renew and resize, need to check destroy status by describing api.
+					if errDestroyChecking := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+						has, isolated, err := service.CheckRedisDestroyOk(ctx, id)
+						if err != nil {
+							log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, err.Error())
+							return resource.NonRetryableError(err)
+						}
+						if !has || isolated {
+							return nil
+						}
+						return resource.RetryableError(fmt.Errorf("instance is not ready to be destroyed"))
+					}); errDestroyChecking != nil {
+						log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
+						return errDestroyChecking
+					}
+				}
+
+				taskId, err := service.CleanUpInstance(ctx, id)
+				if err != nil {
+					log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "CleanUpInstance", err.Error())
+					return err
+				}
+
+				wait("CleanUpInstance", taskId)
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudRedisInstance(t *testing.T) {
 	t.Parallel()
