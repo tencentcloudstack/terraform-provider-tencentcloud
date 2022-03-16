@@ -266,6 +266,7 @@ The `expiration` object supports the following:
 
 * `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
+* `delete_marker` - (Optional) Indicates whether the delete marker of an expired object will be removed.
 
 The `lifecycle_rules` object supports the following:
 

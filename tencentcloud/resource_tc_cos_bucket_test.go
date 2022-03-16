@@ -225,6 +225,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.id", "rule1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.3672460294.days", "365"),
@@ -654,7 +655,9 @@ func testAccBucket_lifecycle(appid string) string {
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   bucket = "tf-bucket-lifecycle-%s"
   acl    = "public-read"
+  versioning_enable = true
   lifecycle_rules {
+    id = "rule1"
     filter_prefix = "test/"
     expiration {
       days = 365
@@ -677,7 +680,9 @@ func testAccBucket_lifecycleUpdate(appid string) string {
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   bucket = "tf-bucket-lifecycle-%s"
   acl    = "public-read"
+  versioning_enable = true
   lifecycle_rules {
+    id = "rule1"
     filter_prefix = "test/"
     expiration {
       days = 300

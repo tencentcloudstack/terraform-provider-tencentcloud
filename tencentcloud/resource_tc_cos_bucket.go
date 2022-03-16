@@ -619,6 +619,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 										ValidateFunc: validateIntegerMin(0),
 										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
 									},
+									"delete_marker": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether the delete marker of an expired object will be removed.",
+									},
 								},
 							},
 						},
@@ -1288,7 +1293,11 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 		for i, lifecycleRule := range lifecycleRules {
 			r := lifecycleRule.(map[string]interface{})
 			rule := &s3.LifecycleRule{}
-			rule.Status = aws.String(s3.ExpirationStatusEnabled)
+			id, ok := r["id"].(string)
+			if ok {
+				rule.ID = &id
+			}
+			rule.Status = helper.String(s3.ExpirationStatusEnabled)
 			prefix := r["filter_prefix"].(string)
 			rule.Filter = &s3.LifecycleRuleFilter{
 				Prefix: &prefix,
@@ -1324,7 +1333,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 				expiration := expirations[0].(map[string]interface{})
 				e := &s3.LifecycleExpiration{}
 
-				if val, ok := expiration["data"].(string); ok && val != "" {
+				if val, ok := expiration["date"].(string); ok && val != "" {
 					date, err := time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00Z", val))
 					if err != nil {
 						return fmt.Errorf("parsing cos bucket lifecycle expiration data(%s) error: %s", val, err.Error())
@@ -1332,6 +1341,10 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 					e.Date = aws.Time(date)
 				} else if val, ok := expiration["days"].(int); ok && val > 0 {
 					e.Days = aws.Int64(int64(val))
+				}
+
+				if val, ok := expiration["delete_marker"].(bool); ok && val {
+					e.ExpiredObjectDeleteMarker = helper.Bool(true)
 				}
 
 				rule.Expiration = e

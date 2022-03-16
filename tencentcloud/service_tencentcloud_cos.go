@@ -340,6 +340,10 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 		for _, value := range response.Rules {
 			rule := make(map[string]interface{})
 
+			if value.ID != nil {
+				rule["id"] = *value.ID
+			}
+
 			// filter_prefix
 			if value.Filter != nil {
 				if value.Filter.And != nil && value.Filter.And.Prefix != nil &&
@@ -375,6 +379,9 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 				}
 				if value.Expiration.Days != nil {
 					e["days"] = int(*value.Expiration.Days)
+				}
+				if value.Expiration.ExpiredObjectDeleteMarker != nil {
+					e["delete_marker"] = *value.Expiration.ExpiredObjectDeleteMarker
 				}
 				rule["expiration"] = schema.NewSet(expirationHash, []interface{}{e})
 			}
