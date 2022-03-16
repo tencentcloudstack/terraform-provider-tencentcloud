@@ -20,9 +20,8 @@ func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
 			{
 				Config: testAccClbInstanceTopic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbInstanceTopicExists("tencentcloud_clb_instances_topic.topic"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instances_topic.topic", "topic_name", "clb-topic-test"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instances_topic.topic", "partition_count", "3"),
+					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
 				),
 			},
 		},
@@ -44,8 +43,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 		clsService := ClsService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		topicName := rs.Primary.Attributes["topic_name"]
-		instance, err := clsService.DescribeTopicsById(ctx, topicName)
+		instance, err := clsService.DescribeTopicsById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -58,8 +56,12 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbInstanceTopic = `
+resource "tencentcloud_clb_log_set" "set1" {
+    period = 7
+}
+
 resource "tencentcloud_clb_log_topic" "topic" {
+    log_set_id = tencentcloud_clb_log_set.set1.id
     topic_name="clb-topic-test"
-    partition_count=3
 }
 `

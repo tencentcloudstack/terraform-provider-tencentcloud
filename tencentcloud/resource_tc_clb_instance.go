@@ -418,6 +418,16 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
 	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			request.Tags = append(request.Tags, &clb.TagInfo{
+				TagKey:   &k,
+				TagValue: &v,
+			})
+		}
+	}
+
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -536,15 +546,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		})
 		if err != nil {
 			log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("clb", "clb", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
