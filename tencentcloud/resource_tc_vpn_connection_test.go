@@ -167,7 +167,7 @@ func testAccCheckVpnConnectionExists(n string) resource.TestCheckFunc {
 const testAccVpnConnectionConfig = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "3.3.3.3"
+  public_ip_address = "1.3.3.3"
 
 }
 
@@ -219,8 +219,7 @@ resource "tencentcloud_vpn_connection" "connection" {
 const testAccVpnConnectionConfigUpdate = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "3.3.3.3"
-
+  public_ip_address = "1.3.3.3"
 }
 
 # Create VPC and Subnet

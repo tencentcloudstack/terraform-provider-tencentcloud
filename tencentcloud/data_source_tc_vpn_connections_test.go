@@ -30,8 +30,7 @@ func TestAccTencentCloudVpnConnectionsDataSource(t *testing.T) {
 const testAccTencentCloudVpnConnectionsDataSourceConfig_basic = `
 resource "tencentcloud_vpn_customer_gateway" "cgw" {
   name              = "terraform_test"
-  public_ip_address = "3.3.3.3"
-
+  public_ip_address = "3.2.3.3"
 }
 
 # Create VPC and Subnet
