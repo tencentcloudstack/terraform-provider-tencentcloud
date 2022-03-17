@@ -53,6 +53,7 @@ The following arguments are supported:
 * `subnet_id` - (Optional) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional) Instance tags.
 * `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
+* `zone` - (Optional, ForceNew) Zone information, this parameter defaults to, the system automatically selects an Availability Zone.
 
 ## Attributes Reference
 
