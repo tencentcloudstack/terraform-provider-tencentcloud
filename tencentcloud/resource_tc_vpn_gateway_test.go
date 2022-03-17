@@ -39,16 +39,15 @@ func testSweepVpnGateway(region string) error {
 	}
 
 	for _, v := range instances {
-		vpnGwId := *v.VpnGatewayId
+		//vpnGwName := *v.VpnGatewayName
 
-		//if !strings.HasPrefix(instanceName, defaultInsName) {
+		//if !strings.HasPrefix(vpnGwName, defaultInsName) {
 		//	continue
 		//}
 
-		instanceId := *v.VpnGatewayId
-
+		vpnGwId := *v.VpnGatewayId
 		if err = vpcService.DeleteVpnGateway(ctx, vpnGwId); err != nil {
-			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+			log.Printf("[ERROR] sweep instance %s error: %s", vpnGwId, err.Error())
 		}
 	}
 

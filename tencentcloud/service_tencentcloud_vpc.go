@@ -3602,6 +3602,71 @@ func (me *VpcService) DeleteVpnGateway(ctx context.Context, vpnGatewayId string)
 	return
 }
 
+func (me *VpcService) DescribeCustomerGatewayByFilter(ctx context.Context, filters map[string]string) (instances []*vpc.CustomerGateway, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCustomerGatewaysRequest()
+	)
+	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := vpc.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances = make([]*vpc.CustomerGateway, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeCustomerGateways(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CustomerGatewaySet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.CustomerGatewaySet...)
+		if len(response.Response.CustomerGatewaySet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *VpcService) DeleteCustomerGateway(ctx context.Context, customerGatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteCustomerGatewayRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.CustomerGatewayId = &customerGatewayId
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteCustomerGateway(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
+}
+
 func (me *VpcService) CreateAddressTemplate(ctx context.Context, name string, addresses []interface{}) (templateId string, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewCreateAddressTemplateRequest()
