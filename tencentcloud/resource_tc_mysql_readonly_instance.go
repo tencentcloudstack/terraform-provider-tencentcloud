@@ -46,6 +46,12 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Required:    true,
 			Description: "Indicates the master instance ID of recovery instances.",
 		},
+		"zone": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Zone information, this parameter defaults to, the system automatically selects an Availability Zone.",
+		},
 	}
 
 	basic := TencentMsyqlBasicInfo()
@@ -92,6 +98,10 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 		request.Cpu = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOk("zone"); ok {
+		zone := v.(string)
+		request.Zone = &zone
+	}
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
 
@@ -150,6 +160,11 @@ func mysqlCreateReadonlyInstancePayByUse(ctx context.Context, d *schema.Resource
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
+	}
+
+	if v, ok := d.GetOk("zone"); ok {
+		zone := v.(string)
+		request.Zone = &zone
 	}
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
@@ -293,6 +308,8 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 			return nil
 		}
 		_ = d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
+		_ = d.Set("zone", *mysqlInfo.Zone)
+
 		return nil
 	})
 	if err != nil {

@@ -63,14 +63,14 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-update"),
 				),
 			},
-			// update intranet_port
-			{
-				Config: testAccMysqlReadonlyInstance_update(CommonPresetMysql, "mysql-readonly-update", "3361"),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3361"),
-				),
-			},
+			// // update intranet_port
+			// {
+			// 	Config: testAccMysqlReadonlyInstance_update(CommonPresetMysql, "mysql-readonly-update", "3361"),
+			// 	Check: resource.ComposeAggregateTestCheckFunc(
+			// 		testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
+			// 		resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3361"),
+			// 	),
+			// },
 		},
 	})
 }
@@ -133,6 +133,7 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
+  zone = var.availability_zone
   tags = {
     test = "test-tf"
   }
@@ -150,6 +151,7 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
+  zone = var.availability_zone
   tags = {
     test = "test-tf"
     role = "%s"
@@ -168,6 +170,7 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "%s"
   intranet_port      = %s 
+  zone = var.availability_zone
   tags = {
     test = "test-tf"
   }

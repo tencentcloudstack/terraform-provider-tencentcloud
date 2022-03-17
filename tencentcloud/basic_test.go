@@ -130,6 +130,11 @@ const (
 
 // ref with `local.mysql_id`
 const CommonPresetMysql = `
+
+variable "availability_zone" {
+  default = "` + defaultAZone + `"
+}
+
 data "tencentcloud_mysql_instance" "mysql" {
   instance_name = "` + defaultMySQLName + `"
 }
