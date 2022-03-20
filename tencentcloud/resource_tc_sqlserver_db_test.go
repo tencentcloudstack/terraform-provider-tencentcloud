@@ -89,17 +89,17 @@ func testAccCheckSqlserverDBExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverDB_basic = testAccSqlserverInstance + `
+const testAccSqlserverDB_basic = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name        = "testAccSqlserverDB"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }`
 
-const testAccSqlserverDB_basic_update_remark = testAccSqlserverInstance + `
+const testAccSqlserverDB_basic_update_remark = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name        = "testAccSqlserverDB"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark_update"

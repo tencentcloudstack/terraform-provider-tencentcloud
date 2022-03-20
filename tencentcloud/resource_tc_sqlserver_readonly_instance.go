@@ -32,6 +32,8 @@ import (
 	"context"
 	"fmt"
 
+	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -67,7 +69,7 @@ func resourceTencentCloudSqlserverReadonlyInstance() *schema.Resource {
 		},
 	}
 
-	basic := TencentSqlServerBasicInfo()
+	basic := TencentSqlServerBasicInfo(true)
 	for k, v := range basic {
 		readonlyInstanceInfo[k] = v
 	}
@@ -108,26 +110,65 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 		securityGroups    = make([]string, 0)
 	)
 
-	if payType == COMMON_PAYTYPE_POSTPAID {
-		payType = "POSTPAID"
-	}
-
 	if v, ok := d.GetOk("readonly_group_id"); ok && readonlyGroupType == 3 {
 		readonlyGroupId = v.(string)
 	}
 
-	if temp, ok := d.GetOkExists("security_groups"); ok {
+	if temp, ok := d.GetOk("security_groups"); ok {
 		sgGroup := temp.(*schema.Set).List()
 		for _, sg := range sgGroup {
 			securityGroups = append(securityGroups, sg.(string))
 		}
 	}
 
+	request := sqlserver.NewCreateReadOnlyDBInstancesRequest()
+
+	request.InstanceId = &masterInstanceId
+	request.InstanceChargeType = &payType
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
+	request.GoodsNum = helper.IntInt64(1)
+
+	request.ReadOnlyGroupType = helper.IntInt64(readonlyGroupType)
+	if readonlyGroupId != "" {
+		request.ReadOnlyGroupId = &readonlyGroupId
+	}
+
+	if forceUpgrade {
+		request.ReadOnlyGroupForcedUpgrade = helper.BoolToInt64Ptr(forceUpgrade)
+	}
+	request.Zone = &zone
+	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
+	for _, v := range securityGroups {
+		request.SecurityGroupList = append(request.SecurityGroupList, &v)
+	}
+
+	if payType == COMMON_PAYTYPE_POSTPAID {
+		request.InstanceChargeType = helper.String("POSTPAID")
+	}
+	if payType == COMMON_PAYTYPE_PREPAID {
+		request.InstanceChargeType = helper.String("PREPAID")
+
+		if v, ok := d.Get("period").(int); ok {
+			request.Period = helper.IntInt64(v)
+		}
+	}
+
+	if v, ok := d.Get("auto_voucher").(int); ok {
+		request.AutoVoucher = helper.IntInt64(v)
+	}
+
+	if v, ok := d.Get("voucher_ids").([]interface{}); ok {
+		request.VoucherIds = helper.InterfacesStringsPoint(v)
+	}
+
 	var instanceId string
 	var outErr, inErr error
 
 	outErr = resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = sqlserverService.CreateSqlserverReadonlyInstance(ctx, masterInstanceId, subnetId, vpcId, payType, memory, zone, storage, readonlyGroupType, readonlyGroupId, forceUpgrade, securityGroups)
+		instanceId, inErr = sqlserverService.CreateSqlserverReadonlyInstance(ctx, request)
 		if inErr != nil {
 			return retryError(inErr)
 		}

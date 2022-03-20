@@ -46,6 +46,7 @@ const (
 	SQLSERVER_DB_RUNNING   = 2
 	SQLSERVER_DB_MODIFYING = 3
 	SQLSERVER_DB_DELETING  = -1
+	SQLSERVER_DB_UPGRADING = 9
 )
 
 var SQLSERVER_DB_STATUS = map[int64]string{
@@ -53,6 +54,7 @@ var SQLSERVER_DB_STATUS = map[int64]string{
 	SQLSERVER_DB_RUNNING:   "running",
 	SQLSERVER_DB_MODIFYING: "modifying",
 	SQLSERVER_DB_DELETING:  "deleting",
+	SQLSERVER_DB_UPGRADING: "upgrading",
 }
 
 const (

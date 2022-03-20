@@ -8,7 +8,7 @@ import (
 
 var testDataSqlserverReadonlyGroupsName = "data.tencentcloud_sqlserver_readonly_groups.test"
 
-func TestAccTencentCloudDataSqlserverReadonlyGroups(t *testing.T) {
+func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
