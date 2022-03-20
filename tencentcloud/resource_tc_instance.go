@@ -1023,11 +1023,17 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet, InternalError)
 			}
-			if instance != nil && (*instance.InstanceState == CVM_STATUS_RUNNING ||
-				*instance.InstanceState == CVM_STATUS_LAUNCH_FAILED) {
-				return nil
+			if instance != nil && instance.LatestOperationState != nil {
+				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.LatestOperationState))
+				}
+				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
+					return resource.NonRetryableError(fmt.Errorf("failed operation when modify instance charge type"))
+				}
+			} else if instance != nil && *instance.InstanceChargeType == CVM_CHARGE_TYPE_POSTPAID {
+				return resource.RetryableError(fmt.Errorf("cvm charge type is still %s, retry", CVM_CHARGE_TYPE_POSTPAID))
 			}
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+			return nil
 		})
 		if err != nil {
 			return err
