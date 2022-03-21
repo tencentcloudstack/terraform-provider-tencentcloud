@@ -45,7 +45,7 @@ func filename(uri URI) (string, error) {
 	if u.Scheme != fileScheme {
 		return "", fmt.Errorf("only file URIs are supported, got %q from %q", u.Scheme, uri)
 	}
-	// If the URI is a Windows URI, we trim the leading "/" and lowercase
+	// If the URI is a Windows URI, we trim the leading "/" and uppercase
 	// the drive letter, which will never be case sensitive.
 	if isWindowsDriveURIPath(u.Path) {
 		u.Path = strings.ToUpper(string(u.Path[1])) + u.Path[2:]
@@ -54,10 +54,14 @@ func filename(uri URI) (string, error) {
 }
 
 func URIFromURI(s string) URI {
-	if !strings.HasPrefix(s, "file:///") {
+	if !strings.HasPrefix(s, "file://") {
 		return URI(s)
 	}
 
+	if !strings.HasPrefix(s, "file:///") {
+		// VS Code sends URLs with only two slashes, which are invalid. golang/go#39789.
+		s = "file:///" + s[len("file://"):]
+	}
 	// Even though the input is a URI, it may not be in canonical form. VS Code
 	// in particular over-escapes :, @, etc. Unescape and re-encode to canonicalize.
 	path, err := url.PathUnescape(s[len("file://"):])
@@ -156,7 +160,7 @@ func isWindowsDrivePath(path string) bool {
 
 // isWindowsDriveURI returns true if the file URI is of the format used by
 // Windows URIs. The url.Parse package does not specially handle Windows paths
-// (see golang/go#6027). We check if the URI path has a drive prefix (e.g. "/C:").
+// (see golang/go#6027), so we check if the URI path has a drive prefix (e.g. "/C:").
 func isWindowsDriveURIPath(uri string) bool {
 	if len(uri) < 4 {
 		return false

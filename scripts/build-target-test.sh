@@ -61,8 +61,6 @@ provider_installation {
 }
 EOF
 
-cd ./binary-test
+echo $PWD
 
-go mod vendor
-
-go test -v -run TestTerraformBasicExample -version=$version -source=localtest/tencentcloud
+go test -v -run TestTerraformBasicExample ./tencentcloud/binary-test -version=$version -source=localtest/tencentcloud
