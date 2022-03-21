@@ -66,7 +66,9 @@ The following arguments are supported:
 * `dns_servers` - (Optional) List of cluster custom DNS Server info.
 * `enable_vpc_core_dns` - (Optional, ForceNew) Indicates whether to enable dns in user cluster, default value is `true`.
 * `extra_param` - (Optional, ForceNew) Extend parameters.
+* `internal_lb` - (Optional) Cluster internal access LoadBalancer info.
 * `need_delete_cbs` - (Optional) Delete CBS after EKS cluster remove.
+* `public_lb` - (Optional) Cluster public access LoadBalancer info.
 * `service_subnet_id` - (Optional) Subnet id of service.
 * `tags` - (Optional) Tags of EKS cluster.
 
@@ -74,6 +76,18 @@ The `dns_servers` object supports the following:
 
 * `domain` - (Optional) DNS Server domain. Empty indicates all domain.
 * `servers` - (Optional) List of DNS Server IP address, pattern: "ip[:port]".
+
+The `internal_lb` object supports the following:
+
+* `enabled` - (Required) Indicates weather the internal access LB enabled.
+* `subnet_id` - (Optional) ID of subnet which related to Internal LB.
+
+The `public_lb` object supports the following:
+
+* `enabled` - (Required) Indicates weather the public access LB enabled.
+* `allow_from_cidrs` - (Optional) List of CIDRs which allowed to access.
+* `extra_param` - (Optional) Extra param text json.
+* `security_policies` - (Optional) List of security allow IP or CIDRs, default deny all.
 
 ## Attributes Reference
 
