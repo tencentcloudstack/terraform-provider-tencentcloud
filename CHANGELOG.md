@@ -1,3 +1,32 @@
+## 1.66.0 (March 22, 2022)
+
+FEATURES:
+
+* new datasource `tencentcloud_eks_cluster_credential` 
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_eks_cluster` support public and internal load balancer config
+
+BUGFIXES:
+
+* resource `tencentcloud_instance` charge type update then polling status mismatch
+
+## 1.65.2 (March 18, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_route_entry` extend next type
+* resource `tencentcloud_clb_instance` create with tag params
+* resource `tencentcloud_emr_cluster` support need_master_wan param
+* resource `tencentcloud_cos_bucket` support lifecycle rule id and delete marker
+* resource `tencentcloud_mysql_readonly_instance` support zone param
+
+BUGFIXES:
+* testcases: cvm, cynosdb, eks, mysql, vpn
+* resource `tencentcloud_emr_cluster` destroy
+* resource `tencentcloud_mysql_instance` init
+* resource `tencentcloud_redis_instance` reset pwd retry and comment
+
 ## 1.65.1 (March 14, 2022)
 
 ENHANCEMENTS:
