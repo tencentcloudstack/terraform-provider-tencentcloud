@@ -15,6 +15,24 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+Using CFS config
+```
+resource "tencentcloud_scf_function" "foo" {
+  name    = "ci-test-function"
+  handler = "main.do_it"
+  runtime = "Python3.6"
+
+  cfs_config {
+	user_id	= "10000"
+	user_group_id	= "10000"
+	cfs_id	= "cfs-xxxxxxxx"
+	mount_ins_id	= "cfs-xxxxxxxx"
+	local_mount_dir	= "/mnt"
+	remote_mount_dir	= "/"
+  }
+}
+```
+
 Import
 
 SCF function can be imported, e.g.
@@ -327,6 +345,62 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				},
 			},
 
+			//cfs config
+			"cfs_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of CFS configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"user_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of user.",
+						},
+						"user_group_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of user group.",
+						},
+						"cfs_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "File system instance ID.",
+						},
+						"mount_ins_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "File system mount instance ID.",
+						},
+						"local_mount_dir": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Local mount directory.",
+						},
+						"remote_mount_dir": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Remote mount directory.",
+						},
+						"ip_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "(Readonly) File system ip address.",
+						},
+						"mount_vpc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "(Readonly) File system virtual private network ID.",
+						},
+						"mount_subnet_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "(Readonly) File system subnet ID.",
+						},
+					},
+				},
+			},
+
 			// computed
 			"modify_time": {
 				Type:        schema.TypeString,
@@ -444,8 +518,6 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	scfService := ScfService{client: client}
-	tagService := TagService{client: client}
-	region := client.Region
 
 	var functionInfo scfFunctionInfo
 
@@ -611,6 +683,42 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		return errors.New("no function code set")
 	}
 
+	if v, ok := d.GetOk("cfs_config"); ok {
+		configs := v.([]interface{})
+		cfsList := make([]*scf.CfsInsInfo, 0, len(configs))
+
+		for i := range configs {
+			var (
+				item        = configs[i].(map[string]interface{})
+				userId      = item["user_id"].(string)
+				userGroupId = item["user_group_id"].(string)
+				cfsId       = item["cfs_id"].(string)
+				mountInsId  = item["mount_ins_id"].(string)
+				localMount  = item["local_mount_dir"].(string)
+				remoteMount = item["remote_mount_dir"].(string)
+			)
+
+			cfsInfo := &scf.CfsInsInfo{
+				UserId:         &userId,
+				UserGroupId:    &userGroupId,
+				CfsId:          &cfsId,
+				MountInsId:     &mountInsId,
+				LocalMountDir:  &localMount,
+				RemoteMountDir: &remoteMount,
+			}
+			cfsList = append(cfsList, cfsInfo)
+		}
+
+		functionInfo.cfsConfig = &scf.CfsConfig{
+			CfsInsList: cfsList,
+		}
+	}
+
+	// Pass tag as creation param instead of modify and time.Sleep
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		functionInfo.tags = tags
+	}
+
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
 		log.Printf("[CRITAL]%s create function failed: %+v", logId, err)
 		return err
@@ -663,22 +771,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	resp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
+	_, err = scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
 	if err != nil {
 		log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 		return err
 	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE, region, *resp.Response.FunctionId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s set function tags failed: %+v", logId, err)
-			return err
-		}
-	}
-
-	// wait for tags add successfully
-	time.Sleep(time.Second)
 
 	return resourceTencentCloudScfFunctionRead(d, m)
 }
@@ -755,6 +852,35 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	if resp.PublicNetConfig != nil {
 		_ = d.Set("enable_public_net", *resp.PublicNetConfig.PublicNetStatus == "ENABLE")
 		_ = d.Set("enable_eip_config", *resp.PublicNetConfig.EipConfig.EipStatus == "ENABLE")
+	}
+
+	if resp.CfsConfig != nil {
+		cfsList := make([]interface{}, 0, len(resp.CfsConfig.CfsInsList))
+		for i := range resp.CfsConfig.CfsInsList {
+			item := resp.CfsConfig.CfsInsList[i]
+			cfs := map[string]interface{}{
+				"user_id":          item.UserId,
+				"user_group_id":    item.UserGroupId,
+				"cfs_id":           item.CfsId,
+				"mount_ins_id":     item.MountInsId,
+				"local_mount_dir":  item.LocalMountDir,
+				"remote_mount_dir": item.RemoteMountDir,
+			}
+
+			if item.IpAddress != nil {
+				cfs["ip_address"] = item.IpAddress
+			}
+			if item.MountVpcId != nil {
+				cfs["mount_vpc_id"] = item.MountVpcId
+			}
+			if item.MountSubnetId != nil {
+				cfs["mount_subnet_id"] = item.MountSubnetId
+			}
+			cfsList = append(cfsList, cfs)
+		}
+		if err := d.Set("cfs_config", cfsList); err != nil {
+			return err
+		}
 	}
 
 	triggers := make([]map[string]interface{}, 0, len(resp.Triggers))
@@ -892,6 +1018,44 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				imageConfigs = append(imageConfigs, config)
 			}
 			functionInfo.imageConfig = imageConfigs[0]
+		}
+	}
+
+	if d.HasChange("cfs_config") {
+		updateAttrs = append(updateAttrs, "cfs_config")
+		if v, ok := d.GetOk("cfs_config"); ok {
+			configs := v.([]interface{})
+			cfsList := make([]*scf.CfsInsInfo, 0, len(configs))
+
+			for i := range configs {
+				var (
+					item        = configs[i].(map[string]interface{})
+					userId      = item["user_id"].(string)
+					userGroupId = item["user_group_id"].(string)
+					cfsId       = item["cfs_id"].(string)
+					mountInsId  = item["mount_ins_id"].(string)
+					localMount  = item["local_mount_dir"].(string)
+					remoteMount = item["remote_mount_dir"].(string)
+				)
+
+				cfsInfo := &scf.CfsInsInfo{
+					UserId:         &userId,
+					UserGroupId:    &userGroupId,
+					CfsId:          &cfsId,
+					MountInsId:     &mountInsId,
+					LocalMountDir:  &localMount,
+					RemoteMountDir: &remoteMount,
+				}
+				cfsList = append(cfsList, cfsInfo)
+			}
+
+			functionInfo.cfsConfig = &scf.CfsConfig{
+				CfsInsList: cfsList,
+			}
+		} else {
+			functionInfo.cfsConfig = &scf.CfsConfig{
+				CfsInsList: []*scf.CfsInsInfo{},
+			}
 		}
 	}
 

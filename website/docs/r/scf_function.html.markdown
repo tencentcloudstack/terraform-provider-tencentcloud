@@ -25,6 +25,25 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+Using CFS config
+
+```hcl
+resource "tencentcloud_scf_function" "foo" {
+  name    = "ci-test-function"
+  handler = "main.do_it"
+  runtime = "Python3.6"
+
+  cfs_config {
+    user_id          = "10000"
+    user_group_id    = "10000"
+    cfs_id           = "cfs-xxxxxxxx"
+    mount_ins_id     = "cfs-xxxxxxxx"
+    local_mount_dir  = "/mnt"
+    remote_mount_dir = "/"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -32,6 +51,7 @@ The following arguments are supported:
 * `handler` - (Required) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `name` - (Required, ForceNew) Name of the SCF function. Name supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `runtime` - (Required) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
+* `cfs_config` - (Optional) List of CFS configurations.
 * `cls_logset_id` - (Optional) cls logset id of the SCF function.
 * `cls_topic_id` - (Optional) cls topic id of the SCF function.
 * `cos_bucket_name` - (Optional) Cos bucket name of the SCF function, such as `cos-1234567890`, conflict with `zip_file`.
@@ -53,6 +73,15 @@ The following arguments are supported:
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
 * `vpc_id` - (Optional) VPC ID of the SCF function.
 * `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
+
+The `cfs_config` object supports the following:
+
+* `cfs_id` - (Required) File system instance ID.
+* `local_mount_dir` - (Required) Local mount directory.
+* `mount_ins_id` - (Required) File system mount instance ID.
+* `remote_mount_dir` - (Required) Remote mount directory.
+* `user_group_id` - (Required) ID of user group.
+* `user_id` - (Required) ID of user.
 
 The `image_config` object supports the following:
 
