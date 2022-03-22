@@ -133,6 +133,7 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
+  master_region = var.region
   zone = var.availability_zone
   tags = {
     test = "test-tf"
@@ -151,6 +152,7 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "mysql-readonly-test"
   intranet_port      = 3360
+  master_region = var.region
   zone = var.availability_zone
   tags = {
     test = "test-tf"
@@ -170,48 +172,11 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   volume_size        = 200
   instance_name      = "%s"
   intranet_port      = %s 
+  master_region = var.region
   zone = var.availability_zone
   tags = {
     test = "test-tf"
   }
 }
 	`, mysqlTestCase, instance_name, instranet_port)
-}
-
-func testAccMysqlReadonlyInstancePrepaid(mysqlTestCase string) string {
-	return fmt.Sprintf(`
-%s
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly_prepaid" {
-  master_instance_id = local.mysql_id
-  mem_size           = 2000
-  cpu                = 1
-  volume_size        = 200
-  instance_name      = "mysql-readonly-test"
-  intranet_port      = 3360
-  pay_type = 0
-  force_delete = true
-  tags = {
-    test = "test-tf"
-  }
-}
-	`, mysqlTestCase)
-}
-
-func testAccMysqlReadonlyInstancePrepaid_update(mysqlTestCase string, renewFlag int) string {
-	return fmt.Sprintf(`
-%s
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly_prepaid" {
-  master_instance_id = local.mysql_id
-  mem_size           = 2000
-  volume_size        = 200
-  instance_name      = "mysql-readonly-test"
-  intranet_port      = 3360
-  auto_renew_flag    = %d
-  tags = {
-    test = "test-tf"
-  }
-  pay_type = 0
-  force_delete = true
-}
-	`, mysqlTestCase, renewFlag)
 }
