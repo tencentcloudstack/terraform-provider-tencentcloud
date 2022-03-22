@@ -350,6 +350,12 @@ type AutoScalingGroupRange struct {
 	MaxSize *int64 `json:"MaxSize,omitempty" name:"MaxSize"`
 }
 
+type AutoUpgradeClusterLevel struct {
+
+	// 是否开启自动变配集群等级
+	IsAutoUpgrade *bool `json:"IsAutoUpgrade,omitempty" name:"IsAutoUpgrade"`
+}
+
 type AutoscalingAdded struct {
 
 	// 正在加入中的节点数量
@@ -498,7 +504,7 @@ type Cluster struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
 
-	// 集群状态 (Running 运行中  Creating 创建中 Abnormal 异常  )
+	// 集群状态 (Running 运行中  Creating 创建中 Idling 闲置中  Abnormal 异常  )
 	ClusterStatus *string `json:"ClusterStatus,omitempty" name:"ClusterStatus"`
 
 	// 集群属性(包括集群不同属性的MAP，属性字段包括NodeNameType (lan-ip模式和hostname 模式，默认无lan-ip模式))
@@ -577,7 +583,7 @@ type ClusterAdvancedSettings struct {
 	// 审计日志上传到的topic
 	AuditLogTopicId *string `json:"AuditLogTopicId,omitempty" name:"AuditLogTopicId"`
 
-	// 区分单网卡多IP模式和独立网卡模式
+	// 区分共享网卡多IP模式和独立网卡模式，共享网卡多 IP 模式填写"tke-route-eni"，独立网卡模式填写"tke-direct-eni"，默认为共享网卡模式
 	VpcCniType *string `json:"VpcCniType,omitempty" name:"VpcCniType"`
 
 	// 运行时版本
@@ -708,6 +714,15 @@ type ClusterBasicSettings struct {
 
 	// 是否开启节点的默认安全组(默认: 否，Aphla特性)
 	NeedWorkSecurityGroup *bool `json:"NeedWorkSecurityGroup,omitempty" name:"NeedWorkSecurityGroup"`
+
+	// 当选择Cilium Overlay网络插件时，TKE会从该子网获取2个IP用来创建内网负载均衡
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 集群等级，针对托管集群生效
+	ClusterLevel *string `json:"ClusterLevel,omitempty" name:"ClusterLevel"`
+
+	// 自动变配集群等级，针对托管集群生效
+	AutoUpgradeClusterLevel *AutoUpgradeClusterLevel `json:"AutoUpgradeClusterLevel,omitempty" name:"AutoUpgradeClusterLevel"`
 }
 
 type ClusterCIDRSettings struct {
@@ -820,6 +835,49 @@ type ClusterPublicLB struct {
 
 	// 外网访问相关的扩展参数，格式为json
 	ExtraParam *string `json:"ExtraParam,omitempty" name:"ExtraParam"`
+
+	// 新内外网功能，需要传递安全组
+	SecurityGroup *string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+}
+
+type ClusterStatus struct {
+
+	// 集群Id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 集群状态
+	ClusterState *string `json:"ClusterState,omitempty" name:"ClusterState"`
+
+	// 集群下机器实例的状态
+	ClusterInstanceState *string `json:"ClusterInstanceState,omitempty" name:"ClusterInstanceState"`
+
+	// 集群是否开启监控
+	ClusterBMonitor *bool `json:"ClusterBMonitor,omitempty" name:"ClusterBMonitor"`
+
+	// 集群创建中的节点数，-1表示获取节点状态超时，-2表示获取节点状态失败
+	ClusterInitNodeNum *int64 `json:"ClusterInitNodeNum,omitempty" name:"ClusterInitNodeNum"`
+
+	// 集群运行中的节点数，-1表示获取节点状态超时，-2表示获取节点状态失败
+	ClusterRunningNodeNum *int64 `json:"ClusterRunningNodeNum,omitempty" name:"ClusterRunningNodeNum"`
+
+	// 集群异常的节点数，-1表示获取节点状态超时，-2表示获取节点状态失败
+	ClusterFailedNodeNum *int64 `json:"ClusterFailedNodeNum,omitempty" name:"ClusterFailedNodeNum"`
+
+	// 集群已关机的节点数，-1表示获取节点状态超时，-2表示获取节点状态失败
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterClosedNodeNum *int64 `json:"ClusterClosedNodeNum,omitempty" name:"ClusterClosedNodeNum"`
+
+	// 集群关机中的节点数，-1表示获取节点状态超时，-2表示获取节点状态失败
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterClosingNodeNum *int64 `json:"ClusterClosingNodeNum,omitempty" name:"ClusterClosingNodeNum"`
+
+	// 集群是否开启删除保护
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterDeletionProtection *bool `json:"ClusterDeletionProtection,omitempty" name:"ClusterDeletionProtection"`
+
+	// 集群是否可审计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterAuditEnabled *bool `json:"ClusterAuditEnabled,omitempty" name:"ClusterAuditEnabled"`
 }
 
 type ClusterVersion struct {
@@ -890,6 +948,10 @@ type Container struct {
 	// Gpu限制
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GpuLimit *uint64 `json:"GpuLimit,omitempty" name:"GpuLimit"`
+
+	// 容器的安全上下文
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityContext *SecurityContext `json:"SecurityContext,omitempty" name:"SecurityContext"`
 }
 
 type ContainerState struct {
@@ -1252,6 +1314,9 @@ type CreateClusterNodePoolRequest struct {
 
 	// 容器的镜像版本，"DOCKER_CUSTOMIZE"(容器定制版),"GENERAL"(普通版本，默认值)
 	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
+
+	// 资源标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateClusterNodePoolRequest) ToJsonString() string {
@@ -1276,6 +1341,7 @@ func (r *CreateClusterNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "Taints")
 	delete(f, "NodePoolOs")
 	delete(f, "OsCustomizeType")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClusterNodePoolRequest has unknown keys!", "")
 	}
@@ -1326,7 +1392,7 @@ type CreateClusterRequest struct {
 	// 节点高级配置信息
 	InstanceAdvancedSettings *InstanceAdvancedSettings `json:"InstanceAdvancedSettings,omitempty" name:"InstanceAdvancedSettings"`
 
-	// 已存在实例的配置信息。所有实例必须在同一个VPC中，最大数量不超过100。
+	// 已存在实例的配置信息。所有实例必须在同一个VPC中，最大数量不超过100，不支持添加竞价实例。
 	ExistedInstancesForNode []*ExistedInstancesForNode `json:"ExistedInstancesForNode,omitempty" name:"ExistedInstancesForNode"`
 
 	// CVM类型和其对应的数据盘挂载配置信息
@@ -1716,6 +1782,96 @@ func (r *CreateEKSContainerInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateImageCacheRequest struct {
+	*tchttp.BaseRequest
+
+	// 用于制作镜像缓存的容器镜像列表
+	Images []*string `json:"Images,omitempty" name:"Images"`
+
+	// 实例所属子网Id
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 实例所属VPC Id
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 镜像缓存名称
+	ImageCacheName *string `json:"ImageCacheName,omitempty" name:"ImageCacheName"`
+
+	// 安全组Id
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
+
+	// 镜像仓库凭证数组
+	ImageRegistryCredentials []*ImageRegistryCredential `json:"ImageRegistryCredentials,omitempty" name:"ImageRegistryCredentials"`
+
+	// 用来绑定容器实例的已有EIP
+	ExistedEipId *string `json:"ExistedEipId,omitempty" name:"ExistedEipId"`
+
+	// 是否为容器实例自动创建EIP，默认为false。若传true，则此参数和ExistedEipIds互斥
+	AutoCreateEip *bool `json:"AutoCreateEip,omitempty" name:"AutoCreateEip"`
+
+	// 自动创建EIP的可选参数。若传此参数，则会自动创建EIP。
+	// 另外此参数和ExistedEipIds互斥
+	AutoCreateEipAttribute *EipAttribute `json:"AutoCreateEipAttribute,omitempty" name:"AutoCreateEipAttribute"`
+
+	// 镜像缓存的大小。默认为20 GiB。取值范围参考[云硬盘类型](https://cloud.tencent.com/document/product/362/2353)中的高性能云盘类型的大小限制。
+	ImageCacheSize *uint64 `json:"ImageCacheSize,omitempty" name:"ImageCacheSize"`
+
+	// 镜像缓存保留时间天数，过期将会自动清理，默认为0，永不过期。
+	RetentionDays *uint64 `json:"RetentionDays,omitempty" name:"RetentionDays"`
+}
+
+func (r *CreateImageCacheRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateImageCacheRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Images")
+	delete(f, "SubnetId")
+	delete(f, "VpcId")
+	delete(f, "ImageCacheName")
+	delete(f, "SecurityGroupIds")
+	delete(f, "ImageRegistryCredentials")
+	delete(f, "ExistedEipId")
+	delete(f, "AutoCreateEip")
+	delete(f, "AutoCreateEipAttribute")
+	delete(f, "ImageCacheSize")
+	delete(f, "RetentionDays")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateImageCacheRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateImageCacheResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 镜像缓存Id
+		ImageCacheId *string `json:"ImageCacheId,omitempty" name:"ImageCacheId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateImageCacheResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateImageCacheResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2450,6 +2606,52 @@ func (r *DeleteEKSContainerInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteEKSContainerInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteImageCachesRequest struct {
+	*tchttp.BaseRequest
+
+	// 镜像缓存Id数组
+	ImageCacheIds []*string `json:"ImageCacheIds,omitempty" name:"ImageCacheIds"`
+}
+
+func (r *DeleteImageCachesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteImageCachesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ImageCacheIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteImageCachesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteImageCachesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteImageCachesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteImageCachesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3225,6 +3427,27 @@ type DescribeClusterNodePoolsRequest struct {
 
 	// ClusterId（集群id）
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// ·  NodePoolsName
+	//     按照【节点池名】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  NodePoolsId
+	//     按照【节点池id】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  tags
+	//     按照【标签键值对】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  tag:tag-key
+	//     按照【标签键值对】进行过滤。
+	//     类型：String
+	//     必选：否
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribeClusterNodePoolsRequest) ToJsonString() string {
@@ -3240,6 +3463,7 @@ func (r *DescribeClusterNodePoolsRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ClusterId")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterNodePoolsRequest has unknown keys!", "")
 	}
@@ -3453,6 +3677,58 @@ func (r *DescribeClusterSecurityResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeClusterStatusRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群ID列表，不传默认拉取所有集群
+	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
+}
+
+func (r *DescribeClusterStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeClusterStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 集群状态列表
+		ClusterStatusSet []*ClusterStatus `json:"ClusterStatusSet,omitempty" name:"ClusterStatusSet"`
+
+		// 集群个数
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeClusterStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeClustersRequest struct {
 	*tchttp.BaseRequest
 
@@ -3468,6 +3744,16 @@ type DescribeClustersRequest struct {
 
 	// ·  ClusterName
 	//     按照【集群名】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  ClusterType
+	//     按照【集群类型】进行过滤。
+	//     类型：String
+	//     必选：否
+	// 
+	// ·  ClusterStatus
+	//     按照【集群状态】进行过滤。
 	//     类型：String
 	//     必选：否
 	// 
@@ -3591,6 +3877,9 @@ type DescribeEKSClusterCredentialResponse struct {
 
 		// 集群的内网访问信息
 		InternalLB *ClusterInternalLB `json:"InternalLB,omitempty" name:"InternalLB"`
+
+		// 标记是否新的内外网功能
+		ProxyLB *bool `json:"ProxyLB,omitempty" name:"ProxyLB"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4129,6 +4418,77 @@ func (r *DescribeExternalClusterSpecResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeExternalClusterSpecResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeImageCachesRequest struct {
+	*tchttp.BaseRequest
+
+	// 镜像缓存Id数组
+	ImageCacheIds []*string `json:"ImageCacheIds,omitempty" name:"ImageCacheIds"`
+
+	// 镜像缓存名称数组
+	ImageCacheNames []*string `json:"ImageCacheNames,omitempty" name:"ImageCacheNames"`
+
+	// 限定此次返回资源的数量。如果不设定，默认返回20，最大不能超过50
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量,默认0
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 过滤条件，可选条件：
+	// (1)实例名称
+	// KeyName: image-cache-name
+	// 类型：String
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+}
+
+func (r *DescribeImageCachesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeImageCachesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ImageCacheIds")
+	delete(f, "ImageCacheNames")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeImageCachesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeImageCachesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 镜像缓存总数
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 镜像缓存信息列表
+		ImageCaches []*ImageCache `json:"ImageCaches,omitempty" name:"ImageCaches"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeImageCachesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeImageCachesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4852,6 +5212,64 @@ func (r *DescribeRouteTableConflictsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeTKEEdgeScriptRequest struct {
+	*tchttp.BaseRequest
+
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 网卡名
+	Interface *string `json:"Interface,omitempty" name:"Interface"`
+
+	// 节点名字
+	NodeName *string `json:"NodeName,omitempty" name:"NodeName"`
+
+	// json格式的节点配置
+	Config *string `json:"Config,omitempty" name:"Config"`
+}
+
+func (r *DescribeTKEEdgeScriptRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTKEEdgeScriptRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "Interface")
+	delete(f, "NodeName")
+	delete(f, "Config")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTKEEdgeScriptRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeTKEEdgeScriptResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeTKEEdgeScriptResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTKEEdgeScriptResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeVersionsRequest struct {
 	*tchttp.BaseRequest
 }
@@ -5173,6 +5591,10 @@ type EksCi struct {
 	// 自动为用户创建的EipId
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoCreatedEipId *string `json:"AutoCreatedEipId,omitempty" name:"AutoCreatedEipId"`
+
+	// 容器状态是否持久化
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PersistStatus *bool `json:"PersistStatus,omitempty" name:"PersistStatus"`
 }
 
 type EksCiRegionInfo struct {
@@ -5587,6 +6009,59 @@ func (r *ForwardApplicationRequestV3Response) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GetMostSuitableImageCacheRequest struct {
+	*tchttp.BaseRequest
+
+	// 容器镜像列表
+	Images []*string `json:"Images,omitempty" name:"Images"`
+}
+
+func (r *GetMostSuitableImageCacheRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetMostSuitableImageCacheRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Images")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetMostSuitableImageCacheRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type GetMostSuitableImageCacheResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 是否有匹配的镜像缓存
+		Found *bool `json:"Found,omitempty" name:"Found"`
+
+		// 匹配的镜像缓存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ImageCache *ImageCache `json:"ImageCache,omitempty" name:"ImageCache"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GetMostSuitableImageCacheResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetMostSuitableImageCacheResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type GetTkeAppChartListRequest struct {
 	*tchttp.BaseRequest
 
@@ -5745,6 +6220,66 @@ type IPAddress struct {
 
 	// 网络端口
 	Port *uint64 `json:"Port,omitempty" name:"Port"`
+}
+
+type ImageCache struct {
+
+	// 镜像缓存Id
+	ImageCacheId *string `json:"ImageCacheId,omitempty" name:"ImageCacheId"`
+
+	// 镜像缓存名称
+	ImageCacheName *string `json:"ImageCacheName,omitempty" name:"ImageCacheName"`
+
+	// 镜像缓存大小。单位：GiB
+	ImageCacheSize *uint64 `json:"ImageCacheSize,omitempty" name:"ImageCacheSize"`
+
+	// 镜像缓存包含的镜像列表
+	Images []*string `json:"Images,omitempty" name:"Images"`
+
+	// 创建时间
+	CreationTime *string `json:"CreationTime,omitempty" name:"CreationTime"`
+
+	// 到期时间
+	ExpireDateTime *string `json:"ExpireDateTime,omitempty" name:"ExpireDateTime"`
+
+	// 镜像缓存事件信息
+	Events []*ImageCacheEvent `json:"Events,omitempty" name:"Events"`
+
+	// 最新一次匹配到镜像缓存的时间
+	LastMatchedTime *string `json:"LastMatchedTime,omitempty" name:"LastMatchedTime"`
+
+	// 镜像缓存对应的快照Id
+	SnapshotId *string `json:"SnapshotId,omitempty" name:"SnapshotId"`
+
+	// 镜像缓存状态，可能取值：
+	// Pending：创建中
+	// Ready：创建完成
+	// Failed：创建失败
+	// Updating：更新中
+	// UpdateFailed：更新失败
+	// 只有状态为Ready时，才能正常使用镜像缓存
+	Status *string `json:"Status,omitempty" name:"Status"`
+}
+
+type ImageCacheEvent struct {
+
+	// 镜像缓存Id
+	ImageCacheId *string `json:"ImageCacheId,omitempty" name:"ImageCacheId"`
+
+	// 事件类型, Normal或者Warning
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 事件原因简述
+	Reason *string `json:"Reason,omitempty" name:"Reason"`
+
+	// 事件原因详述
+	Message *string `json:"Message,omitempty" name:"Message"`
+
+	// 事件第一次出现时间
+	FirstTimestamp *string `json:"FirstTimestamp,omitempty" name:"FirstTimestamp"`
+
+	// 事件最后一次出现时间
+	LastTimestamp *string `json:"LastTimestamp,omitempty" name:"LastTimestamp"`
 }
 
 type ImageInstance struct {
@@ -6121,6 +6656,12 @@ type ModifyClusterAttributeRequest struct {
 
 	// 集群描述
 	ClusterDesc *string `json:"ClusterDesc,omitempty" name:"ClusterDesc"`
+
+	// 集群等级
+	ClusterLevel *string `json:"ClusterLevel,omitempty" name:"ClusterLevel"`
+
+	// 自动变配集群等级
+	AutoUpgradeClusterLevel *AutoUpgradeClusterLevel `json:"AutoUpgradeClusterLevel,omitempty" name:"AutoUpgradeClusterLevel"`
 }
 
 func (r *ModifyClusterAttributeRequest) ToJsonString() string {
@@ -6139,6 +6680,8 @@ func (r *ModifyClusterAttributeRequest) FromJsonString(s string) error {
 	delete(f, "ProjectId")
 	delete(f, "ClusterName")
 	delete(f, "ClusterDesc")
+	delete(f, "ClusterLevel")
+	delete(f, "AutoUpgradeClusterLevel")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterAttributeRequest has unknown keys!", "")
 	}
@@ -6160,6 +6703,14 @@ type ModifyClusterAttributeResponse struct {
 		// 集群描述
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		ClusterDesc *string `json:"ClusterDesc,omitempty" name:"ClusterDesc"`
+
+		// 集群等级
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ClusterLevel *string `json:"ClusterLevel,omitempty" name:"ClusterLevel"`
+
+		// 自动变配集群等级
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		AutoUpgradeClusterLevel *AutoUpgradeClusterLevel `json:"AutoUpgradeClusterLevel,omitempty" name:"AutoUpgradeClusterLevel"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -6312,6 +6863,12 @@ type ModifyClusterNodePoolRequest struct {
 
 	// 节点自定义参数
 	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
+
+	// 资源标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 设置加入的节点是否参与调度，默认值为0，表示参与调度；非0表示不参与调度, 待节点初始化完成之后, 可执行kubectl uncordon nodename使node加入调度.
+	Unschedulable *int64 `json:"Unschedulable,omitempty" name:"Unschedulable"`
 }
 
 func (r *ModifyClusterNodePoolRequest) ToJsonString() string {
@@ -6337,6 +6894,8 @@ func (r *ModifyClusterNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "OsName")
 	delete(f, "OsCustomizeType")
 	delete(f, "ExtraArgs")
+	delete(f, "Tags")
+	delete(f, "Unschedulable")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterNodePoolRequest has unknown keys!", "")
 	}
@@ -6661,6 +7220,10 @@ type NodePool struct {
 	// 用户自定义脚本
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserScript *string `json:"UserScript,omitempty" name:"UserScript"`
+
+	// 资源标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type NodePoolOption struct {
@@ -6748,6 +7311,11 @@ type PrometheusAgentOverview struct {
 
 	// 集群名称
 	ClusterName *string `json:"ClusterName,omitempty" name:"ClusterName"`
+
+	// 额外labels
+	// 本集群的所有指标都会带上这几个label
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExternalLabels []*Label `json:"ExternalLabels,omitempty" name:"ExternalLabels"`
 }
 
 type PrometheusAlertHistoryItem struct {
@@ -6802,6 +7370,10 @@ type PrometheusAlertRule struct {
 	// 参考prometheus rule中的annotations
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Annotations []*Label `json:"Annotations,omitempty" name:"Annotations"`
+
+	// 告警规则状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleState *int64 `json:"RuleState,omitempty" name:"RuleState"`
 }
 
 type PrometheusAlertRuleDetail struct {
@@ -7758,6 +8330,12 @@ type UpdateEKSClusterRequest struct {
 
 	// 将来删除集群时是否要删除cbs。默认为 FALSE
 	NeedDeleteCbs *bool `json:"NeedDeleteCbs,omitempty" name:"NeedDeleteCbs"`
+
+	// 标记是否是新的内外网。默认为false
+	ProxyLB *bool `json:"ProxyLB,omitempty" name:"ProxyLB"`
+
+	// 扩展参数。须是map[string]string 的json 格式。
+	ExtraParam *string `json:"ExtraParam,omitempty" name:"ExtraParam"`
 }
 
 func (r *UpdateEKSClusterRequest) ToJsonString() string {
@@ -7782,6 +8360,8 @@ func (r *UpdateEKSClusterRequest) FromJsonString(s string) error {
 	delete(f, "DnsServers")
 	delete(f, "ClearDnsServer")
 	delete(f, "NeedDeleteCbs")
+	delete(f, "ProxyLB")
+	delete(f, "ExtraParam")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateEKSClusterRequest has unknown keys!", "")
 	}
@@ -7879,6 +8459,56 @@ func (r *UpdateEKSContainerInstanceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateEKSContainerInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateImageCacheRequest struct {
+	*tchttp.BaseRequest
+
+	// 镜像缓存Id
+	ImageCacheId *string `json:"ImageCacheId,omitempty" name:"ImageCacheId"`
+
+	// 镜像缓存名称
+	ImageCacheName *string `json:"ImageCacheName,omitempty" name:"ImageCacheName"`
+}
+
+func (r *UpdateImageCacheRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateImageCacheRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ImageCacheId")
+	delete(f, "ImageCacheName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateImageCacheRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateImageCacheResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateImageCacheResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateImageCacheResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

@@ -92,6 +92,9 @@ const (
 	// 存在云服务器在CVM侧查询不到。
 	INTERNALERROR_CVMNUMBERNOTMATCH = "InternalError.CvmNumberNotMatch"
 
+	// cvm状态不正常。
+	INTERNALERROR_CVMSTATUS = "InternalError.CvmStatus"
+
 	// db错误。
 	INTERNALERROR_DB = "InternalError.Db"
 
@@ -182,6 +185,9 @@ const (
 	// 路由表不存在。
 	INTERNALERROR_ROUTETABLENOTFOUND = "InternalError.RouteTableNotFound"
 
+	// 已有相同任务执行中。
+	INTERNALERROR_TASKALREADYRUNNING = "InternalError.TaskAlreadyRunning"
+
 	// 创建任务失败。
 	INTERNALERROR_TASKCREATEFAILED = "InternalError.TaskCreateFailed"
 
@@ -190,6 +196,12 @@ const (
 
 	// 任务未找到。
 	INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
+
+	// 询价错误。
+	INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+
+	// 账户余额不足。
+	INTERNALERROR_TRADEINSUFFICIENTBALANCE = "InternalError.TradeInsufficientBalance"
 
 	// 内部错误。
 	INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -244,6 +256,9 @@ const (
 
 	// 下一跳地址已关联CIDR。
 	INVALIDPARAMETER_GATEWAYALREADYASSOCIATEDCIDR = "InvalidParameter.GatewayAlreadyAssociatedCidr"
+
+	// 无效的私有CIDR网段。
+	INVALIDPARAMETER_INVALIDPRIVATENETWORKCIDR = "InvalidParameter.InvalidPrivateNetworkCIDR"
 
 	// 参数错误。
 	INVALIDPARAMETER_PARAM = "InvalidParameter.Param"

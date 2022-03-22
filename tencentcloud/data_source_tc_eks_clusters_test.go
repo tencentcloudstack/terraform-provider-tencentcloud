@@ -34,7 +34,6 @@ func TestAccTencentCloudEksClustersDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eks_clusters.foo", "list.0.service_subnet_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eks_clusters.foo", "list.0.enable_vpc_core_dns", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eks_clusters.foo", "list.0.need_delete_cbs", "true"),
-					resource.TestCheckResourceAttr("data.tencentcloud_eks_clusters.foo", "list.0.tags.test", "tf"),
 				),
 			},
 		},

@@ -84,6 +84,8 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.1", "10.0.0.1:83"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "enable_vpc_core_dns", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "internal_lb.0.enabled", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "public_lb.0.enabled", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "tags.test", "tf"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "subnet_ids.0"),
@@ -92,9 +94,10 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_eks_cluster.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_eks_cluster.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"public_lb", "internal_lb"},
 			},
 		},
 	})
@@ -215,6 +218,12 @@ resource "tencentcloud_eks_cluster" "foo" {
   }
   enable_vpc_core_dns = false
   need_delete_cbs = true
+  internal_lb {
+    enabled = true
+  }
+  public_lb {
+    enabled = true
+  }
   tags = {
     test = "tf"
   }

@@ -33,6 +33,18 @@ type EksClusterInfo struct {
 	Tags             map[string]string
 }
 
+type EksClusterCredentialResponse struct {
+	Addresses []*tke.IPAddress `json:"Addresses,omitempty" name:"Addresses"`
+
+	Credential *tke.ClusterCredential `json:"Credential,omitempty" name:"Credential"`
+
+	PublicLB *tke.ClusterPublicLB `json:"PublicLB,omitempty" name:"PublicLB"`
+
+	InternalLB *tke.ClusterInternalLB `json:"InternalLB,omitempty" name:"InternalLB"`
+
+	ProxyLB bool
+}
+
 var versionSuffix = regexp.MustCompile(`-eks\.\d*$`)
 
 func getClusterInfo(cluster *tke.EksCluster) EksClusterInfo {
@@ -222,6 +234,46 @@ func (me *EksService) DescribeEksContainerInstancesByFilter(ctx context.Context,
 	if err != nil {
 		errRet = err
 		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *EksService) DescribeEKSClusterCredentialById(ctx context.Context, id string) (info *EksClusterCredentialResponse, errRet error) {
+	request := tke.NewDescribeEKSClusterCredentialRequest()
+	request.ClusterId = &id
+	info, errRet = me.DescribeEKSClusterCredential(ctx, request)
+	return
+}
+
+func (me *EksService) DescribeEKSClusterCredential(ctx context.Context, request *tke.DescribeEKSClusterCredentialRequest) (info *EksClusterCredentialResponse, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeEKSClusterCredential(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if body := response.Response; body != nil {
+		info = &EksClusterCredentialResponse{
+			Credential: body.Credential,
+			Addresses:  body.Addresses,
+			PublicLB:   body.PublicLB,
+			InternalLB: body.InternalLB,
+			ProxyLB:    *body.ProxyLB,
+		}
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

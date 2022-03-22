@@ -148,6 +148,63 @@ func resourceTencentCloudEksCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Delete CBS after EKS cluster remove.",
 			},
+			"public_lb": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Cluster public access LoadBalancer info.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Indicates weather the public access LB enabled.",
+						},
+						"allow_from_cidrs": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of CIDRs which allowed to access.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"security_policies": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of security allow IP or CIDRs, default deny all.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"extra_param": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Extra param text json.",
+						},
+						"security_group": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Security group.",
+						},
+					},
+				},
+			},
+			"internal_lb": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Cluster internal access LoadBalancer info.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Indicates weather the internal access LB enabled.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "ID of subnet which related to Internal LB.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -184,6 +241,53 @@ func resourceTencentcloudEKSClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("subnet_ids", cluster.SubnetIds)
 	_ = d.Set("need_delete_cbs", cluster.NeedDeleteCbs)
 	_ = d.Set("enable_vpc_core_dns", cluster.EnableVpcCoreDNS)
+
+	info, err := service.DescribeEKSClusterCredentialById(ctx, d.Id())
+
+	if err != nil {
+		return err
+	}
+
+	if _, ok := d.GetOk("internal_lb"); ok && info.InternalLB != nil {
+		internalLB := make([]map[string]interface{}, 0)
+		lb := map[string]interface{}{
+			"enabled":   info.InternalLB.Enabled,
+			"subnet_id": info.InternalLB.SubnetId,
+		}
+		internalLB = append(internalLB, lb)
+		err = d.Set("internal_lb", internalLB)
+		if err != nil {
+			return err
+		}
+	}
+
+	if _, ok := d.GetOk("public_lb"); ok && info.PublicLB != nil {
+		publicLB := make([]map[string]interface{}, 0)
+		var (
+			cidrs    []*string
+			policies []*string
+		)
+		// Avoid empty string "" write to data
+		for _, v := range info.PublicLB.AllowFromCidrs {
+			if *v != "" {
+				cidrs = append(cidrs, v)
+			}
+		}
+		for _, v := range info.PublicLB.SecurityPolicies {
+			if *v != "" {
+				policies = append(cidrs, v)
+			}
+		}
+		lb := map[string]interface{}{
+			"enabled":           info.PublicLB.Enabled,
+			"extra_param":       info.PublicLB.ExtraParam,
+			"allow_from_cidrs":  cidrs,
+			"security_group":    info.PublicLB.SecurityGroup,
+			"security_policies": policies,
+		}
+		publicLB = append(publicLB, lb)
+		_ = d.Set("public_lb", publicLB)
+	}
 
 	return nil
 }
@@ -269,7 +373,7 @@ func resourceTencentcloudEKSClusterCreate(d *schema.ResourceData, meta interface
 
 	d.SetId(id)
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
 		cluster, _, err := service.DescribeEksCluster(ctx, id)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -285,13 +389,76 @@ func resourceTencentcloudEKSClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	upgradeRequest := tke.NewUpdateEKSClusterRequest()
+
 	if v, ok := d.GetOk("need_delete_cbs"); ok {
-		request := tke.NewUpdateEKSClusterRequest()
-		request.ClusterId = helper.String(id)
-		request.NeedDeleteCbs = helper.Bool(v.(bool))
-		err := service.UpdateEksCluster(ctx, request)
+		upgradeRequest.ClusterId = helper.String(id)
+		upgradeRequest.NeedDeleteCbs = helper.Bool(v.(bool))
+	}
+
+	enablePublic := false
+	enableInternal := false
+
+	if lb, ok := helper.InterfacesHeadMap(d, "internal_lb"); ok {
+		upgradeRequest.ClusterId = helper.String(id)
+		enabled := lb["enabled"].(bool)
+		upgradeRequest.InternalLB = &tke.ClusterInternalLB{
+			Enabled: &enabled,
+		}
+		if v, ok := lb["subnet_id"].(string); ok && v != "" {
+			upgradeRequest.InternalLB.SubnetId = &v
+		}
+		enableInternal = enabled
+	}
+
+	if lb, ok := helper.InterfacesHeadMap(d, "public_lb"); ok {
+		upgradeRequest.ClusterId = helper.String(id)
+		enabled := lb["enabled"].(bool)
+		upgradeRequest.PublicLB = &tke.ClusterPublicLB{
+			Enabled: &enabled,
+		}
+		if v, ok := lb["security_group"].(string); ok && v != "" {
+			upgradeRequest.PublicLB.SecurityGroup = &v
+		}
+		if v, ok := lb["allow_from_cidrs"].([]interface{}); ok && len(v) > 0 {
+			upgradeRequest.PublicLB.AllowFromCidrs = helper.InterfacesStringsPoint(v)
+		}
+		if v, ok := lb["security_policies"].([]interface{}); ok && len(v) > 0 {
+			upgradeRequest.PublicLB.SecurityPolicies = helper.InterfacesStringsPoint(v)
+		}
+		enablePublic = enabled
+	}
+
+	if upgradeRequest.ClusterId != nil {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := service.UpdateEksCluster(ctx, upgradeRequest)
+			if inErr != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
 		if err != nil {
-			fmt.Printf("[WARN]: update NeedDeleteCbs failed: %s", err.Error())
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			info, inErr := service.DescribeEKSClusterCredentialById(ctx, id)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if info.InternalLB == nil || *info.InternalLB.Enabled != enableInternal {
+				return resource.RetryableError(fmt.Errorf("waiting for internal lb upgrade"))
+			}
+
+			if info.PublicLB == nil || *info.PublicLB.Enabled != enablePublic {
+				return resource.RetryableError(fmt.Errorf("waiting for public lb upgrade"))
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
 	}
 
@@ -370,6 +537,72 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 		updateAttrs = append(updateAttrs, "need_delete_cbs")
 		needDelete := d.Get("need_delete_cbs").(bool)
 		request.NeedDeleteCbs = helper.Bool(needDelete)
+	}
+
+	enableInternal := false
+	enablePublic := false
+	if d.HasChange("internal_lb") {
+		updateAttrs = append(updateAttrs, "internal_lb")
+		if v, ok := d.GetOk("internal_lb"); ok {
+			lb := v.([]map[string]interface{})[0]
+			enabled := lb["enabled"].(bool)
+			request.InternalLB = &tke.ClusterInternalLB{
+				Enabled: &enabled,
+			}
+			if v, ok := lb["subnet_id"].(string); ok && v != "" {
+				request.InternalLB.SubnetId = &v
+			}
+			enableInternal = enabled
+		} else {
+			request.InternalLB = &tke.ClusterInternalLB{
+				Enabled: helper.Bool(false),
+			}
+		}
+	}
+
+	if d.HasChange("public_lb") {
+		updateAttrs = append(updateAttrs, "public_lb")
+		if v, ok := d.GetOk("public_lb"); ok {
+			lb := v.([]map[string]interface{})[0]
+			enabled := lb["enabled"].(bool)
+			request.PublicLB = &tke.ClusterPublicLB{
+				Enabled: &enabled,
+			}
+			if v, ok := lb["security_group"].(string); ok && v != "" {
+				request.PublicLB.SecurityGroup = &v
+			}
+			if v, ok := lb["allow_from_cidrs"].([]interface{}); ok && len(v) > 0 {
+				request.PublicLB.AllowFromCidrs = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := lb["security_policies"].([]interface{}); ok && len(v) > 0 {
+				request.PublicLB.SecurityPolicies = helper.InterfacesStringsPoint(v)
+			}
+			enablePublic = enabled
+		} else {
+			request.PublicLB = &tke.ClusterPublicLB{
+				Enabled: helper.Bool(false),
+			}
+		}
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			info, inErr := service.DescribeEKSClusterCredentialById(ctx, id)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if info.InternalLB == nil || *info.InternalLB.Enabled != enableInternal {
+				return resource.RetryableError(fmt.Errorf("waiting for internal lb upgrade"))
+			}
+
+			if info.PublicLB == nil || *info.PublicLB.Enabled != enablePublic {
+				return resource.RetryableError(fmt.Errorf("waiting for public lb upgrade"))
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
 	}
 
 	if len(updateAttrs) > 0 {
