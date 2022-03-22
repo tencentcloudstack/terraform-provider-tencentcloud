@@ -61,6 +61,7 @@ In addition to all arguments above, the following attributes are exported:
 * `internal_lb` - Cluster internal access LoadBalancer info.
   * `enabled` - Indicates weather the internal access LB enabled.
   * `subnet_id` - ID of subnet which related to Internal LB.
+* `kube_config` - EKS cluster kubeconfig.
 * `proxy_lb` - Indicates whether the new internal/public network function.
 * `public_lb` - Cluster public access LoadBalancer info.
   * `allow_from_cidrs` - List of CIDRs which allowed to access.

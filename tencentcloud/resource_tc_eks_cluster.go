@@ -210,6 +210,12 @@ func resourceTencentCloudEksCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of EKS cluster.",
 			},
+			// computed
+			"kube_config": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "EKS cluster kubeconfig.",
+			},
 		},
 	}
 }
@@ -247,6 +253,8 @@ func resourceTencentcloudEKSClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
+	_ = d.Set("kube_config", info.KubeConfig)
 
 	if _, ok := d.GetOk("internal_lb"); ok && info.InternalLB != nil {
 		internalLB := make([]map[string]interface{}, 0)

@@ -42,6 +42,8 @@ type EksClusterCredentialResponse struct {
 
 	InternalLB *tke.ClusterInternalLB `json:"InternalLB,omitempty" name:"InternalLB"`
 
+	KubeConfig string
+
 	ProxyLB bool
 }
 
@@ -273,6 +275,7 @@ func (me *EksService) DescribeEKSClusterCredential(ctx context.Context, request 
 			PublicLB:   body.PublicLB,
 			InternalLB: body.InternalLB,
 			ProxyLB:    *body.ProxyLB,
+			KubeConfig: *body.Kubeconfig,
 		}
 	}
 
