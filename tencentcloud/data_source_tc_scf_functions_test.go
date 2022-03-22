@@ -146,6 +146,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -156,15 +157,12 @@ data "tencentcloud_scf_functions" "foo" {
 `
 
 const TestAccDataSourceTencentCloudScfFunctionsNamespace = `
-resource "tencentcloud_scf_namespace" "foo" {
-  namespace = "ci-test-scf"
-}
-
 resource "tencentcloud_scf_function" "foo" {
-  namespace = tencentcloud_scf_namespace.foo.id
+  namespace = "` + defaultScfNamespace + `"
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -180,6 +178,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler     = "first.do_it_first"
   runtime     = "Python3.6"
   description = "test"
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -194,6 +193,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 

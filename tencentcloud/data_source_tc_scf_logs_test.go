@@ -56,6 +56,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 }
@@ -70,6 +71,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
+  enable_public_net = true
 
   zip_file = "%s"
 }
