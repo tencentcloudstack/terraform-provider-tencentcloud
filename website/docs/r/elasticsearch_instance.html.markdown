@@ -30,7 +30,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 
   node_info_list {
     node_num  = 2
-    node_type = "ES.S1.SMALL2"
+    node_type = "ES.S1.MEDIUM4"
     encrypt   = false
   }
 

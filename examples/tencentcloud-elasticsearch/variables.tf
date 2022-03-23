@@ -7,5 +7,5 @@ variable "instance_name" {
 }
 
 variable "instance_type" {
-  default = "ES.S1.SMALL2"
+  default = "ES.S1.MEDIUM4"
 }

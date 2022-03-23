@@ -3,11 +3,45 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_elasticsearch_instance
+	resource.AddTestSweepers("tencentcloud_elasticsearch_instance", &resource.Sweeper{
+		Name: "tencentcloud_elasticsearch_instance",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := ElasticsearchService{client: client}
+
+			es, err := service.DescribeInstancesByFilter(ctx, "", "tf-ci-test", nil)
+			if err != nil {
+				return err
+			}
+
+			for _, v := range es {
+				id := *v.InstanceId
+				name := *v.InstanceName
+				if !strings.Contains(name, "tf-ci-test") {
+					continue
+				}
+				if err := service.DeleteInstance(ctx, id); err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 	t.Parallel()
@@ -31,7 +65,7 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM4"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_num", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.SMALL2"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.MEDIUM4"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.type", "hotData"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "terraform"),
@@ -144,7 +178,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 
 	node_info_list {
 	  node_num          = 2
-	  node_type         = "ES.S1.SMALL2"
+	  node_type         = "ES.S1.MEDIUM4"
 	}
   
 	tags = {
