@@ -38,6 +38,10 @@ type scfFunctionInfo struct {
 	zipFile *string
 
 	imageConfig *scf.ImageConfig
+
+	cfsConfig *scf.CfsConfig
+
+	tags map[string]string
 }
 
 type scfTrigger struct {
@@ -91,6 +95,19 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 		CosBucketRegion: info.cosBucketRegion,
 		ZipFile:         info.zipFile,
 		ImageConfig:     info.imageConfig,
+	}
+
+	if info.cfsConfig != nil && len(info.cfsConfig.CfsInsList) > 0 {
+		request.CfsConfig = info.cfsConfig
+	}
+
+	if len(info.tags) > 0 {
+		for k, v := range info.tags {
+			request.Tags = append(request.Tags, &scf.Tag{
+				Key:   &k,
+				Value: &v,
+			})
+		}
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

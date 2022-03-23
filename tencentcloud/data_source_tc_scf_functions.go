@@ -138,6 +138,16 @@ func dataSourceTencentCloudScfFunctions() *schema.Resource {
 							Computed:    true,
 							Description: "Whether to enable L5.",
 						},
+						"enable_public_net": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether the public net enabled.",
+						},
+						"enable_eip_config": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether the EIP enabled.",
+						},
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
@@ -389,7 +399,9 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 		functions = append(functions, m)
 	}
 
-	_ = d.Set("functions", functions)
+	if err := d.Set("functions", functions); err != nil {
+		return err
+	}
 	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

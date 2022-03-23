@@ -17,9 +17,9 @@ func TestAccDataSourceTencentCloudScfNamespaces_basic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudScfNamespaces,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_namespaces.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_namespaces.foo", "namespace", "ci-test-scf"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_namespaces.foo", "namespace", defaultScfNamespace),
 					resource.TestMatchResourceAttr("data.tencentcloud_scf_namespaces.foo", "namespaces.#", regexp.MustCompile(`^[1-9]\d*$`)),
-					resource.TestMatchResourceAttr("data.tencentcloud_scf_namespaces.foo", "namespaces.0.namespace", regexp.MustCompile(`ci-test-scf`)),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_namespaces.foo", "namespaces.0.namespace", defaultScfNamespace),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_namespaces.foo", "namespaces.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_namespaces.foo", "namespaces.0.modify_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_namespaces.foo", "namespaces.0.type"),
@@ -53,18 +53,14 @@ func TestAccDataSourceTencentCloudScfNamespaces_desc(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudScfNamespaces = `
-resource "tencentcloud_scf_namespace" "foo" {
-  namespace = "ci-test-scf"
-}
-
 data "tencentcloud_scf_namespaces" "foo" {
-  namespace = tencentcloud_scf_namespace.foo.id
+  namespace = "` + defaultScfNamespace + `"
 }
 `
 
 const TestAccDataSourceTencentCloudScfNamespacesDesc = `
 resource "tencentcloud_scf_namespace" "foo" {
-  namespace   = "ci-test-scf"
+  namespace   = "ci-test-desc-namespace"
   description = "test"
 }
 

@@ -53,6 +53,8 @@ In addition to all arguments above, the following attributes are exported:
   * `description` - Description of the SCF function.
   * `eip_fixed` - Whether EIP is a fixed IP.
   * `eips` - EIP list of the SCF function.
+  * `enable_eip_config` - Whether the EIP enabled.
+  * `enable_public_net` - Whether the public net enabled.
   * `environment` - Environment variable of the SCF function.
   * `err_no` - Errno of the SCF function.
   * `handler` - Handler of the SCF function.

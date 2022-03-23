@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/pkg/errors"
@@ -185,7 +187,7 @@ func TestAccTencentCloudScfFunction_role(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vpc_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "default"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", "scf-role-test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", defaultScfRoleName1),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "l5_enable", "false"),
@@ -208,7 +210,7 @@ func TestAccTencentCloudScfFunction_role(t *testing.T) {
 				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionRoleUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", "scf-role-test-new"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", defaultScfRoleName2),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "modify_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "code_size"),
@@ -276,17 +278,14 @@ func TestAccTencentCloudScfFunction_trigger(t *testing.T) {
 				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionTriggerUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "triggers.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "triggers.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "modify_time"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "status", SCF_FUNCTION_STATUS_ACTIVE),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "status_desc", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.0.enable", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "trigger_info.0.create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "trigger_info.0.modify_time"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.1.enable", "true"),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "trigger_info.1.create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "trigger_info.1.modify_time"),
 				),
 			},
 		},
@@ -314,7 +313,7 @@ func TestAccTencentCloudScfFunction_customNamespace(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "runtime", "Python3.6"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vpc_id", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "subnet_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", "ci-test-scf"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "namespace", defaultScfNamespace),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "role", ""),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_logset_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cls_topic_id"),
@@ -335,6 +334,63 @@ func TestAccTencentCloudScfFunction_customNamespace(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudScfFunction_fs(t *testing.T) {
+	t.Parallel()
+	var fnId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckScfFunctionDestroy(&fnId),
+		Steps: []resource.TestStep{
+			{
+				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionCfsConfigs),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
+					resource.TestMatchResourceAttr("tencentcloud_scf_function.foo", "name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "modify_time"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.user_id", "10000"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.user_group_id", "10000"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cfs_config.0.cfs_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cfs_config.0.mount_ins_id"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.local_mount_dir", "/mnt"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.remote_mount_dir", "/"),
+				),
+			},
+			{
+				Config: scfFunctionCodeEmbed("second.zip", testAccScfFunctionCfsConfigsUpdate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
+					resource.TestMatchResourceAttr("tencentcloud_scf_function.foo", "name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "modify_time"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.user_id", "10000"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.user_group_id", "10000"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cfs_config.0.cfs_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "cfs_config.0.mount_ins_id"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.local_mount_dir", "/mnt"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "cfs_config.0.remote_mount_dir", "/foo"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_scf_function.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"zip_file",
+				},
 			},
 		},
 	})
@@ -384,6 +440,10 @@ func testAccCheckScfFunctionDestroy(id *string) resource.TestCheckFunc {
 
 		fn, err := service.DescribeFunction(context.TODO(), name, namespace)
 		if err != nil {
+			code := err.(*sdkErrors.TencentCloudSDKError).Code
+			if strings.HasPrefix(code, "ResourceNotFound") {
+				return nil
+			}
 			return err
 		}
 
@@ -444,8 +504,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 `
 
-var testAccScfFunctionBasicUpdate = fmt.Sprintf(
-	defaultVpcVariable+`
+var testAccScfFunctionBasicUpdate = fmt.Sprintf(defaultVpcVariable+`
 resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
   handler   = "second.do_it_second"
@@ -473,13 +532,9 @@ resource "tencentcloud_scf_function" "foo" {
 
 func testAccScfFunctionCosCode(codeSource string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "foo" {
-  bucket = "scf-cos-%s"
-  acl    = "public-read"
-}
-
+%s
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = tencentcloud_cos_bucket.foo.bucket
+  bucket = local.bucket_name
   key    = "/new_object_key.zip"
   source = "%s"
   acl    = "public-read"
@@ -491,33 +546,25 @@ resource "tencentcloud_scf_function" "foo" {
   runtime   = "Python3.6"
   enable_public_net = true
 
-  cos_bucket_name   = tencentcloud_cos_bucket.foo.id
+  cos_bucket_name   = local.bucket_name
   cos_object_name   = tencentcloud_cos_bucket_object.myobject.key
   cos_bucket_region = "ap-guangzhou"
-}`, appid, codeSource)
+}`, defaultSCFCosBucket, codeSource)
 }
 
 func testAccScfFunctionCosUpdateCode(codeSource string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "foo" {
-  bucket = "scf-cos-%s"
-  acl    = "public-read"
-}
+%s
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = tencentcloud_cos_bucket.foo.bucket
+  bucket = local.bucket_name
   key    = "/new_object_key.zip"
   source = "%s"
   acl    = "public-read"
 }
 
-resource "tencentcloud_cos_bucket" "bar" {
-  bucket = "scf-cos2-%s"
-  acl    = "public-read"
-}
-
 resource "tencentcloud_cos_bucket_object" "bar" {
-  bucket = tencentcloud_cos_bucket.bar.bucket
+  bucket = local.bucket_name
   key    = "/new_code.zip"
   source = "%s"
   acl    = "public-read"
@@ -529,11 +576,14 @@ resource "tencentcloud_scf_function" "foo" {
   runtime   = "Python3.6"
   enable_public_net = true
 
-  cos_bucket_name   = tencentcloud_cos_bucket.bar.id
+  cos_bucket_name   = local.bucket_name
   cos_object_name   = tencentcloud_cos_bucket_object.bar.key
   cos_bucket_region = "ap-guangzhou"
-}`, appid, codeSource, appid, codeSource, scfFunctionRandomName())
+}`, defaultSCFCosBucket, codeSource, codeSource, scfFunctionRandomName())
 }
+
+const defaultScfRoleName1 = "preset-scf-role"
+const defaultScfRoleName2 = "preset-scf-role-new"
 
 var testAccScfFunctionRole = fmt.Sprintf(`
 variable "role_document" {
@@ -551,25 +601,19 @@ variable "role_document" {
 EOF
 }
 
-resource "tencentcloud_cam_role" "foo" {
-  name          = "scf-role-test"
-  document      = var.role_document
-  description   = "test"
-  console_login = true
-}
-
 resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
-  role    = tencentcloud_cam_role.foo.name
+  role    = "%s"
   enable_public_net = true
 
   zip_file = "%s"
 }
-`, "%s", "%s")
+`, "%s", defaultScfRoleName1, "%s")
 
 var testAccScfFunctionRoleUpdate = fmt.Sprintf(`
+# use this docment to create role if migrate
 variable "role_document" {
   default = <<EOF
 {
@@ -585,36 +629,19 @@ variable "role_document" {
 EOF
 }
 
-resource "tencentcloud_cam_role" "foo" {
-  name          = "scf-role-test"
-  document      = var.role_document
-  description   = "test"
-  console_login = true
-}
-
-resource "tencentcloud_cam_role" "bar" {
-  name          = "scf-role-test-new"
-  document      = var.role_document
-  description   = "test"
-  console_login = true
-}
-
 resource "tencentcloud_scf_function" "foo" {
   name    = "%s"
   handler = "first.do_it_first"
   runtime = "Python3.6"
-  role    = tencentcloud_cam_role.bar.name
+  role    = "%s"
   enable_public_net = true
 
   zip_file = "%s"
 }
-`, "%s", "%s")
+`, "%s", defaultScfRoleName2, "%s")
 
 var testAccScfFunctionTrigger = fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "foo" {
-  bucket = "scf-cos-%s"
-  acl    = "public-read"
-}
+%s
 
 resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
@@ -631,24 +658,15 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-	name         = tencentcloud_cos_bucket.foo.id
+	name         = local.bucket_name
 	cos_region   = "ap-guangzhou"
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
   }
 }
-`, appid, "%s", "%s")
+`, defaultSCFCosBucket, "%s", "%s")
 
 var testAccScfFunctionTriggerUpdate = fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "foo" {
-  bucket = "scf-cos-%s"
-  acl    = "public-read"
-}
-
-resource "tencentcloud_cos_bucket" "bar" {
-  bucket = "scf-cos2-%s"
-  acl    = "public-read"
-}
 
 resource "tencentcloud_scf_function" "foo" {
   name      = "%s"
@@ -663,24 +681,76 @@ resource "tencentcloud_scf_function" "foo" {
     type         = "timer"
     trigger_desc = "*/5 * * * * * *"
   }
-
-  triggers {
-	name         = tencentcloud_cos_bucket.bar.id
-	cos_region   = "ap-guangzhou"
-    type         = "cos"
-    trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
-  }
 }
-`, appid, appid, "%s", "%s")
+`, "%s", "%s")
 
-const testAccScfFunctionCustomNamespace = `
-resource "tencentcloud_scf_namespace" "foo" {
-  namespace   = "ci-test-scf"
-  description = "test1"
-}
+var testAccScfFunctionCfsConfigs = fmt.Sprintf(defaultVpcVariable+defaultFileSystem+`
 
 resource "tencentcloud_scf_function" "foo" {
-  namespace = tencentcloud_scf_namespace.foo.id
+  name      = "%s"
+  handler   = "first.do_it_first"
+  runtime   = "Python3.6"
+  enable_public_net = true
+
+  description = "test"
+  mem_size    = 1536
+  timeout     = 300
+
+  environment = {
+    "test" = "test"
+  }
+
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
+
+  cfs_config {
+	user_id	= "10000"
+	user_group_id	= "10000"
+	cfs_id	= local.cfs_id
+	mount_ins_id	= var.mount_id
+	local_mount_dir	= "/mnt"
+	remote_mount_dir	= "/"
+  }
+
+  zip_file = "%s"
+}
+`, "%s", "%s")
+var testAccScfFunctionCfsConfigsUpdate = fmt.Sprintf(defaultVpcVariable+defaultFileSystem+`
+
+resource "tencentcloud_scf_function" "foo" {
+  name      = "%s"
+  handler   = "second.do_it_second"
+  runtime   = "Python3.6"
+  enable_public_net = true
+
+  description = "test"
+  mem_size    = 1536
+  timeout     = 300
+
+  environment = {
+    "test" = "test"
+  }
+
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
+
+  cfs_config {
+	user_id	= "10000"
+	user_group_id	= "10000"
+	cfs_id	= local.cfs_id
+	mount_ins_id	= var.mount_id
+	local_mount_dir	= "/mnt"
+	remote_mount_dir	= "/foo"
+  }
+
+  zip_file = "%s"
+}
+`, "%s", "%s")
+
+const testAccScfFunctionCustomNamespace = `
+
+resource "tencentcloud_scf_function" "foo" {
+  namespace = "preset-scf-namespace"
   name      = "%s"
   handler   = "first.do_it_first"
   runtime   = "Python3.6"

@@ -3,12 +3,41 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/pkg/errors"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_scf_namespace
+	resource.AddTestSweepers("tencentcloud_scf_namespace", &resource.Sweeper{
+		Name: "tencentcloud_scf_namespace",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := ScfService{client: client}
+			info, err := service.DescribeNamespaces(ctx)
+			if err != nil {
+				return err
+			}
+			for _, v := range info {
+				name := *v.Name
+				if !strings.Contains(name, "ci-test-scf") {
+					continue
+				}
+				if err := service.DeleteNamespace(ctx, name); err != nil {
+					continue
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudScfNamespace_basic(t *testing.T) {
 	t.Parallel()
@@ -20,36 +49,7 @@ func TestAccTencentCloudScfNamespace_basic(t *testing.T) {
 		CheckDestroy: testAccCheckScfNamespaceDestroy(&nsId),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccScfNamespace,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckScfNamespaceExists("tencentcloud_scf_namespace.foo", &nsId),
-					resource.TestCheckResourceAttr("tencentcloud_scf_namespace.foo", "namespace", "ci-test-scf"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_namespace.foo", "description", ""),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_namespace.foo", "create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_namespace.foo", "modify_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_namespace.foo", "type"),
-				),
-			},
-			{
-				ResourceName:      "tencentcloud_scf_namespace.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudScfNamespace_desc(t *testing.T) {
-	t.Parallel()
-	var nsId string
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckScfNamespaceDestroy(&nsId),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccScfNamespaceDesc,
+				Config: testAccScfNamespaceBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckScfNamespaceExists("tencentcloud_scf_namespace.foo", &nsId),
 					resource.TestCheckResourceAttr("tencentcloud_scf_namespace.foo", "namespace", "ci-test-scf"),
@@ -60,7 +60,7 @@ func TestAccTencentCloudScfNamespace_desc(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccScfNamespaceDescUpdate,
+				Config: testAccScfNamespaceBasicUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckScfNamespaceExists("tencentcloud_scf_namespace.foo", &nsId),
 					resource.TestCheckResourceAttr("tencentcloud_scf_namespace.foo", "description", "test2"),
@@ -117,20 +117,14 @@ func testAccCheckScfNamespaceDestroy(id *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccScfNamespace = `
-resource "tencentcloud_scf_namespace" "foo" {
-  namespace = "ci-test-scf"
-}
-`
-
-const testAccScfNamespaceDesc = `
+const testAccScfNamespaceBasic = `
 resource "tencentcloud_scf_namespace" "foo" {
   namespace   = "ci-test-scf"
   description = "test1"
 }
 `
 
-const testAccScfNamespaceDescUpdate = `
+const testAccScfNamespaceBasicUpdate = `
 resource "tencentcloud_scf_namespace" "foo" {
   namespace   = "ci-test-scf"
   description = "test2"

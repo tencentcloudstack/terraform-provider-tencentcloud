@@ -197,3 +197,35 @@ resource "tencentcloud_mysql_instance" "default" {
   force_delete = true
 }
 `
+const defaultSCFCosBucket = `
+data "tencentcloud_user_info" "info" {}
+
+data "tencentcloud_cos_buckets" "buckets" {
+  bucket_prefix = "preset-scf-bucket-${data.tencentcloud_user_info.info.app_id}"
+}
+
+locals {
+  bucket_name = data.tencentcloud_cos_buckets.buckets.bucket_list.0.bucket
+  bucket_url = data.tencentcloud_cos_buckets.buckets.bucket_list.0.cos_bucket_url
+}
+`
+
+const defaultScfNamespace = "preset-scf-namespace"
+
+const defaultFileSystemName = "preset_cfs"
+
+const defaultFileSystem = `
+data "tencentcloud_cfs_file_systems" "fs" {
+  name = "` + defaultFileSystemName + `"
+}
+
+# doesn't support datasource for now
+variable "mount_id" {
+  default = "cfs-iobiaxtj"
+}
+
+locals {
+  cfs = data.tencentcloud_cfs_file_systems.fs.file_system_list.0
+  cfs_id = local.cfs.file_system_id
+  access_group_id = local.cfs.access_group_id
+}`
