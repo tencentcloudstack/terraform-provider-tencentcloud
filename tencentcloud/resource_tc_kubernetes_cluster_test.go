@@ -39,7 +39,6 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "unschedulable", "0"),
 				),
 			},
 			{
@@ -155,7 +154,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  vpc_id                                     = "vpc-rkojp4kn"
   cluster_cidr                               = var.cluster_cidr
   cluster_max_pod_num                        = 32
   cluster_name                               = "test"
@@ -163,6 +162,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_max_service_num                    = 32
   cluster_internet                           = true
   cluster_version                            = "1.18.4"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
@@ -173,7 +173,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    subnet_id                  = "subnet-fmcdf57e"
     img_id                     = "img-rkiynh11"
 
     data_disk {
@@ -189,7 +189,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
-	cam_role_name			= "CVM_QcsRole"
+	cam_role_name			= "TKE_TEST"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
