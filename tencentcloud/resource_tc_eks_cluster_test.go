@@ -91,6 +91,7 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "subnet_ids.0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "service_subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eks_cluster.foo", "kube_config"),
 				),
 			},
 			{

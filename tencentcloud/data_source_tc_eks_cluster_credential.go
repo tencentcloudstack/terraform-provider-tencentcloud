@@ -162,6 +162,11 @@ func datasourceTencentCloudEksClusterCredential() *schema.Resource {
 				Computed:    true,
 				Description: "Indicates whether the new internal/public network function.",
 			},
+			"kube_config": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "EKS cluster kubeconfig.",
+			},
 		},
 	}
 }
@@ -190,6 +195,8 @@ func datasourceTencentCloudEksClusterCredentialRead(d *schema.ResourceData, meta
 	d.SetId("eks-cluster-credential-" + clusterId)
 
 	_ = d.Set("proxy_lb", info.ProxyLB)
+
+	_ = d.Set("kube_config", info.KubeConfig)
 
 	addresses := make([]map[string]interface{}, 0)
 
@@ -242,6 +249,7 @@ func datasourceTencentCloudEksClusterCredentialRead(d *schema.ResourceData, meta
 		"public_lb":   publicLB,
 		"internal_lb": internalLB,
 		"proxy_lb":    info.ProxyLB,
+		"kube_config": info.KubeConfig,
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok {

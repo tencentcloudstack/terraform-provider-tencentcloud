@@ -23,6 +23,7 @@ func TestAccTencentCloudEksClusterCredentialDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eks_cluster_credential.cred", "public_lb.0.security_policies.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eks_cluster_credential.cred", "internal_lb.0.enabled", "true"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eks_cluster_credential.cred", "proxy_lb"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_eks_cluster_credential.cred", "kube_config"),
 				),
 			},
 		},
