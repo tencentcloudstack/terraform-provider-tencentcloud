@@ -37,6 +37,7 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.project_id", "0"),
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", "sg-qyy7jd2b"),
 				),
 			},
 		},
@@ -108,6 +109,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 		disk_type="CLOUD_PREMIUM"
 		spec="CVM.S2"
 		storage_type=5
+		root_size=50
 	  }
 	  core_resource_spec {
 		mem_size=8192
@@ -116,6 +118,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 		disk_type="CLOUD_PREMIUM"
 		spec="CVM.S2"
 		storage_type=5
+		root_size=50
 	  }
 	  master_count=1
 	  core_count=2
@@ -130,5 +133,6 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	  zone="ap-guangzhou-3"
 	  project_id=0
 	}
+	sg_id="sg-qyy7jd2b"
   }
 `
