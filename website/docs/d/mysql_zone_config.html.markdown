@@ -39,6 +39,7 @@ In addition to all arguments above, the following attributes are exported:
   * `is_support_disaster_recovery` - Indicates whether recovery is supported: `0` - No; `1` - Yes.
   * `is_support_vpc` - Indicates whether VPC is supported: `0` - No; `1` - Yes.
   * `name` - The name of available zone which is equal to a specific datacenter.
+  * `remote_ro_zones` - Zone information about remote ro instance.
   * `second_slave_zones` - Zone information about second slave instance.
   * `sells` - A list of supported instance types for sell:
     * `max_volume_size` - Maximum disk size (in GB).

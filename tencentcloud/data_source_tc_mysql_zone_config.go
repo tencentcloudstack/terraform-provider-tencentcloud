@@ -126,6 +126,12 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Zone information about second slave instance.",
 		},
+		"remote_ro_zones": {
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "Zone information about remote ro instance.",
+		},
 		"sells": {Type: schema.TypeList,
 			Computed:    true,
 			Description: "A list of supported instance types for sell:",
@@ -250,9 +256,9 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 		zoneConfig["disaster_recovery_zones"] = disasterRecoveryZones
 
 		var (
-			slaveDeployModes                                  []int
-			firstSlaveZones, secondSlaveZones, engineVersions []string
-			sells                                             []interface{}
+			slaveDeployModes                                                 []int
+			firstSlaveZones, secondSlaveZones, engineVersions, remoteRoZones []string
+			sells                                                            []interface{}
 		)
 		if sellItem.ZoneConf != nil {
 			for _, mode := range sellItem.ZoneConf.DeployMode {
@@ -264,10 +270,14 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 			for _, zoneName := range sellItem.ZoneConf.BackupZone {
 				secondSlaveZones = append(secondSlaveZones, *zoneName)
 			}
+			for _, zoneName := range sellItem.RemoteRoZone {
+				remoteRoZones = append(remoteRoZones, *zoneName)
+			}
 		}
 		zoneConfig["slave_deploy_modes"] = slaveDeployModes
 		zoneConfig["first_slave_zones"] = firstSlaveZones
 		zoneConfig["second_slave_zones"] = secondSlaveZones
+		zoneConfig["remote_ro_zones"] = remoteRoZones
 
 		for _, mysqlConfigs := range sellItem.SellType {
 			for _, strPtr := range mysqlConfigs.EngineVersion {

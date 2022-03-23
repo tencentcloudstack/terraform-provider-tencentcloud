@@ -134,6 +134,9 @@ const CommonPresetMysql = `
 variable "availability_zone" {
   default = "` + defaultAZone + `"
 }
+variable "region" {
+  default = "` + defaultRegion + `"
+}
 
 data "tencentcloud_mysql_instance" "mysql" {
   instance_name = "` + defaultMySQLName + `"
