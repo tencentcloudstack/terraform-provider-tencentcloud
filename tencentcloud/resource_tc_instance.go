@@ -994,6 +994,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	d.Partial(true)
 
+	var (
+		periodSet    = false
+		renewFlagSet = false
+	)
+
 	if d.HasChange("instance_charge_type") {
 		old, chargeType := d.GetChange("instance_charge_type")
 		if old.(string) != CVM_CHARGE_TYPE_POSTPAID || chargeType.(string) != CVM_CHARGE_TYPE_PREPAID {
@@ -1030,17 +1035,17 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
 					return resource.NonRetryableError(fmt.Errorf("failed operation when modify instance charge type"))
 				}
-			} else if instance != nil && *instance.InstanceChargeType == CVM_CHARGE_TYPE_POSTPAID {
-				return resource.RetryableError(fmt.Errorf("cvm charge type is still %s, retry", CVM_CHARGE_TYPE_POSTPAID))
 			}
 			return nil
 		})
 		if err != nil {
 			return err
 		}
+		periodSet = true
+		renewFlagSet = true
 	}
 
-	if d.HasChange("instance_charge_type_prepaid_period") {
+	if d.HasChange("instance_charge_type_prepaid_period") && !periodSet {
 		chargeType := d.Get("instance_charge_type").(string)
 		if chargeType != CVM_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period or instance_charge_type_prepaid_renew_flag is only supported with charge type PREPAID")
@@ -1050,7 +1055,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if d.HasChange("instance_charge_type_prepaid_renew_flag") {
+	if d.HasChange("instance_charge_type_prepaid_renew_flag") && !renewFlagSet {
 		//check
 		chargeType := d.Get("instance_charge_type").(string)
 		if chargeType != CVM_CHARGE_TYPE_PREPAID {
