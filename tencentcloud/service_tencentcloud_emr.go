@@ -156,6 +156,9 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 			request.LoginSettings.PublicKeyId = common.StringPtr(publicKeyId.(string))
 		}
 	}
+	if v, ok := d.GetOk("sg_id"); ok {
+		request.SgId = common.StringPtr(v.(string))
+	}
 
 	ratelimit.Check(request.GetAction())
 	//API: https://cloud.tencent.com/document/api/589/34261

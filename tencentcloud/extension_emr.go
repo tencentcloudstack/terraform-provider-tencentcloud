@@ -36,6 +36,7 @@ func buildResourceSpecSchema() *schema.Schema {
 				"mem_size":     {Type: schema.TypeInt, Optional: true},
 				"cpu":          {Type: schema.TypeInt, Optional: true},
 				"disk_size":    {Type: schema.TypeInt, Optional: true},
+				"root_size":    {Type: schema.TypeInt, Optional: true},
 			},
 		},
 	}

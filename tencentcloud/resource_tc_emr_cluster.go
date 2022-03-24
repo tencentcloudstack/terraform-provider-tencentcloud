@@ -187,6 +187,12 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
 				By default, the cluster Master node internet is enabled.`,
 			},
+			"sg_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.",
+			},
 		},
 	}
 }

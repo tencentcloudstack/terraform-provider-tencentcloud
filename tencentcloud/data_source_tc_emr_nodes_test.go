@@ -65,6 +65,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
     zone="ap-guangzhou-3"
     project_id=0
   }
+  sg_id="sg-qyy7jd2b"
 }
 data "tencentcloud_emr_nodes" "my_emr_nodes" {
   node_flag="master"
