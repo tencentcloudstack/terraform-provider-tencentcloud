@@ -13,6 +13,11 @@ var appid string = os.Getenv("TENCENTCLOUD_APPID")
 var ownerUin string = os.Getenv("TENCENTCLOUD_OWNER_UIN")
 
 const (
+	keepResource = "keep"
+	defaultResource = "Default"
+)
+
+const (
 	defaultRegion      = "ap-guangzhou"
 	defaultVpcId       = "vpc-86v957zb"
 	defaultVpcCidr     = "172.16.0.0/16"
@@ -50,7 +55,7 @@ const (
 // Tke Exclusive Network Environment
 const (
 	tkeExclusiveVpcId     = "vpc-391sv4w3"
-	tkeExclusiveVpcName   = "tke_exclusive_vpc"
+	tkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
 	tkeExclusiveSubnetId  = "subnet-ljyn7h30"
 	defaultTkeClusterId   = "cls-ely08ic4"
 	defaultTkeClusterName = "preset_tke_cluster"

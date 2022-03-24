@@ -81,6 +81,13 @@ func getEnvDefault(key string, defVal int) int {
 	return int
 }
 
+// string to time.Time
+func stringTotime(t string) time.Time {
+	template := "2006-01-02 15:04:05"
+	stamp, _ := time.ParseInLocation(template, t, time.Local)
+	return stamp
+}
+
 // getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {
