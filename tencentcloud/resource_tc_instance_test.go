@@ -464,6 +464,38 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstancePostpaidToPrepaid(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstancePostPaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceBasicToPrepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_period", "1"),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -524,7 +556,7 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		if instance != nil {
+		if instance != nil && *instance.InstanceState != CVM_STATUS_SHUTDOWN && *instance.InstanceState != CVM_STATUS_TERMINATING {
 			return fmt.Errorf("cvm instance still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -541,6 +573,49 @@ resource "tencentcloud_instance" "foo" {
   subnet_id         = var.subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
+}
+`
+
+const testAccTencentCloudInstancePostPaid = `
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S1"]
+  }
+
+  cpu_core_count = 1
+  memory_size    = 1
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "` + defaultInsName + `"
+  availability_zone = "` + defaultAZone + `"
+  image_id          = "` + defaultTkeOSImageId + `"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+}
+`
+
+const testAccTencentCloudInstanceBasicToPrepaid = `
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S1"]
+  }
+
+  cpu_core_count = 1
+  memory_size    = 1
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "` + defaultInsName + `"
+  availability_zone = "` + defaultAZone + `"
+  image_id          = "` + defaultTkeOSImageId + `"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  instance_charge_type       = "PREPAID"
+  instance_charge_type_prepaid_period = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 `
 
