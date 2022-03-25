@@ -13,7 +13,7 @@ var appid string = os.Getenv("TENCENTCLOUD_APPID")
 var ownerUin string = os.Getenv("TENCENTCLOUD_OWNER_UIN")
 
 const (
-	keepResource = "keep"
+	keepResource    = "keep"
 	defaultResource = "Default"
 )
 
