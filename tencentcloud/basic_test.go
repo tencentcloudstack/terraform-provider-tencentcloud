@@ -13,9 +13,20 @@ var appid string = os.Getenv("TENCENTCLOUD_APPID")
 var ownerUin string = os.Getenv("TENCENTCLOUD_OWNER_UIN")
 
 const (
-	keepResource = "keep"
+	keepResource    = "keep"
 	defaultResource = "Default"
 )
+
+// vpn
+const defaultVpnDataSource = `
+data "tencentcloud_vpn_gateways" "foo" {
+  name = "keep-vpn-gw"
+}
+
+data "tencentcloud_vpn_connections" "conns" {
+  name = "keep-vpn-conn"
+}
+`
 
 const (
 	defaultRegion      = "ap-guangzhou"

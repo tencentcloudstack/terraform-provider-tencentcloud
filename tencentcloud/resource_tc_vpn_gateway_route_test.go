@@ -104,15 +104,10 @@ func testAccCheckVpnGatewayRouteExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testVpnGatewayRouteCreate = `
+const testVpnGatewayRouteCreate = defaultVpnDataSource + `
 # Create VPC
 data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"
-}
-
-data "tencentcloud_vpn_gateways" "foo" {}
-
-data "tencentcloud_vpn_connections" "conns" {
 }
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
@@ -124,16 +119,11 @@ resource "tencentcloud_vpn_gateway_route" "route1" {
   status = "ENABLE"
 }
 `
-const testVpnGatewayRouteUpdate = `
+const testVpnGatewayRouteUpdate = defaultVpnDataSource + `
 # Create VPC
 data "tencentcloud_vpc_instances" "foo" {
   name = "Default-VPC"
 }
-
-data "tencentcloud_vpn_connections" "conns" {
-}
-
-data "tencentcloud_vpn_gateways" "foo" {}
 
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
