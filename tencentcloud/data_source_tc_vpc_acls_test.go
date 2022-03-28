@@ -25,10 +25,11 @@ func TestAccDataSourceTencentCloudVpcACL_Basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcACLInstances = `
 data "tencentcloud_vpc_instances" "test" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
-    vpc_id            	= data.tencentcloud_vpc_instances.test.instance_list.0.vpc_id
+    vpc_id  = data.tencentcloud_vpc_instances.test.instance_list.0.vpc_id
     name  	= "test_acl"
 	ingress = [
 		"ACCEPT#192.168.1.0/24#80#TCP",

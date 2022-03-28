@@ -141,6 +141,7 @@ func testAccCheckVpcACLDestroy(s *terraform.State) error {
 
 const testAccVpcACLConfig = `
 data "tencentcloud_vpc_instances" "default" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
@@ -159,6 +160,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 const testAccVpcACLConfigUpdate = `
 data "tencentcloud_vpc_instances" "default" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
@@ -177,6 +179,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 const testAccVpcACLConfigUpdateReduceAllRule = `
 data "tencentcloud_vpc_instances" "default" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
@@ -193,6 +196,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 const testAccVpcACLConfigUpdateNoIngress = `
 data "tencentcloud_vpc_instances" "default" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
@@ -206,6 +210,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 `
 const testAccVpcACLConfigUpdateNoEgress = `
 data "tencentcloud_vpc_instances" "default" {
+	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
