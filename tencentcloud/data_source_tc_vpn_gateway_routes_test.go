@@ -29,14 +29,7 @@ func TestAccTencentCloudVpnGatewayRoutesDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic = `
-data "tencentcloud_vpn_gateways" "foo" {
-  name = "Default-VPC"
-}
-
-data "tencentcloud_vpn_connections" "conns" {
-}
-
+const testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic = defaultVpnDataSource + `
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
   destination_cidr_block = "10.0.0.0/16"
