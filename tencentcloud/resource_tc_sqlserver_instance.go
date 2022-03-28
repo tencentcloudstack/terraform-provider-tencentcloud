@@ -146,7 +146,7 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		basicSchema["auto_renew"] = &schema.Schema{
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Automatic renewal sign. 0 for normal renewal, 1 for automatic renewal, the default is 1 automatic renewal. Only valid when purchasing a prepaid instance.",
+			Description: "Automatic renewal sign. 0 for normal renewal, 1 for automatic renewal (Default). Only valid when purchasing a prepaid instance.",
 		}
 	}
 
@@ -581,6 +581,9 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 
 	if int(*instance.PayMode) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
+		if _, ok := d.GetOk("auto_renew"); ok {
+			_ = d.Set("auto_renew", instance.RenewFlag)
+		}
 	} else {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
 	}

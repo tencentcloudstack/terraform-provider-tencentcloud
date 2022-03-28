@@ -197,6 +197,35 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSqlserverInstancePrepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSqlserverInstanceExists(testSqlserverInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_sqlserver_instance"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
+				),
+			},
+			{
+				Config: testAccSqlserverInstancePrepaidUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSqlserverInstanceExists(testSqlserverInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_sqlserver_instance_update"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "charge_type", "PREPAID"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -296,6 +325,27 @@ locals {
 }
 `
 
+const testAccSqlserverInstanceBasicPrepaid = `
+locals {
+  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
+  vpc_subnet_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.subnet_ids.0
+  az = data.tencentcloud_subnet.sub.availability_zone
+  sg = data.tencentcloud_security_group.group.security_group_id
+}
+
+data "tencentcloud_vpc_instances" "vpc" {
+  name = "keep"
+}
+
+data "tencentcloud_security_group" "group" {}
+
+
+data "tencentcloud_subnet" "sub" {
+  vpc_id = local.vpc_id
+  subnet_id = local.vpc_subnet_id
+}
+`
+
 const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance"
@@ -334,6 +384,41 @@ resource "tencentcloud_sqlserver_instance" "test" {
   tags = {
     abc                     = "abc"
   }
+}
+`
+
+const testAccSqlserverInstancePrepaid string = testAccSqlserverInstanceBasicPrepaid + `
+resource "tencentcloud_sqlserver_instance" "test" {
+  name                          = "tf_sqlserver_instance"
+  availability_zone             = local.az
+  charge_type                   = "POSTPAID_BY_HOUR"
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.vpc_subnet_id
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
+  security_groups               = [local.sg]
+}
+`
+
+const testAccSqlserverInstancePrepaidUpdate string = testAccSqlserverInstanceBasicPrepaid + `
+resource "tencentcloud_sqlserver_instance" "test" {
+  name                          = "tf_sqlserver_instance_update"
+  availability_zone             = local.az
+  charge_type                   = "PREPAID"
+  period                        = 1
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.vpc_subnet_id
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
+  security_groups               = [local.sg]
 }
 `
 
