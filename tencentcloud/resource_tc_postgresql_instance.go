@@ -238,7 +238,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:     true,
 				Default:      POSTGRESQL_DB_CHARSET_UTF8,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(POSTSQL_DB_CHARSET),
+				ValidateFunc: validateAllowedStringValue(POSTGRESQL_DB_CHARSET),
 				Description:  "Charset of the root account. Valid values are `UTF8`,`LATIN1`.",
 			},
 			"public_access_switch": {
@@ -337,7 +337,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		securityGroups = d.Get("security_groups").(*schema.Set).List()
 		zone           = d.Get("availability_zone").(string)
 		storage        = d.Get("storage").(int)
-		memory         = d.Get("memory").(int)
+		memory         = d.Get("memory").(int) // Memory only used for query specCode which contains memory info
 		username       = d.Get("root_user").(string)
 		password       = d.Get("root_password").(string)
 		charset        = d.Get("charset").(string)
@@ -706,11 +706,32 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			})
 		}
 
-		if err := postgresqlService.ModifyDBInstanceDeployment(ctx, request); err != nil {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if err := postgresqlService.ModifyDBInstanceDeployment(ctx, request); err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			return nil
+		})
+
+		if err != nil {
 			return err
 		}
 
-		d.SetPartial("db_node_set")
+		err = resource.Retry(readRetryTimeout*10, func() *resource.RetryError {
+			instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+			if err != nil {
+				return retryError(err)
+			}
+			if IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+				return resource.RetryableError(fmt.Errorf("instance status is %s, retrying", *instance.DBInstanceStatus))
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
 	}
 
 	if d.HasChange("zone") {
@@ -789,7 +810,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 			}
 			return retryError(inErr)
 		}
-		if IsContains(POSTGRES_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+		if IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
 			return resource.RetryableError(fmt.Errorf("instance %s is %s, retrying", *instance.DBInstanceId, *instance.DBInstanceStatus))
 		}
 		return nil
