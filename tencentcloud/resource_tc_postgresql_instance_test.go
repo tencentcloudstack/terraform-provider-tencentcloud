@@ -167,7 +167,7 @@ func TestAccTencentCloudPostgresqlMAZInstanceResource(t *testing.T) {
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-7"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-6"),
 				),
 			},
 		},
