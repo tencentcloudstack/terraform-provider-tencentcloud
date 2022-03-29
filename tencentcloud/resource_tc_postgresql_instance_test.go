@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -11,6 +12,67 @@ import (
 
 var testPostgresqlInstanceResourceName = "tencentcloud_postgresql_instance"
 var testPostgresqlInstanceResourceKey = testPostgresqlInstanceResourceName + ".test"
+
+func init() {
+	resource.AddTestSweepers(testPostgresqlInstanceResourceName, &resource.Sweeper{
+		Name: testPostgresqlInstanceResourceName,
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			postgresqlService := PostgresqlService{client: client}
+			vpcService := VpcService{client: client}
+
+			instances, err := postgresqlService.DescribePostgresqlInstances(ctx, nil)
+			if err != nil {
+				return err
+			}
+
+			var vpcs []string
+
+			for _, v := range instances {
+				id := *v.DBInstanceId
+				name := *v.DBInstanceName
+				vpcId := *v.VpcId
+				if strings.HasPrefix(name, keepResource) || strings.HasPrefix(name, defaultResource) {
+					continue
+				}
+				err := postgresqlService.IsolatePostgresqlInstance(ctx, id)
+				if err != nil {
+					continue
+				}
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, id)
+					if err != nil {
+						return retryError(err)
+					}
+					if !has {
+						return resource.NonRetryableError(fmt.Errorf("instance %s removed", id))
+					}
+					if *instance.DBInstanceStatus != "isolated" {
+						return resource.RetryableError(fmt.Errorf("waiting for instance isolated, now is %s", *instance.DBInstanceStatus))
+					}
+					return nil
+				})
+				if err != nil {
+					continue
+				}
+				err = postgresqlService.DeletePostgresqlInstance(ctx, id)
+				if err != nil {
+					continue
+				}
+				vpcs = append(vpcs, vpcId)
+			}
+
+			for _, v := range vpcs {
+				_ = vpcService.DeleteVpc(ctx, v)
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 	t.Parallel()
@@ -37,7 +99,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "test"),
+					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "test"),
 				),
 			},
 			{
@@ -68,7 +130,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_host"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_port"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
+					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
 				),
 			},
 		},
@@ -105,7 +167,7 @@ func TestAccTencentCloudPostgresqlMAZInstanceResource(t *testing.T) {
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_node_set.#", "2"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-7"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "availability_zone", "ap-guangzhou-6"),
 				),
 			},
 		},
@@ -240,10 +302,6 @@ resource "tencentcloud_postgresql_instance" "test" {
   db_node_set {
     zone = "ap-guangzhou-7"
   }
-
-	tags = {
-		tf = "test"
-	}
 }
 `
 
@@ -254,7 +312,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = "ap-guangzhou-7"
+  availability_zone = "ap-guangzhou-6"
   cidr_block        = "10.0.0.0/24"
   name              = "pg-sub1"
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -269,19 +327,14 @@ resource "tencentcloud_postgresql_instance" "test" {
   engine_version		= "10.4"
   root_password                 = "t1qaA2k1wgvfa3?ZZZ"
   charset = "LATIN1"
-  public_access_switch = true
   memory = 4
   storage = 250
   db_node_set {
+    role = "Primary"
     zone = "ap-guangzhou-6"
   }
   db_node_set {
-    role = "Primary"
-    zone = "ap-guangzhou-7"
+    zone = "ap-guangzhou-6"
   }
-
-	tags = {
-		tf = "teest"
-	}
 }
 `
