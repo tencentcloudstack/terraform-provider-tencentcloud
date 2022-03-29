@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -34,14 +36,6 @@ func testSweepClbInstance(region string) error {
 	}
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := ClbService{client: client}
-	testCaseNames := []string{
-		BasicClbName,
-		InternalClbName,
-		InternalClbNameUpdate,
-		MyOpenClbName,
-		OpenClbName,
-		OpenClbNameUpdate,
-	}
 
 	res, err := service.DescribeLoadBalancerByFilter(ctx, map[string]interface{}{})
 	if err != nil {
@@ -51,9 +45,17 @@ func testSweepClbInstance(region string) error {
 	if len(res) > 0 {
 		for _, v := range res {
 			id := *v.LoadBalancerId
+			instanceName := *v.LoadBalancerName
+			createTime := stringTotime(*v.CreateTime)
 
-			name := *v.LoadBalancerName
-			if !IsContains(testCaseNames, name) {
+			now := time.Now()
+			interval := now.Sub(createTime).Minutes()
+			// keep not delete
+			if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+				continue
+			}
+			// less than 30 minute, not delete
+			if int64(interval) < 30 {
 				continue
 			}
 			if err := service.DeleteLoadBalancerById(ctx, id); err != nil {
@@ -62,7 +64,6 @@ func testSweepClbInstance(region string) error {
 			}
 		}
 	}
-
 	return nil
 }
 
