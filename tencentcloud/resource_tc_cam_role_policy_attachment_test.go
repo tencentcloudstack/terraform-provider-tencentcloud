@@ -17,7 +17,7 @@ func TestAccTencentCloudCamRolePolicyAttachment_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCamRolePolicyAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRolePolicyAttachment_basic(ownerUin),
+				Config: testAccCamRolePolicyAttachment_basic(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamRolePolicyAttachmentExists("tencentcloud_cam_role_policy_attachment.role_policy_attachment_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment.role_policy_attachment_basic", "role_id"),
@@ -80,23 +80,21 @@ func testAccCheckCamRolePolicyAttachmentExists(n string) resource.TestCheckFunc 
 }
 
 //need to add policy resource definition
-func testAccCamRolePolicyAttachment_basic(uin string) string {
-	return fmt.Sprintf(`
-resource "tencentcloud_cam_role" "role" {
-  name          = "cam-role-test"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
-  description   = "test"
-  console_login = true
+func testAccCamRolePolicyAttachment_basic() string {
+	return defaultCamVariables + `
+data "tencentcloud_cam_policies" "policy" {
+  name        = var.cam_policy_basic
 }
 
-resource "tencentcloud_cam_policy" "policy" {
-  name        = "cam-policy-test2"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-  description = "test"
+data "tencentcloud_cam_roles" "roles" {
+  name        = var.cam_role_basic
 }
-  
+
 resource "tencentcloud_cam_role_policy_attachment" "role_policy_attachment_basic" {
-  role_id   = tencentcloud_cam_role.role.id
-  policy_id = tencentcloud_cam_policy.policy.id
-}`, uin, uin)
+  role_id   = data.tencentcloud_cam_roles.roles.role_list.0.role_id
+  policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
+}
+
+`
+
 }

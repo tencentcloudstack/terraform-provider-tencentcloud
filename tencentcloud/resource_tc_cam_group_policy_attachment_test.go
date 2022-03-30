@@ -79,20 +79,17 @@ func testAccCheckCamGroupPolicyAttachmentExists(n string) resource.TestCheckFunc
 	}
 }
 
-const testAccCamGroupPolicyAttachment_basic = `
-resource "tencentcloud_cam_group" "group" {
-  name   = "cam-group-test2"
-  remark = "test"
+const testAccCamGroupPolicyAttachment_basic = defaultCamVariables + `
+data "tencentcloud_cam_groups" "groups" {
+  name = var.cam_group_basic
 }
-  
-resource "tencentcloud_cam_policy" "policy" {
-  name        = "cam-policy-test9"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-	description = "test"
+
+data "tencentcloud_cam_policies" "policy" {
+  name = var.cam_policy_basic
 }
-  
+
 resource "tencentcloud_cam_group_policy_attachment" "group_policy_attachment_basic" {
-  group_id  = tencentcloud_cam_group.group.id
-  policy_id = tencentcloud_cam_policy.policy.id
+  group_id  = data.tencentcloud_cam_groups.groups.group_list.0.group_id
+  policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
 }
 `

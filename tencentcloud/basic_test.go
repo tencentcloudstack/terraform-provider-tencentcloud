@@ -1,6 +1,9 @@
 package tencentcloud
 
-import "os"
+import (
+	"os"
+	"regexp"
+)
 
 /*
 ---------------------------------------------------
@@ -16,6 +19,8 @@ const (
 	keepResource    = "keep"
 	defaultResource = "Default"
 )
+
+var persistResource = regexp.MustCompile("^(keep|Default)")
 
 // vpn
 const defaultVpnDataSource = `
@@ -255,3 +260,21 @@ locals {
   cfs_id = local.cfs.file_system_id
   access_group_id = local.cfs.access_group_id
 }`
+
+const defaultCamVariables = `
+variable "cam_role_basic" {
+  default = "keep-cam-role"
+}
+
+variable "cam_policy_basic" {
+  default = "keep-cam-policy"
+}
+
+variable "cam_group_basic" {
+  default = "keep-cam-group"
+}
+
+variable "cam_user_basic" {
+  default = "keep-cam-user"
+}
+`

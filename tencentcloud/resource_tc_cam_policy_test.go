@@ -3,11 +3,54 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cam_policy
+	resource.AddTestSweepers("tencentcloud_cam_policy", &resource.Sweeper{
+		Name: "tencentcloud_cam_policy",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := CamService{client: client}
+
+			policies, err := service.DescribePoliciesByFilter(ctx, nil)
+			if err != nil {
+				return nil
+			}
+			var (
+				request             = cam.NewDeletePolicyRequest()
+				presetPolicy uint64 = 2
+			)
+
+			for _, v := range policies {
+				name := *v.PolicyName
+				if *v.Type == presetPolicy || persistResource.MatchString(name) {
+					continue
+				}
+				request.PolicyId = append(request.PolicyId, v.PolicyId)
+			}
+
+			_, err = client.UseCamClient().DeletePolicy(request)
+
+			if err != nil {
+				log.Printf("[%s] error, request: %s \nreason: %s", request.GetAction(), request.ToJsonString(), err.Error())
+				return err
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCamPolicy_basic(t *testing.T) {
 	t.Parallel()

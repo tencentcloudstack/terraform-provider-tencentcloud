@@ -3,11 +3,52 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
+
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cam_role
+	resource.AddTestSweepers("tencentcloud_cam_role", &resource.Sweeper{
+		Name: "tencentcloud_cam_role",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CamService{client: client}
+
+			groups, err := service.DescribeRolesByFilter(ctx, nil)
+			if err != nil {
+				return err
+			}
+			for _, v := range groups {
+				name := *v.RoleName
+
+				if !strings.HasPrefix(name, "cam-role-test") {
+					continue
+				}
+
+				request := cam.NewDeleteRoleRequest()
+				request.RoleName = v.RoleName
+				request.RoleId = v.RoleId
+				if _, err := client.UseCamClient().DeleteRole(request); err != nil {
+					log.Printf("[%s] error, request: %s \nreason: %s ", request.GetAction(), request.ToJsonString(), err.Error())
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCamRole_basic(t *testing.T) {
 	t.Parallel()

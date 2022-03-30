@@ -26,28 +26,18 @@ func TestAccTencentCloudCamGroupMembershipsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccCamGroupMembershipsDataSource_basic = `
-resource "tencentcloud_cam_group" "group_basic" {
-  name   = "cam-group-membership-test"
-  remark = "test"
+const testAccCamGroupMembershipsDataSource_basic = defaultCamVariables + `
+data "tencentcloud_cam_groups" "groups" {
+  name = var.cam_group_basic
 }
 
-resource "tencentcloud_cam_user" "user_basic" {
-  name                = "cam-user-testjj"
-  remark              = "test"
-  console_login       = true
-  use_api             = true
-  need_reset_password = true
-  password            = "Gail@1234"
-  phone_num           = "12345678910"
-  country_code        = "86"
-  email               = "1234@qq.com"
-  force_delete        = true
+data "tencentcloud_cam_users" "users" {
+  name = var.cam_user_basic
 }
 
 resource "tencentcloud_cam_group_membership" "membership" {
-  group_id = tencentcloud_cam_group.group_basic.id
-  user_ids = [tencentcloud_cam_user.user_basic.id]
+  group_id = data.tencentcloud_cam_groups.groups.group_list.0.group_id
+  user_names = [data.tencentcloud_cam_users.users.user_list.0.user_id]
 }
 
 data "tencentcloud_cam_group_memberships" "memberships" {
