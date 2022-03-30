@@ -85,48 +85,13 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 	return
 }
 
-func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, subnetId string, vpcId string, zone string, storage int, weekSet []int, startTime string, timeSpan int, multiZones bool, haType string, securityGroups []string) (instanceId string, errRet error) {
+func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, request *sqlserver.CreateDBInstancesRequest) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
-	request := sqlserver.NewCreateDBInstancesRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-
-	request.DBVersion = &dbVersion
-	request.InstanceChargeType = &chargeType
-	request.Memory = helper.IntInt64(memory)
-	request.Storage = helper.IntInt64(storage)
-	request.SubnetId = &subnetId
-	request.VpcId = &vpcId
-	request.HAType = &haType
-	request.MultiZones = &multiZones
-	request.AutoRenewFlag = helper.IntInt64(autoRenewFlag)
-	if projectId != 0 {
-		request.ProjectId = helper.IntInt64(projectId)
-	}
-
-	if len(weekSet) > 0 {
-		request.Weekly = make([]*int64, 0)
-		for _, i := range weekSet {
-			request.Weekly = append(request.Weekly, helper.IntInt64(i))
-		}
-	}
-	if startTime != "" {
-		request.StartTime = &startTime
-	}
-	if timeSpan != 0 {
-		request.Span = helper.IntInt64(timeSpan)
-	}
-
-	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
-	for _, v := range securityGroups {
-		request.SecurityGroupList = append(request.SecurityGroupList, &v)
-	}
-
-	request.GoodsNum = helper.IntInt64(1)
-	request.Zone = &zone
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseSqlserverClient().CreateDBInstances(request)
@@ -186,12 +151,18 @@ func (me *SqlserverService) ModifySqlserverInstanceProjectId(ctx context.Context
 	return err
 }
 
-func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory int, storage int) (errRet error) {
+func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory, storage, autoVoucher int, voucherIds []*string) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewUpgradeDBInstanceRequest()
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntInt64(memory)
 	request.Storage = helper.IntInt64(storage)
+	if autoVoucher != 0 {
+		request.AutoVoucher = helper.IntInt64(autoVoucher)
+	}
+	if len(voucherIds) > 0 {
+		request.VoucherIds = voucherIds
+	}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
@@ -505,37 +476,13 @@ func (me *SqlserverService) DescribeReadonlyGroupList(ctx context.Context, insta
 	return
 }
 
-func (me *SqlserverService) CreateSqlserverReadonlyInstance(ctx context.Context, masterInstanceId string, subnetId string, vpcId string, chargeType string, memory int, zone string, storage int, readonlyGroupType int, readonlyGroupId string, forceUpgrade bool, securityGroups []string) (instanceId string, errRet error) {
+func (me *SqlserverService) CreateSqlserverReadonlyInstance(ctx context.Context, request *sqlserver.CreateReadOnlyDBInstancesRequest) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
-	request := sqlserver.NewCreateReadOnlyDBInstancesRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-
-	request.InstanceId = &masterInstanceId
-	request.InstanceChargeType = &chargeType
-	request.Memory = helper.IntInt64(memory)
-	request.Storage = helper.IntInt64(storage)
-	request.SubnetId = &subnetId
-	request.VpcId = &vpcId
-	request.GoodsNum = helper.IntInt64(1)
-
-	request.ReadOnlyGroupType = helper.IntInt64(readonlyGroupType)
-	if readonlyGroupId != "" {
-		request.ReadOnlyGroupId = &readonlyGroupId
-	}
-
-	if forceUpgrade {
-		request.ReadOnlyGroupForcedUpgrade = helper.BoolToInt64Ptr(forceUpgrade)
-	}
-	request.GoodsNum = helper.IntInt64(1)
-	request.Zone = &zone
-	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
-	for _, v := range securityGroups {
-		request.SecurityGroupList = append(request.SecurityGroupList, &v)
-	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseSqlserverClient().CreateReadOnlyDBInstances(request)

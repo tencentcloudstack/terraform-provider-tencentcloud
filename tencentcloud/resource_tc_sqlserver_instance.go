@@ -36,8 +36,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TencentSqlServerBasicInfo() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
+func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
+	basicSchema := map[string]*schema.Schema{
 		"name": {
 			Type:         schema.TypeString,
 			Required:     true,
@@ -49,8 +49,28 @@ func TencentSqlServerBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      COMMON_PAYTYPE_POSTPAID,
 			ForceNew:     true,
-			ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
-			Description:  "Pay type of the SQL Server instance. For now, only `POSTPAID_BY_HOUR` is valid.",
+			ValidateFunc: validateAllowedStringValue([]string{COMMON_PAYTYPE_PREPAID, COMMON_PAYTYPE_POSTPAID}),
+			Description:  "Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.",
+		},
+		"period": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateIntegerInRange(1, 48),
+			Description:  "Purchase instance period in month. The value does not exceed 48.",
+		},
+		"auto_voucher": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Default:     0,
+			Description: "Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.",
+		},
+		"voucher_ids": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "An array of voucher IDs, currently only one can be used for a single order.",
 		},
 		"vpc_id": {
 			Type:        schema.TypeString,
@@ -121,6 +141,16 @@ func TencentSqlServerBasicInfo() map[string]*schema.Schema {
 			Description: "The tags of the SQL Server.",
 		},
 	}
+
+	if !isROInstance {
+		basicSchema["auto_renew"] = &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Automatic renewal sign. 0 for normal renewal, 1 for automatic renewal (Default). Only valid when purchasing a prepaid instance.",
+		}
+	}
+
+	return basicSchema
 }
 
 func resourceTencentCloudSqlserverInstance() *schema.Resource {
@@ -173,7 +203,7 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 			Description: "Project ID, default value is 0.",
 		},
 	}
-	basic := TencentSqlServerBasicInfo()
+	basic := TencentSqlServerBasicInfo(false)
 	for k, v := range basic {
 		specialInfo[k] = v
 	}
@@ -223,9 +253,7 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 			weekSet = append(weekSet, vv.(int))
 		}
 	}
-	if payType == COMMON_PAYTYPE_POSTPAID {
-		payType = "POSTPAID"
-	}
+
 	var instanceId string
 	var outErr, inErr error
 
@@ -235,8 +263,65 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 			securityGroups = append(securityGroups, sg.(string))
 		}
 	}
+
+	request := sqlserver.NewCreateDBInstancesRequest()
+	request.DBVersion = &dbVersion
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
+	request.HAType = &haType
+	request.MultiZones = &multiZones
+
+	if payType == COMMON_PAYTYPE_POSTPAID {
+		request.InstanceChargeType = helper.String("POSTPAID")
+	}
+	if payType == COMMON_PAYTYPE_PREPAID {
+		request.InstanceChargeType = helper.String("PREPAID")
+		if v, ok := d.Get("auto_renew").(int); ok {
+			request.AutoRenewFlag = helper.IntInt64(v)
+		}
+
+		if v, ok := d.Get("period").(int); ok {
+			request.Period = helper.IntInt64(v)
+		}
+	}
+
+	if v, ok := d.Get("auto_voucher").(int); ok {
+		request.AutoVoucher = helper.IntInt64(v)
+	}
+
+	if v, ok := d.Get("voucher_ids").([]interface{}); ok {
+		request.VoucherIds = helper.InterfacesStringsPoint(v)
+	}
+
+	if projectId != 0 {
+		request.ProjectId = helper.IntInt64(projectId)
+	}
+
+	if len(weekSet) > 0 {
+		request.Weekly = make([]*int64, 0)
+		for _, i := range weekSet {
+			request.Weekly = append(request.Weekly, helper.IntInt64(i))
+		}
+	}
+	if startTime != "" {
+		request.StartTime = &startTime
+	}
+	if timeSpan != 0 {
+		request.Span = helper.IntInt64(timeSpan)
+	}
+
+	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
+	for _, v := range securityGroups {
+		request.SecurityGroupList = append(request.SecurityGroupList, &v)
+	}
+
+	request.GoodsNum = helper.IntInt64(1)
+	request.Zone = &zone
+
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = sqlserverService.CreateSqlserverInstance(ctx, dbVersion, payType, memory, 0, projectId, subnetId, vpcId, zone, storage, weekSet, startTime, timeSpan, multiZones, haType, securityGroups)
+		instanceId, inErr = sqlserverService.CreateSqlserverInstance(ctx, request)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -294,19 +379,36 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	//upgrade storage and memory size
-	if d.HasChange("memory") || d.HasChange("storage") {
+	if d.HasChange("memory") || d.HasChange("storage") || d.HasChange("auto_voucher") || d.HasChange("voucher_ids") {
 		memory := d.Get("memory").(int)
 		storage := d.Get("storage").(int)
+		autoVoucher := d.Get("auto_voucher").(int)
+		voucherIds := d.Get("voucher_ids").([]interface{})
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage)
+			inErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds))
 			if inErr != nil {
 				return retryError(inErr)
 			}
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
+
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			instance, _, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
+
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			//specAsExpected := int(*instance.Memory) != memory && int(*instance.Storage) != storage
+
+			if *instance.Status == SQLSERVER_DB_UPGRADING {
+				return resource.RetryableError(fmt.Errorf("instance status code is: %d, waiting for upgrade complete", *instance.Status))
+			}
+			return nil
+		})
 
 		d.SetPartial("memory")
 		d.SetPartial("storage")
@@ -479,6 +581,9 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 
 	if int(*instance.PayMode) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
+		if _, ok := d.GetOk("auto_renew"); ok {
+			_ = d.Set("auto_renew", instance.RenewFlag)
+		}
 	} else {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
 	}

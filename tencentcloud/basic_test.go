@@ -163,6 +163,16 @@ locals {
 }
 `
 
+const CommonPresetSQLServer = `
+data "tencentcloud_sqlserver_instances" "sqlserver" {
+  project_id = "` + defaultProjectId + `"
+}
+
+locals {
+  sqlserver_id = data.tencentcloud_sqlserver_instances.sqlserver.instance_list.0.id
+}
+`
+
 const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name

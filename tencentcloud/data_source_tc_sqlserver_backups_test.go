@@ -8,7 +8,7 @@ import (
 
 var testDataSqlserverBackupsName = "data.tencentcloud_sqlserver_backups.test"
 
-func TestAccTencentCloudDataSqlserverBackups(t *testing.T) {
+func TestAccDataSourceTencentCloudSqlserverBackups(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
