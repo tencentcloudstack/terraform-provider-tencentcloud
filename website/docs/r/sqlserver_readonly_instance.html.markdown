@@ -14,12 +14,12 @@ Provides a SQL Server instance resource to create read-only database instances.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_readonly_instance" "foo" {
+resource "tencentcloud_sqlserver_readonly_instance" "foo" {
   name                = "tf_sqlserver_instance_ro"
   availability_zone   = "ap-guangzhou-4"
   charge_type         = "POSTPAID_BY_HOUR"
-  vpc_id              = "` + defaultVpcId + `"
-  subnet_id           = "` + defaultSubnetId + `"
+  vpc_id              = "vpc-xxxxxxxx"
+  subnet_id           = "subnet-xxxxxxxx"
   memory              = 2
   storage             = 10
   master_instance_id  = tencentcloud_sqlserver_instance.test.id
