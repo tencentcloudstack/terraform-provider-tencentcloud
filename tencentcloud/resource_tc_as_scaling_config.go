@@ -31,6 +31,18 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 }
 ```
 
+Using SPOT charge type
+```
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+  configuration_name = "launch-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
+  instance_charge_type = "SPOTPAID"
+  spot_instance_type = "one-time"
+  spot_max_price = "1000"
+}
+```
+
 Import
 
 AutoScaling Configuration can be imported using the id, e.g.
@@ -134,6 +146,37 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 						},
 					},
 				},
+			},
+			// payment
+			"instance_charge_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+			},
+			"instance_charge_type_prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
+				Description:  "The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+			},
+			"instance_charge_type_prepaid_renew_flag": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
+				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+			},
+			"spot_instance_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"one-time"}),
+				Description:  "Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.",
+			},
+			"spot_max_price": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateStringNumber,
+				Description:  "Max price of a spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
 			},
 			"internet_charge_type": {
 				Type:         schema.TypeString,
@@ -362,7 +405,32 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.UserData = helper.String(v.(string))
 	}
 
-	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
+	chargeType, ok := d.Get("instance_charge_type").(string)
+	if !ok || chargeType == "" {
+		chargeType = INSTANCE_CHARGE_TYPE_POSTPAID
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_SPOTPAID {
+		spotMaxPrice := d.Get("spot_max_price").(string)
+		spotInstanceType := d.Get("spot_instance_type").(string)
+		request.InstanceMarketOptions = &as.InstanceMarketOptionsRequest{
+			MarketType: helper.String("spot"),
+			SpotOptions: &as.SpotMarketOptions{
+				MaxPrice:         &spotMaxPrice,
+				SpotInstanceType: &spotInstanceType,
+			},
+		}
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_PREPAID {
+		period := d.Get("instance_charge_type_prepaid_period").(int)
+		renewFlag := d.Get("instance_charge_type_prepaid_renew_flag").(string)
+		request.InstanceChargePrepaid = &as.InstanceChargePrepaid{
+			Period:    helper.IntInt64(period),
+			RenewFlag: &renewFlag,
+		}
+	}
+
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := d.GetOk("instance_types_check_policy"); ok {
@@ -479,6 +547,19 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 
 		if config.SystemDisk.DiskType != nil {
 			_ = d.Set("system_disk_type", *config.SystemDisk.DiskType)
+		}
+
+		if _, ok := d.GetOk("instance_charge_type"); ok || *config.InstanceChargeType != INSTANCE_CHARGE_TYPE_POSTPAID {
+			_ = d.Set("instance_charge_type", *config.InstanceChargeType)
+		}
+
+		if config.InstanceMarketOptions != nil && config.InstanceMarketOptions.SpotOptions != nil {
+			_ = d.Set("spot_instance_type", config.InstanceMarketOptions.SpotOptions.SpotInstanceType)
+			_ = d.Set("spot_max_price", config.InstanceMarketOptions.SpotOptions.MaxPrice)
+		}
+
+		if config.InstanceChargePrepaid != nil {
+			_ = d.Set("instance_charge_type_prepaid_renew_flag", config.InstanceChargePrepaid.RenewFlag)
 		}
 		return nil
 	})
@@ -603,7 +684,32 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		request.UserData = helper.String(v.(string))
 	}
 
-	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
+	chargeType, ok := d.Get("instance_charge_type").(string)
+	if !ok || chargeType == "" {
+		chargeType = INSTANCE_CHARGE_TYPE_POSTPAID
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_SPOTPAID {
+		spotMaxPrice := d.Get("spot_max_price").(string)
+		spotInstanceType := d.Get("spot_instance_type").(string)
+		request.InstanceMarketOptions = &as.InstanceMarketOptionsRequest{
+			MarketType: helper.String("spot"),
+			SpotOptions: &as.SpotMarketOptions{
+				MaxPrice:         &spotMaxPrice,
+				SpotInstanceType: &spotInstanceType,
+			},
+		}
+	}
+
+	if chargeType == INSTANCE_CHARGE_TYPE_PREPAID {
+		period := d.Get("instance_charge_type_prepaid_period").(int)
+		renewFlag := d.Get("instance_charge_type_prepaid_renew_flag").(string)
+		request.InstanceChargePrepaid = &as.InstanceChargePrepaid{
+			Period:    helper.IntInt64(period),
+			RenewFlag: &renewFlag,
+		}
+	}
+
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := d.GetOk("instance_types_check_policy"); ok {

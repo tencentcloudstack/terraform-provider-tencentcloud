@@ -41,6 +41,19 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 }
 ```
 
+Using SPOT charge type
+
+```hcl
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+  configuration_name   = "launch-configuration"
+  image_id             = "img-9qabwvbn"
+  instance_types       = ["SA1.SMALL1"]
+  instance_charge_type = "SPOTPAID"
+  spot_instance_type   = "one-time"
+  spot_max_price       = "1000"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -53,6 +66,9 @@ The following arguments are supported:
 * `disk_type_policy` - (Optional) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_monitor_service` - (Optional) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is `TRUE`.
+* `instance_charge_type_prepaid_period` - (Optional) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `instance_charge_type_prepaid_renew_flag` - (Optional) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
+* `instance_charge_type` - (Optional) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name_settings` - (Optional) Settings of CVM instance names.
 * `instance_tags` - (Optional) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
@@ -63,6 +79,8 @@ The following arguments are supported:
 * `project_id` - (Optional) Specifys to which project the configuration belongs.
 * `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
+* `spot_instance_type` - (Optional) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `spot_max_price` - (Optional) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
 * `user_data` - (Optional) ase64-encoded User Data text, the length limit is 16KB.
