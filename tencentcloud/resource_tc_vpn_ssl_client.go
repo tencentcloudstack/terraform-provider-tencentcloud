@@ -68,9 +68,10 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		vpcService     = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request        = vpc.NewCreateVpnGatewaySslClientRequest()
-		sslVpnServerId string
+		vpcService       = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request          = vpc.NewCreateVpnGatewaySslClientRequest()
+		sslVpnServerId   string
+		sslVpnClientName string
 	)
 
 	if v, ok := d.GetOk("ssl_vpn_server_id"); ok {
@@ -78,7 +79,21 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		request.SslVpnServerId = helper.String(sslVpnServerId)
 	}
 	if v, ok := d.GetOk("ssl_vpn_client_name"); ok {
-		request.SslVpnClientName = helper.String(v.(string))
+		sslVpnClientName = v.(string)
+		request.SslVpnClientName = helper.String(sslVpnClientName)
+	}
+
+	// make sure client name is unique
+	filter := make(map[string]string)
+	filter["ssl-vpn-server-id"] = sslVpnServerId
+	filter["ssl-vpn-client-name"] = sslVpnClientName
+
+	existIns, err := vpcService.DescribeVpnGwSslClientByFilter(ctx, filter)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+	if len(existIns) > 0 {
+		return fmt.Errorf("ssl client with same name already exist.")
 	}
 
 	var taskId *uint64
@@ -98,24 +113,22 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	err := vpcService.DescribeTaskResult(ctx, helper.Uint64(*taskId))
+	err = vpcService.DescribeTaskResult(ctx, helper.Uint64(*taskId))
 	if err != nil {
 		return err
 	}
-
 	// add protect
 	time.Sleep(3)
 
-	filter := make(map[string]string)
-	filter["ssl-vpn-server-id"] = sslVpnServerId
-
-	instances, err := vpcService.DescribeVpnGwSslClientByFilter(ctx, filter)
-
+	newIns, err := vpcService.DescribeVpnGwSslClientByFilter(ctx, filter)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
+	if len(newIns) != 1 {
+		return  fmt.Errorf("create ssl client error")
+	}
 
-	sslClient := instances[0]
+	sslClient := newIns[0]
 	d.SetId(*sslClient.SslVpnClientId)
 
 	return resourceTencentCloudVpnSslClientRead(d, meta)

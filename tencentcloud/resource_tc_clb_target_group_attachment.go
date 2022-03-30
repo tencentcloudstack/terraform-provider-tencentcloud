@@ -34,7 +34,7 @@ resource "tencentcloud_clb_target_group_attachment" "group" {
     clb_id          = tencentcloud_clb_instance.clb_basic.id
     listener_id     = tencentcloud_clb_listener.listener_basic.listener_id
     rule_id         = tencentcloud_clb_listener_rule.rule_basic.rule_id
-    targrt_group_id = tencentcloud_clb_target_group.test.id
+    target_group_id = tencentcloud_clb_target_group.test.id
 }
 ```
 
