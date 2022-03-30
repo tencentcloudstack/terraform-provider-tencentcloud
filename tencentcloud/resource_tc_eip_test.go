@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -72,6 +73,10 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 
 func TestAccTencentCloudEip_anycast(t *testing.T) {
 	t.Parallel()
+	defer func() {
+		os.Setenv(PROVIDER_REGION, "")
+	}()
+	os.Setenv(PROVIDER_REGION, "ap-hongkong")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -234,14 +239,14 @@ const testAccEipAnycast = `
 resource "tencentcloud_eip" "foo" {
   name = "eip_anycast"
   type = "AnycastEIP"
-  anycast_zone = "ANYCAST_ZONE_GLOBAL"
+  anycast_zone = "ANYCAST_ZONE_OVERSEAS"
 }
 `
 
 const testAccEipProvider = `
 resource "tencentcloud_eip" "foo" {
   name = "eip_provider"
-  internet_service_provider = "CMCC"
+  internet_service_provider = "CUCC"
 }
 `
 
