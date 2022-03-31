@@ -175,7 +175,7 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 						Type:        schema.TypeString,
 						ForceNew:    true,
 						Optional:    true,
-						Description: "The name of the device or partition to mount.",
+						Description: "The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.",
 					},
 				},
 			},
