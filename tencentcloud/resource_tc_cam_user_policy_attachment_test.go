@@ -90,7 +90,7 @@ data "tencentcloud_cam_users" "users" {
   name = var.cam_user_basic
 }
 
-resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment" {
+resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment_basic" {
   user_name = data.tencentcloud_cam_users.users.user_list.0.user_id
   policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
 }
