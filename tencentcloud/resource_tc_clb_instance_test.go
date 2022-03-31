@@ -15,7 +15,8 @@ import (
 const BasicClbName = "tf-clb-basic"
 const InternalClbName = "tf-clb-internal"
 const InternalClbNameUpdate = "tf-clb-update-internal"
-const MyOpenClbName = "my-open-clb"
+const SingleClbName = "single-open-clb"
+const MultiClbName = "multi-open-clb"
 const OpenClbName = "tf-clb-open"
 const OpenClbNameUpdate = "tf-clb-update-open"
 
@@ -187,7 +188,7 @@ func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.default_enable"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "network_type", "OPEN"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", MyOpenClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", SingleClbName),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "load_balancer_pass_to_target", "true"),
@@ -202,7 +203,7 @@ func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.default_enable"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "network_type", "OPEN"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", MyOpenClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "clb_name", SingleClbName),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.default_enable", "vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.default_enable", "load_balancer_pass_to_target", "true"),
@@ -229,7 +230,7 @@ func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MyOpenClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MultiClbName),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100004"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "mytest"),
@@ -240,7 +241,7 @@ func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MyOpenClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MultiClbName),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100004"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "open"),
@@ -448,7 +449,7 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_clb_instance" "default_enable" {
   network_type                 = "OPEN"
-  clb_name                     = "` + MyOpenClbName + `"
+  clb_name                     = "` + SingleClbName + `"
   project_id                   = 0
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
@@ -493,7 +494,7 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_clb_instance" "default_enable" {
   network_type                 = "OPEN"
-  clb_name                     = "` + MyOpenClbName + `"
+  clb_name                     = "` + SingleClbName + `"
   project_id                   = 0
   vpc_id                       = tencentcloud_vpc.foo.id
   load_balancer_pass_to_target = true
@@ -511,7 +512,7 @@ resource "tencentcloud_clb_instance" "default_enable" {
 const testAccClbInstance__multi_instance = `
 resource "tencentcloud_clb_instance" "multiple_instance" {
   network_type              = "OPEN"
-  clb_name                  = "` + MyOpenClbName + `"
+  clb_name                  = "` + MultiClbName + `"
   master_zone_id = "100003"
   slave_zone_id = "100004"
 
@@ -524,7 +525,7 @@ resource "tencentcloud_clb_instance" "multiple_instance" {
 const testAccClbInstance__multi_instance_update = `
 resource "tencentcloud_clb_instance" "multiple_instance" {
   network_type              = "OPEN"
-  clb_name                  = "` + MyOpenClbName + `"
+  clb_name                  = "` + MultiClbName + `"
   master_zone_id = "100003"
   slave_zone_id = "100004"
 

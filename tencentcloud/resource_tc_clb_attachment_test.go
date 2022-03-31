@@ -176,7 +176,7 @@ resource "tencentcloud_clb_listener" "foo" {
 
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
-  listener_id = tencentcloud_clb_listener.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
 
   targets {
     instance_id = tencentcloud_instance.default.id
@@ -209,7 +209,7 @@ resource "tencentcloud_clb_listener" "foo" {
 
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
-  listener_id = tencentcloud_clb_listener.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
 
   targets {
     instance_id = tencentcloud_instance.default.id
@@ -237,7 +237,7 @@ resource "tencentcloud_clb_listener" "foo" {
 
 resource "tencentcloud_clb_listener_rule" "foo" {
   clb_id              = tencentcloud_clb_instance.foo.id
-  listener_id         = tencentcloud_clb_listener.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -288,7 +288,7 @@ resource "tencentcloud_clb_listener" "foo" {
 
 resource "tencentcloud_clb_listener_rule" "foo" {
   clb_id              = tencentcloud_clb_instance.foo.id
-  listener_id         = tencentcloud_clb_listener.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -297,7 +297,7 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
-  listener_id = tencentcloud_clb_listener.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
   rule_id     = tencentcloud_clb_listener_rule.foo.id
 
   targets {
@@ -332,7 +332,7 @@ resource "tencentcloud_clb_listener" "foo" {
 
 resource "tencentcloud_clb_listener_rule" "foo" {
   clb_id              = tencentcloud_clb_instance.foo.id
-  listener_id         = tencentcloud_clb_listener.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -341,7 +341,7 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
-  listener_id = tencentcloud_clb_listener.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
   rule_id     = tencentcloud_clb_listener_rule.foo.id
 
   targets {

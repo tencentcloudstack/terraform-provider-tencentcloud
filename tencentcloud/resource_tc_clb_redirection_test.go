@@ -102,7 +102,7 @@ func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 const testAccClbRedirection_basic = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-redirection"
+  clb_name     = "tf-clb-redirection-basic"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -150,7 +150,7 @@ resource "tencentcloud_clb_redirection" "redirection_basic" {
 const testAccClbRedirection_auto = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-redirection"
+  clb_name     = "tf-clb-redirection-auto"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
