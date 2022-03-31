@@ -547,7 +547,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.310
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.376
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.283
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
@@ -555,7 +555,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.291
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.370
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.376
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http

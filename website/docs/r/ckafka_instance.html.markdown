@@ -56,11 +56,13 @@ The following arguments are supported:
 * `dynamic_retention_config` - (Optional) Dynamic message retention policy configuration.
 * `kafka_version` - (Optional, ForceNew) Kafka version (0.10.2/1.1.1/2.4.1).
 * `msg_retention_time` - (Optional) The maximum retention time of instance logs, in minutes. the default is 10080 (7 days), the maximum is 30 days, and the default 0 is not filled, which means that the log retention time recovery policy is not enabled.
+* `multi_zone_flag` - (Optional, ForceNew) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
 * `partition` - (Optional, ForceNew) Partition size, the professional version does not need set.
 * `public_network` - (Optional) Timestamp.
 * `rebalance_time` - (Optional) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, ForceNew) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
 * `tags` - (Optional, ForceNew) Partition size, the professional version does not need tag.
+* `zone_ids` - (Optional, ForceNew) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 
 The `config` object supports the following:
 

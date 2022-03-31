@@ -73,6 +73,18 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Available zone id.",
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					multiZone := d.Get("multi_zone_flag").(bool)
+					zoneId := d.Get("zone_id").(int)
+					v, ok := d.GetOk("zone_ids")
+
+					if !multiZone || !ok {
+						return old == new
+					}
+
+					zoneIds := v.(*schema.Set)
+					return zoneIds.Contains(zoneId)
+				},
 			},
 			"period": {
 				Type:        schema.TypeInt,
@@ -135,6 +147,20 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Computed:    true,
 				ForceNew:    true,
 				Description: "Partition size, the professional version does not need set.",
+			},
+			"multi_zone_flag": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.",
+			},
+			"zone_ids": {
+				Type:         schema.TypeSet,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  "List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.",
+				RequiredWith: []string{"multi_zone_flag"},
+				Elem:         &schema.Schema{Type: schema.TypeInt},
 			},
 			"tags": {
 				Type:        schema.TypeList,
@@ -261,7 +287,6 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	request.ZoneId = &zoneId
 
 	period := int64(d.Get("period").(int))
-	log.Printf(fmt.Sprintf("%dm", period))
 	request.Period = helper.String(fmt.Sprintf("%dm", period))
 	// only support create profession instance
 	request.InstanceType = helper.Int64(1)
@@ -318,6 +343,14 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("disk_type"); ok {
 		diskType := v.(string)
 		request.DiskType = helper.String(diskType)
+	}
+
+	if flag := d.Get("multi_zone_flag").(bool); flag {
+		request.MultiZoneFlag = helper.Bool(flag)
+		ids := d.Get("zone_ids").(*schema.Set).List()
+		for _, v := range ids {
+			request.ZoneIds = append(request.ZoneIds, helper.IntInt64(v.(int)))
+		}
 	}
 
 	result, err := service.client.UseCkafkaClient().CreateInstancePre(request)
@@ -462,6 +495,16 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("disk_size", info.DiskSize)
 	_ = d.Set("band_width", info.Bandwidth)
 	_ = d.Set("partition", info.MaxPartitionNumber)
+
+	if len(info.ZoneIds) > 0 {
+		_ = d.Set("multi_zone_flag", true)
+		ids := helper.Int64sInterfaces(info.ZoneIds)
+		idSet := schema.NewSet(func(i interface{}) int {
+			return i.(int)
+		}, ids)
+		_ = d.Set("zone_ids", idSet)
+	}
+
 	tagSets := make([]map[string]interface{}, 0, len(info.Tags))
 	for _, item := range info.Tags {
 		tagSets = append(tagSets, map[string]interface{}{
@@ -610,7 +653,13 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 	)
 	instanceId := d.Id()
 	request.InstanceId = &instanceId
-	_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+		if err != nil {
+			retryError(err, "UnsupportedOperation")
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
