@@ -565,14 +565,14 @@ resource "tencentcloud_clb_listener" "listener_https" {
 }
 `
 
-const clb_instance = `
+const clb_tcp_instance = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-listener-tcp"
+  clb_name     = "tf-clb-listener-tcp-tcp"
 }
 `
 
-const testAccClbListener_tcp_tcp = clb_instance + `
+const testAccClbListener_tcp_tcp = clb_tcp_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp"
@@ -590,7 +590,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 }
 `
 
-const testAccClbListener_tcp_update_tcp = clb_instance + `
+const testAccClbListener_tcp_update_tcp = clb_tcp_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp_update"
@@ -607,7 +607,14 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 }
 `
 
-const testAccClbListener_tcp_http = clb_instance + `
+const clb_http_instance = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-tcp-http"
+}
+`
+
+const testAccClbListener_tcp_http = clb_http_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp"
@@ -629,7 +636,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 }
 `
 
-const testAccClbListener_tcp_update_http = clb_instance + `
+const testAccClbListener_tcp_update_http = clb_http_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp_update"
@@ -650,7 +657,14 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 }
 `
 
-const testAccClbListener_tcp_customer = clb_instance + `
+const clb_customer_instance = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-tcp-customer"
+}
+`
+
+const testAccClbListener_tcp_customer = clb_customer_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp"
@@ -670,7 +684,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 }
 `
 
-const testAccClbListener_tcp_customer_update = clb_instance + `
+const testAccClbListener_tcp_customer_update = clb_customer_instance + `
 resource "tencentcloud_clb_listener" "listener_tcp"{
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp_update"
