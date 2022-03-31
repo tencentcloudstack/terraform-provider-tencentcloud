@@ -653,7 +653,13 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 	)
 	instanceId := d.Id()
 	request.InstanceId = &instanceId
-	_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+		if err != nil {
+			retryError(err, "UnsupportedOperation")
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
