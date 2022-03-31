@@ -125,7 +125,7 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}
 	if len(newIns) != 1 {
-		return  fmt.Errorf("create ssl client error")
+		return fmt.Errorf("create ssl client error")
 	}
 
 	sslClient := newIns[0]

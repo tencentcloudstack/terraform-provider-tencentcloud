@@ -2128,7 +2128,7 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 	}
 
 	// DisassociateAddress Doesn't support Disassociate NAT Address
-	if strings.HasPrefix(*eip.InstanceId, "nat-") {
+	if eip.InstanceId != nil && strings.HasPrefix(*eip.InstanceId, "nat-") {
 		request := vpc.NewDisassociateNatGatewayAddressRequest()
 		request.NatGatewayId = eip.InstanceId
 		request.PublicIpAddresses = []*string{eip.AddressIp}
