@@ -149,10 +149,10 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	documentErr := camService.PolicyDocumentForceCheck(document)
-	if documentErr != nil {
-		return documentErr
-	}
+	//documentErr := camService.PolicyDocumentForceCheck(document)
+	//if documentErr != nil {
+	//	return documentErr
+	//}
 	request := cam.NewCreateRoleRequest()
 	request.RoleName = &name
 	request.PolicyDocument = &document

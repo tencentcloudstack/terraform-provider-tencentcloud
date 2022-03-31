@@ -3,11 +3,50 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cam_group
+	resource.AddTestSweepers("tencentcloud_cam_group", &resource.Sweeper{
+		Name: "tencentcloud_cam_group",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CamService{client: client}
+
+			groups, err := service.DescribeGroupsByFilter(ctx, nil)
+			if err != nil {
+				return err
+			}
+			for _, v := range groups {
+				name := *v.GroupName
+
+				if persistResource.MatchString(name) {
+					continue
+				}
+
+				request := cam.NewDeleteGroupRequest()
+				request.GroupId = v.GroupId
+				if _, err := client.UseCamClient().DeleteGroup(request); err != nil {
+					log.Printf("[%s] error, request: %s \nreason: %s ", request.GetAction(), request.ToJsonString(), err.Error())
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCamGroup_basic(t *testing.T) {
 	t.Parallel()

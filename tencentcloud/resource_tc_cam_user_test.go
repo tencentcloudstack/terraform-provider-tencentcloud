@@ -3,11 +3,51 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cam_user
+	resource.AddTestSweepers("tencentcloud_cam_user", &resource.Sweeper{
+		Name: "tencentcloud_cam_user",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CamService{client: client}
+
+			users, err := service.DescribeUsersByFilter(ctx, nil)
+			if err != nil {
+				return err
+			}
+
+			for _, v := range users {
+				if persistResource.MatchString(*v.Name) {
+					continue
+				}
+				request := cam.NewDeleteUserRequest()
+				request.Name = v.Name
+				request.Force = helper.IntUint64(1)
+				_, err := client.UseCamClient().DeleteUser(request)
+				if err != nil {
+					log.Printf("[%s] error, request: %s \nreason: %s ", request.GetAction(), request.ToJsonString(), err.Error())
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCamUser_basic(t *testing.T) {
 	t.Parallel()

@@ -86,10 +86,9 @@ func testAccCheckCamGroupMembershipExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCamGroupMembership_basic = `
-resource "tencentcloud_cam_group" "group_basic" {
-  name   = "cam-group-membership-test"
-  remark = "test"
+const testAccCamGroupMembership_basic = defaultCamVariables + `
+data "tencentcloud_cam_groups" "groups" {
+  name   = var.cam_group_basic
 }
 
 resource "tencentcloud_cam_user" "foo" {
@@ -103,18 +102,6 @@ resource "tencentcloud_cam_user" "foo" {
   country_code        = "86"
   email               = "1234@qq.com"
   force_delete        = true
-}
-
-resource "tencentcloud_cam_group_membership" "group_membership_basic" {
-  group_id = tencentcloud_cam_group.group_basic.id
-  user_names = [tencentcloud_cam_user.foo.id]
-}
-`
-
-const testAccCamGroupMembership_update = `
-resource "tencentcloud_cam_group" "group_basic" {
-  name   = "cam-group-membership-test"
-  remark = "test"
 }
 
 resource "tencentcloud_cam_user" "user_basic" {
@@ -131,7 +118,44 @@ resource "tencentcloud_cam_user" "user_basic" {
 }
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
-  group_id = tencentcloud_cam_group.group_basic.id
+  group_id = data.tencentcloud_cam_groups.groups.group_list.0.group_id
+  user_names = [tencentcloud_cam_user.foo.id]
+}
+`
+
+const testAccCamGroupMembership_update = defaultCamVariables + `
+data "tencentcloud_cam_groups" "groups" {
+  name   = var.cam_group_basic
+}
+
+resource "tencentcloud_cam_user" "foo" {
+  name                = "cam-user-test22"
+  remark              = "test"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@1234"
+  phone_num           = "12345678910"
+  country_code        = "86"
+  email               = "1234@qq.com"
+  force_delete        = true
+}
+
+resource "tencentcloud_cam_user" "user_basic" {
+  name                = "cam-user-test33"
+  remark              = "test"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@1234"
+  phone_num           = "12345678910"
+  country_code        = "86"
+  email               = "1234@qq.com"
+  force_delete        = true
+}
+
+resource "tencentcloud_cam_group_membership" "group_membership_basic" {
+  group_id = data.tencentcloud_cam_groups.groups.group_list.0.group_id
   user_names = [tencentcloud_cam_user.user_basic.id]
 }
 `

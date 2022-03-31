@@ -16,10 +16,9 @@ func TestAccTencentCloudCamGroupsDataSource_basic(t *testing.T) {
 			{
 				Config: testAccCamGroupsDataSource_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckCamGroupExists("tencentcloud_cam_group.group"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cam_groups.groups", "group_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cam_groups.groups", "group_list.0.name", "cam-group-test3"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cam_groups.groups", "group_list.0.remark", "test"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.remark"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.group_id"),
 				),
@@ -28,13 +27,8 @@ func TestAccTencentCloudCamGroupsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccCamGroupsDataSource_basic = `
-resource "tencentcloud_cam_group" "group" {
-  name   = "cam-group-test3"
-  remark = "test"
-}
-  
+const testAccCamGroupsDataSource_basic = defaultCamVariables + `
 data "tencentcloud_cam_groups" "groups" {
-  group_id = tencentcloud_cam_group.group.id
+  name = var.cam_group_basic
 }
 `

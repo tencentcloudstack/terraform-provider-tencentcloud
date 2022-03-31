@@ -28,31 +28,21 @@ func TestAccTencentCloudCamUserPolicyAttachmentsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccCamUserPolicyAttachmentsDataSource_basic = `
-resource "tencentcloud_cam_user" "user" {
-  name                = "cam-user-testdata"
-  remark              = "test"
-  console_login       = true
-  use_api             = true
-  need_reset_password = true
-  password            = "Gail@1234"
-  phone_num           = "12345678910"
-  country_code        = "86"
-  email               = "1234@qq.com"
-  force_delete        = true
+const testAccCamUserPolicyAttachmentsDataSource_basic = defaultCamVariables + `
+
+data "tencentcloud_cam_policies" "policy" {
+  name        = var.cam_policy_basic
 }
 
-resource "tencentcloud_cam_policy" "policy" {
-  name        = "cam-policy-test7"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-  description = "test"
+data "tencentcloud_cam_users" "users" {
+  name = var.cam_user_basic
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment" {
-  user_name   = tencentcloud_cam_user.user.name
-  policy_id = tencentcloud_cam_policy.policy.id
+  user_name = data.tencentcloud_cam_users.users.user_list.0.user_id
+  policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
 }
-  
+
 data "tencentcloud_cam_user_policy_attachments" "user_policy_attachments" {
   user_name = tencentcloud_cam_user_policy_attachment.user_policy_attachment.user_name
 }

@@ -80,28 +80,18 @@ func testAccCheckCamUserPolicyAttachmentExists(n string) resource.TestCheckFunc 
 }
 
 //need to add policy resource definition
-const testAccCamUserPolicyAttachment_basic = `
-resource "tencentcloud_cam_user" "user" {
-  name                = "cam-user-testtt"
-  remark              = "test"
-  console_login       = true
-  use_api             = true
-  need_reset_password = true
-  password            = "Gail@1234"
-  phone_num           = "12345678910"
-  country_code        = "86"
-  email               = "1234@qq.com"
-  force_delete        = true
+const testAccCamUserPolicyAttachment_basic = defaultCamVariables + `
+
+data "tencentcloud_cam_policies" "policy" {
+  name = var.cam_policy_basic
 }
 
-resource "tencentcloud_cam_policy" "policy" {
-  name        = "cam-policy-test3"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-  description = "test"
+data "tencentcloud_cam_users" "users" {
+  name = var.cam_user_basic
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment_basic" {
-  user_name   = tencentcloud_cam_user.user.name
-  policy_id = tencentcloud_cam_policy.policy.id
+  user_name = data.tencentcloud_cam_users.users.user_list.0.user_id
+  policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
 }
 `
