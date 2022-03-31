@@ -92,6 +92,42 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudAsScalingConfig_charge(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAsScalingConfigDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAsScalingConfig_charge(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type", "POSTPAID_BY_HOUR"),
+				),
+			},
+			{
+				Config: testAccAsScalingConfig_charge_spot(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type", "SPOTPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "spot_instance_type", "one-time"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "spot_max_price", "1000"),
+				),
+			},
+			{
+				Config: testAccAsScalingConfig_charge_perpaid(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type_prepaid_period", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckAsScalingConfigExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -208,6 +244,43 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
     test = "update"
   }
   
+}
+	`
+}
+
+func testAccAsScalingConfig_charge() string {
+	return `
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	configuration_name = "tf-as-basic"
+	image_id = "img-2lr9q49h"
+	instance_types = ["SA1.SMALL1"]
+	instance_charge_type = "POSTPAID_BY_HOUR"
+}
+	`
+}
+
+func testAccAsScalingConfig_charge_spot() string {
+	return `
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	configuration_name = "tf-as-basic"
+	image_id = "img-2lr9q49h"
+	instance_types = ["SA1.SMALL1"]
+	instance_charge_type = "SPOTPAID"
+	spot_instance_type = "one-time"
+	spot_max_price = "1000"
+}
+	`
+}
+
+func testAccAsScalingConfig_charge_perpaid() string {
+	return `
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	configuration_name = "tf-as-basic"
+	image_id = "img-2lr9q49h"
+	instance_types = ["SA1.SMALL1"]
+	instance_charge_type = "PREPAID"
+	instance_charge_type_prepaid_period = 1
+	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 	`
 }
