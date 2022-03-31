@@ -1,3 +1,42 @@
+## 1.66.3 (March 31, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_sqlserver_instance` block name mistake in example block.
+* resource `tencentcloud_kubernetes_node_pool`, `tencentcloud_kubernetes_cluster_attachment` fix `data_disk.disk_partition` usage description.
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_as_scaling_config` support prepaid and spot charge type.
+* resource `tencentcloud_ckafka_config` support multi zones config.
+
+## 1.66.2 (March 31, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_instance` optimize charge type modification.
+* resource `tencentcloud_postgresql_instance` fix instance upgrade polling error.
+* resource `tencentcloud_vpn_ssl_client` 
+* fix vpc, vpngw, clb and eni testcases.
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_sqlserver_instance`,`tencentcloud_sqlserver_readonly_instance` support prepaid charge type
+
+## 1.66.1 (March 24, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_elasticsearch_instance` testcases.
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_mysql_readonly_instance` support cross-zone purchase and query remoteRoZones
+* resource `tencentcloud_scf_function` support cfs config and fix testcases
+* resource `tencentcloud_eks_cluster` support output kubeconfig
+* resource `tencentcloud_emr_cluster` support `root_size` and `sg_id` params.
+
+
 ## 1.66.0 (March 22, 2022)
 
 FEATURES:
