@@ -19,13 +19,13 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testEmrBasic,
+				Config: testEmrBasic(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEmrExists(testEmrClusterResourceKey),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "product_id", "4"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "display_strategy", "clusterList"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.vpc_id", "vpc-i9zty99n"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.subnet_id", "subnet-opwnh0sw"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.vpc_id", defaultVpcId),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.subnet_id", defaultSubnetId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "softwares.0", "zookeeper-3.6.1"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "support_ha", "0"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "instance_name", "emr-test-demo"),
@@ -37,7 +37,7 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.project_id", "0"),
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", "sg-qyy7jd2b"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", defaultEMRSgId),
 				),
 			},
 		},
@@ -88,13 +88,14 @@ func testAccCheckEmrExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testEmrBasic = `
+func testEmrBasic() string {
+	return fmt.Sprintf(`
 resource "tencentcloud_emr_cluster" "emrrrr" {
 	product_id=4
 	display_strategy="clusterList"
 	vpc_settings={
-	  vpc_id="vpc-i9zty99n"
-	  subnet_id:"subnet-opwnh0sw"
+	  vpc_id="%s"
+	  subnet_id:"%s"
 	}
 	softwares=[
 	  "zookeeper-3.6.1",
@@ -133,6 +134,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	  zone="ap-guangzhou-3"
 	  project_id=0
 	}
-	sg_id="sg-qyy7jd2b"
+	sg_id="%s"
   }
-`
+`, defaultVpcId, defaultSubnetId, defaultEMRSgId)
+}
