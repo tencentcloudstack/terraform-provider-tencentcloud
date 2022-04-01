@@ -36,9 +36,6 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 		Read:   resourceTencentCloudGaapCertificateRead,
 		Update: resourceTencentCloudGaapCertificateUpdate,
 		Delete: resourceTencentCloudGaapCertificateDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:         schema.TypeString,
@@ -155,9 +152,7 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 		return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
 	}
 
-	_ = d.Set("content", certificate.CertificateContent)
 	_ = d.Set("name", certificate.CertificateAlias)
-	_ = d.Set("key", certificate.CertificateKey)
 
 	if certificate.CreateTime == nil {
 		return errors.New("certificate create time is nil")
