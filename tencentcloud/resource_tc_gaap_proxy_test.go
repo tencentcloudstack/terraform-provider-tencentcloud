@@ -237,6 +237,10 @@ resource tencentcloud_gaap_proxy "foo" {
   access_region     = "Guangzhou"
   realserver_region = "Beijing"
   enable            = false
+
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
