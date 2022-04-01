@@ -1,14 +1,69 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_nat", &resource.Sweeper{
+		Name: "tencentcloud_nat",
+		F:    testSweepNatInstance,
+	})
+}
+
+func testSweepNatInstance(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeNatGatewayByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := *v.NatGatewayId
+		instanceName := v.NatGatewayName
+
+		now := time.Now()
+
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+		if instanceName != nil {
+			if strings.HasPrefix(*instanceName, keepResource) || strings.HasPrefix(*instanceName, defaultResource) {
+				continue
+			}
+		}
+
+		// less than 30 minute, not delete
+		if int64(interval) < 30 {
+			continue
+		}
+
+		if err = vpcService.DeleteNatGateway(ctx, instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 	t.Parallel()
