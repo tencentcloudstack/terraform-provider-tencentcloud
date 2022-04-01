@@ -3,12 +3,68 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_eip", &resource.Sweeper{
+		Name: "tencentcloud_eip",
+		F:    testSweepEipInstance,
+	})
+}
+
+func testSweepEipInstance(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeEipByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := *v.AddressId
+		print(instanceId)
+		instanceName := v.AddressName
+
+		now := time.Now()
+
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+		if instanceName != nil {
+			if strings.HasPrefix(*instanceName, keepResource) || strings.HasPrefix(*instanceName, defaultResource) {
+				continue
+			}
+		}
+
+		// less than 30 minute, not delete
+		if int64(interval) < 30 {
+			continue
+		}
+
+		if err = vpcService.DeleteEip(ctx, instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudEip_basic(t *testing.T) {
 	t.Parallel()

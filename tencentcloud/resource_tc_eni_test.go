@@ -4,11 +4,66 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_eni", &resource.Sweeper{
+		Name: "tencentcloud_eni",
+		F:    testSweepEniInstance,
+	})
+}
+
+func testSweepEniInstance(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeEniByFilters(ctx, nil, nil, nil, nil, nil, nil,nil,nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := *v.NetworkInterfaceId
+		instanceName := v.NetworkInterfaceName
+
+		now := time.Now()
+
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+		if instanceName != nil {
+			if strings.HasPrefix(*instanceName, keepResource) || strings.HasPrefix(*instanceName, defaultResource) {
+				continue
+			}
+		}
+
+		// less than 30 minute, not delete
+		if int64(interval) < 30 {
+			continue
+		}
+
+		if err = vpcService.DeleteEni(ctx, instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudEni_basic(t *testing.T) {
 	t.Parallel()
