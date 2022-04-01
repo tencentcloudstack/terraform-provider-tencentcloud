@@ -160,6 +160,10 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		request.SgId = common.StringPtr(v.(string))
 	}
 
+	if v, ok := d.GetOk("extend_fs_field"); ok {
+		request.ExtendFsField = common.StringPtr(v.(string))
+	}
+
 	ratelimit.Check(request.GetAction())
 	//API: https://cloud.tencent.com/document/api/589/34261
 	response, err := me.client.UseEmrClient().CreateInstance(request)

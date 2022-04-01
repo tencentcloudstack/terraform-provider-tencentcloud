@@ -171,6 +171,11 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				ForceNew:    true,
 				Description: "Instance login settings.",
 			},
+			"extend_fs_field": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Access the external file system.",
+			},
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -228,6 +233,9 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	}
 	if d.HasChange("resource_spec.0.core_count") {
 		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
+	}
+	if d.HasChange("extend_fs_field") {
+		return innerErr.New("extend_fs_field not support update.")
 	}
 	_, err := emrService.UpdateInstance(ctx, request)
 	if err != nil {
