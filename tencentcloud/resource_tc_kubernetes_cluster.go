@@ -893,7 +893,17 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     false,
-			Description: "Indicates whether to enable cluster node auto scaler. Default is false.",
+			Description: "Indicates whether to enable cluster node auto scaling. Default is false.",
+		},
+		"cluster_level": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify cluster level, valid for managed cluster.",
+		},
+		"auto_upgrade_cluster_level": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether the cluster level auto upgraded, valid for managed cluster.",
 		},
 		"node_pool_global_config": {
 			Type:     schema.TypeList,
@@ -1781,6 +1791,14 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		basic.ClusterDescription = v.(string)
 	}
 
+	if v, ok := d.GetOk("cluster_level"); ok {
+		basic.ClusterLevel = v.(string)
+	}
+
+	if v, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
+		basic.AutoUpgradeClusterLevel = v.(bool)
+	}
+
 	advanced.Ipvs = d.Get("cluster_ipvs").(bool)
 	advanced.AsEnabled = d.Get("cluster_as_enabled").(bool)
 	advanced.ContainerRuntime = d.Get("container_runtime").(string)
@@ -2623,16 +2641,15 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("managed_cluster_internet_security_policies")
 	}
 
-	if d.HasChange("project_id") || d.HasChange("cluster_name") || d.HasChange("cluster_desc") {
+	if d.HasChange("project_id") || d.HasChange("cluster_name") || d.HasChange("cluster_desc") || d.HasChange("cluster_level") || d.HasChange("auto_upgrade_cluster_level") {
 		projectId := int64(d.Get("project_id").(int))
 		clusterName := d.Get("cluster_name").(string)
 		clusterDesc := d.Get("cluster_desc").(string)
-		if err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc); err != nil {
+		clusterLevel := d.Get("cluster_level").(string)
+		autoUpgradeClusterLevel := d.Get("auto_upgrade_cluster_level").(bool)
+		if err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc, clusterLevel, autoUpgradeClusterLevel); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
-		d.SetPartial("cluster_name")
-		d.SetPartial("cluster_desc")
 	}
 
 	//upgrade k8s cluster version
