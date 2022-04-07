@@ -11,7 +11,7 @@ description: |-
 
 Provides a TencentCloud Container Cluster Instance resource.
 
-~> **NOTE:** It has been deprecated and replaced by  tencentcloud_kubernetes_scale_worker.
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_scale_worker.
 
 ## Example Usage
 

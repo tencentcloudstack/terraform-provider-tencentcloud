@@ -26,6 +26,11 @@ import (
 
 func tkeClusterInfo() map[string]*schema.Schema {
 	schemaBody := map[string]*schema.Schema{
+		"cluster_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "ID of cluster.",
+		},
 		"cluster_name": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -298,6 +303,7 @@ LOOP:
 		}
 
 		var infoMap = map[string]interface{}{}
+		infoMap["cluster_id"] = info.ClusterId
 		infoMap["cluster_name"] = info.ClusterName
 		infoMap["cluster_desc"] = info.ClusterDescription
 		infoMap["cluster_os"] = tkeToShowClusterOs(info.ClusterOs)

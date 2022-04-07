@@ -57,6 +57,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc            = "test cluster desc"
   cluster_version         = "1.20.6"
   cluster_max_service_num = 32
+  cluster_os			  = "tlinux2.2(tkernel3)x86_64"
 
   worker_config {
     count                      = 1

@@ -48,6 +48,7 @@ In addition to all arguments above, the following attributes are exported:
     * `kube_apiserver` - The customized parameters for kube-apiserver.
     * `kube_controller_manager` - The customized parameters for kube-controller-manager.
     * `kube_scheduler` - The customized parameters for kube-scheduler.
+  * `cluster_id` - ID of cluster.
   * `cluster_ipvs` - Indicates whether ipvs is enabled.
   * `cluster_max_pod_num` - The maximum number of Pods per node in the cluster.
   * `cluster_max_service_num` - The maximum number of services in the cluster.

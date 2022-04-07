@@ -217,7 +217,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 data "tencentcloud_security_groups" "sg" {
-  name = "test_preset_sg"
+  name = "default"
 }
 
 variable "default_instance_type" {
