@@ -23,17 +23,14 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
-	// 异步检索任务还未完成，请稍后。
-	FAILEDOPERATION_ASYNCSEARCHNOTCOMPLETED = "FailedOperation.AsyncSearchNotCompleted"
-
-	// 异步任务未完成。
-	FAILEDOPERATION_ASYNCTASKNOTCOMPLETED = "FailedOperation.AsyncTaskNotCompleted"
-
 	// 告警策略通知模板已经绑定到了某个告警策略上。
 	FAILEDOPERATION_BINDEDALARM = "FailedOperation.BindedAlarm"
 
 	// 检索日志触发最大条数限制。
 	FAILEDOPERATION_GETLOGREACHLIMIT = "FailedOperation.GetlogReachLimit"
+
+	// 低频不支持配置kv和tag索引。
+	FAILEDOPERATION_INVALIDINDEXRULEFORSEARCHLOW = "FailedOperation.InValidIndexRuleForSearchLow"
 
 	// 该告警策略状态异常，请检查下日志主题ID是否都存在。
 	FAILEDOPERATION_INVALIDALARM = "FailedOperation.InvalidAlarm"
@@ -71,14 +68,14 @@ const (
 	// 查询语句解析错误。
 	FAILEDOPERATION_SYNTAXERROR = "FailedOperation.SyntaxError"
 
+	// 请求标签服务限频。
+	FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+
 	// 日志主题已关闭。
 	FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 
 	// 日志主题已隔离。
 	FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
-
-	// 日志主题不支持该操作。
-	FAILEDOPERATION_TOPICNOTSUPPORT = "FailedOperation.TopicNotSupport"
 
 	// 写qps超过限制。
 	FAILEDOPERATION_WRITEQPSLIMIT = "FailedOperation.WriteQpsLimit"
@@ -104,6 +101,12 @@ const (
 	// 无效的Content。
 	INVALIDPARAMETER_CONTENT = "InvalidParameter.Content"
 
+	// 数据库唯一键冲突。
+	INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+
+	// 低频不支持配置kv和tag索引。
+	INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
+
 	// 指定日志主题已经存在索引规则。
 	INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
 
@@ -124,12 +127,6 @@ const (
 
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
-
-	// 运行中的异步检索任务数目超限。
-	LIMITEXCEEDED_ASYNCSEARCHTASK = "LimitExceeded.AsyncSearchTask"
-
-	// 异步任务数目超过限制。
-	LIMITEXCEEDED_ASYNCTASK = "LimitExceeded.AsyncTask"
 
 	// 采集规则配置超过最大值限制。
 	LIMITEXCEEDED_CONFIG = "LimitExceeded.Config"
@@ -158,6 +155,9 @@ const (
 	// 分区超过限制。
 	LIMITEXCEEDED_PARTITION = "LimitExceeded.Partition"
 
+	// 检索接口返回的日志量太大， 超过20MB限制。
+	LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
+
 	// 投递规则超出限制。
 	LIMITEXCEEDED_SHIPPER = "LimitExceeded.Shipper"
 
@@ -185,11 +185,20 @@ const (
 	// 账户不存在。
 	OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 
+	// 低频不支持告警。
+	OPERATIONDENIED_ALARMNOTSUPPORTFORSEARCHLOW = "OperationDenied.AlarmNotSupportForSearchLow"
+
 	// 字段没有开启分析功能。
 	OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
 
-	// 通知模版已绑定告警，无法删除。
+	// 通知模板已绑定告警，无法删除。
 	OPERATIONDENIED_NOTICEHASALARM = "OperationDenied.NoticeHasAlarm"
+
+	// 操作低频检索不支持。
+	OPERATIONDENIED_OPERATIONNOTSUPPORTINSEARCHLOW = "OperationDenied.OperationNotSupportInSearchLow"
+
+	// topic绑定了数据加工。
+	OPERATIONDENIED_TOPICHASDATAFORMTASK = "OperationDenied.TopicHasDataFormTask"
 
 	// topic绑定了函数投递。
 	OPERATIONDENIED_TOPICHASDELIVERFUNCTION = "OperationDenied.TopicHasDeliverFunction"
@@ -205,12 +214,6 @@ const (
 
 	// 告警策略通知模板不存在。
 	RESOURCENOTFOUND_ALARMNOTICENOTEXIST = "ResourceNotFound.AlarmNoticeNotExist"
-
-	// 异步检索任务不存在。
-	RESOURCENOTFOUND_ASYNCSEARCHTASKNOTEXIST = "ResourceNotFound.AsyncSearchTaskNotExist"
-
-	// 异步任务不存在。
-	RESOURCENOTFOUND_ASYNCTASKNOTEXIST = "ResourceNotFound.AsyncTaskNotExist"
 
 	// 指定的采集规则配置不存在。
 	RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"

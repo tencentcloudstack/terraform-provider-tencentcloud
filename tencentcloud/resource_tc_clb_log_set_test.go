@@ -49,7 +49,7 @@ func testAccCheckClbLogsetDestroy(s *terraform.State) error {
 		}
 		time.Sleep(5 * time.Second)
 		resourceId := rs.Primary.ID
-		info, err := clsService.DescribeClsLogSetById(ctx, resourceId)
+		info, err := clsService.DescribeClsLogsetById(ctx, resourceId)
 		if info != nil && err == nil {
 			return fmt.Errorf("[CHECK][CLB logset][Destroy] check: CLB logset still exists: %s", rs.Primary.ID)
 		}
@@ -73,7 +73,7 @@ func testAccCheckClbLogsetExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		resourceId := rs.Primary.ID
-		instance, err := service.DescribeClsLogSetById(ctx, resourceId)
+		instance, err := service.DescribeClsLogsetById(ctx, resourceId)
 		if err != nil {
 			return err
 		}
