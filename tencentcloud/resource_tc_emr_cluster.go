@@ -361,21 +361,23 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	// remove metadb
-	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
+	if metaDB != nil && *metaDB != "" {
+		// remove metadb
+		mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
 		if err != nil {
-			return retryError(err, InternalError)
+			return err
 		}
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
-
 	return nil
 }
 
