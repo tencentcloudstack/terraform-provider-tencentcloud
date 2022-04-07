@@ -74,7 +74,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 
 	id := d.Id()
 
-	info, err := service.DescribeClsLogSetById(ctx, id)
+	info, err := service.DescribeClsLogsetById(ctx, id)
 
 	if err != nil {
 		return err
@@ -128,7 +128,7 @@ func resourceTencentCloudClbLogSetUpdate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_clb_logset.update")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	request := cls.NewModifyLogsetRequest()
 
 	request.LogsetId = helper.String(d.Id())
@@ -157,7 +157,7 @@ func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
 
-	if err := service.DeleteClsLogSet(ctx, id); err != nil {
+	if err := service.DeleteClsLogset(ctx, id); err != nil {
 		return err
 	}
 

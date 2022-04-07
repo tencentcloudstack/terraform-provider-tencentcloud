@@ -148,3 +148,11 @@ func StrToUInt64(s string) (i uint64) {
 	i = uint64(intNum)
 	return
 }
+
+func StrToBool(s string) (i bool) {
+	i = false
+	if s == "true" {
+		i = true
+	}
+	return
+}

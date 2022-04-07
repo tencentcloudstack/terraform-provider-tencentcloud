@@ -83,7 +83,7 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	}
 
 	if v, ok := d.GetOk("log_set_id"); ok {
-		info, err := clsService.DescribeClsLogSetById(ctx, v.(string))
+		info, err := clsService.DescribeClsLogsetById(ctx, v.(string))
 		if err != nil {
 			return err
 		}
@@ -121,7 +121,7 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	clsService := ClsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	res, err := clsService.DescribeTopicsById(ctx, id)
+	res, err := clsService.DescribeClsTopicById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func resourceTencentCloudClbInstanceTopicDelete(d *schema.ResourceData, meta int
 	clsService := ClsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := clsService.DeleteTopicsById(ctx, id)
+	err := clsService.DeleteClsTopic(ctx, id)
 	if err != nil {
 		return err
 	}

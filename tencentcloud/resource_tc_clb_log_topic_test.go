@@ -43,7 +43,7 @@ func testAccCheckClbInstanceTopicExists(n string) resource.TestCheckFunc {
 		clsService := ClsService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		instance, err := clsService.DescribeTopicsById(ctx, rs.Primary.ID)
+		instance, err := clsService.DescribeClsTopicById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}

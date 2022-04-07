@@ -596,6 +596,12 @@ PrivateDNS
   Resource
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
+
+CLS
+  Resource
+	tencentcloud_cls_logset
+	tencentcloud_cls_topic
+	tencentcloud_cls_machine_group
 */
 package tencentcloud
 
@@ -1078,6 +1084,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dnspod_record":                           resourceTencentCloudDnspodRecord(),
 			"tencentcloud_private_dns_zone":                        resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                      resourceTencentCloudPrivateDnsRecord(),
+			"tencentcloud_cls_logset":                              resourceTencentCloudClsLogset(),
+			"tencentcloud_cls_topic":                               resourceTencentCloudClsTopic(),
+			"tencentcloud_cls_machine_group":                       resourceTencentCloudClsMachineGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,
