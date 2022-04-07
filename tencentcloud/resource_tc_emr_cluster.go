@@ -321,11 +321,19 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	emrService := EMRService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	if err := emrService.DeleteInstance(ctx, d); err != nil {
+	instanceId := d.Id()
+	clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+	if len(clusters) == 0 {
+		return innerErr.New("Not find clusters.")
+	}
+	metaDB := clusters[0].MetaDb
+	if err != nil {
 		return err
 	}
-	instanceId := d.Id()
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	if err = emrService.DeleteInstance(ctx, d); err != nil {
+		return err
+	}
+	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -352,6 +360,23 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	})
 	if err != nil {
 		return err
+	}
+
+	if metaDB != nil && *metaDB != "" {
+		// remove metadb
+		mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -76,7 +76,7 @@ const (
 
 	defaultTkeOSImageId   = "img-2lr9q49h"
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
-	defaultEMRSgId        = "sg-qyy7jd2b"
+	defaultEMRSgId        = "sg-mag8k2fj"
 )
 
 // Tke Exclusive Network Environment
