@@ -142,12 +142,6 @@ variable "default_instance_type" {
   default = "S1.SMALL1"
 }
 
-data "tencentcloud_images" "default" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
-}
-
-
 data "tencentcloud_vpc_subnets" "vpc" {
   is_default        = true
   availability_zone = var.availability_zone
@@ -166,7 +160,7 @@ data "tencentcloud_instance_types" "default" {
 resource "tencentcloud_instance" "foo" {
   instance_name     = "tf-auto-test-1-1"
   availability_zone = var.availability_zone
-  image_id          = data.tencentcloud_images.default.images.0.image_id
+  image_id          = ` + defaultTkeOSImageId + `
   instance_type     = var.default_instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
@@ -181,6 +175,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_name            = "keep"
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
+  cluster_os			  = "tlinux2.2(tkernel3)x86_64"
 
   worker_config {
     count                      = 1
