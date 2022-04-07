@@ -924,8 +924,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if len(instance.DataDisks) > 0 {
 		var diskIds []*string
 		for i := range instance.DataDisks {
-			disk := instance.DataDisks[i]
-			diskIds = append(diskIds, disk.DiskId)
+			id := instance.DataDisks[i].DiskId
+			size := instance.DataDisks[i].DiskSize
+			if id == nil {
+				continue
+			}
+			if strings.HasPrefix(*id, "disk-") {
+				diskIds = append(diskIds, id)
+			} else {
+				diskSizeMap[*id] = helper.Int64Uint64(*size)
+			}
 		}
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			disks, err := cbsService.DescribeDiskList(ctx, diskIds)
@@ -947,10 +955,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 	for _, disk := range instance.DataDisks {
 		dataDisk := make(map[string]interface{}, 5)
-		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
-		dataDisk["data_disk_type"] = disk.DiskType
-		dataDisk["data_disk_size"] = diskSizeMap[*disk.DiskId]
 		dataDisk["data_disk_id"] = disk.DiskId
+		if disk.DiskId == nil {
+			dataDisk["data_disk_size"] = disk.DiskSize
+		} else if size, ok := diskSizeMap[*disk.DiskId]; ok {
+			dataDisk["data_disk_size"] = size
+		}
+		dataDisk["data_disk_type"] = disk.DiskType
+		dataDisk["data_disk_snapshot_id"] = disk.SnapshotId
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
 		dataDisk["encrypt"] = disk.Encrypt
 		dataDisk["throughput_performance"] = disk.ThroughputPerformance
