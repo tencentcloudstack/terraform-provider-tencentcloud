@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"os"
 	"regexp"
+	"time"
 )
 
 /*
@@ -21,6 +22,15 @@ const (
 )
 
 var persistResource = regexp.MustCompile("^(keep|Default)")
+
+// Check if resource should persist instead of recycled
+func isResourcePersist(name string, createdTime *time.Time) bool {
+	createdWithin30Minutes := false
+	if createdTime != nil {
+		createdWithin30Minutes = createdTime.Add(time.Minute * 30).After(time.Now())
+	}
+	return persistResource.MatchString(name) || createdWithin30Minutes
+}
 
 // vpn
 const defaultVpnDataSource = `
@@ -75,7 +85,7 @@ const (
 	tkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
 	tkeExclusiveSubnetId  = "subnet-ljyn7h30"
 	defaultTkeClusterId   = "cls-ely08ic4"
-	defaultTkeClusterName = "preset_tke_cluster"
+	defaultTkeClusterName = "keep-tke-cluster"
 )
 
 /*

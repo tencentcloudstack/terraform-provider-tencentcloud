@@ -34,7 +34,7 @@ func testSweepEniInstance(region string) error {
 		client: client.apiV3Conn,
 	}
 
-	instances, err := vpcService.DescribeEniByFilters(ctx, nil, nil, nil, nil, nil, nil,nil,nil)
+	instances, err := vpcService.DescribeEniByFilters(ctx, nil, nil, nil, nil, nil, nil, nil, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}

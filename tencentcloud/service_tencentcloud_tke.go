@@ -17,17 +17,19 @@ import (
 )
 
 type ClusterBasicSetting struct {
-	ClusterId          string
-	ClusterOs          string
-	ClusterOsType      string
-	ClusterVersion     string
-	ClusterName        string
-	ClusterDescription string
-	VpcId              string
-	ProjectId          int64
-	ClusterNodeNum     int64
-	ClusterStatus      string
-	Tags               map[string]string
+	ClusterId               string
+	ClusterOs               string
+	ClusterOsType           string
+	ClusterVersion          string
+	ClusterName             string
+	ClusterDescription      string
+	ClusterLevel            string
+	AutoUpgradeClusterLevel bool
+	VpcId                   string
+	ProjectId               int64
+	ClusterNodeNum          int64
+	ClusterStatus           string
+	Tags                    map[string]string
 }
 
 type ClusterAdvancedSettings struct {
@@ -82,7 +84,8 @@ type ClusterInfo struct {
 	ClusterCidrSettings
 	ClusterAdvancedSettings
 
-	DeployType string
+	DeployType  string
+	CreatedTime string
 }
 
 type InstanceInfo struct {
@@ -232,6 +235,7 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
 		clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
 		clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
+		clusterInfo.CreatedTime = *cluster.CreatedTime
 
 		if len(cluster.TagSpecification) > 0 {
 			clusterInfo.Tags = make(map[string]string)
@@ -302,6 +306,33 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 			clusterInfo.Tags[*tag.Key] = *tag.Value
 		}
 	}
+
+	return
+}
+
+func (me *TkeService) DescribeClusterLevelAttribute(ctx context.Context, id string) (clusterLevels []*tke.ClusterLevelAttribute, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterLevelAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterID = &id
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterLevelAttribute(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	clusterLevels = response.Response.Items
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -422,6 +453,12 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterBasicSettings.ClusterDescription = &basic.ClusterDescription
 	request.ClusterBasicSettings.ClusterName = &basic.ClusterName
 	request.ClusterBasicSettings.OsCustomizeType = &basic.ClusterOsType
+	request.ClusterBasicSettings.ClusterLevel = &basic.ClusterLevel
+	if &basic.AutoUpgradeClusterLevel != nil {
+		request.ClusterBasicSettings.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
+			IsAutoUpgrade: &basic.AutoUpgradeClusterLevel,
+		}
+	}
 	for k, v := range tags {
 		if len(request.ClusterBasicSettings.TagSpecification) == 0 {
 			request.ClusterBasicSettings.TagSpecification = []*tke.TagSpecification{{
@@ -904,7 +941,7 @@ func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, se
 	return
 }
 
-func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, projectId int64, clusterName string, clusterDesc string) (errRet error) {
+func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, projectId int64, clusterName, clusterDesc, clusterLevel string, autoUpgradeClusterLevel bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewModifyClusterAttributeRequest()
 	defer func() {
@@ -916,6 +953,16 @@ func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, pro
 	request.ProjectId = &projectId
 	request.ClusterName = &clusterName
 	request.ClusterDesc = &clusterDesc
+
+	if clusterLevel != "" {
+		request.ClusterLevel = &clusterLevel
+	}
+
+	if autoUpgradeClusterLevel {
+		request.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
+			IsAutoUpgrade: &autoUpgradeClusterLevel,
+		}
+	}
 
 	ratelimit.Check(request.GetAction())
 

@@ -74,6 +74,7 @@ func NewAcquireClusterAdminRoleResponse() (response *AcquireClusterAdminRoleResp
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
@@ -94,6 +95,7 @@ func (c *Client) AcquireClusterAdminRole(request *AcquireClusterAdminRoleRequest
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
@@ -2426,6 +2428,7 @@ func NewDescribeAvailableClusterVersionResponse() (response *DescribeAvailableCl
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 func (c *Client) DescribeAvailableClusterVersion(request *DescribeAvailableClusterVersionRequest) (response *DescribeAvailableClusterVersionResponse, err error) {
     return c.DescribeAvailableClusterVersionWithContext(context.Background(), request)
@@ -2440,6 +2443,7 @@ func (c *Client) DescribeAvailableClusterVersion(request *DescribeAvailableClust
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 func (c *Client) DescribeAvailableClusterVersionWithContext(ctx context.Context, request *DescribeAvailableClusterVersionRequest) (response *DescribeAvailableClusterVersionResponse, err error) {
     if request == nil {
@@ -2675,6 +2679,7 @@ func NewDescribeClusterCommonNamesResponse() (response *DescribeClusterCommonNam
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
 func (c *Client) DescribeClusterCommonNames(request *DescribeClusterCommonNamesRequest) (response *DescribeClusterCommonNamesResponse, err error) {
@@ -2691,6 +2696,7 @@ func (c *Client) DescribeClusterCommonNames(request *DescribeClusterCommonNamesR
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
 func (c *Client) DescribeClusterCommonNamesWithContext(ctx context.Context, request *DescribeClusterCommonNamesRequest) (response *DescribeClusterCommonNamesResponse, err error) {
@@ -3032,6 +3038,7 @@ func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfig
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_KUBECLIENTCONNECTION = "InternalError.KubeClientConnection"
 //  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
@@ -3042,6 +3049,7 @@ func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfig
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
@@ -3055,6 +3063,7 @@ func (c *Client) DescribeClusterKubeconfig(request *DescribeClusterKubeconfigReq
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_KUBECLIENTCONNECTION = "InternalError.KubeClientConnection"
 //  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
@@ -3065,6 +3074,7 @@ func (c *Client) DescribeClusterKubeconfig(request *DescribeClusterKubeconfigReq
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
@@ -3080,6 +3090,104 @@ func (c *Client) DescribeClusterKubeconfigWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeClusterKubeconfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterLevelAttributeRequest() (request *DescribeClusterLevelAttributeRequest) {
+    request = &DescribeClusterLevelAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterLevelAttribute")
+    
+    
+    return
+}
+
+func NewDescribeClusterLevelAttributeResponse() (response *DescribeClusterLevelAttributeResponse) {
+    response = &DescribeClusterLevelAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClusterLevelAttribute
+// 获取集群规模
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeClusterLevelAttribute(request *DescribeClusterLevelAttributeRequest) (response *DescribeClusterLevelAttributeResponse, err error) {
+    return c.DescribeClusterLevelAttributeWithContext(context.Background(), request)
+}
+
+// DescribeClusterLevelAttribute
+// 获取集群规模
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeClusterLevelAttributeWithContext(ctx context.Context, request *DescribeClusterLevelAttributeRequest) (response *DescribeClusterLevelAttributeResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterLevelAttributeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterLevelAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterLevelAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterLevelChangeRecordsRequest() (request *DescribeClusterLevelChangeRecordsRequest) {
+    request = &DescribeClusterLevelChangeRecordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterLevelChangeRecords")
+    
+    
+    return
+}
+
+func NewDescribeClusterLevelChangeRecordsResponse() (response *DescribeClusterLevelChangeRecordsResponse) {
+    response = &DescribeClusterLevelChangeRecordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClusterLevelChangeRecords
+// 查询集群变配记录
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeClusterLevelChangeRecords(request *DescribeClusterLevelChangeRecordsRequest) (response *DescribeClusterLevelChangeRecordsResponse, err error) {
+    return c.DescribeClusterLevelChangeRecordsWithContext(context.Background(), request)
+}
+
+// DescribeClusterLevelChangeRecords
+// 查询集群变配记录
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeClusterLevelChangeRecordsWithContext(ctx context.Context, request *DescribeClusterLevelChangeRecordsRequest) (response *DescribeClusterLevelChangeRecordsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterLevelChangeRecordsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterLevelChangeRecords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterLevelChangeRecordsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4201,6 +4309,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_COMPONENTCLINETHTTP = "InternalError.ComponentClinetHttp"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBAFFECTIVEDROWS = "InternalError.DbAffectivedRows"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4227,6 +4336,7 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
+//  INTERNALERROR_COMPONENTCLINETHTTP = "InternalError.ComponentClinetHttp"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBAFFECTIVEDROWS = "InternalError.DbAffectivedRows"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4842,6 +4952,63 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeResourceUsageRequest() (request *DescribeResourceUsageRequest) {
+    request = &DescribeResourceUsageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeResourceUsage")
+    
+    
+    return
+}
+
+func NewDescribeResourceUsageResponse() (response *DescribeResourceUsageResponse) {
+    response = &DescribeResourceUsageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeResourceUsage
+// 获取集群资源使用量
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) DescribeResourceUsage(request *DescribeResourceUsageRequest) (response *DescribeResourceUsageResponse, err error) {
+    return c.DescribeResourceUsageWithContext(context.Background(), request)
+}
+
+// DescribeResourceUsage
+// 获取集群资源使用量
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) DescribeResourceUsageWithContext(ctx context.Context, request *DescribeResourceUsageRequest) (response *DescribeResourceUsageResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceUsageRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceUsage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceUsageResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRouteTableConflictsRequest() (request *DescribeRouteTableConflictsRequest) {
     request = &DescribeRouteTableConflictsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5247,6 +5414,7 @@ func NewEnableClusterDeletionProtectionResponse() (response *EnableClusterDeleti
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) EnableClusterDeletionProtection(request *EnableClusterDeletionProtectionRequest) (response *EnableClusterDeletionProtectionResponse, err error) {
     return c.EnableClusterDeletionProtectionWithContext(context.Background(), request)
 }
@@ -5257,6 +5425,7 @@ func (c *Client) EnableClusterDeletionProtection(request *EnableClusterDeletionP
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) EnableClusterDeletionProtectionWithContext(ctx context.Context, request *EnableClusterDeletionProtectionRequest) (response *EnableClusterDeletionProtectionResponse, err error) {
     if request == nil {
         request = NewEnableClusterDeletionProtectionRequest()
@@ -5356,6 +5525,7 @@ func NewForwardApplicationRequestV3Response() (response *ForwardApplicationReque
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
@@ -5378,6 +5548,7 @@ func (c *Client) ForwardApplicationRequestV3(request *ForwardApplicationRequestV
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
@@ -5393,6 +5564,53 @@ func (c *Client) ForwardApplicationRequestV3WithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewForwardApplicationRequestV3Response()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetClusterLevelPriceRequest() (request *GetClusterLevelPriceRequest) {
+    request = &GetClusterLevelPriceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "GetClusterLevelPrice")
+    
+    
+    return
+}
+
+func NewGetClusterLevelPriceResponse() (response *GetClusterLevelPriceResponse) {
+    response = &GetClusterLevelPriceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// GetClusterLevelPrice
+// 获取集群规模价格
+//
+// 可能返回的错误码:
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+func (c *Client) GetClusterLevelPrice(request *GetClusterLevelPriceRequest) (response *GetClusterLevelPriceResponse, err error) {
+    return c.GetClusterLevelPriceWithContext(context.Background(), request)
+}
+
+// GetClusterLevelPrice
+// 获取集群规模价格
+//
+// 可能返回的错误码:
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+func (c *Client) GetClusterLevelPriceWithContext(ctx context.Context, request *GetClusterLevelPriceRequest) (response *GetClusterLevelPriceResponse, err error) {
+    if request == nil {
+        request = NewGetClusterLevelPriceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetClusterLevelPrice require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetClusterLevelPriceResponse()
     err = c.Send(request, response)
     return
 }
@@ -5741,11 +5959,13 @@ func NewModifyClusterAttributeResponse() (response *ModifyClusterAttributeRespon
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
 //  INTERNALERROR_TRADEINSUFFICIENTBALANCE = "InternalError.TradeInsufficientBalance"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 func (c *Client) ModifyClusterAttribute(request *ModifyClusterAttributeRequest) (response *ModifyClusterAttributeResponse, err error) {
     return c.ModifyClusterAttributeWithContext(context.Background(), request)
 }
@@ -5762,11 +5982,13 @@ func (c *Client) ModifyClusterAttribute(request *ModifyClusterAttributeRequest) 
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
 //  INTERNALERROR_TRADEINSUFFICIENTBALANCE = "InternalError.TradeInsufficientBalance"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
 func (c *Client) ModifyClusterAttributeWithContext(ctx context.Context, request *ModifyClusterAttributeRequest) (response *ModifyClusterAttributeResponse, err error) {
     if request == nil {
         request = NewModifyClusterAttributeRequest()
@@ -5944,6 +6166,7 @@ func NewModifyClusterNodePoolResponse() (response *ModifyClusterNodePoolResponse
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_CAENABLEFAILED = "UnsupportedOperation.CaEnableFailed"
 func (c *Client) ModifyClusterNodePool(request *ModifyClusterNodePoolRequest) (response *ModifyClusterNodePoolResponse, err error) {
     return c.ModifyClusterNodePoolWithContext(context.Background(), request)
@@ -5957,6 +6180,7 @@ func (c *Client) ModifyClusterNodePool(request *ModifyClusterNodePoolRequest) (r
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_CAENABLEFAILED = "UnsupportedOperation.CaEnableFailed"
 func (c *Client) ModifyClusterNodePoolWithContext(ctx context.Context, request *ModifyClusterNodePoolRequest) (response *ModifyClusterNodePoolResponse, err error) {
     if request == nil {

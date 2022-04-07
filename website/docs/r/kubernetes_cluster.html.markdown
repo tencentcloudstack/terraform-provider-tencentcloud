@@ -412,9 +412,10 @@ The following arguments are supported:
 
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
 * `auth_options` - (Optional) Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.
+* `auto_upgrade_cluster_level` - (Optional) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
-* `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler. Default is false.
+* `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaling. Default is false.
 * `cluster_cidr` - (Optional, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional) Description of the cluster.
@@ -423,6 +424,7 @@ The following arguments are supported:
 * `cluster_intranet_subnet_id` - (Optional) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional) Open intranet access or not.
 * `cluster_ipvs` - (Optional, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
+* `cluster_level` - (Optional) Specify cluster level, valid for managed cluster.
 * `cluster_max_pod_num` - (Optional, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_max_service_num` - (Optional, ForceNew) The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_name` - (Optional) Name of the cluster.

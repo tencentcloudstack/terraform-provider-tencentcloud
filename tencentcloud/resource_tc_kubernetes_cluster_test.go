@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -12,6 +13,38 @@ import (
 
 var testTkeClusterName = "tencentcloud_kubernetes_cluster"
 var testTkeClusterResourceKey = testTkeClusterName + ".managed_cluster"
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_kubernetes_cluster
+	resource.AddTestSweepers("tencentcloud_kubernetes_cluster", &resource.Sweeper{
+		Name: "tencentcloud_kubernetes_cluster",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := TkeService{client: client}
+			clusters, err := service.DescribeClusters(ctx, "", "")
+			if err != nil {
+				return err
+			}
+
+			for _, v := range clusters {
+				id := v.ClusterId
+				name := v.ClusterName
+				createdTime, _ := time.Parse(time.RFC3339, v.CreatedTime)
+				if isResourcePersist(name, &createdTime) {
+					continue
+				}
+				if err := service.DeleteCluster(ctx, id); err != nil {
+					return err
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTkeResource(t *testing.T) {
 	t.Parallel()
@@ -47,6 +80,38 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					testAccCheckTkeExists(testTkeClusterResourceKey),
 					resource.TestCheckNoResourceAttr(testTkeClusterResourceKey, "tags.test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.abc", "abc"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudTkeResourceClusterLevel(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTkeDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeClusterLevel,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.31.0.0/16"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_max_pod_num", "32"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L5"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "auto_upgrade_cluster_level", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "worker_instances_list.#", "1"),
+					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "worker_instances_list.0.instance_id"),
+				),
+			},
+			{
+				Config: testAccTkeClusterLevelUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L20"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "auto_upgrade_cluster_level", "false"),
 				),
 			},
 		},
@@ -154,7 +219,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = "vpc-rkojp4kn"
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
   cluster_cidr                               = var.cluster_cidr
   cluster_max_pod_num                        = 32
   cluster_name                               = "test"
@@ -173,8 +238,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "subnet-fmcdf57e"
-    img_id                     = "img-rkiynh11"
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    img_id                     = "`+defaultTkeOSImageId+`"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -189,7 +254,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
-	cam_role_name			= "TKE_TEST"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
@@ -211,3 +275,109 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 `, key, value,
 	)
 }
+
+const testAccTkeClusterLevel = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_version                            = "1.18.4"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level 							 = "L5"
+  auto_upgrade_cluster_level 				 = true
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    img_id                     = "` + defaultTkeOSImageId + `"
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  unschedulable = 0
+}
+`
+
+const testAccTkeClusterLevelUpdate = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_version                            = "1.18.4"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level 							 = "L20"
+  auto_upgrade_cluster_level 				 = false
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    img_id                     = "` + defaultTkeOSImageId + `"
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  unschedulable = 0
+}
+`

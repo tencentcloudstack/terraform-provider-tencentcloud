@@ -511,6 +511,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.370 h1:FlmN
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.370/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.376 h1:pXsCDParuAiDUt/SuDBeJ0Fv90kItYMbk37W1cMVHck=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.376/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.378 h1:o+GKr3tHDivmoWxBXX5oeJC8EmmNV64g/yw5s0RjBdg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.378/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199 h1:ajgJogYSIQ5u1PIbiV5nsvr5K0fYpm1/T7Dy+mxEM6U=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.351 h1:zqJsH5pxGT57La7NAOOyMQxsuM11pupNBwV1dzXcT24=
@@ -578,6 +580,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.369 h1:bp9vCew
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.369/go.mod h1:HlPCDRZ3zUnEXifuTNbCiEOwKn/2LmA6ziPkCr3VHsk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.370 h1:rzExiYuyKD9JhRAyQzoECLz8RRyT0bNgLxmDjPQxTRg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.370/go.mod h1:qs+mOMyRpnBtCNHBl70LMH826P1kbYDIjgX2+p5nqMg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.378 h1:gVtRJRENcLw2LxA06oS0OOOeRADStVrrpIyKjlrmkW4=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.378/go.mod h1:3fugxjsjhR7P3HeVRsUCMIM2P7KnIvqnPhcsImS7zN0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199 h1:6Yt74l4pA5QtzhwMNIEUt0spXdSBKH744DDqTHJOCP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199/go.mod h1:Yw6OQ33z3s4k0HVYTNSffB12qOzEJ2Zf1Vj4+5S3sRs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.199 h1:UDZ59pvaqjDy2QIsMsv9hxm0BEJLmPIbHF1ms0MqaRk=
