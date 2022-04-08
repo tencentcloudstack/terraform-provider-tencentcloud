@@ -1,3 +1,23 @@
+## 1.67.0 (April 8, 2022)
+
+FEATURES:
+* New resource `tencentcloud_cls_logset`
+* New resource `tencentcloud_cls_topic`
+* New resource `tencentcloud_cls_machine_group`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_cluster` support cluster level and auto upgrade level settings.
+
+BUGFIXES:
+
+* resource `tencentcloud_emr_cluster` clear metadb
+* resource `tencentcloud_instance` ignore local disk describe status.
+
+COMMON:
+
+* fix partial testcases gaap, tke, clb, cam, e.g.
+
 ## 1.66.3 (March 31, 2022)
 
 BUGFIXES:
