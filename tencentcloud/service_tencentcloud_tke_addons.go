@@ -118,7 +118,7 @@ func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonNa
 		return nil
 	})
 
-	return phase, has, err
+	return response, has, err
 }
 
 func (me *TkeService) ProcessExtensionAddons(ctx context.Context, request *tke.ForwardApplicationRequestV3Request) (response *tke.ForwardApplicationRequestV3Response, err error) {

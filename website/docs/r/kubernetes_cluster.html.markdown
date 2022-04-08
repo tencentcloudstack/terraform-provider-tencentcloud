@@ -424,7 +424,7 @@ The following arguments are supported:
 * `cluster_intranet_subnet_id` - (Optional) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional) Open intranet access or not.
 * `cluster_ipvs` - (Optional, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
-* `cluster_level` - (Optional) Specify cluster level, valid for managed cluster.
+* `cluster_level` - (Optional) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.
 * `cluster_max_pod_num` - (Optional, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_max_service_num` - (Optional, ForceNew) The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_name` - (Optional) Name of the cluster.

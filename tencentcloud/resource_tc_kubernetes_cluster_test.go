@@ -305,6 +305,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level 							 = "L5"
   auto_upgrade_cluster_level 				 = true
+  ignore_cluster_cidr_conflict               = true
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone

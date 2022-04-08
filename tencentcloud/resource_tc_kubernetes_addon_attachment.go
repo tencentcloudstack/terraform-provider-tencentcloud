@@ -227,6 +227,13 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	response, _, err = service.DescribeExtensionAddon(ctx, clusterId, addonName)
+
+	if err != nil {
+		d.SetId("")
+		return err
+	}
+
 	_ = d.Set("response_body", response)
 
 	spec := addonResponseData.Spec
