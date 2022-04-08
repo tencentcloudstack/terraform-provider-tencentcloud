@@ -8,6 +8,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource `tencentcloud_kubernetes_cluster` support cluster level and auto upgrade level settings.
+* resource `tencentcloud_emr_cluster` support `extend_fs_field`
 
 BUGFIXES:
 
@@ -16,7 +17,7 @@ BUGFIXES:
 
 COMMON:
 
-* fix partial testcases gaap, tke, clb, cam, e.g.
+* fix partial testcases gaap, tke, clb, cam, emr, e.g.
 
 ## 1.66.3 (March 31, 2022)
 
