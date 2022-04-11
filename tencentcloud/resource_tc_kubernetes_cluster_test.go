@@ -219,7 +219,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = "vpc-rkojp4kn"
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
   cluster_cidr                               = var.cluster_cidr
   cluster_max_pod_num                        = 32
   cluster_name                               = "test"
@@ -238,7 +238,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "subnet-fmcdf57e"
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
     img_id                     = "`+defaultTkeOSImageId+`"
 
     data_disk {
@@ -254,7 +254,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
-	cam_role_name			= "TKE_TEST"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
