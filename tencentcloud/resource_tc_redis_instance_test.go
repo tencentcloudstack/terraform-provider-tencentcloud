@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"testing"
 	"time"
 
@@ -34,7 +33,7 @@ func init() {
 			for _, v := range instances {
 				name := v.Name
 				id := v.RedisId
-				if !strings.HasPrefix(name, "terrform_test") {
+				if isResourcePersist(name, nil) {
 					continue
 				}
 				// Collect infos before deleting action

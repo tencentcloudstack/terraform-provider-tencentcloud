@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"strings"
 	"sync"
 	"testing"
 
@@ -51,7 +50,7 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 			defer wg.Done()
 			id := *instances[i].InstanceId
 			name := *instances[i].Name
-			if strings.HasPrefix(name, "preset_sqlserver") {
+			if isResourcePersist(name, nil) {
 				return
 			}
 
