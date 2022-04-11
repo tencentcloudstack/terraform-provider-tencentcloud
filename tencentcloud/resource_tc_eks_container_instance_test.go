@@ -5,9 +5,50 @@ import (
 	"fmt"
 	"testing"
 
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_eks_ci
+	resource.AddTestSweepers("tencentcloud_eks_ci", &resource.Sweeper{
+		Name: "tencentcloud_eks_ci",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := EksService{client}
+
+			cis, err := service.DescribeEksContainerInstancesByFilter(ctx, nil, 100, 0)
+
+			if err != nil {
+				return err
+			}
+
+			var ids []*string
+			for i := range cis {
+				ci := cis[i]
+				name := *ci.EksCiName
+				if isResourcePersist(name, nil) {
+					continue
+				}
+				ids = append(ids, ci.EksCiId)
+			}
+			request := tke.NewDeleteEKSContainerInstancesRequest()
+			request.EksCiIds = ids
+			err = service.DeleteEksContainerInstance(ctx, request)
+
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 	t.Parallel()
@@ -90,7 +131,9 @@ func testAccCheckEksCiDestroy(s *terraform.State) error {
 }
 
 const testAccEksCi = defaultVpcVariable + `
-data "tencentcloud_security_groups" "group" {}
+data "tencentcloud_security_groups" "group" {
+  name = "default"
+}
 
 resource "tencentcloud_eks_container_instance" "foo" {
   name = "foo"

@@ -36,12 +36,6 @@ func testSweepMySQLInstance(region string) error {
 	service := MysqlService{client: client}
 
 	request := cdb.NewDescribeDBInstancesRequest()
-	request.InstanceNames = []*string{
-		helper.String(defaultInsName),
-		helper.String(TestAccTencentCloudMysqlInstanceName),
-		helper.String(TestAccTencentCloudMysqlInstanceNameVersion1),
-		helper.String(TestAccTencentCloudMysqlInstanceNamePrepaid),
-	}
 	request.Limit = helper.IntUint64(2000)
 
 	response, err := client.UseMysqlClient().DescribeDBInstances(request)
@@ -55,6 +49,10 @@ func testSweepMySQLInstance(region string) error {
 
 	for _, v := range response.Response.Items {
 		id := *v.InstanceId
+		name := *v.InstanceName
+		if isResourcePersist(name, nil) {
+			continue
+		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			_, err := service.IsolateDBInstance(ctx, id)
 			if err != nil {

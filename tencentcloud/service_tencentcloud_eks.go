@@ -238,6 +238,8 @@ func (me *EksService) DescribeEksContainerInstancesByFilter(ctx context.Context,
 		return
 	}
 
+	instances = response.Response.EksCis
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
