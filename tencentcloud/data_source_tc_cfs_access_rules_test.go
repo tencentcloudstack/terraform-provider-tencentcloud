@@ -17,7 +17,7 @@ func TestAccTencentCloudCfsAccessRulesDataSource(t *testing.T) {
 				Config: testAccCfsAccessRulesDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCfsAccessRuleExists("tencentcloud_cfs_access_rule.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_rules.access_rules", "access_rule_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_access_rules.access_rules", "access_rule_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_access_rules.access_rules", "access_rule_list.0.access_rule_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_rules.access_rules", "access_rule_list.0.auth_client_ip", "10.10.1.0/24"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_rules.access_rules", "access_rule_list.0.priority", "1"),
@@ -27,19 +27,16 @@ func TestAccTencentCloudCfsAccessRulesDataSource(t *testing.T) {
 	})
 }
 
-const testAccCfsAccessRulesDataSource = `
-resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_rule"
-}
+const testAccCfsAccessRulesDataSource = defaultCfsAccessGroup + `
 
 resource "tencentcloud_cfs_access_rule" "foo" {
-  access_group_id = tencentcloud_cfs_access_group.foo.id
+  access_group_id = local.cfs_access_group_id
   auth_client_ip = "10.10.1.0/24"
   priority = 1
 }
 
 data "tencentcloud_cfs_access_rules" "access_rules" {
-  access_group_id = tencentcloud_cfs_access_group.foo.id
+  access_group_id = local.cfs_access_group_id
   access_rule_id = tencentcloud_cfs_access_rule.foo.id
 }
 `

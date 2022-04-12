@@ -3,11 +3,46 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cfs_access_group
+	resource.AddTestSweepers("tencentcloud_cfs_access_group", &resource.Sweeper{
+		Name: "tencentcloud_cfs_access_group",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CfsService{client}
+
+			groups, err := service.DescribeAccessGroup(ctx, "", "")
+
+			if err != nil {
+				return err
+			}
+
+			for i := range groups {
+				id := *groups[i].PGroupId
+				name := *groups[i].Name
+				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "pgroup-") {
+					continue
+				}
+				if err := service.DeleteAccessGroup(ctx, id); err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCfsAccessGroup(t *testing.T) {
 	t.Parallel()

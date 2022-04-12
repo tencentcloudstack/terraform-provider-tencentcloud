@@ -31,7 +31,7 @@ func TestAccTencentCloudCfsFileSystemsDataSource(t *testing.T) {
 	})
 }
 
-const testAccCfsFileSystemsDataSource = `
+const testAccCfsFileSystemsDataSource = defaultCfsAccessGroup + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "test-cfs-vpc"
   cidr_block = "10.2.0.0/16"
@@ -44,14 +44,10 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = "ap-guangzhou-3"
 }
 
-resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_rule"
-}
-
 resource "tencentcloud_cfs_file_system" "foo" {
   name = "test_cfs_file_system"
   availability_zone = "ap-guangzhou-3"
-  access_group_id = tencentcloud_cfs_access_group.foo.id
+  access_group_id = local.cfs_access_group_id
   protocol = "NFS"
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
