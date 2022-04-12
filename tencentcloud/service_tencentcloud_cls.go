@@ -416,3 +416,134 @@ func (me *ClsService) DeleteClsMachineGroup(ctx context.Context, id string) (err
 
 	return
 }
+
+// cls cos shipper
+func (me *ClsService) DescribeClsCosShippersByFilter(ctx context.Context, filters map[string]string) (instances []*cls.ShipperInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeShippersRequest()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = make([]*cls.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := cls.Filter{
+			Key:    helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances = make([]*cls.ShipperInfo, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClsClient().DescribeShippers(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Shippers) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Shippers...)
+		if len(response.Response.Shippers) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *ClsService) DescribeClsCosShipperById(ctx context.Context, shipperId string) (instance *cls.ShipperInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeShippersRequest()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*cls.Filter{
+		{
+			Key:    common.StringPtr("shipperId"),
+			Values: []*string{&shipperId},
+		},
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances := make([]*cls.ShipperInfo, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClsClient().DescribeShippers(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Shippers) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Shippers...)
+		if len(response.Response.Shippers) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 0 {
+		return
+	}
+	instance = instances[0]
+	return
+}
+
+func (me *ClsService) DeleteClsCosShipper(ctx context.Context, id string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteShipperRequest()
+	request.ShipperId = &id
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClsClient().DeleteShipper(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

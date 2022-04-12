@@ -142,8 +142,8 @@ func resourceTencentCloudClsMachineGroupCreate(d *schema.ResourceData, meta inte
 				for _, u := range v.([]interface{}) {
 					machineGroupType.Values = append(machineGroupType.Values, helper.String(u.(string)))
 				}
-				machineGroupTypes = append(machineGroupTypes, &machineGroupType)
 			}
+			machineGroupTypes = append(machineGroupTypes, &machineGroupType)
 		}
 		request.MachineGroupType = machineGroupTypes[0]
 	}

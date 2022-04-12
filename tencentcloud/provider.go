@@ -605,6 +605,7 @@ CLS
 	tencentcloud_cls_logset
 	tencentcloud_cls_topic
 	tencentcloud_cls_machine_group
+	tencentcloud_cls_cos_shipper
 */
 package tencentcloud
 
@@ -1093,6 +1094,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_logset":                              resourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                               resourceTencentCloudClsTopic(),
 			"tencentcloud_cls_machine_group":                       resourceTencentCloudClsMachineGroup(),
+			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 		},
 
 		ConfigureFunc: providerConfigure,
