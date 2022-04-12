@@ -39,6 +39,7 @@ type Request interface {
 	GetVersion() string
 	GetContentType() string
 	GetContext() context.Context
+	GetHeader() map[string]string
 	SetScheme(string)
 	SetRootDomain(string)
 	SetDomain(string)
@@ -47,6 +48,7 @@ type Request interface {
 	SetContentType(string)
 	SetBody([]byte)
 	SetContext(context.Context)
+	SetHeader(header map[string]string)
 }
 
 type BaseRequest struct {
@@ -58,6 +60,7 @@ type BaseRequest struct {
 	path       string
 	params     map[string]string
 	formParams map[string]string
+	header     map[string]string
 
 	service string
 	version string
@@ -188,6 +191,17 @@ func (r *BaseRequest) SetContext(ctx context.Context) {
 	r.context = ctx
 }
 
+func (r *BaseRequest) GetHeader() map[string]string {
+	return r.header
+}
+
+func (r *BaseRequest) SetHeader(header map[string]string) {
+	if header == nil {
+		return
+	}
+	r.header = header
+}
+
 func GetUrlQueriesEncoded(params map[string]string) string {
 	values := url.Values{}
 	for key, value := range params {
@@ -240,7 +254,7 @@ func CompleteCommonParams(request Request, region string) {
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
-	params["RequestClient"] = "SDK_GO_1.0.378"
+	params["RequestClient"] = "SDK_GO_1.0.383"
 }
 
 func ConstructParams(req Request) (err error) {
