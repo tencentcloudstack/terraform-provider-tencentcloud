@@ -414,6 +414,9 @@ PostgreSQL
 
   Resource
 	tencentcloud_postgresql_instance
+	tencentcloud_postgresql_readonly_instance
+	tencentcloud_postgresql_readonly_group
+	tencentcloud_postgresql_readonly_attachment
 
 Redis
   Data Source
@@ -1029,6 +1032,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),
+			"tencentcloud_postgresql_readonly_instance":            resourceTencentCloudPostgresqlReadonlyInstance(),
+			"tencentcloud_postgresql_readonly_group":               resourceTencentCloudPostgresqlReadonlyGroup(),
+			"tencentcloud_postgresql_readonly_attachment":          resourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_sqlserver_instance":                      resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                            resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                       resourceTencentCloudSqlserverAccount(),

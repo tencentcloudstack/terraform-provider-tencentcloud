@@ -586,3 +586,89 @@ func (me *PostgresqlService) DescribeDBInstanceAttribute(ctx context.Context, re
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlReadOnlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewDescribeReadOnlyGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit int64 = 1, 10
+
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		request.Filters = filter
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		instanceList = append(instanceList, response.Response.ReadOnlyGroupList...)
+		if len(response.Response.ReadOnlyGroupList) < int(limit) {
+			return
+		}
+		offset += 1
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, groupId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewDescribeReadOnlyGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Filters = append(
+		request.Filters,
+		&postgresql.Filter{
+			Name:   helper.String("db-master-instance-id"),
+			Values: []*string{&groupId},
+		},
+	)
+
+	var offset, limit int64 = 1, 10
+
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		instanceList = append(instanceList, response.Response.ReadOnlyGroupList...)
+		if len(response.Response.ReadOnlyGroupList) < int(limit) {
+			return
+		}
+		offset += 1
+	}
+}
+
+func (me *PostgresqlService) DeletePostgresqlReadOnlyGroupById(ctx context.Context, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewDeleteReadOnlyGroupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ReadOnlyGroupId = &groupId
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroup(request)
+	return err
+}
