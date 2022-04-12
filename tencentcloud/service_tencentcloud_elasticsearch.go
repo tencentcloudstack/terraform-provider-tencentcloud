@@ -94,7 +94,8 @@ func (me *ElasticsearchService) DeleteInstance(ctx context.Context, instanceId s
 	return nil
 }
 
-func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password string, basicSecurityType int64, nodeList []*es.NodeInfo) error {
+// UpdateInstance FIXME: use *Request instead of these suck params
+func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password string, basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo) error {
 	logId := getLogId(ctx)
 	request := es.NewUpdateInstanceRequest()
 	request.InstanceId = &instanceId
@@ -109,6 +110,9 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	}
 	if nodeList != nil {
 		request.NodeInfoList = nodeList
+	}
+	if nodeTypeInfo != nil {
+		request.WebNodeTypeInfo = nodeTypeInfo
 	}
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseEsClient().UpdateInstance(request)

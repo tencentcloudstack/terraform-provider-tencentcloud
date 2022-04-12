@@ -505,7 +505,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", 0, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", 0, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -519,7 +519,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, 0, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, 0, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -592,7 +592,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("basic_security_type") {
 		basicSecurityType := d.Get("basic_security_type").(int)
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -602,6 +602,29 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			return err
 		}
 		d.SetPartial("basic_security_type")
+	}
+
+	if d.HasChange("web_node_type_info") {
+		var err error
+		infos := d.Get("web_node_type_info").([]interface{})
+		for _, item := range infos {
+			value := item.(map[string]interface{})
+			info := &es.WebNodeTypeInfo{
+				NodeNum:  helper.IntUint64(value["node_num"].(int)),
+				NodeType: helper.String(value["node_type"].(string)),
+			}
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, info)
+				if errRet != nil {
+					return retryError(errRet)
+				}
+				return nil
+			})
+			break
+		}
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("node_info_list") {
@@ -626,7 +649,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			nodeInfoList = append(nodeInfoList, &dataDisk)
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
