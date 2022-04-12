@@ -289,6 +289,8 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo.ClusterDescription = *cluster.ClusterDescription
 	clusterInfo.ClusterName = *cluster.ClusterName
 	clusterInfo.ClusterStatus = *cluster.ClusterStatus
+	clusterInfo.ClusterLevel = cluster.ClusterLevel
+	clusterInfo.AutoUpgradeClusterLevel = cluster.AutoUpgradeClusterLevel
 
 	clusterInfo.ProjectId = int64(*cluster.ProjectId)
 	clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
