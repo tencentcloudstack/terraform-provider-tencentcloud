@@ -119,7 +119,7 @@ func (me *ClsService) DescribeClsLogsetById(ctx context.Context, logSetId string
 		offset += pageSize
 	}
 
-	if len(instances) < 0 {
+	if len(instances) < 1 {
 		return
 	}
 	logset = instances[0]
@@ -254,7 +254,7 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 		offset += pageSize
 	}
 
-	if len(instances) < 0 {
+	if len(instances) < 1 {
 		return
 	}
 	topic = instances[0]
@@ -385,7 +385,7 @@ func (me *ClsService) DescribeClsMachineGroupById(ctx context.Context, id string
 		offset += pageSize
 	}
 
-	if len(instances) < 0 {
+	if len(instances) < 1 {
 		return
 	}
 	machineGroup = instances[0]
@@ -516,7 +516,7 @@ func (me *ClsService) DescribeClsCosShipperById(ctx context.Context, shipperId s
 		offset += pageSize
 	}
 
-	if len(instances) < 0 {
+	if len(instances) < 1 {
 		return
 	}
 	instance = instances[0]
