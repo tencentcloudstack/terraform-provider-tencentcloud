@@ -2239,9 +2239,15 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_max_pod_num", info.MaxNodePodNum)
 	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
-	_ = d.Set("cluster_level", info.ClusterLevel)
-	_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
 	_ = d.Set("tags", info.Tags)
+
+	if _, ok := d.GetOk("cluster_level"); ok {
+		_ = d.Set("cluster_level", info.ClusterLevel)
+	}
+
+	if _, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
+		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+	}
 
 	config, err := service.DescribeClusterConfig(ctx, d.Id())
 	if err != nil {
