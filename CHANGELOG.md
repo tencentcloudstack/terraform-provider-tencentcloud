@@ -1,3 +1,20 @@
+## 1.68.0 (April 12, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_cls_cos_shipper`
+* New resource `tencentcloud_postgresql_readonly_instance`
+* New resource `tencentcloud_postgresql_readonly_group`
+* New resource `tencentcloud_postgresql_readonly_attachment`
+
+BUGFIXES:
+
+* resource `tencentcloud_elasticsearch_instance` support `web_node_type_info` modify
+
+COMMON
+
+* update es, eks(ci), myqsl, redis, sqlserver sweepers
+
 ## 1.67.0 (April 8, 2022)
 
 FEATURES:
