@@ -34,10 +34,10 @@ func TestAccDataSourceTencentCloudSqlserverBackups(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSqlserverBackupsBasic = testAccSqlserverDB_basic + `
+const testAccTencentCloudDataSqlserverBackupsBasic = `
 data "tencentcloud_sqlserver_backups" "test"{
-	instance_id = tencentcloud_sqlserver_instance.test.id
+	instance_id = "mssql-ds1xhnt9"
 	start_time = "2020-06-17 00:00:00"
-	end_time = "2020-06-22 00:00:00"
+	end_time = "2022-06-22 00:00:00"
 }
 `

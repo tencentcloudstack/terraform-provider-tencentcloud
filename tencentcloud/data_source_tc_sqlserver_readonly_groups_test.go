@@ -18,7 +18,7 @@ func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataSqlserverReadonlyGroupsBasic,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(testDataSqlserverReadonlyGroupsName, "list.#", "2"),
+					resource.TestCheckResourceAttrSet(testDataSqlserverReadonlyGroupsName, "list.#"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverReadonlyGroupsName, "list.0.vport"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverReadonlyGroupsName, "list.0.vip"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverReadonlyGroupsName, "list.0.min_instances"),
@@ -37,6 +37,6 @@ func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 
 const testAccTencentCloudDataSqlserverReadonlyGroupsBasic = `
 data "tencentcloud_sqlserver_readonly_groups" "test"{
-	master_instance_id = "mssql-ixq78we9"
+	master_instance_id = "mssql-ds1xhnt9"
 }
 `

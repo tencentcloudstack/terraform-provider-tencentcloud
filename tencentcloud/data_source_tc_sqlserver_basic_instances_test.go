@@ -26,9 +26,9 @@ func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBasicInstancesName, "instance_list.0.engine_version"),
 					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.project_id", "0"),
-					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.memory", "2"),
+					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.memory", "4"),
 					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.storage", "20"),
-					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.cpu", "1"),
+					resource.TestCheckResourceAttr(testDataSqlserverBasicInstancesName, "instance_list.0.cpu", "2"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBasicInstancesName, "instance_list.0.vpc_id"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBasicInstancesName, "instance_list.0.subnet_id"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBasicInstancesName, "instance_list.0.availability_zone"),
@@ -43,10 +43,7 @@ func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSqlserverBasicInstancesBasic = `
-variable "availability_zone"{
-	default = "ap-guangzhou-3"
-}
+const testAccTencentCloudDataSqlserverBasicInstancesBasic = testAccSqlserverInstanceBasic + `
 
 resource "tencentcloud_vpc" "foo" {
 	name       = "tf-sqlserver-vpc"
@@ -54,7 +51,7 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_subnet" "foo" {
-	availability_zone = var.availability_zone
+	availability_zone = local.az1
 	name              = "tf-sqlserver-subnet"
 	vpc_id            = tencentcloud_vpc.foo.id
 	cidr_block        = "10.0.0.0/16"
@@ -63,15 +60,15 @@ resource "tencentcloud_subnet" "foo" {
 
 resource "tencentcloud_sqlserver_basic_instance" "test" {
 	name                    = "tf_sqlserver_basic_instance"
-	availability_zone       = var.availability_zone
+	availability_zone       = local.az1
 	charge_type             = "POSTPAID_BY_HOUR"
 	vpc_id                  = tencentcloud_vpc.foo.id
 	subnet_id               = tencentcloud_subnet.foo.id
 	machine_type            = "CLOUD_PREMIUM"
 	project_id              = 0
-	memory                  = 2
+	memory                  = 4
 	storage                 = 20
-	cpu                     = 1
+	cpu                     = 2
 	security_groups         = ["` + defaultSecurityGroup + `"]
 
 	tags = {

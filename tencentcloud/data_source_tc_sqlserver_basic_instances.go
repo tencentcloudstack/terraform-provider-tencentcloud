@@ -43,6 +43,11 @@ func dataSourceTencentCloudSqlserverBasicInstances() *schema.Resource {
 				Optional:    true,
 				Description: "ID of the SQL Server basic instance to be query.",
 			},
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the SQL Server basic instance to be query.",
+			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -171,6 +176,7 @@ func dataSourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, me
 		tagService = &TagService{client: tcClient}
 		service    = SqlserverService{client: tcClient}
 		id         = d.Get("id").(string)
+		name       = d.Get("name").(string)
 		projectId  = -1
 		vpcId      string
 		subnetId   string
@@ -184,7 +190,7 @@ func dataSourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, me
 	if v, ok := d.GetOk("subnet_id"); ok {
 		subnetId = v.(string)
 	}
-	instanceList, err := service.DescribeSqlserverInstances(ctx, id, projectId, vpcId, subnetId, 1)
+	instanceList, err := service.DescribeSqlserverInstances(ctx, id, name, projectId, vpcId, subnetId, 1)
 	if err != nil {
 		return err
 	}

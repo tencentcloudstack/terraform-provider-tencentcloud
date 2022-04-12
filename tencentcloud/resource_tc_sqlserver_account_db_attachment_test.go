@@ -25,7 +25,7 @@ func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountDBAttachmentExists(testSqlserverAccountDBAttachmentResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountDBAttachmentResourceKey, "instance_id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_sqlserver_account"),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_sqlserver_account_attach"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", "test111"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "privilege", "ReadOnly"),
 				),
@@ -41,7 +41,7 @@ func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountDBAttachmentExists(testSqlserverAccountDBAttachmentResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountDBAttachmentResourceKey, "instance_id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_sqlserver_account"),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_sqlserver_account_attach"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", "test111"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "privilege", "ReadWrite"),
 				),
@@ -117,44 +117,44 @@ func testAccCheckSqlserverAccountDBAttachmentExists(n string) resource.TestCheck
 	}
 }
 
-const testAccSqlserverAccountDBAttachment string = testAccSqlserverInstance + `
+const testAccSqlserverAccountDBAttachment string = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
-  name = "tf_sqlserver_account"
+  instance_id = local.sqlserver_id
+  name = "tf_sqlserver_account_attach"
   password = "testt123"
 }
 
 resource "tencentcloud_sqlserver_db" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name        = "test111"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }
 
 resource "tencentcloud_sqlserver_account_db_attachment" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   account_name = tencentcloud_sqlserver_account.test.name
   db_name = tencentcloud_sqlserver_db.test.name
   privilege = "ReadOnly"
 }
 `
 
-const testAccSqlserverAccountDBAttachmentUpdate string = testAccSqlserverInstance + `
+const testAccSqlserverAccountDBAttachmentUpdate string = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
-  name = "tf_sqlserver_account"
+  instance_id = local.sqlserver_id
+  name = "tf_sqlserver_account_attach"
   password = "testt123"
 }
 
 resource "tencentcloud_sqlserver_db" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name        = "test111"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }
 
 resource "tencentcloud_sqlserver_account_db_attachment" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   account_name = tencentcloud_sqlserver_account.test.name
   db_name = tencentcloud_sqlserver_db.test.name
   privilege = "ReadWrite"

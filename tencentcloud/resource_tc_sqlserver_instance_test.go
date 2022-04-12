@@ -24,7 +24,7 @@ func init() {
 			cli, _ := sharedClientForRegion(r)
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := SqlserverService{client: client}
-			instances, err := service.DescribeSqlserverInstances(ctx, "", -1, defaultVpcId, defaultSubnetId, 1)
+			instances, err := service.DescribeSqlserverInstances(ctx, "", "", -1, defaultVpcId, defaultSubnetId, 1)
 
 			if err != nil {
 				return err

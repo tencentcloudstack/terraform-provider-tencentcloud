@@ -28,9 +28,9 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "subnet_id"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "2"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "4"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "storage", "20"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "1"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "machine_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "project_id", "0"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "create_time"),
@@ -58,9 +58,9 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_start_time", "08:00"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_time_span", "4"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_week_set.#", "4"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "8"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "storage", "100"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "1"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "machine_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "create_time"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "project_id", "0"),
@@ -153,9 +153,9 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	subnet_id               = tencentcloud_subnet.foo.id
 	security_groups         = ["` + defaultSecurityGroup + `"]
 	project_id              = 0
-	memory                  = 2
+	memory                  = 4
 	storage                 = 20
-	cpu                     = 1
+	cpu                     = 2
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
@@ -176,9 +176,9 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	subnet_id               = tencentcloud_subnet.foo.id
 	security_groups         = ["` + defaultSecurityGroup + `"]
 	project_id              = 0
-	memory                  = 4
+	memory                  = 8
 	storage                 = 100
-	cpu                     = 1
+	cpu                     = 2
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3,4]
 	maintenance_start_time  = "08:00"
