@@ -163,14 +163,11 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = "ap-guangzhou-3"
 }
 
-resource "tencentcloud_cfs_access_group" "foo" {
-	name = "test_cfs_access_rule"
-}
 
 resource "tencentcloud_cfs_file_system" "foo" {
   name = "test_cfs_file_system"
   availability_zone = "ap-guangzhou-3"
-  access_group_id = tencentcloud_cfs_access_group.foo.id
+  access_group_id = "%s"
   protocol = "NFS"
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
@@ -181,5 +178,5 @@ resource "tencentcloud_cfs_file_system" "foo" {
 	  role = "%s"
   }
 }
-`, value)
+`, BasicCfsAccessGroup, value)
 }

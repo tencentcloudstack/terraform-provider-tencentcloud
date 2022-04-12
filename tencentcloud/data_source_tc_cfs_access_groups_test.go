@@ -16,9 +16,8 @@ func TestAccTencentCloudCfsAccessGroupsDataSource(t *testing.T) {
 			{
 				Config: testAccCfsAccessGroupsDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCfsAccessGroupExists("tencentcloud_cfs_access_group.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.0.name", "test_cfs_access_group"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.0.name", "keep_access_group"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.0.description", "test"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.0.access_group_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_access_groups.access_groups", "access_group_list.0.create_time"),
@@ -28,14 +27,20 @@ func TestAccTencentCloudCfsAccessGroupsDataSource(t *testing.T) {
 	})
 }
 
-const testAccCfsAccessGroupsDataSource = `
-resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_group"
-  description = "test"
+const BasicCfsAccessGroup = "pgroupbasic"
+
+const defaultCfsAccessGroup = `
+data "tencentcloud_cfs_access_groups" "access_groups" {
+  name = "keep_access_group"
 }
 
+locals {
+  cfs_access_group_id = data.tencentcloud_cfs_access_groups.access_groups.access_group_list.0.access_group_id
+}
+`
+
+const testAccCfsAccessGroupsDataSource = `
 data "tencentcloud_cfs_access_groups" "access_groups" {
-  access_group_id = tencentcloud_cfs_access_group.foo.id
-  name = tencentcloud_cfs_access_group.foo.name
+  name = "keep_access_group"
 }
 `
