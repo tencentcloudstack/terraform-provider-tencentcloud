@@ -100,7 +100,7 @@ func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 const testAccCfsAccessRule = `
 
 resource "tencentcloud_cfs_access_rule" "foo" {
-  access_group_id = "`+ BasicCfsAccessGroup +`"
+  access_group_id = "` + BasicCfsAccessGroup + `"
   auth_client_ip = "10.10.1.0/24"
   priority = 1
 }
