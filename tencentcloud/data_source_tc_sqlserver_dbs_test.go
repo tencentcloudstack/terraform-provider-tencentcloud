@@ -28,8 +28,8 @@ func TestAccDataSourceTencentCloudSqlserverDBs_basic(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudSqlserverDB = testAccSqlserverDB_basic + `
+const TestAccDataSourceTencentCloudSqlserverDB = `
 data "tencentcloud_sqlserver_dbs" "foo" {
-  instance_id = tencentcloud_sqlserver_db.mysqlserver_db.instance_id
+  instance_id = "mssql-ds1xhnt9"
 }
 `

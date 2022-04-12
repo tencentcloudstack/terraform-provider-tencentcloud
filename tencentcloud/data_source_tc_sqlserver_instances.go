@@ -37,6 +37,11 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 				Optional:    true,
 				Description: "ID of the SQL Server instance to be query.",
 			},
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the SQL Server instance to be query.",
+			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -172,19 +177,21 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 
 	id := d.Get("id").(string)
 
-	project_id := -1
+	name := d.Get("name").(string)
+
+	projectId := -1
 	if v, ok := d.GetOk("project_id"); ok {
-		project_id = v.(int)
+		projectId = v.(int)
 	}
 
-	vpc_id := d.Get("vpc_id").(string)
+	vpcId := d.Get("vpc_id").(string)
 
-	subnet_id := d.Get("subnet_id").(string)
+	subnetId := d.Get("subnet_id").(string)
 
-	instanceList, err := service.DescribeSqlserverInstances(ctx, id, project_id, vpc_id, subnet_id, 1)
+	instanceList, err := service.DescribeSqlserverInstances(ctx, id, name, projectId, vpcId, subnetId, 1)
 
 	if err != nil {
-		instanceList, err = service.DescribeSqlserverInstances(ctx, id, project_id, vpc_id, subnet_id, 1)
+		instanceList, err = service.DescribeSqlserverInstances(ctx, id, name, projectId, vpcId, subnetId, 1)
 	}
 	if err != nil {
 		return err

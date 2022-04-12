@@ -125,17 +125,17 @@ func testAccCheckSqlserverAccountExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverAccount string = testAccSqlserverInstance + `
+const testAccSqlserverAccount string = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name = "tf_sqlserver_account"
   password = "testt123"
 }
 `
 
-const testAccSqlserverAccountUpdate string = testAccSqlserverInstance + `
+const testAccSqlserverAccountUpdate string = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+  instance_id = local.sqlserver_id
   name = "tf_sqlserver_account"
   password = "test1233"
   remark = "testt"

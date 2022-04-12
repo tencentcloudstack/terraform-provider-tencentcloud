@@ -3,11 +3,56 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+const testDbName = "testAccSqlserverDB"
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_db
+	resource.AddTestSweepers("tencentcloud_sqlserver_db", &resource.Sweeper{
+		Name: "tencentcloud_sqlserver_db",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := SqlserverService{client}
+
+			projId, _ := strconv.ParseInt(defaultProjectId, 10, 64)
+			instance, err := service.DescribeSqlserverInstances(ctx, "", "", int(projId), "", "", -1)
+
+			if err != nil {
+				return err
+			}
+
+			insId := *instance[0].InstanceId
+
+			dbs, err := service.DescribeDBsOfInstance(ctx, insId)
+
+			if err != nil {
+				return err
+			}
+
+			for i := range dbs {
+				db := dbs[i]
+				if *db.Name != testDbName {
+					continue
+				}
+				err := service.DeleteSqlserverDB(ctx, insId, []*string{db.Name})
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 	t.Parallel()
@@ -19,7 +64,7 @@ func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 			{
 				Config: testAccSqlserverDB_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "name", "testAccSqlserverDB"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "name", testDbName),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "charset", "Chinese_PRC_BIN"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "remark", "testACC-remark"),
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "create_time"),
@@ -92,7 +137,7 @@ func testAccCheckSqlserverDBExists(n string) resource.TestCheckFunc {
 const testAccSqlserverDB_basic = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
   instance_id = local.sqlserver_id
-  name        = "testAccSqlserverDB"
+  name        = "` + testDbName + `"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }`
@@ -100,7 +145,7 @@ resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
 const testAccSqlserverDB_basic_update_remark = CommonPresetSQLServer + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
   instance_id = local.sqlserver_id
-  name        = "testAccSqlserverDB"
+  name        = "` + testDbName + `"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark_update"
 }`

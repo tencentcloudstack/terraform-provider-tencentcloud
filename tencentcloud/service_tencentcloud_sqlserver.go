@@ -288,7 +288,7 @@ func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanc
 	return err
 }
 
-func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, instanceId string, projectId int, vpcId string, subnetId string, netType int) (instanceList []*sqlserver.DBInstance, errRet error) {
+func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, instanceId, instanceName string, projectId int, vpcId, subnetId string, netType int) (instanceList []*sqlserver.DBInstance, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeDBInstancesRequest()
 	defer func() {
@@ -299,6 +299,9 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 
 	if instanceId != "" {
 		request.InstanceIdSet = []*string{&instanceId}
+	}
+	if instanceName != "" {
+		request.InstanceNameSet = []*string{&instanceName}
 	}
 	if projectId != -1 {
 		request.ProjectId = helper.IntUint64(projectId)
@@ -340,7 +343,7 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 }
 
 func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, instanceId string) (instance *sqlserver.DBInstance, has bool, errRet error) {
-	instanceList, err := me.DescribeSqlserverInstances(ctx, instanceId, -1, "", "", 1)
+	instanceList, err := me.DescribeSqlserverInstances(ctx, instanceId, "", -1, "", "", 1)
 	if err != nil {
 		errRet = err
 		return
