@@ -18,7 +18,8 @@ func TestAccTencentCloudTkeAttachResource(t *testing.T) {
 		CheckDestroy: testAccCheckTkeAttachDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAttachCluster(),
+				ExpectNonEmptyPlan: false,
+				Config:             testAccTkeAttachCluster(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
@@ -44,17 +45,19 @@ func testAccCheckTkeAttachDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_kubernetes_cluster_attachment" {
 			continue
 		}
+		instanceId := ""
 		clusterId := ""
 		if items := strings.Split(rs.Primary.ID, "_"); len(items) != 2 {
 			return fmt.Errorf("the resource id is corrupted")
 		} else {
+			instanceId = items[0]
 			clusterId = items[1]
 		}
 
-		_, has, err := service.DescribeCluster(ctx, clusterId)
+		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				_, has, err = service.DescribeCluster(ctx, clusterId)
+				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 				if err != nil {
 					return retryError(err)
 				}
@@ -66,7 +69,17 @@ func testAccCheckTkeAttachDestroy(s *terraform.State) error {
 			return nil
 		}
 
-		if has {
+		var instanceStillExists bool
+
+		for i := range workers {
+			id := workers[i].InstanceId
+			if instanceId == id {
+				instanceStillExists = true
+				break
+			}
+		}
+
+		if instanceStillExists {
 			return fmt.Errorf("tke cluster attach delete fail,%s", rs.Primary.ID)
 		}
 
@@ -130,10 +143,6 @@ func testAccTkeAttachCluster() string {
 
 	return `
 
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
 variable "cluster_cidr" {
   default = "172.16.0.0/16"
 }
@@ -142,68 +151,32 @@ variable "default_instance_type" {
   default = "S1.SMALL1"
 }
 
-data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
-  availability_zone = var.availability_zone
+data "tencentcloud_vpc_instances" "vpcs" {
+  name = "keep_tke_exclusive_vpc"
 }
 
-data "tencentcloud_instance_types" "default" {
-  filter {
-    name   = "instance-family"
-    values = ["SA2"]
-  }
-
-  cpu_core_count = 8
-  memory_size    = 16
+data "tencentcloud_vpc_subnets" "sub" {
+  vpc_id        = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
 }
 
 resource "tencentcloud_instance" "foo" {
   instance_name     = "tf-auto-test-1-1"
-  availability_zone = var.availability_zone
-  image_id          = ` + defaultTkeOSImageId + `
+  availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
+  image_id          = "` + defaultTkeOSImageId + `"
   instance_type     = var.default_instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
-  vpc_id            = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id         = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+  vpc_id            = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
+  subnet_id         =  data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
+  tags = data.tencentcloud_kubernetes_clusters.cls.list.0.tags # new added node will passive add tag by cluster
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.31.0.0/16"
-  cluster_max_pod_num     = 32
-  cluster_name            = "keep"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-  cluster_os			  = "tlinux2.2(tkernel3)x86_64"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
+data "tencentcloud_kubernetes_clusters" "cls" {
+  cluster_name = "keep"
 }
 
 resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
-  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id  = data.tencentcloud_kubernetes_clusters.cls.list.0.cluster_id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
   unschedulable = 0

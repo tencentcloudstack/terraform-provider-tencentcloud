@@ -898,7 +898,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_level": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Specify cluster level, valid for managed cluster.",
+			Description: "Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.",
 		},
 		"auto_upgrade_cluster_level": {
 			Type:        schema.TypeBool,
@@ -1792,11 +1792,11 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	if v, ok := d.GetOk("cluster_level"); ok {
-		basic.ClusterLevel = v.(string)
+		basic.ClusterLevel = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
-		basic.AutoUpgradeClusterLevel = v.(bool)
+		basic.AutoUpgradeClusterLevel = helper.Bool(v.(bool))
 	}
 
 	advanced.Ipvs = d.Get("cluster_ipvs").(bool)
@@ -2240,6 +2240,14 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
 	_ = d.Set("tags", info.Tags)
+
+	if _, ok := d.GetOk("cluster_level"); ok {
+		_ = d.Set("cluster_level", info.ClusterLevel)
+	}
+
+	if _, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
+		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+	}
 
 	config, err := service.DescribeClusterConfig(ctx, d.Id())
 	if err != nil {

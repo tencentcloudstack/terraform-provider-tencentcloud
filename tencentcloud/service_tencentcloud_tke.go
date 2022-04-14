@@ -23,8 +23,8 @@ type ClusterBasicSetting struct {
 	ClusterVersion          string
 	ClusterName             string
 	ClusterDescription      string
-	ClusterLevel            string
-	AutoUpgradeClusterLevel bool
+	ClusterLevel            *string
+	AutoUpgradeClusterLevel *bool
 	VpcId                   string
 	ProjectId               int64
 	ClusterNodeNum          int64
@@ -223,6 +223,8 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		clusterInfo.ClusterDescription = *cluster.ClusterDescription
 		clusterInfo.ClusterName = *cluster.ClusterName
 		clusterInfo.ClusterStatus = *cluster.ClusterStatus
+		clusterInfo.ClusterLevel = cluster.ClusterLevel
+		clusterInfo.AutoUpgradeClusterLevel = cluster.AutoUpgradeClusterLevel
 
 		clusterInfo.ProjectId = int64(*cluster.ProjectId)
 		clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
@@ -287,6 +289,8 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo.ClusterDescription = *cluster.ClusterDescription
 	clusterInfo.ClusterName = *cluster.ClusterName
 	clusterInfo.ClusterStatus = *cluster.ClusterStatus
+	clusterInfo.ClusterLevel = cluster.ClusterLevel
+	clusterInfo.AutoUpgradeClusterLevel = cluster.AutoUpgradeClusterLevel
 
 	clusterInfo.ProjectId = int64(*cluster.ProjectId)
 	clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
@@ -320,7 +324,9 @@ func (me *TkeService) DescribeClusterLevelAttribute(ctx context.Context, id stri
 		}
 	}()
 
-	request.ClusterID = &id
+	if id != "" {
+		request.ClusterID = &id
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().DescribeClusterLevelAttribute(request)
 
@@ -453,10 +459,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterBasicSettings.ClusterDescription = &basic.ClusterDescription
 	request.ClusterBasicSettings.ClusterName = &basic.ClusterName
 	request.ClusterBasicSettings.OsCustomizeType = &basic.ClusterOsType
-	request.ClusterBasicSettings.ClusterLevel = &basic.ClusterLevel
-	if &basic.AutoUpgradeClusterLevel != nil {
+	request.ClusterBasicSettings.ClusterLevel = basic.ClusterLevel
+	if basic.AutoUpgradeClusterLevel != nil {
 		request.ClusterBasicSettings.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
-			IsAutoUpgrade: &basic.AutoUpgradeClusterLevel,
+			IsAutoUpgrade: basic.AutoUpgradeClusterLevel,
 		}
 	}
 	for k, v := range tags {
