@@ -78,7 +78,7 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 					zoneId := d.Get("zone_id").(int)
 					v, ok := d.GetOk("zone_ids")
 
-					if !multiZone || !ok {
+					if !multiZone || !ok || old == "" {
 						return old == new
 					}
 
