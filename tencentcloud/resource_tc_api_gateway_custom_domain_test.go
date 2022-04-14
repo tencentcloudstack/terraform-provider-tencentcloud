@@ -21,7 +21,7 @@ func TestAccTencentCloudAPIGateWayCustomDomain(t *testing.T) {
 				Config: testAccCustomDomain,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCustomDomainExists("tencentcloud_api_gateway_custom_domain.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "service_id", "service-ohxqslqe"),
+					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "service_id", "service-7lybgojo"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "sub_domain", "tic-test.dnsv1.com"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "protocol", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "net_type", "OUTER"),
@@ -34,7 +34,7 @@ func TestAccTencentCloudAPIGateWayCustomDomain(t *testing.T) {
 				Config: testAccCustomDomainUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCustomDomainExists("tencentcloud_api_gateway_custom_domain.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "service_id", "service-ohxqslqe"),
+					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "service_id", "service-7lybgojo"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "sub_domain", "tic-test.dnsv1.com"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "protocol", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_api_gateway_custom_domain.foo", "net_type", "OUTER"),
@@ -112,7 +112,7 @@ func testAccCheckCustomDomainExists(n string) resource.TestCheckFunc {
 
 const testAccCustomDomain = `
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
-	service_id         = "service-ohxqslqe"
+	service_id         = "service-7lybgojo"
 	sub_domain         = "tic-test.dnsv1.com"
 	protocol           = "http"
 	net_type           = "OUTER"
@@ -124,7 +124,7 @@ resource "tencentcloud_api_gateway_custom_domain" "foo" {
 
 const testAccCustomDomainUpdate = `
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
-	service_id         = "service-ohxqslqe"
+	service_id         = "service-7lybgojo"
 	sub_domain         = "tic-test.dnsv1.com"
 	protocol           = "http"
 	net_type           = "OUTER"

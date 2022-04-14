@@ -140,7 +140,6 @@ const testAccAPIGatewayBase = `
 resource "tencentcloud_api_gateway_service" "service" {
   service_name = "ck"
   protocol     = "http&https"
-  service_desc = "your nice service"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
 }
@@ -175,7 +174,7 @@ resource "tencentcloud_api_gateway_api" "api" {
     code           = 100
     msg            = "system error"
     desc           = "system error code"
-    converted_code = -100
+    converted_code = 100
     need_convert   = true
   }
 
@@ -189,7 +188,6 @@ const testAccAPIGatewayAPIUpdate = `
 resource "tencentcloud_api_gateway_service" "service" {
   service_name = "ck"
   protocol     = "http&https"
-  service_desc = "your nice service"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
 }
@@ -224,7 +222,7 @@ resource "tencentcloud_api_gateway_api" "api" {
     code           = 10
     msg            = "system error"
     desc           = "system error code"
-    converted_code = -10
+    converted_code = 10
     need_convert   = true
   }
 
