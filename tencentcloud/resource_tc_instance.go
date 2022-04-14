@@ -541,9 +541,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			if period, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
 				periodInt64 := int64(period.(int))
 				request.InstanceChargePrepaid.Period = &periodInt64
-			} else {
-				return fmt.Errorf("instance charge type prepaid period can not be empty when charge type is %s",
-					instanceChargeType)
 			}
 			if renewFlag, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
@@ -1006,12 +1003,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	d.Partial(true)
 
+	// Get the latest instance info from actual resource.
+	instanceInfo, err := cvmService.DescribeInstanceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
 	var (
-		periodSet    = false
-		renewFlagSet = false
+		periodSet      = false
+		renewFlagSet   = false
+		alreadyPrepaid = *instanceInfo.InstanceChargeType == CVM_CHARGE_TYPE_PREPAID
 	)
 
-	if d.HasChange("instance_charge_type") {
+	if d.HasChange("instance_charge_type") && !alreadyPrepaid {
 		old, chargeType := d.GetChange("instance_charge_type")
 		if old.(string) != CVM_CHARGE_TYPE_POSTPAID || chargeType.(string) != CVM_CHARGE_TYPE_PREPAID {
 			return fmt.Errorf("Only support change chargeType from POSTPAID_BY_HOUR to PREPAID.")
@@ -1022,9 +1026,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		)
 		if v, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
 			period = v.(int)
-		} else {
-			return fmt.Errorf("instance charge type prepaid period can not"+
-				" be empty when charge type is %s", chargeType)
 		}
 		if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 			renewFlag = v.(string)
@@ -1035,21 +1036,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		// query cvm status
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && instance.LatestOperationState != nil {
-				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.LatestOperationState))
-				}
-				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
-					return resource.NonRetryableError(fmt.Errorf("failed operation when modify instance charge type"))
-				}
-			}
-			return nil
-		})
+		err = waitForOperationFinished(d, meta, 5*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
@@ -1057,23 +1044,32 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		renewFlagSet = true
 	}
 
+	// When instance is prepaid but period was empty and set to 1, skip this case.
+	op, np := d.GetChange("instance_charge_type_prepaid_period")
+	if _, ok := op.(int); !ok && np.(int) == 1 {
+		periodSet = true
+	}
 	if d.HasChange("instance_charge_type_prepaid_period") && !periodSet {
 		chargeType := d.Get("instance_charge_type").(string)
-		if chargeType != CVM_CHARGE_TYPE_PREPAID {
-			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period or instance_charge_type_prepaid_renew_flag is only supported with charge type PREPAID")
+		period := d.Get("instance_charge_type_prepaid_period").(int)
+		renewFlag := ""
+
+		if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
+			renewFlag = v.(string)
 		}
-		if !d.HasChange("instance_charge_type") {
-			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period is only with charge type change to PREPAID")
+		err := cvmService.ModifyInstanceChargeType(ctx, instanceId, chargeType, period, renewFlag)
+		if err != nil {
+			return err
 		}
+		// query cvm status
+		err = waitForOperationFinished(d, meta, 5*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
+		}
+		renewFlagSet = true
 	}
 
 	if d.HasChange("instance_charge_type_prepaid_renew_flag") && !renewFlagSet {
-		//check
-		chargeType := d.Get("instance_charge_type").(string)
-		if chargeType != CVM_CHARGE_TYPE_PREPAID {
-			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period or instance_charge_type_prepaid_renew_flag is only supported with charge type PREPAID")
-		}
-
 		//renew api
 		err := cvmService.ModifyRenewParam(ctx, instanceId, d.Get("instance_charge_type_prepaid_renew_flag").(string))
 		if err != nil {
@@ -1081,24 +1077,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		//check success
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && instance.LatestOperationState != nil {
-				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_SUCCESS {
-					return nil
-				} else if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
-					return resource.NonRetryableError(fmt.Errorf("update instance %s prepaid charge type failed", instanceId))
-				} else {
-					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-				}
-			} else {
-				return resource.RetryableError(fmt.Errorf("cvm instance %s returns nil status", instanceId))
-			}
-
-		})
+		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
@@ -1217,18 +1196,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			d.SetPartial("password")
-			time.Sleep(10 * time.Second)
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return retryError(errRet, InternalError)
-				}
-				if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-				}
-				return nil
-			})
+			err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 			if err != nil {
 				return err
 			}
@@ -1243,17 +1211,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if err != nil {
 					return err
 				}
-				time.Sleep(10 * time.Second)
-				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-					if errRet != nil {
-						return retryError(errRet, InternalError)
-					}
-					if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-						return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-					}
-					return nil
-				})
+				err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
 				}
@@ -1264,17 +1222,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if err != nil {
 					return err
 				}
-				time.Sleep(10 * time.Second)
-				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-					if errRet != nil {
-						return retryError(errRet, InternalError)
-					}
-					if instance != nil && instance.LatestOperationState != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-						return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-					}
-					return nil
-				})
+				err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 				if err != nil {
 					return err
 				}
@@ -1379,20 +1327,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 		d.SetPartial("instance_type")
 
-		// wait for status
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			// Modifying instance type need restart the instance
-			// so status of CVM must be running when running flag is true
-			if instance != nil && instance.LatestOperationState != nil && (*instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING ||
-				(flag && *instance.InstanceState != CVM_STATUS_RUNNING)) {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
-			return nil
-		})
+		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
@@ -1405,20 +1340,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 		d.SetPartial("cdh_instance_type")
 
-		// wait for status
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			// Modifying instance type need restart the instance
-			// so status of CVM must be running when running flag is true
-			if instance != nil && (instance.LatestOperationState != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING ||
-				(flag && instance.LatestOperationState != nil && *instance.InstanceState != CVM_STATUS_RUNNING)) {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
-			return nil
-		})
+		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
@@ -1491,17 +1413,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("internet_max_bandwidth_out")
-		time.Sleep(1 * time.Second)
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
-				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
-			}
-			return nil
-		})
+		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err
 		}
@@ -1746,6 +1658,42 @@ func switchInstance(cvmService *CvmService, ctx context.Context, d *schema.Resou
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func waitForOperationFinished(d *schema.ResourceData, meta interface{}, timeout time.Duration, state string, immediately bool) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	client := meta.(*TencentCloudClient).apiV3Conn
+	cvmService := CvmService{client}
+	instanceId := d.Id()
+	// We cannot catch LatestOperationState change immediately after modification returns, we must wait for LatestOperationState update to expected.
+	if !immediately {
+		time.Sleep(time.Second * 10)
+	}
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			return resource.NonRetryableError(fmt.Errorf("%s not exists", instanceId))
+		}
+		if instance.LatestOperationState == nil {
+			return resource.RetryableError(fmt.Errorf("wait for operation update"))
+		}
+		if *instance.LatestOperationState == state {
+			return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", instanceId))
+		}
+		if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
+			return resource.NonRetryableError(fmt.Errorf("failed operation"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
 	}
 	return nil
 }
