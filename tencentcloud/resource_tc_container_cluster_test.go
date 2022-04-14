@@ -9,7 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
+// @Deprecated It has been deprecated and replaced by tencentcloud_kubernetes_cluster.
+func testAccTencentCloudContainerCluster_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
