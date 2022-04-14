@@ -55,7 +55,7 @@ func testSweepEipInstance(region string) error {
 		}
 
 		// less than 30 minute, not delete
-		if int64(interval) < 30 {
+		if needProtect == 1 && int64(interval) < 30 {
 			continue
 		}
 

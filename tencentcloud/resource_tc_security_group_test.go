@@ -6,9 +6,7 @@ import (
 	"log"
 	"strings"
 	"testing"
-
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -35,10 +33,7 @@ func testSweepSecurityGroups(region string) error {
 		client: client.apiV3Conn,
 	}
 
-	sgs, err := service.DescribeSecurityGroups(ctx, nil, helper.String(NamePrefix), nil, nil)
-	var sgIds []*string
-	var candidates []string
-	var referredSgs = make(map[string][]*string, 0)
+	sgs, err := service.DescribeSecurityGroups(ctx, nil, nil, nil, nil)
 
 	if err != nil {
 		return fmt.Errorf("DescribeSecurityGroups error: %s", err.Error())
@@ -47,36 +42,17 @@ func testSweepSecurityGroups(region string) error {
 	for _, v := range sgs {
 		name := *v.SecurityGroupName
 		id := *v.SecurityGroupId
-		sgIds = append(sgIds, v.SecurityGroupId)
-		if !strings.HasPrefix(name, NamePrefix) {
+
+		now := time.Now()
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+
+		if strings.HasPrefix(name, keepResource) || strings.HasPrefix(name, defaultResource) {
 			continue
 		}
-		candidates = append(candidates, id)
 
-	}
-
-	refReq := vpc.NewDescribeSecurityGroupReferencesRequest()
-	refReq.SecurityGroupIds = sgIds
-
-	refRes, err := client.apiV3Conn.UseVpcClient().DescribeSecurityGroupReferences(refReq)
-	if err != nil {
-		return fmt.Errorf("DescribeSecurityGroupReferences error: %s", err.Error())
-	}
-	for _, v := range refRes.Response.ReferredSecurityGroupSet {
-		if len(v.ReferredSecurityGroupIds) > 0 {
-			referredSgs[*v.SecurityGroupId] = v.ReferredSecurityGroupIds
-		}
-	}
-
-	res, err := service.DescribeSecurityGroupsAssociate(ctx, candidates)
-	if err != nil {
-		return fmt.Errorf("DescribeSecurityGroupsAssociate error: %s", err.Error())
-	}
-
-	for _, v := range res {
-		id := *v.SecurityGroupId
-
-		if *v.TotalCount > 0 || len(referredSgs[id]) > 0 {
+		// less than 30 minute, not delete
+		if needProtect == 1 && int64(interval) < 30 {
 			continue
 		}
 
@@ -84,6 +60,7 @@ func testSweepSecurityGroups(region string) error {
 			log.Printf("[ERROR] sweep security group %s error: %s", id, err.Error())
 		}
 	}
+
 	return nil
 }
 
