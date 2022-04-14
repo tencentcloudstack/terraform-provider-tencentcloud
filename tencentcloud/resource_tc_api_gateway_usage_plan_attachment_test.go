@@ -194,7 +194,6 @@ resource "tencentcloud_api_gateway_usage_plan" "plan" {
 resource "tencentcloud_api_gateway_service" "service" {
   	service_name = "niceservice"
   	protocol     = "http&https"
-  	service_desc = "your nice service"
   	net_type     = ["INNER", "OUTER"]
   	ip_version   = "IPv4"
 }
@@ -228,7 +227,7 @@ resource "tencentcloud_api_gateway_api" "api" {
     	code           = 10
         msg            = "system error"
        	desc           = "system error code"
-       	converted_code = -10
+       	converted_code = 10
         need_convert   = true
     }
 }

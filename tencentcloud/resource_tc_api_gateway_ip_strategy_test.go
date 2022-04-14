@@ -109,7 +109,6 @@ const testAPIGatewayServiceBase = `
 resource "tencentcloud_api_gateway_service" "service" {
   	service_name = "niceservice"
   	protocol     = "http&https"
-  	service_desc = "your nice service"
   	net_type     = ["INNER", "OUTER"]
   	ip_version   = "IPv4"
 }
