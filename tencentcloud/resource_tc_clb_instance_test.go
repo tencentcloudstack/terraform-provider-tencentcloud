@@ -56,7 +56,7 @@ func testSweepClbInstance(region string) error {
 				continue
 			}
 			// less than 30 minute, not delete
-			if int64(interval) < 30 {
+			if needProtect == 1 && int64(interval) < 30 {
 				continue
 			}
 			if err := service.DeleteLoadBalancerById(ctx, id); err != nil {

@@ -31,6 +31,8 @@ const logIdKey = contextLogId("logId")
 const (
 	PROVIDER_READ_RETRY_TIMEOUT  = "TENCENTCLOUD_READ_RETRY_TIMEOUT"
 	PROVIDER_WRITE_RETRY_TIMEOUT = "TENCENTCLOUD_WRITE_RETRY_TIMEOUT"
+
+	SWEEPER_NEED_PROTECT = "SWEEPER_NEED_PROTECT"
 )
 
 var logFirstTime = ""
@@ -45,6 +47,9 @@ var readRetryTimeout = time.Duration(readRetry) * time.Minute
 //const writeRetryTimeout = 5 * time.Minute
 var writeRetry = getEnvDefault(PROVIDER_WRITE_RETRY_TIMEOUT, 5)
 var writeRetryTimeout = time.Duration(writeRetry) * time.Minute
+
+//const writeRetryTimeout = 5 * time.Minute
+var needProtect = getEnvDefault(SWEEPER_NEED_PROTECT, 0)
 
 // InternalError common internalError, do not add in retryableErrorCode,
 // because when some product return this error, retry won't fix anything.
