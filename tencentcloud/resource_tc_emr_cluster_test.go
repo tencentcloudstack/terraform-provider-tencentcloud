@@ -8,7 +8,85 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_emr
+	resource.AddTestSweepers("tencentcloud_emr", &resource.Sweeper{
+		Name: "tencentcloud_emr",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			emrService := EMRService{client: client}
+			filters := make(map[string]interface{})
+			filters["display_strategy"] = DisplayStrategyIsclusterList
+			clusters, err := emrService.DescribeInstances(ctx, filters)
+			if err != nil {
+				return nil
+			}
+			for _, cluster := range clusters {
+				metaDB := cluster.MetaDb
+				instanceId := *cluster.ClusterId
+				request := emr.NewTerminateInstanceRequest()
+				request.InstanceId = &instanceId
+				if _, err = emrService.client.UseEmrClient().TerminateInstance(request); err != nil {
+					return nil
+				}
+				err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+					clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+
+					if e, ok := err.(*errors.TencentCloudSDKError); ok {
+						if e.GetCode() == "InternalError.ClusterNotFound" {
+							return nil
+						}
+						if e.GetCode() == "UnauthorizedOperation" {
+							return nil
+						}
+					}
+
+					if len(clusters) > 0 {
+						status := *(clusters[0].Status)
+						if status != EmrInternetStatusDeleted {
+							return resource.RetryableError(
+								fmt.Errorf("%v create cluster endpoint status still is %v", instanceId, status))
+						}
+					}
+
+					if err != nil {
+						return resource.RetryableError(err)
+					}
+					return nil
+				})
+				if err != nil {
+					return nil
+				}
+
+				if metaDB != nil && *metaDB != "" {
+					// remove metadb
+					mysqlService := MysqlService{client: client}
+
+					err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
+						if err != nil {
+							return retryError(err, InternalError)
+						}
+						return nil
+					})
+
+					if err != nil {
+						return nil
+					}
+				}
+			}
+			return nil
+		},
+	})
+}
 
 var testEmrClusterResourceKey = "tencentcloud_emr_cluster.emrrrr"
 
