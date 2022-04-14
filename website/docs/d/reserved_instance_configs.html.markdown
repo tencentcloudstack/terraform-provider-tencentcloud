@@ -26,6 +26,8 @@ The following arguments are supported:
 * `availability_zone` - (Optional) The available zone that the reserved instance locates at.
 * `duration` - (Optional) Validity period of the reserved instance. Valid values are `31536000`(1 year) and `94608000`(3 years).
 * `instance_type` - (Optional) The type of reserved instance.
+* `offering_type` - (Optional) Filter by Payment Type. Such as All Upfront.
+* `product_description` - (Optional) Filter by the Platform Description (that is, operating system) for Reserved Instance billing. Shaped like: linux.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
@@ -38,7 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `currency_code` - Settlement currency of the reserved instance, which is a standard currency code as listed in ISO 4217.
   * `duration` - Validity period of the reserved instance.
   * `instance_type` - Instance type of the reserved instance.
+  * `offering_type` - OfferingType of the reserved instance.
   * `platform` - Platform of the reserved instance.
   * `price` - Purchase price of the reserved instance.
+  * `usage_price` - UsagePrice of the reserved instance.
 
 

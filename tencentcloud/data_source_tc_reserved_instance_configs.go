@@ -43,6 +43,16 @@ func dataSourceTencentCloudReservedInstanceConfigs() *schema.Resource {
 				Optional:    true,
 				Description: "The type of reserved instance.",
 			},
+			"offering_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter by Payment Type. Such as All Upfront.",
+			},
+			"product_description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter by the Platform Description (that is, operating system) for Reserved Instance billing. Shaped like: linux.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -77,7 +87,7 @@ func dataSourceTencentCloudReservedInstanceConfigs() *schema.Resource {
 							Description: "Validity period of the reserved instance.",
 						},
 						"price": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeFloat,
 							Computed:    true,
 							Description: "Purchase price of the reserved instance.",
 						},
@@ -90,6 +100,16 @@ func dataSourceTencentCloudReservedInstanceConfigs() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Platform of the reserved instance.",
+						},
+						"offering_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "OfferingType of the reserved instance.",
+						},
+						"usage_price": {
+							Type:        schema.TypeFloat,
+							Computed:    true,
+							Description: "UsagePrice of the reserved instance.",
 						},
 					},
 				},
@@ -118,6 +138,12 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 	if v, ok := d.GetOk("instance_type"); ok {
 		filter["instance-type"] = v.(string)
 	}
+	if v, ok := d.GetOk("offering_type"); ok {
+		filter["offering-type"] = v.(string)
+	}
+	if v, ok := d.GetOk("product_description"); ok {
+		filter["product-description"] = v.(string)
+	}
 
 	var configs []*cvm.ReservedInstancesOffering
 	var errRet error
@@ -143,6 +169,8 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 			"price":             config.FixedPrice,
 			"currency_code":     config.CurrencyCode,
 			"platform":          config.ProductDescription,
+			"offering_type":     config.OfferingType,
+			"usage_price":       config.UsagePrice,
 		}
 		configList = append(configList, mapping)
 		ids = append(ids, *config.ReservedInstancesOfferingId)

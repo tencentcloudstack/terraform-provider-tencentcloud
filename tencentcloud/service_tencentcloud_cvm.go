@@ -727,11 +727,15 @@ func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo,
 	return
 }
 
-func (me *CvmService) CreateReservedInstance(ctx context.Context, configId string, count int64) (instanceId string, errRet error) {
+func (me *CvmService) CreateReservedInstance(ctx context.Context, configId string, count int64, extendParams map[string]interface{}) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewPurchaseReservedInstancesOfferingRequest()
 	request.ReservedInstancesOfferingId = &configId
 	request.InstanceCount = &count
+	if v, ok := extendParams["reserved_instance_name"]; ok {
+		reservedInstanceName := v.(string)
+		request.ReservedInstanceName = &reservedInstanceName
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().PurchaseReservedInstancesOffering(request)

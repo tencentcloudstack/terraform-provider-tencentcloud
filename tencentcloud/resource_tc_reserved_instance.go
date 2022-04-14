@@ -53,6 +53,13 @@ func resourceTencentCloudReservedInstance() *schema.Resource {
 				ValidateFunc: validateIntegerMin(1),
 				Description:  "Number of reserved instances to be purchased.",
 			},
+			"reserved_instance_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Reserved Instance display name.
+				- If you do not specify an instance display name, 'Unnamed' is displayed by default.
+				- Up to 60 characters (including pattern strings) are supported.`,
+			},
 
 			// computed
 			"start_time": {
@@ -84,10 +91,14 @@ func resourceTencentCloudReservedInstanceCreate(d *schema.ResourceData, meta int
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	extendParams := make(map[string]interface{})
+	if v, ok := d.GetOk("reserved_instance_name"); ok {
+		extendParams["reserved_instance_name"] = v.(string)
+	}
 	var instanceId string
 	var errRet error
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, errRet = cvmService.CreateReservedInstance(ctx, configId, int64(count))
+		instanceId, errRet = cvmService.CreateReservedInstance(ctx, configId, int64(count), extendParams)
 		if errRet != nil {
 			return retryError(errRet)
 		}
@@ -137,6 +148,7 @@ func resourceTencentCloudReservedInstanceRead(d *schema.ResourceData, meta inter
 	_ = d.Set("start_time", instance.StartTime)
 	_ = d.Set("end_time", instance.EndTime)
 	_ = d.Set("status", instance.State)
+	_ = d.Set("reserved_instance_name", instance.ReservedInstanceName)
 
 	return nil
 }

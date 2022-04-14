@@ -9,7 +9,7 @@ import (
 func TestAccTencentCloudReservedInstanceConfigsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
