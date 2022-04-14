@@ -18,7 +18,8 @@ func TestAccTencentCloudTkeAttachResource(t *testing.T) {
 		CheckDestroy: testAccCheckTkeAttachDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeAttachCluster(),
+				ExpectNonEmptyPlan: false,
+				Config:             testAccTkeAttachCluster(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
