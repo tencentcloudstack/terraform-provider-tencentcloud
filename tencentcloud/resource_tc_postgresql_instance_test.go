@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -35,13 +36,25 @@ func init() {
 				id := *v.DBInstanceId
 				name := *v.DBInstanceName
 				vpcId := *v.VpcId
+
+				now := time.Now()
+				createTime := stringTotime(*v.CreateTime)
+				interval := now.Sub(createTime).Minutes()
+
 				if strings.HasPrefix(name, keepResource) || strings.HasPrefix(name, defaultResource) {
 					continue
 				}
+
+				// less than 30 minute, not delete
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+				// isolate
 				err := postgresqlService.IsolatePostgresqlInstance(ctx, id)
 				if err != nil {
 					continue
 				}
+				// describe status
 				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 					instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, id)
 					if err != nil {
@@ -58,13 +71,13 @@ func init() {
 				if err != nil {
 					continue
 				}
+				// delete
 				err = postgresqlService.DeletePostgresqlInstance(ctx, id)
 				if err != nil {
 					continue
 				}
 				vpcs = append(vpcs, vpcId)
 			}
-
 			for _, v := range vpcs {
 				_ = vpcService.DeleteVpc(ctx, v)
 			}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 	"testing"
+	"time"
 
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 
@@ -24,7 +25,7 @@ func init() {
 			cli, _ := sharedClientForRegion(r)
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := SqlserverService{client: client}
-			instances, err := service.DescribeSqlserverInstances(ctx, "", "", -1, defaultVpcId, defaultSubnetId, 1)
+			instances, err := service.DescribeSqlserverInstances(ctx, "", "", -1, "", "", 1)
 
 			if err != nil {
 				return err
@@ -50,7 +51,17 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 			defer wg.Done()
 			id := *instances[i].InstanceId
 			name := *instances[i].Name
+			createTime := *instances[i].CreateTime
+			now := time.Now()
+
+			interval := now.Sub(stringTotime(createTime)).Minutes()
+
 			if isResourcePersist(name, nil) {
+				return
+			}
+
+			// less than 30 minute, not delete
+			if needProtect == 1 && int64(interval) < 30 {
 				return
 			}
 
