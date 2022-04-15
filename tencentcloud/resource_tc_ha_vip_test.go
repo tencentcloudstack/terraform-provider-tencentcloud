@@ -1,9 +1,12 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -11,6 +14,56 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_ha_vip", &resource.Sweeper{
+		Name: "tencentcloud_ha_vip",
+		F:    testSweepHaVipInstance,
+	})
+}
+
+func testSweepHaVipInstance(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeHaVipByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := *v.HaVipId
+		instanceName := *v.HaVipName
+
+		now := time.Now()
+
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+		if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+			continue
+		}
+		// less than 30 minute, not delete
+		if needProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
+		if err = vpcService.DeleteHaVip(ctx, instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudHaVip_basic(t *testing.T) {
 	t.Parallel()
@@ -173,6 +226,6 @@ resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
   vpc_id    = var.vpc_id
   subnet_id = var.subnet_id
-  vip       = "172.16.0.255"
+  vip       = "172.16.0.137"
 }
 `
