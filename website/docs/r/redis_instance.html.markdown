@@ -78,9 +78,9 @@ The following arguments are supported:
 * `port` - (Optional, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.
 * `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `project_id` - (Optional) Specifies which project the instance should belong to.
-* `redis_replicas_num` - (Optional, ForceNew) The number of instance copies. This is not required for standalone and master slave versions.
+* `redis_replicas_num` - (Optional) The number of instance copies. This is not required for standalone and master slave versions.
 * `redis_shard_num` - (Optional, ForceNew) The number of instance shard. This is not required for standalone and master slave versions.
-* `replica_zone_ids` - (Optional, ForceNew) ID of replica nodes available zone. This is not required for standalone and master slave versions.
+* `replica_zone_ids` - (Optional) ID of replica nodes available zone. This is not required for standalone and master slave versions.
 * `replicas_read_only` - (Optional, ForceNew) Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.
 * `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, ForceNew) Specifies which subnet the instance should belong to.

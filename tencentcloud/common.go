@@ -147,7 +147,7 @@ func retryError(err error, additionRetryableError ...string) *resource.RetryErro
 	return resource.NonRetryableError(err)
 }
 
-// isExpectError returns whether error is expect error
+// isExpectError returns whether error is expected error
 func isExpectError(err error, expectError []string) bool {
 	e, ok := err.(*sdkErrors.TencentCloudSDKError)
 	if !ok {
@@ -275,4 +275,34 @@ func IsContains(array interface{}, value interface{}) bool {
 	default:
 		return reflect.DeepEqual(array, value)
 	}
+}
+
+func FindIntListIndex(list []int, elem int) int {
+	for i, v := range list {
+		if v == elem {
+			return i
+		}
+	}
+	return -1
+}
+
+func GetListIncrement(o []int, n []int) (result []int, err error) {
+	result = append(result, n...)
+	if len(o) > len(n) {
+		err = fmt.Errorf("new list elem count %d less than old: %d", len(n), len(o))
+		return
+	}
+	for _, v := range o {
+		index := FindIntListIndex(result, v)
+		if index == -1 {
+			err = fmt.Errorf("elem %d not exist", v)
+			return
+		}
+		if index+1 >= len(result) {
+			result = result[:index]
+		} else {
+			result = append(result[:index], result[index+1:]...)
+		}
+	}
+	return
 }

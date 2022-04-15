@@ -743,17 +743,23 @@ func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (ta
 	return
 }
 
-func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64, redisShardNum int64, redisReplicasNum int64) (dealId string, errRet error) {
+func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize, redisShardNum, redisReplicasNum int, nodeSet []*redis.RedisNodeInfo) (dealId string, errRet error) {
 	logId := getLogId(ctx)
 
-	var uintNewMemSize = uint64(newMemSize)
-	var uintRedisReplicas = uint64(redisReplicasNum)
-	var uintRedisShardNum = uint64(redisShardNum)
 	request := redis.NewUpgradeInstanceRequest()
 	request.InstanceId = &redisId
-	request.MemSize = &uintNewMemSize
-	request.RedisReplicasNum = &uintRedisReplicas
-	request.RedisShardNum = &uintRedisShardNum
+	if newMemSize > 0 {
+		request.MemSize = helper.IntUint64(newMemSize)
+	}
+	if redisShardNum > 0 {
+		request.RedisShardNum = helper.IntUint64(redisShardNum)
+	}
+	if redisReplicasNum != 0 {
+		request.RedisReplicasNum = helper.IntUint64(redisReplicasNum)
+	}
+	if len(nodeSet) > 0 {
+		request.NodeSet = nodeSet
+	}
 
 	defer func() {
 		if errRet != nil {

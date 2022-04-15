@@ -124,14 +124,12 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"redis_replicas_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     1,
 				Description: "The number of instance copies. This is not required for standalone and master slave versions.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
@@ -578,17 +576,25 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	}
 
 	if info.NodeSet != nil {
-		var zoneIds []uint64
+		var zoneIds []int
 		for i := range info.NodeSet {
 			nodeInfo := info.NodeSet[i]
 			if *nodeInfo.NodeType == 0 {
 				continue
 			}
-			zoneIds = append(zoneIds, *nodeInfo.ZoneId)
+			zoneIds = append(zoneIds, int(*nodeInfo.ZoneId))
 		}
 
-		if err := d.Set("replica_zone_ids", zoneIds); err != nil {
-			log.Printf("[WARN] replica_zone_ids set error: %s", err.Error())
+		var zoneIdsEqual = false
+
+		raw, ok := d.GetOk("replica_zone_ids")
+		if ok {
+			oldIds := helper.InterfacesIntegers(raw.([]interface{}))
+			zoneIdsEqual = checkZoneIdsEqual(oldIds, zoneIds)
+		}
+
+		if !zoneIdsEqual {
+			_ = d.Set("replica_zone_ids", zoneIds)
 		}
 	}
 
@@ -643,27 +649,28 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		d.SetPartial("name")
 	}
 
+	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
 	if d.HasChange("mem_size") {
 
 		_, newInter := d.GetChange("mem_size")
 		newMemSize := newInter.(int)
-		//oldMemSize := oldInter.(int)
-
-		//if oldMemSize >= newMemSize {
-		//	return fmt.Errorf("redis mem_size can only increase")
-		//}
+		oShard, _ := d.GetChange("redis_shard_num")
+		redisShardNum := oShard.(int)
+		oReplica, _ := d.GetChange("redis_replicas_num")
+		redisReplicasNum := oReplica.(int)
 
 		if newMemSize < 1 {
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
 		}
-		redisShardNum := d.Get("redis_shard_num").(int)
-		redisReplicasNum := d.Get("redis_replicas_num").(int)
-		_, err := redisService.UpgradeInstance(ctx, id, int64(newMemSize), int64(redisShardNum), int64(redisReplicasNum))
+
+		_, err := redisService.UpgradeInstance(ctx, id, newMemSize, redisShardNum, redisReplicasNum, nil)
 
 		if err != nil {
-			log.Printf("[CRITAL]%s redis update mem size error, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s redis upgrade instance error, reason:%s\n", logId, err.Error())
 			return err
 		}
+
+		startUpdate := false
 
 		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
@@ -673,11 +680,16 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 				if status == "" {
 					return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is unknown ,status=%d", *info.Status))
 				}
+				if *info.Status == REDIS_STATUS_ONLINE && !startUpdate {
+					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
+				}
+				if *info.Status == REDIS_STATUS_ONLINE && startUpdate {
+					return nil
+				}
+				startUpdate = true
+
 				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
 					return resource.RetryableError(fmt.Errorf("redis update processing."))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE {
-					return nil
 				}
 				return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is %s", status))
 			}
@@ -696,8 +708,143 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis update mem size fail , reason:%s\n", logId, err.Error())
 			return err
 		}
+	}
 
-		d.SetPartial("mem_size")
+	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
+	if d.HasChange("redis_shard_num") {
+		redisShardNum := d.Get("redis_shard_num").(int)
+		oReplica, _ := d.GetChange("redis_replicas_num")
+		redisReplicasNum := oReplica.(int)
+		memSize := d.Get("mem_size").(int)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := redisService.UpgradeInstance(ctx, id, memSize, redisShardNum, redisReplicasNum, nil)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis upgrade instance error, reason:%s\n", logId, err.Error())
+			return err
+		}
+
+		startUpdate := false
+
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
+			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
+
+			if info != nil {
+				status := REDIS_STATUS[*info.Status]
+				if status == "" {
+					return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis status is unknown ,status=%d", *info.Status))
+				}
+				if *info.Status == REDIS_STATUS_ONLINE && !startUpdate {
+					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
+				}
+				if *info.Status == REDIS_STATUS_ONLINE && startUpdate {
+					return nil
+				}
+				startUpdate = true
+
+				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
+					return resource.RetryableError(fmt.Errorf("redis update processing."))
+				}
+				return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis status is %s", status))
+			}
+
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis disappear"))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis update shard num fail , reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
+	if d.HasChange("redis_replicas_num") || d.HasChange("replica_zone_ids") {
+		//availabilityZone := d.Get("availability_zone").(string)
+		o, n := d.GetChange("replica_zone_ids") // Only pass zone id increments
+		ov := helper.InterfacesIntegers(o.([]interface{}))
+		nv := helper.InterfacesIntegers(n.([]interface{}))
+		zoneIds, err := GetListIncrement(ov, nv)
+
+		if err != nil {
+			return fmt.Errorf("get diff replica error: %s", err.Error())
+		}
+
+		var nodeInfo []*redis.RedisNodeInfo
+
+		for _, id := range zoneIds {
+			nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
+				NodeType: helper.Int64(1),
+				ZoneId:   helper.IntUint64(id),
+			})
+		}
+		redisReplicasNum := d.Get("redis_replicas_num").(int)
+		memSize := d.Get("mem_size").(int)
+		redisShardNum := d.Get("redis_shard_num").(int)
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err = redisService.UpgradeInstance(ctx, id, memSize, redisShardNum, redisReplicasNum, nodeInfo)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
+			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
+
+			if info != nil {
+				status := REDIS_STATUS[*info.Status]
+				if status == "" {
+					return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis status is unknown ,status=%d", *info.Status))
+				}
+				actualNodeCount := len(info.NodeSet)
+				expectedNodeCount := len(nv) + 1
+				// wait until node set as expected or will cause status inconsistent
+				if *info.Status == REDIS_STATUS_ONLINE && actualNodeCount != expectedNodeCount {
+					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
+				}
+				if *info.Status == REDIS_STATUS_ONLINE && actualNodeCount == expectedNodeCount {
+					return nil
+				}
+				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
+					return resource.RetryableError(fmt.Errorf("redis update processing."))
+				}
+
+				return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis status is %s", status))
+			}
+
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis disappear"))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis update replicas fail , reason:%s\n", logId, err.Error())
+			return err
+		}
+
 	}
 
 	if d.HasChange("password") {
@@ -879,4 +1026,20 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	} else {
 		return nil
 	}
+}
+
+func checkZoneIdsEqual(o []int, n []int) bool {
+	if len(o) != len(n) {
+		return false
+	}
+
+	sort.Ints(o)
+	sort.Ints(n)
+
+	for i, v := range o {
+		if v != n[i] {
+			return false
+		}
+	}
+	return true
 }

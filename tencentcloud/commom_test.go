@@ -2,6 +2,10 @@ package tencentcloud
 
 import (
 	"testing"
+
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIsContains(t *testing.T) {
@@ -70,4 +74,54 @@ func TestIsContains(t *testing.T) {
 			t.Errorf("Failed: %#v", v)
 		}
 	}
+}
+
+func TestGetListIncrement(t *testing.T) {
+	var (
+		old1      = []int{1, 2, 2, 3, 5}
+		new1      = []int{1, 2, 3, 2, 4, 5, 6, 3}
+		expected1 = []int{4, 6, 3}
+	)
+	actual1, _ := GetListIncrement(old1, new1)
+	assert.Equalf(t, expected1, actual1, "incr1 should equal, got %v %v", expected1, actual1)
+
+	var (
+		old2      = []int{1, 2, 4, 5}
+		new2      = []int{1, 2, 3, 2, 4, 5, 6, 3}
+		expected2 = []int{3, 2, 6, 3}
+	)
+	actual2, _ := GetListIncrement(old2, new2)
+	assert.Equalf(t, expected2, actual2, "incr1 should equal, got %v %v", expected2, actual2)
+
+	var (
+		old3      = []int{1, 2, 4, 5, 3, 6, 3, 2}
+		new3      = []int{1, 2, 3, 2, 4, 5, 6, 3}
+		expected3 = make([]int, 0)
+	)
+	actual3, _ := GetListIncrement(old3, new3)
+	assert.Equalf(t, expected3, actual3, "incr1 should equal, got %v %v", expected3, actual3)
+
+	var (
+		old4 = []int{1}
+		new4 = []int{2}
+	)
+
+	_, err := GetListIncrement(old4, new4)
+	assert.EqualError(t, err, "elem 1 not exist")
+
+}
+
+func TestIsExpectError(t *testing.T) {
+
+	err := sdkErrors.NewTencentCloudSDKError("ClientError.NetworkError", "", "")
+
+	expectedFull := []string{"ClientError.NetworkError"}
+	expectedShort := []string{"ClientError"}
+	unExpectedMatchHead := []string{"ClientError.HttpStatusCodeError"}
+	unExpectedShort := []string{"SystemError"}
+
+	assert.Equalf(t, isExpectError(err, expectedFull), true, "")
+	assert.Equalf(t, isExpectError(err, expectedShort), true, "")
+	assert.Equalf(t, isExpectError(err, unExpectedMatchHead), false, "")
+	assert.Equalf(t, isExpectError(err, unExpectedShort), false, "")
 }
