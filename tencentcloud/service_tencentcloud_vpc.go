@@ -2904,6 +2904,50 @@ func (me *VpcService) DescribeEniByFilters(
 	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
 }
 
+func (me *VpcService) DescribeHaVipByFilter(ctx context.Context, filters map[string]string) (instances []*vpc.HaVip, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeHaVipsRequest()
+	)
+	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := vpc.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances = make([]*vpc.HaVip, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeHaVips(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.HaVipSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.HaVipSet...)
+		if len(response.Response.HaVipSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
 func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachmentId string) (eip string, haVip string, has bool, errRet error) {
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
@@ -2951,6 +2995,27 @@ func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachme
 		errRet = err
 	}
 	return eip, haVip, has, errRet
+}
+
+func (me *VpcService) DeleteHaVip(ctx context.Context, haVipId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteHaVipRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.HaVipId = &haVipId
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseVpcClient().DeleteHaVip(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	return
 }
 
 func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s []string, dropIpv4s []string) error {
