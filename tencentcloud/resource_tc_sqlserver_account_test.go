@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -12,6 +13,53 @@ import (
 
 var testSqlserverAccountResourceName = "tencentcloud_sqlserver_account"
 var testSqlserverAccountResourceKey = testSqlserverAccountResourceName + ".test"
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_account
+	resource.AddTestSweepers("tencentcloud_sqlserver_account", &resource.Sweeper{
+		Name: "tencentcloud_sqlserver_account",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := SqlserverService{client}
+
+			db, err := service.DescribeSqlserverInstances(ctx, "", defaultSQLServerName, -1, "", "", -1)
+
+			if err != nil {
+				return err
+			}
+
+			if len(db) == 0 {
+				return fmt.Errorf("%s not exists", defaultSQLServerName)
+			}
+
+			instanceId := *db[0].InstanceId
+
+			accounts, err := service.DescribeSqlserverAccounts(ctx, instanceId)
+
+			for i := range accounts {
+				account := accounts[i]
+				name := *account.Name
+				created, err := time.Parse("2006-01-02 15:04:05", *account.CreateTime)
+				if err != nil {
+					created = time.Time{}
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				err = service.DeleteSqlserverAccount(ctx, instanceId, name)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudSqlserverAccountResource(t *testing.T) {
 	t.Parallel()

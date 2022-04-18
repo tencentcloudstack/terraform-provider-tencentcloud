@@ -97,32 +97,28 @@ func testAccCheckSqlserverPublishSubscribeExists(n string) resource.TestCheckFun
 	}
 }
 
-const testAccSqlserverPublishSubscribe_basic = testAccSqlserverInstanceBasic + `
-resource "tencentcloud_security_group" "foo" {
-  name = "test-sg-tf"
-}
-
+const testAccSqlserverPublishSubscribe_basic = defaultVpcSubnets + defaultSecurityGroupData + `
 resource "tencentcloud_sqlserver_instance" "publish_instance" {
   name                      = "tf_sqlserver_publish_instance"
-  availability_zone         = var.availability_zone
+  availability_zone         = var.default_az
   charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = "` + defaultVpcId + `"
-  subnet_id                 = "` + defaultSubnetId + `"
+  vpc_id                    = local.vpc_id
+  subnet_id                 = local.subnet_id
   project_id                = 0
   memory                    = 2
   storage                   = 10
   maintenance_week_set      = [1,2,3]
   maintenance_start_time    = "09:00"
   maintenance_time_span     = 3
-  security_groups           = [tencentcloud_security_group.foo.name]
+  security_groups           = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   name                      = "tf_sqlserver_subscribe_instance"
-  availability_zone         = var.availability_zone
+  availability_zone         = var.default_az
   charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = "` + defaultVpcId + `"
-  subnet_id                 = "` + defaultSubnetId + `"
+  vpc_id                    = local.vpc_id
+  subnet_id                 = local.subnet_id
   project_id                = 0
   memory                    = 2
   storage                   = 10
@@ -149,13 +145,13 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	}
 }`
 
-const testAccSqlserverPublishSubscribe_basic_update_name = testAccSqlserverInstanceBasic + `
+const testAccSqlserverPublishSubscribe_basic_update_name = testAccSqlserverAZ + defaultSecurityGroupData + `
 resource "tencentcloud_sqlserver_instance" "publish_instance" {
   name                          = "tf_sqlserver_publish_instance"
-  availability_zone             = var.availability_zone
-  charge_type                   = "POSTPAID_BY_HOUR"
-  vpc_id                        = "` + defaultVpcId + `"
-  subnet_id                     = "` + defaultSubnetId + `"
+  availability_zone             = var.default_az
+  charge_type         	        = "POSTPAID_BY_HOUR"
+  vpc_id                 	    = local.vpc_id
+  subnet_id            	        = local.subnet_id
   project_id                    = 0
   memory                        = 2
   storage                       = 10
@@ -167,10 +163,10 @@ resource "tencentcloud_sqlserver_instance" "publish_instance" {
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   name                          = "tf_sqlserver_subscribe_instance"
-  availability_zone             = var.availability_zone
-  charge_type                   = "POSTPAID_BY_HOUR"
-  vpc_id                        = "` + defaultVpcId + `"
-  subnet_id                     = "` + defaultSubnetId + `"
+  availability_zone      	    = var.default_az
+  charge_type           	    = "POSTPAID_BY_HOUR"
+  vpc_id             	        = local.vpc_id
+  subnet_id           	        = local.subnet_id
   project_id                    = 0
   memory                        = 2
   storage                       = 10

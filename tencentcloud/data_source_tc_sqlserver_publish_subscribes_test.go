@@ -34,55 +34,44 @@ func TestAccTencentCloudSqlserverPublishSubscribeDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig = testAccSqlserverInstanceBasic + `
-resource "tencentcloud_security_group" "foo" {
-  name = "test-sg-tf"
-}
+const testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig = defaultVpcSubnets + defaultSecurityGroupData + CommonPresetSQLServer + `
 
 resource "tencentcloud_sqlserver_instance" "publish_instance" {
   name                  = "tf_sqlserver_publish_instance"
-  availability_zone     = var.availability_zone
-  charge_type           = "POSTPAID_BY_HOUR"
-  vpc_id                = "` + defaultVpcId + `"
-  subnet_id             = "` + defaultSubnetId + `"
+  availability_zone         = var.default_az
+  charge_type               = "POSTPAID_BY_HOUR"
+  vpc_id                    = local.vpc_id
+  subnet_id                 = local.subnet_id
   project_id            = 0
   memory                = 2
   storage               = 10
   maintenance_week_set  = [1,2,3]
   maintenance_start_time= "09:00"
   maintenance_time_span = 3
-  security_groups       = [tencentcloud_security_group.foo.name]
+  security_groups       = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   name                      = "tf_sqlserver_subscribe_instance"
-  availability_zone         = var.availability_zone
+  availability_zone         = var.default_az
   charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = "` + defaultVpcId + `"
-  subnet_id                 = "` + defaultSubnetId + `"
-  project_id                = 0
+  vpc_id                    = local.vpc_id
+  subnet_id                 = local.subnet_id
   memory                    = 2
   storage                   = 10
   maintenance_week_set      = [1,2,3]
   maintenance_start_time    = "09:00"
   maintenance_time_span     = 3
-  security_groups           = [tencentcloud_security_group.foo.name]
-}
-
-resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
-  instance_id   = tencentcloud_sqlserver_instance.publish_instance.id
-  name          = "test111"
-  charset       = "Chinese_PRC_BIN"
-  remark        = "testACC-remark"
+  security_groups           = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
+	publish_instance_id             = local.sqlserver_id
 	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
 	delete_subscribe_db             = false
 	database_tuples {
-		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		publish_database            = local.sqlserver_db
 	}
 }
 

@@ -40,7 +40,6 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "status"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "auto_renew"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "security_groups.#", "1"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "tags.test", "test"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_start_time", "09:00"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_time_span", "3"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_week_set.#", "3"),
@@ -58,9 +57,6 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_start_time", "08:00"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_time_span", "4"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_week_set.#", "4"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "8"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "storage", "100"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "machine_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "create_time"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "project_id", "0"),
@@ -69,8 +65,6 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vport"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "status"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "security_groups.#", "1"),
-					resource.TestCheckNoResourceAttr(testSqlserverBasicInstanceResourceKey, "tags.test"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "tags.abc", "abc"),
 				),
 			},
 			{
@@ -125,33 +119,16 @@ func testAccCheckSqlserverBasicInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverBasicInstanceBasic = `
-variable "availability_zone"{
-	default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-	name       = "tf-sqlserver-vpc"
-	cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-	availability_zone = "ap-guangzhou-3"
-	name              = "tf-sqlserver-subnet"
-	vpc_id            = tencentcloud_vpc.foo.id
-	cidr_block        = "10.0.0.0/16"
-	is_multicast      = false
-}
-`
+const testAccSqlserverBasicInstanceBasic = defaultVpcSubnets + defaultSecurityGroupData
 
 const testAccSqlserverBasicInstancePostpaid string = testAccSqlserverBasicInstanceBasic + `
 resource "tencentcloud_sqlserver_basic_instance" "test" {
 	name                    = "tf_sqlserver_basic_instance"
-	availability_zone       = var.availability_zone
+	availability_zone       = var.default_az
 	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = tencentcloud_vpc.foo.id
-	subnet_id               = tencentcloud_subnet.foo.id
-	security_groups         = ["` + defaultSecurityGroup + `"]
+	vpc_id                  = local.vpc_id
+	subnet_id               = local.subnet_id
+	security_groups         = [local.sg_id]
 	project_id              = 0
 	memory                  = 4
 	storage                 = 20
@@ -160,32 +137,24 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
 	maintenance_time_span   = 3
-
-	tags = {
-		"test" = "test"
-	}
 }
 `
 
 const testAccSqlserverBasicInstancePostpaidUpdate string = testAccSqlserverBasicInstanceBasic + `
 resource "tencentcloud_sqlserver_basic_instance" "test" {
 	name                    = "tf_sqlserver_basic_instance_update"
-	availability_zone       = var.availability_zone
+	availability_zone       = var.default_az
 	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = tencentcloud_vpc.foo.id
-	subnet_id               = tencentcloud_subnet.foo.id
-	security_groups         = ["` + defaultSecurityGroup + `"]
+	vpc_id                  = local.vpc_id
+	subnet_id               = local.subnet_id
+	security_groups         = [local.sg_id]
 	project_id              = 0
-	memory                  = 8
-	storage                 = 100
+	memory                  = 4
+	storage                 = 20
 	cpu                     = 2
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3,4]
 	maintenance_start_time  = "08:00"
 	maintenance_time_span   = 4
-
-	tags = {
-		abc = "abc"
-	}
 }
 `

@@ -35,8 +35,8 @@ func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSqlserverReadonlyGroupsBasic = `
+const testAccTencentCloudDataSqlserverReadonlyGroupsBasic = CommonPresetSQLServer + `
 data "tencentcloud_sqlserver_readonly_groups" "test"{
-	master_instance_id = "mssql-ds1xhnt9"
+	master_instance_id = local.sqlserver_id
 }
 `

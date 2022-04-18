@@ -119,7 +119,7 @@ func testAccCheckReadonlySqlserverInstanceExists(n string) resource.TestCheckFun
 	}
 }
 
-const testAccReadonlySqlserverInstance string = testAccSqlserverInstanceBasic + `
+const testAccReadonlySqlserverInstance string = testAccSqlserverAZ + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
   availability_zone             = "ap-guangzhou-2"
@@ -156,7 +156,7 @@ resource "tencentcloud_sqlserver_readonly_instance" "test" {
 }
 `
 
-const testAccReadonlySqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
+const testAccReadonlySqlserverInstanceUpdate string = testAccSqlserverAZ + `
 resource = tencentcloud_sqlserver_instance" "test" {
   name                      = "tf_sqlserver_instance_multi"
   availability_zone         = "ap-guangzhou-2"

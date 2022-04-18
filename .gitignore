@@ -9,6 +9,7 @@ export_env.sh
 .idea
 *.log
 *.exe
+.terraform.lock.hcl
 .terraform/
 terraform-provider-tencentcloud
 terraform-provider-qcloud

@@ -17,6 +17,7 @@ var testSqlserverInstanceResourceName = "tencentcloud_sqlserver_instance"
 var testSqlserverInstanceResourceKey = testSqlserverInstanceResourceName + ".test"
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_instance
 	resource.AddTestSweepers("tencentcloud_sqlserver_instance", &resource.Sweeper{
 		Name: "tencentcloud_sqlserver_instance",
 		F: func(r string) error {
@@ -177,7 +178,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 				ResourceName:            testSqlserverInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"multi_zones"},
+				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher"},
 			},
 
 			{
@@ -193,7 +194,6 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "maintenance_time_span", "4"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "storage", "20"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "create_time"),
-					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "project_id", defaultProjectId),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "availability_zone"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vip"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
@@ -324,16 +324,7 @@ func testAccCheckSqlserverInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverInstanceBasic = `
-data "tencentcloud_availability_zones_by_product" "zone" {
-  product = "sqlserver"
-}
-
-locals {
-  az = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
-  az1 = data.tencentcloud_availability_zones_by_product.zone.zones[1].name
-}
-`
+const testAccSqlserverBasicInstanceNetwork = defaultVpcSubnets + defaultSecurityGroupData
 
 const testAccSqlserverInstanceBasicPrepaid = `
 locals {
@@ -356,20 +347,20 @@ data "tencentcloud_subnet" "sub" {
 }
 `
 
-const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
+const testAccSqlserverInstance string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance"
-  availability_zone             = local.az1
+  availability_zone             = var.default_az
   charge_type                   = "POSTPAID_BY_HOUR"
-  vpc_id                        = "` + defaultVpcId + `"
-  subnet_id                     = "` + defaultSubnetId + `"
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.subnet_id
+  security_groups               = [local.sg_id]
   project_id                    = 0
   memory                        = 2
   storage                       = 10
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = ["` + defaultSecurityGroup + `"]
 
   tags = {
     "test"                      = "test"
@@ -377,14 +368,16 @@ resource "tencentcloud_sqlserver_instance" "test" {
 }
 `
 
-const testAccSqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
+const testAccSqlserverInstanceUpdate string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                      = "tf_sqlserver_instance_update"
   availability_zone         = local.az1
   charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = "` + defaultVpcId + `"
-  subnet_id                 = "` + defaultSubnetId + `"
-  project_id                = ` + defaultProjectId + `
+  availability_zone             = var.default_az
+  charge_type                   = "POSTPAID_BY_HOUR"
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.subnet_id
+  security_groups               = [local.sg_id]
   memory                    = 4
   storage                   = 20
   maintenance_week_set      = [2,3,4]
@@ -432,14 +425,16 @@ resource "tencentcloud_sqlserver_instance" "test" {
 }
 `
 
-const testAccSqlserverInstanceMultiCluster string = testAccSqlserverInstanceBasic + `
+const testAccSqlserverInstanceMultiCluster string = testAccSqlserverAZ + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
-  availability_zone             = local.az1
-  charge_type                   = "POSTPAID_BY_HOUR"
   engine_version                = "2017"
-  vpc_id                        = "` + defaultVpcId + `"
-  subnet_id                     = "` + defaultSubnetId + `"
+  charge_type                   = "POSTPAID_BY_HOUR"
+  availability_zone             = var.default_az
+  charge_type                   = "POSTPAID_BY_HOUR"
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.subnet_id
+  security_groups               = [local.sg_id]
   project_id                    = 0
   memory                        = 2
   storage                       = 10
