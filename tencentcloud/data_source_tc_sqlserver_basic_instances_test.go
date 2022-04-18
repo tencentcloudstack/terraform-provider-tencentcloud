@@ -43,7 +43,7 @@ func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSqlserverBasicInstancesBasic = testAccSqlserverInstanceBasic + `
+const testAccTencentCloudDataSqlserverBasicInstancesBasic = testAccSqlserverAZ + `
 
 resource "tencentcloud_vpc" "foo" {
 	name       = "tf-sqlserver-vpc"

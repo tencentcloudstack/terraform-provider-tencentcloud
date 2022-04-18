@@ -28,8 +28,8 @@ func TestAccDataSourceTencentCloudSqlserverDBs_basic(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudSqlserverDB = `
+const TestAccDataSourceTencentCloudSqlserverDB = CommonPresetSQLServer + `
 data "tencentcloud_sqlserver_dbs" "foo" {
-  instance_id = "mssql-ds1xhnt9"
+  instance_id = local.sqlserver_id
 }
 `

@@ -156,8 +156,38 @@ data "tencentcloud_instance_types" "default" {
 }
 `
 
+const defaultAzVariable = `
+variable "default_az" {
+  default = "ap-guangzhou-3"
+}
+`
+
+// default VPC/Subnet datasource
+const defaultVpcSubnets = defaultAzVariable + `
+
+data "tencentcloud_vpc_subnets" "gz3" {
+  availability_zone = var.default_az
+  is_default = true
+}
+
+locals {
+  vpc_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
+}`
+
+const defaultSecurityGroupData = `
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  # local.sg_id
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+`
+
 const (
-	defaultMySQLName = "preset_mysql"
+	defaultMySQLName = "keep_preset_mysql"
 )
 
 // ref with `local.mysql_id`
@@ -179,13 +209,44 @@ locals {
 }
 `
 
+// SQLServer
+const defaultSQLServerName = "keep-preset_sqlserver"
+const defaultSQLServerDB = "keep_sqlserver_db"
+const defaultSQLServerAccount = "keep_sqlserver_account"
+
 const CommonPresetSQLServer = `
 data "tencentcloud_sqlserver_instances" "sqlserver" {
-  project_id = "` + defaultProjectId + `"
+  name = "` + defaultSQLServerName + `"
 }
 
 locals {
+  # local.sqlserver_id
   sqlserver_id = data.tencentcloud_sqlserver_instances.sqlserver.instance_list.0.id
+  sqlserver_db = "` + defaultSQLServerDB + `"
+}
+`
+
+const CommonPresetSQLServerAccount = CommonPresetSQLServer + `
+data "tencentcloud_sqlserver_accounts" "test"{
+  instance_id = local.sqlserver_id
+  name = "` + defaultSQLServerAccount + `"
+}
+
+locals {
+  # local.sqlserver_id
+  sqlserver_account = data.tencentcloud_sqlserver_accounts.test.list.0.name
+}
+`
+
+const testAccSqlserverAZ = `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "sqlserver"
+}
+
+locals {
+  # local.az, local.az1
+  az = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
+  az1 = data.tencentcloud_availability_zones_by_product.zone.zones[1].name
 }
 `
 
@@ -203,6 +264,7 @@ resource "tencentcloud_instance" "default" {
   subnet_id                  = var.subnet_id
 }
 `
+// End of SQLServer
 
 const defaultCVMName = "keep-cvm"
 const presetCVM = `
