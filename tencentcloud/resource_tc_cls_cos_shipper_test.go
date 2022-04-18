@@ -17,7 +17,7 @@ func TestAccTencentCloudClsCosShipper_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClsTopic,
+				Config: testAccClsCosShipper,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClsCosShipperExists("tencentcloud_cls_cos_shipper.shipper"),
 					resource.TestCheckResourceAttr("tencentcloud_cls_cos_shipper.shipper", "shipper_name", "tf-shipper-test"),

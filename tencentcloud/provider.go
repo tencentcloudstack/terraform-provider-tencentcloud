@@ -605,6 +605,8 @@ CLS
   Resource
 	tencentcloud_cls_logset
 	tencentcloud_cls_topic
+	tencentcloud_cls_config
+	tencentcloud_cls_config_attachment
 	tencentcloud_cls_machine_group
 	tencentcloud_cls_cos_shipper
 */
@@ -1095,6 +1097,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_private_dns_record":                      resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_cls_logset":                              resourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                               resourceTencentCloudClsTopic(),
+			"tencentcloud_cls_config":                              resourceTencentCloudClsConfig(),
+			"tencentcloud_cls_config_attachment":                   resourceTencentCloudClsConfigAttachment(),
 			"tencentcloud_cls_machine_group":                       resourceTencentCloudClsMachineGroup(),
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 		},
