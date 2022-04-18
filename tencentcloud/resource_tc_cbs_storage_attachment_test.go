@@ -87,16 +87,17 @@ func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCbsStorageAttachmentConfig = instanceCommonTestCase + `
+const testAccCbsStorageAttachmentConfig = presetCVM + `
 resource "tencentcloud_cbs_storage" "foo" {
-  availability_zone = var.availability_zone
+  availability_zone = local.cvm_az
   storage_size      = 100
   storage_type      = "CLOUD_PREMIUM"
-  storage_name      = var.instance_name
+  storage_name      = "test-cbs-attachment"
+  charge_type       = "POSTPAID_BY_HOUR"
 }
 
 resource "tencentcloud_cbs_storage_attachment" "foo" {
   storage_id  = tencentcloud_cbs_storage.foo.id
-  instance_id = tencentcloud_instance.default.id
+  instance_id = local.cvm_id
 }
 `

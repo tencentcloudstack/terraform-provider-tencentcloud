@@ -204,6 +204,18 @@ resource "tencentcloud_instance" "default" {
 }
 `
 
+const defaultCVMName = "keep-cvm"
+const presetCVM = `
+data "tencentcloud_instances" "instance" {
+  instance_name = "` + defaultCVMName + `"
+}
+
+locals {
+  cvm_id = data.tencentcloud_instances.instance.instance_list.0.instance_id
+  cvm_az = "` + defaultAZone + `"
+}
+`
+
 const mysqlInstanceCommonTestCase = defaultVpcVariable + `
 resource "tencentcloud_mysql_instance" "default" {
   mem_size = 1000

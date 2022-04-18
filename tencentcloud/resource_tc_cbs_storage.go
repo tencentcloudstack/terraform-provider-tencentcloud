@@ -386,8 +386,12 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			if e != nil {
 				return retryError(e)
 			}
-			if storage != nil && *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+
+			if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
 				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+			}
+			if *storage.DiskSize != uint64(newValue) {
+				return resource.RetryableError(fmt.Errorf("waiting for cbs size changed to %d, now %d", newValue, *storage.DiskSize))
 			}
 			return nil
 		})

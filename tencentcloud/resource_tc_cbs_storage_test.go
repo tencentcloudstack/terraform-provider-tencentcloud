@@ -4,10 +4,58 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cbs_storage
+	resource.AddTestSweepers("tencentcloud_cbs_storage", &resource.Sweeper{
+		Name: "tencentcloud_cbs_storage",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CbsService{client}
+
+			disks, err := service.DescribeDisksByFilter(ctx, nil)
+
+			if err != nil {
+				return err
+			}
+
+			for i := range disks {
+				disk := disks[i]
+				id := *disk.DiskId
+				if disk.DiskName == nil {
+					continue
+				}
+				name := *disk.DiskName
+				created, err := time.Parse("2006-01-02 15:04:05", *disk.CreateTime)
+				if err != nil {
+					created = time.Now()
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				if *disk.DiskState == CBS_STORAGE_STATUS_ATTACHED {
+					continue
+				}
+				err = service.DeleteDiskById(ctx, id)
+				if err != nil {
+					continue
+				}
+
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 	t.Parallel()
@@ -78,7 +126,7 @@ func TestAccTencentCloudCbsStorage_prepaid(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
@@ -108,7 +156,7 @@ func TestAccTencentCloudCbsStorage_upgrade(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
@@ -258,6 +306,7 @@ resource "tencentcloud_cbs_storage" "storage_upgrade" {
 	storage_name      = "tf-storage-upgrade"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
+	charge_type       = "POSTPAID_BY_HOUR"
 }
 `
 
