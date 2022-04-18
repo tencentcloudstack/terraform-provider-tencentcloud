@@ -10,7 +10,7 @@ func TestAccTencentCloudCbsSnapshotPoliciesDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCbsSnapshotPolicyDestroy,
 		Steps: []resource.TestStep{

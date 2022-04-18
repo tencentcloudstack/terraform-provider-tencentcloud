@@ -1,3 +1,16 @@
+variable "default_az" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cvm_name" {
+  default = "keep-cvm"
+}
+
+# this persist exist and barely removed
+variable "image_id" {
+  default = "img-2lr9q49h"
+}
+
 variable "vpn_gw" {
   default = "kepp-vpn-gw"
 }
