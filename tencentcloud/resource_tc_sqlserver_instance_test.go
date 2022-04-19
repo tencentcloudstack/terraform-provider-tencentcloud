@@ -145,10 +145,10 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 	return nil
 }
 
-func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
+func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -208,7 +208,6 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 }
 
 func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
@@ -239,7 +238,7 @@ func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -371,8 +370,6 @@ resource "tencentcloud_sqlserver_instance" "test" {
 const testAccSqlserverInstanceUpdate string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                      = "tf_sqlserver_instance_update"
-  availability_zone         = local.az1
-  charge_type               = "POSTPAID_BY_HOUR"
   availability_zone             = var.default_az
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = local.vpc_id

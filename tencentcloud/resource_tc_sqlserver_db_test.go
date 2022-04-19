@@ -57,7 +57,7 @@ func init() {
 func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverDBDestroy,
 		Steps: []resource.TestStep{

@@ -15,7 +15,7 @@ var testReadonlySqlserverInstanceResourceKey = testReadonlySqlserverInstanceReso
 func TestAccTencentCloudReadonlySqlserverInstanceResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckReadonlySqlserverInstanceDestroy,
 		Steps: []resource.TestStep{

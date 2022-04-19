@@ -11,7 +11,7 @@ var testDataSqlserverAccountDBAttachmentsName = "data.tencentcloud_sqlserver_acc
 func TestAccDataSourceTencentCloudSqlserverAccountDBAttachments(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{
