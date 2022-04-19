@@ -82,8 +82,10 @@ func testAccCheckCamUserPolicyAttachmentExists(n string) resource.TestCheckFunc 
 //need to add policy resource definition
 const testAccCamUserPolicyAttachment_basic = defaultCamVariables + `
 
-data "tencentcloud_cam_policies" "policy" {
-  name = var.cam_policy_basic
+resource "tencentcloud_cam_policy" "policy_basic" {
+  name        = "test-attach-user-policy"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"monitor:*\",\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
+  description = "test"
 }
 
 data "tencentcloud_cam_users" "users" {
@@ -92,6 +94,6 @@ data "tencentcloud_cam_users" "users" {
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment_basic" {
   user_name = data.tencentcloud_cam_users.users.user_list.0.user_id
-  policy_id = data.tencentcloud_cam_policies.policy.policy_list.0.policy_id
+  policy_id = tencentcloud_cam_policy.policy_basic.id
 }
 `
