@@ -24,7 +24,7 @@ func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 				Config: testAccGaapRealserverBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.2.2.2"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
@@ -53,7 +53,7 @@ func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
 				Config: testAccGaapRealserverDomain,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "domain", "www1.qq.com"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "ip"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
@@ -74,10 +74,10 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapRealserverBasic,
+				Config: testAccGaapRealserverBasic2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.2.2.3"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
@@ -105,10 +105,10 @@ func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
 		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapRealserverBasic,
+				Config: testAccGaapRealserverBasic3,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.2.2.4"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
@@ -192,28 +192,42 @@ func testAccCheckGaapRealserverExists(n string, id *string) resource.TestCheckFu
 
 const testAccGaapRealserverBasic = `
 resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
+  ip   = "1.2.2.2"
+  name = "ci-test-gaap-realserver"
+}
+`
+
+const testAccGaapRealserverBasic2 = `
+resource tencentcloud_gaap_realserver "foo" {
+  ip   = "1.2.2.3"
+  name = "ci-test-gaap-realserver"
+}
+`
+
+const testAccGaapRealserverBasic3 = `
+resource tencentcloud_gaap_realserver "foo" {
+  ip   = "1.2.2.4"
   name = "ci-test-gaap-realserver"
 }
 `
 
 const testAccGaapRealserverDomain = `
 resource tencentcloud_gaap_realserver "foo" {
-  domain = "www.qq.com"
+  domain = "www1.qq.com"
   name   = "ci-test-gaap-realserver"
 }
 `
 
 const testAccGaapRealserverNewName = `
 resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
+  ip   = "1.2.2.3"
   name = "ci-test-gaap-realserver-new"
 }
 `
 
 const testAccGaapRealserverUpdateTags = `
 resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
+  ip   = "1.2.2.4"
   name = "ci-test-gaap-realserver"
 
   tags = {

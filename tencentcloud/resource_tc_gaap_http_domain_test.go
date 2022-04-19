@@ -242,7 +242,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 		CheckDestroy: testAccCheckGaapHttpDomainDestroy(id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapHttpDomainHttpsRsIds,
+				Config: testAccGaapHttpDomainHttpsRsIds2,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
@@ -335,7 +335,7 @@ var testAccGaapHttpDomainBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = 7170
   proxy_id = "%s"
 }
 
@@ -355,7 +355,7 @@ resource tencentcloud_gaap_certificate "foo" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
-  port             = 80
+  port             = 7171
   proxy_id         = "%s"
   certificate_id   = tencentcloud_gaap_certificate.foo.id
   forward_protocol = "HTTP"
@@ -385,7 +385,7 @@ resource tencentcloud_gaap_certificate "bar" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
+  port                  = 7172
   proxy_id              = "%s"
   certificate_id        = tencentcloud_gaap_certificate.foo.id
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
@@ -446,7 +446,7 @@ resource tencentcloud_gaap_certificate "gaap" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
+  port                  = 7172
   proxy_id              = "%s"
   certificate_id        = tencentcloud_gaap_certificate.foo.id
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
@@ -503,7 +503,7 @@ resource tencentcloud_gaap_certificate "client1" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
-  port                        = 80
+  port                        = 7173
   proxy_id                    = "%s"
   certificate_id              = tencentcloud_gaap_certificate.foo.id
   client_certificate_ids      = [tencentcloud_gaap_certificate.bar.id]
@@ -550,7 +550,7 @@ resource tencentcloud_gaap_certificate "client3" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
-  port                        = 80
+  port                        = 7173
   proxy_id                    = "%s"
   certificate_id              = tencentcloud_gaap_certificate.foo.id
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
@@ -592,7 +592,7 @@ resource tencentcloud_gaap_certificate "client1" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
-  port                        = 80
+  port                        = 7174
   proxy_id                    = "%s"
   certificate_id              = tencentcloud_gaap_certificate.foo.id
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
@@ -633,7 +633,7 @@ resource tencentcloud_gaap_certificate "client1" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
-  port                        = 80
+  port                        = 7174
   proxy_id                    = "%s"
   certificate_id              = tencentcloud_gaap_certificate.foo.id
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
@@ -674,7 +674,7 @@ resource tencentcloud_gaap_certificate "realserver1" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
+  port                  = 7176
   proxy_id              = "%s"
   certificate_id        = tencentcloud_gaap_certificate.foo.id
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
@@ -688,6 +688,50 @@ resource tencentcloud_gaap_http_domain "foo" {
 
   realserver_auth               = true
   realserver_certificate_id     = tencentcloud_gaap_certificate.realserver1.id
+  realserver_certificate_domain = "qq.com"
+}
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	defaultGaapProxyId,
+)
+
+var testAccGaapHttpDomainHttpsRsIds2 = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "realserver1" {
+  type    = "REALSERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol              = "HTTPS"
+  name                  = "ci-test-gaap-l7-listener"
+  port                  = 7177
+  proxy_id              = "%s"
+  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  client_certificate_id = tencentcloud_gaap_certificate.bar.id
+  forward_protocol      = "HTTPS"
+  auth_type             = 1
+}
+
+resource tencentcloud_gaap_http_domain "foo" {
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  domain      = "www.qq.com"
+
+  realserver_auth               = true
+  realserver_certificate_ids    = [tencentcloud_gaap_certificate.realserver1.id]
   realserver_certificate_domain = "qq.com"
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -718,7 +762,7 @@ resource tencentcloud_gaap_certificate "realserver1" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
+  port                  = 7176
   proxy_id              = "%s"
   certificate_id        = tencentcloud_gaap_certificate.foo.id
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
@@ -768,7 +812,7 @@ resource tencentcloud_gaap_certificate "realserver2" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
+  port                  = 7177
   proxy_id              = "%s"
   certificate_id        = tencentcloud_gaap_certificate.foo.id
   client_certificate_id = tencentcloud_gaap_certificate.bar.id

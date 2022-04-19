@@ -11,7 +11,6 @@ import (
 )
 
 func TestAccTencentCloudGaapSecurityPolicy_basic(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -37,7 +36,6 @@ func TestAccTencentCloudGaapSecurityPolicy_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityPolicy_disable(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -65,7 +63,6 @@ func TestAccTencentCloudGaapSecurityPolicy_disable(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityPolicy_drop(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -136,7 +133,7 @@ resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "ACCEPT"
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId2)
 
 var testAccGaapSecurityPolicyDisable = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -144,11 +141,11 @@ resource tencentcloud_gaap_security_policy "foo" {
   action   = "ACCEPT"
   enable   = false
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId2)
 
 var testAccGaapSecurityPolicyDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "DROP"
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId2)
