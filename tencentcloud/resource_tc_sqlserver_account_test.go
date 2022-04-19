@@ -64,7 +64,7 @@ func init() {
 func TestAccTencentCloudSqlserverAccountResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverAccountDestroy,
 		Steps: []resource.TestStep{

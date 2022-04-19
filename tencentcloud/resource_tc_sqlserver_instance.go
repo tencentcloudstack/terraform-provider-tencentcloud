@@ -291,8 +291,9 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		request.AutoVoucher = helper.IntInt64(v)
 	}
 
-	if v, ok := d.Get("voucher_ids").([]interface{}); ok {
-		request.VoucherIds = helper.InterfacesStringsPoint(v)
+	if v, ok := d.GetOk("voucher_ids"); ok {
+		voucherIds := v.(*schema.Set).List()
+		request.VoucherIds = helper.InterfacesStringsPoint(voucherIds)
 	}
 
 	if projectId != 0 {
@@ -383,29 +384,11 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		memory := d.Get("memory").(int)
 		storage := d.Get("storage").(int)
 		autoVoucher := d.Get("auto_voucher").(int)
-		voucherIds := d.Get("voucher_ids").([]interface{})
+		voucherIds := d.Get("voucher_ids").(*schema.Set).List()
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds))
 			if inErr != nil {
 				return retryError(inErr)
-			}
-			return nil
-		})
-
-		if outErr != nil {
-			return outErr
-		}
-
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			instance, _, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
-
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			//specAsExpected := int(*instance.Memory) != memory && int(*instance.Storage) != storage
-
-			if IsContains(SQLSERVER_STATUS_WAITING, *instance.Status) {
-				return resource.RetryableError(fmt.Errorf("instance status code is: %d, waiting for upgrade complete", *instance.Status))
 			}
 			return nil
 		})

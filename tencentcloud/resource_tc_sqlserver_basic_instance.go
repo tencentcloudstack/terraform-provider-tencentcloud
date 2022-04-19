@@ -453,24 +453,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			instance, _, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
-
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			//specAsExpected := int(*instance.Memory) != memory && int(*instance.Storage) != storage
-
-			if IsContains(SQLSERVER_STATUS_WAITING, *instance.Status) {
-				return resource.RetryableError(fmt.Errorf("instance status code is: %d, waiting for upgrade complete", *instance.Status))
-			}
-			return nil
-		})
-
-		if outErr != nil {
-			return outErr
-		}
-
 		d.SetPartial("memory")
 		d.SetPartial("storage")
 		d.SetPartial("cpu")
