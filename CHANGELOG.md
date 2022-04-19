@@ -1,9 +1,16 @@
-## 1.69.1 (April 19, 2022)
+## 1.70.1 (April 19, 2022)
 
 BUGFIXES:
 
 * resource `tencentcloud_ckafka_instance` plan change
 * resource `tencentcloud_mysql_instance`  ignore lowercase when 8.0
+
+## 1.70.0 (April 19, 2022)
+
+BUGFIXES:
+
+* New resource `tencentcloud_cls_config`
+* New resource `tencentcloud_cls_config_attachment`
 
 ## 1.69.0 (April 19, 2022)
 
