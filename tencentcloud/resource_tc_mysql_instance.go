@@ -624,11 +624,17 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	// Initialize mysql instance
 	var (
+		version   = d.Get("engine_version").(string)
 		password  = d.Get("root_password").(string)
 		charset   = d.Get("parameters.character_set_server").(string)
 		lowercase = d.Get("parameters.lower_case_table_names").(string)
 		vPort     int
 	)
+
+	// 8.0 does not support lower_case_table_names modified, skip this params
+	if version == "8.0" {
+		lowercase = ""
+	}
 
 	port, portOk := d.GetOk("intranet_port")
 

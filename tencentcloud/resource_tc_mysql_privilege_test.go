@@ -186,7 +186,7 @@ func testAccMysqlPrivilege() string {
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = local.mysql_id
-  name        = "test11"
+  name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
@@ -220,7 +220,7 @@ func testAccMysqlPrivilegeUpdate() string {
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = local.mysql_id
-  name        = "test11"
+  name        = "test11priv"
   host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
