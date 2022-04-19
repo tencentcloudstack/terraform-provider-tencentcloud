@@ -17,16 +17,24 @@ Use this resource to create ckafka instance.
 
 ```hcl
 resource "tencentcloud_ckafka_instance" "foo" {
-  instance_name      = "demo-hello"
-  zone_id            = 100006
-  period             = 1
-  vpc_id             = "vpc-boi1ah65"
-  subnet_id          = "subnet-7ros461e"
-  msg_retention_time = 1300
-  renew_flag         = 0
-  kafka_version      = "1.1.1"
+  band_width         = 40
   disk_size          = 500
   disk_type          = "CLOUD_BASIC"
+  period             = 1
+  instance_name      = "ckafka-instance-tf-test"
+  kafka_version      = "1.1.1"
+  msg_retention_time = 1300
+  multi_zone_flag    = true
+  partition          = 800
+  public_network     = 3
+  renew_flag         = 0
+  subnet_id          = "subnet-4vwihrzk"
+  vpc_id             = "vpc-82p1t1nv"
+  zone_id            = 100006
+  zone_ids = [
+    100006,
+    100007,
+  ]
 
   config {
     auto_create_topic_enable   = true
@@ -35,7 +43,10 @@ resource "tencentcloud_ckafka_instance" "foo" {
   }
 
   dynamic_retention_config {
-    enable = 1
+    bottom_retention        = 0
+    disk_quota_percentage   = 0
+    enable                  = 1
+    step_forward_percentage = 0
   }
 }
 ```
@@ -45,19 +56,19 @@ resource "tencentcloud_ckafka_instance" "foo" {
 The following arguments are supported:
 
 * `instance_name` - (Required) Instance name.
-* `period` - (Required, ForceNew) Prepaid purchase time, such as 1, is one month.
 * `subnet_id` - (Required, ForceNew) Subnet id.
 * `vpc_id` - (Required, ForceNew) Vpc id.
 * `zone_id` - (Required, ForceNew) Available zone id.
-* `band_width` - (Optional, ForceNew) Instance bandwidth in Mbps.
+* `band_width` - (Optional, ForceNew) Instance bandwidth in MBps. interval:40-1200.
 * `config` - (Optional) Instance configuration.
-* `disk_size` - (Optional, ForceNew) Disk Size.
+* `disk_size` - (Optional, ForceNew) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, ForceNew) Type of disk.
 * `dynamic_retention_config` - (Optional) Dynamic message retention policy configuration.
 * `kafka_version` - (Optional, ForceNew) Kafka version (0.10.2/1.1.1/2.4.1).
 * `msg_retention_time` - (Optional) The maximum retention time of instance logs, in minutes. the default is 10080 (7 days), the maximum is 30 days, and the default 0 is not filled, which means that the log retention time recovery policy is not enabled.
 * `multi_zone_flag` - (Optional, ForceNew) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
-* `partition` - (Optional, ForceNew) Partition size, the professional version does not need set.
+* `partition` - (Optional, ForceNew) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
+* `period` - (Optional, ForceNew) Prepaid purchase time, such as 1, is one month.
 * `public_network` - (Optional) Timestamp.
 * `rebalance_time` - (Optional) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, ForceNew) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
