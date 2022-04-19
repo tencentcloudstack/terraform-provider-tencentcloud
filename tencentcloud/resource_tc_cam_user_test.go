@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -32,6 +33,9 @@ func init() {
 
 			for _, v := range users {
 				if persistResource.MatchString(*v.Name) {
+					continue
+				}
+				if !strings.Contains(*v.Name, "test") {
 					continue
 				}
 				request := cam.NewDeleteUserRequest()

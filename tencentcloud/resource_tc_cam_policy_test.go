@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -23,7 +24,7 @@ func init() {
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := CamService{client: client}
 
-			policies, err := service.DescribePoliciesByFilter(ctx, nil)
+			policies, err := service.DescribePoliciesByFilter(ctx, map[string]interface{}{"name": "cam-policy-test"})
 			if err != nil {
 				return nil
 			}
@@ -34,7 +35,7 @@ func init() {
 
 			for _, v := range policies {
 				name := *v.PolicyName
-				if *v.Type == presetPolicy || persistResource.MatchString(name) {
+				if *v.Type == presetPolicy || !strings.Contains(name, "cam-policy-test") {
 					continue
 				}
 				request.PolicyId = append(request.PolicyId, v.PolicyId)
