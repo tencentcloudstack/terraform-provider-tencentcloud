@@ -65,7 +65,17 @@ const (
 	defaultDayuBgpIp  = "bgpip-00000294"
 	defaultDayuNet    = "net-0000007e"
 
-	defaultGaapProxyId = "link-4yb9g6tb"
+	defaultGaapProxyId             = "link-ljb08m2l"
+	defaultGaapProxyId2            = "link-8lpyo88p"
+	defaultGaapSecurityPolicyId    = "sp-05t5q92x"
+	defaultGaapRealserverDomainId1 = "rs-qs0h6wxp"
+	defaultGaapRealserverDomain1   = "github.com"
+	defaultGaapRealserverDomainId2 = "rs-qcygnwpd"
+	defaultGaapRealserverDomain2   = "www.github.com"
+	defaultGaapRealserverIpId1     = "rs-24e1ol23"
+	defaultGaapRealserverIp1       = "119.29.29.35"
+	defaultGaapRealserverIpId2     = "rs-70qzt26p"
+	defaultGaapRealserverIp2       = "1.1.1.5"
 
 	defaultSecurityGroup  = "sg-ijato2x1"
 	defaultSecurityGroup2 = "sg-51rgzop1"

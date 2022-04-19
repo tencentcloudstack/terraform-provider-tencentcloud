@@ -222,7 +222,7 @@ const testAccGaapDomainErrorPageListenerAndDomain = `
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = "%s"
   proxy_id = "%s"
 }
 
@@ -238,7 +238,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
   error_codes = [404, 503]
   body        = "bad request"
 }
-`, defaultGaapProxyId)
+`, "81", defaultGaapProxyId)
 
 var testAccGaapDomainErrorPageSingleErrorCode = fmt.Sprintf(testAccGaapDomainErrorPageListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -247,7 +247,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
   error_codes = [400]
   body        = "bad request"
 }
-`, defaultGaapProxyId)
+`, "82", defaultGaapProxyId)
 
 var testAccGaapDomainErrorPageNewErrorCode = fmt.Sprintf(testAccGaapDomainErrorPageListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -257,7 +257,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
   body           = "bad request"
   new_error_code = 501
 }
-`, defaultGaapProxyId)
+`, "83", defaultGaapProxyId)
 
 var testAccGaapDomainErrorPageClearHeaders = fmt.Sprintf(testAccGaapDomainErrorPageListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -267,7 +267,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
   body           = "bad request"
   clear_headers  = ["Content-Length", "X-TEST"]
 }
-`, defaultGaapProxyId)
+`, "84", defaultGaapProxyId)
 
 var testAccGaapDomainErrorPageSetHeaders = fmt.Sprintf(testAccGaapDomainErrorPageListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -280,7 +280,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
     "X-TEST" = "test"
   }
 }
-`, defaultGaapProxyId)
+`, "85", defaultGaapProxyId)
 
 var testAccGaapDomainErrorPageFull = fmt.Sprintf(testAccGaapDomainErrorPageListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -295,4 +295,4 @@ resource tencentcloud_gaap_domain_error_page "foo" {
     "X-TEST" = "test"
   }
 }
-`, defaultGaapProxyId)
+`, "86", defaultGaapProxyId)

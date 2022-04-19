@@ -26,7 +26,7 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9090"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
@@ -62,7 +62,7 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9091"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "DOMAIN"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
@@ -87,12 +87,12 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapLayer4ListenerBasic,
+				Config: testAccGaapLayer4ListenerUpdateBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9092"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "rr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
@@ -147,7 +147,7 @@ func TestAccTencentCloudGaapLayer4Listener_udp_basic(t *testing.T) {
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9093"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "rr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
@@ -184,7 +184,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9095"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "rr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "DOMAIN"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
@@ -208,12 +208,12 @@ func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGaapLayer4ListenerUdp,
+				Config: testAccGaapLayer4ListenerUdpUpdateBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "9094"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "rr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
@@ -325,86 +325,82 @@ func testAccCheckGaapLayer4ListenerDestroy(id *string, protocol string) resource
 }
 
 var testAccGaapLayer4ListenerBasic = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
 
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
-  port            = 80
+  port            = 9090
   realserver_type = "IP"
   proxy_id        = "%s"
   health_check    = true
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
 
 var testAccGaapLayer4ListenerTcpDomain = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  domain = "qq.com"
-  name   = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  domain = "www.qq.com"
-  name   = "ci-test-gaap-realserver2"
-}
 
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
-  port            = 80
+  port            = 9091
   realserver_type = "DOMAIN"
   proxy_id        = "%s"
   health_check    = true
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.domain
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.domain
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverDomainId1, defaultGaapRealserverDomain1, defaultGaapRealserverDomainId2, defaultGaapRealserverDomain2)
 
-var testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
+var testAccGaapLayer4ListenerUpdateBasic = fmt.Sprintf(`
 
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 9092
+  realserver_type = "IP"
+  proxy_id        = "%s"
+  health_check    = true
+
+  realserver_bind_set {
+    id   = "%s"
+    ip   = "%s"
+    port = 80
+  }
+
+  realserver_bind_set {
+    id     = "%s"
+    ip     = "%s"
+    port   = 80
+  }
+}
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
+
+var testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = fmt.Sprintf(`
+resource tencentcloud_gaap_layer4_listener "foo" {
+  protocol        = "TCP"
   name            = "ci-test-gaap-4-listener-new"
-  port            = 80
+  port            = 9092
   scheduler       = "wrr"
   realserver_type = "IP"
   proxy_id        = "%s"
@@ -413,173 +409,142 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   connect_timeout = 10
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
 
 var testAccGaapLayer4ListenerUpdateNoHealthCheck = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
-
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener-new"
-  port            = 80
+  port            = 9092
   scheduler       = "wrr"
   realserver_type = "IP"
   proxy_id        = "%s"
   health_check    = false
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
-
-  realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
-    port   = 80
-  }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1)
 
 var testAccGaapLayer4ListenerTcpUpdateRealserverSet = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
 
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
-  port            = 80
+  port            = 9092
   scheduler       = "wrr"
   realserver_type = "IP"
   proxy_id        = "%s"
   health_check    = false
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1)
 
 var testAccGaapLayer4ListenerUdp = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
-
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "UDP"
   name            = "ci-test-gaap-4-udp-listener"
-  port            = 80
+  port            = 9093
   realserver_type = "IP"
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
 
 var testAccGaapLayer4ListenerUdpDomain = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  domain = "www.qq.com"
-  name   = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  domain = "qq.com"
-  name   = "ci-test-gaap-realserver2"
-}
 
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "UDP"
   name            = "ci-test-gaap-4-udp-listener"
-  port            = 80
+  port            = 9095
   realserver_type = "DOMAIN"
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.domain
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.domain
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverDomainId1, defaultGaapRealserverDomain1, defaultGaapRealserverDomainId2, defaultGaapRealserverDomain2)
 
-var testAccGaapLayer4ListenerUdpUpdate = fmt.Sprintf(`
-resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
-}
-
-resource tencentcloud_gaap_realserver "bar" {
-  ip   = "119.29.29.29"
-  name = "ci-test-gaap-realserver2"
-}
-
+var testAccGaapLayer4ListenerUdpUpdateBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "UDP"
-  name            = "ci-test-gaap-4-udpListener-new"
-  port            = 80
+  name            = "ci-test-gaap-4-udp-listener"
+  port            = 9094
   realserver_type = "IP"
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = tencentcloud_gaap_realserver.foo.id
-    ip   = tencentcloud_gaap_realserver.foo.ip
+    id   = "%s"
+    ip   = "%s"
     port = 80
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
+    id     = "%s"
+    ip     = "%s"
     port   = 80
   }
 }
-`, defaultGaapProxyId)
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
+
+var testAccGaapLayer4ListenerUdpUpdate = fmt.Sprintf(`
+
+resource tencentcloud_gaap_layer4_listener "foo" {
+  protocol        = "UDP"
+  name            = "ci-test-gaap-4-udpListener-new"
+  port            = 9094
+  realserver_type = "IP"
+  proxy_id        = "%s"
+
+  realserver_bind_set {
+    id   = "%s"
+    ip   = "%s"
+    port = 80
+  }
+
+  realserver_bind_set {
+    id     = "%s"
+    ip     = "%s"
+    port   = 80
+  }
+}
+`, defaultGaapProxyId, defaultGaapRealserverIpId1, defaultGaapRealserverIp1, defaultGaapRealserverIpId2, defaultGaapRealserverIp2)
