@@ -1,3 +1,10 @@
+## 1.69.0 (April 19, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_cls_config`
+* New resource `tencentcloud_cls_config_attachment`
+
 ## 1.68.0 (April 12, 2022)
 
 FEATURES:
