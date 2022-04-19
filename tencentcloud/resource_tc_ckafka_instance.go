@@ -7,17 +7,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_instance" "foo" {
-  instance_name      = "demo-hello"
-  zone_id            = 100006
-  period             = 1
-  vpc_id             = "vpc-boi1ah65"
-  subnet_id          = "subnet-7ros461e"
-  msg_retention_time = 1300
-  renew_flag         = 0
-  kafka_version      = "1.1.1"
+  band_width         = 40
   disk_size          = 500
   disk_type          = "CLOUD_BASIC"
-
+  period             = 1
+  instance_name      = "ckafka-instance-tf-test"
+  kafka_version      = "1.1.1"
+  msg_retention_time = 1300
+  multi_zone_flag    = true
+  partition          = 800
+  public_network     = 3
+  renew_flag         = 0
+  subnet_id          = "subnet-4vwihrzk"
+  vpc_id             = "vpc-82p1t1nv"
+  zone_id            = 100006
+  zone_ids           = [
+    100006,
+    100007,
+  ]
 
   config {
     auto_create_topic_enable   = true
@@ -26,7 +33,10 @@ resource "tencentcloud_ckafka_instance" "foo" {
   }
 
   dynamic_retention_config {
-    enable = 1
+    bottom_retention        = 0
+    disk_quota_percentage   = 0
+    enable                  = 1
+    step_forward_percentage = 0
   }
 }
 ```
@@ -88,7 +98,7 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			},
 			"period": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Description: "Prepaid purchase time, such as 1, is one month.",
 			},
@@ -127,26 +137,29 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Kafka version (0.10.2/1.1.1/2.4.1).",
 			},
-			"disk_size": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				ForceNew:    true,
-				Description: "Disk Size.",
-			},
 			"band_width": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				ForceNew:    true,
-				Description: "Instance bandwidth in Mbps.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: validateIntegerInRange(40, 1200),
+				Description:  "Instance bandwidth in MBps. interval:40-1200.",
+			},
+			"disk_size": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+				Description: "Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
+					"If it is not within the interval, the plan will cause a change when first created.",
 			},
 			"partition": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				ForceNew:    true,
-				Description: "Partition size, the professional version does not need set.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+				Description: "Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
+					"If it is not within the interval, the plan will cause a change when first created.",
 			},
 			"multi_zone_flag": {
 				Type:        schema.TypeBool,
@@ -484,16 +497,17 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
 	// calculate period
-	createTime := *info.CreateTime
-	expireTime := *info.ExpireTime
-	period := (expireTime - createTime) / (3600 * 24 * 31)
-	_ = d.Set("period", &period)
+	//createTime := *info.CreateTime
+	//expireTime := *info.ExpireTime
+	//period := (expireTime - createTime) / (3600 * 24 * 31)
+	//_ = d.Set("period", &period)
 	_ = d.Set("vpc_id", info.VpcId)
 	_ = d.Set("subnet_id", info.SubnetId)
 	_ = d.Set("renew_flag", info.RenewFlag)
 	_ = d.Set("kafka_version", info.Version)
 	_ = d.Set("disk_size", info.DiskSize)
-	_ = d.Set("band_width", info.Bandwidth)
+	bandWidth := info.Bandwidth
+	_ = d.Set("band_width", *bandWidth/8)
 	_ = d.Set("partition", info.MaxPartitionNumber)
 
 	if len(info.ZoneIds) > 0 {
