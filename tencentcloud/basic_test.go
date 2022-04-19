@@ -264,6 +264,7 @@ resource "tencentcloud_instance" "default" {
   subnet_id                  = var.subnet_id
 }
 `
+
 // End of SQLServer
 
 const defaultCVMName = "keep-cvm"
