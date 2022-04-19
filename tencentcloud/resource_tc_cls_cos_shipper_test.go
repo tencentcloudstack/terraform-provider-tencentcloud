@@ -61,7 +61,7 @@ func testAccCheckClsCosShipperExists(n string) resource.TestCheckFunc {
 
 const testAccClsCosShipper = `
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-topic-test"
+  logset_name = "tf-shipper-test"
   tags        = {
     "test" = "test"
   }
@@ -77,7 +77,7 @@ resource "tencentcloud_cls_topic" "topic" {
   tags                 = {
     "test" = "test"
   }
-  topic_name           = "tf-topic-test"
+  topic_name           = "tf-shipper-test"
 }
 
 resource "tencentcloud_cls_cos_shipper" "shipper" {
