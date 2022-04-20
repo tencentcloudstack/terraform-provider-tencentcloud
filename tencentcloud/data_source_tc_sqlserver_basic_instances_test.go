@@ -11,7 +11,7 @@ var testDataSqlserverBasicInstancesName = "data.tencentcloud_sqlserver_basic_ins
 func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverBasicInstanceDestroy,
 		Steps: []resource.TestStep{

@@ -148,7 +148,7 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -238,7 +238,7 @@ func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverInstanceDestroy,
 		Steps: []resource.TestStep{
