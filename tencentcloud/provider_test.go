@@ -74,6 +74,14 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_COMMON:
+		secretId := os.Getenv(PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", PROVIDER_SECRET_ID, PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
 	default:
 		if v := os.Getenv(PROVIDER_SECRET_ID); v == "" {
 			t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_SECRET_ID)
