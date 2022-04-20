@@ -551,8 +551,7 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 	enablePublic := false
 	if d.HasChange("internal_lb") {
 		updateAttrs = append(updateAttrs, "internal_lb")
-		if v, ok := d.GetOk("internal_lb"); ok {
-			lb := v.([]map[string]interface{})[0]
+		if lb, ok := helper.InterfacesHeadMap(d, "internal_lb"); ok {
 			enabled := lb["enabled"].(bool)
 			request.InternalLB = &tke.ClusterInternalLB{
 				Enabled: &enabled,
@@ -570,8 +569,7 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("public_lb") {
 		updateAttrs = append(updateAttrs, "public_lb")
-		if v, ok := d.GetOk("public_lb"); ok {
-			lb := v.([]map[string]interface{})[0]
+		if lb, ok := helper.InterfacesHeadMap(d, "public_lb"); ok {
 			enabled := lb["enabled"].(bool)
 			request.PublicLB = &tke.ClusterPublicLB{
 				Enabled: &enabled,
