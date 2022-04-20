@@ -25,8 +25,8 @@ const (
 	PREPAY_PROVIDER_SECRET_KEY      = "TENCENTCLOUD_SECRET_KEY_PREPAY"
 	PRIVATE_PROVIDER_SECRET_ID      = "TENCENTCLOUD_SECRET_ID_PRIVATE"
 	PRIVATE_PROVIDER_SECRET_KEY     = "TENCENTCLOUD_SECRET_KEY_PRIVATE"
-	LOCK_PROVIDER_SECRET_ID         = "TENCENTCLOUD_SECRET_ID_LOCK"
-	LOCK_PROVIDER_SECRET_KEY        = "TENCENTCLOUD_SECRET_KEY_LOCK"
+	COMMON_PROVIDER_SECRET_ID       = "TENCENTCLOUD_SECRET_ID_COMMON"
+	COMMON_PROVIDER_SECRET_KEY      = "TENCENTCLOUD_SECRET_KEY_COMMON"
 )
 
 func init() {
@@ -57,14 +57,12 @@ func testAccPreCheck(t *testing.T) {
 		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
 		os.Setenv(PROVIDER_REGION, defaultRegion)
 	}
-	if v := os.Getenv(LOCK_PROVIDER_SECRET_ID); v == "" {
-		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
-		secretId := os.Getenv(LOCK_PROVIDER_SECRET_ID)
+	if v := os.Getenv(COMMON_PROVIDER_SECRET_ID); v == "" {
+		secretId := os.Getenv(COMMON_PROVIDER_SECRET_ID)
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 	}
-	if v := os.Getenv(LOCK_PROVIDER_SECRET_ID); v == "" {
-		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
-		secretKey := os.Getenv(LOCK_PROVIDER_SECRET_KEY)
+	if v := os.Getenv(COMMON_PROVIDER_SECRET_KEY); v == "" {
+		secretKey := os.Getenv(COMMON_PROVIDER_SECRET_KEY)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
 	}
 }
