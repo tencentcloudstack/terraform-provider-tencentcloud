@@ -57,11 +57,11 @@ func testAccPreCheck(t *testing.T) {
 		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
 		os.Setenv(PROVIDER_REGION, defaultRegion)
 	}
-	if v := os.Getenv(COMMON_PROVIDER_SECRET_ID); v == "" {
+	if v := os.Getenv(COMMON_PROVIDER_SECRET_ID); v != "" {
 		secretId := os.Getenv(COMMON_PROVIDER_SECRET_ID)
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 	}
-	if v := os.Getenv(COMMON_PROVIDER_SECRET_KEY); v == "" {
+	if v := os.Getenv(COMMON_PROVIDER_SECRET_KEY); v != "" {
 		secretKey := os.Getenv(COMMON_PROVIDER_SECRET_KEY)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
 	}

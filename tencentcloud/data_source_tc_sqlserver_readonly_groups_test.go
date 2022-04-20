@@ -11,7 +11,7 @@ var testDataSqlserverReadonlyGroupsName = "data.tencentcloud_sqlserver_readonly_
 func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{

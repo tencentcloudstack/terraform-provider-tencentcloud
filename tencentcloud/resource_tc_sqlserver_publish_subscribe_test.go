@@ -13,7 +13,7 @@ import (
 func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverPublishSubscribeDestroy,
 		Steps: []resource.TestStep{

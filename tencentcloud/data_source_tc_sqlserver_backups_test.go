@@ -15,7 +15,7 @@ var now = time.Now().Format("2006-01-02 15:04:05")
 func TestAccDataSourceTencentCloudSqlserverBackups(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{
