@@ -125,7 +125,7 @@ resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   maintenance_week_set      = [1,2,3]
   maintenance_start_time    = "09:00"
   maintenance_time_span     = 3
-  security_groups           = [tencentcloud_security_group.foo.name]
+  security_groups           = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
@@ -158,7 +158,7 @@ resource "tencentcloud_sqlserver_instance" "publish_instance" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = [tencentcloud_security_group.foo.name]
+  security_groups               = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
@@ -173,7 +173,7 @@ resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = [tencentcloud_security_group.foo.name]
+  security_groups               = [local.sg_id]
 }
 
 resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
