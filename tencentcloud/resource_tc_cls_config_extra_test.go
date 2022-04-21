@@ -25,7 +25,7 @@ func TestAccTencentCloudClsConfigExtra_basic(t *testing.T) {
 
 const testAccClsConfigExtra = `
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-config-test"
+  logset_name = "tf-config-extra-test"
   tags        = {
     "test" = "test"
   }
@@ -41,11 +41,11 @@ resource "tencentcloud_cls_topic" "topic" {
   tags                 = {
     "test" = "test"
   }
-  topic_name           = "tf-config-test"
+  topic_name           = "tf-config-extra-test"
 }
 
 resource "tencentcloud_cls_machine_group" "group" {
-  group_name        = "tf-basic-group"
+  group_name        = "tf-config-extra-test"
   service_logging   = true
   auto_update       = true
   update_end_time   = "19:05:00"
