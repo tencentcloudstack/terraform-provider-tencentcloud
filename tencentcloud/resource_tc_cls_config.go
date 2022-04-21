@@ -207,7 +207,7 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		}
 		extractRule := cls.ExtractRuleInfo{}
 		dMap := v.([]interface{})[0].(map[string]interface{})
-		if v, ok := dMap["format"]; ok {
+		if v, ok := dMap["time_key"]; ok {
 			extractRule.TimeKey = helper.String(v.(string))
 		}
 		if v, ok := dMap["time_format"]; ok {
@@ -217,10 +217,10 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 			extractRule.Delimiter = helper.String(v.(string))
 		}
 		if v, ok := dMap["log_regex"]; ok {
-			extractRule.Delimiter = helper.String(v.(string))
+			extractRule.LogRegex = helper.String(v.(string))
 		}
 		if v, ok := dMap["begin_regex"]; ok {
-			extractRule.Delimiter = helper.String(v.(string))
+			extractRule.BeginRegex = helper.String(v.(string))
 		}
 		if v, ok := dMap["keys"]; ok {
 			keys := v.(*schema.Set).List()
@@ -287,7 +287,7 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls logset failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cls config extra failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -335,7 +335,7 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			}
 			extractRule := cls.ExtractRuleInfo{}
 			dMap := v.([]interface{})[0].(map[string]interface{})
-			if v, ok := dMap["format"]; ok {
+			if v, ok := dMap["time_key"]; ok {
 				extractRule.TimeKey = helper.String(v.(string))
 			}
 			if v, ok := dMap["time_format"]; ok {
@@ -345,10 +345,10 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 				extractRule.Delimiter = helper.String(v.(string))
 			}
 			if v, ok := dMap["log_regex"]; ok {
-				extractRule.Delimiter = helper.String(v.(string))
+				extractRule.LogRegex = helper.String(v.(string))
 			}
 			if v, ok := dMap["begin_regex"]; ok {
-				extractRule.Delimiter = helper.String(v.(string))
+				extractRule.BeginRegex = helper.String(v.(string))
 			}
 			if v, ok := dMap["keys"]; ok {
 				keys := v.(*schema.Set).List()

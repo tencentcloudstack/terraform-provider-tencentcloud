@@ -573,3 +573,29 @@ func (me *ClsService) DeleteClsConfig(ctx context.Context, id string) (errRet er
 
 	return
 }
+
+// cls config extra
+func (me *ClsService) DeleteClsConfigExtra(ctx context.Context, id string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteConfigExtraRequest()
+	request.ConfigExtraId = &id
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClsClient().DeleteConfigExtra(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
