@@ -45,7 +45,7 @@ func TestAccDataSourceTencentCloudGaapSecurityRules_multi(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.name", "ci-test-gaap-s-rule"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.port", "8061"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.protocol", "TCP"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.action", "ACCEPT"),
 				),
@@ -97,7 +97,7 @@ func TestAccDataSourceTencentCloudGaapSecurityRules_multi(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.cidr_ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.port", "rules.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.port", "rules.0.port", "8065"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.protocol"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.action"),
 				),
@@ -120,147 +120,115 @@ func TestAccDataSourceTencentCloudGaapSecurityRules_multi(t *testing.T) {
 }
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesBasic = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
 
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8060"
 }
 
 data tencentcloud_gaap_security_rules "foo" {
   policy_id = tencentcloud_gaap_security_rule.foo.policy_id
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesRuleId = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
-
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8061"
 }
 
 data tencentcloud_gaap_security_rules "ruleId" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   rule_id   = tencentcloud_gaap_security_rule.foo.id
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesAction = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
 
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8062"
 }
 
 data tencentcloud_gaap_security_rules "action" {
-  policy_id = tencentcloud_gaap_security_rule.foo.policy_id
+  policy_id = "%s"
   action    = "ACCEPT"
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesCidrIp = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
-
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8063"
 }
 
 data tencentcloud_gaap_security_rules "cidrIp" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   cidr_ip   = tencentcloud_gaap_security_rule.foo.cidr_ip
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesName = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
 
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8064"
 }
 
 data tencentcloud_gaap_security_rules "name" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = tencentcloud_gaap_security_rule.foo.name
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesPort = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
-
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8065"
 }
 
 data tencentcloud_gaap_security_rules "port" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   port      = tencentcloud_gaap_security_rule.foo.port
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesProtocol = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
-
 resource tencentcloud_gaap_security_rule "foo" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8066"
 }
 
 data tencentcloud_gaap_security_rules "protocol" {
-  policy_id = tencentcloud_gaap_security_policy.foo.id
+  policy_id = "%s"
   protocol  = tencentcloud_gaap_security_rule.foo.protocol
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId, defaultGaapSecurityPolicyId)

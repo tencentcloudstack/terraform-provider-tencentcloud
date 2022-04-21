@@ -24,26 +24,26 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 			{
 				Config: testAccGaapProxyBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Beijing"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
-					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
+					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo-basic", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "name", "ci-test-gaap-proxy"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "bandwidth", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "concurrent", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "access_region", "Guangzhou"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "realserver_region", "Beijing"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo-basic", "enable", "true"),
+					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo-basic", "tags"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "scalable"),
+					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo-basic", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo-basic", "forward_ip"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_gaap_proxy.foo",
+				ResourceName:      "tencentcloud_gaap_proxy.foo-basic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -180,7 +180,7 @@ func testAccCheckGaapProxyExists(n string, id *string) resource.TestCheckFunc {
 }
 
 const testAccGaapProxyBasic = `
-resource tencentcloud_gaap_proxy "foo" {
+resource tencentcloud_gaap_proxy "foo-basic" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2

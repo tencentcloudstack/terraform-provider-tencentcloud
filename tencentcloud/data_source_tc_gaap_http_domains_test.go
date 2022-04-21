@@ -36,7 +36,7 @@ var testAccGaapHttpDomainsBasic = fmt.Sprintf(`
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = 6020
   proxy_id = "%s"
 }
 

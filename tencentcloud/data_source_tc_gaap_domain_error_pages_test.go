@@ -62,21 +62,21 @@ func TestAccDataSourceTencentCloudGaapDomainErrorPages_Ids(t *testing.T) {
 }
 
 const testAccGaapDomainErrorPagesListenerAndDomain = `
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-domain-error-page" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = %d
   proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
-  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id = tencentcloud_gaap_layer7_listener.foo-domain-error-page.id
   domain      = "www.qq.com"
 }`
 
 var testAccGaapDomainErrorPagesBasic = fmt.Sprintf(testAccGaapDomainErrorPagesListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
-  listener_id    = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id    = tencentcloud_gaap_layer7_listener.foo-domain-error-page.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [406, 504]
   new_error_code = 502
@@ -92,11 +92,11 @@ data tencentcloud_gaap_domain_error_pages "foo" {
   listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
   domain      = tencentcloud_gaap_domain_error_page.foo.domain
 }
-`, defaultGaapProxyId)
+`, 6010, defaultGaapProxyId)
 
 var testAccGaapDomainErrorPagesIds = fmt.Sprintf(testAccGaapDomainErrorPagesListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
-  listener_id    = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id    = tencentcloud_gaap_layer7_listener.foo-domain-error-page.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [406, 504]
   new_error_code = 502
@@ -109,7 +109,7 @@ resource tencentcloud_gaap_domain_error_page "foo" {
 }
 
 resource tencentcloud_gaap_domain_error_page "bar" {
-  listener_id    = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id    = tencentcloud_gaap_layer7_listener.foo-domain-error-page.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [403]
   new_error_code = 502
@@ -121,4 +121,4 @@ data tencentcloud_gaap_domain_error_pages "foo" {
   domain      = tencentcloud_gaap_domain_error_page.foo.domain
   ids         = [tencentcloud_gaap_domain_error_page.foo.id]
 }
-`, defaultGaapProxyId)
+`, 6011, defaultGaapProxyId)

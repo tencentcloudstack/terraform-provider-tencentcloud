@@ -589,7 +589,7 @@ resource tencentcloud_gaap_certificate "client1" {
   key     = %s
 }
 
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-httpscc" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7174
@@ -601,7 +601,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
-  listener_id           = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id           = tencentcloud_gaap_layer7_listener.foo-httpscc.id
   domain                = "www.qq.com"
   client_certificate_id = tencentcloud_gaap_certificate.client1.id
 }
@@ -630,7 +630,7 @@ resource tencentcloud_gaap_certificate "client1" {
   key     = %s
 }
 
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-httpscc" {
   protocol                    = "HTTPS"
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7174
@@ -642,7 +642,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
-  listener_id                = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id                = tencentcloud_gaap_layer7_listener.foo-httpscc.id
   domain                     = "www.qq.com"
  client_certificate_ids = [tencentcloud_gaap_certificate.client1.id]
 }

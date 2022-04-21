@@ -63,28 +63,28 @@ func TestAccTencentCloudGaapLayer7Listener_https_basic(t *testing.T) {
 			{
 				Config: testAccGaapLayer7ListenerHttps,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "8081"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", id, "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "protocol", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "name", "ci-test-gaap-l7-listener"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "port", "8081"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "client_certificate_ids.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "forward_protocol", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "auth_type", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "create_time"),
 				),
 			},
 			{
 				Config: testAccGaapLayer7ListenerHttpsUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener-new"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", id, "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "name", "ci-test-gaap-l7-listener-new"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo-l7-listener-https", "certificate_id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+				ResourceName:      "tencentcloud_gaap_layer7_listener.foo-l7-listener-https",
 				ImportState:       true,
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
@@ -355,7 +355,7 @@ resource tencentcloud_gaap_certificate "foo" {
   key     = %s
 }
 
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-l7-listener-https" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 8081
@@ -380,7 +380,7 @@ resource tencentcloud_gaap_certificate "bar" {
   key     = %s
 }
 
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-l7-listener-https" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener-new"
   port             = 8081

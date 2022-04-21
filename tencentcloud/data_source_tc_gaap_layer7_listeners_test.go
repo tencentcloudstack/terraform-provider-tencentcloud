@@ -48,7 +48,7 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.protocol", "HTTP"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.port", "6050"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.create_time"),
 				),
@@ -103,7 +103,7 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_https(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.protocol", "HTTPS"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.port", "6055"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.certificate_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer7_listeners.port", "listeners.0.auth_type"),
@@ -116,46 +116,46 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_https(t *testing.T) {
 }
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerId = fmt.Sprintf(`
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-l7-lintener" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = 6050
   proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTP"
-  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  listener_id = tencentcloud_gaap_layer7_listener.foo-l7-lintener.id
 }
 `, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerName = fmt.Sprintf(`
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-l7-lintener" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = 6050
   proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "listenerName" {
   protocol      = "HTTP"
   proxy_id      = "%s"
-  listener_name = tencentcloud_gaap_layer7_listener.foo.name
+  listener_name = tencentcloud_gaap_layer7_listener.foo-l7-lintener.name
 }
 `, defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersPort = fmt.Sprintf(`
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource tencentcloud_gaap_layer7_listener "foo-l7-lintener" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = 6050
   proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTP"
   proxy_id = "%s"
-  port     = tencentcloud_gaap_layer7_listener.foo.port
+  port     = tencentcloud_gaap_layer7_listener.foo-l7-lintener.port
 }
 `, defaultGaapProxyId, defaultGaapProxyId)
 
@@ -169,7 +169,7 @@ resource tencentcloud_gaap_certificate "foo" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
-  port             = 80
+  port             = 6053
   certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
@@ -193,7 +193,7 @@ resource tencentcloud_gaap_certificate "foo" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
-  port             = 80
+  port             = 6054
   certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
@@ -217,7 +217,7 @@ resource tencentcloud_gaap_certificate "foo" {
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
-  port             = 80
+  port             = 6055
   certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
