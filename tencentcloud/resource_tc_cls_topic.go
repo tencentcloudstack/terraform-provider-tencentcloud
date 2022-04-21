@@ -73,6 +73,7 @@ func resourceTencentCloudClsTopic() *schema.Resource {
 			"auto_split": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Default:     true,
 				Description: "Whether to enable automatic split. Default value: true.",
 			},
 			"max_split_partitions": {
@@ -128,9 +129,7 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if v, ok := d.GetOk("auto_split"); ok {
-		request.AutoSplit = helper.Bool(v.(bool))
-	}
+	request.AutoSplit = helper.Bool(d.Get("auto_split").(bool))
 
 	if v, ok := d.GetOk("max_split_partitions"); ok {
 		request.MaxSplitPartitions = helper.IntInt64(v.(int))

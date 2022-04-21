@@ -23,6 +23,23 @@ func TestAccTencentCloudClsConfig_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClsConfig_FullRegex(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClsFullRegexConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "name", "tf-full-regex-config-test"),
+				),
+			},
+		},
+	})
+}
+
 const testAccClsConfig = `
 resource "tencentcloud_cls_logset" "logset" {
   logset_name = "tf-config-test"
@@ -69,6 +86,40 @@ resource "tencentcloud_cls_config" "config" {
   exclude_paths {
     type  = "File"
     value = "/file"
+  }
+}
+`
+const testAccClsFullRegexConfig = `
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-full-regex-config-test"
+  tags        = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic" {
+  auto_split           = true
+  logset_id            = tencentcloud_cls_logset.logset.id
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test"
+  }
+  topic_name           = "tf-full-regex-config-test"
+}
+
+resource "tencentcloud_cls_config" "config" {
+  name     = "tf-full-regex-config-test"
+  output   = tencentcloud_cls_topic.topic.id
+  path     = "/var/log/nginx/**/access.log"
+  log_type = "fullregex_log"
+
+  extract_rule {
+    begin_regex = "\\d+\\.\\d+\\.\\d+\\.\\d+\\s+-\\s+.*"
+    log_regex = "\\d+\\.\\d+\\.\\d+\\.\\d+\\s+-\\s+(.*)"
+    keys = ["acd", "edf"]
   }
 }
 `
