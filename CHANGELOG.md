@@ -1,3 +1,14 @@
+## 1.70.2 (April 21, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_cls_config_extra`
+
+BUGFIXES:
+
+* resource `tencentcloud_cls_topic` plan change
+* resource `tencentcloud_cls_config` create failed when log_type is full regex
+
 ## 1.70.1 (April 19, 2022)
 
 BUGFIXES:
