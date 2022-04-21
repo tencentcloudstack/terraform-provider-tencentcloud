@@ -37,13 +37,13 @@ The following arguments are supported:
 
 * `instance_id` - (Required, ForceNew) Ckafka instance ID.
 * `partition_num` - (Required) The number of partition.
-* `replica_num` - (Required) The number of replica, the maximum is 3.
-* `topic_name` - (Required, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.
+* `replica_num` - (Required) The number of replica.
+* `topic_name` - (Required, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-).
 * `clean_up_policy` - (Optional) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
 * `enable_white_list` - (Optional) Whether to open the ip whitelist, `true`: open, `false`: close.
 * `ip_white_list` - (Optional) Ip whitelist, quota limit, required when enableWhileList=true.
 * `max_message_bytes` - (Optional) Max message bytes.
-* `note` - (Optional) The subject note is a string of no more than 64 characters. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
+* `note` - (Optional) The subject note. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
 * `retention` - (Optional) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
 * `segment` - (Optional) Segment scrolling time, in ms, the current minimum is 3600000ms.
 * `sync_replica_min_num` - (Optional) Min number of sync replicas, Default is `1`.
