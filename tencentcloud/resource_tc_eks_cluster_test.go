@@ -82,7 +82,7 @@ func TestAccTencentCloudEKSCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.0", "10.0.0.1:82"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "dns_servers.0.servers.1", "10.0.0.1:83"),
-					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "enable_vpc_core_dns", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "enable_vpc_core_dns", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "need_delete_cbs", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "internal_lb.0.enabled", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_cluster.foo", "public_lb.0.enabled", "true"),
@@ -217,7 +217,7 @@ resource "tencentcloud_eks_cluster" "foo" {
     domain = "example1.org"
     servers = ["10.0.0.1:82", "10.0.0.1:83"]
   }
-  enable_vpc_core_dns = false
+  enable_vpc_core_dns = true
   need_delete_cbs = true
   internal_lb {
     enabled = true

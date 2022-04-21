@@ -589,8 +589,15 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 				Enabled: helper.Bool(false),
 			}
 		}
+	}
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if len(updateAttrs) > 0 {
+		err := service.UpdateEksCluster(ctx, request)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			info, inErr := service.DescribeEKSClusterCredentialById(ctx, id)
 			if inErr != nil {
 				return retryError(inErr)
@@ -607,17 +614,6 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 
 		if err != nil {
 			return err
-		}
-
-	}
-
-	if len(updateAttrs) > 0 {
-		err := service.UpdateEksCluster(ctx, request)
-		if err != nil {
-			return err
-		}
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
 		}
 	}
 
