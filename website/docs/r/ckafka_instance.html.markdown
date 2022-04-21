@@ -59,7 +59,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, ForceNew) Subnet id.
 * `vpc_id` - (Required, ForceNew) Vpc id.
 * `zone_id` - (Required, ForceNew) Available zone id.
-* `band_width` - (Optional, ForceNew) Instance bandwidth in MBps. interval:40-1200.
+* `band_width` - (Optional, ForceNew) Instance bandwidth in MBps.
 * `config` - (Optional) Instance configuration.
 * `disk_size` - (Optional, ForceNew) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, ForceNew) Type of disk.

@@ -138,12 +138,11 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Description: "Kafka version (0.10.2/1.1.1/2.4.1).",
 			},
 			"band_width": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Computed:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(40, 1200),
-				Description:  "Instance bandwidth in MBps. interval:40-1200.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Instance bandwidth in MBps.",
 			},
 			"disk_size": {
 				Type:     schema.TypeInt,
