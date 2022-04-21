@@ -180,7 +180,6 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher"},
 			},
-
 			{
 				Config: testAccSqlserverInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
@@ -198,7 +197,7 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vip"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vport"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "status"),
-					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "security_groups.#", "0"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "security_groups.#", "1"),
 					//resource.TestCheckNoResourceAttr(testSqlserverInstanceResourceKey, "tags.test"),
 					//resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "tags.abc", "abc"),
 				),
@@ -339,7 +338,6 @@ data "tencentcloud_vpc_instances" "vpc" {
 
 data "tencentcloud_security_group" "group" {}
 
-
 data "tencentcloud_subnet" "sub" {
   vpc_id = local.vpc_id
   subnet_id = local.vpc_subnet_id
@@ -428,7 +426,6 @@ resource "tencentcloud_sqlserver_instance" "test" {
   engine_version                = "2017"
   charge_type                   = "POSTPAID_BY_HOUR"
   availability_zone             = var.default_az
-  charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = local.vpc_id
   subnet_id                     = local.subnet_id
   security_groups               = [local.sg_id]
