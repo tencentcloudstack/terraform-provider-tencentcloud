@@ -16,7 +16,7 @@ Import
 tcr vpc attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_vpc_attachment.foo cls-cda1iex1#vpcAccess
+$ terraform import tencentcloud_tcr_vpc_attachment.foo tcrId#vpcId#subnetId
 ```
 */
 package tencentcloud
