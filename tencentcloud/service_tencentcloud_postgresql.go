@@ -225,7 +225,16 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UsePostgresqlClient().OpenDBExtranetAccess(request)
+		var response *postgresql.OpenDBExtranetAccessResponse
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			resp, err := me.client.UsePostgresqlClient().OpenDBExtranetAccess(request)
+			if err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			response = resp
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
@@ -270,7 +279,16 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UsePostgresqlClient().CloseDBExtranetAccess(request)
+		var response *postgresql.CloseDBExtranetAccessResponse
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			resp, err := me.client.UsePostgresqlClient().CloseDBExtranetAccess(request)
+			if err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			response = resp
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
