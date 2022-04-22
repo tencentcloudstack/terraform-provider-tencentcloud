@@ -3,12 +3,65 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_subnet", &resource.Sweeper{
+		Name: "tencentcloud_subnet",
+		F:    testSweepSubnet,
+	})
+}
+
+func testSweepSubnet(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	vpcService := VpcService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := vpcService.DescribeSubnets(ctx, "", "", "", "",
+		nil, nil, nil, "", "")
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+
+		instanceId := v.subnetId
+		instanceName := v.name
+		now := time.Now()
+		createTime := stringTotime(v.createTime)
+		interval := now.Sub(createTime).Minutes()
+
+		if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+			continue
+		}
+
+		if needProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
+		if err = vpcService.DeleteSubnet(ctx, instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudVpcV3SubnetBasic(t *testing.T) {
 	t.Parallel()
