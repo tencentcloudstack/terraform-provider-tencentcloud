@@ -118,6 +118,7 @@ The following arguments are supported:
 * `name` - (Required) Name of the postgresql instance.
 * `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `storage` - (Required) Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
+* `backup_plan` - (Optional) Specify DB backup plan.
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `db_node_set` - (Optional) Specify instance node info for disaster migration.
@@ -131,6 +132,13 @@ The following arguments are supported:
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
 * `tags` - (Optional) The available tags within this postgresql.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.
+
+The `backup_plan` object supports the following:
+
+* `backup_period` - (Optional) List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.
+* `base_backup_retention_period` - (Optional) Specify days of the retention.
+* `max_backup_start_time` - (Optional) Specify latest backup start time, format `hh:mm:ss`.
+* `min_backup_start_time` - (Optional) Specify earliest backup start time, format `hh:mm:ss`.
 
 The `db_node_set` object supports the following:
 
