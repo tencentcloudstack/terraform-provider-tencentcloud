@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -14,6 +17,58 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_ssl_certificate", &resource.Sweeper{
+		Name: "tencentcloud_ssl_certificate",
+		F:    testSweepSslCertificate,
+	})
+}
+
+func testSweepSslCertificate(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	sslService := SSLService{
+		client: client.apiV3Conn,
+	}
+	describeRequest := ssl.NewDescribeCertificatesRequest()
+	instances, err := sslService.DescribeCertificates(ctx, describeRequest)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+
+		instanceId := *v.CertificateId
+		instanceName := *v.Alias
+		now := time.Now()
+		createTime := stringTotime(*v.CertBeginTime)
+		interval := now.Sub(createTime).Minutes()
+
+		if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+			continue
+		}
+
+		if needProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
+		request := ssl.NewDeleteCertificateRequest()
+		request.CertificateId = helper.String(instanceId)
+		if _, err = sslService.DeleteCertificate(ctx, request); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudSslCertificate_basic(t *testing.T) {
 	t.Parallel()

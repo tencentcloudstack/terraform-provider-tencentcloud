@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -39,13 +41,21 @@ func testSweepVpnGateway(region string) error {
 	}
 
 	for _, v := range instances {
-		//vpnGwName := *v.VpnGatewayName
-
-		//if !strings.HasPrefix(vpnGwName, defaultInsName) {
-		//	continue
-		//}
 
 		vpnGwId := *v.VpnGatewayId
+		vpnName := *v.VpnGatewayName
+		now := time.Now()
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+
+		if strings.HasPrefix(vpnName, keepResource) || strings.HasPrefix(vpnName, defaultResource) {
+			continue
+		}
+
+		if needProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
 		if err = vpcService.DeleteVpnGateway(ctx, vpnGwId); err != nil {
 			log.Printf("[ERROR] sweep instance %s error: %s", vpnGwId, err.Error())
 		}
