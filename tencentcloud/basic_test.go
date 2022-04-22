@@ -158,11 +158,11 @@ data "tencentcloud_images" "default" {
 data "tencentcloud_instance_types" "default" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S6"]
   }
 
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count = 2
+  memory_size    = 2
 }
 `
 
