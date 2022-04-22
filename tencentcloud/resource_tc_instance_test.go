@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -40,7 +41,15 @@ func testSweepCvmInstance(region string) error {
 	for _, v := range instances {
 		instanceId := *v.InstanceId
 		instanceName := *v.InstanceName
-		if !strings.HasPrefix(instanceName, defaultInsName) {
+		now := time.Now()
+		createTime := stringTotime(*v.CreatedTime)
+		interval := now.Sub(createTime).Minutes()
+
+		if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+			continue
+		}
+
+		if needProtect == 1 && int64(interval) < 30 {
 			continue
 		}
 
