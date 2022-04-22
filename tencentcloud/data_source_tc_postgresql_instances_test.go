@@ -38,49 +38,9 @@ func TestAccTencentCloudDataPostgresqlInstances(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataPostgresqlInstanceBasic = `
-data "tencentcloud_availability_zones_by_product" "pg" {
-  product = "postgres"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/24"
-  name       = "test-pg-vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = local.az
-  cidr_block        = "10.0.0.0/24"
-  name              = "sub1"
-  vpc_id            = tencentcloud_vpc.vpc.id
-}
-
-locals {
-  az = data.tencentcloud_availability_zones_by_product.pg.zones.0.name
-  vpc_id = tencentcloud_vpc.vpc.id
-  subnet_id = tencentcloud_subnet.subnet.id
-}
-
-
-resource "tencentcloud_postgresql_instance" "test" {
-  name = "tf_postsql_instance"
-  availability_zone = local.az
-  charge_type = "POSTPAID_BY_HOUR"
-  engine_version		= "10.4"
-  root_password                 = "1qaA2k1wgvfa!_3ZZZ"
-  charset = "UTF8"
-  project_id = 0
-  memory = 2
-  storage = 10
-  vpc_id                       = local.vpc_id
-  subnet_id                    = local.subnet_id
-
-  tags = {
-    tf = "test"
-  }
-}
+const testAccTencentCloudDataPostgresqlInstanceBasic = CommonPresetPGSQL + `
 
 data "tencentcloud_postgresql_instances" "id_test"{
-  id = tencentcloud_postgresql_instance.test.id
+  id = local.pgsql_id
 }
 `

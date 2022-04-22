@@ -579,16 +579,16 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
 		request := postgresql.NewModifyBackupPlanRequest()
 		request.DBInstanceId = &instanceId
-		if v, ok := plan["min_backup_start_time"].(string); ok {
+		if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
 			request.MinBackupStartTime = &v
 		}
-		if v, ok := plan["max_backup_start_time"].(string); ok {
+		if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
 			request.MaxBackupStartTime = &v
 		}
-		if v, ok := plan["base_backup_retention_period"].(int); ok {
+		if v, ok := plan["base_backup_retention_period"].(int); ok && v != 0 {
 			request.BaseBackupRetentionPeriod = helper.IntUint64(v)
 		}
-		if v, ok := plan["backup_period"].([]interface{}); ok {
+		if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
 			request.BackupPeriod = helper.InterfacesStringsPoint(v)
 		}
 		err := postgresqlService.ModifyBackupPlan(ctx, request)
@@ -742,16 +742,16 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
 			request := postgresql.NewModifyBackupPlanRequest()
 			request.DBInstanceId = &instanceId
-			if v, ok := plan["min_backup_start_time"].(string); ok {
+			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
 				request.MinBackupStartTime = &v
 			}
-			if v, ok := plan["max_backup_start_time"].(string); ok {
+			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
 				request.MaxBackupStartTime = &v
 			}
-			if v, ok := plan["base_backup_retention_period"].(int); ok {
+			if v, ok := plan["base_backup_retention_period"].(int); ok && v != 0 {
 				request.BaseBackupRetentionPeriod = helper.IntUint64(v)
 			}
-			if v, ok := plan["backup_period"].([]interface{}); ok {
+			if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
 				request.BackupPeriod = helper.InterfacesStringsPoint(v)
 			}
 			err := postgresqlService.ModifyBackupPlan(ctx, request)
