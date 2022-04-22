@@ -1,3 +1,10 @@
+## 1.70.3 (April 22, 2022)
+
+FEATURES:
+
+* resource `tencentcloud_ckafka_instance` remove validate check
+* resource `tencentcloud_tcr_vpc_attachment` modify doc
+
 ## 1.70.2 (April 21, 2022)
 
 FEATURES:
