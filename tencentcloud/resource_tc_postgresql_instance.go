@@ -1112,7 +1112,7 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
 				return nil
 			}
-			return retryError(inErr)
+			return retryError(inErr, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
 		}
 		return nil
 	})
