@@ -43,6 +43,12 @@ data "tencentcloud_vpn_connections" "conns" {
 }
 `
 
+// clb
+const (
+	defaultSshCertificate  = "vVe5TlLF"
+	defaultSshCertificateB = "vVdYr3Ui"
+)
+
 const (
 	defaultRegion      = "ap-guangzhou"
 	defaultVpcId       = "vpc-86v957zb"
@@ -56,9 +62,6 @@ const (
 
 	defaultInsName       = "tf-ci-test"
 	defaultInsNameUpdate = "tf-ci-test-update"
-
-	defaultSshCertificate  = "f8kGFR2T"
-	defaultSshCertificateB = "fbW9Spiy"
 
 	defaultDayuBgp    = "bgp-000006mq"
 	defaultDayuBgpMul = "bgp-0000008o"

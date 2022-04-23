@@ -164,7 +164,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = tencentcloud_clb_instance.clb_basic.id
-  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -174,7 +174,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id             = tencentcloud_clb_instance.clb_basic.id
-  target_listener_id = tencentcloud_clb_listener.listener_basic.id
+  target_listener_id = tencentcloud_clb_listener.listener_basic.listener_id
   target_rule_id     = tencentcloud_clb_listener_rule.rule_basic.id
   is_auto_rewrite	 = true
 }
