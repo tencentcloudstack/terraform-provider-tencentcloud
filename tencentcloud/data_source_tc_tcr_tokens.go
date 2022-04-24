@@ -105,7 +105,8 @@ func dataSourceTencentCloudTCRTokensRead(d *schema.ResourceData, meta interface{
 
 	ids := make([]string, 0, len(tokens))
 	tokenList := make([]map[string]interface{}, 0, len(tokens))
-	for _, token := range tokens {
+	for i := range tokens {
+		token := tokens[i]
 		mapping := map[string]interface{}{
 			"token_id":    token.Id,
 			"enable":      token.Enabled,

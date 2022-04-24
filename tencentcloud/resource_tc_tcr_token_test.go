@@ -3,12 +3,75 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
+	"time"
+
+	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_token
+	resource.AddTestSweepers("tencentcloud_tcr_token", &resource.Sweeper{
+		Name: "tencentcloud_tcr_token",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := TCRService{client}
+
+			var filters []*tcr.Filter
+			filters = append(filters, &tcr.Filter{
+				Name:   helper.String("RegistryName"),
+				Values: []*string{helper.String(defaultTCRInstanceName)},
+			})
+
+			instances, err := service.DescribeTCRInstances(ctx, "", filters)
+
+			if err != nil {
+				return err
+			}
+
+			if len(instances) == 0 {
+				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+			}
+
+			instanceId := *instances[0].RegistryId
+
+			tokens, err := service.DescribeTCRTokens(ctx, instanceId, "")
+
+			if err != nil {
+				return err
+			}
+
+			for i := range tokens {
+				token := tokens[i]
+				id := *token.Id
+				created, err := time.Parse(time.RFC3339, *token.CreatedAt)
+				if err != nil {
+					created = time.Time{}
+				}
+				if isResourcePersist("", &created) {
+					continue
+				}
+				log.Printf("%s -> %s (%s) will delete", instanceId, id, *token.Desc)
+				err = service.DeleteTCRLongTermToken(ctx, instanceId, id)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
 	t.Parallel()
@@ -20,7 +83,7 @@ func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRToken_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "description", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "description", "test token"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "enable", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_token.mytcr_token", "token_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_token.mytcr_token", "create_time"),
@@ -104,35 +167,16 @@ func testAccCheckTCRTokenExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRToken_basic = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
+const testAccTCRToken_basic = defaultTCRInstanceData + `
 resource "tencentcloud_tcr_token" "mytcr_token" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  description       = "test"
+  instance_id = local.tcr_id
+  description       = "test token"
 }`
 
-const testAccTCRToken_basic_update_remark = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
+const testAccTCRToken_basic_update_remark = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_token" "mytcr_token" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  description       = "test"
+  instance_id = local.tcr_id
+  description       = "test token"
   enable   = false
 }`

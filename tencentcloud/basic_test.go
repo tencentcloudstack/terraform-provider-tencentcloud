@@ -411,3 +411,34 @@ variable "cam_user_basic" {
   default = "keep-cam-user"
 }
 `
+
+// TCR Service
+const defaultTCRInstanceName = "keep-tcr-instance"
+const defaultTCRNamespace = "keep-tcr-namespace"
+const defaultTCRRepoName = "keep-tcr-repo"
+
+const defaultTCRInstanceVar = `
+variable "tcr_name" {
+  default = "` + defaultTCRInstanceName + `"
+}
+
+variable "tcr_namespace" {
+  default = "` + defaultTCRNamespace + `"
+}
+
+variable "tcr_repo" {
+  default = "` + defaultTCRRepoName + `"
+}
+`
+
+const defaultTCRInstanceData = defaultTCRInstanceVar + `
+data "tencentcloud_tcr_instances" "tcr" {
+  name = var.tcr_name
+}
+
+locals {
+  tcr_id = data.tencentcloud_tcr_instances.tcr.instance_list.0.id
+}
+`
+
+// End of TCR Service

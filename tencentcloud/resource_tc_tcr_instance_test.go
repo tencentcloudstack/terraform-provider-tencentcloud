@@ -3,11 +3,53 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_instance
+	resource.AddTestSweepers("tencentcloud_tcr_instance", &resource.Sweeper{
+		Name: "tencentcloud_tcr_instance",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := TCRService{client}
+
+			instances, err := service.DescribeTCRInstances(ctx, "", nil)
+
+			if err != nil {
+				return err
+			}
+
+			for i := range instances {
+				ins := instances[i]
+				id := *ins.RegistryId
+				name := *ins.RegistryName
+				created, err := time.Parse(time.RFC3339, *ins.CreatedAt)
+				if err != nil {
+					created = time.Time{}
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				log.Printf("instance %s:%s will delete", id, name)
+				err = service.DeleteTCRInstance(ctx, id, true)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 	t.Parallel()

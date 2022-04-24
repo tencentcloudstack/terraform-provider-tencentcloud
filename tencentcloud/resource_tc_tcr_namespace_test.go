@@ -34,6 +34,7 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 				Config: testAccTCRNamespace_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRNamespaceExists("tencentcloud_tcr_namespace.mytcr_namespace"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "false"),
 				),
 			},
@@ -99,36 +100,18 @@ func testAccCheckTCRNamespaceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRNamespace_basic = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
+const testAccTCRNamespace_basic = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
+  instance_id = local.tcr_id
   name        = "test"
   is_public   = true
 }`
 
-const testAccTCRNamespace_basic_update_remark = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
+const testAccTCRNamespace_basic_update_remark = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  name        = "test"
+  instance_id = local.tcr_id
+  name        = "test2"
   is_public   = false
 }`

@@ -18,10 +18,7 @@ func TestAccTencentCloudDataTCRRepositories(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTCRRepositoriesBasic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTCRRepositoryExists("tencentcloud_tcr_repository.mytcr_repository"),
-					resource.TestCheckResourceAttr(testDataTCRRepositoriesNameAll, "repository_list.0.name", "test"),
-					resource.TestCheckResourceAttr(testDataTCRRepositoriesNameAll, "repository_list.0.brief_desc", "2222"),
-					resource.TestCheckResourceAttr(testDataTCRRepositoriesNameAll, "repository_list.0.description", "211111111111111111111111111111111111"),
+					resource.TestCheckResourceAttrSet(testDataTCRRepositoriesNameAll, "repository_list.0.name"),
 					resource.TestCheckResourceAttrSet(testDataTCRRepositoriesNameAll, "repository_list.0.create_time"),
 					resource.TestCheckResourceAttrSet(testDataTCRRepositoriesNameAll, "repository_list.0.url"),
 				),
@@ -30,33 +27,9 @@ func TestAccTencentCloudDataTCRRepositories(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRRepositoriesBasic = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "standard"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  name        = "test"
-  is_public   = false
-}
-
-resource "tencentcloud_tcr_repository" "mytcr_repository" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  namespace_name        = tencentcloud_tcr_namespace.mytcr_namespace.name
-  name = "test"
-  brief_desc = "2222"
-  description = "211111111111111111111111111111111111"
-}
-
+const testAccTencentCloudDataTCRRepositoriesBasic = defaultTCRInstanceData + `
 data "tencentcloud_tcr_repositories" "id_test" {
-  instance_id = tencentcloud_tcr_repository.mytcr_repository.instance_id
-  namespace_name = tencentcloud_tcr_namespace.mytcr_namespace.name
+  instance_id = local.tcr_id
+  namespace_name = var.tcr_namespace
 }
 `
