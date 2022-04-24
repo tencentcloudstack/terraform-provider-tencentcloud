@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -40,6 +41,13 @@ func init() {
 					continue
 				}
 				for _, fun := range funs {
+					createTime := stringTotime(*fun.AddTime)
+					now := time.Now()
+					interval := now.Sub(createTime).Minutes()
+					// less than 30 minute, not delete
+					if needProtect == 1 && int64(interval) < 30 {
+						continue
+					}
 					err := service.DeleteFunction(ctx, *fun.FunctionName, *nsName)
 					if err != nil {
 						continue
