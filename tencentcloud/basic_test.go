@@ -280,6 +280,21 @@ resource "tencentcloud_instance" "default" {
 
 // End of SQLServer
 
+// PostgreSQL
+
+const defaultPGSQLName = "keep-postgresql"
+const CommonPresetPGSQL = `
+data "tencentcloud_postgresql_instances" "foo" {
+  name = "` + defaultPGSQLName + `"
+}
+
+locals {
+  pgsql_id = data.tencentcloud_postgresql_instances.foo.instance_list.0.id
+}
+`
+
+// End of PostgreSQL
+
 const defaultCVMName = "keep-cvm"
 const presetCVM = `
 data "tencentcloud_instances" "instance" {

@@ -264,6 +264,37 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Computed:    true,
 				Description: "max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.",
 			},
+			"backup_plan": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Specify DB backup plan.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"min_backup_start_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Specify earliest backup start time, format `hh:mm:ss`.",
+						},
+						"max_backup_start_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Specify latest backup start time, format `hh:mm:ss`.",
+						},
+						"base_backup_retention_period": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Specify days of the retention.",
+						},
+						"backup_period": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+					},
+				},
+			},
 			"db_node_set": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -543,6 +574,29 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		time.Sleep(10 * time.Second)
 	}
 
+	// set backup plan
+
+	if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
+		request := postgresql.NewModifyBackupPlanRequest()
+		request.DBInstanceId = &instanceId
+		if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+			request.MinBackupStartTime = &v
+		}
+		if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+			request.MaxBackupStartTime = &v
+		}
+		if v, ok := plan["base_backup_retention_period"].(int); ok && v != 0 {
+			request.BaseBackupRetentionPeriod = helper.IntUint64(v)
+		}
+		if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
+			request.BackupPeriod = helper.InterfacesStringsPoint(v)
+		}
+		err := postgresqlService.ModifyBackupPlan(ctx, request)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
 }
 
@@ -682,6 +736,29 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 		d.SetPartial("security_groups")
+	}
+
+	if d.HasChange("backup_plan") {
+		if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
+			request := postgresql.NewModifyBackupPlanRequest()
+			request.DBInstanceId = &instanceId
+			if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
+				request.MinBackupStartTime = &v
+			}
+			if v, ok := plan["max_backup_start_time"].(string); ok && v != "" {
+				request.MaxBackupStartTime = &v
+			}
+			if v, ok := plan["base_backup_retention_period"].(int); ok && v != 0 {
+				request.BaseBackupRetentionPeriod = helper.IntUint64(v)
+			}
+			if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
+				request.BackupPeriod = helper.InterfacesStringsPoint(v)
+			}
+			err := postgresqlService.ModifyBackupPlan(ctx, request)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("db_node_set") {
@@ -952,6 +1029,39 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	}
 	_ = d.Set("tags", tags)
 
+	// backup plans (only specified will rewrite)
+	if _, ok := d.GetOk("backup_plan"); ok {
+		request := postgresql.NewDescribeBackupPlansRequest()
+		request.DBInstanceId = helper.String(d.Id())
+		response, err := postgresqlService.DescribeBackupPlans(ctx, request)
+
+		if err != nil {
+			return err
+		}
+
+		var backupPlan *postgresql.BackupPlan
+
+		if len(response) > 0 {
+			backupPlan = response[0]
+		}
+
+		if backupPlan != nil {
+			if _, ok := d.GetOk("backup_plan.0.min_backup_start_time"); ok {
+				_ = d.Set("backup_plan.0.min_backup_start_time", backupPlan.MinBackupStartTime)
+			}
+			if _, ok := d.GetOk("backup_plan.0.max_backup_start_time"); ok {
+				_ = d.Set("backup_plan.0.max_backup_start_time", backupPlan.MaxBackupStartTime)
+			}
+			if _, ok := d.GetOk("backup_plan.0.base_backup_retention_period"); ok {
+				_ = d.Set("backup_plan.0.base_backup_retention_period", backupPlan.BaseBackupRetentionPeriod)
+			}
+			if _, ok := d.GetOk("backup_plan.0.backup_period"); ok {
+				_ = d.Set("backup_plan.0.backup_period", backupPlan.BackupPeriod)
+			}
+		}
+
+	}
+
 	// pg params
 	var parmas map[string]string
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -1002,7 +1112,7 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
 				return nil
 			}
-			return retryError(inErr)
+			return retryError(inErr, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
 		}
 		return nil
 	})

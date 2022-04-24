@@ -412,6 +412,7 @@ PostgreSQL
   Data Source
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
+	tencentcloud_postgresql_xlogs
 
   Resource
 	tencentcloud_postgresql_instance
@@ -844,6 +845,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_elasticsearch_instances":                  dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                     dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                     dataSourceTencentCloudPostgresqlSpecinfos(),
+			"tencentcloud_postgresql_xlogs":                         datasourceTencentCloudPostgresqlXlogs(),
 			"tencentcloud_sqlserver_zone_config":                    dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                      dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                        dataSourceTencentCloudSqlserverBackups(),

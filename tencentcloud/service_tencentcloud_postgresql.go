@@ -131,6 +131,87 @@ func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string)
 	return
 }
 
+func (me *PostgresqlService) ModifyBackupPlan(ctx context.Context, request *postgresql.ModifyBackupPlanRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().ModifyBackupPlan(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) DescribeBackupPlans(ctx context.Context, request *postgresql.DescribeBackupPlansRequest) (result []*postgresql.BackupPlan, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Plans) > 0 {
+		result = response.Response.Plans
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) DescribeDBXlogs(ctx context.Context, request *postgresql.DescribeDBXlogsRequest) (xlogs []*postgresql.Xlog, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	offset := 0
+	request.Limit = helper.IntInt64(100)
+	request.Offset = helper.IntInt64(offset)
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBXlogs(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.XlogList) > 0 {
+		xlogs = append(xlogs, response.Response.XlogList...)
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openInternet bool, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -144,7 +225,16 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UsePostgresqlClient().OpenDBExtranetAccess(request)
+		var response *postgresql.OpenDBExtranetAccessResponse
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			resp, err := me.client.UsePostgresqlClient().OpenDBExtranetAccess(request)
+			if err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			response = resp
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
@@ -189,7 +279,16 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UsePostgresqlClient().CloseDBExtranetAccess(request)
+		var response *postgresql.CloseDBExtranetAccessResponse
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			resp, err := me.client.UsePostgresqlClient().CloseDBExtranetAccess(request)
+			if err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			response = resp
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
