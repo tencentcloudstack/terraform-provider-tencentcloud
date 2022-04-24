@@ -55,6 +55,10 @@ const (
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
+	defaultCvmAZone        = "ap-guangzhou-7"
+	defaultCvmVpcId        = "vpc-l0dw94uh"
+	defaultCvmSubnetId     = "subnet-ccj2qg0m"
+
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
 	defaultSubnetCidr     = "172.16.0.0/20"
@@ -124,6 +128,18 @@ variable "availability_zone" {
   default = "` + defaultAZone + `"
 }
 
+variable "availability_cvm_zone" {
+  default = "` + defaultCvmAZone + `"
+}
+
+variable "cvm_vpc_id" {
+  default = "` + defaultCvmVpcId + `"
+}
+
+variable "cvm_subnet_id" {
+  default = "` + defaultCvmSubnetId + `"
+}
+
 variable "vpc_id" {
   default = "` + defaultVpcId + `"
 }
@@ -163,7 +179,10 @@ data "tencentcloud_instance_types" "default" {
     name   = "instance-family"
     values = ["S6"]
   }
-
+  filter {
+    name   = "zone"
+    values = [var.availability_cvm_zone]
+  }
   cpu_core_count = 2
   memory_size    = 2
 }
@@ -266,15 +285,15 @@ locals {
 const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
-  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  availability_zone          = var.availability_cvm_zone
   image_id                   = data.tencentcloud_images.default.images.1.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
   allocate_public_ip         = true
   internet_max_bandwidth_out = 10
-  vpc_id                     = var.vpc_id
-  subnet_id                  = var.subnet_id
+  vpc_id                     = var.cvm_vpc_id
+  subnet_id                  = var.cvm_subnet_id
 }
 `
 
