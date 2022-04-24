@@ -55,9 +55,9 @@ const (
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
-	defaultCvmAZone        = "ap-guangzhou-7"
-	defaultCvmVpcId        = "vpc-l0dw94uh"
-	defaultCvmSubnetId     = "subnet-ccj2qg0m"
+	defaultCvmAZone    = "ap-guangzhou-7"
+	defaultCvmVpcId    = "vpc-l0dw94uh"
+	defaultCvmSubnetId = "subnet-ccj2qg0m"
 
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
