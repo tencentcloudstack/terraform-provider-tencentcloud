@@ -1,6 +1,21 @@
-## 1.70.3 (April 22, 2022)
+## 1.71.0 (April 24, 2022)
 
 FEATURES:
+
+* New datasource `tencentcloud_postgresql_xlogs`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_postgresql_instance` support backup plan
+* resource `tencentcloud_redis_instance` support `replica_zone_ids` modify
+
+BUGFIXES:
+
+* resource `tencentcloud_eks_cluster` fix LB modified errors
+
+## 1.70.3 (April 22, 2022)
+
+ENHANCEMENTS:
 
 * resource `tencentcloud_ckafka_instance` remove validate check
 * resource `tencentcloud_tcr_vpc_attachment` modify doc
