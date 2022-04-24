@@ -138,7 +138,6 @@ func init() {
 }
 
 func TestAccTencentCloudRedisInstance(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -155,7 +154,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "redis_shard_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "redis_replicas_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "mem_size", "8192"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terrform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terraform_test"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "status", "online"),
 				),
@@ -186,7 +185,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "redis_shard_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "redis_replicas_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "mem_size", "8192"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terrform_test_update"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terraform_test_update"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "status", "online"),
 				),
@@ -203,7 +202,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "redis_replicas_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "type_id", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "mem_size", "12288"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terrform_test_update"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terraform_test_update"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "status", "online"),
 				),
@@ -218,20 +217,61 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 	})
 }
 
-/*
-func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudRedisInstance_Maz(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				ResourceName:            "tencentcloud_redis_instance.redis_instance_test",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete"},
+				Config: testAccRedisInstanceMaz(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_maz"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "redis_replicas_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "2"),
+				),
 			},
+			{
+				Config: testAccRedisInstanceMazUpdate(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_maz"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "mem_size", "8192"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "redis_replicas_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "3"),
+				),
+			},
+			{
+				Config: testAccRedisInstanceMazUpdate2(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_maz"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "redis_replicas_num", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "4"),
+				),
+			},
+			{
+				Destroy:           false,
+				ResourceName:      "tencentcloud_redis_instance.redis_maz",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+					"type",
+					"redis_shard_num",
+					"force_delete",
+					"replica_zone_ids.2", // sequence of ids proceeded
+					"replica_zone_ids.3", // sequence of ids proceeded
+				},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
+		Steps: []resource.TestStep{
 			{
 				Config: testAccRedisInstancePrepaidBasic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -243,16 +283,21 @@ func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "redis_shard_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "redis_replicas_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "mem_size", "8192"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "name", "terrform_prepaid_test"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "name", "terraform_prepaid_test"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "status", "online"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_prepaid_instance_test", "charge_type", "PREPAID"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_redis_instance.redis_prepaid_instance_test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete", "prepaid_period"},
+			},
 		},
 	})
 }
-*/
 
 func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -313,7 +358,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type_id            = 2
   password           = "test12345789"
   mem_size           = 8192
-  name               = "terrform_test"
+  name               = "terraform_test"
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
@@ -327,7 +372,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type_id            = 2
   password           = "test12345789"
   mem_size           = 8192
-  name               = "terrform_test"
+  name               = "terraform_test"
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
@@ -345,7 +390,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type_id            = 2
   password           = "test12345789"
   mem_size           = 8192
-  name               = "terrform_test"
+  name               = "terraform_test"
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
@@ -363,7 +408,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type_id            = 2
   password           = "test12345789"
   mem_size           = 8192
-  name               = "terrform_test_update"
+  name               = "terraform_test_update"
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
@@ -381,7 +426,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type_id            = 2
   password           = "AAA123456BBB"
   mem_size           = 12288
-  name               = "terrform_test_update"
+  name               = "terraform_test_update"
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
@@ -392,6 +437,57 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }`
 }
 
+func testAccRedisInstanceMaz() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_maz" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 6 #7
+  password           = "AAA123456BBB"
+  mem_size           = 4096
+  name               = "terraform_maz"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 2
+  replica_zone_ids   = [100003, 100004]
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
+}`
+}
+
+func testAccRedisInstanceMazUpdate() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_maz" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 6 #7
+  password           = "AAA123456BBB"
+  mem_size           = 8192
+  name               = "terraform_maz"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 3
+  replica_zone_ids   = [100003, 100004, 100003]
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
+}`
+}
+
+func testAccRedisInstanceMazUpdate2() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_maz" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 6 #7
+  password           = "AAA123456BBB"
+  mem_size           = 8192
+  name               = "terraform_maz"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 4
+  replica_zone_ids   = [100003, 100004, 100006, 100003]
+  vpc_id 			 = var.vpc_id
+  subnet_id 		 = var.subnet_id
+}`
+}
+
 func testAccRedisInstancePrepaidBasic() string {
 	return `
 resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
@@ -399,7 +495,7 @@ resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
   type_id                             = 2
   password                            = "test12345789"
   mem_size                            = 8192
-  name                                = "terrform_prepaid_test"
+  name                                = "terraform_prepaid_test"
   port                                = 6379
   redis_shard_num                     = 1
   redis_replicas_num                  = 1
