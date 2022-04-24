@@ -18,6 +18,39 @@ import (
 	"github.com/pkg/errors"
 )
 
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_scf
+	resource.AddTestSweepers("tencentcloud_scf", &resource.Sweeper{
+		Name: "tencentcloud_scf",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := ScfService{client: client}
+			nss, err := service.DescribeNamespaces(ctx)
+			if err != nil {
+				return nil
+			}
+			for _, ns := range nss {
+				nsName := ns.Name
+				funs, err := service.DescribeFunctions(ctx, nil, nsName, nil, nil)
+				if err != nil {
+					continue
+				}
+				for _, fun := range funs {
+					err := service.DeleteFunction(ctx, *fun.FunctionName, *nsName)
+					if err != nil {
+						continue
+					}
+				}
+			}
+			return nil
+		},
+	})
+}
+
 func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 	t.Parallel()
 	var fnId string
