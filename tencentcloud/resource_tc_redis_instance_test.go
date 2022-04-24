@@ -290,10 +290,10 @@ func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_redis_instance.redis_instance_test",
+				ResourceName:            "tencentcloud_redis_instance.redis_prepaid_instance_test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete"},
+				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete", "prepaid_period"},
 			},
 		},
 	})
