@@ -106,50 +106,21 @@ func testAccCheckTCRRepositoryExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRRepository_basic = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
+const testAccTCRRepository_basic = defaultTCRInstanceData + `
 
-  tags ={
-	test = "test"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  name        = "test"
-  is_public   = false
-}
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  namespace_name        = tencentcloud_tcr_namespace.mytcr_namespace.name
-  name = "test"
-  brief_desc = "111"
-  description = "111111111111111111111111111111111111"
+  instance_id	 = local.tcr_id
+  namespace_name = var.tcr_namespace
+  name 	         = "test"
+  brief_desc 	 = "111"
+  description	 = "111111111111111111111111111111111111"
 }`
 
-const testAccTCRRepository_basic_update_remark = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  name        = "test"
-  is_public   = false
-}
+const testAccTCRRepository_basic_update_remark = defaultTCRInstanceData + `
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  namespace_name        = tencentcloud_tcr_namespace.mytcr_namespace.name
-  name = "test"
-  brief_desc = "2222"
-  description = "211111111111111111111111111111111111"
+  instance_id 	 = local.tcr_id
+  namespace_name = var.tcr_namespace
+  name			 = "test"
+  brief_desc 	 = "2222"
+  description	 = "211111111111111111111111111111111111"
 }`

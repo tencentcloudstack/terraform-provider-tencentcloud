@@ -98,37 +98,15 @@ func testAccCheckTCRVPCAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRVPCAttachment_basic = `
+const testAccTCRVPCAttachment_basic = defaultVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
+  name        = "test_resource_attach"
   instance_type = "basic"
   delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = var.availability_zone
-  name              = "guagua-ci-temp-test"
-  vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        = "10.0.20.0/28"
-  is_multicast      = false
 }
 
 resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment" {
   instance_id = tencentcloud_tcr_instance.mytcr_instance.id
-  vpc_id = tencentcloud_vpc.foo.id
-  subnet_id = tencentcloud_subnet.subnet.id
-  region_id = 1
+  vpc_id = local.vpc_id
+  subnet_id = local.subnet_id
 }`

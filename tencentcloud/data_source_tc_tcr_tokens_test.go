@@ -29,24 +29,14 @@ func TestAccTencentCloudDataTCRTokens(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRTokensBasic = `
-resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "testacctcrinstance"
-  instance_type = "standard"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
+const testAccTencentCloudDataTCRTokensBasic = defaultTCRInstanceData + `
 resource "tencentcloud_tcr_token" "mytcr_token" {
-  instance_id = tencentcloud_tcr_instance.mytcr_instance.id
+  instance_id = local.tcr_id
   description       = "test"
   enable   = true
 }
 
 data "tencentcloud_tcr_tokens" "id_test" {
-  instance_id = tencentcloud_tcr_token.mytcr_token.instance_id
+  instance_id = local.tcr_id
 }
 `
