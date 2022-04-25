@@ -8,7 +8,7 @@ import (
 
 var testDataTCRNamespacesNameAll = "data.tencentcloud_tcr_namespaces.id_test"
 
-func TestAccTencentCloudDataTCRNamespaces(t *testing.T) {
+func TestAccTencentCloudTCRNamespacesData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

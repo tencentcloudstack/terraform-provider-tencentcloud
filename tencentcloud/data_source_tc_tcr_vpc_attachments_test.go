@@ -8,7 +8,7 @@ import (
 
 var testDataTCRVPCAttachmentsNameAll = "data.tencentcloud_tcr_vpc_attachments.id_test"
 
-func TestAccTencentCloudDataTCRVPCAttachments(t *testing.T) {
+func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

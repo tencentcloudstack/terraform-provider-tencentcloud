@@ -8,7 +8,7 @@ import (
 
 var testDataTCRRepositoriesNameAll = "data.tencentcloud_tcr_repositories.id_test"
 
-func TestAccTencentCloudDataTCRRepositories(t *testing.T) {
+func TestAccTencentCloudTCRRepositoriesData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
