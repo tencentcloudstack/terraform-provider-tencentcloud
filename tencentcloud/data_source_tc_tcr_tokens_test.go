@@ -8,7 +8,7 @@ import (
 
 var testDataTCRTokensNameAll = "data.tencentcloud_tcr_tokens.id_test"
 
-func TestAccTencentCloudDataTCRTokens(t *testing.T) {
+func TestAccTencentCloudTCRTokensData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,7 +18,6 @@ func TestAccTencentCloudDataTCRTokens(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTCRTokensBasic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTCRTokenExists("tencentcloud_tcr_token.mytcr_token"),
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.token_id"),
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.create_time"),
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.description"),
@@ -37,6 +36,7 @@ resource "tencentcloud_tcr_token" "mytcr_token" {
 }
 
 data "tencentcloud_tcr_tokens" "id_test" {
+  token_id = tencentcloud_tcr_token.mytcr_token.token_id
   instance_id = local.tcr_id
 }
 `
