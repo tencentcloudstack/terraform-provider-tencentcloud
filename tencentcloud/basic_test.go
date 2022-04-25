@@ -326,6 +326,16 @@ locals {
 }
 `
 
+const userInfoData = `
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+  uin = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+}
+`
+
 const mysqlInstanceCommonTestCase = defaultVpcVariable + `
 resource "tencentcloud_mysql_instance" "default" {
   mem_size = 1000
@@ -361,6 +371,7 @@ resource "tencentcloud_mysql_instance" "default" {
   force_delete = true
 }
 `
+
 const defaultSCFCosBucket = `
 data "tencentcloud_user_info" "info" {}
 
