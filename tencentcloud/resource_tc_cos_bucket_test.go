@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -12,6 +12,7 @@ import (
 )
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cos_bucket
 	resource.AddTestSweepers("tencentcloud_cos_bucket", &resource.Sweeper{
 		Name: "tencentcloud_cos_bucket",
 		F:    testSweepCosBuckets,
@@ -36,9 +37,11 @@ func testSweepCosBuckets(region string) error {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
 
+	prefix := regexp.MustCompile("^(tf|test)-")
+
 	for _, v := range buckets {
 		bucket := *v.Name
-		if !strings.HasPrefix(bucket, "tf-bucket-") {
+		if !prefix.MatchString(bucket) {
 			continue
 		}
 
@@ -70,14 +73,14 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucket_basic(appid),
+				Config: testAccCosBucket_basic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 				),
 			},
 			// test update bucket acl
 			{
-				Config: testAccCosBucket_basicUpdate(appid),
+				Config: testAccCosBucket_basicUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
@@ -103,7 +106,7 @@ func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucket_ACL(appid, ownerUin),
+				Config: testAccCosBucket_ACL(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "public-read"),
@@ -112,7 +115,7 @@ func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
 			},
 			// test update bucket acl
 			{
-				Config: testAccCosBucket_ACLUpdate(appid, ownerUin),
+				Config: testAccCosBucket_ACLUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "private"),
@@ -138,14 +141,14 @@ func TestAccTencentCloudCosBucket_tags(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucket_tags(appid),
+				Config: testAccCosBucket_tags(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.test", "test"),
 				),
 			},
 			{
-				Config: testAccCosBucket_tagsReplace(appid),
+				Config: testAccCosBucket_tagsReplace(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
 					resource.TestCheckNoResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.test"),
@@ -153,7 +156,7 @@ func TestAccTencentCloudCosBucket_tags(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCosBucket_tagsDelete(appid),
+				Config: testAccCosBucket_tagsDelete(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
 					resource.TestCheckNoResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.abc"),
@@ -172,7 +175,7 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucket_cors(appid),
+				Config: testAccCosBucket_cors(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_cors"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_cors", "cors_rules.#", "1"),
@@ -190,7 +193,7 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 			},
 			// test updata bucket cors
 			{
-				Config: testAccCosBucket_corsUpdate(appid),
+				Config: testAccCosBucket_corsUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_cors", "cors_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_cors", "cors_rules.0.allowed_methods.#", "3"),
@@ -221,7 +224,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucket_lifecycle(appid),
+				Config: testAccBucket_lifecycle(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
@@ -238,7 +241,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 			},
 			// test update bucket lifecycle
 			{
-				Config: testAccBucket_lifecycleUpdate(appid),
+				Config: testAccBucket_lifecycleUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
@@ -273,7 +276,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucket_website(appid),
+				Config: testAccBucket_website(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_website"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
@@ -283,7 +286,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 			},
 			// test update bucket website
 			{
-				Config: testAccBucket_websiteUpdate(appid),
+				Config: testAccBucket_websiteUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_website"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
@@ -310,7 +313,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucket_MAZ(appid),
+				Config: testAccBucket_MAZ(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_maz"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_maz", "multi_az", "true"),
@@ -335,7 +338,7 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucket_originPull(appid),
+				Config: testAccBucket_originPull(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
@@ -351,7 +354,7 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccBucket_originPullUpdate(appid),
+				Config: testAccBucket_originPullUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_origin"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.priority", "1"),
@@ -427,17 +430,17 @@ func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBucketReplication(appid, ownerUin, ownerUin),
+				Config: testAccBucketReplication(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", fmt.Sprintf("qcs::cam::uin/%s:uin/%s", ownerUin, ownerUin)),
+					resource.TestMatchResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", regexp.MustCompile("^qcs::cam::uin/\\d+:uin/\\d+$")),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.id", "test-rep1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.status", "Enabled"),
 				),
 			},
 			{
-				Config: testAccBucketReplicationUpdate(appid, ownerUin, ownerUin),
+				Config: testAccBucketReplicationUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "1"),
@@ -446,7 +449,7 @@ func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccBucketReplicationRemove(appid),
+				Config: testAccBucketReplicationRemove(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", ""),
@@ -504,36 +507,42 @@ func testAccCheckCosBucketDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCosBucket_basic(appid string) string {
+func testAccCosBucket_basic() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-  bucket = "tf-bucket-basic-%s"
+  bucket = "tf-bucket-basic-${local.app_id}"
   acl    = "public-read"
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_basicUpdate(appid string) string {
+func testAccCosBucket_basicUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-  bucket               = "tf-bucket-basic-%s"
+  bucket               = "tf-bucket-basic-${local.app_id}"
   acl                  = "private"
   encryption_algorithm = "AES256"
   versioning_enable    = true
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_ACL(appid, uin string) string {
+func testAccCosBucket_ACL() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_acl" {
-  bucket	= "tf-bucket-acl-%s"
+  bucket	= "tf-bucket-acl-${local.app_id}"
   acl       = "public-read"
   acl_body 	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
-		<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
@@ -544,8 +553,8 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
-				<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
             </Grantee>
             <Permission>FULL_CONTROL</Permission>
         </Grant>
@@ -553,25 +562,27 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
 </AccessControlPolicy>
 EOF
 }
-`, appid, uin)
+`, userInfoData)
 }
 
-func testAccCosBucket_ACLUpdate(appid, uin string) string {
+func testAccCosBucket_ACLUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_acl" {
-  bucket	= "tf-bucket-acl-%s"
+  bucket	= "tf-bucket-acl-${local.app_id}"
   acl 		= "private"
   acl_body	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
-		<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/%[2]v:uin/%[2]v</ID>
-				<DisplayName>qcs::cam::uin/%[2]v:uin/%[2]v</DisplayName>
+                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
             </Grantee>
             <Permission>FULL_CONTROL</Permission>
         </Grant>
@@ -579,48 +590,55 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
 </AccessControlPolicy>
 EOF
 }
-`, appid, uin)
+`, userInfoData)
 }
 
-func testAccCosBucket_tags(appid string) string {
+func testAccCosBucket_tags() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_tags" {
-  bucket = "tf-bucket-tags-%s"
+  bucket = "tf-bucket-tags-${local.app_id}"
   acl    = "public-read"
 
   tags = {
     "test" = "test"
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_tagsReplace(appid string) string {
+func testAccCosBucket_tagsReplace() string {
 	return fmt.Sprintf(`
+%s
 resource "tencentcloud_cos_bucket" "bucket_tags" {
-  bucket = "tf-bucket-tags-%s"
+  bucket = "tf-bucket-tags-${local.app_id}"
   acl    = "public-read"
 
   tags = {
     "abc" = "abc"
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_tagsDelete(appid string) string {
+func testAccCosBucket_tagsDelete() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_tags" {
-  bucket = "tf-bucket-tags-%s"
+  bucket = "tf-bucket-tags-${local.app_id}"
   acl    = "public-read"
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_cors(appid string) string {
+func testAccCosBucket_cors() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_cors" {
-  bucket = "tf-bucket-cors-%s"
+  bucket = "tf-bucket-cors-${local.app_id}"
   acl    = "public-read"
 
   cors_rules {
@@ -631,13 +649,15 @@ resource "tencentcloud_cos_bucket" "bucket_cors" {
     max_age_seconds = 300
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccCosBucket_corsUpdate(appid string) string {
+func testAccCosBucket_corsUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_cors" {
-  bucket = "tf-bucket-cors-%s"
+  bucket = "tf-bucket-cors-${local.app_id}"
   acl    = "public-read"
   cors_rules {
     allowed_headers = ["*"]
@@ -647,13 +667,15 @@ resource "tencentcloud_cos_bucket" "bucket_cors" {
     max_age_seconds = 100
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_lifecycle(appid string) string {
+func testAccBucket_lifecycle() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
-  bucket = "tf-bucket-lifecycle-%s"
+  bucket = "tf-bucket-lifecycle-${local.app_id}"
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
@@ -672,13 +694,15 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
     }
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_lifecycleUpdate(appid string) string {
+func testAccBucket_lifecycleUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
-  bucket = "tf-bucket-lifecycle-%s"
+  bucket = "tf-bucket-lifecycle-${local.app_id}"
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
@@ -711,50 +735,58 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
     }
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_website(appid string) string {
+func testAccBucket_website() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_website" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-website-${local.app_id}"
   acl    = "public-read"
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_websiteUpdate(appid string) string {
+func testAccBucket_websiteUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_website" {
-  bucket = "tf-bucket-website-%s"
+  bucket = "tf-bucket-website-${local.app_id}"
   acl    = "public-read"
   website {
     index_document = "testindex.html"
     error_document = "testerror.html"
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_MAZ(appid string) string {
+func testAccBucket_MAZ() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "bucket_maz" {
-  bucket   = "tf-bucket-maz-%s"
+  bucket   = "tf-bucket-maz-${local.app_id}"
   acl      = "public-read"
   multi_az = true
   versioning_enable = true
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_originPull(appid string) string {
+func testAccBucket_originPull() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "tf-bucket-origin-%s"
+  bucket = "tf-bucket-origin-${local.app_id}"
   acl    = "private"
   origin_pull_rules {
     priority = 1
@@ -770,13 +802,15 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     }
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_originPullUpdate(appid string) string {
+func testAccBucket_originPullUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "tf-bucket-origin-%s"
+  bucket = "tf-bucket-origin-${local.app_id}"
   acl    = "private"
   origin_pull_rules {
     priority = 1
@@ -792,32 +826,36 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     }
   }
 }
-`, appid)
+`, userInfoData)
 }
 
-func testAccBucket_originDomain(appid string, randomName int) string {
+func testAccBucket_originDomain(randomName int) string {
 	return fmt.Sprintf(`
+%s
+
 provider "tencentcloud" {
   region = "ap-singapore"
 }
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-%d-%s"
+  bucket = "tf-bucket-domain-${local.app_id}-%d"
   acl    = "private"
   origin_domain_rules {
 	status = "ENABLED"
 	domain = "www.example.com"
   }
 }
-`, randomName, appid)
+`, userInfoData, randomName)
 }
 
-func testAccBucket_originDomainUpdate(appid string, randomName int) string {
+func testAccBucket_originDomainUpdate(randomName int) string {
 	return fmt.Sprintf(`
+%s
+
 provider "tencentcloud" {
   region = "ap-singapore"
 }
 resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-%d-%s"
+  bucket = "tf-bucket-domain-${local.app_id}-%d"
   acl    = "private"
   origin_domain_rules {
 	status = "DISABLED"
@@ -827,44 +865,48 @@ resource "tencentcloud_cos_bucket" "with_domain" {
 	domain = "test.example1.com"
   }
 }
-`, randomName, appid)
+`, userInfoData, randomName)
 }
 
-func testAccBucketReplication(appid, ownerUin, subUin string) string {
+func testAccBucketReplication() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "replica1" {
-  bucket = "tf-replica-foo-%s"
+  bucket = "tf-replica-foo-${local.app_id}"
   acl    = "private"
   versioning_enable = true
 }
 
 resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket = "tf-bucket-replica-%s"
+  bucket = "tf-bucket-replica-${local.app_id}"
   acl    = "private"
   versioning_enable = true
-  replica_role = "qcs::cam::uin/%s:uin/%s"
+  replica_role = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
 	id = "test-rep1"
     status = "Enabled"
     destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
   }
 }
-`, appid, appid, ownerUin, subUin, defaultRegion)
+`, userInfoData, defaultRegion)
 }
 
-func testAccBucketReplicationUpdate(appid, ownerUin, subUin string) string {
+func testAccBucketReplicationUpdate() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "replica1" {
-  bucket = "tf-replica-foo-%s"
+  bucket = "tf-replica-foo-${local.app_id}"
   acl    = "private"
   versioning_enable = true
 }
 
 resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket = "tf-bucket-replica-%s"
+  bucket = "tf-bucket-replica-${local.app_id}"
   acl    = "private"
   versioning_enable = true
-  replica_role = "qcs::cam::uin/%s:uin/%s"
+  replica_role = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
 	id = "test-rep1"
     status = "Disabled"
@@ -872,21 +914,23 @@ resource "tencentcloud_cos_bucket" "with_replication" {
     destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
   }
 }
-`, appid, appid, ownerUin, subUin, defaultRegion)
+`, userInfoData, defaultRegion)
 }
 
-func testAccBucketReplicationRemove(appid string) string {
+func testAccBucketReplicationRemove() string {
 	return fmt.Sprintf(`
+%s
+
 resource "tencentcloud_cos_bucket" "replica1" {
-  bucket = "tf-replica-foo-%s"
+  bucket = "tf-replica-foo-${local.app_id}"
   acl    = "private"
   versioning_enable = true
 }
 
 resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket = "tf-bucket-replica-%s"
+  bucket = "tf-bucket-replica-${local.app_id}"
   acl    = "private"
   versioning_enable = true
 }
-`, appid, appid)
+`, userInfoData)
 }
