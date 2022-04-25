@@ -45,8 +45,8 @@ data "tencentcloud_vpn_connections" "conns" {
 
 // clb
 const (
-	defaultSshCertificate  = "vVe5TlLF"
-	defaultSshCertificateB = "vVdYr3Ui"
+	defaultSshCertificate  = "vYSQkJ3K"
+	defaultSshCertificateB = "vYVlNIhW"
 )
 
 const (

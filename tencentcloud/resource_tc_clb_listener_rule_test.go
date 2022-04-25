@@ -278,7 +278,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 resource "tencentcloud_clb_listener_rule" "rule_full" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_id                = tencentcloud_clb_listener.listener_basic.listener_id
-  domain                     = "abcdr.com"
+  domain                     = "abcd.com"
   url                        = "/"
   session_expire_time        = 60
   scheduler                  = "WRR"

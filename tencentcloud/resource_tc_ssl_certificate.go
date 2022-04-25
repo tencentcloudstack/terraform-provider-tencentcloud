@@ -358,11 +358,11 @@ func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interfac
 		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		sslService    = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
 		outErr, inErr error
-		id            = d.Id()
+		//id            = d.Id()
 		deleteResult  bool
 	)
 	request := ssl.NewDeleteCertificateRequest()
-	request.CertificateId = helper.String(id)
+	//request.CertificateId = helper.String(id)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		deleteResult, inErr = sslService.DeleteCertificate(ctx, request)

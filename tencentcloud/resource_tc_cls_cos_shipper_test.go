@@ -81,7 +81,7 @@ resource "tencentcloud_cls_topic" "topic" {
 }
 
 resource "tencentcloud_cls_cos_shipper" "shipper" {
-  bucket       = "preset-scf-bucket-1308919341"
+  bucket       = "keep-bucket-1308919341"
   interval     = 300
   max_size     = 200
   partition    = "/%Y/%m/%d/%H/"
