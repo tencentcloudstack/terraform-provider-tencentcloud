@@ -187,7 +187,6 @@ data "tencentcloud_instance_types" "default" {
   memory_size    = 2
 }
 `
-
 const defaultAzVariable = `
 variable "default_az" {
   default = "ap-guangzhou-3"
