@@ -577,8 +577,8 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 }
@@ -640,8 +640,8 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.new_type.instance_types.0.instance_type
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 }
@@ -745,9 +745,9 @@ resource "tencentcloud_instance" "foo" {
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
-  private_ip        = "172.16.0.130"
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  private_ip        = "10.0.0.123"
 }
 `
 
