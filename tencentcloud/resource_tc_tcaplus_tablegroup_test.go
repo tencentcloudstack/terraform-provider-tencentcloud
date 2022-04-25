@@ -94,31 +94,15 @@ func testAccCheckTcaplusGroupExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusGroupBasic = `variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-resource "tencentcloud_tcaplus_cluster" "test_cluster" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_guagua_group"
-  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}`
-
-const testAccTcaplusGroup = testAccTcaplusGroupBasic + `
+const testAccTcaplusGroup = defaultTcaPlusData + `
 resource "tencentcloud_tcaplus_tablegroup" "test_group" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
+  cluster_id         = local.tcaplus_id
   tablegroup_name    = "tf_test_group_name_guagua"
 }
 `
-const testAccTcaplusGroupUpdate = testAccTcaplusGroupBasic + `
+const testAccTcaplusGroupUpdate = defaultTcaPlusData + `
 resource "tencentcloud_tcaplus_tablegroup" "test_group" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
+  cluster_id         = local.tcaplus_id
   tablegroup_name    = "tf_test_group_name_guagua_2"
 }
 `

@@ -453,3 +453,41 @@ locals {
 `
 
 // End of TCR Service
+
+// TcaPlus DB
+
+const defaultTcaPlusClusterName = "keep-tcaplus-cluster"
+const defaultTcaPlusClusterTableGroup = "keep_table_group"
+const defaultTcaPlusClusterTable = "keep_players"
+const defaultTcaPlusVar = `
+variable "tcaplus_cluster" {
+  default = "` + defaultTcaPlusClusterName + `"
+}
+
+variable "tcaplus_table_group" {
+  default = "` + defaultTcaPlusClusterTableGroup + `"
+}
+
+variable "tcaplus_table" {
+  default = "` + defaultTcaPlusClusterTable + `"
+}
+`
+const defaultTcaPlusData = defaultTcaPlusVar + `
+data "tencentcloud_tcaplus_clusters" "tcaplus" {
+  cluster_name = var.tcaplus_cluster
+}
+
+data "tencentcloud_tcaplus_tablegroups" "group" {
+  cluster_id = data.tencentcloud_tcaplus_clusters.tcaplus.list.0.cluster_id
+  tablegroup_name = var.tcaplus_table_group
+}
+
+locals {
+  tcaplus_id = data.tencentcloud_tcaplus_clusters.tcaplus.list.0.cluster_id
+  tcaplus_table_group = var.tcaplus_table_group
+  tcaplus_table_group_id = data.tencentcloud_tcaplus_tablegroups.group.list.0.tablegroup_id
+  tcaplus_table = var.tcaplus_table
+}
+`
+
+// End of TcaPlus DB

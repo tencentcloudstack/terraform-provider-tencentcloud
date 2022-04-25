@@ -8,7 +8,7 @@ import (
 
 var testDataTcaplusIdlsName = "data.tencentcloud_tcaplus_idls.id_test"
 
-func TestAccTencentCloudDataTcaplusIdls(t *testing.T) {
+func TestAccTencentCloudTcaplusIdlsData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -27,32 +27,11 @@ func TestAccTencentCloudDataTcaplusIdls(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTcaplusIdlsBaic = `
-variable "availability_zone" {
-default = "ap-guangzhou-3"
-}
+const testAccTencentCloudDataTcaplusIdlsBaic = defaultTcaPlusData + `
 
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-
-resource "tencentcloud_tcaplus_tablegroup" "test_group" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_name    = "tf_test_group_name_guagua"
-}
-
-resource "tencentcloud_tcaplus_cluster" "test_cluster" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_data_guagua"
-  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
 resource "tencentcloud_tcaplus_idl" "test_idl" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id  = tencentcloud_tcaplus_tablegroup.test_group.id
+  cluster_id     = local.tcaplus_id
+  tablegroup_id  = local.tcaplus_table_group_id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -60,7 +39,7 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";
-    message tb_online_guagua {
+    message tb_online_datasource {
         option(tcaplusservice.tcaplus_primary_key) = "uin,name,region";
         required int64 uin = 1;
         required string name = 2;
@@ -69,10 +48,10 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
         optional int32 logintime = 5 [default = 1];
         repeated int64 lockid = 6 [packed = true];
         optional bool is_available = 7 [default = false];
-        optional pay_info pay = 8;
+        optional pay_info_datasource pay = 8;
     }
 
-    message pay_info {
+    message pay_info_datasource {
         required int64 pay_id = 1;
         optional uint64 total_money = 2;
         optional uint64 pay_times = 3;

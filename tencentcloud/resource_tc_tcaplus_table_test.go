@@ -109,28 +109,10 @@ func testAccCheckTcaplusTableExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusTableBasic = `variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-resource "tencentcloud_tcaplus_cluster" "test_cluster" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_g_table"
-  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
-resource "tencentcloud_tcaplus_tablegroup" "group" {
-  cluster_id           = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_name      = "tf_test_group_name"
-}
+const testAccTcaplusTableBasic = defaultTcaPlusData + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id  = tencentcloud_tcaplus_tablegroup.group.id
+  cluster_id     = local.tcaplus_id
+  tablegroup_id  = local.tcaplus_table_group_id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -162,14 +144,10 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
     }
     EOF
 }
-resource "tencentcloud_tcaplus_tablegroup" "test_group" {
-  cluster_id      = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_name = "tf_test_group_name_guagua"
-}
 
 resource "tencentcloud_tcaplus_idl" "test_idl_2" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id  = tencentcloud_tcaplus_tablegroup.test_group.id
+  cluster_id     = local.tcaplus_id
+  tablegroup_id  = local.tcaplus_table_group_id
   file_name      = "tf_idl_test_guagua_2"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -204,8 +182,8 @@ resource "tencentcloud_tcaplus_idl" "test_idl_2" {
 `
 const testAccTcaplusTable = testAccTcaplusTableBasic + `
 resource "tencentcloud_tcaplus_table" "test_table" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
+  cluster_id         = local.tcaplus_id
+  tablegroup_id      = local.tcaplus_table_group_id
   table_name         = "tb_online_guagua"
   table_type         = "GENERIC"
   description        = "test"
@@ -218,8 +196,8 @@ resource "tencentcloud_tcaplus_table" "test_table" {
 `
 const testAccTcaplusTableUpdate = testAccTcaplusTableBasic + `
 resource "tencentcloud_tcaplus_table" "test_table" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
+  cluster_id         = local.tcaplus_id
+  tablegroup_id      = local.tcaplus_table_group_id
   table_name         = "tb_online_guagua"
   table_type         = "GENERIC"
   description        = "test_desc"
