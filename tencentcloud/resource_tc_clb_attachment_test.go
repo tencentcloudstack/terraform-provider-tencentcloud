@@ -94,7 +94,7 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckClbServerAttachmentTargetGroups(t *testing.T) {
+func TestAccCheckClbServerAttachmentTargetGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -156,13 +156,13 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 const testAccClbServerAttachment_tcp = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
+  clb_name     = "tf-clb-attach-tcp-test"
+  vpc_id       = var.cvm_vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
   clb_id                     = tencentcloud_clb_instance.foo.id
-  listener_name              = var.instance_name
+  listener_name              = "tf-clb-attach-tcp-test"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -189,13 +189,13 @@ resource "tencentcloud_clb_attachment" "foo" {
 const testAccClbServerAttachment_tcp_update = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
+  clb_name     = "tf-clb-attach-tcp-test"
+  vpc_id       = var.cvm_vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
   clb_id                     = tencentcloud_clb_instance.foo.id
-  listener_name              = var.instance_name
+  listener_name              = "tf-clb-attach-tcp-test"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -222,64 +222,13 @@ resource "tencentcloud_clb_attachment" "foo" {
 const testAccClbServerAttachment_http = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
+  clb_name     = "tf-clb-attach-http-test"
+  vpc_id       = var.cvm_vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
   clb_id               = tencentcloud_clb_instance.foo.id
-  listener_name        = var.instance_name
-  port                 = 77
-  protocol             = "HTTPS"
-  certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "%s"
-}
-
-resource "tencentcloud_clb_listener_rule" "foo" {
-  clb_id              = tencentcloud_clb_instance.foo.id
-  listener_id         = tencentcloud_clb_listener.foo.listener_id
-  domain              = "abc.com"
-  url                 = "/"
-  session_expire_time = 30
-  scheduler           = "WRR"
-}
-
-resource "tencentcloud_clb_attachment" "foo" {
-  clb_id      = tencentcloud_clb_instance.foo.id
-  listener_id = tencentcloud_clb_listener.foo.id
-  rule_id     = tencentcloud_clb_listener_rule.foo.id
-
-  targets {
-    instance_id = tencentcloud_instance.default.id
-    port        = 23
-    weight      = 10
-  }
-}
-`
-
-const testAccClbServerAttachment_multiple = instanceCommonTestCase + `
-resource "tencentcloud_instance" "update" {
-  instance_name              = var.instance_name_update
-  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
-  image_id                   = data.tencentcloud_images.default.images.0.image_id
-  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  system_disk_type           = "CLOUD_PREMIUM"
-  system_disk_size           = 50
-  allocate_public_ip         = true
-  internet_max_bandwidth_out = 10
-  vpc_id                     = var.vpc_id
-  subnet_id                  = var.subnet_id
-}
-
-resource "tencentcloud_clb_instance" "foo" {
-  network_type = "OPEN"
-  clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
-}
-
-resource "tencentcloud_clb_listener" "foo" {
-  clb_id               = tencentcloud_clb_instance.foo.id
-  listener_name        = var.instance_name
+  listener_name        = "tf-clb-attach-http-test"
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
@@ -298,7 +247,58 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
   listener_id = tencentcloud_clb_listener.foo.listener_id
-  rule_id     = tencentcloud_clb_listener_rule.foo.id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_multiple = instanceCommonTestCase + `
+resource "tencentcloud_instance" "update" {
+  instance_name              = var.instance_name_update
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type           = "CLOUD_PREMIUM"
+  system_disk_size           = 50
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 10
+  vpc_id                     = var.cvm_vpc_id
+  subnet_id                  = var.cvm_subnet_id
+}
+
+resource "tencentcloud_clb_instance" "foo" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-multi-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id               = tencentcloud_clb_instance.foo.id
+  listener_name        = "tf-clb-attach-multi-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "foo" {
+  clb_id              = tencentcloud_clb_instance.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
 
   targets {
     instance_id = tencentcloud_instance.default.id
@@ -317,13 +317,13 @@ const testAccClbServerAttachment_multiple_update = instanceCommonTestCase + `
 
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
+  clb_name     = "tf-clb-attach-multi-test"
+  vpc_id       = var.cvm_vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
   clb_id               = tencentcloud_clb_instance.foo.id
-  listener_name        = var.instance_name
+  listener_name        = "tf-clb-attach-multi-test"
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
@@ -342,7 +342,7 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
   listener_id = tencentcloud_clb_listener.foo.listener_id
-  rule_id     = tencentcloud_clb_listener_rule.foo.id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
 
   targets {
     instance_id = tencentcloud_instance.default.id

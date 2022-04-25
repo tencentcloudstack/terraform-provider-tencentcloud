@@ -17,6 +17,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mozillazg/go-httpheader v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.5.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.358
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
