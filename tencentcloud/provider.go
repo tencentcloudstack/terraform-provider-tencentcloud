@@ -166,6 +166,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_group_policy_attachment
     tencentcloud_cam_group_membership
     tencentcloud_cam_saml_provider
+	tencentcloud_cam_oidc_sso
 
 Cloud Block Storage(CBS)
   Data Source
@@ -1012,6 +1013,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_user_policy_attachment":              resourceTencentCloudCamUserPolicyAttachment(),
 			"tencentcloud_cam_group_policy_attachment":             resourceTencentCloudCamGroupPolicyAttachment(),
 			"tencentcloud_cam_group":                               resourceTencentCloudCamGroup(),
+			"tencentcloud_cam_oidc_sso":                            resourceTencentCloudCamOIDCSSO(),
 			"tencentcloud_cam_group_membership":                    resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":                       resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_scf_function":                            resourceTencentCloudScfFunction(),
