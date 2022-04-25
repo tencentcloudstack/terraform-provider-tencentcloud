@@ -3,11 +3,43 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_vod_adaptive_dynamic_streaming_template
+	resource.AddTestSweepers("tencentcloud_vod_adaptive_dynamic_streaming_template", &resource.Sweeper{
+		Name: "tencentcloud_vod_adaptive_dynamic_streaming_template",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			vodService := VodService{
+				client: client.apiV3Conn,
+			}
+			filter := make(map[string]interface{})
+			templates, e := vodService.DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx, filter)
+			if e != nil {
+				return nil
+			}
+			for _, template := range templates {
+				ee := vodService.DeleteAdaptiveDynamicStreamingTemplate(ctx, strconv.FormatUint(*template.Definition, 10), uint64(0))
+				if ee != nil {
+					continue
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T) {
 	t.Parallel()
