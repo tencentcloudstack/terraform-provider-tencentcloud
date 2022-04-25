@@ -101,33 +101,10 @@ func testAccCheckTcaplusIdlExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcaplusIdlBasic = `variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-
-resource "tencentcloud_tcaplus_cluster" "test_cluster" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_test_cluster"
-  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
-resource "tencentcloud_tcaplus_tablegroup" "group" {
-  cluster_id          = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_name     = "tf_test_group_name"
-}
-`
-
-const testAccTcaplusIdl = testAccTcaplusIdlBasic + `
+const testAccTcaplusIdl = defaultTcaPlusData + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id  = tencentcloud_tcaplus_tablegroup.group.id
+  cluster_id     = local.tcaplus_id
+  tablegroup_id  = local.tcaplus_table_group_id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"

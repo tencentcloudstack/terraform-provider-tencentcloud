@@ -8,7 +8,7 @@ import (
 
 var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_tablegroups.id_test"
 
-func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
+func TestAccTencentCloudTcaplusGroupsData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -16,14 +16,13 @@ func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 		CheckDestroy: testAccCheckTcaplusGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataTcaplusGroupsBaic,
+				Config: testAccTencentCloudDataTcaplusGroupsBasic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_tablegroup.test_group"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "cluster_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "tablegroup_id"),
-					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.#", "1"),
-					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.tablegroup_name", "tf_test_group_name_guagua"),
-					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.table_count", "0"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.#"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.tablegroup_name"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.table_count"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.tablegroup_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.total_size"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.create_time"),
@@ -33,30 +32,10 @@ func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTcaplusGroupsBaic = `
-variable "availability_zone" {
-default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-resource "tencentcloud_tcaplus_cluster" "test_cluster" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_data_guagua"
-  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
-resource "tencentcloud_tcaplus_tablegroup" "test_group" {
-  cluster_id       = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_name  = "tf_test_group_name_guagua"
-}
+const testAccTencentCloudDataTcaplusGroupsBasic = defaultTcaPlusData + `
 
 data "tencentcloud_tcaplus_tablegroups" "id_test" {
-   cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-   tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
+   cluster_id         = local.tcaplus_id
+   tablegroup_id      = local.tcaplus_table_group_id
 }
 `
