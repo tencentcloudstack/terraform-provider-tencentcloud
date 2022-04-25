@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -12,6 +12,7 @@ import (
 )
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cos_bucket
 	resource.AddTestSweepers("tencentcloud_cos_bucket", &resource.Sweeper{
 		Name: "tencentcloud_cos_bucket",
 		F:    testSweepCosBuckets,
@@ -36,9 +37,11 @@ func testSweepCosBuckets(region string) error {
 		return fmt.Errorf("list buckets error: %s", err.Error())
 	}
 
+	prefix := regexp.MustCompile("^(tf|test)-")
+
 	for _, v := range buckets {
 		bucket := *v.Name
-		if !strings.HasPrefix(bucket, "tf-bucket-") {
+		if !prefix.MatchString(bucket) {
 			continue
 		}
 
