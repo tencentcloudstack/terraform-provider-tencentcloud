@@ -359,7 +359,7 @@ func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interfac
 		sslService    = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
 		outErr, inErr error
 		//id            = d.Id()
-		deleteResult  bool
+		deleteResult bool
 	)
 	request := ssl.NewDeleteCertificateRequest()
 	//request.CertificateId = helper.String(id)
