@@ -411,6 +411,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 The following arguments are supported:
 
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
+* `acquire_cluster_admin_role` - (Optional) If set to true, it will acquire the ClusterRole tke:admin. NOTE: this arguments cannot revoke to `false` after acquired.
 * `auth_options` - (Optional) Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.
 * `auto_upgrade_cluster_level` - (Optional) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.

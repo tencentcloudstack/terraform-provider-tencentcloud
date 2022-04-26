@@ -314,6 +314,31 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	return
 }
 
+func (me *TkeService) DescribeClusterCommonNames(ctx context.Context, request *tke.DescribeClusterCommonNamesRequest) (commonNames []*tke.CommonName, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterCommonNames(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	commonNames = response.Response.CommonNames
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *TkeService) DescribeClusterLevelAttribute(ctx context.Context, id string) (clusterLevels []*tke.ClusterLevelAttribute, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterLevelAttributeRequest()
@@ -1556,6 +1581,32 @@ func (me *TkeService) ModifyDeletionProtection(ctx context.Context, id string, e
 				logId, action, errRet.Error())
 		}
 	}()
+
+	return
+}
+
+func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewAcquireClusterAdminRoleRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &clusterId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().AcquireClusterAdminRole(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
