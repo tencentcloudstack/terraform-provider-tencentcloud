@@ -61,15 +61,12 @@ func TestAccTencentCloudTkeAddonAttachmentResource(t *testing.T) {
 
 func testAccTkeAddonAttachment() string {
 	return fmt.Sprintf(`
-
-data "tencentcloud_kubernetes_clusters" "cls" {
-  cluster_name = "keep"
-}
+%s
 
 resource "tencentcloud_kubernetes_addon_attachment" "cos" {
-  cluster_id = data.tencentcloud_kubernetes_clusters.cls.list.0.cluster_id // tencentcloud_kubernetes_cluster.managed_cluster.id
-  name = %s
+  cluster_id = local.cluster_id
+  name = "%s"
   version = "1.0.0"
 }
-`, defaultAddonName)
+`, TkeDataSource, defaultAddonName)
 }
