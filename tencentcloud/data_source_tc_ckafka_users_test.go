@@ -9,7 +9,7 @@ import (
 func TestAccTencentCloudCkafkaUsersDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCkafkaUserDestroy,
 		Steps: []resource.TestStep{
@@ -18,7 +18,7 @@ func TestAccTencentCloudCkafkaUsersDataSource(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCkafkaUserExists("tencentcloud_ckafka_user.foo"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_users.foo", "instance_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_users.foo", "user_list.0.account_name", "test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_users.foo", "user_list.0.account_name", "test1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_users.foo", "user_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_users.foo", "user_list.0.update_time"),
 				),
@@ -27,10 +27,10 @@ func TestAccTencentCloudCkafkaUsersDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSourceCkafkaUser = `
+const testAccTencentCloudDataSourceCkafkaUser = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_user" "foo" {
-  instance_id  = "ckafka-f9ife4zz"
-  account_name = "test"
+  instance_id  = var.instance_id
+  account_name = "test1"
   password     = "test1234"
 }
 
