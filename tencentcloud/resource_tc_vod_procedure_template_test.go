@@ -20,7 +20,7 @@ func TestAccTencentCloudVodProcedureTemplateResource(t *testing.T) {
 				Config: testAccVodProcedureTemplate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVodProcedureTemplateExists("tencentcloud_vod_procedure_template.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "name", "tf-procedure"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "name", "tf-procedure0"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "comment", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.adaptive_dynamic_streaming_task_list.#", "1"),
@@ -121,7 +121,7 @@ func testAccCheckVodProcedureTemplateExists(n string) resource.TestCheckFunc {
 
 const testAccVodProcedureTemplate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
 resource "tencentcloud_vod_procedure_template" "foo" {
-  name    = "tf-procedure"
+  name    = "tf-procedure0"
   comment = "test"
   media_process_task {
     adaptive_dynamic_streaming_task_list {
@@ -142,7 +142,7 @@ resource "tencentcloud_vod_procedure_template" "foo" {
 
 const testAccVodProcedureTemplateUpdate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
 resource "tencentcloud_vod_procedure_template" "foo" {
-  name    = "tf-procedure"
+  name    = "tf-procedure0"
   comment = "test-update"
   media_process_task {
     adaptive_dynamic_streaming_task_list {

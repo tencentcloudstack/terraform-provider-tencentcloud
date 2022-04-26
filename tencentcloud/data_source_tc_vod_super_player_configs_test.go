@@ -18,7 +18,7 @@ func TestAccDataSourceTencentCloudVodSuperPlayerConfigs(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vod_super_player_configs.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.name", "tf-super-player"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.name", "tf-super-player1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.drm_switch", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.drm_streaming_info.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.resolution_names.#", "2"),
@@ -39,7 +39,29 @@ func TestAccDataSourceTencentCloudVodSuperPlayerConfigs(t *testing.T) {
 	})
 }
 
-const testAccVodSuperPlayerConfigs = testAccVodSuperPlayerConfig + `
+const testAccDataSourceVodSuperPlayerConfig = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodImageSpriteTemplate + `
+resource "tencentcloud_vod_super_player_config" "foo" {
+  name                    = "tf-super-player1"
+  drm_switch              = true
+  drm_streaming_info {
+    simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
+  }
+  image_sprite_definition = tencentcloud_vod_image_sprite_template.foo.id
+  resolution_names {
+    min_edge_length = 889
+    name            = "test1"
+  }
+  resolution_names {
+    min_edge_length = 890
+    name            = "test2"
+  }
+  domain                  = "Default"
+  scheme                  = "Default"
+  comment                 = "test"
+}
+`
+
+const testAccVodSuperPlayerConfigs = testAccDataSourceVodSuperPlayerConfig + `
 data "tencentcloud_vod_super_player_configs" "foo" {
   type = "Custom"
   name = tencentcloud_vod_super_player_config.foo.id
