@@ -18,7 +18,7 @@ func TestAccDataSourceTencentCloudVodProcedureTemplates(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vod_procedure_templates.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.0.name", "tf-procedure"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.0.name", "tf-procedure1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.0.comment", "test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.0.media_process_task.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_procedure_templates.foo", "template_list.0.media_process_task.0.adaptive_dynamic_streaming_task_list.#", "1"),
@@ -37,7 +37,28 @@ func TestAccDataSourceTencentCloudVodProcedureTemplates(t *testing.T) {
 	})
 }
 
-const testAccVodProcedureTemplates = testAccVodProcedureTemplate + `
+const testAccDataSourceVodProcedureTemplate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
+resource "tencentcloud_vod_procedure_template" "foo" {
+  name    = "tf-procedure1"
+  comment = "test"
+  media_process_task {
+    adaptive_dynamic_streaming_task_list {
+      definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
+    }
+    snapshot_by_time_offset_task_list {
+      definition           = tencentcloud_vod_snapshot_by_time_offset_template.foo.id
+      ext_time_offset_list = [
+        "3.5s"
+      ]
+    }
+    image_sprite_task_list {
+      definition = tencentcloud_vod_image_sprite_template.foo.id
+    }
+  }
+}
+`
+
+const testAccVodProcedureTemplates = testAccDataSourceVodProcedureTemplate + `
 data "tencentcloud_vod_procedure_templates" "foo" {
   type = "Custom"
   name = tencentcloud_vod_procedure_template.foo.id
