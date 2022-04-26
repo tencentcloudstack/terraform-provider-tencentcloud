@@ -202,13 +202,9 @@ func testAccCheckTkeNodePoolExists(s *terraform.State) error {
 
 }
 
-const testAccTkeNodePoolClusterBasic = `
+const testAccTkeNodePoolClusterBasic = TkeDataSource + TkeInstanceType + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
-}
-
-variable "cluster_cidr" {
-  default = "192.168.0.0/16"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -219,20 +215,12 @@ data "tencentcloud_vpc_subnets" "vpc" {
 data "tencentcloud_security_groups" "sg" {
   name = "default"
 }
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
-}
-
-variable "cluster_id" {
-  default = "` + defaultTkeClusterId + `"
-}
 `
 
 const testAccTkeNodePoolCluster string = testAccTkeNodePoolClusterBasic + `
 resource "tencentcloud_kubernetes_node_pool" "np_test" {
   name = "mynodepool"
-  cluster_id = var.cluster_id
+  cluster_id = local.cluster_id
   max_size = 6
   min_size = 1
   vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
@@ -246,7 +234,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_project_id = "` + defaultProjectId + `"
 
   auto_scaling_config {
-    instance_type      = var.default_instance_type
+    instance_type      = local.type1
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
@@ -288,7 +276,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 const testAccTkeNodePoolClusterUpdate string = testAccTkeNodePoolClusterBasic + `
 resource "tencentcloud_kubernetes_node_pool" "np_test" {
   name = "mynodepoolupdate"
-  cluster_id = var.cluster_id
+  cluster_id = local.cluster_id
   max_size = 5
   min_size = 2
   vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
@@ -304,7 +292,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies 	   = ["NEWEST_INSTANCE"]
 
   auto_scaling_config {
-    instance_type      = var.default_instance_type
+    instance_type      = local.type1
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]

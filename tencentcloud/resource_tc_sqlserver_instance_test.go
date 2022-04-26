@@ -50,6 +50,8 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 	for i := range instances {
 		go func(i int) {
 			defer wg.Done()
+			delay := time.Duration(i)
+			time.Sleep(time.Second * delay)
 			id := *instances[i].InstanceId
 			name := *instances[i].Name
 			createTime := *instances[i].CreateTime
@@ -425,7 +427,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
   engine_version                = "2017"
   charge_type                   = "POSTPAID_BY_HOUR"
-  availability_zone             = var.default_az
+  availability_zone             = local.az
   vpc_id                        = local.vpc_id
   subnet_id                     = local.subnet_id
   security_groups               = [local.sg_id]

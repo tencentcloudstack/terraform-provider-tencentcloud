@@ -13,7 +13,8 @@ import (
 var testTkeClusterAsName = "tencentcloud_kubernetes_as_scaling_group"
 var testTkeClusterAsResourceKey = testTkeClusterAsName + ".as_test"
 
-func TestAccTencentCloudTkeAsResource(t *testing.T) {
+// @Deprecated
+func testAccTencentCloudTkeAsResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -67,16 +68,23 @@ func testAccCheckTkeAsDestroy(s *terraform.State) error {
 	}
 	asGroupId := items[1]
 
-	_, has, err := service.DescribeAutoScalingGroupById(ctx, asGroupId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, err := service.DescribeAutoScalingGroupById(ctx, asGroupId)
+
+		if err != nil {
+			return retryError(err)
+		}
+		if has == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("tke as group %s still exist", asGroupId))
+	})
+
 	if err != nil {
 		return err
 	}
-	if has == 0 {
-		return nil
-	} else {
-		return fmt.Errorf("tke as group %s still exist", asGroupId)
-	}
-
+	return nil
 }
 
 func testAccCheckTkeAsExists(s *terraform.State) error {
@@ -108,76 +116,23 @@ func testAccCheckTkeAsExists(s *terraform.State) error {
 	}
 	if has == 1 {
 		return nil
-	} else {
-		return fmt.Errorf("tke as group %s query fail.", asGroupId)
 	}
-
+	return fmt.Errorf("tke as group %s query fail.", asGroupId)
 }
 
-const testAccTkeAsClusterBasic = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
+const TkeAsBasic = TkeDataSource + TkeExclusiveNetwork + TkeInstanceType
 
-variable "cluster_cidr" {
-  default = "172.31.0.0/16"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
-}
-
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = var.cluster_cidr
-  cluster_max_pod_num     = 32
-  cluster_name            = "tf-tke-unit-test"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-  cluster_version         = "1.18.4"
-  cluster_os			  = "tlinux2.2(tkernel3)x86_64"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}`
-
-const testAccTkeAsCluster string = testAccTkeAsClusterBasic + `
+const testAccTkeAsCluster = TkeAsBasic + `
 resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id = local.cluster_id
 
   auto_scaling_group {
     scaling_group_name   = "tf-tke-as-group-unit-test"
     max_size             = "5"
     min_size             = "0"
-    vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-    subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+    vpc_id               = local.vpc_id
+    subnet_ids           = [local.subnet_id]
     project_id           = 0
     default_cooldown     = 400
     desired_capacity     = "1"
@@ -192,7 +147,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
   auto_scaling_config {
     configuration_name = "tf-tke-as-config-unit-test"
-    instance_type      = var.default_instance_type
+    instance_type      = local.type1
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
@@ -226,17 +181,17 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
 `
 
-const testAccTkeAsClusterUpdate string = testAccTkeAsClusterBasic + `
+const testAccTkeAsClusterUpdate = TkeAsBasic + `
 resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id = local.cluster_id
 
   auto_scaling_group {
     scaling_group_name   = "tf-tke-as-group-unit-test"
     max_size             = "6"
     min_size             = "1"
-    vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-    subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+    vpc_id               = local.vpc_id
+    subnet_ids           = [local.subnet_id]
     project_id           = 0
     default_cooldown     = 400
     desired_capacity     = "1"
@@ -251,7 +206,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
   auto_scaling_config {
     configuration_name = "tf-tke-as-config-unit-test"
-    instance_type      = var.default_instance_type
+    instance_type      = local.type1
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
