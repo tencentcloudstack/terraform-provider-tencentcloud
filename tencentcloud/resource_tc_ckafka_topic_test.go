@@ -10,10 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCKafkaTopic(t *testing.T) {
+func TestAccTencentCloudCKafkaTopicResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccTencentCloudKafkaTopicDestory,
 		Steps: []resource.TestStep{
@@ -21,7 +21,7 @@ func TestAccTencentCloudCKafkaTopic(t *testing.T) {
 				Config: testAccKafkaTopicInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaTopicInstanceExists("tencentcloud_ckafka_topic.kafka_topic"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "instance_id", "ckafka-f9ife4zz"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "topic_name", "ckafka-topic-tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "note", "this is test ckafka topic"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "replica_num", "2"),
@@ -32,7 +32,7 @@ func TestAccTencentCloudCKafkaTopic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "clean_up_policy", "delete"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "sync_replica_min_num", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "unclean_leader_election_enable"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "segment", "3600000"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "segment", "86400000"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "retention", "60000"),
 				),
 			},
@@ -40,14 +40,14 @@ func TestAccTencentCloudCKafkaTopic(t *testing.T) {
 				Config: testAccKafkaTopicInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaTopicInstanceExists("tencentcloud_ckafka_topic.kafka_topic"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "instance_id", "ckafka-f9ife4zz"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "note", "this is test topic_update"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "partition_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "enable_white_list", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "clean_up_policy", "compact"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "sync_replica_min_num", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "unclean_leader_election_enable"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "segment", "4000000"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "segment", "87400000"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "retention", "70000"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "max_message_bytes", "8388608"),
 				),
@@ -125,9 +125,9 @@ func testAccCheckKafkaTopicInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccKafkaTopicInstance = `
+const testAccKafkaTopicInstance = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
-	instance_id                         = "ckafka-f9ife4zz"
+	instance_id                         = var.instance_id
 	topic_name                          = "ckafka-topic-tf-test"
 	note                                = "this is test ckafka topic"
 	replica_num                         = 2
@@ -137,15 +137,15 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	clean_up_policy                     = "delete"
 	sync_replica_min_num                = 1
 	unclean_leader_election_enable      = false
-	segment                             = 3600000
+	segment                             = 86400000
 	retention                           = 60000
 	max_message_bytes                   = 0
 }
 `
 
-const testAccKafkaTopicInstanceUpdate = `
+const testAccKafkaTopicInstanceUpdate = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
-	instance_id                         = "ckafka-f9ife4zz"
+	instance_id                         = var.instance_id
 	topic_name                          = "ckafka-topic-tf-test"
 	note                                = "this is test topic_update"
 	replica_num                         = 2
@@ -155,7 +155,7 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	clean_up_policy                     = "compact"
 	sync_replica_min_num                = 2
 	unclean_leader_election_enable      = true
-	segment                             = 4000000
+	segment                             = 87400000
 	retention                           = 70000
 	max_message_bytes                   = 8388608
 }

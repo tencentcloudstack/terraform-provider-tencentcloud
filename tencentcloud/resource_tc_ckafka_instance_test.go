@@ -12,7 +12,7 @@ import (
 func TestAccTencentCloudCKafkaInstance(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -21,7 +21,7 @@ func TestAccTencentCloudCKafkaInstance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-tf-test"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100006"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1300"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "renew_flag", "0"),
@@ -35,7 +35,7 @@ func TestAccTencentCloudCKafkaInstance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-tf-test"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100086"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1200"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "renew_flag", "0"),
@@ -45,9 +45,10 @@ func TestAccTencentCloudCKafkaInstance(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_ckafka_instance.kafka_instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"period"},
 			},
 		},
 	})
@@ -64,15 +65,16 @@ func TestAccTencentCloudKafkaInstanceMAZ(t *testing.T) {
 				Config: testAccKafkaInstanceMAZ,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-tf-test"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100006"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-maz-tf-test"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_ids.#", "2"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_ckafka_instance.kafka_instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"period"},
 			},
 		},
 	})
@@ -135,31 +137,13 @@ func testAccCheckKafkaInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccKafkaInstance = `
-resource "tencentcloud_route_table" "rtb_test" {
-  name   = "rtb-test"
-  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
-}
-
-resource "tencentcloud_subnet" "subnet_test" {
-  name              = "subnet-test"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-guangzhou-6"
-  vpc_id            = "${tencentcloud_vpc.vpc_test.id}"
-  route_table_id    = "${tencentcloud_route_table.rtb_test.id}"
-}
-
-resource "tencentcloud_vpc" "vpc_test" {
-  name       = "vpc-test"
-  cidr_block = "10.0.0.0/16"
-}
-
+const testAccKafkaInstance = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-tf-test"
-  zone_id            = 100006
+  zone_id            = 100003
   period             = 1
-  vpc_id             = "${tencentcloud_vpc.vpc_test.id}"
-  subnet_id          = "${tencentcloud_subnet.subnet_test.id}"
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "1.1.1"
@@ -179,31 +163,13 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 `
 
-const testAccKafkaInstanceUpdate = `
-resource "tencentcloud_route_table" "rtb_test" {
-  name   = "rtb-test"
-  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
-}
-
-resource "tencentcloud_subnet" "subnet_test" {
-  name              = "subnet-test"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-guangzhou-6"
-  vpc_id            = "${tencentcloud_vpc.vpc_test.id}"
-  route_table_id    = "${tencentcloud_route_table.rtb_test.id}"
-}
-
-resource "tencentcloud_vpc" "vpc_test" {
-  name       = "vpc-test"
-  cidr_block = "10.0.0.0/16"
-}
-
+const testAccKafkaInstanceUpdate = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-tf-test"
-  zone_id            = 100006
+  zone_id            = 100003
   period             = 1
-  vpc_id             = "${tencentcloud_vpc.vpc_test.id}"
-  subnet_id          = "${tencentcloud_subnet.subnet_test.id}"
+  vpc_id             =  var.vpc_id
+  subnet_id          =  var.subnet_id
   msg_retention_time = 1200
   renew_flag         = 0
   kafka_version      = "1.1.1"
@@ -223,33 +189,15 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 `
 
-const testAccKafkaInstanceMAZ = `
-resource "tencentcloud_route_table" "rtb_test" {
-  name   = "rtb-test"
-  vpc_id = "${tencentcloud_vpc.vpc_test.id}"
-}
-
-resource "tencentcloud_subnet" "subnet_test" {
-  name              = "subnet-test"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-guangzhou-6"
-  vpc_id            = tencentcloud_vpc.vpc_test.id
-  route_table_id    = tencentcloud_route_table.rtb_test.id
-}
-
-resource "tencentcloud_vpc" "vpc_test" {
-  name       = "vpc-test"
-  cidr_block = "10.0.0.0/16"
-}
-
+const testAccKafkaInstanceMAZ = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
-  instance_name      = "ckafka-instance-tf-test"
-  zone_id            = 100006
+  instance_name      = "ckafka-instance-maz-tf-test"
+  zone_id            = 100003
   multi_zone_flag    = true
-  zone_ids           = [100007, 100006]
+  zone_ids           = [100003, 100006]
   period             = 1
-  vpc_id             = tencentcloud_vpc.vpc_test.id
-  subnet_id          = tencentcloud_subnet.subnet_test.id
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "1.1.1"

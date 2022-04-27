@@ -338,29 +338,16 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	}
 	//Update ip white List
 	if whiteListSwitch {
-		oldInterface, newInterface := d.GetChange("ip_white_list")
-		oldIpWhiteListInterface := oldInterface.([]interface{})
+		_, newInterface := d.GetChange("ip_white_list")
 		newIpWhiteListInterface := newInterface.([]interface{})
-		var oldIpWhiteList, newIpWhiteList []*string
-		for _, value := range oldIpWhiteListInterface {
-			oldIpWhiteList = append(oldIpWhiteList, helper.String(value.(string)))
-		}
+		var newIpWhiteList []*string
 		for _, value := range newIpWhiteListInterface {
 			newIpWhiteList = append(newIpWhiteList, helper.String(value.(string)))
-		}
-		if len(oldIpWhiteList) > 0 {
-			error := ckafkcService.RemoveCkafkaTopicIpWhiteList(ctx, instanceId, topicName, oldIpWhiteList)
-			if error != nil {
-				return fmt.Errorf("IP whitelist Modification failed, reason[%s]\n", error.Error())
-			}
 		}
 		if len(newIpWhiteList) == 0 {
 			return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
 		}
-		error := ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, newIpWhiteList)
-		if error != nil {
-			return fmt.Errorf("IP whitelist Modification failed, reason[%s]\n", error.Error())
-		}
+		request.IpWhiteList = newIpWhiteList
 	} else {
 		//IP whiteList Switch not turned on, and the ip whitelist cannot be modified
 		if d.HasChange("ip_white_list") {

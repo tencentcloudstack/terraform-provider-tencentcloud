@@ -96,6 +96,25 @@ const (
 	defaultEMRSgId        = "sg-mag8k2fj"
 )
 
+//ckafka
+const (
+	defaultKafkaInstanceId = "ckafka-vv7wpvae"
+	defaultKafkaVpcId      = "vpc-68vi2d3h"
+	defaultKafkaSubnetId   = "subnet-ob6clqwk"
+)
+
+const defaultKafkaVariable = `
+variable "instance_id" {
+  default = "` + defaultKafkaInstanceId + `"
+}
+variable "vpc_id" {
+  default = "` + defaultKafkaVpcId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultKafkaSubnetId + `"
+}
+`
+
 // Tke Exclusive Network Environment
 const (
 	tkeExclusiveVpcId     = "vpc-391sv4w3"

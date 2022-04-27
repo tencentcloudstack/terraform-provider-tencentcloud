@@ -12,7 +12,7 @@ import (
 func TestAccTencentCloudCkafkaUser(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCkafkaUserDestroy,
 		Steps: []resource.TestStep{
@@ -99,17 +99,17 @@ func testAccCheckCkafkaUserDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCkafkaUser = `
+const testAccCkafkaUser = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_user" "foo" {
-  instance_id  = "ckafka-f9ife4zz"
+  instance_id  = var.instance_id
   account_name = "tf-test"
   password     = "test1234"
 }
 `
 
-const testAccCkafkaUser_update = `
+const testAccCkafkaUser_update = defaultKafkaVariable + `
 resource "tencentcloud_ckafka_user" "foo" {
-  instance_id  = "ckafka-f9ife4zz"
+  instance_id  = var.instance_id
   account_name = "tf-test"
   password     = "test1234update"
 }

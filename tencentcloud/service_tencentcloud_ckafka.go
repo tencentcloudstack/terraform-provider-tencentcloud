@@ -810,7 +810,7 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 			return retryError(err)
 		}
 		if len(topicList) != 0 {
-			errRet = fmt.Errorf("this Topic %s Delete Failed", name)
+			return resource.RetryableError(fmt.Errorf("this Topic %s Delete Failed", name))
 		}
 		return nil
 	})

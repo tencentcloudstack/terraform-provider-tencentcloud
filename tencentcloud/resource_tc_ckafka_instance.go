@@ -388,6 +388,9 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 		}
 		return resource.RetryableError(fmt.Errorf("create ckafka instance task is processing"))
 	})
+	if err != nil {
+		return err
+	}
 	d.SetId(*instanceId)
 
 	// modify instance attributes
@@ -669,7 +672,7 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
 		if err != nil {
-			retryError(err, "UnsupportedOperation")
+			return retryError(err, "UnsupportedOperation")
 		}
 		return nil
 	})
@@ -687,5 +690,8 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 		}
 		return resource.RetryableError(fmt.Errorf("delete ckafka instance task is processing"))
 	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -9,7 +9,7 @@ import (
 func TestAccTencentCloudCkafkaAclsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCkafkaAclDestroy,
 		Steps: []resource.TestStep{
@@ -29,7 +29,38 @@ func TestAccTencentCloudCkafkaAclsDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataSourceCkafkaAcl = testAccCkafkaAcl + `
+const testAccTencentCloudDataSourceCkafkaAcl = defaultKafkaVariable + `
+resource "tencentcloud_ckafka_user" "foo" {
+	instance_id  = var.instance_id
+	account_name = "tf-test-acl-data"
+	password     = "test1234"
+}
+
+resource "tencentcloud_ckafka_topic" "kafka_topic_acl" {
+	instance_id                     = var.instance_id
+	topic_name                      = "ckafka-topic-acl-data-test"
+	replica_num                     = 2
+	partition_num                   = 1
+	note                            = "test topic"
+	enable_white_list               = true
+	ip_white_list                   = ["192.168.1.1"]
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
+	unclean_leader_election_enable  = false
+	segment                         = 86400000
+	retention                       = 60000
+}
+
+resource "tencentcloud_ckafka_acl" foo {
+  instance_id     = var.instance_id
+  resource_type   = "TOPIC"
+  resource_name   = tencentcloud_ckafka_topic.kafka_topic_acl.topic_name
+  operation_type  = "WRITE"
+  permission_type = "ALLOW"
+  host            = "10.10.10.0"
+  principal       = tencentcloud_ckafka_user.foo.account_name
+}
+
 data "tencentcloud_ckafka_acls" "foo" {
 	instance_id   = tencentcloud_ckafka_acl.foo.instance_id
     resource_type = tencentcloud_ckafka_acl.foo.resource_type
