@@ -67,6 +67,10 @@ func testAccPreCheck(t *testing.T) {
 	}
 }
 
+func testAccStepPreConfigSetTempAKSK(t *testing.T, accountType string) {
+	testAccPreCheckCommon(t, accountType)
+}
+
 func testAccPreCheckCommon(t *testing.T, accountType string) {
 	if v := os.Getenv(PROVIDER_REGION); v == "" {
 		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
@@ -94,6 +98,14 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		secretKey := os.Getenv(PRIVATE_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {
 			t.Fatalf("%v and %v must be set for acceptance tests\n", PRIVATE_PROVIDER_SECRET_ID, PRIVATE_PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_COMMON:
+		secretId := os.Getenv(COMMON_PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(COMMON_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", COMMON_PROVIDER_SECRET_ID, COMMON_PROVIDER_SECRET_KEY)
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)

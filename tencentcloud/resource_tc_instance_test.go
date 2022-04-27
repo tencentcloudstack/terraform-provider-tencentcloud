@@ -72,7 +72,8 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceBasic,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -84,7 +85,8 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceModifyInstanceType,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceModifyInstanceType,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
@@ -112,7 +114,8 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithDataDisk,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithDataDisk,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -127,7 +130,8 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithDataDiskUpdate,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithDataDiskUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -156,7 +160,8 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithNetworkFalse("false"),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithNetworkFalse("false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -165,7 +170,8 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithNetwork("true", 5),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithNetwork("true", 5),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -179,7 +185,7 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 }
 
 func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
-
+	t.Parallel()
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
@@ -188,7 +194,8 @@ func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithPrivateIP,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithPrivateIP,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -210,7 +217,8 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_0"),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithKeyPair("key_pair_0"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -219,7 +227,8 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -242,7 +251,8 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithPassword("TF_test_123"),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithPassword("TF_test_123"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -251,7 +261,8 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithPassword("TF_test_123456"),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithPassword("TF_test_123456"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -264,17 +275,17 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 }
 
 func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
-	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
 		Providers:     testAccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithImageLogin,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccTencentCloudInstanceWithImageLogin,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -297,7 +308,8 @@ func TestAccTencentCloudInstanceWithName(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithName(defaultInsName),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithName(defaultInsName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -306,7 +318,8 @@ func TestAccTencentCloudInstanceWithName(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithName(defaultInsNameUpdate),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithName(defaultInsNameUpdate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -329,7 +342,8 @@ func TestAccTencentCloudInstanceWithHostname(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithHostname,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithHostname,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -356,7 +370,8 @@ func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithSecurityGroup(`[tencentcloud_security_group.foo.id]`),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithSecurityGroup(`[tencentcloud_security_group.foo.id]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(instanceId),
 					testAccCheckTencentCloudInstanceExists(instanceId),
@@ -370,6 +385,7 @@ func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithSecurityGroup(`[
 					tencentcloud_security_group.foo.id,
 					tencentcloud_security_group.bar.id
@@ -401,6 +417,7 @@ func TestAccTencentCloudInstanceWithTags(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithTags(`{
 					"hello" = "world"
 					"happy" = "hour"
@@ -414,6 +431,7 @@ func TestAccTencentCloudInstanceWithTags(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithTags(`{
 					"hello" = "hello"
 				}`),
@@ -439,7 +457,8 @@ func TestAccTencentCloudInstanceWithPlacementGroup(t *testing.T) {
 		CheckDestroy: testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithPlacementGroup,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithPlacementGroup,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
@@ -461,7 +480,8 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithSpotpaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithSpotpaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -473,17 +493,17 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 }
 
 func TestAccTencentCloudInstancePostpaidToPrepaid(t *testing.T) {
-	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
 		Providers:     testAccProviders,
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstancePostPaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccTencentCloudInstancePostPaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -491,7 +511,8 @@ func TestAccTencentCloudInstancePostpaidToPrepaid(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceBasicToPrepaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccTencentCloudInstanceBasicToPrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -591,8 +612,8 @@ data "tencentcloud_instance_types" "default" {
     values = ["S1"]
   }
 
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count = 2
+  memory_size    = 2
 }
 
 resource "tencentcloud_instance" "foo" {
@@ -601,6 +622,7 @@ resource "tencentcloud_instance" "foo" {
   image_id          = "` + defaultTkeOSImageId + `"
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
+  force_delete = true
 }
 `
 
@@ -611,8 +633,8 @@ data "tencentcloud_instance_types" "default" {
     values = ["S1"]
   }
 
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count = 2
+  memory_size    = 2
 }
 
 resource "tencentcloud_instance" "foo" {
@@ -624,6 +646,7 @@ resource "tencentcloud_instance" "foo" {
   instance_charge_type       = "PREPAID"
   instance_charge_type_prepaid_period = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  force_delete = true
 }
 `
 
@@ -796,7 +819,6 @@ resource "tencentcloud_instance" "foo" {
 const testAccTencentCloudInstanceWithImageLogin = defaultInstanceVariable + `
 data "tencentcloud_images" "zoo" {
   image_type = ["PRIVATE_IMAGE"]
-  os_name    = "centos"
 }
 resource "tencentcloud_instance" "foo" {
   instance_name              = var.instance_name
