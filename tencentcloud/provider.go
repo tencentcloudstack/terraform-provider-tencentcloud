@@ -347,6 +347,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_eks_cluster_credential
     tencentcloud_kubernetes_cluster_levels
     tencentcloud_kubernetes_charts
+    tencentcloud_kubernetes_cluster_common_names
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -769,6 +770,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kubernetes_clusters":                      dataSourceTencentCloudKubernetesClusters(),
 			"tencentcloud_kubernetes_charts":                        dataSourceTencentCloudKubernetesCharts(),
 			"tencentcloud_kubernetes_cluster_levels":                datasourceTencentCloudKubernetesClusterLevels(),
+			"tencentcloud_kubernetes_cluster_common_names":          datasourceTencentCloudKubernetesClusterCommonNames(),
 			"tencentcloud_eks_clusters":                             dataSourceTencentCloudEKSClusters(),
 			"tencentcloud_eks_cluster_credential":                   datasourceTencentCloudEksClusterCredential(),
 			"tencentcloud_container_clusters":                       dataSourceTencentCloudContainerClusters(),

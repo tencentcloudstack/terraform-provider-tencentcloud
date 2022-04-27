@@ -905,6 +905,11 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:    true,
 			Description: "Whether the cluster level auto upgraded, valid for managed cluster.",
 		},
+		"acquire_cluster_admin_role": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "If set to true, it will acquire the ClusterRole tke:admin. NOTE: this arguments cannot revoke to `false` after acquired.",
+		},
 		"node_pool_global_config": {
 			Type:     schema.TypeList,
 			Optional: true,
@@ -2175,6 +2180,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v, ok := d.GetOk("acquire_cluster_admin_role"); ok && v.(bool) {
+		err := service.AcquireClusterAdminRole(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
 	if _, ok := d.GetOk("auth_options"); ok {
 		request := tkeGetAuthOptions(d)
 		if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
@@ -2746,6 +2758,17 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		d.SetPartial("deletion_protection")
+	}
+
+	if d.HasChange("acquire_cluster_admin_role") {
+		o, n := d.GetChange("acquire_cluster_admin_role")
+		if o.(bool) && !n.(bool) {
+			return fmt.Errorf("argument `acquire_cluster_admin_role` cannot set to false")
+		}
+		err := tkeService.AcquireClusterAdminRole(ctx, id)
+		if err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
