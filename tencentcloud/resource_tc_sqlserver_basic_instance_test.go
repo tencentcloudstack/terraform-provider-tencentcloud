@@ -108,9 +108,9 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	subnet_id               = local.subnet_id
 	security_groups         = [local.sg_id]
 	project_id              = 0
-	memory                  = 4
+	memory                  = 8
 	storage                 = 20
-	cpu                     = 2
+	cpu                     = 1
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
