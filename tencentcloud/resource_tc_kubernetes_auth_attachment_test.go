@@ -31,20 +31,6 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
-variable "cluster_cidr" {
-  default = "172.16.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
-}
-
-data "tencentcloud_images" "default" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
-}
-
-
 data "tencentcloud_vpc_subnets" "vpc" {
   is_default        = true
   availability_zone = var.availability_zone
@@ -59,21 +45,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_version         = "1.20.6"
   cluster_max_service_num = 32
   cluster_os			  = "tlinux2.2(tkernel3)x86_64"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
 }

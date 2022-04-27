@@ -141,14 +141,9 @@ func testAccCheckTkeAttachExists(n string) resource.TestCheckFunc {
 
 func testAccTkeAttachCluster() string {
 
-	return `
-
+	return TkeDataSource + TkeInstanceType + `
 variable "cluster_cidr" {
   default = "172.16.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
 }
 
 data "tencentcloud_vpc_instances" "vpcs" {
@@ -163,20 +158,16 @@ resource "tencentcloud_instance" "foo" {
   instance_name     = "tf-auto-test-1-1"
   availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
   image_id          = "` + defaultTkeOSImageId + `"
-  instance_type     = var.default_instance_type
+  instance_type     = local.type1
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
   vpc_id            = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
   subnet_id         =  data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
-  tags = data.tencentcloud_kubernetes_clusters.cls.list.0.tags # new added node will passive add tag by cluster
-}
-
-data "tencentcloud_kubernetes_clusters" "cls" {
-  cluster_name = "keep"
+  tags = data.tencentcloud_kubernetes_clusters.tke.list.0.tags # new added node will passive add tag by cluster
 }
 
 resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
-  cluster_id  = data.tencentcloud_kubernetes_clusters.cls.list.0.cluster_id
+  cluster_id  = local.cluster_id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
   unschedulable = 0

@@ -46,28 +46,6 @@ func TestAccTencentCloudSqlserverBasicInstanceResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccSqlserverBasicInstancePostpaidUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBasicInstanceExists(testSqlserverBasicInstanceResourceKey),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "name", "tf_sqlserver_basic_instance_update"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vpc_id"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "subnet_id"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_start_time", "08:00"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_time_span", "4"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "maintenance_week_set.#", "4"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "machine_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "create_time"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "project_id", "0"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "availability_zone"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vip"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vport"),
-					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "status"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "security_groups.#", "1"),
-				),
-			},
-			{
 				ResourceName:            testSqlserverBasicInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -130,31 +108,12 @@ resource "tencentcloud_sqlserver_basic_instance" "test" {
 	subnet_id               = local.subnet_id
 	security_groups         = [local.sg_id]
 	project_id              = 0
-	memory                  = 4
+	memory                  = 8
 	storage                 = 20
-	cpu                     = 2
+	cpu                     = 1
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"
 	maintenance_time_span   = 3
-}
-`
-
-const testAccSqlserverBasicInstancePostpaidUpdate string = testAccSqlserverBasicInstanceBasic + `
-resource "tencentcloud_sqlserver_basic_instance" "test" {
-	name                    = "tf_sqlserver_basic_instance_update"
-	availability_zone       = var.default_az
-	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = local.vpc_id
-	subnet_id               = local.subnet_id
-	security_groups         = [local.sg_id]
-	project_id              = 0
-	memory                  = 4
-	storage                 = 20
-	cpu                     = 2
-	machine_type            = "CLOUD_PREMIUM"
-	maintenance_week_set    = [1,2,3,4]
-	maintenance_start_time  = "08:00"
-	maintenance_time_span   = 4
 }
 `

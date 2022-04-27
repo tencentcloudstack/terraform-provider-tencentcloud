@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -23,8 +22,7 @@ func init() {
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := SqlserverService{client}
 
-			projId, _ := strconv.ParseInt(defaultProjectId, 10, 64)
-			instance, err := service.DescribeSqlserverInstances(ctx, "", "", int(projId), "", "", -1)
+			instance, err := service.DescribeSqlserverInstances(ctx, "", defaultSQLServerName, -1, "", "", -1)
 
 			if err != nil {
 				return err

@@ -117,9 +117,7 @@ variable "subnet_id" {
 
 // Tke Exclusive Network Environment
 const (
-	tkeExclusiveVpcId     = "vpc-391sv4w3"
 	tkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
-	tkeExclusiveSubnetId  = "subnet-ljyn7h30"
 	defaultTkeClusterId   = "cls-ely08ic4"
 	defaultTkeClusterName = "keep-tke-cluster"
 )
@@ -209,6 +207,16 @@ data "tencentcloud_instance_types" "default" {
 const defaultAzVariable = `
 variable "default_az" {
   default = "ap-guangzhou-3"
+}
+`
+
+const defaultImages = `
+variable "default_img_id" {
+  default = "` + defaultTkeOSImageId + `"
+}
+
+variable "default_img" {
+  default = "` + defaultTkeOSImageName + `"
 }
 `
 
@@ -508,3 +516,44 @@ locals {
 `
 
 // End of TcaPlus DB
+
+// TKE Service
+const TkeInstanceType = `
+data "tencentcloud_instance_types" "ins_type" {
+  availability_zone = "` + defaultCvmAZone + `"
+  cpu_core_count    = 1
+  memory_size       = 2
+}
+
+locals {
+  type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][0].instance_type
+  type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][1].instance_type
+}
+`
+
+const TkeExclusiveNetwork = `
+data "tencentcloud_vpc_instances" "vpc" {
+  name = "` + tkeExclusiveVpcName + `"
+}
+
+data "tencentcloud_vpc_subnets" "subnet" {
+  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
+}
+
+locals {
+  vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+}
+`
+
+const TkeDataSource = `
+data "tencentcloud_kubernetes_clusters" "tke" {
+  cluster_name = "` + defaultTkeClusterName + `"
+}
+
+locals {
+  cluster_id = data.tencentcloud_kubernetes_clusters.tke.list.0.cluster_id
+}
+`
+
+// End of TKE Service

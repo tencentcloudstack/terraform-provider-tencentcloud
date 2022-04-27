@@ -145,7 +145,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	}
 }`
 
-const testAccSqlserverPublishSubscribe_basic_update_name = testAccSqlserverAZ + defaultSecurityGroupData + `
+const testAccSqlserverPublishSubscribe_basic_update_name = defaultVpcSubnets + defaultSecurityGroupData + `
 resource "tencentcloud_sqlserver_instance" "publish_instance" {
   name                          = "tf_sqlserver_publish_instance"
   availability_zone             = var.default_az

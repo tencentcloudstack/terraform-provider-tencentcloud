@@ -48,7 +48,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTkeResource(t *testing.T) {
+func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -205,17 +205,13 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 }
 
 func testAccTkeCluster(key, value string) string {
-	return fmt.Sprintf(`
+	return fmt.Sprintf(TkeInstanceType+defaultImages+`
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
 variable "cluster_cidr" {
   default = "10.31.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -237,14 +233,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
+    instance_type              = local.type1
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-    img_id                     = "`+defaultTkeOSImageId+`"
+    img_id                     = var.default_img_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -281,17 +277,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 	)
 }
 
-const testAccTkeClusterLevel = `
+const testAccTkeClusterLevel = TkeInstanceType + defaultImages + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
 variable "cluster_cidr" {
   default = "192.168.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -307,20 +299,20 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_version                            = "1.18.4"
-  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_os                                 = var.default_img
   cluster_level 							 = "L5"
   auto_upgrade_cluster_level 				 = true
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
+    instance_type              = local.type1
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-    img_id                     = "` + defaultTkeOSImageId + `"
+    img_id                     = var.default_img_id
 
     enhanced_security_service = false
     enhanced_monitor_service  = false
@@ -334,17 +326,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterLevelUpdate = `
+const testAccTkeClusterLevelUpdate = TkeInstanceType + defaultImages + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
 variable "cluster_cidr" {
   default = "192.168.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S1.SMALL1"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -360,20 +348,20 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_version                            = "1.18.4"
-  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_os                                 = var.default_img
   cluster_level 							 = "L20"
   auto_upgrade_cluster_level 				 = false
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
+    instance_type              = local.type1
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
     subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-    img_id                     = "` + defaultTkeOSImageId + `"
+    img_id                     = var.default_img_id
 
     enhanced_security_service = false
     enhanced_monitor_service  = false
