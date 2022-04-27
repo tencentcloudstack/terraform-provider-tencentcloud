@@ -405,7 +405,7 @@ locals {
 
 const defaultScfNamespace = "preset-scf-namespace"
 
-const defaultFileSystemName = "preset_cfs"
+const defaultFileSystemName = "keep_preset_cfs"
 
 const defaultFileSystem = `
 data "tencentcloud_cfs_file_systems" "fs" {
@@ -420,7 +420,6 @@ variable "mount_id" {
 locals {
   cfs = data.tencentcloud_cfs_file_systems.fs.file_system_list.0
   cfs_id = local.cfs.file_system_id
-  access_group_id = local.cfs.access_group_id
 }`
 
 const defaultCamVariables = `
