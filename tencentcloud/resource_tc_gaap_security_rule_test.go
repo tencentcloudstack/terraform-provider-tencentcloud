@@ -246,7 +246,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "81"
 }
 `, defaultGaapSecurityPolicyId)
 

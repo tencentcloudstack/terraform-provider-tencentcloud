@@ -27,12 +27,8 @@ func TestAccDataSourceTencentCloudGaapSecurityPolices_basic(t *testing.T) {
 }
 
 var TestAccDataSourceTencentCloudGaapSecurityPolicesBasic = fmt.Sprintf(`
-resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "%s"
-  action   = "ACCEPT"
-}
 
 data tencentcloud_gaap_security_policies "foo" {
-  id = tencentcloud_gaap_security_policy.foo.id
+  id = "%s"
 }
-`, defaultGaapProxyId)
+`, defaultGaapSecurityPolicyId)
