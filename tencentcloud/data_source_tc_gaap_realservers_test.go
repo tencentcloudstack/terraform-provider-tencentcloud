@@ -74,7 +74,7 @@ func TestAccDataSourceTencentCloudGaapRealservers_name(t *testing.T) {
 
 const TestAccDataSourceTencentCloudGaapRealserversBasic = `
 resource tencentcloud_gaap_realserver "foo" {
-  ip   = "1.1.1.1"
+  ip   = "1.1.1.10"
   name = "ci-test-gaap-realserver"
 }
 
