@@ -65,7 +65,7 @@ const testAccGaapDomainErrorPagesListenerAndDomain = `
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
-  port     = 80
+  port     = %d
   proxy_id = "%s"
 }
 
@@ -92,7 +92,7 @@ data tencentcloud_gaap_domain_error_pages "foo" {
   listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
   domain      = tencentcloud_gaap_domain_error_page.foo.domain
 }
-`, defaultGaapProxyId)
+`, 8081, defaultGaapProxyId2)
 
 var testAccGaapDomainErrorPagesIds = fmt.Sprintf(testAccGaapDomainErrorPagesListenerAndDomain+`
 resource tencentcloud_gaap_domain_error_page "foo" {
@@ -121,4 +121,4 @@ data tencentcloud_gaap_domain_error_pages "foo" {
   domain      = tencentcloud_gaap_domain_error_page.foo.domain
   ids         = [tencentcloud_gaap_domain_error_page.foo.id]
 }
-`, defaultGaapProxyId)
+`, 8082, defaultGaapProxyId2)

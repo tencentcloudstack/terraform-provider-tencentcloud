@@ -728,7 +728,7 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	describeRequest := gaap.NewDescribeProxiesRequest()
 	describeRequest.ProxyIds = []*string{&id}
 
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(describeRequest.GetAction())
 
 		response, err := client.DescribeProxies(describeRequest)

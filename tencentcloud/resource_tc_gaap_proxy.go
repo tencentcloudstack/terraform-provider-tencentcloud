@@ -337,7 +337,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 			d.SetPartial("concurrent")
 		}
 		//deal with sync delay
-		time.Sleep(time.Duration(20) * time.Second)
+		time.Sleep(time.Duration(10) * time.Second)
 	}
 
 	if d.HasChange("enable") {

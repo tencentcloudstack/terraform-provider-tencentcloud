@@ -21,7 +21,7 @@ func TestAccDataSourceTencentCloudGaapRealservers_basic(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.ip", "1.1.1.1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_realservers.foo", "realservers.0.ip", "1.1.1.10"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_realservers.foo", "realservers.0.project_id"),
 				),
 			},
