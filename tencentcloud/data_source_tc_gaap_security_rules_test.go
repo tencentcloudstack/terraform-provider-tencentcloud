@@ -45,7 +45,7 @@ func TestAccDataSourceTencentCloudGaapSecurityRules_multi(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.name", "ci-test-gaap-s-rule"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.port", "8120"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.protocol", "TCP"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.ruleId", "rules.0.action", "ACCEPT"),
 				),
@@ -97,7 +97,7 @@ func TestAccDataSourceTencentCloudGaapSecurityRules_multi(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.cidr_ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.port", "rules.0.port", "80"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_rules.port", "rules.0.port", "8120"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.protocol"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_rules.port", "rules.0.action"),
 				),
@@ -143,7 +143,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "ruleId" {
@@ -159,7 +159,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "action" {
@@ -175,7 +175,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "cidrIp" {
@@ -192,7 +192,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "name" {
@@ -209,7 +209,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "port" {
@@ -226,7 +226,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
   protocol  = "TCP"
-  port      = "80"
+  port      = "8120"
 }
 
 data tencentcloud_gaap_security_rules "protocol" {
