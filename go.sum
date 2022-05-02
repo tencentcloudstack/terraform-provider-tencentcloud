@@ -528,6 +528,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.389 h1:Ndw5
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.389/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.391 h1:aygYrFPSM5eFw2ysGJH4eAV4UXxl+zbPNaQWOHPlS3o=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.391/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.392 h1:UqcmPErxEm77NwqaRq6J1i2rcbhXcZHzq7WOuc9clAQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.392/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199 h1:ajgJogYSIQ5u1PIbiV5nsvr5K0fYpm1/T7Dy+mxEM6U=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.199/go.mod h1:AqyM/ZZMD7q5mHBqNY9YImbSpEpoEe7E/vrTbUWX+po=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.351 h1:zqJsH5pxGT57La7NAOOyMQxsuM11pupNBwV1dzXcT24=
@@ -617,6 +619,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.199 h1:UDZ59pv
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.199/go.mod h1:SKgeSsIfPEM6BeoIFiGHsWG9UsEXzkK0SkWx51H/OS8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.357 h1:fltPXAHX1pQRXX94LEzJbWaDzNsculh70XA9NN+9DFY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.357/go.mod h1:vuWreRMZo2kArdDtpXIjTf//ckEMRSot1msuSsmtQ0I=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.392 h1:nx8MQ8yJ3srpfEAlKLQKtOsBCBc30QJ3Q0RsSOGSphQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.392/go.mod h1:IAl660UAxdUtp1rHUwbUwxFCVqwk61xAIRbBk6QtTy8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199 h1:hMBLtiJPnZ9GvA677cTB6ELBR6B68wCR2QY1sNoGQc4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199/go.mod h1:nnY91/H3j/Gu7V/oCA6Zeg8T5D3q36EUdBh4EjmHwqY=
 github.com/tencentyun/cos-go-sdk-v5 v0.7.31-0.20210902132439-360bc9b1be6b h1:rLl5sAeLt382023Kd3X4TaOEaT2hdgXWwTGyKiy16Zo=

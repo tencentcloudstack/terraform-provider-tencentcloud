@@ -23,7 +23,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -83,20 +82,10 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		request.SslVpnClientName = helper.String(sslVpnClientName)
 	}
 
-	// make sure client name is unique
-	filter := make(map[string]string)
-	filter["ssl-vpn-server-id"] = sslVpnServerId
-	filter["ssl-vpn-client-name"] = sslVpnClientName
-
-	existIns, err := vpcService.DescribeVpnGwSslClientByFilter(ctx, filter)
-	if err != nil {
-		return fmt.Errorf("get instance list error: %s", err.Error())
-	}
-	if len(existIns) > 0 {
-		return fmt.Errorf("ssl client with same name already exist.")
-	}
-
-	var taskId *uint64
+	var (
+		taskId      *uint64
+		sslClientId *string
+	)
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := vpcService.client.UseVpcClient().CreateVpnGatewaySslClient(request)
@@ -108,28 +97,20 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		taskId = response.Response.TaskId
+		sslClientId = response.Response.SslVpnClientId
 		return nil
 	}); err != nil {
 		return err
 	}
 
-	err = vpcService.DescribeTaskResult(ctx, helper.Uint64(*taskId))
+	err := vpcService.DescribeTaskResult(ctx, helper.Uint64(*taskId))
 	if err != nil {
 		return err
 	}
 	// add protect
 	time.Sleep(3)
 
-	newIns, err := vpcService.DescribeVpnGwSslClientByFilter(ctx, filter)
-	if err != nil {
-		return fmt.Errorf("get instance list error: %s", err.Error())
-	}
-	if len(newIns) != 1 {
-		return fmt.Errorf("create ssl client error")
-	}
-
-	sslClient := newIns[0]
-	d.SetId(*sslClient.SslVpnClientId)
+	d.SetId(*sslClientId)
 
 	return resourceTencentCloudVpnSslClientRead(d, meta)
 }

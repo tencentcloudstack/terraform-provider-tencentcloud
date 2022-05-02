@@ -993,6 +993,15 @@ type AssociateNatGatewayAddressRequest struct {
 
 	// 弹性IP可用区，自动分配弹性IP时传递。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 绑定NAT网关的弹性IP带宽大小（单位Mbps），默认为当前用户类型所能使用的最大值。
+	StockPublicIpAddressesBandwidthOut *uint64 `json:"StockPublicIpAddressesBandwidthOut,omitempty" name:"StockPublicIpAddressesBandwidthOut"`
+
+	// 需要申请公网IP带宽大小（单位Mbps），默认为当前用户类型所能使用的最大值。
+	PublicIpAddressesBandwidthOut *uint64 `json:"PublicIpAddressesBandwidthOut,omitempty" name:"PublicIpAddressesBandwidthOut"`
+
+	// 公网IP是否强制与NAT网关来自同可用区，true表示需要与NAT网关同可用区；false表示可与NAT网关不是同一个可用区。此参数只有当参数Zone存在时才能生效。
+	PublicIpFromSameZone *bool `json:"PublicIpFromSameZone,omitempty" name:"PublicIpFromSameZone"`
 }
 
 func (r *AssociateNatGatewayAddressRequest) ToJsonString() string {
@@ -1011,6 +1020,9 @@ func (r *AssociateNatGatewayAddressRequest) FromJsonString(s string) error {
 	delete(f, "AddressCount")
 	delete(f, "PublicIpAddresses")
 	delete(f, "Zone")
+	delete(f, "StockPublicIpAddressesBandwidthOut")
+	delete(f, "PublicIpAddressesBandwidthOut")
+	delete(f, "PublicIpFromSameZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssociateNatGatewayAddressRequest has unknown keys!", "")
 	}
@@ -1512,6 +1524,10 @@ type CcnBandwidthInfo struct {
 	// 描述带宽的地域和限速上限信息。在地域间限速的情况下才会返回参数，出口限速模式不返回。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CcnRegionBandwidthLimit *CcnRegionBandwidthLimit `json:"CcnRegionBandwidthLimit,omitempty" name:"CcnRegionBandwidthLimit"`
+
+	// 云市场实例ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MarketId *string `json:"MarketId,omitempty" name:"MarketId"`
 }
 
 type CcnInstance struct {
@@ -2647,7 +2663,7 @@ type CreateFlowLogRequest struct {
 	// 流日志实例名字
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN
+	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN|NAT|DCG
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID
@@ -2980,6 +2996,15 @@ type CreateNatGatewayRequest struct {
 
 	// NAT网关所属子网
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 绑定NAT网关的弹性IP带宽大小（单位Mbps），默认为当前用户类型所能使用的最大值。
+	StockPublicIpAddressesBandwidthOut *uint64 `json:"StockPublicIpAddressesBandwidthOut,omitempty" name:"StockPublicIpAddressesBandwidthOut"`
+
+	// 需要申请公网IP带宽大小（单位Mbps），默认为当前用户类型所能使用的最大值。
+	PublicIpAddressesBandwidthOut *uint64 `json:"PublicIpAddressesBandwidthOut,omitempty" name:"PublicIpAddressesBandwidthOut"`
+
+	// 公网IP是否强制与NAT网关来自同可用区，true表示需要与NAT网关同可用区；false表示可与NAT网关不是同一个可用区。此参数只有当参数Zone存在时才能生效。
+	PublicIpFromSameZone *bool `json:"PublicIpFromSameZone,omitempty" name:"PublicIpFromSameZone"`
 }
 
 func (r *CreateNatGatewayRequest) ToJsonString() string {
@@ -3003,6 +3028,9 @@ func (r *CreateNatGatewayRequest) FromJsonString(s string) error {
 	delete(f, "Zone")
 	delete(f, "Tags")
 	delete(f, "SubnetId")
+	delete(f, "StockPublicIpAddressesBandwidthOut")
+	delete(f, "PublicIpAddressesBandwidthOut")
+	delete(f, "PublicIpFromSameZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNatGatewayRequest has unknown keys!", "")
 	}
@@ -4371,6 +4399,9 @@ type CreateVpnGatewaySslClientResponse struct {
 		// 异步任务ID。
 		TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
 
+		// SSL-VPN client 唯一ID
+		SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -4451,6 +4482,9 @@ type CreateVpnGatewaySslServerResponse struct {
 
 		// 创建SSL-VPN server 异步任务ID
 		TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
+
+		// SSL-VPN server 唯一ID
+		SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -7261,6 +7295,48 @@ func (r *DescribeClassicLinkInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeCrossBorderCcnRegionBandwidthLimitsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeCrossBorderCcnRegionBandwidthLimitsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCrossBorderCcnRegionBandwidthLimitsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCrossBorderCcnRegionBandwidthLimitsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCrossBorderCcnRegionBandwidthLimitsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeCrossBorderCcnRegionBandwidthLimitsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCrossBorderCcnRegionBandwidthLimitsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeCrossBorderComplianceRequest struct {
 	*tchttp.BaseRequest
 
@@ -9043,7 +9119,7 @@ func (r *DescribeNetworkInterfacesResponse) FromJsonString(s string) error {
 type DescribeProductQuotaRequest struct {
 	*tchttp.BaseRequest
 
-	// 查询的网络产品名称，如vpc、ccn等
+	// 查询的网络产品名称，可查询的产品有：vpc、ccn、vpn、dc、dfw、clb、eip。
 	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
@@ -9788,6 +9864,48 @@ func (r *DescribeTemplateLimitsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTemplateLimitsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeTenantCcnsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeTenantCcnsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTenantCcnsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTenantCcnsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeTenantCcnsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeTenantCcnsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTenantCcnsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -12145,7 +12263,7 @@ type FlowLog struct {
 	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN。
+	// 流日志所属资源类型，VPC|SUBNET|NETWORKINTERFACE|CCN|NAT|DCG。
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
 	// 资源唯一ID。
@@ -12552,6 +12670,12 @@ type InquiryPriceCreateVpnGatewayRequest struct {
 
 	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitempty" name:"InstanceChargePrepaid"`
+
+	// SSL VPN连接数设置，可选规格：5, 10, 20, 50, 100；单位：个。
+	MaxConnection *uint64 `json:"MaxConnection,omitempty" name:"MaxConnection"`
+
+	// 查询的VPN类型，支持IPSEC和SSL两种类型，为SSL类型时，MaxConnection参数必传。
+	Type *string `json:"Type,omitempty" name:"Type"`
 }
 
 func (r *InquiryPriceCreateVpnGatewayRequest) ToJsonString() string {
@@ -12569,6 +12693,8 @@ func (r *InquiryPriceCreateVpnGatewayRequest) FromJsonString(s string) error {
 	delete(f, "InternetMaxBandwidthOut")
 	delete(f, "InstanceChargeType")
 	delete(f, "InstanceChargePrepaid")
+	delete(f, "MaxConnection")
+	delete(f, "Type")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceCreateVpnGatewayRequest has unknown keys!", "")
 	}
@@ -12928,6 +13054,90 @@ type LocalGateway struct {
 
 	// 本地网关创建时间
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+}
+
+type LockCcnBandwidthsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *LockCcnBandwidthsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LockCcnBandwidthsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "LockCcnBandwidthsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type LockCcnBandwidthsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *LockCcnBandwidthsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LockCcnBandwidthsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type LockCcnsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *LockCcnsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LockCcnsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "LockCcnsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type LockCcnsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *LockCcnsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LockCcnsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type MemberInfo struct {
@@ -14614,7 +14824,7 @@ type ModifyNetworkInterfaceQosRequest struct {
 	// 弹性网卡ID，支持批量修改。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitempty" name:"NetworkInterfaceIds"`
 
-	// 服务质量，可选值：AU、AG、PT，分别代表金、银、白金三个等级。
+	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
@@ -17896,6 +18106,90 @@ func (r *UnassignPrivateIpAddressesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnassignPrivateIpAddressesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UnlockCcnBandwidthsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *UnlockCcnBandwidthsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlockCcnBandwidthsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnlockCcnBandwidthsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UnlockCcnBandwidthsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UnlockCcnBandwidthsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlockCcnBandwidthsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UnlockCcnsRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *UnlockCcnsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlockCcnsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnlockCcnsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UnlockCcnsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UnlockCcnsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlockCcnsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
