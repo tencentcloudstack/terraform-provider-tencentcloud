@@ -376,6 +376,72 @@ func (r *CloseServerlessDBExtranetAccessResponse) FromJsonString(s string) error
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateDBInstanceNetworkAccessRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如：postgres-6bwgamo3。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 私有网络统一 ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 是否指定分配vip true-指定分配  false-自动分配。
+	IsAssignVip *bool `json:"IsAssignVip,omitempty" name:"IsAssignVip"`
+
+	// 目标VIP地址。
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+}
+
+func (r *CreateDBInstanceNetworkAccessRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDBInstanceNetworkAccessRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "IsAssignVip")
+	delete(f, "Vip")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceNetworkAccessRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateDBInstanceNetworkAccessResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateDBInstanceNetworkAccessResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDBInstanceNetworkAccessResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -537,7 +603,7 @@ type CreateInstancesRequest struct {
 	// 项目ID。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// PostgreSQL版本。当输入该参数时，会基于此版本创建对应的最新内核版本号实例
+	// PostgreSQL版本。当输入该参数时，会基于此版本创建对应的最新内核版本号实例。该参数和DBMajorVersion、DBKernelVersion至少需要传递一个。
 	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
 
 	// 实例计费类型。目前支持：PREPAID（预付费，即包年包月），POSTPAID_BY_HOUR（后付费，即按量计费）。
@@ -573,14 +639,23 @@ type CreateInstancesRequest struct {
 	// 安全组ID。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
-	// PostgreSQL主要版本。目前支持10，11，12，13这几个版本。当输入该参数时，会基于此版本创建对应的最新内核版本号实例
+	// PostgreSQL主要版本。目前支持10，11，12，13这几个版本。当输入该参数时，会基于此版本创建对应的最新内核版本号实例。该参数和DBVersion、DBKernelVersion至少需要传递一个。
 	DBMajorVersion *string `json:"DBMajorVersion,omitempty" name:"DBMajorVersion"`
 
-	// PostgreSQL内核版本。当输入该参数时，会创建该内核版本号实例
+	// PostgreSQL内核版本。当输入该参数时，会创建该内核版本号实例。该参数和DBVersion、DBMajorVersion至少需要传递一个。
 	DBKernelVersion *string `json:"DBKernelVersion,omitempty" name:"DBKernelVersion"`
 
 	// 实例节点信息，购买跨可用区实例时填写。
 	DBNodeSet []*DBNode `json:"DBNodeSet,omitempty" name:"DBNodeSet"`
+
+	// 是否需要支持数据透明加密，1：是，0：否（默认）。
+	NeedSupportTDE *uint64 `json:"NeedSupportTDE,omitempty" name:"NeedSupportTDE"`
+
+	// 自定义密钥的keyId，若选择自定义密匙加密，则需要传入自定义密匙的keyId，keyId是CMK的唯一标识。
+	KMSKeyId *string `json:"KMSKeyId,omitempty" name:"KMSKeyId"`
+
+	// 使用KMS服务的地域，KMSRegion为空默认使用本地域的kms，本地域不支持的情况下需自选其他KMS支持的地域。
+	KMSRegion *string `json:"KMSRegion,omitempty" name:"KMSRegion"`
 }
 
 func (r *CreateInstancesRequest) ToJsonString() string {
@@ -619,6 +694,9 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	delete(f, "DBMajorVersion")
 	delete(f, "DBKernelVersion")
 	delete(f, "DBNodeSet")
+	delete(f, "NeedSupportTDE")
+	delete(f, "KMSKeyId")
+	delete(f, "KMSRegion")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancesRequest has unknown keys!", "")
 	}
@@ -711,7 +789,7 @@ type CreateReadOnlyDBInstanceRequest struct {
 	// 只读组ID。
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
 
-	// 实例需要绑定的Tag信息，默认为空
+	// 实例需要绑定的Tag信息，默认为空（该类型为Tag数组类型）
 	TagList *Tag `json:"TagList,omitempty" name:"TagList"`
 
 	// 安全组id
@@ -782,6 +860,72 @@ func (r *CreateReadOnlyDBInstanceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateReadOnlyDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateReadOnlyGroupNetworkAccessRequest struct {
+	*tchttp.BaseRequest
+
+	// RO组ID，形如：pgro-4t9c6g7k。
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// 私有网络统一 ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 是否指定分配vip true-指定分配  false-自动分配。
+	IsAssignVip *bool `json:"IsAssignVip,omitempty" name:"IsAssignVip"`
+
+	// 目标VIP地址。
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+}
+
+func (r *CreateReadOnlyGroupNetworkAccessRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateReadOnlyGroupNetworkAccessRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ReadOnlyGroupId")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "IsAssignVip")
+	delete(f, "Vip")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReadOnlyGroupNetworkAccessRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateReadOnlyGroupNetworkAccessResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateReadOnlyGroupNetworkAccessResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateReadOnlyGroupNetworkAccessResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1113,6 +1257,10 @@ type DBInstance struct {
 	// 实例的节点信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DBNodeSet []*DBNode `json:"DBNodeSet,omitempty" name:"DBNodeSet"`
+
+	// 实例是否支持TDE数据加密  0：不支持，1：支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsSupportTDE *int64 `json:"IsSupportTDE,omitempty" name:"IsSupportTDE"`
 }
 
 type DBInstanceNetInfo struct {
@@ -1150,6 +1298,130 @@ type DBNode struct {
 
 	// 节点所在可用区，例如 ap-guangzhou-1。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+}
+
+type DeleteDBInstanceNetworkAccessRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如：postgres-6bwgamo3。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+
+	// 私有网络统一 ID，若是基础网络则传"0"。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID，若是基础网络则传"0"。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 目标VIP地址。
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+}
+
+func (r *DeleteDBInstanceNetworkAccessRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDBInstanceNetworkAccessRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "Vip")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDBInstanceNetworkAccessRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteDBInstanceNetworkAccessResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteDBInstanceNetworkAccessResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDBInstanceNetworkAccessResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteReadOnlyGroupNetworkAccessRequest struct {
+	*tchttp.BaseRequest
+
+	// RO组ID，形如：pgro-4t9c6g7k。
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// 私有网络统一 ID，若是基础网络则传"0"。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID，若是基础网络则传"0"。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 目标VIP地址。
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+}
+
+func (r *DeleteReadOnlyGroupNetworkAccessRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteReadOnlyGroupNetworkAccessRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ReadOnlyGroupId")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "Vip")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteReadOnlyGroupNetworkAccessRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteReadOnlyGroupNetworkAccessResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteReadOnlyGroupNetworkAccessResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteReadOnlyGroupNetworkAccessResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type DeleteReadOnlyGroupRequest struct {
@@ -2004,6 +2276,56 @@ func (r *DescribeDatabasesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeEncryptionKeysRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID。
+	DBInstanceId *string `json:"DBInstanceId,omitempty" name:"DBInstanceId"`
+}
+
+func (r *DescribeEncryptionKeysRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEncryptionKeysRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEncryptionKeysRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeEncryptionKeysResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 实例密钥信息列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		EncryptionKeys []*EncryptionKey `json:"EncryptionKeys,omitempty" name:"EncryptionKeys"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeEncryptionKeysResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEncryptionKeysResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeOrdersRequest struct {
 	*tchttp.BaseRequest
 
@@ -2676,6 +2998,33 @@ type DurationAnalysis struct {
 
 	// 对应时段区间慢SQL 条数
 	Count *int64 `json:"Count,omitempty" name:"Count"`
+}
+
+type EncryptionKey struct {
+
+	// KMS实例加密的KeyId。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+
+	// KMS实例加密Key的别名。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyAlias *string `json:"KeyAlias,omitempty" name:"KeyAlias"`
+
+	// 实例加密密钥DEK的密文。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DEKCipherTextBlob *string `json:"DEKCipherTextBlob,omitempty" name:"DEKCipherTextBlob"`
+
+	// 密钥是否启用，1-启用， 0-未启用。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsEnabled *int64 `json:"IsEnabled,omitempty" name:"IsEnabled"`
+
+	// KMS密钥所在地域。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyRegion *string `json:"KeyRegion,omitempty" name:"KeyRegion"`
+
+	// DEK密钥创建时间。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
 type ErrLogDetail struct {
@@ -4492,6 +4841,10 @@ type SpecInfo struct {
 
 	// 规格详细信息列表
 	SpecItemInfoList []*SpecItemInfo `json:"SpecItemInfoList,omitempty" name:"SpecItemInfoList"`
+
+	// 支持KMS的地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportKMSRegions []*string `json:"SupportKMSRegions,omitempty" name:"SupportKMSRegions"`
 }
 
 type SpecItemInfo struct {
@@ -4533,6 +4886,10 @@ type SpecItemInfo struct {
 	// PostgreSQL的内核版本编号
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KernelVersion *string `json:"KernelVersion,omitempty" name:"KernelVersion"`
+
+	// 是否支持TDE数据加密功能，0-不支持，1-支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsSupportTDE *int64 `json:"IsSupportTDE,omitempty" name:"IsSupportTDE"`
 }
 
 type Tag struct {
