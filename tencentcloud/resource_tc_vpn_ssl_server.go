@@ -31,7 +31,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -161,7 +160,10 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 		request.Compress = helper.Bool(v.(bool))
 	}
 
-	var taskId *int64
+	var (
+		taskId      *int64
+		sslServerId *string
+	)
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := vpcService.client.UseVpcClient().CreateVpnGatewaySslServer(request)
@@ -173,6 +175,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		taskId = response.Response.TaskId
+		sslServerId = response.Response.SslVpnServerId
 		return nil
 	}); err != nil {
 		return err
@@ -185,18 +188,7 @@ func resourceTencentCloudVpnSslServerCreate(d *schema.ResourceData, meta interfa
 
 	// add protect
 	time.Sleep(3)
-
-	filter := make(map[string]string)
-	filter["vpn-gateway-id"] = vpnGatewayId
-
-	instances, err := vpcService.DescribeVpnGwSslServerByFilter(ctx, filter)
-
-	if err != nil {
-		return fmt.Errorf("get instance list error: %s", err.Error())
-	}
-
-	sslServer := instances[0]
-	d.SetId(*sslServer.SslVpnServerId)
+	d.SetId(*sslServerId)
 
 	return resourceTencentCloudVpnSslServerRead(d, meta)
 }
