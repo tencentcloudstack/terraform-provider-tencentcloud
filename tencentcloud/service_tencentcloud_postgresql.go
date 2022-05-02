@@ -21,11 +21,12 @@ type PostgresqlService struct {
 
 func (me *PostgresqlService) CreatePostgresqlInstance(
 	ctx context.Context,
-	name, dbVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string,
+	name, dbVersion, dbMajorVersion, dbKernelVersion, chargeType, specCode string, autoRenewFlag, projectId, period int, subnetId, vpcId, zone string,
 	securityGroups []string,
 	storage int,
 	username, password, charset string,
 	dbNodeSet []*postgresql.DBNode,
+	needSupportTde int, kmsKeyId, kmsRegion string,
 ) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
@@ -36,6 +37,12 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	}()
 	request.Name = &name
 	request.DBVersion = &dbVersion
+	if dbMajorVersion != "" {
+		request.DBMajorVersion = helper.String(dbMajorVersion)
+	}
+	if dbKernelVersion != "" {
+		request.DBKernelVersion = helper.String(dbKernelVersion)
+	}
 	request.InstanceChargeType = &chargeType
 	request.SpecCode = &specCode
 	request.AutoRenewFlag = helper.IntInt64(autoRenewFlag)
@@ -49,6 +56,16 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	request.AdminName = &username
 	request.AdminPassword = &password
 	request.Charset = &charset
+
+	if needSupportTde == 1 {
+		request.NeedSupportTDE = helper.IntUint64(1)
+		if kmsKeyId != "" {
+			request.KMSKeyId = helper.String(kmsKeyId)
+		}
+		if kmsRegion != "" {
+			request.KMSRegion = helper.String(kmsRegion)
+		}
+	}
 
 	if len(securityGroups) > 0 {
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
@@ -683,6 +700,33 @@ func (me *PostgresqlService) DescribeDBInstanceAttribute(ctx context.Context, re
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *PostgresqlService) DescribeDBEncryptionKeys(ctx context.Context, request *postgresql.DescribeEncryptionKeysRequest) (has bool, key *postgresql.EncryptionKey, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeEncryptionKeys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	keys := response.Response.EncryptionKeys
+	if len(keys) < 1 {
+		return
+	}
+	has = true
+	key = keys[0]
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }
 

@@ -16,6 +16,7 @@ package v20170312
 
 import (
     "context"
+    "errors"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -87,13 +88,7 @@ func NewAddDBInstanceToReadOnlyGroupResponse() (response *AddDBInstanceToReadOnl
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) AddDBInstanceToReadOnlyGroup(request *AddDBInstanceToReadOnlyGroupRequest) (response *AddDBInstanceToReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewAddDBInstanceToReadOnlyGroupRequest()
-    }
-    
-    response = NewAddDBInstanceToReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.AddDBInstanceToReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // AddDBInstanceToReadOnlyGroup
@@ -125,6 +120,11 @@ func (c *Client) AddDBInstanceToReadOnlyGroupWithContext(ctx context.Context, re
     if request == nil {
         request = NewAddDBInstanceToReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddDBInstanceToReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewAddDBInstanceToReadOnlyGroupResponse()
@@ -168,15 +168,10 @@ func NewCloneDBInstanceResponse() (response *CloneDBInstanceResponse) {
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) CloneDBInstance(request *CloneDBInstanceRequest) (response *CloneDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewCloneDBInstanceRequest()
-    }
-    
-    response = NewCloneDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.CloneDBInstanceWithContext(context.Background(), request)
 }
 
 // CloneDBInstance
@@ -198,11 +193,17 @@ func (c *Client) CloneDBInstance(request *CloneDBInstanceRequest) (response *Clo
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) CloneDBInstanceWithContext(ctx context.Context, request *CloneDBInstanceRequest) (response *CloneDBInstanceResponse, err error) {
     if request == nil {
         request = NewCloneDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloneDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCloneDBInstanceResponse()
@@ -250,13 +251,7 @@ func NewCloseDBExtranetAccessResponse() (response *CloseDBExtranetAccessResponse
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) CloseDBExtranetAccess(request *CloseDBExtranetAccessRequest) (response *CloseDBExtranetAccessResponse, err error) {
-    if request == nil {
-        request = NewCloseDBExtranetAccessRequest()
-    }
-    
-    response = NewCloseDBExtranetAccessResponse()
-    err = c.Send(request, response)
-    return
+    return c.CloseDBExtranetAccessWithContext(context.Background(), request)
 }
 
 // CloseDBExtranetAccess
@@ -285,6 +280,11 @@ func (c *Client) CloseDBExtranetAccessWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCloseDBExtranetAccessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseDBExtranetAccess require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCloseDBExtranetAccessResponse()
@@ -351,13 +351,7 @@ func NewCloseServerlessDBExtranetAccessResponse() (response *CloseServerlessDBEx
 //  UNKNOWNERROR = "UnknownError"
 //  VPCERROR = "VpcError"
 func (c *Client) CloseServerlessDBExtranetAccess(request *CloseServerlessDBExtranetAccessRequest) (response *CloseServerlessDBExtranetAccessResponse, err error) {
-    if request == nil {
-        request = NewCloseServerlessDBExtranetAccessRequest()
-    }
-    
-    response = NewCloseServerlessDBExtranetAccessResponse()
-    err = c.Send(request, response)
-    return
+    return c.CloseServerlessDBExtranetAccessWithContext(context.Background(), request)
 }
 
 // CloseServerlessDBExtranetAccess
@@ -405,9 +399,97 @@ func (c *Client) CloseServerlessDBExtranetAccessWithContext(ctx context.Context,
     if request == nil {
         request = NewCloseServerlessDBExtranetAccessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseServerlessDBExtranetAccess require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCloseServerlessDBExtranetAccessResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateDBInstanceNetworkAccessRequest() (request *CreateDBInstanceNetworkAccessRequest) {
+    request = &CreateDBInstanceNetworkAccessRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "CreateDBInstanceNetworkAccess")
+    
+    
+    return
+}
+
+func NewCreateDBInstanceNetworkAccessResponse() (response *CreateDBInstanceNetworkAccessResponse) {
+    response = &CreateDBInstanceNetworkAccessResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateDBInstanceNetworkAccess
+// 可对实例进行网络的添加操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  FLOWERROR = "FlowError"
+//  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateDBInstanceNetworkAccess(request *CreateDBInstanceNetworkAccessRequest) (response *CreateDBInstanceNetworkAccessResponse, err error) {
+    return c.CreateDBInstanceNetworkAccessWithContext(context.Background(), request)
+}
+
+// CreateDBInstanceNetworkAccess
+// 可对实例进行网络的添加操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  FLOWERROR = "FlowError"
+//  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateDBInstanceNetworkAccessWithContext(ctx context.Context, request *CreateDBInstanceNetworkAccessRequest) (response *CreateDBInstanceNetworkAccessResponse, err error) {
+    if request == nil {
+        request = NewCreateDBInstanceNetworkAccessRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDBInstanceNetworkAccess require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDBInstanceNetworkAccessResponse()
     err = c.Send(request, response)
     return
 }
@@ -502,13 +584,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //  UNAUTHORIZEDOPERATION_USERHASNOREALNAMEAUTHENTICATION = "UnauthorizedOperation.UserHasNoRealnameAuthentication"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response *CreateDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewCreateDBInstancesRequest()
-    }
-    
-    response = NewCreateDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDBInstancesWithContext(context.Background(), request)
 }
 
 // CreateDBInstances
@@ -587,6 +663,11 @@ func (c *Client) CreateDBInstancesWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDBInstancesResponse()
@@ -672,6 +753,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
+//  INVALIDPARAMETERVALUE_PARAMETEROUTRANGEERROR = "InvalidParameterValue.ParameterOutRangeError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_SPECNOTRECOGNIZEDERROR = "InvalidParameterValue.SpecNotRecognizedError"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
@@ -687,13 +769,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  UNAUTHORIZEDOPERATION_USERHASNOREALNAMEAUTHENTICATION = "UnauthorizedOperation.UserHasNoRealnameAuthentication"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *CreateInstancesResponse, err error) {
-    if request == nil {
-        request = NewCreateInstancesRequest()
-    }
-    
-    response = NewCreateInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateInstancesWithContext(context.Background(), request)
 }
 
 // CreateInstances
@@ -757,6 +833,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
+//  INVALIDPARAMETERVALUE_PARAMETEROUTRANGEERROR = "InvalidParameterValue.ParameterOutRangeError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_SPECNOTRECOGNIZEDERROR = "InvalidParameterValue.SpecNotRecognizedError"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
@@ -775,6 +852,11 @@ func (c *Client) CreateInstancesWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateInstancesResponse()
@@ -839,6 +921,7 @@ func NewCreateReadOnlyDBInstanceResponse() (response *CreateReadOnlyDBInstanceRe
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -873,13 +956,7 @@ func NewCreateReadOnlyDBInstanceResponse() (response *CreateReadOnlyDBInstanceRe
 //  UNAUTHORIZEDOPERATION_USERHASNOREALNAMEAUTHENTICATION = "UnauthorizedOperation.UserHasNoRealnameAuthentication"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) CreateReadOnlyDBInstance(request *CreateReadOnlyDBInstanceRequest) (response *CreateReadOnlyDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewCreateReadOnlyDBInstanceRequest()
-    }
-    
-    response = NewCreateReadOnlyDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateReadOnlyDBInstanceWithContext(context.Background(), request)
 }
 
 // CreateReadOnlyDBInstance
@@ -922,6 +999,7 @@ func (c *Client) CreateReadOnlyDBInstance(request *CreateReadOnlyDBInstanceReque
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -959,6 +1037,11 @@ func (c *Client) CreateReadOnlyDBInstanceWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateReadOnlyDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateReadOnlyDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateReadOnlyDBInstanceResponse()
@@ -1013,13 +1096,7 @@ func NewCreateReadOnlyGroupResponse() (response *CreateReadOnlyGroupResponse) {
 //  STRUCTPARSEFAILED = "StructParseFailed"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) CreateReadOnlyGroup(request *CreateReadOnlyGroupRequest) (response *CreateReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewCreateReadOnlyGroupRequest()
-    }
-    
-    response = NewCreateReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // CreateReadOnlyGroup
@@ -1055,9 +1132,91 @@ func (c *Client) CreateReadOnlyGroupWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateReadOnlyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateReadOnlyGroupNetworkAccessRequest() (request *CreateReadOnlyGroupNetworkAccessRequest) {
+    request = &CreateReadOnlyGroupNetworkAccessRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyGroupNetworkAccess")
+    
+    
+    return
+}
+
+func NewCreateReadOnlyGroupNetworkAccessResponse() (response *CreateReadOnlyGroupNetworkAccessResponse) {
+    response = &CreateReadOnlyGroupNetworkAccessResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateReadOnlyGroupNetworkAccess
+// 可对RO组进行网络的添加操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  FLOWERROR = "FlowError"
+//  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+func (c *Client) CreateReadOnlyGroupNetworkAccess(request *CreateReadOnlyGroupNetworkAccessRequest) (response *CreateReadOnlyGroupNetworkAccessResponse, err error) {
+    return c.CreateReadOnlyGroupNetworkAccessWithContext(context.Background(), request)
+}
+
+// CreateReadOnlyGroupNetworkAccess
+// 可对RO组进行网络的添加操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  FLOWERROR = "FlowError"
+//  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+func (c *Client) CreateReadOnlyGroupNetworkAccessWithContext(ctx context.Context, request *CreateReadOnlyGroupNetworkAccessRequest) (response *CreateReadOnlyGroupNetworkAccessResponse, err error) {
+    if request == nil {
+        request = NewCreateReadOnlyGroupNetworkAccessRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateReadOnlyGroupNetworkAccess require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateReadOnlyGroupNetworkAccessResponse()
     err = c.Send(request, response)
     return
 }
@@ -1107,6 +1266,7 @@ func NewCreateServerlessDBInstanceResponse() (response *CreateServerlessDBInstan
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORDFORMAT = "InvalidParameterValue.InvalidPasswordFormat"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
@@ -1117,13 +1277,7 @@ func NewCreateServerlessDBInstanceResponse() (response *CreateServerlessDBInstan
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 //  UNAUTHORIZEDOPERATION_USERHASNOREALNAMEAUTHENTICATION = "UnauthorizedOperation.UserHasNoRealnameAuthentication"
 func (c *Client) CreateServerlessDBInstance(request *CreateServerlessDBInstanceRequest) (response *CreateServerlessDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewCreateServerlessDBInstanceRequest()
-    }
-    
-    response = NewCreateServerlessDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateServerlessDBInstanceWithContext(context.Background(), request)
 }
 
 // CreateServerlessDBInstance
@@ -1154,6 +1308,7 @@ func (c *Client) CreateServerlessDBInstance(request *CreateServerlessDBInstanceR
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORDFORMAT = "InvalidParameterValue.InvalidPasswordFormat"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
@@ -1167,9 +1322,91 @@ func (c *Client) CreateServerlessDBInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateServerlessDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateServerlessDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateServerlessDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteDBInstanceNetworkAccessRequest() (request *DeleteDBInstanceNetworkAccessRequest) {
+    request = &DeleteDBInstanceNetworkAccessRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteDBInstanceNetworkAccess")
+    
+    
+    return
+}
+
+func NewDeleteDBInstanceNetworkAccessResponse() (response *DeleteDBInstanceNetworkAccessResponse) {
+    response = &DeleteDBInstanceNetworkAccessResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteDBInstanceNetworkAccess
+// 可对实例进行网络的删除操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROINSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.ROInstanceIpv6NotSupportedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteDBInstanceNetworkAccess(request *DeleteDBInstanceNetworkAccessRequest) (response *DeleteDBInstanceNetworkAccessResponse, err error) {
+    return c.DeleteDBInstanceNetworkAccessWithContext(context.Background(), request)
+}
+
+// DeleteDBInstanceNetworkAccess
+// 可对实例进行网络的删除操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROINSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.ROInstanceIpv6NotSupportedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteDBInstanceNetworkAccessWithContext(ctx context.Context, request *DeleteDBInstanceNetworkAccessRequest) (response *DeleteDBInstanceNetworkAccessResponse, err error) {
+    if request == nil {
+        request = NewDeleteDBInstanceNetworkAccessRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDBInstanceNetworkAccess require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDBInstanceNetworkAccessResponse()
     err = c.Send(request, response)
     return
 }
@@ -1211,13 +1448,7 @@ func NewDeleteReadOnlyGroupResponse() (response *DeleteReadOnlyGroupResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  SYSTEMERROR = "SystemError"
 func (c *Client) DeleteReadOnlyGroup(request *DeleteReadOnlyGroupRequest) (response *DeleteReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewDeleteReadOnlyGroupRequest()
-    }
-    
-    response = NewDeleteReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // DeleteReadOnlyGroup
@@ -1243,9 +1474,83 @@ func (c *Client) DeleteReadOnlyGroupWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteReadOnlyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteReadOnlyGroupNetworkAccessRequest() (request *DeleteReadOnlyGroupNetworkAccessRequest) {
+    request = &DeleteReadOnlyGroupNetworkAccessRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteReadOnlyGroupNetworkAccess")
+    
+    
+    return
+}
+
+func NewDeleteReadOnlyGroupNetworkAccessResponse() (response *DeleteReadOnlyGroupNetworkAccessResponse) {
+    response = &DeleteReadOnlyGroupNetworkAccessResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteReadOnlyGroupNetworkAccess
+// 可对RO组进行网络的删除操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+func (c *Client) DeleteReadOnlyGroupNetworkAccess(request *DeleteReadOnlyGroupNetworkAccessRequest) (response *DeleteReadOnlyGroupNetworkAccessResponse, err error) {
+    return c.DeleteReadOnlyGroupNetworkAccessWithContext(context.Background(), request)
+}
+
+// DeleteReadOnlyGroupNetworkAccess
+// 可对RO组进行网络的删除操作。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
+//  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+func (c *Client) DeleteReadOnlyGroupNetworkAccessWithContext(ctx context.Context, request *DeleteReadOnlyGroupNetworkAccessRequest) (response *DeleteReadOnlyGroupNetworkAccessResponse, err error) {
+    if request == nil {
+        request = NewDeleteReadOnlyGroupNetworkAccessRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteReadOnlyGroupNetworkAccess require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteReadOnlyGroupNetworkAccessResponse()
     err = c.Send(request, response)
     return
 }
@@ -1293,13 +1598,7 @@ func NewDeleteServerlessDBInstanceResponse() (response *DeleteServerlessDBInstan
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) DeleteServerlessDBInstance(request *DeleteServerlessDBInstanceRequest) (response *DeleteServerlessDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewDeleteServerlessDBInstanceRequest()
-    }
-    
-    response = NewDeleteServerlessDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteServerlessDBInstanceWithContext(context.Background(), request)
 }
 
 // DeleteServerlessDBInstance
@@ -1331,6 +1630,11 @@ func (c *Client) DeleteServerlessDBInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteServerlessDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteServerlessDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteServerlessDBInstanceResponse()
@@ -1371,13 +1675,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *DescribeAccountsResponse, err error) {
-    if request == nil {
-        request = NewDescribeAccountsRequest()
-    }
-    
-    response = NewDescribeAccountsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeAccountsWithContext(context.Background(), request)
 }
 
 // DescribeAccounts
@@ -1399,6 +1697,11 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeAccountsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAccounts require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeAccountsResponse()
@@ -1435,13 +1738,7 @@ func NewDescribeAvailableRecoveryTimeResponse() (response *DescribeAvailableReco
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeAvailableRecoveryTime(request *DescribeAvailableRecoveryTimeRequest) (response *DescribeAvailableRecoveryTimeResponse, err error) {
-    if request == nil {
-        request = NewDescribeAvailableRecoveryTimeRequest()
-    }
-    
-    response = NewDescribeAvailableRecoveryTimeResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeAvailableRecoveryTimeWithContext(context.Background(), request)
 }
 
 // DescribeAvailableRecoveryTime
@@ -1459,6 +1756,11 @@ func (c *Client) DescribeAvailableRecoveryTimeWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeAvailableRecoveryTimeRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAvailableRecoveryTime require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeAvailableRecoveryTimeResponse()
@@ -1497,13 +1799,7 @@ func NewDescribeBackupPlansResponse() (response *DescribeBackupPlansResponse) {
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeBackupPlans(request *DescribeBackupPlansRequest) (response *DescribeBackupPlansResponse, err error) {
-    if request == nil {
-        request = NewDescribeBackupPlansRequest()
-    }
-    
-    response = NewDescribeBackupPlansResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeBackupPlansWithContext(context.Background(), request)
 }
 
 // DescribeBackupPlans
@@ -1523,6 +1819,11 @@ func (c *Client) DescribeBackupPlansWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeBackupPlansRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupPlans require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeBackupPlansResponse()
@@ -1559,13 +1860,7 @@ func NewDescribeCloneDBInstanceSpecResponse() (response *DescribeCloneDBInstance
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 func (c *Client) DescribeCloneDBInstanceSpec(request *DescribeCloneDBInstanceSpecRequest) (response *DescribeCloneDBInstanceSpecResponse, err error) {
-    if request == nil {
-        request = NewDescribeCloneDBInstanceSpecRequest()
-    }
-    
-    response = NewDescribeCloneDBInstanceSpecResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCloneDBInstanceSpecWithContext(context.Background(), request)
 }
 
 // DescribeCloneDBInstanceSpec
@@ -1583,6 +1878,11 @@ func (c *Client) DescribeCloneDBInstanceSpecWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeCloneDBInstanceSpecRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloneDBInstanceSpec require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCloneDBInstanceSpecResponse()
@@ -1631,13 +1931,7 @@ func NewDescribeDBBackupsResponse() (response *DescribeDBBackupsResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeDBBackups(request *DescribeDBBackupsRequest) (response *DescribeDBBackupsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBBackupsRequest()
-    }
-    
-    response = NewDescribeDBBackupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBBackupsWithContext(context.Background(), request)
 }
 
 // DescribeDBBackups
@@ -1667,6 +1961,11 @@ func (c *Client) DescribeDBBackupsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDBBackupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBBackups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBBackupsResponse()
@@ -1708,17 +2007,12 @@ func NewDescribeDBErrlogsResponse() (response *DescribeDBErrlogsResponse) {
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
+//  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeDBErrlogs(request *DescribeDBErrlogsRequest) (response *DescribeDBErrlogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBErrlogsRequest()
-    }
-    
-    response = NewDescribeDBErrlogsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBErrlogsWithContext(context.Background(), request)
 }
 
 // DescribeDBErrlogs
@@ -1738,6 +2032,7 @@ func (c *Client) DescribeDBErrlogs(request *DescribeDBErrlogsRequest) (response 
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
+//  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
@@ -1745,6 +2040,11 @@ func (c *Client) DescribeDBErrlogsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDBErrlogsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBErrlogs require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBErrlogsResponse()
@@ -1792,13 +2092,7 @@ func NewDescribeDBInstanceAttributeResponse() (response *DescribeDBInstanceAttri
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeDBInstanceAttribute(request *DescribeDBInstanceAttributeRequest) (response *DescribeDBInstanceAttributeResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBInstanceAttributeRequest()
-    }
-    
-    response = NewDescribeDBInstanceAttributeResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBInstanceAttributeWithContext(context.Background(), request)
 }
 
 // DescribeDBInstanceAttribute
@@ -1827,6 +2121,11 @@ func (c *Client) DescribeDBInstanceAttributeWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeDBInstanceAttributeRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstanceAttribute require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBInstanceAttributeResponse()
@@ -1862,13 +2161,7 @@ func NewDescribeDBInstanceParametersResponse() (response *DescribeDBInstancePara
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeDBInstanceParameters(request *DescribeDBInstanceParametersRequest) (response *DescribeDBInstanceParametersResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBInstanceParametersRequest()
-    }
-    
-    response = NewDescribeDBInstanceParametersResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBInstanceParametersWithContext(context.Background(), request)
 }
 
 // DescribeDBInstanceParameters
@@ -1885,6 +2178,11 @@ func (c *Client) DescribeDBInstanceParametersWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDBInstanceParametersRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstanceParameters require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBInstanceParametersResponse()
@@ -1935,13 +2233,7 @@ func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (response *DescribeDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBInstancesRequest()
-    }
-    
-    response = NewDescribeDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBInstancesWithContext(context.Background(), request)
 }
 
 // DescribeDBInstances
@@ -1973,6 +2265,11 @@ func (c *Client) DescribeDBInstancesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBInstancesResponse()
@@ -2017,13 +2314,7 @@ func NewDescribeDBSlowlogsResponse() (response *DescribeDBSlowlogsResponse) {
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeDBSlowlogs(request *DescribeDBSlowlogsRequest) (response *DescribeDBSlowlogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBSlowlogsRequest()
-    }
-    
-    response = NewDescribeDBSlowlogsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBSlowlogsWithContext(context.Background(), request)
 }
 
 // DescribeDBSlowlogs
@@ -2049,6 +2340,11 @@ func (c *Client) DescribeDBSlowlogsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeDBSlowlogsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBSlowlogs require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBSlowlogsResponse()
@@ -2098,13 +2394,7 @@ func NewDescribeDBXlogsResponse() (response *DescribeDBXlogsResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeDBXlogs(request *DescribeDBXlogsRequest) (response *DescribeDBXlogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBXlogsRequest()
-    }
-    
-    response = NewDescribeDBXlogsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBXlogsWithContext(context.Background(), request)
 }
 
 // DescribeDBXlogs
@@ -2135,6 +2425,11 @@ func (c *Client) DescribeDBXlogsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeDBXlogsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBXlogs require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBXlogsResponse()
@@ -2185,13 +2480,7 @@ func NewDescribeDatabasesResponse() (response *DescribeDatabasesResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) DescribeDatabases(request *DescribeDatabasesRequest) (response *DescribeDatabasesResponse, err error) {
-    if request == nil {
-        request = NewDescribeDatabasesRequest()
-    }
-    
-    response = NewDescribeDatabasesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDatabasesWithContext(context.Background(), request)
 }
 
 // DescribeDatabases
@@ -2223,9 +2512,61 @@ func (c *Client) DescribeDatabasesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDatabasesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDatabases require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDatabasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeEncryptionKeysRequest() (request *DescribeEncryptionKeysRequest) {
+    request = &DescribeEncryptionKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeEncryptionKeys")
+    
+    
+    return
+}
+
+func NewDescribeEncryptionKeysResponse() (response *DescribeEncryptionKeysResponse) {
+    response = &DescribeEncryptionKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeEncryptionKeys
+// 获取实例的密钥信息列表。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeEncryptionKeys(request *DescribeEncryptionKeysRequest) (response *DescribeEncryptionKeysResponse, err error) {
+    return c.DescribeEncryptionKeysWithContext(context.Background(), request)
+}
+
+// DescribeEncryptionKeys
+// 获取实例的密钥信息列表。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeEncryptionKeysWithContext(ctx context.Context, request *DescribeEncryptionKeysRequest) (response *DescribeEncryptionKeysResponse, err error) {
+    if request == nil {
+        request = NewDescribeEncryptionKeysRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEncryptionKeys require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEncryptionKeysResponse()
     err = c.Send(request, response)
     return
 }
@@ -2265,13 +2606,7 @@ func NewDescribeOrdersResponse() (response *DescribeOrdersResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeOrders(request *DescribeOrdersRequest) (response *DescribeOrdersResponse, err error) {
-    if request == nil {
-        request = NewDescribeOrdersRequest()
-    }
-    
-    response = NewDescribeOrdersResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeOrdersWithContext(context.Background(), request)
 }
 
 // DescribeOrders
@@ -2295,6 +2630,11 @@ func (c *Client) DescribeOrdersWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeOrdersRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOrders require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeOrdersResponse()
@@ -2329,13 +2669,7 @@ func NewDescribeParamsEventResponse() (response *DescribeParamsEventResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeParamsEvent(request *DescribeParamsEventRequest) (response *DescribeParamsEventResponse, err error) {
-    if request == nil {
-        request = NewDescribeParamsEventRequest()
-    }
-    
-    response = NewDescribeParamsEventResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeParamsEventWithContext(context.Background(), request)
 }
 
 // DescribeParamsEvent
@@ -2351,6 +2685,11 @@ func (c *Client) DescribeParamsEventWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeParamsEventRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeParamsEvent require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeParamsEventResponse()
@@ -2394,13 +2733,7 @@ func NewDescribeProductConfigResponse() (response *DescribeProductConfigResponse
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeProductConfig(request *DescribeProductConfigRequest) (response *DescribeProductConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeProductConfigRequest()
-    }
-    
-    response = NewDescribeProductConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeProductConfigWithContext(context.Background(), request)
 }
 
 // DescribeProductConfig
@@ -2425,6 +2758,11 @@ func (c *Client) DescribeProductConfigWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeProductConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeProductConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeProductConfigResponse()
@@ -2466,13 +2804,7 @@ func NewDescribeReadOnlyGroupsResponse() (response *DescribeReadOnlyGroupsRespon
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeReadOnlyGroups(request *DescribeReadOnlyGroupsRequest) (response *DescribeReadOnlyGroupsResponse, err error) {
-    if request == nil {
-        request = NewDescribeReadOnlyGroupsRequest()
-    }
-    
-    response = NewDescribeReadOnlyGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeReadOnlyGroupsWithContext(context.Background(), request)
 }
 
 // DescribeReadOnlyGroups
@@ -2495,6 +2827,11 @@ func (c *Client) DescribeReadOnlyGroupsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeReadOnlyGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReadOnlyGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeReadOnlyGroupsResponse()
@@ -2538,13 +2875,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
-    if request == nil {
-        request = NewDescribeRegionsRequest()
-    }
-    
-    response = NewDescribeRegionsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeRegionsWithContext(context.Background(), request)
 }
 
 // DescribeRegions
@@ -2569,6 +2900,11 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRegions require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeRegionsResponse()
@@ -2623,13 +2959,7 @@ func NewDescribeServerlessDBInstancesResponse() (response *DescribeServerlessDBI
 //  SYSTEMERROR = "SystemError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeServerlessDBInstances(request *DescribeServerlessDBInstancesRequest) (response *DescribeServerlessDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeServerlessDBInstancesRequest()
-    }
-    
-    response = NewDescribeServerlessDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeServerlessDBInstancesWithContext(context.Background(), request)
 }
 
 // DescribeServerlessDBInstances
@@ -2665,6 +2995,11 @@ func (c *Client) DescribeServerlessDBInstancesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeServerlessDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServerlessDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeServerlessDBInstancesResponse()
@@ -2699,13 +3034,7 @@ func NewDescribeSlowQueryAnalysisResponse() (response *DescribeSlowQueryAnalysis
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeSlowQueryAnalysis(request *DescribeSlowQueryAnalysisRequest) (response *DescribeSlowQueryAnalysisResponse, err error) {
-    if request == nil {
-        request = NewDescribeSlowQueryAnalysisRequest()
-    }
-    
-    response = NewDescribeSlowQueryAnalysisResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeSlowQueryAnalysisWithContext(context.Background(), request)
 }
 
 // DescribeSlowQueryAnalysis
@@ -2721,6 +3050,11 @@ func (c *Client) DescribeSlowQueryAnalysisWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeSlowQueryAnalysisRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSlowQueryAnalysis require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeSlowQueryAnalysisResponse()
@@ -2755,13 +3089,7 @@ func NewDescribeSlowQueryListResponse() (response *DescribeSlowQueryListResponse
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeSlowQueryList(request *DescribeSlowQueryListRequest) (response *DescribeSlowQueryListResponse, err error) {
-    if request == nil {
-        request = NewDescribeSlowQueryListRequest()
-    }
-    
-    response = NewDescribeSlowQueryListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeSlowQueryListWithContext(context.Background(), request)
 }
 
 // DescribeSlowQueryList
@@ -2777,6 +3105,11 @@ func (c *Client) DescribeSlowQueryListWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeSlowQueryListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSlowQueryList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeSlowQueryListResponse()
@@ -2820,13 +3153,7 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
-    if request == nil {
-        request = NewDescribeZonesRequest()
-    }
-    
-    response = NewDescribeZonesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeZonesWithContext(context.Background(), request)
 }
 
 // DescribeZones
@@ -2851,6 +3178,11 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeZonesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeZones require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeZonesResponse()
@@ -2912,13 +3244,7 @@ func NewDestroyDBInstanceResponse() (response *DestroyDBInstanceResponse) {
 //  SYSTEMERROR = "SystemError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DestroyDBInstance(request *DestroyDBInstanceRequest) (response *DestroyDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewDestroyDBInstanceRequest()
-    }
-    
-    response = NewDestroyDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.DestroyDBInstanceWithContext(context.Background(), request)
 }
 
 // DestroyDBInstance
@@ -2961,6 +3287,11 @@ func (c *Client) DestroyDBInstanceWithContext(ctx context.Context, request *Dest
     if request == nil {
         request = NewDestroyDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDestroyDBInstanceResponse()
@@ -3026,13 +3357,7 @@ func NewDisIsolateDBInstancesResponse() (response *DisIsolateDBInstancesResponse
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DisIsolateDBInstances(request *DisIsolateDBInstancesRequest) (response *DisIsolateDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewDisIsolateDBInstancesRequest()
-    }
-    
-    response = NewDisIsolateDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DisIsolateDBInstancesWithContext(context.Background(), request)
 }
 
 // DisIsolateDBInstances
@@ -3079,6 +3404,11 @@ func (c *Client) DisIsolateDBInstancesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDisIsolateDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisIsolateDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDisIsolateDBInstancesResponse()
@@ -3134,13 +3464,7 @@ func NewInitDBInstancesResponse() (response *InitDBInstancesResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) InitDBInstances(request *InitDBInstancesRequest) (response *InitDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewInitDBInstancesRequest()
-    }
-    
-    response = NewInitDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.InitDBInstancesWithContext(context.Background(), request)
 }
 
 // InitDBInstances
@@ -3177,6 +3501,11 @@ func (c *Client) InitDBInstancesWithContext(ctx context.Context, request *InitDB
     if request == nil {
         request = NewInitDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InitDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewInitDBInstancesResponse()
@@ -3226,13 +3555,7 @@ func NewInquiryPriceCreateDBInstancesResponse() (response *InquiryPriceCreateDBI
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_PAYMODEERROR = "OperationDenied.PayModeError"
 func (c *Client) InquiryPriceCreateDBInstances(request *InquiryPriceCreateDBInstancesRequest) (response *InquiryPriceCreateDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewInquiryPriceCreateDBInstancesRequest()
-    }
-    
-    response = NewInquiryPriceCreateDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.InquiryPriceCreateDBInstancesWithContext(context.Background(), request)
 }
 
 // InquiryPriceCreateDBInstances
@@ -3263,6 +3586,11 @@ func (c *Client) InquiryPriceCreateDBInstancesWithContext(ctx context.Context, r
     if request == nil {
         request = NewInquiryPriceCreateDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceCreateDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewInquiryPriceCreateDBInstancesResponse()
@@ -3310,13 +3638,7 @@ func NewInquiryPriceRenewDBInstanceResponse() (response *InquiryPriceRenewDBInst
 //  OPERATIONDENIED_POSTPAIDPAYMODEERROR = "OperationDenied.PostPaidPayModeError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) InquiryPriceRenewDBInstance(request *InquiryPriceRenewDBInstanceRequest) (response *InquiryPriceRenewDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewInquiryPriceRenewDBInstanceRequest()
-    }
-    
-    response = NewInquiryPriceRenewDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.InquiryPriceRenewDBInstanceWithContext(context.Background(), request)
 }
 
 // InquiryPriceRenewDBInstance
@@ -3345,6 +3667,11 @@ func (c *Client) InquiryPriceRenewDBInstanceWithContext(ctx context.Context, req
     if request == nil {
         request = NewInquiryPriceRenewDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceRenewDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewInquiryPriceRenewDBInstanceResponse()
@@ -3397,13 +3724,7 @@ func NewInquiryPriceUpgradeDBInstanceResponse() (response *InquiryPriceUpgradeDB
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) InquiryPriceUpgradeDBInstance(request *InquiryPriceUpgradeDBInstanceRequest) (response *InquiryPriceUpgradeDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewInquiryPriceUpgradeDBInstanceRequest()
-    }
-    
-    response = NewInquiryPriceUpgradeDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.InquiryPriceUpgradeDBInstanceWithContext(context.Background(), request)
 }
 
 // InquiryPriceUpgradeDBInstance
@@ -3437,6 +3758,11 @@ func (c *Client) InquiryPriceUpgradeDBInstanceWithContext(ctx context.Context, r
     if request == nil {
         request = NewInquiryPriceUpgradeDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquiryPriceUpgradeDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewInquiryPriceUpgradeDBInstanceResponse()
@@ -3483,6 +3809,7 @@ func NewIsolateDBInstancesResponse() (response *IsolateDBInstancesResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDVOUCHERID = "InvalidVoucherId"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -3496,13 +3823,7 @@ func NewIsolateDBInstancesResponse() (response *IsolateDBInstancesResponse) {
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) IsolateDBInstances(request *IsolateDBInstancesRequest) (response *IsolateDBInstancesResponse, err error) {
-    if request == nil {
-        request = NewIsolateDBInstancesRequest()
-    }
-    
-    response = NewIsolateDBInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.IsolateDBInstancesWithContext(context.Background(), request)
 }
 
 // IsolateDBInstances
@@ -3527,6 +3848,7 @@ func (c *Client) IsolateDBInstances(request *IsolateDBInstancesRequest) (respons
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDVOUCHERID = "InvalidVoucherId"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -3543,6 +3865,11 @@ func (c *Client) IsolateDBInstancesWithContext(ctx context.Context, request *Iso
     if request == nil {
         request = NewIsolateDBInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IsolateDBInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewIsolateDBInstancesResponse()
@@ -3585,13 +3912,7 @@ func NewModifyAccountRemarkResponse() (response *ModifyAccountRemarkResponse) {
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyAccountRemark(request *ModifyAccountRemarkRequest) (response *ModifyAccountRemarkResponse, err error) {
-    if request == nil {
-        request = NewModifyAccountRemarkRequest()
-    }
-    
-    response = NewModifyAccountRemarkResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyAccountRemarkWithContext(context.Background(), request)
 }
 
 // ModifyAccountRemark
@@ -3615,6 +3936,11 @@ func (c *Client) ModifyAccountRemarkWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyAccountRemarkRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAccountRemark require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyAccountRemarkResponse()
@@ -3652,13 +3978,7 @@ func NewModifyBackupPlanResponse() (response *ModifyBackupPlanResponse) {
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyBackupPlan(request *ModifyBackupPlanRequest) (response *ModifyBackupPlanResponse, err error) {
-    if request == nil {
-        request = NewModifyBackupPlanRequest()
-    }
-    
-    response = NewModifyBackupPlanResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyBackupPlanWithContext(context.Background(), request)
 }
 
 // ModifyBackupPlan
@@ -3677,6 +3997,11 @@ func (c *Client) ModifyBackupPlanWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyBackupPlanRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBackupPlan require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyBackupPlanResponse()
@@ -3713,13 +4038,7 @@ func NewModifyDBInstanceDeploymentResponse() (response *ModifyDBInstanceDeployme
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 func (c *Client) ModifyDBInstanceDeployment(request *ModifyDBInstanceDeploymentRequest) (response *ModifyDBInstanceDeploymentResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceDeploymentRequest()
-    }
-    
-    response = NewModifyDBInstanceDeploymentResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceDeploymentWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceDeployment
@@ -3737,6 +4056,11 @@ func (c *Client) ModifyDBInstanceDeploymentWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyDBInstanceDeploymentRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceDeployment require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceDeploymentResponse()
@@ -3783,13 +4107,7 @@ func NewModifyDBInstanceNameResponse() (response *ModifyDBInstanceNameResponse) 
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceName(request *ModifyDBInstanceNameRequest) (response *ModifyDBInstanceNameResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceNameRequest()
-    }
-    
-    response = NewModifyDBInstanceNameResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceNameWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceName
@@ -3817,6 +4135,11 @@ func (c *Client) ModifyDBInstanceNameWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDBInstanceNameRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceName require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceNameResponse()
@@ -3848,15 +4171,10 @@ func NewModifyDBInstanceParametersResponse() (response *ModifyDBInstanceParamete
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceParameters(request *ModifyDBInstanceParametersRequest) (response *ModifyDBInstanceParametersResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceParametersRequest()
-    }
-    
-    response = NewModifyDBInstanceParametersResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceParametersWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceParameters
@@ -3866,11 +4184,17 @@ func (c *Client) ModifyDBInstanceParameters(request *ModifyDBInstanceParametersR
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceParametersWithContext(ctx context.Context, request *ModifyDBInstanceParametersRequest) (response *ModifyDBInstanceParametersResponse, err error) {
     if request == nil {
         request = NewModifyDBInstanceParametersRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceParameters require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceParametersResponse()
@@ -3919,13 +4243,7 @@ func NewModifyDBInstanceReadOnlyGroupResponse() (response *ModifyDBInstanceReadO
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) ModifyDBInstanceReadOnlyGroup(request *ModifyDBInstanceReadOnlyGroupRequest) (response *ModifyDBInstanceReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceReadOnlyGroupRequest()
-    }
-    
-    response = NewModifyDBInstanceReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceReadOnlyGroup
@@ -3955,6 +4273,11 @@ func (c *Client) ModifyDBInstanceReadOnlyGroupWithContext(ctx context.Context, r
     if request == nil {
         request = NewModifyDBInstanceReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceReadOnlyGroupResponse()
@@ -3994,13 +4317,7 @@ func NewModifyDBInstanceSpecResponse() (response *ModifyDBInstanceSpecResponse) 
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 func (c *Client) ModifyDBInstanceSpec(request *ModifyDBInstanceSpecRequest) (response *ModifyDBInstanceSpecResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceSpecRequest()
-    }
-    
-    response = NewModifyDBInstanceSpecResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceSpecWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceSpec
@@ -4021,6 +4338,11 @@ func (c *Client) ModifyDBInstanceSpecWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDBInstanceSpecRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceSpec require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceSpecResponse()
@@ -4066,13 +4388,7 @@ func NewModifyDBInstancesProjectResponse() (response *ModifyDBInstancesProjectRe
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstancesProject(request *ModifyDBInstancesProjectRequest) (response *ModifyDBInstancesProjectResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstancesProjectRequest()
-    }
-    
-    response = NewModifyDBInstancesProjectResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstancesProjectWithContext(context.Background(), request)
 }
 
 // ModifyDBInstancesProject
@@ -4099,6 +4415,11 @@ func (c *Client) ModifyDBInstancesProjectWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyDBInstancesProjectRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstancesProject require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstancesProjectResponse()
@@ -4149,13 +4470,7 @@ func NewModifyReadOnlyGroupConfigResponse() (response *ModifyReadOnlyGroupConfig
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyReadOnlyGroupConfig(request *ModifyReadOnlyGroupConfigRequest) (response *ModifyReadOnlyGroupConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyReadOnlyGroupConfigRequest()
-    }
-    
-    response = NewModifyReadOnlyGroupConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyReadOnlyGroupConfigWithContext(context.Background(), request)
 }
 
 // ModifyReadOnlyGroupConfig
@@ -4187,6 +4502,11 @@ func (c *Client) ModifyReadOnlyGroupConfigWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyReadOnlyGroupConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyReadOnlyGroupConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyReadOnlyGroupConfigResponse()
@@ -4229,13 +4549,7 @@ func NewModifySwitchTimePeriodResponse() (response *ModifySwitchTimePeriodRespon
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) ModifySwitchTimePeriod(request *ModifySwitchTimePeriodRequest) (response *ModifySwitchTimePeriodResponse, err error) {
-    if request == nil {
-        request = NewModifySwitchTimePeriodRequest()
-    }
-    
-    response = NewModifySwitchTimePeriodResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifySwitchTimePeriodWithContext(context.Background(), request)
 }
 
 // ModifySwitchTimePeriod
@@ -4259,6 +4573,11 @@ func (c *Client) ModifySwitchTimePeriodWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifySwitchTimePeriodRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySwitchTimePeriod require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifySwitchTimePeriodResponse()
@@ -4305,13 +4624,7 @@ func NewOpenDBExtranetAccessResponse() (response *OpenDBExtranetAccessResponse) 
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) OpenDBExtranetAccess(request *OpenDBExtranetAccessRequest) (response *OpenDBExtranetAccessResponse, err error) {
-    if request == nil {
-        request = NewOpenDBExtranetAccessRequest()
-    }
-    
-    response = NewOpenDBExtranetAccessResponse()
-    err = c.Send(request, response)
-    return
+    return c.OpenDBExtranetAccessWithContext(context.Background(), request)
 }
 
 // OpenDBExtranetAccess
@@ -4339,6 +4652,11 @@ func (c *Client) OpenDBExtranetAccessWithContext(ctx context.Context, request *O
     if request == nil {
         request = NewOpenDBExtranetAccessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenDBExtranetAccess require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewOpenDBExtranetAccessResponse()
@@ -4404,13 +4722,7 @@ func NewOpenServerlessDBExtranetAccessResponse() (response *OpenServerlessDBExtr
 //  UNKNOWNERROR = "UnknownError"
 //  VPCERROR = "VpcError"
 func (c *Client) OpenServerlessDBExtranetAccess(request *OpenServerlessDBExtranetAccessRequest) (response *OpenServerlessDBExtranetAccessResponse, err error) {
-    if request == nil {
-        request = NewOpenServerlessDBExtranetAccessRequest()
-    }
-    
-    response = NewOpenServerlessDBExtranetAccessResponse()
-    err = c.Send(request, response)
-    return
+    return c.OpenServerlessDBExtranetAccessWithContext(context.Background(), request)
 }
 
 // OpenServerlessDBExtranetAccess
@@ -4457,6 +4769,11 @@ func (c *Client) OpenServerlessDBExtranetAccessWithContext(ctx context.Context, 
     if request == nil {
         request = NewOpenServerlessDBExtranetAccessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenServerlessDBExtranetAccess require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewOpenServerlessDBExtranetAccessResponse()
@@ -4502,13 +4819,7 @@ func NewRebalanceReadOnlyGroupResponse() (response *RebalanceReadOnlyGroupRespon
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  VPCERROR = "VpcError"
 func (c *Client) RebalanceReadOnlyGroup(request *RebalanceReadOnlyGroupRequest) (response *RebalanceReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewRebalanceReadOnlyGroupRequest()
-    }
-    
-    response = NewRebalanceReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.RebalanceReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // RebalanceReadOnlyGroup
@@ -4535,6 +4846,11 @@ func (c *Client) RebalanceReadOnlyGroupWithContext(ctx context.Context, request 
     if request == nil {
         request = NewRebalanceReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RebalanceReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRebalanceReadOnlyGroupResponse()
@@ -4583,13 +4899,7 @@ func NewRemoveDBInstanceFromReadOnlyGroupResponse() (response *RemoveDBInstanceF
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) RemoveDBInstanceFromReadOnlyGroup(request *RemoveDBInstanceFromReadOnlyGroupRequest) (response *RemoveDBInstanceFromReadOnlyGroupResponse, err error) {
-    if request == nil {
-        request = NewRemoveDBInstanceFromReadOnlyGroupRequest()
-    }
-    
-    response = NewRemoveDBInstanceFromReadOnlyGroupResponse()
-    err = c.Send(request, response)
-    return
+    return c.RemoveDBInstanceFromReadOnlyGroupWithContext(context.Background(), request)
 }
 
 // RemoveDBInstanceFromReadOnlyGroup
@@ -4619,6 +4929,11 @@ func (c *Client) RemoveDBInstanceFromReadOnlyGroupWithContext(ctx context.Contex
     if request == nil {
         request = NewRemoveDBInstanceFromReadOnlyGroupRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveDBInstanceFromReadOnlyGroup require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRemoveDBInstanceFromReadOnlyGroupResponse()
@@ -4677,13 +4992,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 //  RESOURCEUNAVAILABLE_RESOURCENOPERMISSION = "ResourceUnavailable.ResourceNoPermission"
 //  RESOURCEUNAVAILABLE_VPCRESOURCENOTFOUND = "ResourceUnavailable.VpcResourceNotFound"
 func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewInstanceResponse, err error) {
-    if request == nil {
-        request = NewRenewInstanceRequest()
-    }
-    
-    response = NewRenewInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.RenewInstanceWithContext(context.Background(), request)
 }
 
 // RenewInstance
@@ -4723,6 +5032,11 @@ func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewIns
     if request == nil {
         request = NewRenewInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRenewInstanceResponse()
@@ -4771,13 +5085,7 @@ func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) 
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (response *ResetAccountPasswordResponse, err error) {
-    if request == nil {
-        request = NewResetAccountPasswordRequest()
-    }
-    
-    response = NewResetAccountPasswordResponse()
-    err = c.Send(request, response)
-    return
+    return c.ResetAccountPasswordWithContext(context.Background(), request)
 }
 
 // ResetAccountPassword
@@ -4807,6 +5115,11 @@ func (c *Client) ResetAccountPasswordWithContext(ctx context.Context, request *R
     if request == nil {
         request = NewResetAccountPasswordRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetAccountPassword require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewResetAccountPasswordResponse()
@@ -4853,13 +5166,7 @@ func NewRestartDBInstanceResponse() (response *RestartDBInstanceResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) RestartDBInstance(request *RestartDBInstanceRequest) (response *RestartDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewRestartDBInstanceRequest()
-    }
-    
-    response = NewRestartDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.RestartDBInstanceWithContext(context.Background(), request)
 }
 
 // RestartDBInstance
@@ -4887,6 +5194,11 @@ func (c *Client) RestartDBInstanceWithContext(ctx context.Context, request *Rest
     if request == nil {
         request = NewRestartDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRestartDBInstanceResponse()
@@ -4933,13 +5245,7 @@ func NewSetAutoRenewFlagResponse() (response *SetAutoRenewFlagResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) SetAutoRenewFlag(request *SetAutoRenewFlagRequest) (response *SetAutoRenewFlagResponse, err error) {
-    if request == nil {
-        request = NewSetAutoRenewFlagRequest()
-    }
-    
-    response = NewSetAutoRenewFlagResponse()
-    err = c.Send(request, response)
-    return
+    return c.SetAutoRenewFlagWithContext(context.Background(), request)
 }
 
 // SetAutoRenewFlag
@@ -4967,6 +5273,11 @@ func (c *Client) SetAutoRenewFlagWithContext(ctx context.Context, request *SetAu
     if request == nil {
         request = NewSetAutoRenewFlagRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetAutoRenewFlag require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewSetAutoRenewFlagResponse()
@@ -5023,13 +5334,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response *UpgradeDBInstanceResponse, err error) {
-    if request == nil {
-        request = NewUpgradeDBInstanceRequest()
-    }
-    
-    response = NewUpgradeDBInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.UpgradeDBInstanceWithContext(context.Background(), request)
 }
 
 // UpgradeDBInstance
@@ -5067,6 +5372,11 @@ func (c *Client) UpgradeDBInstanceWithContext(ctx context.Context, request *Upgr
     if request == nil {
         request = NewUpgradeDBInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeDBInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewUpgradeDBInstanceResponse()

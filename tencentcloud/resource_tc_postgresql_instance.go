@@ -99,6 +99,39 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
+create pgsql with kms key
+```
+resource "tencentcloud_postgresql_instance" "pg" {
+  name              = "tf_postsql_instance"
+  availability_zone = "ap-guangzhou-6"
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = "vpc-86v957zb"
+  subnet_id         = "subnet-enm92y0m"
+  engine_version    = "11.12"
+  #  db_major_vesion   = "11"
+  db_kernel_version = "v11.12_r1.3"
+  need_support_tde  = 1
+  kms_key_id        = "788c606a-c7b7-11ec-82d1-5254001e5c4e"
+  kms_region        = "ap-guangzhou"
+  root_password     = "xxxxxxxxxx"
+  charset           = "LATIN1"
+  project_id        = 0
+  memory            = 4
+  storage           = 100
+
+  backup_plan {
+    min_backup_start_time        = "00:10:11"
+    max_backup_start_time        = "01:10:11"
+    base_backup_retention_period = 7
+    backup_period                = ["tuesday", "wednesday"]
+  }
+
+  tags = {
+    tf = "test"
+  }
+}
+```
+
 Import
 
 postgresql instance can be imported using the id, e.g.
@@ -159,6 +192,21 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Default:     "10.4",
 				Description: "Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.",
 			},
+			"db_major_vesion": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
+					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
+			},
+			"db_kernel_version": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "PostgreSQL kernel version number. " +
+					"If it is specified, an instance running kernel DBKernelVersion will be created.",
+			},
+
 			"vpc_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
@@ -240,6 +288,24 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(POSTGRESQL_DB_CHARSET),
 				Description:  "Charset of the root account. Valid values are `UTF8`,`LATIN1`.",
+			},
+			"need_support_tde": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to support data transparent encryption, 1: yes, 0: no (default).",
+			},
+			"kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "KeyId of the custom key.",
+			},
+			"kms_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Region of the custom key.",
 			},
 			"public_access_switch": {
 				Type:        schema.TypeBool,
@@ -382,6 +448,29 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	var outErr, inErr error
 	var allowVersion, allowMemory []string
 
+	var (
+		dbMajorVersion  = ""
+		dbKernelVersion = ""
+		needSupportTde  = 0
+		kmsKeyId        = ""
+		kmsRegion       = ""
+	)
+
+	if v, ok := d.GetOk("db_major_vesion"); ok {
+		dbMajorVersion = v.(string)
+	}
+	if v, ok := d.GetOk("db_kernel_version"); ok {
+		dbKernelVersion = v.(string)
+	}
+	if v, ok := d.GetOk("need_support_tde"); ok {
+		needSupportTde = v.(int)
+	}
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		kmsKeyId = v.(string)
+	}
+	if v, ok := d.GetOk("kms_region"); ok {
+		kmsRegion = v.(string)
+	}
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
 
 	for _, v := range securityGroups {
@@ -450,6 +539,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		instanceId, inErr = postgresqlService.CreatePostgresqlInstance(ctx,
 			name,
 			dbVersion,
+			dbMajorVersion,
+			dbKernelVersion,
 			payType, specCode,
 			0,
 			projectId,
@@ -463,6 +554,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			password,
 			charset,
 			dbNodeSet,
+			needSupportTde,
+			kmsKeyId,
+			kmsRegion,
 		)
 		if inErr != nil {
 			return retryError(inErr)
@@ -841,6 +935,13 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
 	}
+	if d.HasChange("db_major_vesion") || d.HasChange("db_kernel_version") {
+		return fmt.Errorf("Not support change db major version or kernel version.")
+	}
+
+	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
+		return fmt.Errorf("Not support change params contact with data transparent encryption.")
+	}
 	if len(paramEntrys) != 0 {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
@@ -917,6 +1018,8 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
+	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
+	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
 	if rootUser != "" {
@@ -996,6 +1099,19 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("status", instance.DBInstanceStatus)
 	_ = d.Set("memory", instance.DBInstanceMemory)
 	_ = d.Set("storage", instance.DBInstanceStorage)
+
+	// kms
+	kmsRequest := postgresql.NewDescribeEncryptionKeysRequest()
+	kmsRequest.DBInstanceId = helper.String(d.Id())
+	_ = d.Set("need_support_tde", instance.IsSupportTDE)
+	has, kms, err := postgresqlService.DescribeDBEncryptionKeys(ctx, kmsRequest)
+	if err != nil {
+		return err
+	}
+	if has {
+		_ = d.Set("kms_key_id", kms.KeyId)
+		_ = d.Set("kms_region", kms.KeyRegion)
+	}
 
 	// Uid, must use
 	var filters = make([]*postgresql.Filter, 0, 10)

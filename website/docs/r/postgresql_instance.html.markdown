@@ -109,6 +109,40 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
+create pgsql with kms key
+
+```hcl
+resource "tencentcloud_postgresql_instance" "pg" {
+  name              = "tf_postsql_instance"
+  availability_zone = "ap-guangzhou-6"
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = "vpc-86v957zb"
+  subnet_id         = "subnet-enm92y0m"
+  engine_version    = "11.12"
+  #  db_major_vesion   = "11"
+  db_kernel_version = "v11.12_r1.3"
+  need_support_tde  = 1
+  kms_key_id        = "788c606a-c7b7-11ec-82d1-5254001e5c4e"
+  kms_region        = "ap-guangzhou"
+  root_password     = "xxxxxxxxxx"
+  charset           = "LATIN1"
+  project_id        = 0
+  memory            = 4
+  storage           = 100
+
+  backup_plan {
+    min_backup_start_time        = "00:10:11"
+    max_backup_start_time        = "01:10:11"
+    base_backup_retention_period = 7
+    backup_period                = ["tuesday", "wednesday"]
+  }
+
+  tags = {
+    tf = "test"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -121,10 +155,15 @@ The following arguments are supported:
 * `backup_plan` - (Optional) Specify DB backup plan.
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
+* `db_kernel_version` - (Optional) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
+* `db_major_vesion` - (Optional) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_node_set` - (Optional) Specify instance node info for disaster migration.
 * `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.
+* `kms_key_id` - (Optional) KeyId of the custom key.
+* `kms_region` - (Optional) Region of the custom key.
 * `max_standby_archive_delay` - (Optional) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
 * `max_standby_streaming_delay` - (Optional) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
+* `need_support_tde` - (Optional) Whether to support data transparent encryption, 1: yes, 0: no (default).
 * `project_id` - (Optional) Project id, default value is `0`.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
