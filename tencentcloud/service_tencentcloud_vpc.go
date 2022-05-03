@@ -4413,6 +4413,33 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 	}
 }
 
+func (me *VpcService) DescribeVpcTaskResult(ctx context.Context, taskId *string) (err error) {
+
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeVpcTaskResultRequest()
+	defer func() {
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), err.Error())
+		}
+	}()
+	request.TaskId = taskId
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseVpcClient().DescribeVpcTaskResult(request)
+		if err != nil {
+			return retryError(err)
+		}
+		if response.Response.Status != nil && *response.Response.Status == VPN_TASK_STATUS_RUNNING {
+			return resource.RetryableError(errors.New("VPN task is running"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return
+}
+
 func (me *VpcService) DescribeTaskResult(ctx context.Context, taskId *uint64) (err error) {
 
 	logId := getLogId(ctx)
@@ -4520,7 +4547,7 @@ func (me *VpcService) DescribeVpnGwSslServerByFilter(ctx context.Context, filter
 	return
 }
 
-func (me *VpcService) DeleteVpnGatewaySslServer(ctx context.Context, SslServerId string) (errRet error) {
+func (me *VpcService) DeleteVpnGatewaySslServer(ctx context.Context, SslServerId string) (taskId uint64, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDeleteVpnGatewaySslServerRequest()
 	defer func() {
@@ -4532,10 +4559,11 @@ func (me *VpcService) DeleteVpnGatewaySslServer(ctx context.Context, SslServerId
 
 	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, errRet = me.client.UseVpcClient().DeleteVpnGatewaySslServer(request)
+		response, errRet := me.client.UseVpcClient().DeleteVpnGatewaySslServer(request)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
+		taskId = *response.Response.TaskId
 		return nil
 	})
 	return
@@ -4621,7 +4649,7 @@ func (me *VpcService) DescribeVpnGwSslClientByFilter(ctx context.Context, filter
 	return
 }
 
-func (me *VpcService) DeleteVpnGatewaySslClient(ctx context.Context, SslClientId string) (errRet error) {
+func (me *VpcService) DeleteVpnGatewaySslClient(ctx context.Context, SslClientId string) (taskId *uint64, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDeleteVpnGatewaySslClientRequest()
 	defer func() {
@@ -4633,10 +4661,11 @@ func (me *VpcService) DeleteVpnGatewaySslClient(ctx context.Context, SslClientId
 
 	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, errRet = me.client.UseVpcClient().DeleteVpnGatewaySslClient(request)
+		response, errRet := me.client.UseVpcClient().DeleteVpnGatewaySslClient(request)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
+		taskId = response.Response.TaskId
 		return nil
 	})
 	return

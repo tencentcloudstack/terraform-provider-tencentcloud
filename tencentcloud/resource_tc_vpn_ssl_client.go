@@ -24,7 +24,6 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"time"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -32,7 +31,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudVpnSslClient() *schema.Resource {
@@ -103,12 +101,10 @@ func resourceTencentCloudVpnSslClientCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	err := vpcService.DescribeTaskResult(ctx, helper.Uint64(*taskId))
+	err := vpcService.DescribeVpcTaskResult(ctx, helper.String(helper.UInt64ToStr(*taskId)))
 	if err != nil {
 		return err
 	}
-	// add protect
-	time.Sleep(3)
 
 	d.SetId(*sslClientId)
 
@@ -155,17 +151,15 @@ func resourceTencentCloudVpnSslClientDelete(d *schema.ResourceData, meta interfa
 
 	sslClientId := d.Id()
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err := service.DeleteVpnGatewaySslClient(ctx, sslClientId); err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == VPCNotFound {
-					return nil
-				}
-			}
-			return resource.RetryableError(err)
-		}
-		return nil
-	})
+	taskId, err := service.DeleteVpnGatewaySslClient(ctx, sslClientId)
+	if err != nil {
+		return err
+	}
+
+	err = service.DescribeVpcTaskResult(ctx, helper.String(helper.UInt64ToStr(*taskId)))
+	if err != nil {
+		return err
+	}
 
 	return err
 }
