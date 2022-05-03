@@ -141,7 +141,7 @@ resource "tencentcloud_route_table_entry" "my_route_entry" {
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id            = data.tencentcloud_vpc.my_vpc.id
   name              = "terraform test"
-  cidr_block        = "172.16.128.0/24"
+  cidr_block        = "172.128.128.0/24"
   availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
   route_table_id    = tencentcloud_route_table.my_route_table.id
 }

@@ -139,10 +139,10 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id             = tencentcloud_clb_instance.clb_basic.id
-  source_listener_id = tencentcloud_clb_listener.listener_basic.id
-  target_listener_id = tencentcloud_clb_listener.listener_target.id
-  source_rule_id     = tencentcloud_clb_listener_rule.rule_basic.id
-  target_rule_id     = tencentcloud_clb_listener_rule.rule_target.id
+  source_listener_id = tencentcloud_clb_listener.listener_basic.listener_id
+  target_listener_id = tencentcloud_clb_listener.listener_target.listener_id
+  source_rule_id     = tencentcloud_clb_listener_rule.rule_basic.rule_id
+  target_rule_id     = tencentcloud_clb_listener_rule.rule_target.rule_id
     is_auto_rewrite	 = false
 }
 `

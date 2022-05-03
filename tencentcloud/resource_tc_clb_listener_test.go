@@ -133,7 +133,6 @@ func TestAccTencentCloudClbListenerTCPWithTCP(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
 				),
 			},
 			{
@@ -168,7 +167,6 @@ func TestAccTencentCloudClbListenerTCPWithHTTP(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_type", "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_port", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_code", "16"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_http_domain", "www.tencent.com"),
