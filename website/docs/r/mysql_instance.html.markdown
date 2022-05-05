@@ -65,7 +65,7 @@ The following arguments are supported:
 * `parameters` - (Optional) List of parameters to use.
 * `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
-* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
+* `prepaid_period` - (Optional) Period of instance. NOTES: Only support prepaid instance.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional) Security groups to use.
@@ -88,4 +88,12 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+
+## Import
+
+MySQL instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
+```
 

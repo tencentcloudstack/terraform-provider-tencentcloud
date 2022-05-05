@@ -49,7 +49,7 @@ The following arguments are supported:
 * `master_region` - (Optional, ForceNew) The zone information of the primary instance is required when you purchase a disaster recovery instance.
 * `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
-* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
+* `prepaid_period` - (Optional) Period of instance. NOTES: Only support prepaid instance.
 * `security_groups` - (Optional) Security groups to use.
 * `subnet_id` - (Optional) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional) Instance tags.
