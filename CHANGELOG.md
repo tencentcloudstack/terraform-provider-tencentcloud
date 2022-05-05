@@ -1,3 +1,19 @@
+## 1.72.0 (May 5, 2022)
+
+FEATURES:
+
+* New datasource `tencentcloud_kubernetes_cluster_common_names`
+* New resource `tencentcloud_cam_oidc_sso`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_postgresql_instance` support data transparent encryption
+
+BUGFIXES:
+
+* resource `tencentcloud_vpn_ssl_client` fix delete failed
+* resource `tencentcloud_vpn_ssl_server` fix create duplicate instance
+
 ## 1.71.0 (April 24, 2022)
 
 FEATURES:
