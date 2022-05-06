@@ -2671,7 +2671,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc, clusterLevel, autoUpgradeClusterLevel)
 			if err != nil {
 				// create and update immediately may cause cluster level syntax error, this error can wait until cluster level state normal
-				return retryError(err, tke.INTERNALERROR_UNEXPECTEDINTERNAL)
+				return retryError(err, tke.INTERNALERROR_UNEXPECTEDINTERNAL, tke.RESOURCEUNAVAILABLE)
 			}
 			return nil
 		})
