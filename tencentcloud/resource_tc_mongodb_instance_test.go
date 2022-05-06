@@ -3,13 +3,65 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_mongodb_instance
+	resource.AddTestSweepers("tencentcloud_mongodb_instance", &resource.Sweeper{
+		Name: "tencentcloud_mongodb_instance",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := MongodbService{client}
+
+			instances, err := service.DescribeInstancesByFilter(ctx, "", -1)
+			if err != nil {
+				return err
+			}
+
+			var isolated []string
+
+			for i := range instances {
+				ins := instances[i]
+				id := *ins.InstanceId
+				name := *ins.InstanceName
+				created, err := time.Parse("2006-01-02 15:04:05", *ins.CreateTime)
+				if err != nil {
+					created = time.Time{}
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				log.Printf("%s (%s) will Isolated", id, name)
+				err = service.IsolateInstance(ctx, id)
+				if err != nil {
+					continue
+				}
+				isolated = append(isolated, id)
+			}
+
+			log.Printf("Offline isolated instance %v", isolated)
+			for _, id := range isolated {
+				err = service.OfflineIsolatedDBInstance(ctx, id)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,11 +73,11 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "engine_version", "MONGO_36_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "machine_type", MONGODB_MACHINE_TYPE_HIO),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "available_zone", "ap-guangzhou-2"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "memory"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "volume"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "engine_version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "machine_type"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "available_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
@@ -52,16 +104,27 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
 			},
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
+	// Avoid to set Parallel to make sure EnvVar secure
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMongodbInstanceDestroy,
+		Steps: []resource.TestStep{
 			{
 				Config: testAccMongodbInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "memory", "8"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "volume", "200"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "engine_version", "MONGO_40_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "machine_type", MONGODB_MACHINE_TYPE_HIO10G),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "memory"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "volume"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "engine_version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "machine_type"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "vip"),
@@ -82,6 +145,12 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "tags.prepaid", "prepaid"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
 			},
 		},
 	})
@@ -137,14 +206,14 @@ func testAccCheckMongodbInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMongodbInstance = `
+const testAccMongodbInstance = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-test"
-  memory         = 4
-  volume         = 100
-  engine_version = "MONGO_36_WT"
-  machine_type   = "GIO"
-  available_zone = "ap-guangzhou-2"
+  memory         = local.memory
+  volume         = local.volume
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  available_zone = "ap-guangzhou-6"
   project_id     = 0
   password       = "test1234"
 
@@ -154,14 +223,14 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 }
 `
 
-const testAccMongodbInstance_update = `
+const testAccMongodbInstance_update = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-update"
-  memory         = 8
-  volume         = 200
-  engine_version = "MONGO_36_WT"
-  machine_type   = "GIO"
-  available_zone = "ap-guangzhou-2"
+  memory         = local.memory * 2
+  volume         = local.volume * 2
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  available_zone = "ap-guangzhou-6"
   project_id     = 0
   password       = "test1234update"
 
@@ -171,14 +240,14 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 }
 `
 
-const testAccMongodbInstancePrepaid = `
+const testAccMongodbInstancePrepaid = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-test-prepaid"
-  memory          = 8
-  volume          = 200
-  engine_version  = "MONGO_40_WT"
-  machine_type    = "HIO10G"
-  available_zone  = "ap-guangzhou-3"
+  memory         = local.memory
+  volume         = local.volume
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234"
   charge_type     = "PREPAID"
@@ -191,14 +260,14 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
 }
 `
 
-const testAccMongodbInstancePrepaid_update = `
+const testAccMongodbInstancePrepaid_update = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-test-prepaid-update"
-  memory          = 4
-  volume          = 100
-  engine_version  = "MONGO_40_WT"
-  machine_type    = "HIO10G"
-  available_zone  = "ap-guangzhou-3"
+  memory         = local.memory
+  volume         = local.volume
+  engine_version = local.engine_version
+  machine_type   = local.machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234update"
   charge_type     = "PREPAID"

@@ -557,3 +557,31 @@ locals {
 `
 
 // End of TKE Service
+
+// MongoDB
+
+const DefaultMongoDBSpec = `
+data "tencentcloud_mongodb_zone_config" "zone_config" {
+  available_zone = "ap-guangzhou-6"
+}
+
+variable "engine_versions" {
+  default = {
+    "3.6": "MONGO_36_WT",
+    "4.0": "MONGO_40_WT",
+    "4.2": "MONGO_42_WT"
+  }
+}
+
+locals {
+  filtered_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") != "3.2"]
+  spec = concat(local.filtered_spec, data.tencentcloud_mongodb_zone_config.zone_config.list)
+  machine_type = local.spec.0.machine_type
+  cluster_type = local.spec.0.cluster_type
+  memory = local.spec.0.memory / 1024
+  volume = local.spec.0.min_storage / 1024
+  engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
+}
+`
+
+// End of MongoDB
