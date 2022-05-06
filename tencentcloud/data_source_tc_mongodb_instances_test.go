@@ -16,7 +16,6 @@ func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
 			{
 				Config: testAccMongodbInstancesDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_instance"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.#"),
 				),
 			},
