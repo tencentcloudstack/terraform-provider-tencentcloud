@@ -989,10 +989,8 @@ func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, pro
 		request.ClusterLevel = &clusterLevel
 	}
 
-	if autoUpgradeClusterLevel {
-		request.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
-			IsAutoUpgrade: &autoUpgradeClusterLevel,
-		}
+	request.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
+		IsAutoUpgrade: &autoUpgradeClusterLevel,
 	}
 
 	ratelimit.Check(request.GetAction())
