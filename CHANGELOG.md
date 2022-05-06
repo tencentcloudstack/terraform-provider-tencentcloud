@@ -1,3 +1,10 @@
+## 1.72.1 (May 6, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_scf_function` suport java handler
+* resource `tencentcloud_mongodb_instance` fix engine version doc
+
 ## 1.72.0 (May 5, 2022)
 
 FEATURES:
