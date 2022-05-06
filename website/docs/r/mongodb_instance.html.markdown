@@ -33,7 +33,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_3_WT` (represents MongoDB 3.2 WiredTiger Edition), `MONGO_3_ROCKS` (represents MongoDB 3.2 RocksDB Edition), `MONGO_36_WT` (represents MongoDB 3.6 WiredTiger Edition) and `MONGO_40_WT` (represents MongoDB 4.0 WiredTiger Edition).
+* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_36_WT` (MongoDB 3.6 WiredTiger Edition), `MONGO_40_WT` (MongoDB 4.0 WiredTiger Edition) and `MONGO_42_WT`  (MongoDB 4.2 WiredTiger Edition). NOTE: `MONGO_3_WT` (MongoDB 3.2 WiredTiger Edition) and `MONGO_3_ROCKS` (MongoDB 3.2 RocksDB Edition) will deprecated.
 * `instance_name` - (Required) Name of the Mongodb instance.
 * `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated, represents high IO) and `HIO10G`(or `TGIO` which will be deprecated, represents 10-gigabit high IO).
 * `memory` - (Required) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.

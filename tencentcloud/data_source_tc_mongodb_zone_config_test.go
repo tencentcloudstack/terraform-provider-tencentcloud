@@ -16,7 +16,7 @@ func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 				Config: testAccMongodbZoneConfigDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", defaultAZone),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.cluster_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.machine_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.cpu"),
@@ -31,8 +31,8 @@ func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 	})
 }
 
-const testAccMongodbZoneConfigDataSource = `
+const testAccMongodbZoneConfigDataSource = defaultAzVariable + `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
-	available_zone = "ap-guangzhou-3"
+	available_zone = var.default_az
 }
 `
