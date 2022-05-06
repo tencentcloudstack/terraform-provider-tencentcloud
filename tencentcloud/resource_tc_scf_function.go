@@ -82,12 +82,12 @@ func scfFunctionValidate(allowDot bool) schema.SchemaValidateFunc {
 
 		for _, r := range runes {
 			switch {
-			case unicode.IsLetter(r), unicode.IsNumber(r), r == '-', r == '_', r == '.' && allowDot:
+			case unicode.IsLetter(r), unicode.IsNumber(r), r == '-', r == '_', r == ':', r == '.' && allowDot:
 			default:
 				if !allowDot {
-					errs = append(errs, errors.Errorf(`invalid %s, %s only can contain a-Z, 0-9, "-" and "_"`, k, k))
+					errs = append(errs, errors.Errorf(`invalid %s, %s only can contain a-Z, 0-9, "-" , "_" and ":"`, k, k))
 				} else {
-					errs = append(errs, errors.Errorf(`invalid %s, %s only can contain a-Z, 0-9, "-", "." and "_"`, k, k))
+					errs = append(errs, errors.Errorf(`invalid %s, %s only can contain a-Z, 0-9, "-", ".", "_" and ":"`, k, k))
 				}
 				return
 			}
