@@ -187,13 +187,9 @@ func resourceTencentCloudClbTargetUpdate(d *schema.ResourceData, meta interface{
 	)
 
 	isChanged := false
-	if d.HasChange("port") {
+	if d.HasChange("port") ||  d.HasChange("target_group_name"){
 		isChanged = true
 		port = uint64(d.Get("port").(int))
-	}
-
-	if d.HasChange("target_group_name") {
-		isChanged = true
 		tgtGroupName = d.Get("target_group_name").(string)
 	}
 
