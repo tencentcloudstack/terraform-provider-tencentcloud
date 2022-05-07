@@ -47,7 +47,14 @@ func testAccCheckNatGatewaySnatDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_nat_gateway_snat" {
 			continue
 		}
-		err, result := service.DescribeNatGatewaySnats(contextNil, rs.Primary.ID, nil)
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("nat gateway snat id is not set")
+		}
+
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+
+		err, result := service.DescribeNatGatewaySnats(contextNil, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read nat gateway snat failed, reason:%s\n ", logId, err.Error())
 			return err
@@ -89,10 +96,14 @@ func testAccCheckNatGatewaySnatExists(n string) resource.TestCheckFunc {
 }
 
 const testAccNatGatewaySnatConfig = `
-data "tencentcloud_availability_zones" "my_zones" {}
 
-data "tencentcloud_vpc" "my_vpc" {
+data "tencentcloud_vpc_instances" "my_vpc" {
   name = "Default-VPC"
+}
+
+data "tencentcloud_vpc_subnets" "my_subnet" {
+  vpc_id    = data.tencentcloud_vpc_instances.my_vpc.instance_list.0.vpc_id
+  subnet_id = "subnet-4o0zd840"
 }
 
 data "tencentcloud_images" "my_image" {
@@ -114,7 +125,7 @@ resource "tencentcloud_eip" "eip_test_dnat" {
 
 # Create NAT Gateway
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id         = data.tencentcloud_vpc.my_vpc.id
+  vpc_id         = data.tencentcloud_vpc_instances.my_vpc.instance_list.0.vpc_id
   name           = "terraform test"
   max_concurrent = 3000000
   bandwidth      = 500
@@ -125,33 +136,12 @@ resource "tencentcloud_nat_gateway" "my_nat" {
   ]
 }
 
-# Create route_table and entry
-resource "tencentcloud_route_table" "my_route_table" {
-  vpc_id = data.tencentcloud_vpc.my_vpc.id
-  name   = "terraform test"
-}
-resource "tencentcloud_route_table_entry" "my_route_entry" {
-  route_table_id         = tencentcloud_route_table.my_route_table.id
-  destination_cidr_block = "10.0.0.0/8"
-  next_type              = "NAT"
-  next_hub               = tencentcloud_nat_gateway.my_nat.id
-}
-
-# Create Subnet
-resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id            = data.tencentcloud_vpc.my_vpc.id
-  name              = "terraform test"
-  cidr_block        = "172.128.128.0/24"
-  availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
-  route_table_id    = tencentcloud_route_table.my_route_table.id
-}
-
 # Subnet Nat gateway snat
 resource "tencentcloud_nat_gateway_snat" "my_subnet_snat" {
   nat_gateway_id    = tencentcloud_nat_gateway.my_nat.id
   resource_type     = "SUBNET"
-  subnet_id         = tencentcloud_subnet.my_subnet.id
-  subnet_cidr_block = tencentcloud_subnet.my_subnet.cidr_block
+  subnet_id         = data.tencentcloud_vpc_subnets.my_subnet.instance_list.0.subnet_id
+  subnet_cidr_block = data.tencentcloud_vpc_subnets.my_subnet.instance_list.0.cidr_block
   description       = "terraform test"
   public_ip_addr = [
     tencentcloud_eip.eip_dev_dnat.public_ip,
@@ -160,10 +150,14 @@ resource "tencentcloud_nat_gateway_snat" "my_subnet_snat" {
 }
 `
 const testAccNatGatewaySnatConfigUpdate = `
-data "tencentcloud_availability_zones" "my_zones" {}
 
-data "tencentcloud_vpc" "my_vpc" {
+data "tencentcloud_vpc_instances" "my_vpc" {
   name = "Default-VPC"
+}
+
+data "tencentcloud_vpc_subnets" "my_subnet" {
+  vpc_id    = data.tencentcloud_vpc_instances.my_vpc.instance_list.0.vpc_id
+  subnet_id = "subnet-4o0zd840"
 }
 
 data "tencentcloud_images" "my_image" {
@@ -185,7 +179,7 @@ resource "tencentcloud_eip" "eip_test_dnat" {
 
 # Create NAT Gateway
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id         = data.tencentcloud_vpc.my_vpc.id
+  vpc_id         = data.tencentcloud_vpc_instances.my_vpc.instance_list.0.vpc_id
   name           = "terraform test"
   max_concurrent = 3000000
   bandwidth      = 500
@@ -196,33 +190,12 @@ resource "tencentcloud_nat_gateway" "my_nat" {
   ]
 }
 
-# Create route_table and entry
-resource "tencentcloud_route_table" "my_route_table" {
-  vpc_id = data.tencentcloud_vpc.my_vpc.id
-  name   = "terraform test"
-}
-resource "tencentcloud_route_table_entry" "my_route_entry" {
-  route_table_id         = tencentcloud_route_table.my_route_table.id
-  destination_cidr_block = "10.0.0.0/8"
-  next_type              = "NAT"
-  next_hub               = tencentcloud_nat_gateway.my_nat.id
-}
-
-# Create Subnet
-resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id            = data.tencentcloud_vpc.my_vpc.id
-  name              = "terraform test"
-  cidr_block        = "172.16.128.0/24"
-  availability_zone = data.tencentcloud_availability_zones.my_zones.zones.0.name
-  route_table_id    = tencentcloud_route_table.my_route_table.id
-}
-
 # Subnet Nat gateway snat
 resource "tencentcloud_nat_gateway_snat" "my_subnet_snat" {
   nat_gateway_id    = tencentcloud_nat_gateway.my_nat.id
   resource_type     = "SUBNET"
-  subnet_id         = tencentcloud_subnet.my_subnet.id
-  subnet_cidr_block = tencentcloud_subnet.my_subnet.cidr_block
+  subnet_id         = data.tencentcloud_vpc_subnets.my_subnet.instance_list.0.subnet_id
+  subnet_cidr_block = data.tencentcloud_vpc_subnets.my_subnet.instance_list.0.cidr_block
   description       = "terraform test2"
   public_ip_addr = [
     tencentcloud_eip.eip_dev_dnat.public_ip,
