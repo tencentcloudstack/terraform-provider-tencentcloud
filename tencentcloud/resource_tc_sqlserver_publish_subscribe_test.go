@@ -11,7 +11,6 @@ import (
 )
 
 func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -26,7 +25,6 @@ func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_publish_subscribe.example", "publish_subscribe_name", "example"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_publish_subscribe.example", "database_tuples.#", "1"),
 				),
-				Destroy: false,
 			},
 			{
 				Config: testAccSqlserverPublishSubscribe_basic_update_name,
@@ -97,98 +95,25 @@ func testAccCheckSqlserverPublishSubscribeExists(n string) resource.TestCheckFun
 	}
 }
 
-const testAccSqlserverPublishSubscribe_basic = defaultVpcSubnets + defaultSecurityGroupData + `
-resource "tencentcloud_sqlserver_instance" "publish_instance" {
-  name                      = "tf_sqlserver_publish_instance"
-  availability_zone         = var.default_az
-  charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = local.vpc_id
-  subnet_id                 = local.subnet_id
-  project_id                = 0
-  memory                    = 2
-  storage                   = 10
-  maintenance_week_set      = [1,2,3]
-  maintenance_start_time    = "09:00"
-  maintenance_time_span     = 3
-  security_groups           = [local.sg_id]
-}
-
-resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
-  name                      = "tf_sqlserver_subscribe_instance"
-  availability_zone         = var.default_az
-  charge_type               = "POSTPAID_BY_HOUR"
-  vpc_id                    = local.vpc_id
-  subnet_id                 = local.subnet_id
-  project_id                = 0
-  memory                    = 2
-  storage                   = 10
-  maintenance_week_set      = [1,2,3]
-  maintenance_start_time    = "09:00"
-  maintenance_time_span     = 3
-  security_groups           = [local.sg_id]
-}
-
-resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
-  instance_id = tencentcloud_sqlserver_instance.publish_instance.id
-  name        = "test111"
-  charset     = "Chinese_PRC_BIN"
-  remark      = "testACC-remark"
-}
+const testAccSqlserverPublishSubscribe_basic = CommonPubSubSQLServer + `
 
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
-	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
+	publish_instance_id             = local.pub_sqlserver_id
+	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example"
-	delete_subscribe_db             = false
+	delete_subscribe_db             = true
 	database_tuples {
-		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		publish_database            = local.sqlserver_pubsub_db
 	}
 }`
 
-const testAccSqlserverPublishSubscribe_basic_update_name = defaultVpcSubnets + defaultSecurityGroupData + `
-resource "tencentcloud_sqlserver_instance" "publish_instance" {
-  name                          = "tf_sqlserver_publish_instance"
-  availability_zone             = var.default_az
-  charge_type         	        = "POSTPAID_BY_HOUR"
-  vpc_id                 	    = local.vpc_id
-  subnet_id            	        = local.subnet_id
-  project_id                    = 0
-  memory                        = 2
-  storage                       = 10
-  maintenance_week_set          = [1,2,3]
-  maintenance_start_time        = "09:00"
-  maintenance_time_span         = 3
-  security_groups               = [local.sg_id]
-}
-
-resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
-  name                          = "tf_sqlserver_subscribe_instance"
-  availability_zone      	    = var.default_az
-  charge_type           	    = "POSTPAID_BY_HOUR"
-  vpc_id             	        = local.vpc_id
-  subnet_id           	        = local.subnet_id
-  project_id                    = 0
-  memory                        = 2
-  storage                       = 10
-  maintenance_week_set          = [1,2,3]
-  maintenance_start_time        = "09:00"
-  maintenance_time_span         = 3
-  security_groups               = [local.sg_id]
-}
-
-resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
-  instance_id = tencentcloud_sqlserver_instance.publish_instance.id
-  name        = "test111"
-  charset     = "Chinese_PRC_BIN"
-  remark      = "testACC-remark"
-}
-
+const testAccSqlserverPublishSubscribe_basic_update_name = CommonPubSubSQLServer + `
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
-	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
+	publish_instance_id             = local.pub_sqlserver_id
+	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example1"
-	delete_subscribe_db             = false
+	delete_subscribe_db             = true
 	database_tuples {
-		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		publish_database            = local.sqlserver_pubsub_db
 	}
 }`

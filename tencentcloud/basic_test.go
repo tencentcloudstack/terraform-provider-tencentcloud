@@ -269,7 +269,10 @@ locals {
 
 // SQLServer
 const defaultSQLServerName = "keep-preset_sqlserver"
+const defaultPubSQLServerName = "keep-publish-instance"
+const defaultSubSQLServerName = "keep-subscribe-instance"
 const defaultSQLServerDB = "keep_sqlserver_db"
+const defaultSQLServerPubSubDB = "keep_pubsub_db"
 const defaultSQLServerAccount = "keep_sqlserver_account"
 
 const CommonPresetSQLServer = `
@@ -305,6 +308,21 @@ locals {
   # local.az, local.az1
   az = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
   az1 = data.tencentcloud_availability_zones_by_product.zone.zones[1].name
+}
+`
+
+const CommonPubSubSQLServer = `
+data "tencentcloud_sqlserver_instances" "pub_sqlserver" {
+  name = "` + defaultPubSQLServerName + `"
+}
+data "tencentcloud_sqlserver_instances" "sub_sqlserver" {
+  name = "` + defaultSubSQLServerName + `"
+}
+
+locals {
+  pub_sqlserver_id = data.tencentcloud_sqlserver_instances.pub_sqlserver.instance_list.0.id
+  sub_sqlserver_id = data.tencentcloud_sqlserver_instances.sub_sqlserver.instance_list.0.id
+  sqlserver_pubsub_db = "` + defaultSQLServerPubSubDB + `"
 }
 `
 
