@@ -52,7 +52,7 @@ func TestAccTencentCloudClbInstanceTargetGroup(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbTargetGroupExists("tencentcloud_clb_target_group.target_group"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_target_group.target_group", "target_group_name", "tgt_grp_test"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_target_group.target_group", "port", "33"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group.target_group", "port", "44"),
 					//resource.TestCheckResourceAttr("tencentcloud_clb_target_group.target_group", "target_group_instances.bind_ip", "10.0.0.4"),
 					//resource.TestCheckResourceAttr("tencentcloud_clb_target_group.target_group", "target_group_instances.port", "44"),
 				),

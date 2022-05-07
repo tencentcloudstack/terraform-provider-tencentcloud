@@ -89,7 +89,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_full"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "clb_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "domain", "abcdr.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "domain", "abcd.com"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "session_expire_time", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "scheduler", "WRR"),

@@ -564,7 +564,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	domainChanged := false
 	domainRequest := clb.NewModifyDomainAttributesRequest()
 	if d.HasChange("domain") {
-		new, old := d.GetChange("domain")
+		old, new := d.GetChange("domain")
 		domainChanged = true
 		domainRequest.Domain = helper.String(old.(string))
 		domainRequest.NewDomain = helper.String(new.(string))
