@@ -134,59 +134,15 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeScaleWorkerInstance string = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
+const testAccTkeScaleWorkerInstanceBasic = defaultAzVariable + TkeExclusiveNetwork + TkeDataSource
 
-data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.availability_zone
-}
-
-variable "default_instance_type" {
-  default = "SA1.LARGE8"
-}
-
+const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
 variable "scale_instance_type" {
-  default = "S2.LARGE16"
-}
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "192.168.0.0/16"
-  cluster_max_pod_num     = 32
-  cluster_name            = "test"
-  cluster_version         = "1.18.4"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-  cluster_os	          = "tlinux2.2(tkernel3)x86_64"
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
+  default = "S2.LARGE8"
 }
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  cluster_id = local.cluster_id
   
   extra_args = [
  	"root-dir=/var/lib/kubelet"
@@ -200,14 +156,12 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 
   worker_config {
     count                      				= 1
-    availability_zone          				= var.availability_zone
+    availability_zone          				= var.default_az
     instance_type              				= var.scale_instance_type
-    subnet_id                  				= data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+    subnet_id                  				= local.subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out 				= 100
-    public_ip_assigned         				= true
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
