@@ -101,7 +101,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = local.pub_sqlserver_id
 	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example"
-	delete_subscribe_db             = false
+	delete_subscribe_db             = true
 	database_tuples {
 		publish_database            = local.sqlserver_pubsub_db
 	}
@@ -112,7 +112,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = local.pub_sqlserver_id
 	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example1"
-	delete_subscribe_db             = false
+	delete_subscribe_db             = true
 	database_tuples {
 		publish_database            = local.sqlserver_pubsub_db
 	}
