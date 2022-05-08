@@ -128,7 +128,6 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudEip_anycast(t *testing.T) {
-	t.Parallel()
 	defer func() {
 		os.Setenv(PROVIDER_REGION, "")
 	}()
