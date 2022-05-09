@@ -182,6 +182,14 @@ variable "subnet_cidr_less" {
 }
 `
 
+const fixedTagVariable = `
+variable "fixed_tags" {
+  default = {
+    fixed_resource: "do_not_remove"
+  }
+}
+`
+
 const defaultInstanceVariable = defaultVpcVariable + `
 data "tencentcloud_availability_zones" "default" {
 }
@@ -233,9 +241,10 @@ locals {
   subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
 }`
 
-const defaultSecurityGroupData = `
+const defaultSecurityGroupData = fixedTagVariable + `
 data "tencentcloud_security_groups" "internal" {
   name = "default"
+  tags = var.fixed_tags
 }
 
 locals {
