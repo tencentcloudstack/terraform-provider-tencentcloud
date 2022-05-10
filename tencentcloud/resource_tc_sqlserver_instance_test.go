@@ -422,12 +422,12 @@ resource "tencentcloud_sqlserver_instance" "test" {
 }
 `
 
-const testAccSqlserverInstanceMultiCluster string = testAccSqlserverAZ + `
+const testAccSqlserverInstanceMultiCluster string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
   engine_version                = "2017"
   charge_type                   = "POSTPAID_BY_HOUR"
-  availability_zone             = local.az
+  availability_zone             = var.default_az
   vpc_id                        = local.vpc_id
   subnet_id                     = local.subnet_id
   security_groups               = [local.sg_id]

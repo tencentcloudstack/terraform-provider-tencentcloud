@@ -13,8 +13,48 @@ import (
 var testSqlserverAccountDBAttachmentResourceName = "tencentcloud_sqlserver_account_db_attachment"
 var testSqlserverAccountDBAttachmentResourceKey = testSqlserverAccountDBAttachmentResourceName + ".test"
 
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_account_db_attachment
+	resource.AddTestSweepers(testSqlserverAccountDBAttachmentResourceName, &resource.Sweeper{
+		Name: testSqlserverAccountDBAttachmentResourceName,
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := SqlserverService{client}
+
+			db, err := service.DescribeSqlserverInstances(ctx, "", defaultSQLServerName, -1, "", "", -1)
+
+			if err != nil {
+				return err
+			}
+
+			if len(db) == 0 {
+				return fmt.Errorf("%s not exists", defaultSQLServerName)
+			}
+
+			instanceId := *db[0].InstanceId
+
+			records, err := service.DescribeAccountDBAttachments(ctx, instanceId, defaultSQLServerAccount, defaultSQLServerDB)
+			if err != nil {
+				return err
+			}
+
+			if len(records) > 0 {
+				err = service.ModifyAccountDBAttachment(ctx, instanceId, defaultSQLServerAccount, defaultSQLServerDB, "Delete")
+			}
+
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+	})
+}
+
 func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -119,8 +159,8 @@ func testAccCheckSqlserverAccountDBAttachmentExists(n string) resource.TestCheck
 const testAccSqlserverAccountDBAttachment string = CommonPresetSQLServerAccount + `
 resource "tencentcloud_sqlserver_account_db_attachment" "test" {
   instance_id = local.sqlserver_id
-  account_name = local.sqlserver_account
-  db_name = local.sqlserver_db
+  account_name = local.sqlserver_account # "keep_sqlserver_account"
+  db_name = local.sqlserver_db # "keep_sqlserver_db"
   privilege = "ReadOnly"
 }
 `

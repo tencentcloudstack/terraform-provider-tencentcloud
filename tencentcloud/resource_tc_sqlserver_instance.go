@@ -213,7 +213,10 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 		Update: resourceTencentCloudSqlserverInstanceUpdate,
 		Delete: resourceTencentCLoudSqlserverInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("auto_voucher", 0)
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: specialInfo,
 	}
