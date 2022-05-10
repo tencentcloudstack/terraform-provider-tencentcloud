@@ -26,7 +26,7 @@ func TestAccTencentCloudTkeAuthAttachResource(t *testing.T) {
 }
 
 func testAccTkeAuthAttach() string {
-	return `
+	return TkeCIDRs + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -38,7 +38,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.31.0.0/16"
+  cluster_cidr            = var.tke_cidr_a.1
   cluster_max_pod_num     = 32
   cluster_name            = "for-auth-attachment"
   cluster_desc            = "test cluster desc"

@@ -545,6 +545,40 @@ locals {
 // End of TcaPlus DB
 
 // TKE Service
+
+// List sample CIDRs to avoid conflict when running multiple cluster testcase parallel
+const TkeCIDRs = `
+variable "tke_cidr_a" {
+  default = [
+	"10.31.0.0/23",		
+	"10.31.2.0/24",		
+	"10.31.3.0/25",		
+	"10.31.3.128/26",		
+	"10.31.3.192/26"
+  ]
+}
+
+variable "tke_cidr_b" {
+  default = [
+	"172.18.0.0/20",
+	"172.18.16.0/21",
+	"172.18.24.0/21",
+	"172.18.32.0/20",
+	"172.18.48.0/20"
+  ]
+}
+
+variable "tke_cidr_c" {
+  default = [
+    "192.168.0.0/18",
+    "192.168.64.0/19",
+    "192.168.96.0/20",
+    "192.168.112.0/21",
+    "192.168.120.0/21"
+  ]
+}
+`
+
 const TkeInstanceType = `
 data "tencentcloud_instance_types" "ins_type" {
   availability_zone = "` + defaultCvmAZone + `"
