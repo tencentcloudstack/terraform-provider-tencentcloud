@@ -121,7 +121,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Default:       1,
 			ConflictsWith: []string{"pay_type", "period"},
 			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:   "Period of instance. NOTES: Only support prepaid instance.",
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,

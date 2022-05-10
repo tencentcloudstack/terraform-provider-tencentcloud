@@ -65,7 +65,7 @@ The following arguments are supported:
 * `parameters` - (Optional) List of parameters to use.
 * `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
-* `prepaid_period` - (Optional) Period of instance. NOTES: Only support prepaid instance.
+* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional) Security groups to use.
