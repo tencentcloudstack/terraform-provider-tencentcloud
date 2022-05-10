@@ -59,7 +59,7 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.31.0.0/16"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.31.0.0/23"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_max_pod_num", "32"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
@@ -179,18 +179,16 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeCluster = TkeExclusiveNetwork + TkeInstanceType + defaultImages + `
+const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages
+
+const testAccTkeCluster = TkeDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
-  cluster_cidr                               = var.cluster_cidr
+  cluster_cidr                               = var.tke_cidr_a.0
   cluster_max_pod_num                        = 32
   cluster_name                               = "test"
   cluster_desc                               = "test cluster desc"
@@ -245,18 +243,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   ]
 }
 `
-const testAccTkeClusterUpdate = TkeExclusiveNetwork + TkeInstanceType + defaultImages + `
+const testAccTkeClusterUpdate = TkeDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
-  cluster_cidr                               = var.cluster_cidr
+  cluster_cidr                               = var.tke_cidr_a.0
   cluster_max_pod_num                        = 32
   cluster_name                               = "test2"
   cluster_desc                               = "test cluster desc2"
