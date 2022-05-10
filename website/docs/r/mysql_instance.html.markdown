@@ -89,3 +89,11 @@ In addition to all arguments above, the following attributes are exported:
 * `task_status` - Indicates which kind of operations is being executed.
 
 
+## Import
+
+MySQL instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
+```
+

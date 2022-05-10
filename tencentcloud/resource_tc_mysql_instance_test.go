@@ -15,10 +15,9 @@ import (
 
 const TestAccTencentCloudMysqlMasterInstance_availability_zone = "ap-guangzhou-3"
 const TestAccTencentCloudMysqlInstanceName = "testAccMysql"
-const TestAccTencentCloudMysqlInstanceNameVersion1 = "testAccMysql-version1"
-const TestAccTencentCloudMysqlInstanceNamePrepaid = "testAccMysqlPrepaid"
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_mysql_instance
 	resource.AddTestSweepers("tencentcloud_mysql_instance", &resource.Sweeper{
 		Name: "tencentcloud_mysql_instance",
 		F:    testSweepMySQLInstance,
@@ -145,6 +144,12 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql_master", "task_status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql_master", "gtid"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_mysql_instance.mysql_master",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete"},
 			},
 			// add tag
 			{

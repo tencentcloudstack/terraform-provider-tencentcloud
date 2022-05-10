@@ -34,6 +34,15 @@ resource "tencentcloud_mysql_instance" "default" {
   }
 }
 ```
+
+Import
+
+MySQL instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
+```
+
 */
 package tencentcloud
 
@@ -304,8 +313,22 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		Read:   resourceTencentCloudMysqlInstanceRead,
 		Update: resourceTencentCloudMysqlInstanceUpdate,
 		Delete: resourceTencentCloudMysqlInstanceDelete,
-
 		Schema: specialInfo,
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("charge_type", MYSQL_CHARGE_TYPE_POSTPAID)
+				_ = d.Set("prepaid_period", 1)
+				_ = d.Set("auto_renew_flag", 0)
+				_ = d.Set("intranet_port", 3306)
+				_ = d.Set("force_delete", false)
+				_ = d.Set("internet_service", 0)
+				_ = d.Set("engine_version", MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2])
+				_ = d.Set("slave_deploy_mode", 0)
+				_ = d.Set("slave_sync_mode", 0)
+				_ = d.Set("project_id", 0)
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 	}
 }
 
@@ -909,13 +932,11 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
 		_ = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-			//if you set ,i set
 			if _, ok := d.GetOk("first_slave_zone"); ok {
 				_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
 			}
 		}
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-			//if you set ,i set
 			if _, ok := d.GetOk("second_slave_zone"); ok {
 				_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 			}
