@@ -553,7 +553,10 @@ func (me *SqlserverService) CreateSqlserverAccount(ctx context.Context, instance
 	}()
 
 	request.InstanceId = &instanceId
-	account := sqlserver.AccountCreateInfo{UserName: &userName, Password: &password, IsAdmin: &isAdmin, Remark: &remark}
+	account := sqlserver.AccountCreateInfo{UserName: &userName, Password: &password, IsAdmin: &isAdmin}
+	if remark != "" {
+		account.Remark = &remark
+	}
 	request.Accounts = []*sqlserver.AccountCreateInfo{&account}
 
 	ratelimit.Check(request.GetAction())

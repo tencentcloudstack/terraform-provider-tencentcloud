@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -22,13 +23,25 @@ func init() {
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := SqlserverService{client}
 
-			instance, err := service.DescribeSqlserverInstances(ctx, "", defaultSQLServerName, -1, "", "", -1)
+			instances, err := service.DescribeSqlserverInstances(ctx, "", "", -1, "", "", -1)
 
 			if err != nil {
 				return err
 			}
 
-			insId := *instance[0].InstanceId
+			var (
+				insId    string
+				subInsId string
+			)
+
+			for _, v := range instances {
+				if *v.Name == defaultSQLServerName {
+					insId = *v.InstanceId
+				}
+				if *v.Name == defaultSubSQLServerName {
+					subInsId = *v.InstanceId
+				}
+			}
 
 			dbs, err := service.DescribeDBsOfInstance(ctx, insId)
 
@@ -47,6 +60,20 @@ func init() {
 				}
 			}
 
+			// Clear sub instance db
+			subDbs, err := service.DescribeDBsOfInstance(ctx, subInsId)
+
+			for i := range subDbs {
+				db := subDbs[i]
+				if *db.Name == defaultSQLServerPubSubDB {
+					err = service.DeleteSqlserverDB(ctx, subInsId, []*string{db.Name})
+					break
+				}
+			}
+
+			if err != nil {
+				log.Printf("Delete sub instance DB fail: %s", err.Error())
+			}
 			return nil
 		},
 	})
