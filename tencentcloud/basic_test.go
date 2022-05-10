@@ -202,14 +202,13 @@ data "tencentcloud_images" "default" {
 data "tencentcloud_instance_types" "default" {
   filter {
     name   = "instance-family"
-    values = ["S6"]
+    values = ["S5"]
   }
   filter {
     name   = "zone"
     values = [var.availability_cvm_zone]
   }
-  cpu_core_count = 2
-  memory_size    = 2
+  exclude_sold_out = true
 }
 `
 const defaultAzVariable = `
