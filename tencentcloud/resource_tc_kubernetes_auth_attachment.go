@@ -75,6 +75,8 @@ package tencentcloud
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -133,7 +135,15 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
 	}
 
-	if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := service.ModifyClusterAuthenticationOptions(ctx, request)
+		if err != nil {
+			return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
+		}
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
