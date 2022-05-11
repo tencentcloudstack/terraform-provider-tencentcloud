@@ -1,3 +1,14 @@
+## 1.72.2 (May 11, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_mysql_readonly_instance` skip monitor check.
+* resource `tencentcloud_clb_listener_rule` fix domain and port update.
+* resource `tencentcloud_kubernetes_cluster` add cluster level modify retry.
+
+COMMON:
+* fix testcases
+
 ## 1.72.1 (May 6, 2022)
 
 ENHANCEMENTS:
