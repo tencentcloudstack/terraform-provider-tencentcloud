@@ -223,13 +223,14 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 			"sni_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      GAAP_SERVER_NAME_INDICATION_SWITCH_OFF,
+				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{GAAP_SERVER_NAME_INDICATION_SWITCH_ON, GAAP_SERVER_NAME_INDICATION_SWITCH_OFF}),
 				Description:  "ServerNameIndication (SNI) switch. ON means on and OFF means off.",
 			},
 			"sni": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "ServerNameIndication (SNI) is required when the SNI switch is turned on.",
 			},
 		},
@@ -259,6 +260,7 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		healthCheckMethod:          d.Get("health_check_method").(string),
 		forwardHost:                d.Get("forward_host").(string),
 		serverNameIndicationSwitch: d.Get("sni_switch").(string),
+		serverNameIndication:       d.Get("sni").(string),
 	}
 
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
@@ -284,9 +286,6 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		return errors.New("health_check_status_codes can't be empty")
 	}
 
-	if v, ok := d.GetOk("sni"); ok {
-		rule.serverNameIndication = v.(string)
-	}
 	if rule.serverNameIndicationSwitch == GAAP_SERVER_NAME_INDICATION_SWITCH_ON && rule.serverNameIndication == "" {
 		return fmt.Errorf("ServerNameIndication (SNI) is required when the SNI switch is turned on.")
 	}

@@ -2671,8 +2671,12 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	}
 
 	request.ForwardHost = &httpRule.forwardHost
-	request.ServerNameIndicationSwitch = &httpRule.serverNameIndicationSwitch
-	request.ServerNameIndication = &httpRule.serverNameIndication
+	if httpRule.serverNameIndicationSwitch != "" {
+		request.ServerNameIndicationSwitch = &httpRule.serverNameIndicationSwitch
+	}
+	if httpRule.serverNameIndication != "" {
+		request.ServerNameIndication = &httpRule.serverNameIndication
+	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
