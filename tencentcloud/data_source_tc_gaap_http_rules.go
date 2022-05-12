@@ -161,6 +161,16 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Computed:    true,
 							Description: "Requested host which is forwarded to the realserver by the listener.",
 						},
+						"sni_switch": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ServerNameIndication (SNI) switch.",
+						},
+						"sni": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ServerNameIndication (SNI).",
+						},
 						"realservers": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -294,6 +304,8 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 				"health_check_path":   *checkParams.Path,
 				"health_check_method": *checkParams.Method,
 				"forward_host":        *rule.ForwardHost,
+				"sni_switch":          *rule.ServerNameIndicationSwitch,
+				"sni":                 *rule.ServerNameIndication,
 			}
 			statusCodes := make([]int, 0, len(checkParams.StatusCode))
 			for _, code := range checkParams.StatusCode {

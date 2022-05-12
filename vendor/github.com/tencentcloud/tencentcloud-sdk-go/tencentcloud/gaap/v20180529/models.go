@@ -30,6 +30,9 @@ type AccessConfiguration struct {
 
 	// 通道并发量上限，表示同时在线的连接数，单位：万。
 	Concurrent *uint64 `json:"Concurrent,omitempty" name:"Concurrent"`
+
+	// 网络类型，可取值：normal、cn2，默认值为normal
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
 }
 
 type AccessRegionDetial struct {
@@ -45,6 +48,29 @@ type AccessRegionDetial struct {
 
 	// 可选的带宽取值数组
 	BandwidthList []*int64 `json:"BandwidthList,omitempty" name:"BandwidthList"`
+
+	// 机房所属大区
+	RegionArea *string `json:"RegionArea,omitempty" name:"RegionArea"`
+
+	// 机房所属大区名
+	RegionAreaName *string `json:"RegionAreaName,omitempty" name:"RegionAreaName"`
+
+	// 机房类型, dc表示DataCenter数据中心, ec表示EdgeComputing边缘节点
+	IDCType *string `json:"IDCType,omitempty" name:"IDCType"`
+
+	// 特性位图，每个bit位代表一种特性，其中：
+	// 0，表示不支持该特性；
+	// 1，表示支持该特性。
+	// 特性位图含义如下（从右往左）：
+	// 第1个bit，支持4层加速；
+	// 第2个bit，支持7层加速；
+	// 第3个bit，支持Http3接入；
+	// 第4个bit，支持IPv6；
+	// 第5个bit，支持精品BGP接入；
+	// 第6个bit，支持三网接入；
+	// 第7个bit，支持接入段Qos加速。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FeatureBitmap *int64 `json:"FeatureBitmap,omitempty" name:"FeatureBitmap"`
 }
 
 type AccessRegionDomainConf struct {
@@ -381,6 +407,15 @@ type CheckProxyCreateRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 网络类型，可取值：normal、cn2，默认值normal
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+
+	// 通道套餐类型。Thunder表示标准通道组，Accelerator表示游戏加速器通道，CrossBorder表示跨境通道。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 支持Http3的开关，其中：0，表示不需要支持Http3接入；1，表示需要支持Http3接入。注意：如果开启了Http3的功能，那么该通道就不再支持TCP/UDP接入的功能。该功能的启停无法在通道创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *CheckProxyCreateRequest) ToJsonString() string {
@@ -401,6 +436,9 @@ func (r *CheckProxyCreateRequest) FromJsonString(s string) error {
 	delete(f, "Concurrent")
 	delete(f, "GroupId")
 	delete(f, "IPAddressVersion")
+	delete(f, "NetworkType")
+	delete(f, "PackageType")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckProxyCreateRequest has unknown keys!", "")
 	}
@@ -685,6 +723,56 @@ func (r *CreateCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateCustomHeaderRequest struct {
+	*tchttp.BaseRequest
+
+	// 规则id
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 新增的header名称和内容列表， ‘’$remote_addr‘’会被解析替换成客户端ip，其他值原样透传到源站。
+	Headers []*HttpHeaderParam `json:"Headers,omitempty" name:"Headers"`
+}
+
+func (r *CreateCustomHeaderRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomHeaderRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RuleId")
+	delete(f, "Headers")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCustomHeaderRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateCustomHeaderResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateCustomHeaderResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomHeaderResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateDomainErrorPageInfoRequest struct {
 	*tchttp.BaseRequest
 
@@ -777,6 +865,12 @@ type CreateDomainRequest struct {
 	// 客户端CA证书，用于客户端与GAAP的HTTPS的交互。
 	// 仅当采用双向认证的方式时，需要设置该字段或ClientCertificateId字段。
 	PolyClientCertificateIds []*string `json:"PolyClientCertificateIds,omitempty" name:"PolyClientCertificateIds"`
+
+	// 是否开启Http3特性的标识，其中：
+	// 0，表示不开启Http3；
+	// 1，表示开启Http3。
+	// 默认不开启Http3。可以通过SetDomainHttp3开启。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *CreateDomainRequest) ToJsonString() string {
@@ -796,6 +890,7 @@ func (r *CreateDomainRequest) FromJsonString(s string) error {
 	delete(f, "CertificateId")
 	delete(f, "ClientCertificateId")
 	delete(f, "PolyClientCertificateIds")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDomainRequest has unknown keys!", "")
 	}
@@ -915,6 +1010,13 @@ type CreateHTTPSListenerRequest struct {
 
 	// 通道组ID，与ProxyId之间只能设置一个。表示创建通道组的监听器。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 支持Http3的开关，其中：
+	// 0，表示不需要支持Http3接入；
+	// 1，表示需要支持Http3接入。
+	// 注意：如果支持了Http3的功能，那么该监听器会占用对应的UDP接入端口，不可再创建相同端口的UDP监听器。
+	// 该功能的启停无法在监听器创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *CreateHTTPSListenerRequest) ToJsonString() string {
@@ -938,6 +1040,7 @@ func (r *CreateHTTPSListenerRequest) FromJsonString(s string) error {
 	delete(f, "ClientCertificateId")
 	delete(f, "PolyClientCertificateIds")
 	delete(f, "GroupId")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateHTTPSListenerRequest has unknown keys!", "")
 	}
@@ -1036,6 +1139,16 @@ type CreateProxyGroupRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 通道组套餐类型，可取值：Thunder、Accelerator，默认值Thunder
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 支持Http3的开关，其中：
+	// 0，表示不需要支持Http3接入；
+	// 1，表示需要支持Http3接入。
+	// 注意：如果开启了Http3的功能，那么该通道组就不再支持TCP/UDP接入的功能。
+	// 该功能的启停无法在通道组创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *CreateProxyGroupRequest) ToJsonString() string {
@@ -1056,6 +1169,8 @@ func (r *CreateProxyGroupRequest) FromJsonString(s string) error {
 	delete(f, "TagSet")
 	delete(f, "AccessRegionSet")
 	delete(f, "IPAddressVersion")
+	delete(f, "PackageType")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateProxyGroupRequest has unknown keys!", "")
 	}
@@ -1125,6 +1240,15 @@ type CreateProxyRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 网络类型，normal表示常规BGP，cn2表示精品BGP，triple表示三网
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+
+	// 通道套餐类型，Thunder表示标准通道组，Accelerator表示游戏加速器通道，CrossBorder表示跨境通道。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 支持Http3的开关，其中：0，表示不需要支持Http3接入；1，表示需要支持Http3接入。注意：如果开启了Http3的功能，那么该通道就不再支持TCP/UDP接入的功能。该功能的启停无法在通道创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *CreateProxyRequest) ToJsonString() string {
@@ -1151,6 +1275,9 @@ func (r *CreateProxyRequest) FromJsonString(s string) error {
 	delete(f, "ClonedProxyId")
 	delete(f, "BillingType")
 	delete(f, "IPAddressVersion")
+	delete(f, "NetworkType")
+	delete(f, "PackageType")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateProxyRequest has unknown keys!", "")
 	}
@@ -1208,8 +1335,14 @@ type CreateRuleRequest struct {
 	// 不传递该字段时表示使用对应监听器的ForwardProtocol。
 	ForwardProtocol *string `json:"ForwardProtocol,omitempty" name:"ForwardProtocol"`
 
-	// 加速通道转发到远照的host，不设置该参数时，使用默认的host设置，即客户端发起的http请求的host。
+	// 回源Host。加速通道转发到源站的host，不设置该参数时，使用默认的host设置，即客户端发起的http请求的host。
 	ForwardHost *string `json:"ForwardHost,omitempty" name:"ForwardHost"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI）开关。ON表示开启，OFF表示关闭。
+	ServerNameIndicationSwitch *string `json:"ServerNameIndicationSwitch,omitempty" name:"ServerNameIndicationSwitch"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI），当SNI开关打开时，该字段必填。
+	ServerNameIndication *string `json:"ServerNameIndication,omitempty" name:"ServerNameIndication"`
 }
 
 func (r *CreateRuleRequest) ToJsonString() string {
@@ -1233,6 +1366,8 @@ func (r *CreateRuleRequest) FromJsonString(s string) error {
 	delete(f, "CheckParams")
 	delete(f, "ForwardProtocol")
 	delete(f, "ForwardHost")
+	delete(f, "ServerNameIndicationSwitch")
+	delete(f, "ServerNameIndication")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRuleRequest has unknown keys!", "")
 	}
@@ -1971,6 +2106,9 @@ type DescribeAccessRegionsByDestRegionRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 通道套餐类型，Thunder表示标准通道组，Accelerator表示游戏加速器通道，CrossBorder表示跨境通道。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
 }
 
 func (r *DescribeAccessRegionsByDestRegionRequest) ToJsonString() string {
@@ -1987,6 +2125,7 @@ func (r *DescribeAccessRegionsByDestRegionRequest) FromJsonString(s string) erro
 	}
 	delete(f, "DestRegion")
 	delete(f, "IPAddressVersion")
+	delete(f, "PackageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccessRegionsByDestRegionRequest has unknown keys!", "")
 	}
@@ -2064,6 +2203,52 @@ func (r *DescribeAccessRegionsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccessRegionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBlackHeaderRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeBlackHeaderRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBlackHeaderRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBlackHeaderRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBlackHeaderResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 禁用的自定义header列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		BlackHeaders []*string `json:"BlackHeaders,omitempty" name:"BlackHeaders"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeBlackHeaderResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBlackHeaderResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2225,6 +2410,56 @@ func (r *DescribeCountryAreaMappingResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCountryAreaMappingResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCustomHeaderRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeCustomHeaderRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomHeaderRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCustomHeaderRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCustomHeaderResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 规则id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+		// 自定义header列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Headers []*HttpHeaderParam `json:"Headers,omitempty" name:"Headers"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeCustomHeaderResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomHeaderResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2596,6 +2831,13 @@ type DescribeHTTPSListenersRequest struct {
 
 	// 过滤条件，通道组ID
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 支持Http3的开关，其中：
+	// 0，表示不需要支持Http3接入；
+	// 1，表示需要支持Http3接入。
+	// 注意：如果支持了Http3的功能，那么该监听器会占用对应的UDP接入端口，不可再创建相同端口的UDP监听器。
+	// 该功能的启停无法在监听器创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *DescribeHTTPSListenersRequest) ToJsonString() string {
@@ -2618,6 +2860,7 @@ func (r *DescribeHTTPSListenersRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "SearchValue")
 	delete(f, "GroupId")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeHTTPSListenersRequest has unknown keys!", "")
 	}
@@ -2795,6 +3038,7 @@ type DescribeProxiesRequest struct {
 	// RealServerRegion - String - 是否必填：否 - （过滤条件）按照源站地域过滤。
 	// GroupId - String - 是否必填：否 - （过滤条件）按照通道组ID过滤。
 	// IPAddressVersion - String - 是否必填：否 - （过滤条件）按照IP版本过滤。
+	// PackageType - String - 是否必填：否 - （过滤条件）按照通道套餐类型过滤。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// （新参数，替代InstanceIds）按照一个或者多个实例ID查询。每次请求的实例的上限为100。参数不支持同时指定InstanceIds和Filters。
@@ -2808,6 +3052,20 @@ type DescribeProxiesRequest struct {
 	// 当该字段为0时，仅拉取通道组的通道，
 	// 不存在该字段时，拉取所有通道，包括独立通道和通道组通道。
 	Independent *int64 `json:"Independent,omitempty" name:"Independent"`
+
+	// 输出通道列表的排列顺序。取值范围：
+	// asc：升序排列；
+	// desc：降序排列。
+	// 默认为降序。
+	Order *string `json:"Order,omitempty" name:"Order"`
+
+	// 通道列表排序的依据字段。取值范围：
+	// create_time：依据通道的创建时间排序；
+	// proxy_id：依据通道的ID排序；
+	// bandwidth：依据通道带宽上限排序；
+	// concurrent_connections：依据通道并发排序；
+	// 默认按通道创建时间排序。
+	OrderField *string `json:"OrderField,omitempty" name:"OrderField"`
 }
 
 func (r *DescribeProxiesRequest) ToJsonString() string {
@@ -2829,6 +3087,8 @@ func (r *DescribeProxiesRequest) FromJsonString(s string) error {
 	delete(f, "ProxyIds")
 	delete(f, "TagSet")
 	delete(f, "Independent")
+	delete(f, "Order")
+	delete(f, "OrderField")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxiesRequest has unknown keys!", "")
 	}
@@ -3082,14 +3342,15 @@ type DescribeProxyGroupListRequest struct {
 	// 其他值，指定的项目
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 标签列表，当存在该字段时，拉取对应标签下的资源列表。
-	// 最多支持5个标签，当存在两个或两个以上的标签时，满足其中任意一个标签时，该通道组会被拉取出来。
-	TagSet []*TagPair `json:"TagSet,omitempty" name:"TagSet"`
-
 	// 过滤条件。   
 	// 每次请求的Filter.Values的上限为5。
 	// RealServerRegion - String - 是否必填：否 -（过滤条件）按照源站地域过滤，可参考DescribeDestRegions接口返回结果中的RegionId。
+	// PackageType - String - 是否必填：否 - （过滤条件）通道组类型，Thunder表示标准通道组，Accelerator表示银牌加速通道组。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 标签列表，当存在该字段时，拉取对应标签下的资源列表。
+	// 最多支持5个标签，当存在两个或两个以上的标签时，满足其中任意一个标签时，该通道组会被拉取出来。
+	TagSet []*TagPair `json:"TagSet,omitempty" name:"TagSet"`
 }
 
 func (r *DescribeProxyGroupListRequest) ToJsonString() string {
@@ -3107,8 +3368,8 @@ func (r *DescribeProxyGroupListRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "ProjectId")
-	delete(f, "TagSet")
 	delete(f, "Filters")
+	delete(f, "TagSet")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxyGroupListRequest has unknown keys!", "")
 	}
@@ -3230,6 +3491,9 @@ type DescribeProxyStatisticsRequest struct {
 	// 当时间范围不超过7天，支持最小粒度300秒；
 	// 当时间范围不超过30天，支持最小粒度3600秒。
 	Granularity *uint64 `json:"Granularity,omitempty" name:"Granularity"`
+
+	// 运营商（通道为三网通道时有效），支持CMCC，CUCC，CTCC，传空值或不传则合并三个运营商数据
+	Isp *string `json:"Isp,omitempty" name:"Isp"`
 }
 
 func (r *DescribeProxyStatisticsRequest) ToJsonString() string {
@@ -3249,6 +3513,7 @@ func (r *DescribeProxyStatisticsRequest) FromJsonString(s string) error {
 	delete(f, "EndTime")
 	delete(f, "MetricNames")
 	delete(f, "Granularity")
+	delete(f, "Isp")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxyStatisticsRequest has unknown keys!", "")
 	}
@@ -3484,6 +3749,9 @@ type DescribeRegionAndPriceRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 通道套餐类型，Thunder表示标准通道组，Accelerator表示游戏加速器通道，CrossBorder表示跨境通道。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
 }
 
 func (r *DescribeRegionAndPriceRequest) ToJsonString() string {
@@ -3499,6 +3767,7 @@ func (r *DescribeRegionAndPriceRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "IPAddressVersion")
+	delete(f, "PackageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRegionAndPriceRequest has unknown keys!", "")
 	}
@@ -4263,6 +4532,16 @@ type DomainRuleSet struct {
 	// 2表示删除中。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DomainStatus *uint64 `json:"DomainStatus,omitempty" name:"DomainStatus"`
+
+	// 封禁解封状态：BANNED表示已封禁，RECOVER表示已解封或未封禁，BANNING表示封禁中，RECOVERING表示解封中，BAN_FAILED表示封禁失败，RECOVER_FAILED表示解封失败。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BanStatus *string `json:"BanStatus,omitempty" name:"BanStatus"`
+
+	// Http3特性标识，其中：
+	// 0表示关闭；
+	// 1表示启用。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 type Filter struct {
@@ -4375,6 +4654,18 @@ type HttpHeaderParam struct {
 	HeaderValue *string `json:"HeaderValue,omitempty" name:"HeaderValue"`
 }
 
+type IPDetail struct {
+
+	// IP字符串
+	IP *string `json:"IP,omitempty" name:"IP"`
+
+	// 供应商，BGP表示默认，CMCC表示中国移动，CUCC表示中国联通，CTCC表示中国电信
+	Provider *string `json:"Provider,omitempty" name:"Provider"`
+
+	// 带宽
+	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+}
+
 type InquiryPriceCreateProxyRequest struct {
 	*tchttp.BaseRequest
 
@@ -4401,6 +4692,15 @@ type InquiryPriceCreateProxyRequest struct {
 
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 网络类型，可取值：normal、cn2，默认值normal
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+
+	// 通道套餐类型，Thunder表示标准通道组，Accelerator表示游戏加速器通道，CrossBorder表示跨境通道。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 支持Http3的开关，其中：0，表示不需要支持Http3接入；1，表示需要支持Http3接入。注意：如果开启了Http3的功能，那么该通道就不再支持TCP/UDP接入的功能。该功能的启停无法在通道创建完毕后再修改。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 func (r *InquiryPriceCreateProxyRequest) ToJsonString() string {
@@ -4423,6 +4723,9 @@ func (r *InquiryPriceCreateProxyRequest) FromJsonString(s string) error {
 	delete(f, "Concurrent")
 	delete(f, "BillingType")
 	delete(f, "IPAddressVersion")
+	delete(f, "NetworkType")
+	delete(f, "PackageType")
+	delete(f, "Http3Supported")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceCreateProxyRequest has unknown keys!", "")
 	}
@@ -4453,6 +4756,14 @@ type InquiryPriceCreateProxyResponse struct {
 		// 通道的流量费用折扣价格，单位:元/GB
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		DiscountFlowUnitPrice *float64 `json:"DiscountFlowUnitPrice,omitempty" name:"DiscountFlowUnitPrice"`
+
+		// 精品BGP的带宽费用价格，单位: 元/Mbps/天
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Cn2BandwidthPrice *float64 `json:"Cn2BandwidthPrice,omitempty" name:"Cn2BandwidthPrice"`
+
+		// 精品BGP的折后带宽费用价格，单位: 元/Mbps/天
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Cn2BandwidthPriceWithDiscount *float64 `json:"Cn2BandwidthPriceWithDiscount,omitempty" name:"Cn2BandwidthPriceWithDiscount"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -5184,9 +5495,15 @@ type ModifyRuleAttributeRequest struct {
 	// 当ForwardProtocol=default时，表示使用对应监听器的ForwardProtocol。
 	ForwardProtocol *string `json:"ForwardProtocol,omitempty" name:"ForwardProtocol"`
 
-	// 加速通道转发到源站的请求中携带的host。
+	// 回源Host。加速通道转发到源站的请求中携带的host。
 	// 当ForwardHost=default时，使用规则的域名，其他情况为该字段所设置的值。
 	ForwardHost *string `json:"ForwardHost,omitempty" name:"ForwardHost"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI）开关。ON表示开启，OFF表示关闭。
+	ServerNameIndicationSwitch *string `json:"ServerNameIndicationSwitch,omitempty" name:"ServerNameIndicationSwitch"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI），当SNI开关打开时，该字段必填。
+	ServerNameIndication *string `json:"ServerNameIndication,omitempty" name:"ServerNameIndication"`
 }
 
 func (r *ModifyRuleAttributeRequest) ToJsonString() string {
@@ -5209,6 +5526,8 @@ func (r *ModifyRuleAttributeRequest) FromJsonString(s string) error {
 	delete(f, "Path")
 	delete(f, "ForwardProtocol")
 	delete(f, "ForwardHost")
+	delete(f, "ServerNameIndicationSwitch")
+	delete(f, "ServerNameIndication")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyRuleAttributeRequest has unknown keys!", "")
 	}
@@ -5703,6 +6022,16 @@ type ProxyGroupDetail struct {
 	// IP版本，可取值：IPv4、IPv6，默认值IPv4
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 通道组套餐类型：Thunder表示标准通道组，Accelerator表示银牌加速通道组，CrossBorder表示跨境通道组。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 支持Http3特性的标识，其中：
+	// 0表示关闭；
+	// 1表示启用。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 type ProxyGroupInfo struct {
@@ -5746,6 +6075,12 @@ type ProxyGroupInfo struct {
 	// 通道组是否包含微软通道
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyType *uint64 `json:"ProxyType,omitempty" name:"ProxyType"`
+
+	// 支持Http3特性的标识，其中：
+	// 0，表示不支持Http3；
+	// 1，表示支持Http3。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
 }
 
 type ProxyIdDict struct {
@@ -5792,7 +6127,7 @@ type ProxyInfo struct {
 	// ISOLATING表示隔离中；
 	// ISOLATED表示已隔离；
 	// CLONING表示复制中；
-	// UNKNOWN表示未知状态。
+	// RECOVERING表示通道维护中。
 	Status *string `json:"Status,omitempty" name:"Status"`
 
 	// 接入域名。
@@ -5853,7 +6188,7 @@ type ProxyInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyConfigTime *uint64 `json:"ModifyConfigTime,omitempty" name:"ModifyConfigTime"`
 
-	// 通道类型，104表示新的银牌质量通道类型
+	// 通道类型，100表示THUNDER通道，103表示微软合作通道
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyType *uint64 `json:"ProxyType,omitempty" name:"ProxyType"`
 
@@ -5864,6 +6199,33 @@ type ProxyInfo struct {
 	// IP版本：IPv4、IPv6
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPAddressVersion *string `json:"IPAddressVersion,omitempty" name:"IPAddressVersion"`
+
+	// 网络类型：normal表示常规BGP，cn2表示精品BGP，triple表示三网
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+
+	// 通道套餐类型：Thunder表示标准通道，Accelerator表示银牌加速通道，
+	// CrossBorder表示跨境通道。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
+
+	// 封禁解封状态：BANNED表示已封禁，RECOVER表示已解封或未封禁，BANNING表示封禁中，RECOVERING表示解封中，BAN_FAILED表示封禁失败，RECOVER_FAILED表示解封失败。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BanStatus *string `json:"BanStatus,omitempty" name:"BanStatus"`
+
+	// IP列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IPList []*IPDetail `json:"IPList,omitempty" name:"IPList"`
+
+	// 支持Http3协议的标识，其中：
+	// 0表示关闭；
+	// 1表示启用。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Http3Supported *int64 `json:"Http3Supported,omitempty" name:"Http3Supported"`
+
+	// 是否在封禁黑名单中，其中：0表示不在黑名单中，1表示在黑名单中。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InBanBlacklist *int64 `json:"InBanBlacklist,omitempty" name:"InBanBlacklist"`
 }
 
 type ProxySimpleInfo struct {
@@ -5893,8 +6255,7 @@ type ProxyStatus struct {
 	// CLOSED表示已关闭；
 	// ADJUSTING表示配置变更中；
 	// ISOLATING表示隔离中；
-	// ISOLATED表示已隔离；
-	// UNKNOWN表示未知状态。
+	// ISOLATED表示已隔离。
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -5911,6 +6272,9 @@ type RealServer struct {
 
 	// 项目ID
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 是否在封禁黑名单中，其中：0表示不在黑名单中，1表示在黑名单中。
+	InBanBlacklist *int64 `json:"InBanBlacklist,omitempty" name:"InBanBlacklist"`
 }
 
 type RealServerBindSetReq struct {
@@ -5941,6 +6305,10 @@ type RealServerStatus struct {
 
 	// 绑定此源站的通道ID，没有绑定时为空字符串。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// 绑定此源站的通道组ID，没有绑定时为空字符串。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 type RegionDetail struct {
@@ -5950,6 +6318,29 @@ type RegionDetail struct {
 
 	// 区域英文名或中文名
 	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
+
+	// 机房所属大区
+	RegionArea *string `json:"RegionArea,omitempty" name:"RegionArea"`
+
+	// 机房所属大区名
+	RegionAreaName *string `json:"RegionAreaName,omitempty" name:"RegionAreaName"`
+
+	// 机房类型, dc表示DataCenter数据中心, ec表示EdgeComputing边缘节点
+	IDCType *string `json:"IDCType,omitempty" name:"IDCType"`
+
+	// 特性位图，每个bit位代表一种特性，其中：
+	// 0，表示不支持该特性；
+	// 1，表示支持该特性。
+	// 特性位图含义如下（从右往左）：
+	// 第1个bit，支持4层加速；
+	// 第2个bit，支持7层加速；
+	// 第3个bit，支持Http3接入；
+	// 第4个bit，支持IPv6；
+	// 第5个bit，支持精品BGP接入；
+	// 第6个bit，支持三网接入；
+	// 第7个bit，支持接入段Qos加速。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FeatureBitmap *uint64 `json:"FeatureBitmap,omitempty" name:"FeatureBitmap"`
 }
 
 type RemoveRealServersRequest struct {
@@ -6072,6 +6463,16 @@ type RuleInfo struct {
 	// 通道转发到源站的请求所携带的host，其中default表示直接转发接收到的host。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ForwardHost *string `json:"ForwardHost,omitempty" name:"ForwardHost"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI）开关。ON表示开启，OFF表示关闭。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServerNameIndicationSwitch *string `json:"ServerNameIndicationSwitch,omitempty" name:"ServerNameIndicationSwitch"`
+
+	// 服务器名称指示（ServerNameIndication，简称SNI），当SNI开关打开时，该字段必填。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServerNameIndication *string `json:"ServerNameIndication,omitempty" name:"ServerNameIndication"`
 }
 
 type SecurityPolicyRuleIn struct {
@@ -6159,7 +6560,7 @@ type SetAuthenticationRequest struct {
 	// 源站CA证书ID，从证书管理页获取。源站认证时，填写该参数或RealServerCertificateId参数
 	RealServerCertificateId *string `json:"RealServerCertificateId,omitempty" name:"RealServerCertificateId"`
 
-	// 源站证书域名。
+	// 该字段已废弃，请使用创建规则和修改规则中的SNI功能。
 	RealServerCertificateDomain *string `json:"RealServerCertificateDomain,omitempty" name:"RealServerCertificateDomain"`
 
 	// 多源站CA证书ID，从证书管理页获取。源站认证时，填写该参数或RealServerCertificateId参数
@@ -6293,6 +6694,14 @@ type TCPListener struct {
 	// 不健康阈值，表示连续检查失败多少次数后认为源站不健康。范围为1到10
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnhealthyThreshold *uint64 `json:"UnhealthyThreshold,omitempty" name:"UnhealthyThreshold"`
+
+	// 源站是否开启主备模式：1开启，0关闭，DOMAIN类型源站不支持开启
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailoverSwitch *uint64 `json:"FailoverSwitch,omitempty" name:"FailoverSwitch"`
+
+	// 是否开启会话保持选项：0关闭， 非0开启，非0值为会话保持时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionPersist *uint64 `json:"SessionPersist,omitempty" name:"SessionPersist"`
 }
 
 type TagPair struct {
@@ -6356,4 +6765,8 @@ type UDPListener struct {
 
 	// 监听器创建时间，Unix时间戳
 	CreateTime *uint64 `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 是否开启会话保持选项：0关闭， 非0开启，非0值为会话保持时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionPersist *uint64 `json:"SessionPersist,omitempty" name:"SessionPersist"`
 }

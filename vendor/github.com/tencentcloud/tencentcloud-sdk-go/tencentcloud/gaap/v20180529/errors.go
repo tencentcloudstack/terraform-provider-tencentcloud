@@ -17,8 +17,14 @@ package v20180529
 const (
 	// 此产品的特有错误码
 
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
 	// 非企业认证客户。
 	AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+
+	// 子账户未授权操作。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
@@ -59,9 +65,6 @@ const (
 	// 无效的监听器协议。
 	FAILEDOPERATION_INVALIDLISTENERPROTOCOL = "FailedOperation.InvalidListenerProtocol"
 
-	// 域名的数量超过限制。
-	FAILEDOPERATION_LIMITNUMOFDOMAINS = "FailedOperation.LimitNumofDomains"
-
 	// 监听器数量超过限制。
 	FAILEDOPERATION_LIMITNUMOFLISTENER = "FailedOperation.LimitNumofListener"
 
@@ -79,6 +82,12 @@ const (
 
 	// 监听器当前状态无法支持该操作。
 	FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
+
+	// 加速通道在升级中，暂不支持配置变更，请提工单申请。
+	FAILEDOPERATION_MIGRATION = "FailedOperation.Migration"
+
+	// 该通道为非标通道，限制所有写操作。
+	FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 
 	// 仅支持Version2.0的通道。
 	FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
@@ -106,6 +115,9 @@ const (
 
 	// 安全策略已经存在，请勿重复创建。
 	FAILEDOPERATION_PROXYSECURITYPOLICYEXISTED = "FailedOperation.ProxySecurityPolicyExisted"
+
+	// 通道安全策略操作中。
+	FAILEDOPERATION_PROXYSECURITYPOLICYOPERATING = "FailedOperation.ProxySecurityPolicyOperating"
 
 	// 线路售罄或资源不足，请提工单申请。
 	FAILEDOPERATION_PROXYSELLOUT = "FailedOperation.ProxySellOut"
@@ -143,11 +155,29 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// Https证书与域名不匹配。
+	INVALIDPARAMETERVALUE_CERTIFICATENOTMATCHDOMAIN = "InvalidParameterValue.CertificateNotMatchDomain"
+
+	// 域名在ICP黑名单内。
+	INVALIDPARAMETERVALUE_DOMAININICPBLACKLIST = "InvalidParameterValue.DomainInIcpBlacklist"
+
+	// 域名未备案。
+	INVALIDPARAMETERVALUE_DOMAINNOTREGISTER = "InvalidParameterValue.DomainNotRegister"
+
 	// RealServer已存在。
 	INVALIDPARAMETERVALUE_DUPLICATERS = "InvalidParameterValue.DuplicateRS"
 
 	// 监听器端口已存在。
 	INVALIDPARAMETERVALUE_DUPLICATEDLISTENERPORT = "InvalidParameterValue.DuplicatedListenerPort"
+
+	// 无法同时开启所设置的特性。
+	INVALIDPARAMETERVALUE_FEATURECONFLICT = "InvalidParameterValue.FeatureConflict"
+
+	// 资源已被录入封禁黑名单。
+	INVALIDPARAMETERVALUE_HITBANBLACKLIST = "InvalidParameterValue.HitBanBlacklist"
+
+	// header黑名单限制。
+	INVALIDPARAMETERVALUE_HITBLACKLIST = "InvalidParameterValue.HitBlacklist"
 
 	// 带宽值不在可选范围内。
 	INVALIDPARAMETERVALUE_INVALIDBANDWIDTH = "InvalidParameterValue.InvalidBandwidth"
@@ -170,8 +200,17 @@ const (
 	// 未找到或无权限访问该标签
 	INVALIDPARAMETERVALUE_INVALIDTAGS = "InvalidParameterValue.InvalidTags"
 
+	// 该域名被封禁，无法添加。
+	INVALIDPARAMETERVALUE_L7DOMAINHITBANBLACKLIST = "InvalidParameterValue.L7DomainHitBanBlacklist"
+
 	// 项目不属于该用户。
 	INVALIDPARAMETERVALUE_PROJECTIDNOTBELONG = "InvalidParameterValue.ProjectIdNotBelong"
+
+	// 该通道组下无法支持该通道所需的特性。
+	INVALIDPARAMETERVALUE_PROXYANDGROUPFEATURECONFLICT = "InvalidParameterValue.ProxyAndGroupFeatureConflict"
+
+	// 该地区不支持通道所设置的特性。
+	INVALIDPARAMETERVALUE_PROXYANDREGIONFEATURECONFLICT = "InvalidParameterValue.ProxyAndRegionFeatureConflict"
 
 	// 源站不属于该用户。
 	INVALIDPARAMETERVALUE_REALSERVERNOTBELONG = "InvalidParameterValue.RealServerNotBelong"
@@ -182,6 +221,9 @@ const (
 	// 未找到或无权限访问的源站区域。
 	INVALIDPARAMETERVALUE_UNKNOWNDESTREGION = "InvalidParameterValue.UnknownDestRegion"
 
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -191,8 +233,14 @@ const (
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
+	// 账号下存在违规资源，详情请查看站内信或邮件。
+	RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
+
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 跨境通道的联通带宽处于隔离中。
+	UNAUTHORIZEDOPERATION_CROSSBORDERINISOLATING = "UnauthorizedOperation.CrossBorderInIsolating"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"

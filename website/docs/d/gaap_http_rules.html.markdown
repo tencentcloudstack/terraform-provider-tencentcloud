@@ -89,5 +89,7 @@ In addition to all arguments above, the following attributes are exported:
     * `status` - Status of the GAAP realserver.
     * `weight` - Scheduling weight.
   * `scheduler` - Scheduling policy of the forward rule.
+  * `sni_switch` - ServerNameIndication (SNI) switch.
+  * `sni` - ServerNameIndication (SNI).
 
 
