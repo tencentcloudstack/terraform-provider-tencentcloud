@@ -60,6 +60,7 @@ type VpcRouteEntryBasicInfo struct {
 	nextBub         string
 	description     string
 	entryType       string
+	enabled         bool
 }
 
 // route table basic information
@@ -812,6 +813,7 @@ getMoreData:
 			entry.description = *v.RouteDescription
 			entry.routeEntryId = int64(*v.RouteId)
 			entry.entryType = *v.RouteType
+			entry.enabled = *v.Enabled
 			basicInfo.entryInfos = append(basicInfo.entryInfos, entry)
 		}
 		if hasTableMap[basicInfo.routeTableId] {
@@ -985,7 +987,7 @@ func (me *VpcService) DeleteRoutes(ctx context.Context, routeTableId string, ent
 }
 
 func (me *VpcService) CreateRoutes(ctx context.Context,
-	routeTableId, destinationCidrBlock, nextType, nextHub, description string) (entryId int64, errRet error) {
+	routeTableId, destinationCidrBlock, nextType, nextHub, description string, enabled bool) (entryId int64, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewCreateRoutesRequest()
@@ -1006,6 +1008,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	route.RouteDescription = &description
 	route.GatewayType = &nextType
 	route.GatewayId = &nextHub
+	route.Enabled = &enabled
 	request.Routes = []*vpc.Route{&route}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateRoutes(request)
@@ -1051,6 +1054,64 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	return
 }
 
+func (me *VpcService) SwitchRouteEnabled(ctx context.Context, routeTableId string, routeId uint64, enabled bool) error {
+	if enabled {
+		request := vpc.NewEnableRoutesRequest()
+		request.RouteTableId = &routeTableId
+		request.RouteIds = []*uint64{&routeId}
+		return me.EnableRoutes(ctx, request)
+	} else {
+		request := vpc.NewDisableRoutesRequest()
+		request.RouteTableId = &routeTableId
+		request.RouteIds = []*uint64{&routeId}
+		return me.DisableRoutes(ctx, request)
+	}
+}
+
+func (me *VpcService) EnableRoutes(ctx context.Context, request *vpc.EnableRoutesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().EnableRoutes(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *VpcService) DisableRoutes(ctx context.Context, request *vpc.DisableRoutesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DisableRoutes(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
 func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectId *int) (id string, err error) {
 	logId := getLogId(ctx)
 

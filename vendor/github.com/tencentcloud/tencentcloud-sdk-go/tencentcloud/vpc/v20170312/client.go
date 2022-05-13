@@ -733,6 +733,7 @@ func NewAssignPrivateIpAddressesResponse() (response *AssignPrivateIpAddressesRe
 // >
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NETDETECTTIMEOUT = "FailedOperation.NetDetectTimeOut"
 //  INVALIDPARAMETERVALUE_DUPLICATEPARA = "InvalidParameterValue.DuplicatePara"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -764,6 +765,7 @@ func (c *Client) AssignPrivateIpAddresses(request *AssignPrivateIpAddressesReque
 // >
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NETDETECTTIMEOUT = "FailedOperation.NetDetectTimeOut"
 //  INVALIDPARAMETERVALUE_DUPLICATEPARA = "InvalidParameterValue.DuplicatePara"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
@@ -3267,6 +3269,7 @@ func NewCreateNetworkInterfaceResponse() (response *CreateNetworkInterfaceRespon
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEMISMATCH = "UnsupportedOperation.ResourceMismatch"
 func (c *Client) CreateNetworkInterface(request *CreateNetworkInterfaceRequest) (response *CreateNetworkInterfaceResponse, err error) {
     return c.CreateNetworkInterfaceWithContext(context.Background(), request)
 }
@@ -3301,6 +3304,7 @@ func (c *Client) CreateNetworkInterface(request *CreateNetworkInterfaceRequest) 
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEMISMATCH = "UnsupportedOperation.ResourceMismatch"
 func (c *Client) CreateNetworkInterfaceWithContext(ctx context.Context, request *CreateNetworkInterfaceRequest) (response *CreateNetworkInterfaceResponse, err error) {
     if request == nil {
         request = NewCreateNetworkInterfaceRequest()
