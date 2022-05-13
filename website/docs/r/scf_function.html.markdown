@@ -64,7 +64,7 @@ The following arguments are supported:
 * `image_config` - (Optional) Image of the SCF function, conflict with ``.
 * `l5_enable` - (Optional) Enable L5 for SCF function, default is `false`.
 * `layers` - (Optional) The list of association layers.
-* `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.
+* `mem_size` - (Optional) Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.
 * `namespace` - (Optional, ForceNew) Namespace of the SCF function, default is `default`.
 * `role` - (Optional) Role of the SCF function.
 * `subnet_id` - (Optional) Subnet ID of the SCF function.
