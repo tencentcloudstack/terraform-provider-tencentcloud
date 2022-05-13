@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -116,7 +117,8 @@ func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccGaapRealserverUpdateTags,
+				PreConfig: func() { time.Sleep(time.Duration(time.Second * 5)) },
+				Config:    testAccGaapRealserverUpdateTags,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "tags.test", "test"),

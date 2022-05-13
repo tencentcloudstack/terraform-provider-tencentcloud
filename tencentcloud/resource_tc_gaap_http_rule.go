@@ -220,6 +220,19 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Default:     "default",
 				Description: "The default value of requested host which is forwarded to the realserver by the listener is `default`.",
 			},
+			"sni_switch": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{GAAP_SERVER_NAME_INDICATION_SWITCH_ON, GAAP_SERVER_NAME_INDICATION_SWITCH_OFF}),
+				Description:  "ServerNameIndication (SNI) switch. ON means on and OFF means off.",
+			},
+			"sni": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ServerNameIndication (SNI) is required when the SNI switch is turned on.",
+			},
 		},
 	}
 }
@@ -235,17 +248,19 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 	listenerId := d.Get("listener_id").(string)
 
 	rule := gaapHttpRule{
-		listenerId:        listenerId,
-		domain:            d.Get("domain").(string),
-		path:              d.Get("path").(string),
-		realserverType:    d.Get("realserver_type").(string),
-		scheduler:         d.Get("scheduler").(string),
-		healthCheck:       d.Get("health_check").(bool),
-		interval:          d.Get("interval").(int),
-		connectTimeout:    d.Get("connect_timeout").(int),
-		healthCheckPath:   d.Get("health_check_path").(string),
-		healthCheckMethod: d.Get("health_check_method").(string),
-		forwardHost:       d.Get("forward_host").(string),
+		listenerId:                 listenerId,
+		domain:                     d.Get("domain").(string),
+		path:                       d.Get("path").(string),
+		realserverType:             d.Get("realserver_type").(string),
+		scheduler:                  d.Get("scheduler").(string),
+		healthCheck:                d.Get("health_check").(bool),
+		interval:                   d.Get("interval").(int),
+		connectTimeout:             d.Get("connect_timeout").(int),
+		healthCheckPath:            d.Get("health_check_path").(string),
+		healthCheckMethod:          d.Get("health_check_method").(string),
+		forwardHost:                d.Get("forward_host").(string),
+		serverNameIndicationSwitch: d.Get("sni_switch").(string),
+		serverNameIndication:       d.Get("sni").(string),
 	}
 
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
@@ -271,6 +286,9 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		return errors.New("health_check_status_codes can't be empty")
 	}
 
+	if rule.serverNameIndicationSwitch == GAAP_SERVER_NAME_INDICATION_SWITCH_ON && rule.serverNameIndication == "" {
+		return fmt.Errorf("ServerNameIndication (SNI) is required when the SNI switch is turned on.")
+	}
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	id, err := service.CreateHttpRule(ctx, rule)
@@ -342,6 +360,8 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 	_ = d.Set("health_check_method", rule.CheckParams.Method)
 	_ = d.Set("forward_host", rule.ForwardHost)
 	_ = d.Set("health_check_status_codes", rule.CheckParams.StatusCode)
+	_ = d.Set("sni_switch", rule.ServerNameIndicationSwitch)
+	_ = d.Set("sni", rule.ServerNameIndication)
 
 	realserverSet := make([]map[string]interface{}, 0, len(rule.RealServerSet))
 	for _, rs := range rule.RealServerSet {
@@ -373,7 +393,17 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 		scheduler  *string
 		updateAttr []string
 	)
-
+	if d.HasChange("sni_switch") {
+		updateAttr = append(updateAttr, "sni_switch")
+	}
+	sniSwitch := d.Get("sni_switch").(string)
+	if d.HasChange("sni") {
+		updateAttr = append(updateAttr, "sni")
+	}
+	sni := d.Get("sni").(string)
+	if sniSwitch == GAAP_SERVER_NAME_INDICATION_SWITCH_ON && sni == "" {
+		return fmt.Errorf("ServerNameIndication (SNI) is required when the SNI switch is turned on.")
+	}
 	if d.HasChange("path") {
 		updateAttr = append(updateAttr, "path")
 		path = helper.String(d.Get("path").(string))
@@ -454,7 +484,7 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 	if err := service.ModifyHTTPRuleAttribute(
 		ctx,
-		listenerId, id, healthCheckPath, healthCheckMethod,
+		listenerId, id, healthCheckPath, healthCheckMethod, sniSwitch, sni,
 		path, scheduler, healthCheck, interval, connectTimeout, healthCheckStatusCodes,
 	); err != nil {
 		return err

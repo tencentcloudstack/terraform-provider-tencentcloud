@@ -25,18 +25,20 @@ type gaapRealserverBind struct {
 }
 
 type gaapHttpRule struct {
-	listenerId             string
-	domain                 string
-	path                   string
-	realserverType         string
-	scheduler              string
-	healthCheck            bool
-	interval               int
-	connectTimeout         int
-	healthCheckPath        string
-	healthCheckMethod      string
-	healthCheckStatusCodes []int
-	forwardHost            string
+	listenerId                 string
+	domain                     string
+	path                       string
+	realserverType             string
+	scheduler                  string
+	healthCheck                bool
+	interval                   int
+	connectTimeout             int
+	healthCheckPath            string
+	healthCheckMethod          string
+	healthCheckStatusCodes     []int
+	forwardHost                string
+	serverNameIndicationSwitch string
+	serverNameIndication       string
 }
 
 type GaapService struct {
@@ -2669,6 +2671,12 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	}
 
 	request.ForwardHost = &httpRule.forwardHost
+	if httpRule.serverNameIndicationSwitch != "" {
+		request.ServerNameIndicationSwitch = &httpRule.serverNameIndicationSwitch
+	}
+	if httpRule.serverNameIndication != "" {
+		request.ServerNameIndication = &httpRule.serverNameIndication
+	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -2778,7 +2786,7 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, id string) (rule *g
 
 func (me *GaapService) ModifyHTTPRuleAttribute(
 	ctx context.Context,
-	listenerId, ruleId, healthCheckPath, healthCheckMethod string,
+	listenerId, ruleId, healthCheckPath, healthCheckMethod, sniSwitch, sni string,
 	path, scheduler *string,
 	healthCheck bool,
 	interval, connectTimeout int,
@@ -2792,6 +2800,8 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 	request.RuleId = &ruleId
 	request.Path = path
 	request.Scheduler = scheduler
+	request.ServerNameIndicationSwitch = &sniSwitch
+	request.ServerNameIndication = &sni
 
 	if healthCheck {
 		request.HealthCheck = helper.IntUint64(1)

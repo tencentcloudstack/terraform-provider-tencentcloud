@@ -85,6 +85,8 @@ The following arguments are supported:
 * `interval` - (Optional) Interval of the health check, default value is 5s.
 * `realservers` - (Optional) An information list of GAAP realserver.
 * `scheduler` - (Optional) Scheduling policy of the forward rule, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
+* `sni_switch` - (Optional) ServerNameIndication (SNI) switch. ON means on and OFF means off.
+* `sni` - (Optional) ServerNameIndication (SNI) is required when the SNI switch is turned on.
 
 The `realservers` object supports the following:
 

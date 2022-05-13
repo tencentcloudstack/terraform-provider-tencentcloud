@@ -32,6 +32,9 @@ const (
 
 	GAAPInternalError    = "InternalError"
 	GAAPResourceNotFound = "ResourceNotFound"
+
+	GAAP_SERVER_NAME_INDICATION_SWITCH_ON  = "ON"
+	GAAP_SERVER_NAME_INDICATION_SWITCH_OFF = "OFF"
 )
 
 var (
