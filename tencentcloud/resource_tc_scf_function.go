@@ -138,7 +138,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Optional: true,
 				Default:  128,
 				ValidateFunc: helper.ComposeValidateFunc(
-					validateIntegerInRange(128, 1536),
+					//validateIntegerInRange(128, 1536),
 					func(v interface{}, k string) (wss []string, errs []error) {
 						if v.(int)%128 != 0 {
 							errs = append(errs, errors.Errorf("%s should be with 128M as the ladder", k))
@@ -146,7 +146,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 						return
 					},
 				),
-				Description: "Memory size of the SCF function, unit is MB. The default is `128`MB. The range is 128M-1536M, and the ladder is 128M.",
+				Description: "Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.",
 			},
 			"timeout": {
 				Type:         schema.TypeInt,
