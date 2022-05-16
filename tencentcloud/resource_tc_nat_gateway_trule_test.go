@@ -11,7 +11,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TestAccTencentCloudDnat_basic(t *testing.T) {
+func TestAccTencentCloudNatGatewayTransRule_basic(t *testing.T) {
 	t.Parallel()
 	var dnatId string
 
