@@ -179,7 +179,7 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages
+const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
 
 const testAccTkeCluster = TkeDeps + `
 variable "availability_zone" {
@@ -210,6 +210,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     public_ip_assigned         = true
     subnet_id                  = local.subnet_id
     img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -272,6 +273,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     public_ip_assigned         = true
     subnet_id                  = local.subnet_id
     img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
