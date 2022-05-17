@@ -31,7 +31,6 @@ func TestAccTencentCloudCkafkaTopicDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.unclean_leader_election_enable"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.segment", "86400000"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.retention", "60000"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.foo", "instance_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.0.partition_num"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.0.replica_num"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.0.create_time"),

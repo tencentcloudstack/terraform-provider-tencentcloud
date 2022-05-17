@@ -3,11 +3,57 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_kafka
+	resource.AddTestSweepers("tencentcloud_kafka", &resource.Sweeper{
+		Name: "tencentcloud_kafka",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+
+			ckafkaService := CkafkaService{client: client.apiV3Conn}
+			params := make(map[string]interface{})
+			params["instance_id"] = defaultKafkaInstanceId
+			userInfos, err := ckafkaService.DescribeUserByFilter(ctx, params)
+			if err != nil {
+				return nil
+			}
+			for _, userInfo := range userInfos {
+				userName := *userInfo.Name
+				now := time.Now()
+				createTime := stringTotime(*userInfo.CreateTime)
+				interval := now.Sub(createTime).Minutes()
+				// less than 30 minute, not delete
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+
+				if strings.HasPrefix(userName, keepResource) || strings.HasPrefix(userName, defaultResource) {
+					continue
+				}
+				userIdStr := fmt.Sprintf("%v#%v", defaultKafkaInstanceId, userName)
+				err := ckafkaService.DeleteUser(ctx, userIdStr)
+				if err != nil {
+					return nil
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCkafkaUser(t *testing.T) {
 	t.Parallel()
