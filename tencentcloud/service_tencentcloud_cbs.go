@@ -48,14 +48,19 @@ func (me *CbsService) DescribeDiskList(ctx context.Context, diskIds []*string) (
 	return
 }
 
-func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[string]string) (disks []*cbs.Disk, errRet error) {
+func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[string]interface{}) (disks []*cbs.Disk, errRet error) {
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
 	request.Filters = make([]*cbs.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &cbs.Filter{
-			Name:   helper.String(k),
-			Values: []*string{helper.String(v)},
+			Name: helper.String(k),
+		}
+		switch v.(type) {
+		case string:
+			filter.Values = []*string{helper.String(v.(string))}
+		case []*string:
+			filter.Values = v.([]*string)
 		}
 		request.Filters = append(request.Filters, filter)
 	}
