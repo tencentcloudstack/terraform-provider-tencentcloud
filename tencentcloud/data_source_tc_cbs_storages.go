@@ -9,6 +9,21 @@ data "tencentcloud_cbs_storages" "storages" {
   result_output_file = "mytestpath"
 }
 ```
+
+The following snippet shows the new supported query params
+
+```hcl
+data "tencentcloud_cbs_storages" "whats_new" {
+  charge_type = ["POSTPAID_BY_HOUR", "PREPAID"]
+  portable = true
+  storage_state = ["ATTACHED"]
+  instance_ips = ["10.0.0.2"]
+  instance_name = ["my-instance"]
+  tag_keys = ["foo"]
+  tag_values = ["bar", "baz"]
+}
+```
+
 */
 package tencentcloud
 
@@ -57,6 +72,47 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Filter by cloud disk type (`SYSTEM_DISK`: system disk | `DATA_DISK`: data disk).",
+			},
+			"charge_type": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"portable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Filter by whether the disk is portable (Boolean `true` or `false`).",
+			},
+			"storage_state": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by disk state (`UNATTACHED` | `ATTACHING` | `ATTACHED` | `DETACHING` | `EXPANDING` | `ROLLBACKING` | `TORECYCLE`).",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"instance_ips": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by attached instance public or private IPs.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"instance_name": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by attached instance name.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"tag_keys": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by tag keys.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"tag_values": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List filter by tag values.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -162,7 +218,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	params := make(map[string]string)
+	params := make(map[string]interface{})
 	if v, ok := d.GetOk("storage_id"); ok {
 		params["disk-id"] = v.(string)
 	}
@@ -180,6 +236,34 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("storage_usage"); ok {
 		params["disk-usage"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("charge_type"); ok {
+		params["disk-charge-type"] = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+
+	if v, ok := d.GetOk("portable"); ok {
+		if v.(bool) {
+			params["portable"] = "TRUE"
+		} else {
+			params["portable"] = "FALSE"
+		}
+	}
+
+	if v, ok := d.GetOk("storage_state"); ok {
+		params["disk-state"] = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+	if v, ok := d.GetOk("instance_ips"); ok {
+		params["instance-ip-address"] = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+	if v, ok := d.GetOk("instance_name"); ok {
+		params["instance-name"] = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+	if v, ok := d.GetOk("tag_keys"); ok {
+		params["tag-key"] = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+	if v, ok := d.GetOk("tag_values"); ok {
+		params["tag-value"] = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
 	cbsService := CbsService{
