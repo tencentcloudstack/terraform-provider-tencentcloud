@@ -4,11 +4,105 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_emr
+	resource.AddTestSweepers("tencentcloud_emr", &resource.Sweeper{
+		Name: "tencentcloud_emr",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+
+			emrService := EMRService{client: client.apiV3Conn}
+			filters := make(map[string]interface{})
+			filters["display_strategy"] = DisplayStrategyIsclusterList
+			clusters, err := emrService.DescribeInstances(ctx, filters)
+			if err != nil {
+				return nil
+			}
+			for _, cluster := range clusters {
+				clusterName := *cluster.ClusterName
+				if strings.HasPrefix(clusterName, keepResource) || strings.HasPrefix(clusterName, defaultResource) {
+					continue
+				}
+				now := time.Now()
+				createTime := stringTotime(*cluster.AddTime)
+				interval := now.Sub(createTime).Minutes()
+				// less than 30 minute, not delete
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+				metaDB := cluster.MetaDb
+				instanceId := *cluster.ClusterId
+				request := emr.NewTerminateInstanceRequest()
+				request.InstanceId = &instanceId
+				if _, err = emrService.client.UseEmrClient().TerminateInstance(request); err != nil {
+					return nil
+				}
+				err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+					clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
+
+					if e, ok := err.(*errors.TencentCloudSDKError); ok {
+						if e.GetCode() == "InternalError.ClusterNotFound" {
+							return nil
+						}
+						if e.GetCode() == "UnauthorizedOperation" {
+							return nil
+						}
+					}
+
+					if len(clusters) > 0 {
+						status := *(clusters[0].Status)
+						if status != EmrInternetStatusDeleted {
+							return resource.RetryableError(
+								fmt.Errorf("%v create cluster endpoint status still is %v", instanceId, status))
+						}
+					}
+
+					if err != nil {
+						return resource.RetryableError(err)
+					}
+					return nil
+				})
+				if err != nil {
+					return nil
+				}
+
+				if metaDB != nil && *metaDB != "" {
+					// remove metadb
+					mysqlService := MysqlService{client: client.apiV3Conn}
+
+					err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
+						if err != nil {
+							return retryError(err, InternalError)
+						}
+						return nil
+					})
+
+					if err != nil {
+						return nil
+					}
+				}
+			}
+			return nil
+		},
+	})
+}
 
 var testEmrClusterResourceKey = "tencentcloud_emr_cluster.emrrrr"
 
@@ -19,13 +113,13 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testEmrBasic(),
+				Config: testEmrBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEmrExists(testEmrClusterResourceKey),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "product_id", "4"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "display_strategy", "clusterList"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.vpc_id", defaultVpcId),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.subnet_id", defaultSubnetId),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.vpc_id", defaultEMRVpcId),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "vpc_settings.subnet_id", defaultEMRSubnetId),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "softwares.0", "zookeeper-3.6.1"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "support_ha", "0"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "instance_name", "emr-test-demo"),
@@ -88,14 +182,13 @@ func testAccCheckEmrExists(n string) resource.TestCheckFunc {
 	}
 }
 
-func testEmrBasic() string {
-	return fmt.Sprintf(`
+const testEmrBasic = defaultEMRVariable + `
 resource "tencentcloud_emr_cluster" "emrrrr" {
 	product_id=4
 	display_strategy="clusterList"
 	vpc_settings={
-	  vpc_id="%s"
-	  subnet_id:"%s"
+	  vpc_id=var.vpc_id
+	  subnet_id=var.subnet_id
 	}
 	softwares=[
 	  "zookeeper-3.6.1",
@@ -134,7 +227,6 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	  zone="ap-guangzhou-3"
 	  project_id=0
 	}
-	sg_id="%s"
+	sg_id=var.sg_id
   }
-`, defaultVpcId, defaultSubnetId, defaultEMRSgId)
-}
+`

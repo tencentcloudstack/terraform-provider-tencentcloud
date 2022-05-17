@@ -93,8 +93,26 @@ const (
 
 	defaultTkeOSImageId   = "img-2lr9q49h"
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
-	defaultEMRSgId        = "sg-mag8k2fj"
 )
+
+// EMR
+const (
+	defaultEMRVpcId    = defaultVpcId
+	defaultEMRSubnetId = defaultSubnetId
+	defaultEMRSgId     = "sg-694qit0p"
+)
+
+const defaultEMRVariable = `
+variable "vpc_id" {
+  default = "` + defaultEMRVpcId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultEMRSubnetId + `"
+}
+variable "sg_id" {
+  default = "` + defaultEMRSgId + `"
+}
+`
 
 //ckafka
 const (
