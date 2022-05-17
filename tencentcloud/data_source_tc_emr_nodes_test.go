@@ -24,7 +24,7 @@ func TestAccDataSourceTencentCloudEMRNodes(t *testing.T) {
 }
 
 func testAccEMRNodes() string {
-	return testEmrBasic() + `
+	return testEmrBasic + `
 data "tencentcloud_emr_nodes" "my_emr_nodes" {
   node_flag="master"
   instance_id=tencentcloud_emr_cluster.emrrrr.instance_id
