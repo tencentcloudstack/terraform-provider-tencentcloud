@@ -36,7 +36,7 @@ resource "tencentcloud_eip" "eip_test_dnat" {
 
 # Create NAT Gateway
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id         = var.vpc_id
+  vpc_id         = var.cvm_vpc_id
   name           = var.instance_name
   max_concurrent = 3000000
   bandwidth      = 500

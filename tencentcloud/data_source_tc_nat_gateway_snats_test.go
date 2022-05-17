@@ -37,15 +37,6 @@ data "tencentcloud_vpc_subnets" "my_subnet" {
   subnet_id = "subnet-4o0zd840"
 }
 
-data "tencentcloud_images" "my_image" {
-  os_name = "centos"
-}
-
-data "tencentcloud_instance_types" "my_instance_types" {
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
 # Create EIP
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
