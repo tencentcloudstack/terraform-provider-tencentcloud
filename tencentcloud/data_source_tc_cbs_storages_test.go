@@ -29,7 +29,6 @@ func TestAccTencentCloudCbsStoragesDataSourceId(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.attached", "false"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.status"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.tags.test", "tf"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.charge_type"),
 				),
 			},
@@ -63,10 +62,6 @@ resource "tencentcloud_cbs_storage" "storage" {
   availability_zone = "ap-guangzhou-3"
   project_id        = 0
   encrypt           = false
-  
-  tags = {
-    test = "tf"
-  }
 }
 
 data "tencentcloud_cbs_storages" "storages" {
