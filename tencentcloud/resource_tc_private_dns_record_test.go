@@ -33,12 +33,6 @@ resource "tencentcloud_private_dns_zone" "zone" {
   dns_forward_status = "DISABLED"
   domain             = "domain.com"
   remark             = "test_record"
-
-  tag_set {
-    tag_key   = "created_by"
-    tag_value = "terraform"
-  }
-
 }
 
 resource "tencentcloud_private_dns_record" "record" {

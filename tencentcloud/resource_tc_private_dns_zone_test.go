@@ -33,12 +33,6 @@ resource "tencentcloud_private_dns_zone" "zone" {
   dns_forward_status = "DISABLED"
   domain             = "domain.com"
   remark             = "test_zone"
-
-  tag_set {
-    tag_key   = "created_by"
-    tag_value = "terraform"
-  }
-
   vpc_set {
     region      = "ap-guangzhou"
     uniq_vpc_id = var.cvm_vpc_id
