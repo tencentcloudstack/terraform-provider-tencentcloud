@@ -268,12 +268,54 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	request := privatedns.NewDeletePrivateZoneRecordRequest()
+	// unbind
+	request := privatedns.NewDescribePrivateZoneRequest()
 	request.ZoneId = helper.String(zoneId)
-	request.RecordId = helper.String(recordId)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DeletePrivateZoneRecord(request)
+	var response *privatedns.DescribePrivateZoneResponse
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DescribePrivateZone(request)
+		if e != nil {
+			return retryError(e)
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read private dns failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
+	info := response.Response.PrivateZone
+	oldVpcSet := info.VpcSet
+	oldAccVpcSet := info.AccountVpcSet
+
+	unBindRequest := privatedns.NewModifyPrivateZoneVpcRequest()
+	unBindRequest.ZoneId = helper.String(zoneId)
+	unBindRequest.VpcSet = []*privatedns.VpcInfo{}
+	unBindRequest.AccountVpcSet = []*privatedns.AccountVpcInfo{}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZoneVpc(unBindRequest)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s unbind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
+	// delete
+	recordRequest := privatedns.NewDeletePrivateZoneRecordRequest()
+	recordRequest.ZoneId = helper.String(zoneId)
+	recordRequest.RecordId = helper.String(recordId)
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DeletePrivateZoneRecord(recordRequest)
 		if e != nil {
 			return retryError(e)
 		}
@@ -283,5 +325,35 @@ func resourceTencentCloudDPrivateDnsRecordDelete(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s delete privateDns record failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	// rebind
+	unBindRequest = privatedns.NewModifyPrivateZoneVpcRequest()
+	unBindRequest.ZoneId = helper.String(zoneId)
+	unBindRequest.VpcSet = oldVpcSet
+
+	accountVpcSet := make([]*privatedns.AccountVpcInfo, 0, len(oldAccVpcSet))
+	for _, item := range oldAccVpcSet {
+		info := privatedns.AccountVpcInfo{
+			Uin:       item.Uin,
+			UniqVpcId: item.UniqVpcId,
+			Region:    item.Region,
+		}
+		accountVpcSet = append(accountVpcSet, &info)
+	}
+
+	unBindRequest.AccountVpcSet = accountVpcSet
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZoneVpc(unBindRequest)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s rebind privateDns zone vpc failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+
 	return nil
 }
