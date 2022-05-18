@@ -1,3 +1,26 @@
+## 1.72.4 (May 18, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_vpn_gateway` add `cdc_id` and `max_connection`
+* resource `tencentcloud_private_dns_zone` support tag change
+* resource `tencentcloud_route_table_entry` add disabled argument
+* datasource `tencentcloud_cbs_storages` support more query filters
+
+BUGFIXES:
+
+* resource `tencentcloud_private_dns_record` fix delete error
+
+COMMON:
+* fix testcases
+
+## 1.72.3 (May 13, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_gaap_http_rule` add `sni` and `sni_switch`
+* resource `tencentcloud_scf_function` remove memSize validate
+
 ## 1.72.2 (May 11, 2022)
 
 BUGFIXES:
