@@ -128,6 +128,18 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Default:     VPN_CHARGE_TYPE_POSTPAID_BY_HOUR,
 				Description: "Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.",
 			},
+			"cdc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "CDC instance ID.",
+			},
+			"max_connection": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Maximum number of connected clients allowed for the SSL VPN gateway. Valid values: [5, 10, 20, 50, 100]. This parameter is only required for SSL VPN gateways.",
+			},
 			"expired_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -208,6 +220,15 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		}
 		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	}
+
+	if v, ok := d.GetOk("cdc_id"); ok {
+		request.CdcId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("max_connection"); ok {
+		request.MaxConnection = helper.IntUint64(v.(int))
+	}
+
 	var response *vpc.CreateVpnGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnGateway(request)
@@ -306,6 +327,8 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("new_purchase_plan", gateway.NewPurchasePlan)
 	_ = d.Set("restrict_state", gateway.RestrictState)
 	_ = d.Set("zone", gateway.Zone)
+	_ = d.Set("cdc_id", gateway.CdcId)
+	_ = d.Set("max_connection", gateway.MaxConnection)
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -410,6 +433,10 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		d.SetPartial("tags")
+	}
+
+	if d.HasChange("cdc_id") || d.HasChange("max_connection") {
+		return fmt.Errorf("cdc_id and max_connection do not support change now.")
 	}
 
 	d.Partial(false)
