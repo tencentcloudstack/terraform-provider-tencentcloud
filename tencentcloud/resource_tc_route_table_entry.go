@@ -51,6 +51,9 @@ import (
 	"strconv"
 	"strings"
 
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -60,6 +63,7 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpcRouteEntryCreate,
 		Read:   resourceTencentCloudVpcRouteEntryRead,
+		Update: resourceTencentCloudVpcRouteEntryUpdate,
 		Delete: resourceTencentCloudVpcRouteEntryDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -92,6 +96,12 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of next-hop gateway. Note: when `next_type` is EIP, GatewayId should be `0`.",
 			},
+			// Name enabled will lead to exist route table diff fail (null -> false cannot diff).
+			"disabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether the entry is disabled, default is `false`.",
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -116,6 +126,7 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 		destinationCidrBlock = ""
 		nextType             = ""
 		nextHub              = ""
+		disabled             = false
 	)
 
 	if temp, ok := d.GetOk("description"); ok {
@@ -134,6 +145,10 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 		nextHub = temp.(string)
 	}
 
+	if temp, ok := d.GetOk("disabled"); ok {
+		disabled = temp.(bool)
+	}
+
 	if routeTableId == "" || destinationCidrBlock == "" || nextType == "" || nextHub == "" {
 		return fmt.Errorf("some needed fields is empty string")
 	}
@@ -142,13 +157,24 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("if next_type is %s, next_hub can only be \"0\" ", GATE_WAY_TYPE_EIP)
 	}
 
-	entryId, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, nextType, nextHub, description)
+	// route cannot disable on create
+	entryId, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, nextType, nextHub, description, true)
 
 	if err != nil {
 		return err
 	}
 
 	d.SetId(fmt.Sprintf("%d.%s", entryId, routeTableId))
+
+	if disabled {
+		request := vpc.NewDisableRoutesRequest()
+		request.RouteTableId = &routeTableId
+		request.RouteIds = []*uint64{helper.Int64Uint64(entryId)}
+		err := service.DisableRoutes(ctx, request)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
@@ -189,6 +215,8 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 				_ = d.Set("destination_cidr_block", v.destinationCidr)
 				_ = d.Set("next_type", v.nextType)
 				_ = d.Set("next_hub", v.nextBub)
+
+				_ = d.Set("disabled", !v.enabled)
 				return nil
 			}
 		}
@@ -199,6 +227,33 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	return nil
+}
+
+func resourceTencentCloudVpcRouteEntryUpdate(d *schema.ResourceData, meta interface{}) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := VpcService{client}
+
+	items := strings.Split(d.Id(), ".")
+	if len(items) != 2 {
+		return fmt.Errorf("entry id be destroyed, we can not get route table id")
+	}
+
+	id := items[0]
+	routeTableId := items[1]
+	routeEntryId, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		return fmt.Errorf("parse route entry id %s fail: %s", id, routeTableId)
+	}
+
+	if d.HasChange("disabled") {
+		disabled := d.Get("disabled").(bool)
+		if err := service.SwitchRouteEnabled(ctx, routeTableId, routeEntryId, !disabled); err != nil {
+			return err
+		}
+	}
+	return resourceTencentCloudVpcRouteEntryRead(d, meta)
 }
 
 func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interface{}) error {

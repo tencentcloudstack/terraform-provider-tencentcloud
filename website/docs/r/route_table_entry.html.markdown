@@ -54,6 +54,7 @@ The following arguments are supported:
 * `next_type` - (Required, ForceNew) Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.
 * `route_table_id` - (Required, ForceNew) ID of routing table to which this entry belongs.
 * `description` - (Optional, ForceNew) Description of the routing table entry.
+* `disabled` - (Optional) Whether the entry is disabled, default is `false`.
 
 ## Attributes Reference
 

@@ -147,7 +147,7 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("The value of next_type is invalid")
 	}
 
-	_, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, routeTypeNewMap[nextType], nextHub, "")
+	_, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, routeTypeNewMap[nextType], nextHub, "", true)
 	if err != nil {
 		return err
 	}
