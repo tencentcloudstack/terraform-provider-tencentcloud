@@ -41,5 +41,8 @@ resource "tencentcloud_private_dns_zone" "zone" {
     region      = "ap-guangzhou"
     uniq_vpc_id = var.vpc_id
   }
+  tags = {
+    "created-by" : "terraform",
+  }
 }
 `

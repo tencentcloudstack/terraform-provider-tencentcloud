@@ -6,9 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_private_dns_zone" "foo" {
   domain = "domain.com"
-  tag_set {
-    tag_key = "created_by"
-    tag_value = "tag"
+  tags {
+    "created_by" : "terraform"
   }
   vpc_set {
     region = "ap-guangzhou"
@@ -36,6 +35,8 @@ $ terraform import tencentcloud_private_dns_zone.foo zone_id
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
 	"log"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -62,9 +63,12 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 				Description: "Domain name, which must be in the format of standard TLD.",
 			},
 			"tag_set": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Tags the private domain when it is created.",
+				Type:          schema.TypeList,
+				Optional:      true,
+				Computed:      true,
+				Description:   "Tags the private domain when it is created.",
+				Deprecated:    "It has been deprecated from version 1.72.4. Use `tags` instead.",
+				ConflictsWith: []string{"tags"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
@@ -79,6 +83,12 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 						},
 					},
 				},
+			},
+			"tags": {
+				Type:          schema.TypeMap,
+				Optional:      true,
+				Description:   "Tags of the private dns zone.",
+				ConflictsWith: []string{"tag_set"},
 			},
 			"vpc_set": {
 				Type:        schema.TypeList,
@@ -147,6 +157,7 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_private_dns_zone.create")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := privatedns.NewCreatePrivateZoneRequest()
 
@@ -213,7 +224,20 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 
 	var response *privatedns.CreatePrivateZoneResponse
 	response = result
-	d.SetId(*response.Response.ZoneId)
+
+	id := *response.Response.ZoneId
+	d.SetId(id)
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("privatedns", "zone", region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudDPrivateDnsZoneRead(d, meta)
 }
@@ -223,6 +247,7 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -259,6 +284,16 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	}
 	_ = d.Set("tag_set", tagSets)
 
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+
+	tags, err := tagService.DescribeResourceTags(ctx, "privatedns", "zone", region, id)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	vpcSet := make([]map[string]interface{}, 0, len(info.VpcSet))
 	for _, item := range info.VpcSet {
 		vpcSet = append(vpcSet, map[string]interface{}{
@@ -286,6 +321,7 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_private_dns_zone.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	id := d.Id()
 
 	if d.HasChange("remark") || d.HasChange("dns_forward_status") {
@@ -354,6 +390,27 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+
+	if d.HasChange("tag_set") {
+		return fmt.Errorf("tag_set do not support change, please use tags instead.")
+	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("privatedns", "zone", region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
 	return resourceTencentCloudDPrivateDnsZoneRead(d, meta)
 }
 
