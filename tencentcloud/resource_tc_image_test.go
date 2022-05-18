@@ -53,7 +53,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageExists(ImageInstance),
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-fodds4y2"),
+					resource.TestCheckResourceAttr(ImageInstance, "instance_id", defaultCvmId),
 					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "create image with instance"),
 				),
@@ -62,7 +62,7 @@ func TestAccTencentCloudImageResource(t *testing.T) {
 				Config: testAccImageWithInstanceUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(ImageInstance, "image_name", "image-instance-update-keep"),
-					resource.TestCheckResourceAttr(ImageInstance, "instance_id", "ins-fodds4y2"),
+					resource.TestCheckResourceAttr(ImageInstance, "instance_id", defaultCvmId),
 					resource.TestCheckResourceAttr(ImageInstance, "data_disk_ids.#", "1"),
 					resource.TestCheckResourceAttr(ImageInstance, "image_description", "update image with instance"),
 				),
@@ -134,35 +134,35 @@ func testAccCheckImageExists(n string) resource.TestCheckFunc {
 }
 
 const (
-	testAccImageWithSnapShot = `
+	testAccImageWithSnapShot = defaultCvmImageVariable + `
 		resource "tencentcloud_image" "image_snap" {
   			image_name   		= "image-snapshot-keep"
-  			snapshot_ids 		= ["snap-8f2updnb"]
+  			snapshot_ids 		= [var.snap_id]
 			force_poweroff 		= true
 			image_description 	= "create image with snapshot"
 		}`
 
-	testAccImageWithSnapShotUpdate = `
+	testAccImageWithSnapShotUpdate = defaultCvmImageVariable + `
 		resource "tencentcloud_image" "image_snap" {
   			image_name   		= "image-snapshot-update-keep"
-  			snapshot_ids 		= ["snap-8f2updnb"]
+  			snapshot_ids 		= [var.snap_id]
   			force_poweroff   	= false
   			image_description 	= "update image with snapshot"
 		}`
 
-	testAccImageWithInstance = `
+	testAccImageWithInstance = defaultCvmImageVariable + `
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-keep"
-  			instance_id  		= "ins-fodds4y2"
-  			data_disk_ids 		= ["disk-mrnskm5i"]
+  			instance_id  		= var.cvm_id
+  			data_disk_ids 		= [var.disk_id]
   			image_description 	= "create image with instance"
 		}`
 
-	testAccImageWithInstanceUpdate = `
+	testAccImageWithInstanceUpdate = defaultCvmImageVariable + `
 		resource "tencentcloud_image" "image_instance" {
   			image_name   		= "image-instance-update-keep"
-  			instance_id  		= "ins-fodds4y2"
-  			data_disk_ids 		= ["disk-mrnskm5i"]
+  			instance_id  		= var.cvm_id
+  			data_disk_ids 		= [var.disk_id]
   			image_description 	= "update image with instance"
 		}`
 )

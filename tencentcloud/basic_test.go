@@ -114,6 +114,25 @@ variable "sg_id" {
 }
 `
 
+//cvm-image
+const (
+	defaultCvmId  = "ins-8oqqya08"
+	defaultDiskId = "disk-5jjrs2lm"
+	defaultSnapId = "snap-8f2updnb"
+)
+
+const defaultCvmImageVariable = `
+variable "cvm_id" {
+  default = "` + defaultCvmId + `"
+}
+variable "disk_id" {
+  default = "` + defaultDiskId + `"
+}
+variable "snap_id" {
+  default = "` + defaultSnapId + `"
+}
+`
+
 //ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"
