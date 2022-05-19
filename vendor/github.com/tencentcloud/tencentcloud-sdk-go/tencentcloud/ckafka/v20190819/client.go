@@ -66,6 +66,7 @@ func NewAuthorizeTokenResponse() (response *AuthorizeTokenResponse) {
 // 给实例授权token
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -78,6 +79,7 @@ func (c *Client) AuthorizeToken(request *AuthorizeTokenRequest) (response *Autho
 // 给实例授权token
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -282,6 +284,7 @@ func NewCancelAuthorizationTokenResponse() (response *CancelAuthorizationTokenRe
 // 取消授权token
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -294,6 +297,7 @@ func (c *Client) CancelAuthorizationToken(request *CancelAuthorizationTokenReque
 // 取消授权token
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -538,6 +542,7 @@ func NewCreatePartitionResponse() (response *CreatePartitionResponse) {
 // 本接口用于增加主题中的分区
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -559,6 +564,7 @@ func (c *Client) CreatePartition(request *CreatePartitionRequest) (response *Cre
 // 本接口用于增加主题中的分区
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -889,6 +895,7 @@ func NewCreateUserResponse() (response *CreateUserResponse) {
 // 添加用户
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -910,6 +917,7 @@ func (c *Client) CreateUser(request *CreateUserRequest) (response *CreateUserRes
 // 添加用户
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1201,6 +1209,83 @@ func (c *Client) DeleteInstancePreWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteInstancePreResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRouteRequest() (request *DeleteRouteRequest) {
+    request = &DeleteRouteRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteRoute")
+    
+    
+    return
+}
+
+func NewDeleteRouteResponse() (response *DeleteRouteResponse) {
+    response = &DeleteRouteResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteRoute
+// 删除路由
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DeleteRoute(request *DeleteRouteRequest) (response *DeleteRouteResponse, err error) {
+    return c.DeleteRouteWithContext(context.Background(), request)
+}
+
+// DeleteRoute
+// 删除路由
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DeleteRouteWithContext(ctx context.Context, request *DeleteRouteRequest) (response *DeleteRouteResponse, err error) {
+    if request == nil {
+        request = NewDeleteRouteRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRoute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRouteResponse()
     err = c.Send(request, response)
     return
 }
@@ -1500,6 +1585,7 @@ func NewDescribeACLResponse() (response *DescribeACLResponse) {
 // 枚举ACL
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1521,6 +1607,7 @@ func (c *Client) DescribeACL(request *DescribeACLRequest) (response *DescribeACL
 // 枚举ACL
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -2962,6 +3049,75 @@ func (c *Client) ModifyInstanceAttributesWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewModifyInstanceAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancePreRequest() (request *ModifyInstancePreRequest) {
+    request = &ModifyInstancePreRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyInstancePre")
+    
+    
+    return
+}
+
+func NewModifyInstancePreResponse() (response *ModifyInstancePreResponse) {
+    response = &ModifyInstancePreResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyInstancePre
+// 预付费实例变配接口，调整磁盘，带宽
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) ModifyInstancePre(request *ModifyInstancePreRequest) (response *ModifyInstancePreResponse, err error) {
+    return c.ModifyInstancePreWithContext(context.Background(), request)
+}
+
+// ModifyInstancePre
+// 预付费实例变配接口，调整磁盘，带宽
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) ModifyInstancePreWithContext(ctx context.Context, request *ModifyInstancePreRequest) (response *ModifyInstancePreResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancePreRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancePre require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancePreResponse()
     err = c.Send(request, response)
     return
 }

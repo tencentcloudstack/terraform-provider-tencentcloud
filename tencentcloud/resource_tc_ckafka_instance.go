@@ -141,14 +141,12 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Instance bandwidth in MBps.",
 			},
 			"disk_size": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				ForceNew: true,
 				Description: "Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
 					"If it is not within the interval, the plan will cause a change when first created.",
 			},
@@ -156,7 +154,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				ForceNew: true,
 				Description: "Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
 					"If it is not within the interval, the plan will cause a change when first created.",
 			},
@@ -652,6 +649,26 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	error := service.ModifyCkafkaInstanceAttributes(ctx, request)
 	if error != nil {
 		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+	}
+
+	if d.HasChange("band_width") || d.HasChange("disk_size") || d.HasChange("partition") {
+		request := ckafka.NewModifyInstancePreRequest()
+		request.InstanceId = helper.String(instanceId)
+		if v, ok := d.GetOk("band_width"); ok {
+			request.BandWidth = helper.Int64(int64(v.(int)))
+		}
+		if v, ok := d.GetOk("disk_size"); ok {
+			request.DiskSize = helper.Int64(int64(v.(int)))
+		}
+		if v, ok := d.GetOk("partition"); ok {
+			request.Partition = helper.Int64(int64(v.(int)))
+		}
+
+		_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
+		if err != nil {
+			return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+				request.GetAction(), request.ToJsonString(), err.Error())
+		}
 	}
 
 	return resourceTencentCloudCkafkaInstanceRead(d, meta)
