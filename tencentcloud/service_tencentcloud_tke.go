@@ -6,6 +6,8 @@ import (
 	"log"
 	"strings"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -718,42 +720,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 }
 
 func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label, iAdvanced InstanceAdvancedSettings) (asGroupId string, errRet error) {
-
-	logId := getLogId(ctx)
-	request := tke.NewCreateClusterAsGroupRequest()
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = &id
-	request.AutoScalingGroupPara = &groupPara
-	request.LaunchConfigurePara = &configPara
-	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
-		request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{
-			ExtraArgs: &iAdvanced.ExtraArgs,
-		}
-	}
-
-	if len(labels) > 0 {
-		request.Labels = labels
-	}
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTkeClient().CreateClusterAsGroup(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	if response == nil || response.Response == nil || response.Response.AutoScalingGroupId == nil {
-		errRet = fmt.Errorf("CreateClusterAsGroup return nil response")
-		return
-	}
-
-	asGroupId = *response.Response.AutoScalingGroupId
-	return
+	return "", fmt.Errorf("Cluster AS Group has OFFLINE")
 }
 
 func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId string) (clusterAsGroupSet *tke.ClusterAsGroup, errRet error) {
@@ -1597,6 +1564,196 @@ func (me *TkeService) AcquireClusterAdminRole(ctx context.Context, clusterId str
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().AcquireClusterAdminRole(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) SwitchLogAgent(ctx context.Context, clusterId, rootDir string, enable bool) error {
+	if enable {
+		request := tke.NewInstallLogAgentRequest()
+		request.ClusterId = &clusterId
+		if rootDir != "" {
+			request.KubeletRootDir = &rootDir
+		}
+		return me.InstallLogAgent(ctx, request)
+	}
+	request := tke.NewUninstallLogAgentRequest()
+	request.ClusterId = &clusterId
+	return me.UninstallLogAgent(ctx, request)
+}
+
+func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+	if enable {
+		request := tke.NewEnableEventPersistenceRequest()
+		request.ClusterId = &clusterId
+		if logSetId != "" {
+			request.LogsetId = &logSetId
+		}
+		if topicId != "" {
+			request.TopicId = &topicId
+		}
+		return me.EnableEventPersistence(ctx, request)
+	}
+	request := tke.NewDisableEventPersistenceRequest()
+	request.ClusterId = &clusterId
+	return me.DisableEventPersistence(ctx, request)
+}
+
+func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+	if enable {
+		request := tke.NewEnableClusterAuditRequest()
+		request.ClusterId = &clusterId
+		if logSetId != "" {
+			request.LogsetId = &logSetId
+		}
+		if topicId != "" {
+			request.TopicId = &topicId
+		}
+		return me.EnableClusterAudit(ctx, request)
+	}
+	request := tke.NewDisableClusterAuditRequest()
+	request.ClusterId = &clusterId
+	return me.DisableClusterAudit(ctx, request)
+}
+
+func (me *TkeService) InstallLogAgent(ctx context.Context, request *tke.InstallLogAgentRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().InstallLogAgent(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) UninstallLogAgent(ctx context.Context, request *tke.UninstallLogAgentRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().UninstallLogAgent(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) EnableEventPersistence(ctx context.Context, request *tke.EnableEventPersistenceRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().EnableEventPersistence(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) DisableEventPersistence(ctx context.Context, request *tke.DisableEventPersistenceRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DisableEventPersistence(request)
+
+	if err != nil {
+		code := err.(*sdkErrors.TencentCloudSDKError).Code
+		if code == "InternalError.KubernetesDeleteOperationError" {
+			return
+		}
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) EnableClusterAudit(ctx context.Context, request *tke.EnableClusterAuditRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().EnableClusterAudit(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) DisableClusterAudit(ctx context.Context, request *tke.DisableClusterAuditRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DisableClusterAudit(request)
 
 	if err != nil {
 		errRet = err

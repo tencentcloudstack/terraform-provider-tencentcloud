@@ -394,6 +394,30 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }
 ```
+
+Using ops options
+```
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  # ...your basic fields
+
+  log_agent {
+    enabled = true
+    kubelet_root_dir = "" # optional
+  }
+
+  event_persistence {
+    enabled = true
+	log_set_id = "" # optional
+    log_set_topic = "" # optional
+  }
+
+  cluster_audit {
+    enabled = true
+	log_set_id = "" # optional
+    log_set_topic = "" # optional
+  }
+}
+```
 */
 package tencentcloud
 
@@ -1234,6 +1258,76 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				},
 			},
 			Description: "Information of the add-on to be installed.",
+		},
+		"log_agent": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			Description: "Specify cluster log agent config.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"enabled": {
+						Type:        schema.TypeBool,
+						Required:    true,
+						Description: "Whether the log agent enabled.",
+					},
+					"kubelet_root_dir": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Kubelet root directory as the literal.",
+					},
+				},
+			},
+		},
+		"event_persistence": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			Description: "Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"enabled": {
+						Type:        schema.TypeBool,
+						Required:    true,
+						Description: "Specify weather the Event Persistence enabled.",
+					},
+					"log_set_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Specify id of existing CLS log set, or auto create a new set by leave it empty.",
+					},
+					"topic_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Specify id of existing CLS log topic, or auto create a new topic by leave it empty.",
+					},
+				},
+			},
+		},
+		"cluster_audit": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			Description: "Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"enabled": {
+						Type:        schema.TypeBool,
+						Required:    true,
+						Description: "Specify weather the Cluster Audit enabled. NOTE: Enable Cluster Audit will also auto install Log Agent.",
+					},
+					"log_set_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Specify id of existing CLS log set, or auto create a new set by leave it empty.",
+					},
+					"topic_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Specify id of existing CLS log topic, or auto create a new topic by leave it empty.",
+					},
+				},
+			},
 		},
 		"tags": {
 			Type:        schema.TypeMap,
@@ -2194,6 +2288,42 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v, ok := helper.InterfacesHeadMap(d, "log_agent"); ok {
+		enabled := v["enabled"].(bool)
+		rootDir := v["kubelet_root_dir"].(string)
+
+		if enabled {
+			err := service.SwitchLogAgent(ctx, id, rootDir, enabled)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
+		enabled := v["enabled"].(bool)
+		logSetId := v["log_set_id"].(string)
+		topicId := v["topic_id"].(string)
+		if enabled {
+			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "cluster_audit"); ok {
+		enabled := v["enabled"].(bool)
+		logSetId := v["log_set_id"].(string)
+		topicId := v["topic_id"].(string)
+		if enabled {
+			err := service.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if err = resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after create fail , %s", logId, err.Error())
 		return err
@@ -2775,6 +2905,52 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return fmt.Errorf("argument `acquire_cluster_admin_role` cannot set to false")
 		}
 		err := tkeService.AcquireClusterAdminRole(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("log_agent") {
+		v, ok := helper.InterfacesHeadMap(d, "log_agent")
+		enabled := false
+		rootDir := ""
+		if ok {
+			rootDir = v["kubelet_root_dir"].(string)
+			enabled = v["enabled"].(bool)
+		}
+		err := tkeService.SwitchLogAgent(ctx, id, rootDir, enabled)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("event_persistence") {
+		v, ok := helper.InterfacesHeadMap(d, "event_persistence")
+		enabled := false
+		logSetId := ""
+		topicId := ""
+		if ok {
+			enabled = v["enabled"].(bool)
+			logSetId = v["log_set_id"].(string)
+			topicId = v["topic_id"].(string)
+		}
+		err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("cluster_audit") {
+		v, ok := helper.InterfacesHeadMap(d, "cluster_audit")
+		enabled := false
+		logSetId := ""
+		topicId := ""
+		if ok {
+			enabled = v["enabled"].(bool)
+			logSetId = v["log_set_id"].(string)
+			topicId = v["topic_id"].(string)
+		}
+		err := tkeService.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled)
 		if err != nil {
 			return err
 		}

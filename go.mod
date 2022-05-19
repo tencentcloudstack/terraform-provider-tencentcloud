@@ -55,7 +55,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.381
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.401
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.398
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199

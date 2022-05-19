@@ -94,6 +94,45 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTkeDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeClusterLogs,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "192.168.0.0/18"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "log_agent.0.enabled", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.enabled", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_audit.0.enabled", "false"),
+				),
+			},
+			{
+				PreConfig: func() {
+					// do not update so fast
+					time.Sleep(10 * time.Second)
+				},
+				Config: testAccTkeClusterLogsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "192.168.0.0/18"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "log_agent.0.enabled", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.enabled", "false"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_audit.0.enabled", "true"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTkeDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -178,6 +217,23 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 
 	}
 }
+
+// If test environment change, make sure to attach Tke access cls permission
+// We will not apply/destroy frequently
+const TkeAccessClsRole = `
+data "tencentcloud_cam_roles" "tke" {
+  name = "TKE_QCSRole"
+}
+
+data "tencentcloud_cam_policies" "cls" {
+  name = "QcloudCLSFullAccess"
+}
+
+resource "tencentcloud_cam_role_policy_attachment" "tke_cls" {
+  policy_id = data.tencentcloud_cam_policies.cls.policy_list.0.policy_id
+  role_id   = data.tencentcloud_cam_roles.tke.role_list.0.role_id
+}
+`
 
 const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
 
@@ -307,3 +363,65 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   ]
 }
 `
+
+const testAccTkeClusterLogs = TkeDeps + `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = local.vpc_id
+  cluster_cidr                               = var.tke_cidr_c.0
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_version                            = "1.20.6"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level								 = "L5"
+  auto_upgrade_cluster_level				 = true
+  cluster_deploy_type 						 = "MANAGED_CLUSTER"
+
+  log_agent {
+    enabled = true
+  }
+
+  event_persistence {
+    enabled = true
+  }
+
+  cluster_audit {
+    enabled = false
+  }
+}`
+
+const testAccTkeClusterLogsUpdate = TkeDeps + `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = local.vpc_id
+  cluster_cidr                               = var.tke_cidr_c.0
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_version                            = "1.20.6"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level								 = "L5"
+  auto_upgrade_cluster_level				 = true
+  cluster_deploy_type 						 = "MANAGED_CLUSTER"
+
+  log_agent {
+    enabled = true
+  }
+
+  event_persistence {
+    enabled = false
+  }
+
+  cluster_audit {
+    enabled = true
+  }
+}`
