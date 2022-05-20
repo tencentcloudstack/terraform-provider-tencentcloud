@@ -4,133 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_as_scaling_group"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_as_scaling_group"
 description: |-
-  Provide a resource to create an auto scaling group for kubernetes cluster.
+  Auto scaling group for kubernetes cluster (offlined).
 ---
 
 # tencentcloud_kubernetes_as_scaling_group
 
-Provide a resource to create an auto scaling group for kubernetes cluster.
+Auto scaling group for kubernetes cluster (offlined).
 
-~> **NOTE:**  It has been deprecated and replaced by `tencentcloud_cluster_node_pool`.
-~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
+~> **NOTE:**  This resource was offline no longer suppored.
 
 ## Example Usage
 
-```hcl
-resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
-  cluster_id = "cls-kb32pbv4"
-
-  auto_scaling_group {
-    scaling_group_name   = "tf-guagua-as-group"
-    max_size             = "5"
-    min_size             = "0"
-    vpc_id               = "vpc-dk8zmwuf"
-    subnet_ids           = ["subnet-pqfek0t8"]
-    project_id           = 0
-    default_cooldown     = 400
-    desired_capacity     = "0"
-    termination_policies = ["NEWEST_INSTANCE"]
-    retry_policy         = "INCREMENTAL_INTERVALS"
-
-    tags = {
-      "test" = "test"
-    }
-
-  }
-
-  auto_scaling_config {
-    configuration_name = "tf-guagua-as-config"
-    instance_type      = "S1.SMALL1"
-    project_id         = 0
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
-    public_ip_assigned         = true
-    password                   = "test123#"
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-
-    instance_tags = {
-      tag = "as"
-    }
-
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test1" = "test2",
-  }
-}
-```
-
-Use Kubelet
-
-```hcl
-resource "tencentcloud_kubernetes_as_scaling_group" "test" {
-
-  cluster_id = "cls-kb32pbv4"
-
-  auto_scaling_group {
-    scaling_group_name   = "tf-guagua-as-group"
-    max_size             = "5"
-    min_size             = "0"
-    vpc_id               = "vpc-dk8zmwuf"
-    subnet_ids           = ["subnet-pqfek0t8"]
-    project_id           = 0
-    default_cooldown     = 400
-    desired_capacity     = "0"
-    termination_policies = ["NEWEST_INSTANCE"]
-    retry_policy         = "INCREMENTAL_INTERVALS"
-
-    tags = {
-      "test" = "test"
-    }
-
-  }
-
-  auto_scaling_config {
-    configuration_name = "tf-guagua-as-config"
-    instance_type      = "S1.SMALL1"
-    project_id         = 0
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
-    public_ip_assigned         = true
-    password                   = "test123#"
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-
-    instance_tags = {
-      tag = "as"
-    }
-
-  }
-
-  extra_args = [
-    "root-dir=/var/lib/kubelet"
-  ]
-
-  labels = {
-    "test1" = "test1",
-    "test1" = "test2",
-  }
-}
-```
 
 ## Argument Reference
 

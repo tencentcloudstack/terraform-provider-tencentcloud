@@ -20,8 +20,107 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 获取用户认证信息失败。
+	FAILEDOPERATION_ACCOUNTCOMMON = "FailedOperation.AccountCommon"
+
+	// 账户未通过认证。
+	FAILEDOPERATION_ACCOUNTUSERNOTAUTHENTICATED = "FailedOperation.AccountUserNotAuthenticated"
+
+	// 伸缩组资源创建报错。
+	FAILEDOPERATION_ASCOMMON = "FailedOperation.AsCommon"
+
+	// CLB 未知错误。
+	FAILEDOPERATION_CLBUNEXPECTEDERROR = "FailedOperation.CLBUnexpectedError"
+
+	// CVM未知错误。
+	FAILEDOPERATION_CVMUNEXPECTEDERROR = "FailedOperation.CVMUnexpectedError"
+
+	// 无该接口CAM权限。
+	FAILEDOPERATION_CAMNOAUTH = "FailedOperation.CamNoAuth"
+
+	// 集群未找到。
+	FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+
+	// 集群状态错误。
+	FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+
+	// 集群节点版本过低。
+	FAILEDOPERATION_CLUSTERUPGRADENODEVERSION = "FailedOperation.ClusterUpgradeNodeVersion"
+
+	// 内部HTTP客户端错误。
+	FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+
+	// 内部HTTP解包失败。
+	FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+
+	// 请求(http请求)其他云服务失败。
+	FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
+
+	// cvm创建节点报错。
+	FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
+
+	// 存在云服务器在CVM侧查询不到。
+	FAILEDOPERATION_CVMNUMBERNOTMATCH = "FailedOperation.CvmNumberNotMatch"
+
+	// CVM 和 VPC ID 不匹配。
+	FAILEDOPERATION_CVMVPCIDNOTMATCH = "FailedOperation.CvmVpcidNotMatch"
+
+	// db错误。
+	FAILEDOPERATION_DB = "FailedOperation.Db"
+
+	// 记录未找到。
+	FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
+
+	// 获得安全组配额失败。
+	FAILEDOPERATION_DFWGETUSGQUOTA = "FailedOperation.DfwGetUSGQuota"
+
+	// 连接用户Kubernetes集群失败。
+	FAILEDOPERATION_KUBECLIENTCONNECTION = "FailedOperation.KubeClientConnection"
+
+	// KubernetesAPI错误。
+	FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+
+	// 创建集群Client出错。
+	FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
+
+	// Kubernetes未知错误。
+	FAILEDOPERATION_KUBERNETESINTERNAL = "FailedOperation.KubernetesInternal"
+
+	// 底层调用CLB未知错误。
+	FAILEDOPERATION_LBCOMMON = "FailedOperation.LbCommon"
+
+	// 网络扩展错误。
+	FAILEDOPERATION_NETWORKSCALEERROR = "FailedOperation.NetworkScaleError"
+
+	// 镜像OS不支持。
+	FAILEDOPERATION_OSNOTSUPPORT = "FailedOperation.OsNotSupport"
+
+	// 参数错误。
+	FAILEDOPERATION_PARAM = "FailedOperation.Param"
+
+	// 超过配额限制。
+	FAILEDOPERATION_QUOTAMAXCLSLIMIT = "FailedOperation.QuotaMaxClsLimit"
+
+	// 超过配额限制。
+	FAILEDOPERATION_QUOTAMAXNODLIMIT = "FailedOperation.QuotaMaxNodLimit"
+
+	// 安全组配额不足。
+	FAILEDOPERATION_QUOTAUSGLIMIT = "FailedOperation.QuotaUSGLimit"
+
 	// 子账户RBAC权限不足。
 	FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+
+	// 已有相同任务执行中。
+	FAILEDOPERATION_TASKALREADYRUNNING = "FailedOperation.TaskAlreadyRunning"
+
+	// 询价错误。
+	FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
+
+	// VPC未知错误。
+	FAILEDOPERATION_VPCUNEXPECTEDERROR = "FailedOperation.VPCUnexpectedError"
+
+	// 未发现vpc记录。
+	FAILEDOPERATION_VPCRECODRNOTFOUND = "FailedOperation.VpcRecodrNotFound"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -149,6 +248,9 @@ const (
 	// Kubernetes未知错误。
 	INTERNALERROR_KUBERNETESINTERNAL = "InternalError.KubernetesInternal"
 
+	// Kubernetes Patch操作失败。
+	INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
+
 	// 底层调用CLB未知错误。
 	INTERNALERROR_LBCOMMON = "InternalError.LbCommon"
 
@@ -245,6 +347,9 @@ const (
 	// 创建的路由与VPC下已存在的全局路由产生冲突。
 	INVALIDPARAMETER_CIDRCONFLICTWITHVPCGLOBALROUTE = "InvalidParameter.CidrConflictWithVpcGlobalRoute"
 
+	// CIDR无效。
+	INVALIDPARAMETER_CIDRINVALI = "InvalidParameter.CidrInvali"
+
 	// 参数错误，CIDR不符合规范。
 	INVALIDPARAMETER_CIDRINVALID = "InvalidParameter.CidrInvalid"
 
@@ -313,6 +418,9 @@ const (
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
+
+	// 集群状态异常。
+	RESOURCEUNAVAILABLE_CLUSTERINABNORMALSTAT = "ResourceUnavailable.ClusterInAbnormalStat"
 
 	// 集群状态不支持该操作。
 	RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"

@@ -406,6 +406,31 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+Using ops options
+
+```hcl
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  # ...your basic fields
+
+  log_agent {
+    enabled          = true
+    kubelet_root_dir = "" # optional
+  }
+
+  event_persistence {
+    enabled       = true
+    log_set_id    = "" # optional
+    log_set_topic = "" # optional
+  }
+
+  cluster_audit {
+    enabled       = true
+    log_set_id    = "" # optional
+    log_set_topic = "" # optional
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -417,6 +442,7 @@ The following arguments are supported:
 * `base_pod_num` - (Optional, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
 * `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaling. Default is false.
+* `cluster_audit` - (Optional) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional) Description of the cluster.
@@ -437,6 +463,7 @@ The following arguments are supported:
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional) Whether to enable the custom mode of node podCIDR size. Default is false.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
+* `event_persistence` - (Optional) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `exist_instance` - (Optional, ForceNew) create tke cluster by existed instances.
 * `extension_addon` - (Optional, ForceNew) Information of the add-on to be installed.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
@@ -445,6 +472,7 @@ The following arguments are supported:
 * `is_non_static_ip_mode` - (Optional, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, ForceNew) Labels of tke cluster nodes.
+* `log_agent` - (Optional) Specify cluster log agent config.
 * `managed_cluster_internet_security_policies` - (Optional) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
 * `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
@@ -465,6 +493,12 @@ The `auth_options` object supports the following:
 * `issuer` - (Optional) Specify service-account-issuer.
 * `jwks_uri` - (Optional) Specify service-account-jwks-uri.
 
+The `cluster_audit` object supports the following:
+
+* `enabled` - (Required) Specify weather the Cluster Audit enabled. NOTE: Enable Cluster Audit will also auto install Log Agent.
+* `log_set_id` - (Optional) Specify id of existing CLS log set, or auto create a new set by leave it empty.
+* `topic_id` - (Optional) Specify id of existing CLS log topic, or auto create a new topic by leave it empty.
+
 The `cluster_extra_args` object supports the following:
 
 * `kube_apiserver` - (Optional, ForceNew) The customized parameters for kube-apiserver.
@@ -481,6 +515,12 @@ The `data_disk` object supports the following:
 * `mount_target` - (Optional, ForceNew) Mount target.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
+The `event_persistence` object supports the following:
+
+* `enabled` - (Required) Specify weather the Event Persistence enabled.
+* `log_set_id` - (Optional) Specify id of existing CLS log set, or auto create a new set by leave it empty.
+* `topic_id` - (Optional) Specify id of existing CLS log topic, or auto create a new topic by leave it empty.
+
 The `exist_instance` object supports the following:
 
 * `desired_pod_numbers` - (Optional, ForceNew) Custom mode cluster, you can specify the number of pods for each node. corresponding to the existed_instances_para.instance_ids parameter.
@@ -495,6 +535,11 @@ The `extension_addon` object supports the following:
 The `instances_para` object supports the following:
 
 * `instance_ids` - (Required, ForceNew) Cluster IDs.
+
+The `log_agent` object supports the following:
+
+* `enabled` - (Required) Whether the log agent enabled.
+* `kubelet_root_dir` - (Optional) Kubelet root directory as the literal.
 
 The `master_config` object supports the following:
 
