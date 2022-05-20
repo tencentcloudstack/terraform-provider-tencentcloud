@@ -56,24 +56,24 @@ resource "tencentcloud_ckafka_instance" "foo" {
 The following arguments are supported:
 
 * `instance_name` - (Required) Instance name.
-* `subnet_id` - (Required, ForceNew) Subnet id.
-* `vpc_id` - (Required, ForceNew) Vpc id.
-* `zone_id` - (Required, ForceNew) Available zone id.
-* `band_width` - (Optional, ForceNew) Instance bandwidth in MBps.
+* `subnet_id` - (Required) Subnet id.
+* `vpc_id` - (Required) Vpc id.
+* `zone_id` - (Required) Available zone id.
+* `band_width` - (Optional) Instance bandwidth in MBps.
 * `config` - (Optional) Instance configuration.
-* `disk_size` - (Optional, ForceNew) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
-* `disk_type` - (Optional, ForceNew) Type of disk.
+* `disk_size` - (Optional) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
+* `disk_type` - (Optional) Type of disk.
 * `dynamic_retention_config` - (Optional) Dynamic message retention policy configuration.
-* `kafka_version` - (Optional, ForceNew) Kafka version (0.10.2/1.1.1/2.4.1).
+* `kafka_version` - (Optional) Kafka version (0.10.2/1.1.1/2.4.1).
 * `msg_retention_time` - (Optional) The maximum retention time of instance logs, in minutes. the default is 10080 (7 days), the maximum is 30 days, and the default 0 is not filled, which means that the log retention time recovery policy is not enabled.
-* `multi_zone_flag` - (Optional, ForceNew) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
-* `partition` - (Optional, ForceNew) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
-* `period` - (Optional, ForceNew) Prepaid purchase time, such as 1, is one month.
+* `multi_zone_flag` - (Optional) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
+* `partition` - (Optional) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
+* `period` - (Optional) Prepaid purchase time, such as 1, is one month.
 * `public_network` - (Optional) Timestamp.
 * `rebalance_time` - (Optional) Modification of the rebalancing time after upgrade.
-* `renew_flag` - (Optional, ForceNew) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
-* `tags` - (Optional, ForceNew) Partition size, the professional version does not need tag.
-* `zone_ids` - (Optional, ForceNew) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
+* `renew_flag` - (Optional) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
+* `tags` - (Optional) Partition size, the professional version does not need tag.
+* `zone_ids` - (Optional) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 
 The `config` object supports the following:
 

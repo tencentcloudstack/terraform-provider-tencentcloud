@@ -81,7 +81,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Available zone id.",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					multiZone := d.Get("multi_zone_flag").(bool)
@@ -99,19 +98,16 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Prepaid purchase time, such as 1, is one month.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Vpc id.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Subnet id.",
 			},
 			"msg_retention_time": {
@@ -125,7 +121,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			"renew_flag": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				ForceNew: true,
 				Computed: true,
 				Description: "Prepaid automatic renewal mark, 0 means the default state, the initial state," +
 					" 1 means automatic renewal, 2 means clear no automatic renewal (user setting).",
@@ -134,21 +129,18 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Kafka version (0.10.2/1.1.1/2.4.1).",
 			},
 			"band_width": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Instance bandwidth in MBps.",
 			},
 			"disk_size": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				ForceNew: true,
 				Description: "Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
 					"If it is not within the interval, the plan will cause a change when first created.",
 			},
@@ -156,20 +148,17 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				ForceNew: true,
 				Description: "Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. " +
 					"If it is not within the interval, the plan will cause a change when first created.",
 			},
 			"multi_zone_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.",
 			},
 			"zone_ids": {
 				Type:         schema.TypeSet,
 				Optional:     true,
-				ForceNew:     true,
 				Description:  "List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.",
 				RequiredWith: []string{"multi_zone_flag"},
 				Elem:         &schema.Schema{Type: schema.TypeInt},
@@ -177,7 +166,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Partition size, the professional version does not need tag.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -198,7 +186,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Type of disk.",
 			},
 			"config": {
@@ -583,6 +570,15 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	service := CkafkaService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
+	if d.HasChange("zone_id") || d.HasChange("period") || d.HasChange("vpc_id") || d.HasChange("subnet_id") ||
+		d.HasChange("renew_flag") || d.HasChange("kafka_version") || d.HasChange("multi_zone_flag") || d.HasChange("zone_ids") ||
+		d.HasChange("tags") || d.HasChange("disk_type") {
+
+		return fmt.Errorf("parms like 'zone_id | period | vpc_id | subnet_id | renew_flag | " +
+			"kafka_version | multi_zone_flag | zone_ids | tags | disk_type', do not support change now.")
+	}
+
 	instanceId := d.Id()
 	request := ckafka.NewModifyInstanceAttributesRequest()
 	request.InstanceId = &instanceId
@@ -652,6 +648,41 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	error := service.ModifyCkafkaInstanceAttributes(ctx, request)
 	if error != nil {
 		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+	}
+
+	if d.HasChange("band_width") || d.HasChange("disk_size") || d.HasChange("partition") {
+		request := ckafka.NewModifyInstancePreRequest()
+		request.InstanceId = helper.String(instanceId)
+		if v, ok := d.GetOk("band_width"); ok {
+			request.BandWidth = helper.Int64(int64(v.(int)))
+		}
+		if v, ok := d.GetOk("disk_size"); ok {
+			request.DiskSize = helper.Int64(int64(v.(int)))
+		}
+		if v, ok := d.GetOk("partition"); ok {
+			request.Partition = helper.Int64(int64(v.(int)))
+		}
+
+		_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
+		if err != nil {
+			return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+				request.GetAction(), request.ToJsonString(), err.Error())
+		}
+
+		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+			_, ready, err := service.CheckCkafkaInstanceReady(ctx, instanceId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if ready {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("upgrade ckafka instance task is processing"))
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudCkafkaInstanceRead(d, meta)

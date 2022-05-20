@@ -807,7 +807,8 @@ type CreateInstancePreRequest struct {
 	// 预付费购买时长，例如 "1m",就是一个月
 	Period *string `json:"Period,omitempty" name:"Period"`
 
-	// 实例规格，专业版默认填写1。1：入门型 ，2： 标准型，3 ：进阶型，4 ：容量型，5： 高阶型1，6：高阶性2, 7： 高阶型3,8： 高阶型4， 9 ：独占型。
+	// 实例规格说明 专业版实例[所有规格]填写1.
+	// 标准版实例 ([入门型]填写1，[标准型]填写2，[进阶型]填写3，[容量型]填写4，[高阶型1]填写5，[高阶性2]填写6,[高阶型3]填写7,[高阶型4]填写8，[独占型]填写9。
 	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
 
 	// vpcId，不填默认基础网络
@@ -825,10 +826,10 @@ type CreateInstancePreRequest struct {
 	// 预付费自动续费标记，0表示默认状态(用户未设置，即初始状态)， 1表示自动续费，2表示明确不自动续费(用户设置)
 	RenewFlag *int64 `json:"RenewFlag,omitempty" name:"RenewFlag"`
 
-	// 支持指定版本Kafka版本（0.10.2/1.1.1/2.4.1） 。指定专业版参数specificationsType=pro
+	// CKafka版本号[0.10.2、1.1.1、2.4.1], 默认是1.1.1
 	KafkaVersion *string `json:"KafkaVersion,omitempty" name:"KafkaVersion"`
 
-	// 专业版必须填写 （专业版：profession、标准版：standard） 默认是standard。专业版填profession
+	// 实例类型: [标准版实例]填写 standard(默认), [专业版实例]填写 profession
 	SpecificationsType *string `json:"SpecificationsType,omitempty" name:"SpecificationsType"`
 
 	// 磁盘大小,专业版不填写默认最小磁盘,填写后根据磁盘带宽分区数弹性计算
@@ -1211,11 +1212,14 @@ type CreateTopicRequest struct {
 	// 是否允许未同步的副本选为leader，false:不允许，true:允许，默认不允许
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 可消息选。保留时间，单位ms，当前最小值为60000ms
+	// 可选参数。消息保留时间，单位ms，当前最小值为60000ms
 	RetentionMs *int64 `json:"RetentionMs,omitempty" name:"RetentionMs"`
 
 	// Segment分片滚动的时长，单位ms，当前最小为3600000ms
 	SegmentMs *int64 `json:"SegmentMs,omitempty" name:"SegmentMs"`
+
+	// 主题消息最大值，单位为 Byte，最小值1024Byte(即1KB)，最大值为8388608Byte（即8MB）。
+	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitempty" name:"MaxMessageBytes"`
 
 	// 预设ACL规则, 1:打开  0:关闭，默认不打开
 	EnableAclRule *int64 `json:"EnableAclRule,omitempty" name:"EnableAclRule"`
@@ -1254,6 +1258,7 @@ func (r *CreateTopicRequest) FromJsonString(s string) error {
 	delete(f, "UncleanLeaderElectionEnable")
 	delete(f, "RetentionMs")
 	delete(f, "SegmentMs")
+	delete(f, "MaxMessageBytes")
 	delete(f, "EnableAclRule")
 	delete(f, "AclRuleName")
 	delete(f, "RetentionBytes")
@@ -1575,6 +1580,67 @@ func (r *DeleteInstancePreResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteInstancePreResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteRouteRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例唯一id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 路由id
+	RouteId *int64 `json:"RouteId,omitempty" name:"RouteId"`
+
+	// 调用方appId
+	CallerAppid *int64 `json:"CallerAppid,omitempty" name:"CallerAppid"`
+
+	// 删除路由时间
+	DeleteRouteTime *string `json:"DeleteRouteTime,omitempty" name:"DeleteRouteTime"`
+}
+
+func (r *DeleteRouteRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRouteRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RouteId")
+	delete(f, "CallerAppid")
+	delete(f, "DeleteRouteTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRouteRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteRouteResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回结果
+		Result *JgwOperateResponse `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteRouteResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRouteResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2282,11 +2348,14 @@ type DescribeInstancesDetailRequest struct {
 	// 匹配标签key值。
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
 
-	// 过滤器。
+	// 过滤器。filter.Name 支持('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId') ,filter.Values最多传递10个值.
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 已经废弃， 使用InstanceIdList
 	InstanceIds *string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 按照实例ID过滤
+	InstanceIdList []*string `json:"InstanceIdList,omitempty" name:"InstanceIdList"`
 }
 
 func (r *DescribeInstancesDetailRequest) ToJsonString() string {
@@ -2309,6 +2378,7 @@ func (r *DescribeInstancesDetailRequest) FromJsonString(s string) error {
 	delete(f, "TagKey")
 	delete(f, "Filters")
 	delete(f, "InstanceIds")
+	delete(f, "InstanceIdList")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstancesDetailRequest has unknown keys!", "")
 	}
@@ -2939,7 +3009,7 @@ type FetchMessageByOffsetRequest struct {
 	// 分区id
 	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
 
-	// 位点信息
+	// 位点信息，必填
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 }
 
@@ -3572,6 +3642,67 @@ func (r *ModifyInstanceAttributesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyInstancePreRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例名称
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 预计磁盘，根据磁盘步长，规格向上调整。
+	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 预计带宽，根据带宽步长，规格向上调整。
+	BandWidth *int64 `json:"BandWidth,omitempty" name:"BandWidth"`
+
+	// 预计分区，根据带宽步长，规格向上调整。
+	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
+}
+
+func (r *ModifyInstancePreRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstancePreRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "DiskSize")
+	delete(f, "BandWidth")
+	delete(f, "Partition")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstancePreRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyInstancePreResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 变更预付费实例配置返回结构
+		Result *CreateInstancePreResp `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyInstancePreResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstancePreResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyPasswordRequest struct {
 	*tchttp.BaseRequest
 
@@ -3660,7 +3791,7 @@ type ModifyTopicAttributesRequest struct {
 	// Segment 分片滚动的时长，单位：ms，当前最小为86400000ms。
 	SegmentMs *int64 `json:"SegmentMs,omitempty" name:"SegmentMs"`
 
-	// 主题消息最大值，单位为 Byte，最大值为8388608Byte（即8MB）。
+	// 主题消息最大值，单位为 Byte，最大值为12582912Byte（即12MB）。
 	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitempty" name:"MaxMessageBytes"`
 
 	// 消息删除策略，可以选择delete 或者compact
@@ -3832,7 +3963,7 @@ type Route struct {
 	// 路由ID
 	RouteId *int64 `json:"RouteId,omitempty" name:"RouteId"`
 
-	// vip网络类型（1:外网TGW  2:基础网络 3:VPC网络 4:支撑网络(标准版) 5:SSL外网访问方式访问 6:黑石环境vpc 7:支撑网络(专业版)）
+	// vip网络类型（1:外网TGW  2:基础网络 3:VPC网络 4:支撑网络(idc 环境) 5:SSL外网访问方式访问 6:黑石环境vpc 7:支撑网络(cvm 环境）
 	VipType *int64 `json:"VipType,omitempty" name:"VipType"`
 
 	// 虚拟IP列表
