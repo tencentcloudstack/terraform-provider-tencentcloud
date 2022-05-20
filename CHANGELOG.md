@@ -1,3 +1,10 @@
+## 1.72.5 (May 20, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_ckafka_instance` support upgrade config
+* resource `tencentcloud_kubernetes_cluster` support log agent/audit/event persistense
+
 ## 1.72.4 (May 18, 2022)
 
 ENHANCEMENTS:
