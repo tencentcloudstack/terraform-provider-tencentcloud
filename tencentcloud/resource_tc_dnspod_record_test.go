@@ -16,7 +16,6 @@ import (
 func TestAccTencentCloudDnspodRecord(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDnspodRecordDestroy,
 		Steps: []resource.TestStep{
@@ -24,7 +23,7 @@ func TestAccTencentCloudDnspodRecord(t *testing.T) {
 				Config: testAccTencentCloudDnspodRecord,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "mikatong.com"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "terraform.com"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
@@ -115,7 +114,7 @@ func testAccCheckDnspodRecordDestroy(s *terraform.State) error {
 
 const testAccTencentCloudDnspodRecord = `
 resource "tencentcloud_dnspod_record" "demo" {
-  domain="mikatong.com"
+  domain="terraform.com"
   record_type="A"
   record_line="默认"
   value="1.2.3.9"
