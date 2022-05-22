@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCdnDomainResource(t *testing.T) {
+func TestAccTencentCloudNeedFixCdnDomainResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
+func TestAccTencentCloudCdnNeedFixDomainWithHTTPs(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
