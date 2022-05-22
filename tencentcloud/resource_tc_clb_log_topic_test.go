@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
+func TestAccTencentCloudNeedFixClbInstanceTopic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

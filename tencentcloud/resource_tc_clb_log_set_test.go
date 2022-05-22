@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudClbLogset_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixClbLogset_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

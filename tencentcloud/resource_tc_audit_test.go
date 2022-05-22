@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudAudit_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixAudit_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -50,7 +50,7 @@ func TestAccTencentCloudAudit_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudAudit_kms(t *testing.T) {
+func TestAccTencentCloudNeedFixAudit_kms(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
