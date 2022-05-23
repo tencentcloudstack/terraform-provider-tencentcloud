@@ -43,7 +43,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixElasticsearchInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

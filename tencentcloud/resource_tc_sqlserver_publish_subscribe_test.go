@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
+func TestAccTencentCloudNeedFixSqlserverPublishSubscribeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
