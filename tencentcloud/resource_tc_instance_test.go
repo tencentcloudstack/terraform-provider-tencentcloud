@@ -206,9 +206,7 @@ func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudNeedFixInstanceWithKeyPair(t *testing.T) {
-	t.Parallel()
-
+func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
@@ -227,8 +225,11 @@ func TestAccTencentCloudNeedFixInstanceWithKeyPair(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
+				PreConfig: func() {
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+					time.Sleep(time.Duration(time.Second * 5))
+				},
+				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
