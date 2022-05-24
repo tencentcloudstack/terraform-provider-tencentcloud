@@ -17,7 +17,8 @@ func TestAccTencentCloudAsLifecycleHook(t *testing.T) {
 		CheckDestroy: testAccCheckAsLifecycleHookDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAsLifecycleHook(),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccAsLifecycleHook(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsLifecycleHookExists("tencentcloud_as_lifecycle_hook.lifecycle_hook"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_lifecycle_hook.lifecycle_hook", "scaling_group_id"),
@@ -30,7 +31,8 @@ func TestAccTencentCloudAsLifecycleHook(t *testing.T) {
 			},
 			// test update case
 			{
-				Config: testAccAsLifecycleHook_update(),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccAsLifecycleHook_update(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsLifecycleHookExists("tencentcloud_as_lifecycle_hook.lifecycle_hook"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_lifecycle_hook.lifecycle_hook", "scaling_group_id"),
