@@ -7,7 +7,6 @@ import (
 )
 
 func TestAccTencentCloudAsScalingPoliciesDataSource(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -50,7 +49,7 @@ func TestAccTencentCloudAsScalingPoliciesDataSource(t *testing.T) {
 
 //todo
 func testAccAsScalingPoliciesDataSource() string {
-	return `
+	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -60,17 +59,17 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-ds"
   image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-datasource"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0

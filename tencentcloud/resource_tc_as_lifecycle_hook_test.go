@@ -17,8 +17,7 @@ func TestAccTencentCloudAsLifecycleHook(t *testing.T) {
 		CheckDestroy: testAccCheckAsLifecycleHookDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccAsLifecycleHook(),
+				Config: testAccAsLifecycleHook(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsLifecycleHookExists("tencentcloud_as_lifecycle_hook.lifecycle_hook"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_lifecycle_hook.lifecycle_hook", "scaling_group_id"),
@@ -31,8 +30,7 @@ func TestAccTencentCloudAsLifecycleHook(t *testing.T) {
 			},
 			// test update case
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccAsLifecycleHook_update(),
+				Config: testAccAsLifecycleHook_update(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsLifecycleHookExists("tencentcloud_as_lifecycle_hook.lifecycle_hook"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_lifecycle_hook.lifecycle_hook", "scaling_group_id"),
@@ -109,13 +107,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-lifecycle-hook"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-lifecycle-hook"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
@@ -149,13 +147,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-lifecycle-hook"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-lifecycle-hook"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
