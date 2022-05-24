@@ -38,7 +38,7 @@ func TestAccTencentCloudNeedFixCdnDomainResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCdnNeedFixDomainWithHTTPs(t *testing.T) {
+func TestAccTencentCloudNeedFixCdnDomainWithHTTPs(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
