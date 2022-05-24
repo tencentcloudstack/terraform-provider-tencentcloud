@@ -12,8 +12,8 @@ import (
 
 func TestAccTencentCloudAsSchedule(t *testing.T) {
 	t.Parallel()
-	startTime := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)
-	endTime := time.Now().AddDate(0, 1, 0).Format(time.RFC3339)
+	startTime := time.Now().AddDate(0, 0, 1).Format("2006-01-02T15:04:05+08:00")
+	endTime := time.Now().AddDate(0, 1, 0).Format("2006-01-02T15:04:05+08:00")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
