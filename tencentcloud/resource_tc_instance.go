@@ -1236,7 +1236,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		ov := o.([]interface{})
 		nv := n.([]interface{})
 
-		if len(nv) != len(nv) {
+		if len(ov) != len(nv) {
 			return fmt.Errorf("error: data disk count has changed (%d -> %d) but doesn't support add or remove for now", len(ov), len(nv))
 		}
 
