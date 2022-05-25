@@ -323,27 +323,41 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
 	request.RegistryId = helper.String(d.Id())
-	response, err := client.UseTCRClient().DescribeSecurityPolicies(request)
-	if err == nil {
-		if response.Response.SecurityPolicySet != nil {
-			securityPolicySet := response.Response.SecurityPolicySet
-			policies := make([]interface{}, 0, len(securityPolicySet))
-			for i := range securityPolicySet {
-				item := securityPolicySet[i]
-				policy := make(map[string]interface{})
-				policy["cidr_block"] = *item.CidrBlock
-				policy["description"] = *item.Description
-				policy["index"] = *item.PolicyIndex
-				policy["version"] = *item.PolicyVersion
-				policies = append(policies, policy)
+	var securityPolicySet []*tcr.SecurityPolicy
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		policySet, inErr := tcrService.DescribeSecurityPolicies(ctx, request)
+		if inErr != nil && publicStatus != "Closed" {
+			expectedErr := ""
+			if publicStatus == "Opening" {
+				expectedErr = tcr.RESOURCENOTFOUND
 			}
-			if err := d.Set("security_policy", policies); err != nil {
-				return err
-			}
+			return retryError(inErr, expectedErr)
 		}
-	} else {
+		securityPolicySet = policySet
+		return nil
+	})
+
+	if err != nil {
 		_ = d.Set("security_policy", make([]interface{}, 0))
 		log.Printf("[WARN] %s error: %s", request.GetAction(), err.Error())
+	}
+
+	policies := make([]interface{}, 0, len(securityPolicySet))
+
+	for i := range securityPolicySet {
+		item := securityPolicySet[i]
+		policy := make(map[string]interface{})
+		policy["cidr_block"] = *item.CidrBlock
+		policy["description"] = *item.Description
+		policy["index"] = *item.PolicyIndex
+		policy["version"] = *item.PolicyVersion
+		policies = append(policies, policy)
+	}
+
+	err = d.Set("security_policy", policies)
+	if err != nil {
+		return err
 	}
 
 	tags := make(map[string]string, len(instance.TagSpecification.Tags))

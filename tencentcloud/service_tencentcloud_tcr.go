@@ -104,6 +104,33 @@ func (me *TCRService) DescribeExternalEndpointStatus(ctx context.Context, instan
 	return
 }
 
+func (me *TCRService) DescribeSecurityPolicies(ctx context.Context, request *tcr.DescribeSecurityPoliciesRequest) (policies []*tcr.SecurityPolicy, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DescribeSecurityPolicies(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.SecurityPolicySet != nil {
+		policies = response.Response.SecurityPolicySet
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *TCRService) DescribeTCRInstanceById(ctx context.Context, instanceId string) (instance *tcr.Registry, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewDescribeInstancesRequest()

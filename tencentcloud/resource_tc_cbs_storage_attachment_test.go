@@ -87,9 +87,16 @@ func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCbsStorageAttachmentConfig = presetCVM + `
+const testAccCbsStorageAttachmentConfig = defaultAzVariable + defaultImages + `
+resource "tencentcloud_instance" "test_cbs_attach" {
+  instance_name     = "test-cbs-attach-cvm"
+  availability_zone = var.default_az
+  image_id          = var.default_img_id
+  system_disk_type  = "CLOUD_PREMIUM"
+}
+
 resource "tencentcloud_cbs_storage" "foo" {
-  availability_zone = local.cvm_az
+  availability_zone = var.default_az
   storage_size      = 100
   storage_type      = "CLOUD_PREMIUM"
   storage_name      = "test-cbs-attachment"
@@ -98,6 +105,6 @@ resource "tencentcloud_cbs_storage" "foo" {
 
 resource "tencentcloud_cbs_storage_attachment" "foo" {
   storage_id  = tencentcloud_cbs_storage.foo.id
-  instance_id = local.cvm_id
+  instance_id = tencentcloud_instance.test_cbs_attach.id
 }
 `
