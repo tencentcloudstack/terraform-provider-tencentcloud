@@ -111,19 +111,18 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 func TestAccTencentCloudNeedFixMongodbInstanceResourcePrepaid(t *testing.T) {
 	// Avoid to set Parallel to make sure EnvVar secure
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMongodbInstanceDestroy,
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMongodbInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "memory"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "volume"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "engine_version"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "machine_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "memory"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "volume"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "engine_version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "machine_type"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb_prepaid", "status"),
@@ -147,10 +146,10 @@ func TestAccTencentCloudNeedFixMongodbInstanceResourcePrepaid(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
+				ResourceName:            "tencentcloud_mongodb_instance.mongodb_prepaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
+				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag", "prepaid_period"},
 			},
 		},
 	})

@@ -96,6 +96,12 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		projectId             = d.Get("project_id").(int)
 	)
 
+	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
+		password = v.(string)
+	} else {
+		return fmt.Errorf("`password` cannot be empty when creating")
+	}
+
 	if machine == MONGODB_MACHINE_TYPE_GIO {
 		machine = MONGODB_MACHINE_TYPE_HIO
 	} else if machine == MONGODB_MACHINE_TYPE_TGIO {

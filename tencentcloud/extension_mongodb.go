@@ -146,7 +146,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		},
 		"password": {
 			Type:        schema.TypeString,
-			Required:    true,
+			Optional:    true,
 			Sensitive:   true,
 			Description: "Password of this Mongodb account.",
 		},

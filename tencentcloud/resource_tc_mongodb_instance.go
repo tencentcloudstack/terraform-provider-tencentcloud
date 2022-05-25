@@ -93,15 +93,21 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		mongoVersionInterface = d.Get("engine_version").(string)
 		zoneInterface         = d.Get("available_zone").(string)
 		machine               = d.Get("machine_type").(string)
-		password              = d.Get("password").(string)
 		instanceType          = MONGO_INSTANCE_TYPE_FORMAL
 		projectId             = d.Get("project_id").(int)
+		password              string
 	)
 
 	if machine == MONGODB_MACHINE_TYPE_GIO {
 		machine = MONGODB_MACHINE_TYPE_HIO
 	} else if machine == MONGODB_MACHINE_TYPE_TGIO {
 		machine = MONGODB_MACHINE_TYPE_HIO10G
+	}
+
+	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
+		password = v.(string)
+	} else {
+		return fmt.Errorf("`password` cannot be empty when creating")
 	}
 
 	getType := reflect.TypeOf(requestInter)
