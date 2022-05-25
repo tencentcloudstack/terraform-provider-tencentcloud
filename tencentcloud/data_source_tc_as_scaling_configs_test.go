@@ -42,7 +42,6 @@ func TestAccTencentCloudAsScalingConfigsDataSource_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudAsScalingConfigsDataSource_full(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

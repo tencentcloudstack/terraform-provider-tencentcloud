@@ -91,7 +91,7 @@ func testAccCheckAsAttachmentDestroy(s *terraform.State) error {
 }
 
 func testAccAsAttachment() string {
-	return `
+	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -101,13 +101,13 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-attachment-config"
   image_id           = "img-2lr9q49h"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
@@ -121,9 +121,9 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 
 resource "tencentcloud_instance" "cvm_instance" {
   instance_name     = "tf_as_instance"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
   image_id          = "img-2lr9q49h"
-  instance_type     = "SA1.SMALL1"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
@@ -137,7 +137,7 @@ resource "tencentcloud_as_attachment" "attachment" {
 }
 
 func testAccAsAttachment_update() string {
-	return `
+	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -147,13 +147,13 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-attachment-config"
   image_id           = "img-2lr9q49h"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
@@ -167,9 +167,9 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 
 resource "tencentcloud_instance" "cvm_instance" {
   instance_name     = "tf_as_instance"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
   image_id          = "img-2lr9q49h"
-  instance_type     = "SA1.SMALL1"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
@@ -177,9 +177,9 @@ resource "tencentcloud_instance" "cvm_instance" {
 
 resource "tencentcloud_instance" "cvm_instance_1" {
   instance_name     = "tf_as_instance_1"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
   image_id          = "img-2lr9q49h"
-  instance_type     = "SA1.SMALL1"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_SSD"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id

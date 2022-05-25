@@ -133,6 +133,22 @@ variable "snap_id" {
 }
 `
 
+// AS
+const defaultAsVariable = `
+variable "availability_zone" {
+  default = "` + defaultCvmAZone + `"
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "zone"
+    values = [var.availability_zone]
+  }
+  cpu_core_count = 2
+  exclude_sold_out = true
+}
+`
+
 //ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"

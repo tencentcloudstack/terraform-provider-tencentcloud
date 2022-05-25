@@ -107,13 +107,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-lifecycle-hook"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-lifecycle-hook"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
@@ -147,13 +147,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-lifecycle-hook"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-lifecycle-hook"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0

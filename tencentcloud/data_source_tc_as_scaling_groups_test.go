@@ -19,7 +19,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsScalingGroupExists("tencentcloud_as_scaling_group.scaling_group"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.scaling_group_name", "tf-as-group"),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.scaling_group_name", "tf-as-group-ds-basic"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.configuration_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.max_size", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.min_size", "0"),
@@ -29,7 +29,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.create_time"),
 
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.scaling_group_name", "tf-as-group"),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.scaling_group_name", "tf-as-group-ds-basic"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.configuration_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.max_size", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.min_size", "0"),
@@ -66,7 +66,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_full(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsScalingGroupExists("tencentcloud_as_scaling_group.scaling_group"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.scaling_group_name", "tf-as-group"),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.scaling_group_name", "tf-as-group-ds-full"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.configuration_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.max_size", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups", "scaling_group_list.0.min_size", "0"),
@@ -88,7 +88,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_full(t *testing.T) {
 
 // todo
 func testAccAsScalingGroupsDataSource_basic() string {
-	return `
+	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -98,17 +98,17 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-ds-basic"
   image_id           = "img-2lr9q49h"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-group"
+  scaling_group_name = "tf-as-group-ds-basic"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
@@ -135,7 +135,7 @@ data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
 }
 
 func testAccAsScalingGroupsDataSource_full() string {
-	return `
+	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -145,17 +145,17 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-ds-full"
   image_id           = "img-2lr9q49h"
-  instance_types     = ["SA1.SMALL1"]
+  instance_types     = [data.tencentcloud_instance_types.default.instance_types.0.instance_type]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name   = "tf-as-group"
+  scaling_group_name   = "tf-as-group-ds-full"
   configuration_id     = tencentcloud_as_scaling_config.launch_configuration.id
   max_size             = 1
   min_size             = 0

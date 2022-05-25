@@ -10,7 +10,6 @@ import (
 )
 
 func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -95,7 +94,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 func TestAccTencentCloudAsScalingConfig_charge(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckAsScalingConfigDestroy,
 		Steps: []resource.TestStep{
@@ -251,7 +250,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 func testAccAsScalingConfig_charge() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-basic"
+	configuration_name = "tf-as-basic-charge"
 	image_id = "img-2lr9q49h"
 	instance_types = ["SA1.SMALL1"]
 	instance_charge_type = "POSTPAID_BY_HOUR"
@@ -262,7 +261,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 func testAccAsScalingConfig_charge_spot() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-basic"
+	configuration_name = "tf-as-basic-charge-spot"
 	image_id = "img-2lr9q49h"
 	instance_types = ["SA1.SMALL1"]
 	instance_charge_type = "SPOTPAID"
@@ -275,7 +274,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 func testAccAsScalingConfig_charge_perpaid() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-basic"
+	configuration_name = "tf-as-basic-charge-perpaid"
 	image_id = "img-2lr9q49h"
 	instance_types = ["SA1.SMALL1"]
 	instance_charge_type = "PREPAID"

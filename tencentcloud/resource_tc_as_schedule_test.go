@@ -12,8 +12,8 @@ import (
 
 func TestAccTencentCloudAsSchedule(t *testing.T) {
 	t.Parallel()
-	startTime := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)
-	endTime := time.Now().AddDate(0, 1, 0).Format(time.RFC3339)
+	startTime := time.Now().AddDate(0, 0, 1).Format("2006-01-02T15:04:05+08:00")
+	endTime := time.Now().AddDate(0, 1, 0).Format("2006-01-02T15:04:05+08:00")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -112,13 +112,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-schedule"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-schedule"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
@@ -154,13 +154,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
+  configuration_name = "tf-as-configuration-schedule"
   image_id           = "img-9qabwvbn"
   instance_types     = ["SA1.SMALL1"]
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-scaling-group"
+  scaling_group_name = "tf-as-scaling-group-schedule"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
