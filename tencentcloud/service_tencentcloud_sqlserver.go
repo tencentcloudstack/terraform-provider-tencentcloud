@@ -1320,6 +1320,11 @@ func (me *SqlserverService) RecycleDBInstance(ctx context.Context, instanceId st
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseSqlserverClient().RecycleDBInstance(request)
 		if err != nil {
+			// FIXME: if action offline then kill this function
+			code := err.(*SDKErrors.TencentCloudSDKError).Code
+			if code == "InvalidAction" {
+				return nil
+			}
 			return retryError(err)
 		}
 		return nil

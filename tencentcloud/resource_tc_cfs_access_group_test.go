@@ -31,7 +31,7 @@ func init() {
 			for i := range groups {
 				id := *groups[i].PGroupId
 				name := *groups[i].Name
-				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "pgroup-") {
+				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
 					continue
 				}
 				if err := service.DeleteAccessGroup(ctx, id); err != nil {

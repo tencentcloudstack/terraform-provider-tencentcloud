@@ -20,11 +20,20 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 查询对象存储失败。
+	FAILEDOPERATION_COSERROR = "FailedOperation.CosError"
+
 	// 获取上传配置信息错误。
 	FAILEDOPERATION_COSPROPERTIESERROR = "FailedOperation.CosPropertiesError"
 
 	// 创建订单失败。
 	FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+
+	// 数据库错误。
+	FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+
+	// 操作失败或者网络超时。
+	FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 
 	// 获取VPC网络信息失败。
 	FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
@@ -40,6 +49,9 @@ const (
 
 	// 安全组操作失败。
 	FAILEDOPERATION_SECURITYGROUPOPERATIONERROR = "FailedOperation.SecurityGroupOperationError"
+
+	// 操作网络失败或者超时。
+	FAILEDOPERATION_VPCERROR = "FailedOperation.VPCError"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -104,6 +116,9 @@ const (
 	// 账户备注内容不合法。
 	INVALIDPARAMETERVALUE_ACCOUNTREMARKISILLEGAL = "InvalidParameterValue.AccountRemarkIsIllegal"
 
+	// 管理员账号只能申请一个。
+	INVALIDPARAMETERVALUE_ADMINACCOUNTNOTUNIQUE = "InvalidParameterValue.AdminAccountNotUnique"
+
 	// 备份名称存在非法字符。
 	INVALIDPARAMETERVALUE_BACKUPNAMEISILLEGAL = "InvalidParameterValue.BackupNameIsIllegal"
 
@@ -127,6 +142,9 @@ const (
 
 	// 数据库名称不允许是保留字。
 	INVALIDPARAMETERVALUE_DBNAMEISKEYWRODS = "InvalidParameterValue.DBNameIsKeyWrods"
+
+	// 数据库名称不能为空。
+	INVALIDPARAMETERVALUE_DBNAMENOTNULL = "InvalidParameterValue.DBNameNotNull"
 
 	// 数据库重命名名称一样。
 	INVALIDPARAMETERVALUE_DBNAMESAME = "InvalidParameterValue.DBNameSame"
@@ -154,6 +172,12 @@ const (
 
 	// 迁移名称包含非法字符。
 	INVALIDPARAMETERVALUE_MIGRATIONNAMEISILLEGAL = "InvalidParameterValue.MigrationNameIsIllegal"
+
+	// 可选参数[enable, disable]。
+	INVALIDPARAMETERVALUE_MODIFYTYPEVALUEINVALID = "InvalidParameterValue.ModifyTypeValueInvalid"
+
+	// 是CVM类型。
+	INVALIDPARAMETERVALUE_ONCVMTYPENOTSUPPORTED = "InvalidParameterValue.OnCvmTypeNotSupported"
 
 	// 参数类型错误。
 	INVALIDPARAMETERVALUE_PARAMETERTYPEERROR = "InvalidParameterValue.ParameterTypeError"
@@ -206,6 +230,9 @@ const (
 	// 实例不存在。
 	RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 
+	// 参数未找到。
+	RESOURCENOTFOUND_PARAMSNOTFOUND = "ResourceNotFound.ParamsNotFound"
+
 	// VPC网络不存在。
 	RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
 
@@ -230,6 +257,9 @@ const (
 	// 实例状态无效。
 	RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 
+	// 不支持只读实例。
+	RESOURCEUNAVAILABLE_NOTSUPPORTROINSTANCE = "ResourceUnavailable.NotSupportRoInstance"
+
 	// VPC不存在。
 	RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
 
@@ -241,6 +271,9 @@ const (
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 不支持重复操作。
+	UNSUPPORTEDOPERATION_NOTSUPPORTREPEAT = "UnsupportedOperation.NotSupportRepeat"
 
 	// 上传类型错误。
 	UNSUPPORTEDOPERATION_UPLOADTYPEERROR = "UnsupportedOperation.UploadTypeError"
