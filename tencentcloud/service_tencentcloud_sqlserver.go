@@ -1313,12 +1313,10 @@ func (me *SqlserverService) RecycleDBInstance(ctx context.Context, instanceId st
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-
-	var response *sqlserver.RecycleDBInstanceResponse
 	var err error
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = me.client.UseSqlserverClient().RecycleDBInstance(request)
+		_, err = me.client.UseSqlserverClient().RecycleDBInstance(request)
 		if err != nil {
 			// FIXME: if action offline then kill this function
 			code := err.(*SDKErrors.TencentCloudSDKError).Code
@@ -1331,16 +1329,6 @@ func (me *SqlserverService) RecycleDBInstance(ctx context.Context, instanceId st
 	})
 	if err != nil {
 		return err
-	}
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-		return
-	}
-
-	flowId := *response.Response.FlowId
-	err = me.WaitForTaskFinish(ctx, flowId)
-	if err != nil {
-		errRet = err
 	}
 	return
 }
