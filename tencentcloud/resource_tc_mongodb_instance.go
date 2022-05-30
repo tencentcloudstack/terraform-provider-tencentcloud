@@ -30,7 +30,6 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"reflect"
@@ -291,10 +290,12 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	client := meta.(*TencentCloudClient).apiV3Conn
 
 	instanceId := d.Id()
 
-	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mongodbService := MongodbService{client}
+	tagService := TagService{client}
 	instance, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -358,20 +359,8 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	}
 	_ = d.Set("standby_instance_list", standbyInsList)
 
-	tags := make(map[string]string, len(instance.Tags))
-	for _, tag := range instance.Tags {
-		if tag.TagKey == nil {
-			return errors.New("mongodb tag key is nil")
-		}
-		if tag.TagValue == nil {
-			return errors.New("mongodb tag value is nil")
-		}
-		if *tag.TagKey == "project" {
-			continue
-		}
+	tags, err := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
 
-		tags[*tag.TagKey] = *tag.TagValue
-	}
 	_ = d.Set("tags", tags)
 
 	return nil

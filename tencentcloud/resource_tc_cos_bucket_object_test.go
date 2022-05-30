@@ -250,7 +250,7 @@ resource "tencentcloud_cos_bucket_object" "object_storage" {
 func testAccCosBucketObject_acl(appid, acl string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-  bucket = "tf-bucket-acl-%s"
+  bucket = "tf-bucket-obj-acl-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_acl" {
