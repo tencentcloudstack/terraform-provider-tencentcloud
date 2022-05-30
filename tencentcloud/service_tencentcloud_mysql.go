@@ -1108,7 +1108,7 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 }
 
 func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
-	memSize, cpu, volumeSize int64) (asyncRequestId string, errRet error) {
+	memSize, cpu, volumeSize, fastUpgrade int64) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
@@ -1120,6 +1120,7 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 	request.Cpu = &cpu
 	request.Volume = &volumeSize
 	request.WaitSwitch = &waitSwitch
+	request.FastUpgrade = &fastUpgrade
 
 	defer func() {
 		if errRet != nil {

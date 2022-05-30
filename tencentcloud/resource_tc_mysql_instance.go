@@ -175,7 +175,16 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			},
 			Description: "Security groups to use.",
 		},
-
+		"param_template_id": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Specify parameter template id.",
+		},
+		"fast_upgrade": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.",
+		},
 		"tags": {
 			Type:        schema.TypeMap,
 			Optional:    true,
@@ -428,6 +437,15 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByMonth.SecurityGroup = requestSecurityGroup
 		} else {
 			requestByUse.SecurityGroup = requestSecurityGroup
+		}
+	}
+
+	if v, ok := d.GetOk("param_template_id"); ok {
+		paramTemplateId := helper.IntInt64(v.(int))
+		if okByMonth {
+			requestByMonth.ParamTemplateId = paramTemplateId
+		} else {
+			requestByUse.ParamTemplateId = paramTemplateId
 		}
 	}
 	return nil
@@ -1003,8 +1021,12 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		memSize := int64(d.Get("mem_size").(int))
 		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
+		fastUpgrade := int64(0)
+		if v, ok := d.GetOk("fast_upgrade"); ok {
+			fastUpgrade = int64(v.(int))
+		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize)
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade)
 
 		if err != nil {
 			return err
@@ -1094,6 +1116,9 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		d.SetPartial("tags")
 	}
 
+	if d.HasChange("param_template_id") {
+		return fmt.Errorf("argument `param_template_id` cannot be modified for now")
+	}
 	return nil
 }
 
