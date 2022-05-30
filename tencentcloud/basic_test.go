@@ -631,15 +631,15 @@ variable "tke_cidr_c" {
 const TkeInstanceType = `
 data "tencentcloud_instance_types" "ins_type" {
   availability_zone = "` + defaultCvmAZone + `"
-  cpu_core_count    = 1
-  memory_size       = 2
+  cpu_core_count    = 2
   exclude_sold_out  = true
 }
 
 locals {
   ins_az = "` + defaultCvmAZone + `"
-  type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][0].instance_type
-  type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][1].instance_type
+  type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"]
+  type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i]
+  final_type = concat(local.type1, local.type2)[0].instance_type
 }
 `
 

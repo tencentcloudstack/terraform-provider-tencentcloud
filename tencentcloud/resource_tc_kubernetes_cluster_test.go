@@ -218,23 +218,6 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 	}
 }
 
-// If test environment change, make sure to attach Tke access cls permission
-// We will not apply/destroy frequently
-const TkeAccessClsRole = `
-data "tencentcloud_cam_roles" "tke" {
-  name = "TKE_QCSRole"
-}
-
-data "tencentcloud_cam_policies" "cls" {
-  name = "QcloudCLSFullAccess"
-}
-
-resource "tencentcloud_cam_role_policy_attachment" "tke_cls" {
-  policy_id = data.tencentcloud_cam_policies.cls.policy_list.0.policy_id
-  role_id   = data.tencentcloud_cam_roles.tke.role_list.0.role_id
-}
-`
-
 const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
 
 const testAccTkeCluster = TkeDeps + `
@@ -258,7 +241,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone
-    instance_type              = local.type1
+    instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -321,7 +304,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.availability_zone
-    instance_type              = local.type1
+    instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
