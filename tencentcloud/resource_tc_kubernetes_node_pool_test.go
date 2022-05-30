@@ -234,7 +234,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_project_id = "` + defaultProjectId + `"
 
   auto_scaling_config {
-    instance_type      = local.type1
+    instance_type      = local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
@@ -292,7 +292,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies 	   = ["NEWEST_INSTANCE"]
 
   auto_scaling_config {
-    instance_type      = local.type1
+    instance_type      = local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
