@@ -571,6 +571,68 @@ func (r *CreateGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateOIDCConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 身份提供商URL
+	IdentityUrl *string `json:"IdentityUrl,omitempty" name:"IdentityUrl"`
+
+	// 签名公钥，需要base64
+	IdentityKey *string `json:"IdentityKey,omitempty" name:"IdentityKey"`
+
+	// 客户端ID
+	ClientId []*string `json:"ClientId,omitempty" name:"ClientId"`
+
+	// 名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
+func (r *CreateOIDCConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOIDCConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "IdentityUrl")
+	delete(f, "IdentityKey")
+	delete(f, "ClientId")
+	delete(f, "Name")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOIDCConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateOIDCConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateOIDCConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOIDCConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreatePolicyRequest struct {
 	*tchttp.BaseRequest
 
@@ -703,6 +765,9 @@ type CreateRoleRequest struct {
 
 	// 申请角色临时密钥的最长有效期限制(范围：0~43200)
 	SessionDuration *uint64 `json:"SessionDuration,omitempty" name:"SessionDuration"`
+
+	// 角色绑定标签
+	Tags []*RoleTags `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateRoleRequest) ToJsonString() string {
@@ -722,6 +787,7 @@ func (r *CreateRoleRequest) FromJsonString(s string) error {
 	delete(f, "Description")
 	delete(f, "ConsoleLogin")
 	delete(f, "SessionDuration")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRoleRequest has unknown keys!", "")
 	}
@@ -820,6 +886,9 @@ type CreateServiceLinkedRoleRequest struct {
 
 	// 角色说明。
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 角色绑定标签。
+	Tags []*RoleTags `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateServiceLinkedRoleRequest) ToJsonString() string {
@@ -837,6 +906,7 @@ func (r *CreateServiceLinkedRoleRequest) FromJsonString(s string) error {
 	delete(f, "QCSServiceName")
 	delete(f, "CustomSuffix")
 	delete(f, "Description")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServiceLinkedRoleRequest has unknown keys!", "")
 	}
@@ -1034,6 +1104,52 @@ func (r *DeleteGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteOIDCConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// OIDC身份提供商名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+func (r *DeleteOIDCConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteOIDCConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteOIDCConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteOIDCConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteOIDCConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteOIDCConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1424,6 +1540,73 @@ func (r *DeleteUserResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeOIDCConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+func (r *DescribeOIDCConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOIDCConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOIDCConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeOIDCConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 身份提供商类型 11角色身份提供商
+		ProviderType *uint64 `json:"ProviderType,omitempty" name:"ProviderType"`
+
+		// 身份提供商URL
+		IdentityUrl *string `json:"IdentityUrl,omitempty" name:"IdentityUrl"`
+
+		// 签名公钥
+		IdentityKey *string `json:"IdentityKey,omitempty" name:"IdentityKey"`
+
+		// 客户端id
+		ClientId []*string `json:"ClientId,omitempty" name:"ClientId"`
+
+		// 状态：0:未设置，11:已开启，2:已禁用
+		Status *uint64 `json:"Status,omitempty" name:"Status"`
+
+		// 描述
+		Description *string `json:"Description,omitempty" name:"Description"`
+
+		// 名称
+		Name *string `json:"Name,omitempty" name:"Name"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeOIDCConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOIDCConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeRoleListRequest struct {
 	*tchttp.BaseRequest
 
@@ -1432,6 +1615,9 @@ type DescribeRoleListRequest struct {
 
 	// 每页行数，不能大于200
 	Rp *uint64 `json:"Rp,omitempty" name:"Rp"`
+
+	// 标签筛选
+	Tags []*RoleTags `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *DescribeRoleListRequest) ToJsonString() string {
@@ -1448,6 +1634,7 @@ func (r *DescribeRoleListRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Page")
 	delete(f, "Rp")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRoleListRequest has unknown keys!", "")
 	}
@@ -4151,6 +4338,19 @@ type RoleInfo struct {
 	// 服务相关角色删除TaskId
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeletionTaskId *string `json:"DeletionTaskId,omitempty" name:"DeletionTaskId"`
+
+	// 标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*RoleTags `json:"Tags,omitempty" name:"Tags"`
+}
+
+type RoleTags struct {
+
+	// 标签键
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 标签值
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type SAMLProviderInfo struct {
@@ -4404,6 +4604,114 @@ type SubAccountUser struct {
 	LastLoginTime *string `json:"LastLoginTime,omitempty" name:"LastLoginTime"`
 }
 
+type TagRoleRequest struct {
+	*tchttp.BaseRequest
+
+	// 标签
+	Tags []*RoleTags `json:"Tags,omitempty" name:"Tags"`
+
+	// 角色名，与角色ID至少输入一个
+	RoleName *string `json:"RoleName,omitempty" name:"RoleName"`
+
+	// 角色ID，与角色名至少输入一个
+	RoleId *string `json:"RoleId,omitempty" name:"RoleId"`
+}
+
+func (r *TagRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TagRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Tags")
+	delete(f, "RoleName")
+	delete(f, "RoleId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TagRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type TagRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *TagRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TagRoleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UntagRoleRequest struct {
+	*tchttp.BaseRequest
+
+	// 标签键
+	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
+
+	// 角色名，与角色ID至少输入一个
+	RoleName *string `json:"RoleName,omitempty" name:"RoleName"`
+
+	// 角色ID，与角色名至少输入一个
+	RoleId *string `json:"RoleId,omitempty" name:"RoleId"`
+}
+
+func (r *UntagRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UntagRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TagKeys")
+	delete(f, "RoleName")
+	delete(f, "RoleId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UntagRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UntagRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UntagRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UntagRoleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type UpdateAssumeRolePolicyRequest struct {
 	*tchttp.BaseRequest
 
@@ -4509,6 +4817,68 @@ func (r *UpdateGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateOIDCConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 身份提供商URL
+	IdentityUrl *string `json:"IdentityUrl,omitempty" name:"IdentityUrl"`
+
+	// 签名公钥，需要base64
+	IdentityKey *string `json:"IdentityKey,omitempty" name:"IdentityKey"`
+
+	// 客户端ID
+	ClientId []*string `json:"ClientId,omitempty" name:"ClientId"`
+
+	// 名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+}
+
+func (r *UpdateOIDCConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateOIDCConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "IdentityUrl")
+	delete(f, "IdentityKey")
+	delete(f, "ClientId")
+	delete(f, "Name")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateOIDCConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateOIDCConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateOIDCConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateOIDCConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
