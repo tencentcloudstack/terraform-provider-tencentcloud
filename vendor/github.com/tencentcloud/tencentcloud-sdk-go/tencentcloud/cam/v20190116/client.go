@@ -444,6 +444,63 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     return
 }
 
+func NewCreateOIDCConfigRequest() (request *CreateOIDCConfigRequest) {
+    request = &CreateOIDCConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "CreateOIDCConfig")
+    
+    
+    return
+}
+
+func NewCreateOIDCConfigResponse() (response *CreateOIDCConfigResponse) {
+    response = &CreateOIDCConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateOIDCConfig
+// 创建角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
+//  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
+//  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  LIMITEXCEEDED_IDENTITYFULL = "LimitExceeded.IdentityFull"
+func (c *Client) CreateOIDCConfig(request *CreateOIDCConfigRequest) (response *CreateOIDCConfigResponse, err error) {
+    return c.CreateOIDCConfigWithContext(context.Background(), request)
+}
+
+// CreateOIDCConfig
+// 创建角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
+//  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
+//  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  LIMITEXCEEDED_IDENTITYFULL = "LimitExceeded.IdentityFull"
+func (c *Client) CreateOIDCConfigWithContext(ctx context.Context, request *CreateOIDCConfigRequest) (response *CreateOIDCConfigResponse, err error) {
+    if request == nil {
+        request = NewCreateOIDCConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOIDCConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOIDCConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreatePolicyRequest() (request *CreatePolicyRequest) {
     request = &CreatePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -687,6 +744,7 @@ func NewCreateRoleResponse() (response *CreateRoleResponse) {
 // 本接口（CreateRole）用于创建角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
 //  INVALIDPARAMETER_ACTIONMISS = "InvalidParameter.ActionMiss"
@@ -706,6 +764,8 @@ func NewCreateRoleResponse() (response *CreateRoleResponse) {
 //  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
 //  INVALIDPARAMETER_ROLENAMEINUSE = "InvalidParameter.RoleNameInUse"
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) CreateRole(request *CreateRoleRequest) (response *CreateRoleResponse, err error) {
@@ -716,6 +776,7 @@ func (c *Client) CreateRole(request *CreateRoleRequest) (response *CreateRoleRes
 // 本接口（CreateRole）用于创建角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
 //  INVALIDPARAMETER_ACTIONMISS = "InvalidParameter.ActionMiss"
@@ -735,6 +796,8 @@ func (c *Client) CreateRole(request *CreateRoleRequest) (response *CreateRoleRes
 //  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
 //  INVALIDPARAMETER_ROLENAMEINUSE = "InvalidParameter.RoleNameInUse"
 //  INVALIDPARAMETER_STATEMENTERROR = "InvalidParameter.StatementError"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  INVALIDPARAMETER_VERSIONERROR = "InvalidParameter.VersionError"
 func (c *Client) CreateRoleWithContext(ctx context.Context, request *CreateRoleRequest) (response *CreateRoleResponse, err error) {
@@ -829,11 +892,21 @@ func NewCreateServiceLinkedRoleResponse() (response *CreateServiceLinkedRoleResp
 // 创建服务相关角色
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INVALIDPARAMETER_CONDITIONCONTENTERROR = "InvalidParameter.ConditionContentError"
+//  INVALIDPARAMETER_CONDITIONERROR = "InvalidParameter.ConditionError"
+//  INVALIDPARAMETER_CONDITIONTYPEERROR = "InvalidParameter.ConditionTypeError"
 //  INVALIDPARAMETER_DESCRIPTIONLENGTHOVERLIMIT = "InvalidParameter.DescriptionLengthOverlimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
 //  INVALIDPARAMETER_ROLENAMEINUSE = "InvalidParameter.RoleNameInUse"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) CreateServiceLinkedRole(request *CreateServiceLinkedRoleRequest) (response *CreateServiceLinkedRoleResponse, err error) {
     return c.CreateServiceLinkedRoleWithContext(context.Background(), request)
 }
@@ -842,11 +915,21 @@ func (c *Client) CreateServiceLinkedRole(request *CreateServiceLinkedRoleRequest
 // 创建服务相关角色
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INVALIDPARAMETER_CONDITIONCONTENTERROR = "InvalidParameter.ConditionContentError"
+//  INVALIDPARAMETER_CONDITIONERROR = "InvalidParameter.ConditionError"
+//  INVALIDPARAMETER_CONDITIONTYPEERROR = "InvalidParameter.ConditionTypeError"
 //  INVALIDPARAMETER_DESCRIPTIONLENGTHOVERLIMIT = "InvalidParameter.DescriptionLengthOverlimit"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
+//  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
 //  INVALIDPARAMETER_ROLENAMEINUSE = "InvalidParameter.RoleNameInUse"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) CreateServiceLinkedRoleWithContext(ctx context.Context, request *CreateServiceLinkedRoleRequest) (response *CreateServiceLinkedRoleResponse, err error) {
     if request == nil {
         request = NewCreateServiceLinkedRoleRequest()
@@ -990,6 +1073,7 @@ func NewDeleteGroupResponse() (response *DeleteGroupResponse) {
 // 删除用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) DeleteGroup(request *DeleteGroupRequest) (response *DeleteGroupResponse, err error) {
     return c.DeleteGroupWithContext(context.Background(), request)
@@ -999,6 +1083,7 @@ func (c *Client) DeleteGroup(request *DeleteGroupRequest) (response *DeleteGroup
 // 删除用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGroupRequest) (response *DeleteGroupResponse, err error) {
     if request == nil {
@@ -1012,6 +1097,55 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     request.SetContext(ctx)
     
     response = NewDeleteGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteOIDCConfigRequest() (request *DeleteOIDCConfigRequest) {
+    request = &DeleteOIDCConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "DeleteOIDCConfig")
+    
+    
+    return
+}
+
+func NewDeleteOIDCConfigResponse() (response *DeleteOIDCConfigResponse) {
+    response = &DeleteOIDCConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteOIDCConfig
+// 删除OIDC身份提供商
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) DeleteOIDCConfig(request *DeleteOIDCConfigRequest) (response *DeleteOIDCConfigResponse, err error) {
+    return c.DeleteOIDCConfigWithContext(context.Background(), request)
+}
+
+// DeleteOIDCConfig
+// 删除OIDC身份提供商
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) DeleteOIDCConfigWithContext(ctx context.Context, request *DeleteOIDCConfigRequest) (response *DeleteOIDCConfigResponse, err error) {
+    if request == nil {
+        request = NewDeleteOIDCConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteOIDCConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteOIDCConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -1490,6 +1624,57 @@ func (c *Client) DeleteUserPermissionsBoundaryWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDeleteUserPermissionsBoundaryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOIDCConfigRequest() (request *DescribeOIDCConfigRequest) {
+    request = &DescribeOIDCConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "DescribeOIDCConfig")
+    
+    
+    return
+}
+
+func NewDescribeOIDCConfigResponse() (response *DescribeOIDCConfigResponse) {
+    response = &DescribeOIDCConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeOIDCConfig
+// 查询角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+func (c *Client) DescribeOIDCConfig(request *DescribeOIDCConfigRequest) (response *DescribeOIDCConfigResponse, err error) {
+    return c.DescribeOIDCConfigWithContext(context.Background(), request)
+}
+
+// DescribeOIDCConfig
+// 查询角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+func (c *Client) DescribeOIDCConfigWithContext(ctx context.Context, request *DescribeOIDCConfigRequest) (response *DescribeOIDCConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeOIDCConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOIDCConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOIDCConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -3887,6 +4072,130 @@ func (c *Client) SetMfaFlagWithContext(ctx context.Context, request *SetMfaFlagR
     return
 }
 
+func NewTagRoleRequest() (request *TagRoleRequest) {
+    request = &TagRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "TagRole")
+    
+    
+    return
+}
+
+func NewTagRoleResponse() (response *TagRoleResponse) {
+    response = &TagRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// TagRole
+// 角色绑定标签
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
+func (c *Client) TagRole(request *TagRoleRequest) (response *TagRoleResponse, err error) {
+    return c.TagRoleWithContext(context.Background(), request)
+}
+
+// TagRole
+// 角色绑定标签
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
+func (c *Client) TagRoleWithContext(ctx context.Context, request *TagRoleRequest) (response *TagRoleResponse, err error) {
+    if request == nil {
+        request = NewTagRoleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("TagRole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewTagRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUntagRoleRequest() (request *UntagRoleRequest) {
+    request = &UntagRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "UntagRole")
+    
+    
+    return
+}
+
+func NewUntagRoleResponse() (response *UntagRoleResponse) {
+    response = &UntagRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UntagRole
+// 角色解绑标签。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_UNTAGRESOURCEFAILED = "FailedOperation.UnTagResourceFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
+func (c *Client) UntagRole(request *UntagRoleRequest) (response *UntagRoleResponse, err error) {
+    return c.UntagRoleWithContext(context.Background(), request)
+}
+
+// UntagRole
+// 角色解绑标签。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_UNTAGRESOURCEFAILED = "FailedOperation.UnTagResourceFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_ROLENAMEERROR = "InvalidParameter.RoleNameError"
+//  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
+func (c *Client) UntagRoleWithContext(ctx context.Context, request *UntagRoleRequest) (response *UntagRoleResponse, err error) {
+    if request == nil {
+        request = NewUntagRoleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UntagRole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUntagRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateAssumeRolePolicyRequest() (request *UpdateAssumeRolePolicyRequest) {
     request = &UpdateAssumeRolePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4019,6 +4328,65 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     request.SetContext(ctx)
     
     response = NewUpdateGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateOIDCConfigRequest() (request *UpdateOIDCConfigRequest) {
+    request = &UpdateOIDCConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "UpdateOIDCConfig")
+    
+    
+    return
+}
+
+func NewUpdateOIDCConfigResponse() (response *UpdateOIDCConfigResponse) {
+    response = &UpdateOIDCConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateOIDCConfig
+// 修改角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
+//  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
+//  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  LIMITEXCEEDED_IDENTITYFULL = "LimitExceeded.IdentityFull"
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+func (c *Client) UpdateOIDCConfig(request *UpdateOIDCConfigRequest) (response *UpdateOIDCConfigResponse, err error) {
+    return c.UpdateOIDCConfigWithContext(context.Background(), request)
+}
+
+// UpdateOIDCConfig
+// 修改角色OIDC配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
+//  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
+//  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
+//  INVALIDPARAMETERVALUE_NAMEERROR = "InvalidParameterValue.NameError"
+//  LIMITEXCEEDED_IDENTITYFULL = "LimitExceeded.IdentityFull"
+//  RESOURCENOTFOUND_IDENTITYNOTEXIST = "ResourceNotFound.IdentityNotExist"
+func (c *Client) UpdateOIDCConfigWithContext(ctx context.Context, request *UpdateOIDCConfigRequest) (response *UpdateOIDCConfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateOIDCConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateOIDCConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateOIDCConfigResponse()
     err = c.Send(request, response)
     return
 }
