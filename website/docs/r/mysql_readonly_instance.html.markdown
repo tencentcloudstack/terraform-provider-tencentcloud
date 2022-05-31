@@ -38,7 +38,7 @@ resource "tencentcloud_mysql_readonly_instance" "default" {
 The following arguments are supported:
 
 * `instance_name` - (Required) The name of a mysql instance.
-* `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
+* `master_instance_id` - (Required) Indicates the master instance ID of recovery instances.
 * `mem_size` - (Required) Memory size (in MB).
 * `volume_size` - (Required) Disk size (in GB).
 * `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
@@ -47,7 +47,7 @@ The following arguments are supported:
 * `fast_upgrade` - (Optional) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
-* `master_region` - (Optional, ForceNew) The zone information of the primary instance is required when you purchase a disaster recovery instance.
+* `master_region` - (Optional) The zone information of the primary instance is required when you purchase a disaster recovery instance.
 * `param_template_id` - (Optional) Specify parameter template id.
 * `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
 * `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
@@ -56,7 +56,7 @@ The following arguments are supported:
 * `subnet_id` - (Optional) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional) Instance tags.
 * `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
-* `zone` - (Optional, ForceNew) Zone information, this parameter defaults to, the system automatically selects an Availability Zone.
+* `zone` - (Optional) Zone information, this parameter defaults to, the system automatically selects an Availability Zone.
 
 ## Attributes Reference
 
