@@ -294,6 +294,10 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 
 func testAccMysqlMasterInstance_fullslave() string {
 	return `
+variable "temporary_param_tmpl_id" {
+	default = 16954
+}
+
 resource "tencentcloud_mysql_instance" "mysql_master" {
   charge_type       = "POSTPAID"
   mem_size          = 1000
@@ -307,6 +311,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   first_slave_zone  = "ap-guangzhou-3"
   second_slave_zone = "ap-guangzhou-3"
   slave_sync_mode   = 2
+  param_template_id = var.temporary_param_tmpl_id
   force_delete      = true
 }`
 }

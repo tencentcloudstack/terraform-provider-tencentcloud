@@ -100,6 +100,12 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items"},
+			},
+			{
 				Config: testAccCynosdbCluster_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_duration", "7200"),
@@ -115,12 +121,6 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.old_value", "utf8"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8mb4"),
 				),
-			},
-			{
-				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items"},
 			},
 		},
 	})

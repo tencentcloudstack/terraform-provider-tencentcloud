@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 子账号无权限。
+	AUTHFAILURE_SUBACCOUNTDENIED = "AuthFailure.SubAccountDenied"
+
 	// 后端错误或者流程错误。
 	CDBERROR = "CdbError"
 
@@ -35,8 +38,17 @@ const (
 	// 后端任务错误。
 	CDBERROR_TASKERROR = "CdbError.TaskError"
 
+	// 操作失败。
+	FAILEDOPERATION = "FailedOperation"
+
 	// 异步任务状态异常。
 	FAILEDOPERATION_ASYNCTASKSTATUSERROR = "FailedOperation.AsyncTaskStatusError"
+
+	// 审计不存在。
+	FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+
+	// 实例互斥操作锁定失败,请稍后重试。
+	FAILEDOPERATION_CDBINSTANCELOCKFAILERROR = "FailedOperation.CdbInstanceLockFailError"
 
 	// 创建失败，请检查用户是否已存在。
 	FAILEDOPERATION_CREATEACCOUNTERROR = "FailedOperation.CreateAccountError"
@@ -44,14 +56,29 @@ const (
 	// 创建审计规则失败。
 	FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
 
+	// 创建审计日志文件失败。
+	FAILEDOPERATION_CREATEAUDITLOGFILEERROR = "FailedOperation.CreateAuditLogFileError"
+
 	// 申请只读实例独立VIP失败。
 	FAILEDOPERATION_CREATEROVIPERROR = "FailedOperation.CreateRoVipError"
 
 	// 数据库操作失败。
 	FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
 
+	// 删除审计失败。
+	FAILEDOPERATION_DELETEAUDITFAILERROR = "FailedOperation.DeleteAuditFailError"
+
+	// 查询数据库代理失败。
+	FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
+
 	// 获取权限错误。
 	FAILEDOPERATION_GETPRIVILEGEERROR = "FailedOperation.GetPrivilegeError"
+
+	// 查询失败。
+	FAILEDOPERATION_INSTANCEQUERYERROR = "FailedOperation.InstanceQueryError"
+
+	// json序列化失败。
+	FAILEDOPERATION_JSONMARSHALERROR = "FailedOperation.JsonMarshalError"
 
 	// json反序列化失败。
 	FAILEDOPERATION_JSONUNMARSHALERROR = "FailedOperation.JsonUnmarshalError"
@@ -59,14 +86,17 @@ const (
 	// 不是延迟复制RO。
 	FAILEDOPERATION_NOTDELAYRO = "FailedOperation.NotDelayRo"
 
-	// 调用后端接口开启延迟复制操作失败。
-	FAILEDOPERATION_OPERATIONREPLICATIONERROR = "FailedOperation.OperationReplicationError"
-
 	// 执行的权限修改操作非法。您可以参照产品文档，了解当前实例支持哪些权限修改操作，如有疑问，请您咨询客服进行处理。
 	FAILEDOPERATION_PRIVILEGEDATAILLEGAL = "FailedOperation.PrivilegeDataIllegal"
 
+	// 数据库代理状态异常。
+	FAILEDOPERATION_PROXYGROUPSTATUSERROR = "FailedOperation.ProxyGroupStatusError"
+
 	// 查询日志失败。
 	FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
+
+	// 代理创建中或则已存在，请勿重复创建。
+	FAILEDOPERATION_REPEATCREATEPROXYERROR = "FailedOperation.RepeatCreateProxyError"
 
 	// 后台请求服务异常，请您联系客服解决。
 	FAILEDOPERATION_RESPONSEVALUEERROR = "FailedOperation.ResponseValueError"
@@ -79,6 +109,9 @@ const (
 
 	// 提交任务失败，请稍后重试。如果持续提交失败，请您联系客服进行处理。
 	FAILEDOPERATION_SUBMITASYNCTASKERROR = "FailedOperation.SubmitAsyncTaskError"
+
+	// 查询超时。
+	FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
 
 	// 类型错误，无法执行该操作。
 	FAILEDOPERATION_TYPEINCONFLICT = "FailedOperation.TypeInConflict"
@@ -209,6 +242,9 @@ const (
 	// 交易系统错误。
 	INTERNALERROR_TRADEERROR = "InternalError.TradeError"
 
+	// 操作失败。
+	INTERNALERROR_TRANSACTIONBEGINERROR = "InternalError.TransactionBeginError"
+
 	// 未知错误。
 	INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 
@@ -226,6 +262,9 @@ const (
 
 	// 置放群组下存在资源。
 	INVALIDPARAMETER_DEPLOYGROUPNOTEMPTY = "InvalidParameter.DeployGroupNotEmpty"
+
+	// 异常参数。
+	INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 
 	// 未找到该实例。
 	INVALIDPARAMETER_INSTANCENAMENOTFOUND = "InvalidParameter.InstanceNameNotFound"
@@ -281,17 +320,8 @@ const (
 	// 数据转换失败。
 	INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 
-	// 指定时间点不能大于当前时间。
-	INVALIDPARAMETERVALUE_DUETIMEWRONG = "InvalidParameterValue.DueTimeWrong"
-
 	// 参数值无效。
 	INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-
-	// 源类型与目标类型一致。
-	INVALIDPARAMETERVALUE_SRCTYPEEQUALDSTTYPE = "InvalidParameterValue.SrcTypeEqualDstType"
-
-	// 当前ro实例类型与操作实例类型不一致。
-	INVALIDPARAMETERVALUE_SRCTYPENOTEQUALDSTTYPE = "InvalidParameterValue.SrcTypeNotEqualDstType"
 
 	// 账号用户名规则错误。
 	INVALIDPARAMETERVALUE_USERNAMERULEERROR = "InvalidParameterValue.UserNameRuleError"
@@ -329,6 +359,12 @@ const (
 	// 不支持的操作。
 	OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 
+	// 已开启安全审计，至少保留一个全审计。
+	OPERATIONDENIED_ATLEASTALLRULEAUDITPOLICYERROR = "OperationDenied.AtLeastAllRuleAuditPolicyError"
+
+	// 至少保留一个审计策略。
+	OPERATIONDENIED_ATLEASTAUDITPOLICYERROR = "OperationDenied.AtLeastAuditPolicyError"
+
 	// 审计日志文件数超过最大限制数。
 	OPERATIONDENIED_AUDITFILEOVERQUOTAERROR = "OperationDenied.AuditFileOverQuotaError"
 
@@ -340,6 +376,9 @@ const (
 
 	// 审计策略不存在。
 	OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
+
+	// 审计策略数量超限。
+	OPERATIONDENIED_AUDITPOLICYOVERQUOTAERROR = "OperationDenied.AuditPolicyOverQuotaError"
 
 	// 审计规则删除失败。
 	OPERATIONDENIED_AUDITRULEDELETEERROR = "OperationDenied.AuditRuleDeleteError"
@@ -359,6 +398,12 @@ const (
 	// 审计任务冲突。
 	OPERATIONDENIED_AUDITTASKCONFLICTERROR = "OperationDenied.AuditTaskConflictError"
 
+	// 当前RO组有RO实例处于非法状态，不允许执行当前操作。
+	OPERATIONDENIED_CONFLICTROSTATUS = "OperationDenied.ConflictRoStatus"
+
+	// 当前只读组配置正在变更中，请勿重复发起请求。
+	OPERATIONDENIED_CONFLICTSTATUS = "OperationDenied.ConflictStatus"
+
 	// 已开通安全审计,不支持规则审计。
 	OPERATIONDENIED_DBBRAINPOLICYCONFLICT = "OperationDenied.DBBrainPolicyConflict"
 
@@ -371,14 +416,23 @@ const (
 	// 该实例无此功能权限。
 	OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
 
+	// 实例锁冲突，请稍后重试。
+	OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
+
 	// 实例状态异常。
 	OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 
 	// 当前实例正在进行其他任务，不能执行延迟复制。
 	OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
 
+	// 实例不支持该操作。
+	OPERATIONDENIED_INSTANCEUNSUPPORTEDOPERATEERROR = "OperationDenied.InstanceUnsupportedOperateError"
+
 	// 修改审计状态失败。
 	OPERATIONDENIED_MODIFYAUDITSTATUSERROR = "OperationDenied.ModifyAuditStatusError"
+
+	// 基础版实例不支持当前操作（功能）。
+	OPERATIONDENIED_NOTSUPPORTBASIC = "OperationDenied.NotSupportBasic"
 
 	// 不支持修改本地root账号host信息。
 	OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
@@ -388,6 +442,15 @@ const (
 
 	// 资源配额超限。
 	OPERATIONDENIED_OVERQUOTA = "OperationDenied.OverQuota"
+
+	// 数据库代理升级任务中，不允许该操作。
+	OPERATIONDENIED_PROXYUPGRADETASKSTATUSERROR = "OperationDenied.ProxyUpgradeTaskStatusError"
+
+	// 结果集超过限制，请缩小检索范围。
+	OPERATIONDENIED_RESULTOVERLIMIT = "OperationDenied.ResultOverLimit"
+
+	// 腾讯云子账号权限不足，不允许执行当前操作。
+	OPERATIONDENIED_SUBACCOUNTOPERATIONDENIED = "OperationDenied.SubAccountOperationDenied"
 
 	// 该实例暂不支持退款。
 	OPERATIONDENIED_UNSUPPORTREFUNDERROR = "OperationDenied.UnSupportRefundError"
