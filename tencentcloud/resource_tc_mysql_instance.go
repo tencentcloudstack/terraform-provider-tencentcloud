@@ -260,7 +260,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"root_password": {
 			Type:         schema.TypeString,
-			Required:     true,
+			Optional:     true,
 			Sensitive:    true,
 			ValidateFunc: validateMysqlPassword,
 			Description:  "Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.",
@@ -666,11 +666,17 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	// Initialize mysql instance
 	var (
 		version   = d.Get("engine_version").(string)
-		password  = d.Get("root_password").(string)
 		charset   = d.Get("parameters.character_set_server").(string)
 		lowercase = d.Get("parameters.lower_case_table_names").(string)
+		password  string
 		vPort     int
 	)
+
+	if v, ok := d.GetOk("root_password"); ok && v.(string) != "" {
+		password = v.(string)
+	} else {
+		return fmt.Errorf("`root_password` cannot be empty when creating")
+	}
 
 	// 8.0 does not support lower_case_table_names modified, skip this params
 	if version == "8.0" {

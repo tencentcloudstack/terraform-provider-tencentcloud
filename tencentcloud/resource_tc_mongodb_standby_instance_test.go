@@ -52,7 +52,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				ResourceName:            "tencentcloud_mongodb_standby_instance.mongodb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups", "auto_renew_flag"},
+				ImportStateVerifyIgnore: []string{"security_groups", "auto_renew_flag", "password"},
 			},
 			{
 				Config: testAccMongodbStandbyInstancePrepaid,

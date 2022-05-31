@@ -51,7 +51,6 @@ The following arguments are supported:
 
 * `instance_name` - (Required) The name of a mysql instance.
 * `mem_size` - (Required) Memory size (in MB).
-* `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `volume_size` - (Required) Disk size (in GB).
 * `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
@@ -69,6 +68,7 @@ The following arguments are supported:
 * `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
 * `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional) Project ID, default value is 0.
+* `root_password` - (Optional) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional) Security groups to use.
 * `slave_deploy_mode` - (Optional, ForceNew) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
