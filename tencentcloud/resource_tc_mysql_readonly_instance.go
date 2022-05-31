@@ -41,19 +41,18 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 	readonlyInstanceInfo := map[string]*schema.Schema{
 		"master_instance_id": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Required:    true,
 			Description: "Indicates the master instance ID of recovery instances.",
 		},
 		"zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
+			Computed:    true,
 			Description: "Zone information, this parameter defaults to, the system automatically selects an Availability Zone.",
 		},
 		"master_region": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
+			Computed:    true,
 			Optional:    true,
 			Description: "The zone information of the primary instance is required when you purchase a disaster recovery instance.",
 		},
@@ -332,6 +331,18 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
 	if err != nil {
 		return err
+	}
+
+	immutableFields := []string{
+		"master_instance_id",
+		"zone",
+		"master_region",
+	}
+
+	for _, f := range immutableFields {
+		if d.HasChange(f) {
+			return fmt.Errorf("argument `%s` cannot be modified for now", f)
+		}
 	}
 
 	d.Partial(false)
