@@ -56,6 +56,7 @@ The following arguments are supported:
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
 * `charge_type` - (Optional, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional) CPU cores.
+* `device_type` - (Optional) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
 * `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.
 * `fast_upgrade` - (Optional) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `first_slave_zone` - (Optional, ForceNew) Zone information about first slave instance.
