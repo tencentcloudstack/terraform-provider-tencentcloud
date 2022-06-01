@@ -34,7 +34,7 @@ patch)
   version="$major.$minor.$((patch+1))"
 esac
 
-diffs=$(git diff --name-only HEAD origin/master | grep "tencentcloud/*")
+diffs=$(git diff --name-only HEAD $gitTag | grep "tencentcloud/*")
 
 
 resource="^tencentcloud\/resource_tc_([a-z_]+)\.go$"
