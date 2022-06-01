@@ -164,4 +164,7 @@ endif
 	ln -sf ../../../ext/providers/tencentcloud/website/tencentcloud.erb $(GOPATH)/src/github.com/hashicorp/terraform-website/content/source/layouts/tencentcloud.erb
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
+changelog:
+	./scripts/draft-changelog.sh
+
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
