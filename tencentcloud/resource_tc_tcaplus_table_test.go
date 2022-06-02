@@ -49,6 +49,29 @@ func init() {
 					continue
 				}
 
+				taskId, err := service.DeleteTable(ctx, clusterId, gId, insId, name)
+				if err != nil {
+					continue
+				}
+
+				err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+					info, has, err := service.DescribeTask(ctx, clusterId, taskId)
+					if err != nil {
+						return retryError(err)
+					}
+					if !has {
+						return nil
+					}
+					if *info.Progress < 100 {
+						return resource.RetryableError(fmt.Errorf("running delete task %s, table: %s -> %s", taskId, clusterId, name))
+					}
+					return nil
+				})
+
+				if err != nil {
+					continue
+				}
+
 				_, err = service.DeleteTable(ctx, clusterId, gId, insId, name)
 				if err != nil {
 					continue

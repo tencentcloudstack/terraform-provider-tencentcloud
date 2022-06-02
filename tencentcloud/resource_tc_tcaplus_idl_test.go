@@ -36,7 +36,7 @@ func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTcaplusIdlResourceNameResourceKey, "table_infos.0.value_fields"),
 					resource.TestCheckResourceAttrSet(testTcaplusIdlResourceNameResourceKey, "table_infos.0.sum_value_field_size"),
 					resource.TestCheckResourceAttrSet(testTcaplusIdlResourceNameResourceKey, "table_infos.0.index_key_set"),
-					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "table_infos.0.table_name", "tb_online_guagua"),
+					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "table_infos.0.table_name", "tb_idle_test"),
 					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "table_infos.0.error", ""),
 				),
 			},
@@ -112,7 +112,7 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";
-    message tb_online_guagua {
+    message tb_idle_test {
         option(tcaplusservice.tcaplus_primary_key) = "uin,name,region";
         required int64 uin = 1;
         required string name = 2;
