@@ -185,6 +185,11 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.",
 		},
+		"device_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
+		},
 		"tags": {
 			Type:        schema.TypeMap,
 			Optional:    true,
@@ -448,6 +453,15 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByUse.ParamTemplateId = paramTemplateId
 		}
 	}
+
+	if v, ok := d.GetOk("device_type"); ok {
+		deviceType := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DeviceType = deviceType
+		} else {
+			requestByUse.DeviceType = deviceType
+		}
+	}
 	return nil
 
 }
@@ -459,7 +473,8 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
 	requestByUse, _ := requestInter.(*cdb.CreateDBInstanceHourRequest)
 
-	if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
+	isBasic := isBasicDevice(d)
+	if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok && !isBasic {
 		requestParamList := make([]*cdb.ParamInfo, 0, len(parametersMap))
 		for k, v := range parametersMap {
 			key := k
@@ -498,8 +513,8 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 		}
 	}
 
-	if stringInterface, ok := d.GetOk("root_password"); ok {
-		str := stringInterface.(string)
+	if v, ok := d.GetOk("root_password"); ok && v.(string) != "" && !isBasic {
+		str := v.(string)
 		if okByMonth {
 			requestByMonth.Password = &str
 		} else {
@@ -672,10 +687,8 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		vPort     int
 	)
 
-	if v, ok := d.GetOk("root_password"); ok && v.(string) != "" {
+	if v, ok := d.GetOk("root_password"); ok {
 		password = v.(string)
-	} else {
-		return fmt.Errorf("`root_password` cannot be empty when creating")
 	}
 
 	// 8.0 does not support lower_case_table_names modified, skip this params
@@ -815,6 +828,11 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	if d.Get("subnet_id").(string) != "" {
 		errRet = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
+	}
+
+	isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
+	if _, ok := d.GetOk("device_type"); ok || !isUniversal {
+		_ = d.Set("device_type", mysqlInfo.DeviceType)
 	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
@@ -1022,17 +1040,22 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") {
+	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
 
 		memSize := int64(d.Get("mem_size").(int))
 		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
+		deviceType := ""
+
 		fastUpgrade := int64(0)
 		if v, ok := d.GetOk("fast_upgrade"); ok {
 			fastUpgrade = int64(v.(int))
 		}
+		if v, ok := d.GetOk("device_type"); ok {
+			deviceType = v.(string)
+		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade)
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType)
 
 		if err != nil {
 			return err
@@ -1469,4 +1492,12 @@ func getPayType(d *schema.ResourceData) (payType interface{}) {
 		}
 	}
 	return
+}
+
+func isBasicDevice(d *schema.ResourceData) bool {
+	v, ok := d.GetOk("device_type")
+	if !ok {
+		return false
+	}
+	return v.(string) == "BASIC"
 }

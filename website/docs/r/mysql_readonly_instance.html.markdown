@@ -44,6 +44,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
 * `charge_type` - (Optional, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cpu` - (Optional) CPU cores.
+* `device_type` - (Optional) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
 * `fast_upgrade` - (Optional) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.

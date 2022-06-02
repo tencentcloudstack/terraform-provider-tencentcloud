@@ -111,6 +111,10 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 		request.MasterRegion = &masterRegion
 	}
 
+	if v, ok := d.GetOk("device_type"); ok {
+		request.DeviceType = helper.String(v.(string))
+	}
+
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
 
