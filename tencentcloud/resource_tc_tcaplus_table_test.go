@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -11,6 +12,76 @@ import (
 
 var testTcaplusTableResourceName = "tencentcloud_tcaplus_table"
 var testTcaplusTableResourceNameResourceKey = testTcaplusTableResourceName + ".test_table"
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcaplus_table
+	resource.AddTestSweepers("tencentcloud_tcaplus_table", &resource.Sweeper{
+		Name: "tencentcloud_tcaplus_table",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := TcaplusService{client}
+
+			clusters, err := service.DescribeClusters(ctx, "", defaultTcaPlusClusterName)
+
+			if err != nil {
+				return err
+			}
+
+			if len(clusters) == 0 {
+				return fmt.Errorf("no cluster named %s", defaultTcaPlusClusterName)
+			}
+
+			clusterId := *clusters[0].ClusterId
+
+			tables, err := service.DescribeTables(ctx, clusterId, "", "", "")
+
+			for _, table := range tables {
+				name := *table.TableName
+				// legacy bad argument
+				gId := clusterId + ":" + *table.TableGroupId
+				insId := *table.TableInstanceId
+				created := time.Time{}
+
+				if isResourcePersist(name, &created) {
+					continue
+				}
+
+				taskId, err := service.DeleteTable(ctx, clusterId, gId, insId, name)
+				if err != nil {
+					continue
+				}
+
+				err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+					info, has, err := service.DescribeTask(ctx, clusterId, taskId)
+					if err != nil {
+						return retryError(err)
+					}
+					if !has {
+						return nil
+					}
+					if *info.Progress < 100 {
+						return resource.RetryableError(fmt.Errorf("running delete task %s, table: %s -> %s", taskId, clusterId, name))
+					}
+					return nil
+				})
+
+				if err != nil {
+					continue
+				}
+
+				_, err = service.DeleteTable(ctx, clusterId, gId, insId, name)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
 	t.Parallel()
