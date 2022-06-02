@@ -349,9 +349,6 @@ func resourceTencentCloudClsCosShipperCreate(d *schema.ResourceData, meta interf
 	}
 
 	id := *response.Response.ShipperId
-	log.Printf("=====1=========")
-	log.Printf(id)
-	log.Printf("=====1=========")
 	d.SetId(id)
 	return resourceTencentCloudClsCosShipperRead(d, meta)
 }
