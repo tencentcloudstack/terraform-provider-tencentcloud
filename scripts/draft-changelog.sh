@@ -39,7 +39,7 @@ diffs=$(git diff --name-only HEAD $gitTag | grep "tencentcloud/*")
 
 resource="^tencentcloud\/resource_tc_([a-z_]+)\.go$"
 data="^tencentcloud\/data_source_tc_([a-z_]+)\.go$"
-service="^tencentcloud\/service_([a-z_]+)\.go$"
+service="^tencentcloud\/([a-z_]+)\.go$"
 test="([a-z_]+)_test$"
 
 items=""
@@ -54,7 +54,8 @@ for file in ${diffs}; do
     fileType="data source"
     module="tencentcloud_${BASH_REMATCH[1]}"
   elif [[ $file =~ $service ]]; then
-    module="tencentcloud_${BASH_REMATCH[1]}"
+    fileType="service"
+    module="${BASH_REMATCH[1]}"
   fi
 
   if [[ $module =~ $test ]]; then
@@ -73,7 +74,7 @@ LANG=en_US
 dateStr=$(date +"%B %d, %Y")
 
 template="
-## $version $dateStr
+## $version ($dateStr)
 \n
 \nFEATURES:
 \nDEPRECATED:

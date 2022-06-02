@@ -1,3 +1,36 @@
+## 1.72.8 (June 02, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_mysql_instance` support device type
+* resource `tencentcloud_mysql_readonly_instance` support device type
+
+COMMON:
+
+* resource `tencentcloud_tcaplus_table` add test sweeper
+* chore: add changelog draft script
+
+## 1.72.7 (May 31, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_mysql_readonly_instance` make zone arguments optional.
+
+## 1.72.6 (May 31, 2022)
+
+FEATURES:
+* new resource `tencentcloud_cam_role_sso`
+
+ENHANCEMENTS:
+* resource `tencentcloud_mysql_instance`  support fast upgrade and param template id
+
+BUGFIXES:
+* resource `tencentcloud_sqlserver_instance` disable recycle
+* resource `tencentcloud_mysql_instance` / `tencentcloud_mongodb_instance` cancel validate required db pwd.
+
+COMMON:
+* testcases fix: dnspod, cvm, kafka, as, tcr, sqlserver, cbs, cos, cfs, mongo, tke
+
 ## 1.72.5 (May 20, 2022)
 
 ENHANCEMENTS:
