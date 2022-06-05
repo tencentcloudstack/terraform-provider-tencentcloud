@@ -31,6 +31,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -137,6 +138,9 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	}
 
 	d.SetId(dcgId)
+
+	// add sleep protect, either network_instance_id will be set "".
+	time.Sleep(1)
 
 	return resourceTencentCloudDcGatewayRead(d, meta)
 }

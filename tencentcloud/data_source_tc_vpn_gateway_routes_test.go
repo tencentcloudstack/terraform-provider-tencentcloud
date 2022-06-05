@@ -32,7 +32,7 @@ func TestAccTencentCloudVpnGatewayRoutesDataSource(t *testing.T) {
 const testAccTencentCloudVpnGatewayRoutesDataSourceConfig_basic = defaultVpnDataSource + `
 resource "tencentcloud_vpn_gateway_route" "route1" {
   vpn_gateway_id = data.tencentcloud_vpn_gateways.foo.gateway_list.0.id
-  destination_cidr_block = "10.0.0.0/16"
+  destination_cidr_block = "10.0.0.0/18"
   instance_type = "VPNCONN"
   instance_id = data.tencentcloud_vpn_connections.conns.connection_list.0.id
   priority = "100"
