@@ -614,6 +614,7 @@ CLS
 	tencentcloud_cls_config_attachment
 	tencentcloud_cls_machine_group
 	tencentcloud_cls_cos_shipper
+	tencentcloud_cls_index
 */
 package tencentcloud
 
@@ -1101,6 +1102,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_config_attachment":                   resourceTencentCloudClsConfigAttachment(),
 			"tencentcloud_cls_machine_group":                       resourceTencentCloudClsMachineGroup(),
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
+			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 		},
 
 		ConfigureFunc: providerConfigure,

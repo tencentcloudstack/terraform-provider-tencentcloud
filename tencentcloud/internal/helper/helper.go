@@ -128,3 +128,13 @@ func InterfacesHeadMap(d *schema.ResourceData, key string) (result map[string]in
 	result, ok = head.(map[string]interface{})
 	return
 }
+
+func InterfaceToMap(d map[string]interface{}, key string) (result map[string]interface{}, ok bool) {
+	if v, ok := d[key]; ok {
+		if len(v.([]interface{})) != 1 {
+			return nil, false
+		}
+		return v.([]interface{})[0].(map[string]interface{}), true
+	}
+	return nil, false
+}
