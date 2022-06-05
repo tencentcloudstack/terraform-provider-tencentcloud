@@ -112,6 +112,71 @@ func (c *Client) ApplyConfigToMachineGroupWithContext(ctx context.Context, reque
     return
 }
 
+func NewCloseKafkaConsumerRequest() (request *CloseKafkaConsumerRequest) {
+    request = &CloseKafkaConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "CloseKafkaConsumer")
+    
+    
+    return
+}
+
+func NewCloseKafkaConsumerResponse() (response *CloseKafkaConsumerResponse) {
+    response = &CloseKafkaConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CloseKafkaConsumer
+// 关闭Kafka协议消费
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CloseKafkaConsumer(request *CloseKafkaConsumerRequest) (response *CloseKafkaConsumerResponse, err error) {
+    return c.CloseKafkaConsumerWithContext(context.Background(), request)
+}
+
+// CloseKafkaConsumer
+// 关闭Kafka协议消费
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CloseKafkaConsumerWithContext(ctx context.Context, request *CloseKafkaConsumerRequest) (response *CloseKafkaConsumerResponse, err error) {
+    if request == nil {
+        request = NewCloseKafkaConsumerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseKafkaConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseKafkaConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAlarmRequest() (request *CreateAlarmRequest) {
     request = &CreateAlarmRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -406,6 +471,7 @@ func NewCreateConsumerResponse() (response *CreateConsumerResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -424,6 +490,7 @@ func (c *Client) CreateConsumer(request *CreateConsumerRequest) (response *Creat
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -447,6 +514,77 @@ func (c *Client) CreateConsumerWithContext(ctx context.Context, request *CreateC
     return
 }
 
+func NewCreateDataTransformRequest() (request *CreateDataTransformRequest) {
+    request = &CreateDataTransformRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "CreateDataTransform")
+    
+    
+    return
+}
+
+func NewCreateDataTransformResponse() (response *CreateDataTransformResponse) {
+    response = &CreateDataTransformResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateDataTransform
+// 本接口用于创建数据加工任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
+//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateDataTransform(request *CreateDataTransformRequest) (response *CreateDataTransformResponse, err error) {
+    return c.CreateDataTransformWithContext(context.Background(), request)
+}
+
+// CreateDataTransform
+// 本接口用于创建数据加工任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
+//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateDataTransformWithContext(ctx context.Context, request *CreateDataTransformRequest) (response *CreateDataTransformResponse, err error) {
+    if request == nil {
+        request = NewCreateDataTransformRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDataTransform require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDataTransformResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateExportRequest() (request *CreateExportRequest) {
     request = &CreateExportRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -465,7 +603,7 @@ func NewCreateExportResponse() (response *CreateExportResponse) {
 }
 
 // CreateExport
-// 本接口用于创建日志下载任务，导出原始日志
+// 本接口仅创建下载任务，任务返回的下载地址，请用户调用DescribeExports查看任务列表。其中有下载地址CosPath参数。参考文档https://cloud.tencent.com/document/product/614/56449
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -483,7 +621,7 @@ func (c *Client) CreateExport(request *CreateExportRequest) (response *CreateExp
 }
 
 // CreateExport
-// 本接口用于创建日志下载任务，导出原始日志
+// 本接口仅创建下载任务，任务返回的下载地址，请用户调用DescribeExports查看任务列表。其中有下载地址CosPath参数。参考文档https://cloud.tencent.com/document/product/614/56449
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1263,6 +1401,75 @@ func (c *Client) DeleteConsumerWithContext(ctx context.Context, request *DeleteC
     return
 }
 
+func NewDeleteDataTransformRequest() (request *DeleteDataTransformRequest) {
+    request = &DeleteDataTransformRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteDataTransform")
+    
+    
+    return
+}
+
+func NewDeleteDataTransformResponse() (response *DeleteDataTransformResponse) {
+    response = &DeleteDataTransformResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteDataTransform
+// 本接口用于删除数据加工任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteDataTransform(request *DeleteDataTransformRequest) (response *DeleteDataTransformResponse, err error) {
+    return c.DeleteDataTransformWithContext(context.Background(), request)
+}
+
+// DeleteDataTransform
+// 本接口用于删除数据加工任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteDataTransformWithContext(ctx context.Context, request *DeleteDataTransformRequest) (response *DeleteDataTransformResponse, err error) {
+    if request == nil {
+        request = NewDeleteDataTransformRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDataTransform require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDataTransformResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteExportRequest() (request *DeleteExportRequest) {
     request = &DeleteExportRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1617,6 +1824,7 @@ func NewDeleteTopicResponse() (response *DeleteTopicResponse) {
 // 本接口用于删除日志主题。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -1636,6 +1844,7 @@ func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopic
 // 本接口用于删除日志主题。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -2043,6 +2252,73 @@ func (c *Client) DescribeConsumerWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeDataTransformInfoRequest() (request *DescribeDataTransformInfoRequest) {
+    request = &DescribeDataTransformInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeDataTransformInfo")
+    
+    
+    return
+}
+
+func NewDescribeDataTransformInfoResponse() (response *DescribeDataTransformInfoResponse) {
+    response = &DescribeDataTransformInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDataTransformInfo
+// 本接口用于获取数据加工任务列表基本信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeDataTransformInfo(request *DescribeDataTransformInfoRequest) (response *DescribeDataTransformInfoResponse, err error) {
+    return c.DescribeDataTransformInfoWithContext(context.Background(), request)
+}
+
+// DescribeDataTransformInfo
+// 本接口用于获取数据加工任务列表基本信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeDataTransformInfoWithContext(ctx context.Context, request *DescribeDataTransformInfoRequest) (response *DescribeDataTransformInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeDataTransformInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDataTransformInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDataTransformInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeExportsRequest() (request *DescribeExportsRequest) {
     request = &DescribeExportsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2065,6 +2341,7 @@ func NewDescribeExportsResponse() (response *DescribeExportsResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2083,6 +2360,7 @@ func (c *Client) DescribeExports(request *DescribeExportsRequest) (response *Des
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2426,6 +2704,7 @@ func NewDescribeMachineGroupConfigsResponse() (response *DescribeMachineGroupCon
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"
 //  RESOURCENOTFOUND_MACHINEGROUPNOTEXIST = "ResourceNotFound.MachineGroupNotExist"
 func (c *Client) DescribeMachineGroupConfigs(request *DescribeMachineGroupConfigsRequest) (response *DescribeMachineGroupConfigsResponse, err error) {
     return c.DescribeMachineGroupConfigsWithContext(context.Background(), request)
@@ -2444,6 +2723,7 @@ func (c *Client) DescribeMachineGroupConfigs(request *DescribeMachineGroupConfig
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"
 //  RESOURCENOTFOUND_MACHINEGROUPNOTEXIST = "ResourceNotFound.MachineGroupNotExist"
 func (c *Client) DescribeMachineGroupConfigsWithContext(ctx context.Context, request *DescribeMachineGroupConfigsRequest) (response *DescribeMachineGroupConfigsResponse, err error) {
     if request == nil {
@@ -2492,6 +2772,7 @@ func NewDescribeMachineGroupsResponse() (response *DescribeMachineGroupsResponse
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeMachineGroups(request *DescribeMachineGroupsRequest) (response *DescribeMachineGroupsResponse, err error) {
     return c.DescribeMachineGroupsWithContext(context.Background(), request)
 }
@@ -2510,6 +2791,7 @@ func (c *Client) DescribeMachineGroups(request *DescribeMachineGroupsRequest) (r
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeMachineGroupsWithContext(ctx context.Context, request *DescribeMachineGroupsRequest) (response *DescribeMachineGroupsResponse, err error) {
     if request == nil {
         request = NewDescribeMachineGroupsRequest()
@@ -2833,6 +3115,7 @@ func NewDescribeTopicsResponse() (response *DescribeTopicsResponse) {
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTopics(request *DescribeTopicsRequest) (response *DescribeTopicsResponse, err error) {
     return c.DescribeTopicsWithContext(context.Background(), request)
 }
@@ -2853,6 +3136,7 @@ func (c *Client) DescribeTopics(request *DescribeTopicsRequest) (response *Descr
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTopicsWithContext(ctx context.Context, request *DescribeTopicsRequest) (response *DescribeTopicsResponse, err error) {
     if request == nil {
         request = NewDescribeTopicsRequest()
@@ -3251,6 +3535,7 @@ func NewModifyConfigExtraResponse() (response *ModifyConfigExtraResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -3268,6 +3553,7 @@ func (c *Client) ModifyConfigExtra(request *ModifyConfigExtraRequest) (response 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -3348,6 +3634,79 @@ func (c *Client) ModifyConsumerWithContext(ctx context.Context, request *ModifyC
     request.SetContext(ctx)
     
     response = NewModifyConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDataTransformRequest() (request *ModifyDataTransformRequest) {
+    request = &ModifyDataTransformRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyDataTransform")
+    
+    
+    return
+}
+
+func NewModifyDataTransformResponse() (response *ModifyDataTransformResponse) {
+    response = &ModifyDataTransformResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDataTransform
+// 本接口用于修改数据加工任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
+//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
+//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyDataTransform(request *ModifyDataTransformRequest) (response *ModifyDataTransformResponse, err error) {
+    return c.ModifyDataTransformWithContext(context.Background(), request)
+}
+
+// ModifyDataTransform
+// 本接口用于修改数据加工任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
+//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
+//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyDataTransformWithContext(ctx context.Context, request *ModifyDataTransformRequest) (response *ModifyDataTransformResponse, err error) {
+    if request == nil {
+        request = NewModifyDataTransformRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDataTransform require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDataTransformResponse()
     err = c.Send(request, response)
     return
 }
@@ -3711,6 +4070,75 @@ func (c *Client) ModifyTopicWithContext(ctx context.Context, request *ModifyTopi
     return
 }
 
+func NewOpenKafkaConsumerRequest() (request *OpenKafkaConsumerRequest) {
+    request = &OpenKafkaConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cls", APIVersion, "OpenKafkaConsumer")
+    
+    
+    return
+}
+
+func NewOpenKafkaConsumerResponse() (response *OpenKafkaConsumerResponse) {
+    response = &OpenKafkaConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// OpenKafkaConsumer
+// 打开Kafka协议消费功能
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) OpenKafkaConsumer(request *OpenKafkaConsumerRequest) (response *OpenKafkaConsumerResponse, err error) {
+    return c.OpenKafkaConsumerWithContext(context.Background(), request)
+}
+
+// OpenKafkaConsumer
+// 打开Kafka协议消费功能
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) OpenKafkaConsumerWithContext(ctx context.Context, request *OpenKafkaConsumerRequest) (response *OpenKafkaConsumerResponse, err error) {
+    if request == nil {
+        request = NewOpenKafkaConsumerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenKafkaConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenKafkaConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRetryShipperTaskRequest() (request *RetryShipperTaskRequest) {
     request = &RetryShipperTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3999,8 +4427,6 @@ func NewUploadLogResponse() (response *UploadLogResponse) {
 // 系统根据携带的哈希值（X-CLS-HashKey）将数据写入到符合范围要求的目标分区。例如，可以将某个日志源端通过 hashkey 与某个主题分区强绑定，这样可以保证数据在该分区上写入和消费是严格保序的。
 //
 // 
-//
-// 此外日志服务还为用户提供以下两种不同的日志上传模式：
 //
 //                  
 //
@@ -4337,8 +4763,6 @@ func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *Up
 // 系统根据携带的哈希值（X-CLS-HashKey）将数据写入到符合范围要求的目标分区。例如，可以将某个日志源端通过 hashkey 与某个主题分区强绑定，这样可以保证数据在该分区上写入和消费是严格保序的。
 //
 // 
-//
-// 此外日志服务还为用户提供以下两种不同的日志上传模式：
 //
 //                  
 //
