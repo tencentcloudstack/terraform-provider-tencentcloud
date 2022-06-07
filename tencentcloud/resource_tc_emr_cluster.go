@@ -35,7 +35,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
     core_count=2
   }
   login_settings={
-    password="tencent@cloud123"
+    password="Tencent@cloud123"
   }
   time_span=1
   time_unit="m"
