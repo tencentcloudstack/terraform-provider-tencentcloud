@@ -3,28 +3,53 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 )
 
-func TestAccTencentCloudNeedFixCdnDomainResource(t *testing.T) {
+var testAccCdnDomain = ""
+
+func init() {
+	log.Printf("initialize domain testcase")
+	cli, _ := sharedClientForRegion(defaultRegion)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	request := domain.NewDescribeDomainNameListRequest()
+	response, err := client.UseDomainClient().DescribeDomainNameList(request)
+	if err != nil {
+		log.Printf("[DescribeDomainNameList] error: %s", err.Error())
+		return
+	}
+
+	domains := response.Response.DomainSet
+
+	if len(domains) == 0 {
+		log.Printf("[WARN] no domain on your account")
+		return
+	}
+
+	testAccCdnDomain = *domains[0].DomainName
+}
+
+func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdnDomain,
+				Config: testAccCdnDomainBasic("www." + testAccCdnDomain),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "domain", "test.zhaoshaona.com"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "service_type", "web"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "area", "mainland"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "cos"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
 				),
 			},
@@ -38,19 +63,21 @@ func TestAccTencentCloudNeedFixCdnDomainResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudNeedFixCdnDomainWithHTTPs(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdnDomainFull,
+				Config: testAccCdnDomainFull("c." + testAccCdnDomain),
+				PreConfig: func() {
+
+				},
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "domain", "test.zhaoshaona.com"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "service_type", "web"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "area", "mainland"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "range_origin_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.cache_time", "10000"),
@@ -67,7 +94,7 @@ func TestAccTencentCloudNeedFixCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.header_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "ip"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.server_name", "test.zhaoshaona.com"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "origin.0.server_name"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_pull_protocol", "follow"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.https_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.http2_switch", "on"),
@@ -84,11 +111,11 @@ func TestAccTencentCloudNeedFixCdnDomainWithHTTPs(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCdnDomainFullUpdate,
+				Config: testAccCdnDomainFullUpdate("c." + testAccCdnDomain),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "domain", "test.zhaoshaona.com"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "service_type", "web"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "area", "mainland"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "range_origin_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.cache_time", "20000"),
@@ -102,9 +129,9 @@ func TestAccTencentCloudNeedFixCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.re_validate", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.follow_origin_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.switch", "off"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "ip"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "cos"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.server_name", "test.zhaoshaona.com"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "origin.0.server_name"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_pull_protocol", "follow"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.https_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.http2_switch", "on"),
@@ -196,23 +223,44 @@ func testAccCheckCdnDomainExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCdnDomain = `
+func testAccCdnDomainBasic(name string) string {
+	return fmt.Sprintf(`
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "test.zhaoshaona.com"
+  domain = "%s"
   service_type = "web"
-  area = "mainland"
+  area = "overseas"
   origin {
 	origin_type = "ip"
-	origin_list = ["139.199.199.140"]
+	origin_list = ["43.133.14.92"]
   }
+}
+`, name)
+}
+
+const testAccSSLForCDN = `
+data "tencentcloud_ssl_certificates" "foo" {
+  name = "keep-c-ssl"
+}
+
+data "tencentcloud_cos_buckets" "bucket" {
+  bucket_prefix = "keep-cdn-test"
+}
+
+
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  certId = data.tencentcloud_ssl_certificates.foo.certificates.0.id
+  bucket_url = "keep-cdn-test-${data.tencentcloud_user_info.info.app_id}.cos.ap-singapore.myqcloud.com"
 }
 `
 
-const testAccCdnDomainFull = `
+func testAccCdnDomainFull(name string) string {
+	return fmt.Sprintf(testAccSSLForCDN+`
 resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "test.zhaoshaona.com"
+  domain         = "%[1]v"
   service_type   = "web"
-  area           = "mainland"
+  area           = "overseas"
   full_url_cache = false
   range_origin_switch = "off"
   
@@ -235,9 +283,9 @@ resource "tencentcloud_cdn_domain" "foo" {
   }
 
   origin {
-	origin_type          = "ip"
-	origin_list          = ["139.199.199.140"]
-    server_name          = "test.zhaoshaona.com"
+	origin_type          = "cos"
+	origin_list          = [local.bucket_url]
+	server_name			 = local.bucket_url
     origin_pull_protocol = "follow"
   }
 
@@ -255,60 +303,7 @@ resource "tencentcloud_cdn_domain" "foo" {
     }
 
 	server_certificate_config {
-      certificate_content = <<EOT
------BEGIN CERTIFICATE-----
-MIIDuDCCAqACCQDJd98Shn/cJTANBgkqhkiG9w0BAQsFADCBnTELMAkGA1UEBhMC
-Q04xEDAOBgNVBAgMB1RpYW5qaW4xEDAOBgNVBAcMB1RpYW5qaW4xDjAMBgNVBAoM
-BU1vY2hhMRcwFQYDVQQLDA5Nb2NoYSBTb2Z0d2FyZTEcMBoGA1UEAwwTdGVzdC56
-aGFvc2hhb25hLmNvbTEjMCEGCSqGSIb3DQEJARYUeWFsaW5wZWlAdGVuY2VudC5j
-b20wHhcNMjAwNTIwMDcyNDQyWhcNMzAwNTE4MDcyNDQyWjCBnTELMAkGA1UEBhMC
-Q04xEDAOBgNVBAgMB1RpYW5qaW4xEDAOBgNVBAcMB1RpYW5qaW4xDjAMBgNVBAoM
-BU1vY2hhMRcwFQYDVQQLDA5Nb2NoYSBTb2Z0d2FyZTEcMBoGA1UEAwwTdGVzdC56
-aGFvc2hhb25hLmNvbTEjMCEGCSqGSIb3DQEJARYUeWFsaW5wZWlAdGVuY2VudC5j
-b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCgndm2xEWL7CaVQ/lb
-TO6Gj4EqEp1tWygjdfqkUXADfsgMGPukYaZY+klV6AJzLcj8VD5iWgKa+V4kLHtf
-yh66c45nZrdUVoF9CFTw2+B/LTa/UzsvbLTVOnEjVBjI1V5kVzliF5cK5OlQ258d
-w6yFaccOgXqSkp9i57Y9pT1FIb691hsf2VHiVLizPYy3vvLQeN8RnXS3vK56BcQk
-o+49H11TAsrIh0C5maF0jp/7poSQkrX0kjfX4+gK/mC4Dn3PgK464Ko5OR45IGji
-D368/klCK1bqIshlv4owEfgzAEQMPUQ0CfuvXTX85aojM48RiYiDmYveaICtYnSR
-04MTAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAHWUpfePVt3LjZVDS3OmQ7rTG8zc
-zwZgJfxP0f4ZNo/9t53SNsQ0UM/+7sqnBKOjsWfgyFqSh9cfN0Bnsn3gmvPXmD5R
-nCa9qr9IO+FP9Ke4KKn0Ndx1sWJN3B6D8bUTnvFIkJoRsvsqNi24o2uKrUdcAYHL
-5BVtrVe8E55i0A5WosC8KWv4ZJxTacvuxVjfyroKzxsLwOQvCqBNSuZLg1HYUeG6
-XIj0/acmysb8S82Lxm39E82DbPdUO3Z0TlGL7umlAV947/6eGvPhszjnhBlxVo3p
-tmHdyqfHxWbkTW4bnO/Gu+Sll6a3n1uyQ/onXuXH3pBZoXLp3Jj+CV1+N6E=
------END CERTIFICATE-----
-EOT
-
-      private_key         = <<EOT
------BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEAoJ3ZtsRFi+wmlUP5W0zuho+BKhKdbVsoI3X6pFFwA37IDBj7
-pGGmWPpJVegCcy3I/FQ+YloCmvleJCx7X8oeunOOZ2a3VFaBfQhU8Nvgfy02v1M7
-L2y01TpxI1QYyNVeZFc5YheXCuTpUNufHcOshWnHDoF6kpKfYue2PaU9RSG+vdYb
-H9lR4lS4sz2Mt77y0HjfEZ10t7yuegXEJKPuPR9dUwLKyIdAuZmhdI6f+6aEkJK1
-9JI31+PoCv5guA59z4CuOuCqOTkeOSBo4g9+vP5JQitW6iLIZb+KMBH4MwBEDD1E
-NAn7r101/OWqIzOPEYmIg5mL3miArWJ0kdODEwIDAQABAoIBAQCW2uuLX9k6THkI
-pSlleWJm/A4C6Cz4cy/F7p+VCfA9OCzIQAbKI/VLiPisORdj+tLVPILDeWsNB75G
-F4lhNMObt8E+mRkDm6RPPS4ac0nt6ReMp63lIyLNSvDMj8Yfi1f2wn3hBesVjl8d
-VMmj+Q7m16zgkPgBBrmw+ZUPXU2oyUW4+0RvGYvuWnVUdtm/34PD1LC0NKBKaX9T
-MDHrSIns0WpQ7P4vNVQyHW7MGgEl81uzIitSWuT/k+zH6YxBlxd7d66vmhNoxz9c
-aeEf7DE3wAb4819UYWt0/ciMJwSLPkBOaTeAsktKUHVsrMLVELWcWqSIS+PYbSX8
-g3tY1DlxAoGBANSiDKNjfr1rZRtpZvxnVkssLY/586UaHs+dFfyFyd0unr/rAPf/
-GO/BIO0NbBdRb3XORMuiLQN3xf+qgKfoS0kXYglDMGKbEAC/5o6ZMV6E2E/aFrxh
-xmgKTZxCBVnOxlAy33UFs+qR8tpOnR4auAc0pNPA9QB4I7q17vGJRMyHAoGBAMFf
-7nF2aJ/k0Fcl53Cabs/FIaAwL/GBvok6Ny8wWLwiMZCtsGUUywnUdN/qbfr2GwC5
-g0w2iaxGqQPI+qw2qn0utAIfZ0Tz2VAH+P3aUTuG+M4XWHObHVXxBUqO61X9zgV2
-sXRXcbDOx3HgZeDCjk0otcGVJoC3zgzaaEZi5mQVAoGAQer+2gQ1PUm27XmOmL78
-bI+EjHbjhpKDbL95GnDrdKtIQZz8DuXBeEo6B+M6WDxBvpa0kyByrfmKo0jbW7JS
-7JTYKqDuthL2MhVLx3dMa83pNVAZ7kqtdIGFL+TzvbSxnBk5VxDuhtC6Jd1rLfMA
-jBNQ6eiOy5dzFCXkrnJspq8CgYAO4ISFsihmdMIakk31+cugrHfjzRFDMUopYJMy
-TDPndXH+wX4aqLjeLrw3JeAEOL7nFV6mlGOPH3iNU/8FFMeVDezHZQca5O/JGnPr
-g8pQHBg0MtOZQUvGet5/V/N/ECGzhegtHTUf9yic+DieTBmKkiE5nXHy4TE3B+6R
-y7YR6QKBgQDUoNAFOnMZB4BQMeCb/pQQnzNkNTG+Y02eMKjo5eZZDfyusqIui29l
-KKcVGqvwVh2r8ocP7OnrQPVK9ZW7BcoYiqM2DjdKyl7AtQKnvWfPMai++oXKzo0y
-8sg7m1Ic26sKO9W9t87cfZtFKcbKVcImLWucd9R7Ny4M4r6xlRKWpA==
------END RSA PRIVATE KEY-----
-EOT
+      certificate_id = local.certId
       message = "test"
     }
 }
@@ -317,13 +312,15 @@ EOT
     hello = "world"
   }
 }
-`
+`, name)
+}
 
-const testAccCdnDomainFullUpdate = `
+func testAccCdnDomainFullUpdate(name string) string {
+	return fmt.Sprintf(testAccSSLForCDN+`
 resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "test.zhaoshaona.com"
+  domain         = "%[1]v"
   service_type   = "web"
-  area           = "mainland"
+  area           = "overseas"
   full_url_cache = false
   range_origin_switch = "on"
 
@@ -345,9 +342,9 @@ resource "tencentcloud_cdn_domain" "foo" {
   }
 
   origin {
-	origin_type          = "ip"
-	origin_list          = ["139.199.199.140"]
-    server_name          = "test.zhaoshaona.com"
+	origin_type          = "cos"
+	origin_list          = [local.bucket_url]
+	server_name			 = local.bucket_url
     origin_pull_protocol = "follow"
   }
 
@@ -363,60 +360,7 @@ resource "tencentcloud_cdn_domain" "foo" {
     }
 
 	server_certificate_config {
-      certificate_content = <<EOT
------BEGIN CERTIFICATE-----
-MIIDuDCCAqACCQDJd98Shn/cJTANBgkqhkiG9w0BAQsFADCBnTELMAkGA1UEBhMC
-Q04xEDAOBgNVBAgMB1RpYW5qaW4xEDAOBgNVBAcMB1RpYW5qaW4xDjAMBgNVBAoM
-BU1vY2hhMRcwFQYDVQQLDA5Nb2NoYSBTb2Z0d2FyZTEcMBoGA1UEAwwTdGVzdC56
-aGFvc2hhb25hLmNvbTEjMCEGCSqGSIb3DQEJARYUeWFsaW5wZWlAdGVuY2VudC5j
-b20wHhcNMjAwNTIwMDcyNDQyWhcNMzAwNTE4MDcyNDQyWjCBnTELMAkGA1UEBhMC
-Q04xEDAOBgNVBAgMB1RpYW5qaW4xEDAOBgNVBAcMB1RpYW5qaW4xDjAMBgNVBAoM
-BU1vY2hhMRcwFQYDVQQLDA5Nb2NoYSBTb2Z0d2FyZTEcMBoGA1UEAwwTdGVzdC56
-aGFvc2hhb25hLmNvbTEjMCEGCSqGSIb3DQEJARYUeWFsaW5wZWlAdGVuY2VudC5j
-b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCgndm2xEWL7CaVQ/lb
-TO6Gj4EqEp1tWygjdfqkUXADfsgMGPukYaZY+klV6AJzLcj8VD5iWgKa+V4kLHtf
-yh66c45nZrdUVoF9CFTw2+B/LTa/UzsvbLTVOnEjVBjI1V5kVzliF5cK5OlQ258d
-w6yFaccOgXqSkp9i57Y9pT1FIb691hsf2VHiVLizPYy3vvLQeN8RnXS3vK56BcQk
-o+49H11TAsrIh0C5maF0jp/7poSQkrX0kjfX4+gK/mC4Dn3PgK464Ko5OR45IGji
-D368/klCK1bqIshlv4owEfgzAEQMPUQ0CfuvXTX85aojM48RiYiDmYveaICtYnSR
-04MTAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAHWUpfePVt3LjZVDS3OmQ7rTG8zc
-zwZgJfxP0f4ZNo/9t53SNsQ0UM/+7sqnBKOjsWfgyFqSh9cfN0Bnsn3gmvPXmD5R
-nCa9qr9IO+FP9Ke4KKn0Ndx1sWJN3B6D8bUTnvFIkJoRsvsqNi24o2uKrUdcAYHL
-5BVtrVe8E55i0A5WosC8KWv4ZJxTacvuxVjfyroKzxsLwOQvCqBNSuZLg1HYUeG6
-XIj0/acmysb8S82Lxm39E82DbPdUO3Z0TlGL7umlAV947/6eGvPhszjnhBlxVo3p
-tmHdyqfHxWbkTW4bnO/Gu+Sll6a3n1uyQ/onXuXH3pBZoXLp3Jj+CV1+N6E=
------END CERTIFICATE-----
-EOT
-
-      private_key         = <<EOT
------BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEAoJ3ZtsRFi+wmlUP5W0zuho+BKhKdbVsoI3X6pFFwA37IDBj7
-pGGmWPpJVegCcy3I/FQ+YloCmvleJCx7X8oeunOOZ2a3VFaBfQhU8Nvgfy02v1M7
-L2y01TpxI1QYyNVeZFc5YheXCuTpUNufHcOshWnHDoF6kpKfYue2PaU9RSG+vdYb
-H9lR4lS4sz2Mt77y0HjfEZ10t7yuegXEJKPuPR9dUwLKyIdAuZmhdI6f+6aEkJK1
-9JI31+PoCv5guA59z4CuOuCqOTkeOSBo4g9+vP5JQitW6iLIZb+KMBH4MwBEDD1E
-NAn7r101/OWqIzOPEYmIg5mL3miArWJ0kdODEwIDAQABAoIBAQCW2uuLX9k6THkI
-pSlleWJm/A4C6Cz4cy/F7p+VCfA9OCzIQAbKI/VLiPisORdj+tLVPILDeWsNB75G
-F4lhNMObt8E+mRkDm6RPPS4ac0nt6ReMp63lIyLNSvDMj8Yfi1f2wn3hBesVjl8d
-VMmj+Q7m16zgkPgBBrmw+ZUPXU2oyUW4+0RvGYvuWnVUdtm/34PD1LC0NKBKaX9T
-MDHrSIns0WpQ7P4vNVQyHW7MGgEl81uzIitSWuT/k+zH6YxBlxd7d66vmhNoxz9c
-aeEf7DE3wAb4819UYWt0/ciMJwSLPkBOaTeAsktKUHVsrMLVELWcWqSIS+PYbSX8
-g3tY1DlxAoGBANSiDKNjfr1rZRtpZvxnVkssLY/586UaHs+dFfyFyd0unr/rAPf/
-GO/BIO0NbBdRb3XORMuiLQN3xf+qgKfoS0kXYglDMGKbEAC/5o6ZMV6E2E/aFrxh
-xmgKTZxCBVnOxlAy33UFs+qR8tpOnR4auAc0pNPA9QB4I7q17vGJRMyHAoGBAMFf
-7nF2aJ/k0Fcl53Cabs/FIaAwL/GBvok6Ny8wWLwiMZCtsGUUywnUdN/qbfr2GwC5
-g0w2iaxGqQPI+qw2qn0utAIfZ0Tz2VAH+P3aUTuG+M4XWHObHVXxBUqO61X9zgV2
-sXRXcbDOx3HgZeDCjk0otcGVJoC3zgzaaEZi5mQVAoGAQer+2gQ1PUm27XmOmL78
-bI+EjHbjhpKDbL95GnDrdKtIQZz8DuXBeEo6B+M6WDxBvpa0kyByrfmKo0jbW7JS
-7JTYKqDuthL2MhVLx3dMa83pNVAZ7kqtdIGFL+TzvbSxnBk5VxDuhtC6Jd1rLfMA
-jBNQ6eiOy5dzFCXkrnJspq8CgYAO4ISFsihmdMIakk31+cugrHfjzRFDMUopYJMy
-TDPndXH+wX4aqLjeLrw3JeAEOL7nFV6mlGOPH3iNU/8FFMeVDezHZQca5O/JGnPr
-g8pQHBg0MtOZQUvGet5/V/N/ECGzhegtHTUf9yic+DieTBmKkiE5nXHy4TE3B+6R
-y7YR6QKBgQDUoNAFOnMZB4BQMeCb/pQQnzNkNTG+Y02eMKjo5eZZDfyusqIui29l
-KKcVGqvwVh2r8ocP7OnrQPVK9ZW7BcoYiqM2DjdKyl7AtQKnvWfPMai++oXKzo0y
-8sg7m1Ic26sKO9W9t87cfZtFKcbKVcImLWucd9R7Ny4M4r6xlRKWpA==
------END RSA PRIVATE KEY-----
-EOT
+      certificate_id = local.certId
       message = "test"
     }
 }
@@ -425,4 +369,5 @@ EOT
     hello = "world"
   }
 }
-`
+`, name)
+}
