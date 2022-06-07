@@ -124,7 +124,7 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "support_ha", "0"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "instance_name", "emr-test-demo"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "resource_spec.#", "1"),
-					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "login_settings.password", "tencent@cloud123"),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "login_settings.password", "Tencent@cloud123"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "time_span", "3600"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "time_unit", "s"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "pay_mode", "0"),
