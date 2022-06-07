@@ -34,7 +34,8 @@ func init() {
 	testAccCdnDomain = *domains[0].DomainName
 }
 
-func TestAccTencentCloudCdnDomainResource(t *testing.T) {
+// FIXME one domain can only add one auth record, leave this to next TestAccTencentCloudCdnDomainWithHTTPs testcase
+func testAccTencentCloudCdnDomainResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
