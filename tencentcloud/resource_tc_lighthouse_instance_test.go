@@ -32,7 +32,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
   renew_flag = "NOTIFY_AND_AUTO_RENEW"
 
   instance_name = "terraform"
-  zone          = "ap-shanghai-4"
+  zone          = "ap-guangzhou-3"
 
   containers {
     container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
