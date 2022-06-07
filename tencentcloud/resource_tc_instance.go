@@ -852,7 +852,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
-	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+	if instance == nil {
 		d.SetId("")
 		return nil
 	}
