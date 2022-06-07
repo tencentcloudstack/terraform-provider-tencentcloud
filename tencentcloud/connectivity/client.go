@@ -37,6 +37,7 @@ import (
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
+	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -106,6 +107,7 @@ type TencentCloudClient struct {
 	dnsPodConn         *dnspod.Client
 	privateDnsConn     *privatedns.Client
 	antiddosConn       *antiddos.Client
+	lighthouseConn     *lighthouse.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -655,6 +657,18 @@ func (me *TencentCloudClient) UseClsClient() *cls.Client {
 	me.clsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clsConn
+}
+
+// UseLighthouseClient return Lighthouse client for service
+func (me *TencentCloudClient) UseLighthouseClient() *lighthouse.Client {
+	if me.lighthouseConn != nil {
+		return me.lighthouseConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.lighthouseConn, _ = lighthouse.NewClient(me.Credential, me.Region, cpf)
+	me.lighthouseConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.lighthouseConn
 }
 
 // UseDnsPodClient return DnsPod client for service

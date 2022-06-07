@@ -1,76 +1,85 @@
 /*
-Provides a resource to create a cls index.
+Provides a resource to create a lighthouse instance.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_index" "index" {
-  topic_id = "0937e56f-4008-49d2-ad2d-69c52a9f11cc"
+resource "tencentcloud_lighthouse_instance" "lighthouse" {
+  bundle_id    = "bundle2022_gen_01"
+  blueprint_id = "lhbp-f1lkcd41"
 
-  rule {
-    full_text {
-      case_sensitive = true
-      tokenizer      = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
-      contain_z_h    = true
+  period     = 1
+  renew_flag = "NOTIFY_AND_AUTO_RENEW"
+
+  instance_name = "hello world"
+  zone          = "ap-shanghai-4"
+
+  containers {
+    container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
+    container_name = "nginx"
+    envs {
+      key = "key"
+      value = "value"
     }
-
-    key_value {
-      case_sensitive = true
-      key_values {
-        key = "hello"
-        value {
-          contain_z_h = true
-          sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
-          type        = "text"
-        }
-      }
-
-      key_values {
-        key = "world"
-        value {
-          contain_z_h = true
-          sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
-          type        = "text"
-        }
-      }
+    envs {
+      key = "key2"
+      value = "value2"
     }
-
-    tag {
-      case_sensitive = true
-      key_values {
-        key = "terraform"
-        value {
-          contain_z_h = true
-          sql_flag    = true
-          tokenizer   = "@&?|#()='\",;:<>[]{}/ \n\t\r\\"
-          type        = "text"
-        }
-      }
+    publish_ports {
+      host_port = 80
+      container_port = 80
+      ip = "127.0.0.1"
+      protocol = "tcp"
     }
+    publish_ports {
+      host_port = 36000
+      container_port = 36000
+      ip = "127.0.0.1"
+      protocol = "tcp"
+    }
+    volumes {
+      container_path = "/data"
+      host_path = "/tmp"
+    }
+    volumes {
+      container_path = "/var"
+      host_path = "/tmp"
+    }
+    command = "ls -l"
   }
-  status                  = true
-  include_internal_fields = true
-  metadata_flag           = 1
+
+  containers {
+    container_image = "ccr.ccs.tencentyun.com/qcloud/resty"
+    container_name = "resty"
+    envs {
+      key = "key2"
+      value = "value2"
+    }
+    publish_ports {
+      host_port = 80
+      container_port = 80
+      ip = "127.0.0.1"
+      protocol = "udp"
+    }
+
+    volumes {
+      container_path = "/var"
+      host_path = "/tmp"
+    }
+    command = "echo \"hello\""
+  }
 }
 ```
 
-Import
-
-cls cos index can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_cls_index.index 0937e56f-4008-49d2-ad2d-69c52a9f11cc
-```
 */
 package tencentcloud
 
 import (
 	"context"
-	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
-	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	"fmt"
 	"log"
+
+	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -83,9 +92,6 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 		Read:   resourceTencentCloudLighthouseInstanceRead,
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"bundle_id": {
 				Type:        schema.TypeString,
@@ -97,35 +103,24 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				Required:    true,
 				Description: "ID of the Lighthouse image.",
 			},
-			"instance_charge_prepaid": {
-				Type:        schema.TypeList,
-				MaxItems:    1,
+			"period": {
+				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Monthly subscription information for the instance, including the purchase period, setting of auto-renewal, etc.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"period": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.",
-						},
-						"RenewFlag": {
-							Type:     schema.TypeString,
-							Required: true,
-							Description: "Auto-Renewal flag. Valid values: NOTIFY_AND_AUTO_RENEW: notify upon expiration and renew automatically; NOTIFY_AND_MANUAL_RENEW: notify upon expiration but do not renew automatically. You need to manually renew DISABLE_NOTIFY_AND_AUTO_RENEW: neither notify upon expiration nor renew automatically. " +
-								"Default value: NOTIFY_AND_MANUAL_RENEW.",
-						},
-					},
-				},
+				Description: "Subscription period in months. Valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60.",
+			},
+			"renew_flag": {
+				Type:     schema.TypeString,
+				Required: true,
+				Description: "Auto-Renewal flag. Valid values: NOTIFY_AND_AUTO_RENEW: notify upon expiration and renew automatically; NOTIFY_AND_MANUAL_RENEW: notify upon expiration but do not renew automatically. You need to manually renew DISABLE_NOTIFY_AND_AUTO_RENEW: neither notify upon expiration nor renew automatically. " +
+					"Default value: NOTIFY_AND_MANUAL_RENEW.",
 			},
 			"instance_name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The display name of the Lighthouse instance.",
 			},
-			"zones": {
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+			"zone": {
+				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "List of availability zones. A random AZ is selected by default.",
 			},
@@ -145,11 +140,11 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
-				Description: "Login password of the instance. It’s only available for Windows instances. If it’s not specified, it means that the user choose to set the login password after the instance creation.",
+				Description: "Login password of the instance. It is only available for Windows instances. If it is not specified, it means that the user choose to set the login password after the instance creation.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_generate_password": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Required:    true,
 							Description: "whether auto generate password. if false, need set password.",
 						},
@@ -184,7 +179,7 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Required:    true,
 										Description: "Environment variable key.",
 									},
@@ -213,13 +208,13 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 										Description: "Container port.",
 									},
 									"ip": {
-										Type:        schema.TypeInt,
-										Required:    true,
+										Type:        schema.TypeString,
+										Optional:    true,
 										Description: "External IP. It defaults to 0.0.0.0.",
 									},
 									"protocol": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Optional:    true,
 										Description: "The protocol defaults to tcp. Valid values: tcp, udp and sctp.",
 									},
 								},
@@ -263,8 +258,8 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request = lighthouse.CreateInstancesRequest{}
-		indexId string
+		request    = lighthouse.NewCreateInstancesRequest()
+		instanceId string
 	)
 
 	if v, ok := d.GetOk("bundle_id"); ok {
@@ -275,361 +270,201 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		request.BlueprintId = helper.String(v.(string))
 	}
 
-	if instanceChargePrepaidMap, ok := helper.InterfacesHeadMap(d, "instance_charge_prepaid"); ok {
-		ruleInfo := lighthouse.InstanceChargePrepaid{}
-		if instanceChargePrepaidMap, ok := helper.InterfaceToMap(instanceChargePrepaidMap, )
-			fullTextInfo := cls.FullTextInfo{}
-			if v, ok := fullTextMap["case_sensitive"]; ok {
-				fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
-			}
-			if v, ok := fullTextMap["tokenizer"]; ok {
-				fullTextInfo.Tokenizer = helper.String(v.(string))
-			}
-			if v, ok := fullTextMap["contain_z_h"]; ok {
-				fullTextInfo.ContainZH = helper.Bool(v.(bool))
-			}
-			ruleInfo.FullText = &fullTextInfo
-		}
+	instanceChargePrepaid := lighthouse.InstanceChargePrepaid{}
+	if v, ok := d.GetOk("period"); ok {
+		instanceChargePrepaid.Period = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOk("renew_flag"); ok {
+		instanceChargePrepaid.RenewFlag = helper.String(v.(string))
+	}
+	request.InstanceChargePrepaid = &instanceChargePrepaid
 
-		if keyValue, ok := dMap["key_value"]; ok {
-			ruleKeyValueMap := keyValue.([]interface{})[0].(map[string]interface{})
-			ruleKeyValueInfo := cls.RuleKeyValueInfo{}
-			if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
-				ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
+	if v, ok := d.GetOk("instance_name"); ok {
+		request.InstanceName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zones = append(request.Zones, helper.String(v.(string)))
+	}
+
+	if v, ok := d.GetOk("dry_run"); ok {
+		request.DryRun = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("client_token"); ok {
+		request.ClientToken = helper.String(v.(string))
+	}
+
+	if loginConfigurationMap, ok := helper.InterfacesHeadMap(d, "login_configuration"); ok {
+		loginConfiguration := lighthouse.LoginConfiguration{}
+		if v, ok := loginConfigurationMap["auto_generate_password"]; ok {
+			loginConfiguration.AutoGeneratePassword = helper.String(v.(string))
+		}
+		if v, ok := loginConfigurationMap["password"]; ok {
+			loginConfiguration.Password = helper.String(v.(string))
+		}
+		request.LoginConfiguration = &loginConfiguration
+	}
+
+	if v, ok := d.GetOk("containers"); ok {
+		for _, container := range v.([]interface{}) {
+			dockerContainerConfiguration := lighthouse.DockerContainerConfiguration{}
+			containerMap := container.(map[string]interface{})
+			if v, ok := containerMap["container_image"]; ok {
+				dockerContainerConfiguration.ContainerImage = helper.String(v.(string))
 			}
-			if v, ok := ruleKeyValueMap["key_values"]; ok {
-				for _, keyValue := range v.([]interface{}) {
-					keyValueInfo := cls.KeyValueInfo{}
-					keyValueMap := keyValue.(map[string]interface{})
-					if v, ok := keyValueMap["key"]; ok {
-						keyValueInfo.Key = helper.String(v.(string))
+			if v, ok := containerMap["container_name"]; ok {
+				dockerContainerConfiguration.ContainerName = helper.String(v.(string))
+			}
+			if v, ok := containerMap["envs"]; ok {
+				for _, env := range v.([]interface{}) {
+					containerEnv := lighthouse.ContainerEnv{}
+					envMap := env.(map[string]interface{})
+					if v, ok := envMap["key"]; ok {
+						containerEnv.Key = helper.String(v.(string))
 					}
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-						keyValueInfo.Value = &valueInfo
+					if v, ok := envMap["value"]; ok {
+						containerEnv.Value = helper.String(v.(string))
 					}
-					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
+					dockerContainerConfiguration.Envs = append(dockerContainerConfiguration.Envs, &containerEnv)
 				}
 			}
-
-			ruleInfo.KeyValue = &ruleKeyValueInfo
-		}
-
-		if tagMap, ok := helper.InterfaceToMap(dMap, "tag"); ok {
-			ruleTagInfo := cls.RuleTagInfo{}
-			if v, ok := tagMap["case_sensitive"]; ok {
-				ruleTagInfo.CaseSensitive = helper.Bool(v.(bool))
-			}
-			if v, ok := tagMap["key_values"]; ok {
-				for _, keyValue := range v.([]interface{}) {
-					keyValueInfo := cls.KeyValueInfo{}
-					keyValueMap := keyValue.(map[string]interface{})
-					if v, ok := keyValueMap["key"]; ok {
-						keyValueInfo.Key = helper.String(v.(string))
+			if v, ok := containerMap["publish_ports"]; ok {
+				for _, publishPort := range v.([]interface{}) {
+					dockerContainerPublishPort := lighthouse.DockerContainerPublishPort{}
+					publishPortMap := publishPort.(map[string]interface{})
+					if v, ok := publishPortMap["host_port"]; ok {
+						dockerContainerPublishPort.HostPort = helper.IntInt64(v.(int))
 					}
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-						keyValueInfo.Value = &valueInfo
+					if v, ok := publishPortMap["container_port"]; ok {
+						dockerContainerPublishPort.ContainerPort = helper.IntInt64(v.(int))
 					}
-					ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
+					if v, ok := publishPortMap["ip"]; ok {
+						dockerContainerPublishPort.Ip = helper.String(v.(string))
+					}
+					if v, ok := publishPortMap["protocol"]; ok {
+						dockerContainerPublishPort.Protocol = helper.String(v.(string))
+					}
+					dockerContainerConfiguration.PublishPorts = append(dockerContainerConfiguration.PublishPorts, &dockerContainerPublishPort)
 				}
 			}
-			ruleInfo.Tag = &ruleTagInfo
+			if v, ok := containerMap["volumes"]; ok {
+				for _, volume := range v.([]interface{}) {
+					dockerContainerVolume := lighthouse.DockerContainerVolume{}
+					volumeMap := volume.(map[string]interface{})
+					if v, ok := volumeMap["container_path"]; ok {
+						dockerContainerVolume.ContainerPath = helper.String(v.(string))
+					}
+					if v, ok := volumeMap["host_path"]; ok {
+						dockerContainerVolume.HostPath = helper.String(v.(string))
+					}
+					dockerContainerConfiguration.Volumes = append(dockerContainerConfiguration.Volumes, &dockerContainerVolume)
+				}
+			}
+			if v, ok := containerMap["command"]; ok {
+				dockerContainerConfiguration.Command = helper.String(v.(string))
+			}
+			request.Containers = append(request.Containers, &dockerContainerConfiguration)
 		}
-		request.Rule = &ruleInfo
 	}
 
-	if v, ok := d.GetOk("status"); ok {
-		request.Status = helper.Bool(v.(bool))
-	}
-
-	if v, ok := d.GetOk("include_internal_fields"); ok {
-		request.IncludeInternalFields = helper.Bool(v.(bool))
-	}
-
-	if v, ok := d.GetOk("metadata_flag"); ok {
-		request.MetadataFlag = helper.IntUint64(v.(int))
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().CreateIndex(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
+	result, err := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().CreateInstances(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls index failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create lighthouse instance failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(indexId)
+	instanceId = *result.Response.InstanceIdSet[0]
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	lighthouseService := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := lighthouseService.DescribeLighthouseInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance != nil && (*instance.InstanceState == "RUNNING") {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("lighthouse instance status is %s, retry...", *instance.InstanceState))
+	})
+	if err != nil {
+		return err
+	}
+
+	d.SetId(instanceId)
 
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
 }
 
 func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cls_index.read")()
+	defer logElapsed("resource.tencentcloud_lighthouse_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	lighthouseService := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		request = cls.NewDescribeIndexRequest()
-		result  *cls.DescribeIndexResponse
-	)
 	id := d.Id()
 
-	request.TopicId = &id
+	instance, err := lighthouseService.DescribeLighthouseInstanceById(ctx, id)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().DescribeIndex(request)
-		if e != nil {
-			return retryError(e)
-		}
-		result = response
-		return nil
-	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cls index failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	res := result.Response
-
-	if res.TopicId != nil {
-		_ = d.Set("topic_id", res.TopicId)
+	if instance == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `lighthouse instance` %s does not exist", id)
 	}
 
-	if res.Rule != nil {
-		ruleMap := map[string]interface{}{}
+	if instance.BundleId != nil {
+		_ = d.Set("bundle_id", instance.BundleId)
+	}
 
-		if res.Rule.FullText != nil {
-			fullTextMap := map[string]interface{}{
-				"case_sensitive": res.Rule.FullText.CaseSensitive,
-				"tokenizer":      res.Rule.FullText.Tokenizer,
-				"contain_z_h":    res.Rule.FullText.ContainZH,
-			}
-			ruleMap["full_text"] = []interface{}{fullTextMap}
+	if instance.BlueprintId != nil {
+		_ = d.Set("blueprint_id", instance.BlueprintId)
+	}
+
+	if instance.InstanceChargeType != nil {
+		instanceChargePrepaidMap := map[string]interface{}{
+			"renew_flag": instance.RenewFlag,
 		}
-
-		if res.Rule.KeyValue != nil {
-			ruleKeyValueMap := map[string]interface{}{
-				"case_sensitive": res.Rule.KeyValue.CaseSensitive,
-			}
-			if res.Rule.KeyValue.KeyValues != nil {
-				keyValuesList := []interface{}{}
-				for _, keyValueInfo := range res.Rule.KeyValue.KeyValues {
-					keyValueInfoMap := map[string]interface{}{
-						"key": keyValueInfo.Key,
-					}
-					if keyValueInfo.Value != nil {
-						valueInfoMap := map[string]interface{}{
-							"type":        keyValueInfo.Value.Type,
-							"tokenizer":   keyValueInfo.Value.Tokenizer,
-							"sql_flag":    keyValueInfo.Value.SqlFlag,
-							"contain_z_h": keyValueInfo.Value.ContainZH,
-						}
-						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
-					}
-					keyValuesList = append(keyValuesList, keyValueInfoMap)
-				}
-				ruleKeyValueMap["key_values"] = keyValuesList
-			}
-			ruleMap["key_value"] = []interface{}{ruleKeyValueMap}
-		}
-
-		if res.Rule.Tag != nil {
-			ruleTagMap := map[string]interface{}{
-				"case_sensitive": res.Rule.Tag.CaseSensitive,
-			}
-			if res.Rule.Tag.KeyValues != nil {
-				keyValuesList := []interface{}{}
-				for _, keyValueInfo := range res.Rule.Tag.KeyValues {
-					keyValueInfoMap := map[string]interface{}{
-						"key": keyValueInfo.Key,
-					}
-					if keyValueInfo.Value != nil {
-						valueInfoMap := map[string]interface{}{
-							"type":        keyValueInfo.Value.Type,
-							"tokenizer":   keyValueInfo.Value.Tokenizer,
-							"sql_flag":    keyValueInfo.Value.SqlFlag,
-							"contain_z_h": keyValueInfo.Value.ContainZH,
-						}
-						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
-					}
-					keyValuesList = append(keyValuesList, keyValueInfoMap)
-				}
-				ruleTagMap["key_values"] = keyValuesList
-			}
-			ruleMap["tag"] = []interface{}{ruleTagMap}
-		}
-
-		_ = d.Set("rule", []interface{}{ruleMap})
+		_ = d.Set("instance_charge_prepaid", []interface{}{instanceChargePrepaidMap})
 	}
 
-	if res.Status != nil {
-		_ = d.Set("status", res.Status)
+	if instance.InstanceName != nil {
+		_ = d.Set("instance_name", instance.InstanceName)
 	}
 
-	if res.IncludeInternalFields != nil {
-		_ = d.Set("include_internal_fields", res.IncludeInternalFields)
-	}
-
-	if res.MetadataFlag != nil {
-		_ = d.Set("metadata_flag", res.MetadataFlag)
+	if instance.Zone != nil {
+		_ = d.Set("zone", instance.Zone)
 	}
 
 	return nil
 }
 
 func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cls_index.update")()
+	defer logElapsed("resource.tencentcloud_lighthouse_instance.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request = cls.NewModifyIndexRequest()
+		request = lighthouse.NewModifyInstancesAttributeRequest()
 	)
 	id := d.Id()
 
-	request.TopicId = &id
+	request.InstanceIds = append(request.InstanceIds, helper.String(id))
 
-	if d.HasChange("rule") || d.HasChange("status") || d.HasChange("include_internal_fields") || d.HasChange("metadata_flag") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
-			ruleInfo := cls.RuleInfo{}
-			if fullTextMap, ok := helper.InterfaceToMap(dMap, "full_text"); ok {
-				fullTextInfo := cls.FullTextInfo{}
-				if v, ok := fullTextMap["case_sensitive"]; ok {
-					fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := fullTextMap["tokenizer"]; ok {
-					fullTextInfo.Tokenizer = helper.String(v.(string))
-				}
-				if v, ok := fullTextMap["contain_z_h"]; ok {
-					fullTextInfo.ContainZH = helper.Bool(v.(bool))
-				}
-				ruleInfo.FullText = &fullTextInfo
-			}
-
-			if ruleKeyValueMap, ok := helper.InterfaceToMap(dMap, "key_value"); ok {
-				ruleKeyValueInfo := cls.RuleKeyValueInfo{}
-				if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
-					ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := ruleKeyValueMap["key_values"]; ok {
-					for _, keyValue := range v.([]interface{}) {
-						keyValueInfo := cls.KeyValueInfo{}
-						keyValueMap := keyValue.(map[string]interface{})
-						if v, ok := keyValueMap["key"]; ok {
-							keyValueInfo.Key = helper.String(v.(string))
-						}
-						if v, ok := keyValueMap["value"]; ok {
-							valueMap := v.([]interface{})[0].(map[string]interface{})
-							valueInfo := cls.ValueInfo{}
-							if v, ok := valueMap["type"]; ok {
-								valueInfo.Type = helper.String(v.(string))
-							}
-							if v, ok := valueMap["tokenizer"]; ok {
-								valueInfo.Tokenizer = helper.String(v.(string))
-							}
-							if v, ok := valueMap["sql_flag"]; ok {
-								valueInfo.SqlFlag = helper.Bool(v.(bool))
-							}
-							if v, ok := valueMap["contain_z_h"]; ok {
-								valueInfo.ContainZH = helper.Bool(v.(bool))
-							}
-							keyValueInfo.Value = &valueInfo
-						}
-						ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
-					}
-				}
-
-				ruleInfo.KeyValue = &ruleKeyValueInfo
-			}
-
-			if tagMap, ok := helper.InterfaceToMap(dMap, "tag"); ok {
-				ruleTagInfo := cls.RuleTagInfo{}
-				if v, ok := tagMap["case_sensitive"]; ok {
-					ruleTagInfo.CaseSensitive = helper.Bool(v.(bool))
-				}
-				if v, ok := tagMap["key_values"]; ok {
-					for _, keyValue := range v.([]interface{}) {
-						keyValueInfo := cls.KeyValueInfo{}
-						keyValueMap := keyValue.(map[string]interface{})
-						if v, ok := keyValueMap["key"]; ok {
-							keyValueInfo.Key = helper.String(v.(string))
-						}
-						if v, ok := keyValueMap["value"]; ok {
-							valueMap := v.([]interface{})[0].(map[string]interface{})
-							valueInfo := cls.ValueInfo{}
-							if v, ok := valueMap["type"]; ok {
-								valueInfo.Type = helper.String(v.(string))
-							}
-							if v, ok := valueMap["tokenizer"]; ok {
-								valueInfo.Tokenizer = helper.String(v.(string))
-							}
-							if v, ok := valueMap["sql_flag"]; ok {
-								valueInfo.SqlFlag = helper.Bool(v.(bool))
-							}
-							if v, ok := valueMap["contain_z_h"]; ok {
-								valueInfo.ContainZH = helper.Bool(v.(bool))
-							}
-							keyValueInfo.Value = &valueInfo
-						}
-						ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
-					}
-				}
-				ruleInfo.Tag = &ruleTagInfo
-			}
-			request.Rule = &ruleInfo
+	if d.HasChange("instance_name") {
+		if v, ok := d.GetOk("instance_name"); ok {
+			request.InstanceName = helper.String(v.(string))
 		}
-
-		if v, ok := d.GetOk("status"); ok {
-			request.Status = helper.Bool(v.(bool))
-		}
-
-		if v, ok := d.GetOk("include_internal_fields"); ok {
-			request.IncludeInternalFields = helper.Bool(v.(bool))
-		}
-
-		if v, ok := d.GetOk("metadata_flag"); ok {
-			request.MetadataFlag = helper.IntUint64(v.(int))
-		}
-
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyIndex(request)
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ModifyInstancesAttribute(request)
 			if e != nil {
 				return retryError(e)
 			} else {
@@ -642,20 +477,129 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
+
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := service.DescribeLighthouseInstanceById(ctx, id)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance.LatestOperationState == nil {
+				return resource.RetryableError(fmt.Errorf("waiting for instance operation update"))
+			}
+			if *instance.LatestOperationState == "OPERATING" {
+				return resource.RetryableError(fmt.Errorf("waiting for instance %s operation", id))
+			}
+			if *instance.LatestOperationState == "FAILED" {
+				return resource.NonRetryableError(fmt.Errorf("failed operation"))
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
 	}
+
+	if d.HasChange("bundle_id") {
+		old, _ := d.GetChange("bundle_id")
+		_ = d.Set("bundle_id", old)
+		return fmt.Errorf("`bundle_id` do not support change now.")
+	}
+
+	if d.HasChange("blueprint_id") {
+		old, _ := d.GetChange("blueprint_id")
+		_ = d.Set("blueprint_id", old)
+		return fmt.Errorf("`blueprint_id` do not support change now.")
+	}
+
+	if d.HasChange("period") {
+		old, _ := d.GetChange("period")
+		_ = d.Set("period", old)
+		return fmt.Errorf("`period` do not support change now.")
+	}
+
+	if d.HasChange("renew_flag") {
+		old, _ := d.GetChange("renew_flag")
+		_ = d.Set("renew_flag", old)
+		return fmt.Errorf("`renew_flag` do not support change now.")
+	}
+
+	if d.HasChange("zone") {
+		old, _ := d.GetChange("zone")
+		_ = d.Set("zone", old)
+		return fmt.Errorf("`zone` do not support change now.")
+	}
+
+	if d.HasChange("dry_run") {
+		old, _ := d.GetChange("dry_run")
+		_ = d.Set("dry_run", old)
+		return fmt.Errorf("`dry_run` do not support change now.")
+	}
+
+	if d.HasChange("client_token") {
+		old, _ := d.GetChange("client_token")
+		_ = d.Set("client_token", old)
+		return fmt.Errorf("`client_token` do not support change now.")
+	}
+
+	if d.HasChange("login_configuration") {
+		old, _ := d.GetChange("login_configuration")
+		_ = d.Set("login_configuration", old)
+		return fmt.Errorf("`login_configuration` do not support change now.")
+	}
+
+	if d.HasChange("containers") {
+		old, _ := d.GetChange("containers")
+		_ = d.Set("containers", old)
+		return fmt.Errorf("`containers` do not support change now.")
+	}
+
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
 }
 
 func resourceTencentCloudLighthouseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cls_cos_shipper.delete")()
+	defer logElapsed("resource.tencentcloud_lighthouse_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
 
-	if err := service.DeleteClsIndex(ctx, id); err != nil {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if err := service.IsolateLighthouseInstanceById(ctx, id); err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeLighthouseInstanceById(ctx, id)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance.LatestOperationState == nil {
+			return resource.RetryableError(fmt.Errorf("waiting for instance operation update"))
+		}
+		if *instance.LatestOperationState == "FAILED" {
+			return resource.NonRetryableError(fmt.Errorf("failed operation"))
+		}
+		if *instance.InstanceState == "SHUTDOWN" && *instance.LatestOperationState != "OPERATING" {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("instance status is %s, retry...", *instance.InstanceState))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if err := service.DeleteLighthouseInstanceById(ctx, id); err != nil {
 		return err
 	}
 	return nil

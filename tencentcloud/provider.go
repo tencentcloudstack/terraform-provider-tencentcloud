@@ -1108,7 +1108,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_machine_group":                       resourceTencentCloudClsMachineGroup(),
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
-			"tencentcloud_lighthouse_instance": 					resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
