@@ -99,7 +99,7 @@ func testApiStrategyAttachmentExists(n string) resource.TestCheckFunc {
 
 const testAPIGatewayServiceAttachmentBase = `
 resource "tencentcloud_api_gateway_service" "service" {
-  	service_name = "niceservice"
+  	service_name = "attach_service"
   	protocol     = "http&https"
   	net_type     = ["INNER", "OUTER"]
   	ip_version   = "IPv4"
@@ -107,14 +107,14 @@ resource "tencentcloud_api_gateway_service" "service" {
 
 resource "tencentcloud_api_gateway_ip_strategy" "test"{
     service_id    = tencentcloud_api_gateway_service.service.id
-    strategy_name = "tf_test"
+    strategy_name = "attach_strategy"
     strategy_type = "BLACK"
     strategy_data = "9.9.9.9"
 }
 
 resource "tencentcloud_api_gateway_api" "api" {
     service_id            = tencentcloud_api_gateway_service.service.id
-    api_name              = "hello_update"
+    api_name              = "attach_api"
     api_desc              = "my hello api update"
     auth_type             = "SECRET"
     protocol              = "HTTP"
