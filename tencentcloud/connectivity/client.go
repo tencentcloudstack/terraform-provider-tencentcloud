@@ -33,6 +33,7 @@ import (
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
+	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -107,6 +108,7 @@ type TencentCloudClient struct {
 	dnsPodConn         *dnspod.Client
 	privateDnsConn     *privatedns.Client
 	antiddosConn       *antiddos.Client
+	domainConn         *domain.Client
 	lighthouseConn     *lighthouse.Client
 }
 
@@ -693,6 +695,18 @@ func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
 	me.privateDnsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.privateDnsConn
+}
+
+// UseDomainClient return Domain client for service
+func (me *TencentCloudClient) UseDomainClient() *domain.Client {
+	if me.dnsPodConn != nil {
+		return me.domainConn
+	}
+	cpf := me.NewClientProfile(300)
+	me.domainConn, _ = domain.NewClient(me.Credential, me.Region, cpf)
+	me.domainConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.domainConn
 }
 
 // UseAntiddosClient returns antiddos client for service
