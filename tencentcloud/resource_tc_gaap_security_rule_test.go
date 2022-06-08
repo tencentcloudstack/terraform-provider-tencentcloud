@@ -116,7 +116,6 @@ func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -139,7 +138,6 @@ func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapSecurityRule_AllPorts(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

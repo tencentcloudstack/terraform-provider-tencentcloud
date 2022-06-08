@@ -117,7 +117,7 @@ func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { time.Sleep(time.Duration(time.Second * 5)) },
+				PreConfig: func() { time.Sleep(time.Duration(time.Second * 10)) },
 				Config:    testAccGaapRealserverUpdateTags,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
