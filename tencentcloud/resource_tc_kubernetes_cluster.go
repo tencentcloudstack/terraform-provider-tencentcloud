@@ -1040,10 +1040,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				" Because only cluster with node is allowed enable access endpoint.",
 		},
 		"cluster_intranet": {
-			Type:        schema.TypeBool,
-			Default:     false,
-			Optional:    true,
-			Description: "Open intranet access or not.",
+			Type:     schema.TypeBool,
+			Default:  false,
+			Optional: true,
+			Description: "Open intranet access or not." +
+				" If this field is set 'true', the field below `worker_config` must be set." +
+				" Because only cluster with node is allowed enable access endpoint.",
 		},
 		"managed_cluster_internet_security_policies": {
 			Type:     schema.TypeList,
