@@ -38,7 +38,11 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 		Update: resourceTencentCloudTcrVpcAttachmentUpdate,
 		Delete: resourceTencentCLoudTcrVpcAttachmentDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("enable_public_domain_dns", false)
+				_ = d.Set("enable_vpc_domain_dns", false)
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 
 		Schema: map[string]*schema.Schema{
