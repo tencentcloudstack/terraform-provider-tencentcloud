@@ -909,9 +909,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
 	}
 
+	tagService := TagService{client}
+
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "instance", client.Region, d.Id())
+	if err != nil {
+		return err
+	}
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
-	tags := flattenCvmTagsMapping(instance.Tags)
 	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
 	_ = d.Set("tags", tags)
 
