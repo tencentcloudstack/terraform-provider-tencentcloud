@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #service files
-update_services=`git diff --name-status origin/master| awk '{print $2}' | grep "^tencentcloud/" | xargs egrep "type .+Service struct" | awk -F ":" '{print $2}' | awk '{print $2}'`
+update_services=`git diff --name-status origin/master| awk '{print $2}' | grep "^tencentcloud/" | xargs egrep "type .+Service struct" | awk '{print $2}'`
 need_test_files=""
 for update_service in $update_services; do
     tmp_files=`grep -r --with-filename $update_service ./tencentcloud | awk -F ":" '{print $1}' | grep -v "service_tencent*" | awk -F "/" '{print $3}' | sort | uniq | egrep "^resource_tc_|^data_source_tc" | awk -F "." '{print $1}' | awk '/_test$/{print "tencentcloud/"$0".go"} !/_test$/{print "tencentcloud/"$0"_test.go"}'`
