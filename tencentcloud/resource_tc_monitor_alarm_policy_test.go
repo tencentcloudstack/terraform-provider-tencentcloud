@@ -10,7 +10,7 @@ func TestAccTencentCloudMonitorAlarmPolicyResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMonitorAlarmPolicy,
