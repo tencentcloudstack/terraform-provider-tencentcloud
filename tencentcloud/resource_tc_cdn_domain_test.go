@@ -3,36 +3,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 )
 
 var testAccCdnDomain = ""
-
-func init() {
-	log.Printf("initialize domain testcase")
-	cli, _ := sharedClientForRegion(defaultRegion)
-	client := cli.(*TencentCloudClient).apiV3Conn
-	request := domain.NewDescribeDomainNameListRequest()
-	response, err := client.UseDomainClient().DescribeDomainNameList(request)
-	if err != nil {
-		log.Printf("[DescribeDomainNameList] error: %s", err.Error())
-		return
-	}
-
-	domains := response.Response.DomainSet
-
-	if len(domains) == 0 {
-		log.Printf("[WARN] no domain on your account")
-		return
-	}
-
-	testAccCdnDomain = *domains[0].DomainName
-}
 
 // FIXME one domain can only add one auth record, leave this to next TestAccTencentCloudCdnDomainWithHTTPs testcase
 func testAccTencentCloudCdnDomainResource(t *testing.T) {
@@ -44,7 +21,7 @@ func testAccTencentCloudCdnDomainResource(t *testing.T) {
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdnDomainBasic("www." + testAccCdnDomain),
+				Config: testAccCdnDomainBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
@@ -71,7 +48,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdnDomainFull("c." + testAccCdnDomain),
+				Config: testAccCdnDomainFull,
 				PreConfig: func() {
 
 				},
@@ -93,7 +70,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.follow_origin_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.header_rules.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "ip"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "cos"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "origin.0.server_name"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_pull_protocol", "follow"),
@@ -112,7 +89,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCdnDomainFullUpdate("c." + testAccCdnDomain),
+				Config: testAccCdnDomainFullUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
@@ -224,10 +201,17 @@ func testAccCheckCdnDomainExists(n string) resource.TestCheckFunc {
 	}
 }
 
-func testAccCdnDomainBasic(name string) string {
-	return fmt.Sprintf(`
+const testAccDomainForCDN = `
+data "tencentcloud_domains" "domains" {}
+
+locals {
+  domain = data.tencentcloud_domains.domains.list.0.domain_name
+}
+`
+
+const testAccCdnDomainBasic = testAccDomainForCDN + `
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "%s"
+  domain = "www.${local.domain}"
   service_type = "web"
   area = "overseas"
   origin {
@@ -235,8 +219,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 	origin_list = ["43.133.14.92"]
   }
 }
-`, name)
-}
+`
 
 const testAccSSLForCDN = `
 data "tencentcloud_ssl_certificates" "foo" {
@@ -256,10 +239,9 @@ locals {
 }
 `
 
-func testAccCdnDomainFull(name string) string {
-	return fmt.Sprintf(testAccSSLForCDN+`
+const testAccCdnDomainFull = testAccDomainForCDN + testAccSSLForCDN + `
 resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "%[1]v"
+  domain         = "c.${local.domain}"
   service_type   = "web"
   area           = "overseas"
   full_url_cache = false
@@ -307,19 +289,17 @@ resource "tencentcloud_cdn_domain" "foo" {
       certificate_id = local.certId
       message = "test"
     }
-}
+  }
 
   tags = {
     hello = "world"
   }
 }
-`, name)
-}
+`
 
-func testAccCdnDomainFullUpdate(name string) string {
-	return fmt.Sprintf(testAccSSLForCDN+`
+const testAccCdnDomainFullUpdate = testAccDomainForCDN + testAccSSLForCDN + `
 resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "%[1]v"
+  domain         = "c.${local.domain}"
   service_type   = "web"
   area           = "overseas"
   full_url_cache = false
@@ -364,11 +344,10 @@ resource "tencentcloud_cdn_domain" "foo" {
       certificate_id = local.certId
       message = "test"
     }
-}
+  }
 
   tags = {
     hello = "world"
   }
 }
-`, name)
-}
+`

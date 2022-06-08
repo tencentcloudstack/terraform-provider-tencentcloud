@@ -301,6 +301,10 @@ Direct Connect Gateway(DCG)
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
 
+Domain
+  Data Source
+    tencentcloud_domains
+
 Elasticsearch
   Data Source
     tencentcloud_elasticsearch_instances
@@ -753,6 +757,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_acls":                                 dataSourceTencentCloudVpcAcls(),
 			"tencentcloud_subnet":                                   dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                              dataSourceTencentCloudRouteTable(),
+			"tencentcloud_domains":                                  dataSourceTencentCloudDomains(),
 			"tencentcloud_eip":                                      dataSourceTencentCloudEip(),
 			"tencentcloud_eips":                                     dataSourceTencentCloudEips(),
 			"tencentcloud_enis":                                     dataSourceTencentCloudEnis(),
