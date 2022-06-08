@@ -1,3 +1,19 @@
+## 1.73.0 (June 08, 2022)
+
+FEATURES:
+
+* new resource `tencentcloud_cls_index`
+* new resource `tencentcloud_lighthouse_instance`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_dc_gateway` add protect sleep
+* resource `tencentcloud_kubernetes_cluster` fix docs
+
+COMMON:
+
+* fix testcases
+
 ## 1.72.8 (June 02, 2022)
 
 ENHANCEMENTS:
