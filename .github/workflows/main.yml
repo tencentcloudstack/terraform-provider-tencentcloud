@@ -4,7 +4,9 @@ name: SYNC_CODE
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - 'coding-test/**'
     tags: v*
 
 jobs:
