@@ -140,7 +140,7 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	d.SetId(dcgId)
 
 	// add sleep protect, either network_instance_id will be set "".
-	time.Sleep(1)
+	time.Sleep(1 * time.Second)
 
 	return resourceTencentCloudDcGatewayRead(d, meta)
 }
