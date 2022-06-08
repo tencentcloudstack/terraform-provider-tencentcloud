@@ -5,11 +5,51 @@ import (
 	"fmt"
 	"testing"
 
+	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-var testAccCdnDomain = ""
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=cdn_domain
+	resource.AddTestSweepers("cdn_domain", &resource.Sweeper{
+		Name: "cdn_domain",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CdnService{client}
+			domains, err := service.DescribeDomainsConfigByFilters(ctx, nil)
+			if err != nil {
+				return err
+			}
+
+			for i := range domains {
+				item := domains[i]
+				name := *item.Domain
+				if *item.Status != "offline" {
+					_ = service.StopDomain(ctx, name)
+				}
+
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := service.DeleteDomain(ctx, name)
+					if inErr != nil {
+						retryError(err, cdn.RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE)
+					}
+					return nil
+				})
+				if err != nil {
+					break
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 // FIXME one domain can only add one auth record, leave this to next TestAccTencentCloudCdnDomainWithHTTPs testcase
 func testAccTencentCloudCdnDomainResource(t *testing.T) {
