@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -51,7 +52,7 @@ func init() {
 
 			for i := range dbs {
 				db := dbs[i]
-				if *db.Name != testDbName {
+				if !strings.HasPrefix(*db.Name, "test") {
 					continue
 				}
 				err := service.DeleteSqlserverDB(ctx, insId, []*string{db.Name})

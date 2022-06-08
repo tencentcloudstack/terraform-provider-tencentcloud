@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
@@ -19,20 +20,27 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_cam_saml_provider", &resource.Sweeper{
 		Name: "tencentcloud_cam_saml_provider",
 		F: func(r string) error {
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
 
-			request := cam.NewDeleteSAMLProviderRequest()
-			request.Name = helper.String(testAccCamSAMLName)
-
-			_, err := client.UseCamClient().DeleteSAMLProvider(request)
-			if err != nil {
-				return err
+			if err := testAccDeleteSAMLProvider(r, testAccCamSAMLName); err != nil {
+				log.Printf("Delete SAML Provider %s fail, reason: %s", testAccCamSAMLName, err.Error())
 			}
-
+			if err := testAccDeleteSAMLProvider(r, testAccSAMLProviderDataSourceName); err != nil {
+				log.Printf("Delete SAML Provider %s fail, reason: %s", testAccSAMLProviderDataSourceName, err.Error())
+			}
 			return nil
 		},
 	})
+}
+
+func testAccDeleteSAMLProvider(region string, name string) error {
+	cli, _ := sharedClientForRegion(region)
+	client := cli.(*TencentCloudClient).apiV3Conn
+
+	request := cam.NewDeleteSAMLProviderRequest()
+	request.Name = helper.String(name)
+
+	_, err := client.UseCamClient().DeleteSAMLProvider(request)
+	return err
 }
 
 func TestAccTencentCloudCamSAMLProvider_basic(t *testing.T) {

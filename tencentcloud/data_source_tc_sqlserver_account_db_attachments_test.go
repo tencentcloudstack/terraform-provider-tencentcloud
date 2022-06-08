@@ -28,10 +28,12 @@ func TestAccDataSourceTencentCloudSqlserverAccountDBAttachments(t *testing.T) {
 	})
 }
 
+const testAccSQLServerAttachDataDB = "test_db_attachment"
+
 const testAccTencentCloudDataSqlserverAccountDBAttachmentsBasic = CommonPresetSQLServerAccount + `
 resource "tencentcloud_sqlserver_db" "test" {
   instance_id = local.sqlserver_id
-  name        = "test_db_attachment"
+  name        = "` + testAccSQLServerAttachDataDB + `"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }
