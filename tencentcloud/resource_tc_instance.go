@@ -703,6 +703,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	instanceId := ""
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().RunInstances(request)
@@ -710,10 +711,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			e, ok := err.(*sdkErrors.TencentCloudSDKError)
-			if ok && e.Code == CVM_CLOUD_DISK_SOLD_OUT_ERROR {
-				return resource.NonRetryableError(e)
+			if ok && IsContains(CVM_RETRYABLE_ERROR, e.Code) {
+				return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
 			}
-			return retryError(err)
+			return resource.NonRetryableError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -852,7 +853,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
-	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+	if instance == nil {
 		d.SetId("")
 		return nil
 	}
@@ -909,9 +910,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
 	}
 
+	tagService := TagService{client}
+
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "instance", client.Region, d.Id())
+	if err != nil {
+		return err
+	}
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
-	tags := flattenCvmTagsMapping(instance.Tags)
 	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
 	_ = d.Set("tags", tags)
 

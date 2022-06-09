@@ -49,7 +49,9 @@ const (
 	CVM_IMAGE_LOGIN     = "TRUE"
 	CVM_IMAGE_LOGIN_NOT = "FALSE"
 
-	CVM_ZONE_NOT_SUPPORT_ERROR    = "InvalidParameterValue.ZoneNotSupported"
+	// @Deprecated use cvm.INVALIDPARAMETERVALUE_ZONENOTSUPPORTED
+	CVM_ZONE_NOT_SUPPORT_ERROR = "InvalidParameterValue.ZoneNotSupported"
+	// @Deprecated use cvm.RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT instead
 	CVM_CLOUD_DISK_SOLD_OUT_ERROR = "ResourceInsufficient.CloudDiskSoldOut"
 
 	CVM_STOP_MODE_KEEP_CHARGING = "KEEP_CHARGING"
@@ -59,6 +61,13 @@ const (
 	MIDLINE                     = "-"
 	UNDERLINE                   = "_"
 )
+
+// Only client error can cvm retry, others will directly returns
+var CVM_RETRYABLE_ERROR = []string{
+	// client
+	"ClientError.NetworkError",
+	"ClientError.HttpStatusCodeError",
+}
 
 var CVM_CHARGE_TYPE = []string{
 	CVM_CHARGE_TYPE_PREPAID,
