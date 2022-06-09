@@ -59,7 +59,6 @@ func TestAccDataSourceTencentCloudGaapCertificates_name(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapCertificates_type(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },

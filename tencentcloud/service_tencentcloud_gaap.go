@@ -713,7 +713,7 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	}
 	modifyRequest.ClientToken = helper.String(helper.BuildToken())
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(modifyRequest.GetAction())
 
 		if _, err := client.ModifyProxyConfiguration(modifyRequest); err != nil {
