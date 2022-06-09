@@ -115,13 +115,15 @@ func TestIsExpectError(t *testing.T) {
 
 	err := sdkErrors.NewTencentCloudSDKError("ClientError.NetworkError", "", "")
 
+	// Expected
 	expectedFull := []string{"ClientError.NetworkError"}
 	expectedShort := []string{"ClientError"}
-	unExpectedMatchHead := []string{"ClientError.HttpStatusCodeError"}
-	unExpectedShort := []string{"SystemError"}
-
 	assert.Equalf(t, isExpectError(err, expectedFull), true, "")
 	assert.Equalf(t, isExpectError(err, expectedShort), true, "")
+
+	// Unexpected
+	unExpectedMatchHead := []string{"ClientError.HttpStatusCodeError"}
+	unExpectedShort := []string{"SystemError"}
 	assert.Equalf(t, isExpectError(err, unExpectedMatchHead), false, "")
 	assert.Equalf(t, isExpectError(err, unExpectedShort), false, "")
 }

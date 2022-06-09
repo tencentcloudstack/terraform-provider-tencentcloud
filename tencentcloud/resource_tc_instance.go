@@ -703,6 +703,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	instanceId := ""
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().RunInstances(request)
@@ -710,10 +711,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			e, ok := err.(*sdkErrors.TencentCloudSDKError)
-			if ok && e.Code == CVM_CLOUD_DISK_SOLD_OUT_ERROR {
-				return resource.NonRetryableError(e)
+			if ok && IsContains(CVM_RETRYABLE_ERROR, e.Code) {
+				return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
 			}
-			return retryError(err)
+			return resource.NonRetryableError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
