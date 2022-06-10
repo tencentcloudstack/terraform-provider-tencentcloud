@@ -36,6 +36,15 @@ func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "protocol_type", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "1"),
 				),
+			}, {
+				Config: testAccClbServerAttachment_tcp_update_ssl,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "protocol_type", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "1"),
+				),
 			},
 		},
 	})
@@ -154,6 +163,10 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbServerAttachment_tcp = instanceCommonTestCase + `
+data "tencentcloud_ssl_certificates" "foo" {
+  name = "keep"
+}
+
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-test"
@@ -187,6 +200,10 @@ resource "tencentcloud_clb_attachment" "foo" {
 `
 
 const testAccClbServerAttachment_tcp_update = instanceCommonTestCase + `
+data "tencentcloud_ssl_certificates" "foo" {
+  name = "keep"
+}
+
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-test"
@@ -205,6 +222,41 @@ resource "tencentcloud_clb_listener" "foo" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 50
+  }
+}
+`
+
+const testAccClbServerAttachment_tcp_update_ssl = instanceCommonTestCase + `
+data "tencentcloud_ssl_certificates" "foo" {
+  name = "keep"
+}
+
+resource "tencentcloud_clb_instance" "foo" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-tcp-ssl"
+  vpc_id       = var.cvm_vpc_id
+}
+
+# This is will force new as expected
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id                     = tencentcloud_clb_instance.foo.id
+  listener_name              = "tf-clb-attach-tcp-ssl"
+  port                       = 44
+  protocol                   = "TCP_SSL"
+  health_check_switch        = true
+  scheduler                  = "WRR"
+  certificate_ssl_mode       = "UNIDIRECTIONAL"
+  certificate_id             = data.tencentcloud_ssl_certificates.foo.certificates.0.id
 }
 
 resource "tencentcloud_clb_attachment" "foo" {

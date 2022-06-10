@@ -424,7 +424,8 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 				}
 			}
 		}
-	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+		// TCP / UDP / TCP_SSL
+	} else if instance.Targets != nil {
 		onlineTargets = instance.Targets
 	}
 
