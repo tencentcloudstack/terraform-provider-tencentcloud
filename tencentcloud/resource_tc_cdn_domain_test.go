@@ -3,7 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"testing"
+
+	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
+	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 
@@ -83,7 +87,12 @@ func testAccTencentCloudCdnDomainResource(t *testing.T) {
 
 func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			if err := testAccCdnDomainVerify(); err != nil {
+				t.Fatalf("[TestAccCentcentCloudCdnDomainWithHTTPs] Domain Verify failed: %s", err)
+			}
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
@@ -173,6 +182,129 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccGetTestingDomain() (string, error) {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion("ap-guangzhou")
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := DomainService{client}
+	request := domain.NewDescribeDomainNameListRequest()
+	domains, err := service.DescribeDomainNameList(ctx, request)
+	if err != nil {
+		return "", err
+	}
+	if len(domains) == 0 {
+		return "", nil
+	}
+	return *domains[0].DomainName, nil
+}
+
+func testAccCdnDomainVerify() error {
+	cli, _ := sharedClientForRegion("ap-guangzhou")
+	client := cli.(*TencentCloudClient).apiV3Conn
+	continueCode := []string{
+		// no record
+		cdn.UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED,
+		// has record but need modify
+		cdn.UNAUTHORIZEDOPERATION_CDNTXTRECORDVALUENOTMATCH,
+	}
+
+	domainName, err := testAccGetTestingDomain()
+	l3domain := fmt.Sprintf("c.%s", domainName)
+
+	if err != nil {
+		return err
+	}
+
+	vRequest := cdn.NewVerifyDomainRecordRequest()
+	vRequest.Domain = &l3domain
+
+	vRes, err := client.UseCdnClient().VerifyDomainRecord(vRequest)
+
+	if err != nil {
+
+		code := err.(*sdkErrors.TencentCloudSDKError).Code
+
+		if !IsContains(continueCode, code) {
+			return err
+		}
+	}
+
+	if vRes.Response != nil && *vRes.Response.Result {
+		return nil
+	}
+
+	cRequest := cdn.NewCreateVerifyRecordRequest()
+	cRequest.Domain = &l3domain
+
+	cRes, err := client.UseCdnClient().CreateVerifyRecord(cRequest)
+	if err != nil {
+		return err
+	}
+
+	recordType := *cRes.Response.RecordType
+	record := *cRes.Response.Record
+
+	err = testAccSetDnsPodRecord(domainName, recordType, record)
+
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+		vRes, err = client.UseCdnClient().VerifyDomainRecord(vRequest)
+		if err != nil {
+			return retryError(err, continueCode...)
+		}
+		if vRes.Response != nil && *vRes.Response.Result {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("verifying domain, retry"))
+	})
+
+	return nil
+}
+
+func testAccSetDnsPodRecord(domainName, recordType, record string) error {
+	cli, _ := sharedClientForRegion("ap-guangzhou")
+	client := cli.(*TencentCloudClient).apiV3Conn
+	recordLine := "默认"
+	subDomain := "_cdnauth"
+
+	request := dnspod.NewDescribeRecordListRequest()
+	request.Domain = &domainName
+	request.Subdomain = &subDomain
+	response, err := client.UseDnsPodClient().DescribeRecordList(request)
+
+	if err != nil {
+		code := err.(*sdkErrors.TencentCloudSDKError).Code
+		if code != dnspod.RESOURCENOTFOUND_NODATAOFRECORD {
+			return err
+		}
+	}
+
+	if response.Response != nil && len(response.Response.RecordList) > 0 {
+		for i := range response.Response.RecordList {
+			recordInfo := response.Response.RecordList[i]
+			if *recordInfo.Value == record {
+				return nil
+			}
+		}
+	}
+
+	cRequest := dnspod.NewCreateRecordRequest()
+	cRequest.Domain = &domainName
+	cRequest.SubDomain = &subDomain
+	cRequest.RecordType = &recordType
+	cRequest.RecordLine = &recordLine
+	cRequest.Value = &record
+
+	if _, err := client.UseDnsPodClient().CreateRecord(cRequest); err != nil {
+		return err
+	}
+	return nil
 }
 
 func testAccCheckCdnDomainDestroy(s *terraform.State) error {
