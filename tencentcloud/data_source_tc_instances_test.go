@@ -23,7 +23,7 @@ func TestAccTencentCloudDataSourceInstancesBase(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_instances.foo", "instance_list.0.instance_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_instances.foo", "instance_list.0.cpu"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_instances.foo", "instance_list.0.memory"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instances.foo", "instance_list.0.availability_zone", defaultAZone),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_instances.foo", "instance_list.0.availability_zone"),
 					resource.TestCheckResourceAttr("data.tencentcloud_instances.foo", "instance_list.0.project_id", "0"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_instances.foo", "instance_list.0.system_disk_type"),
 				),
