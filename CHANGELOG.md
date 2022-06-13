@@ -1,3 +1,13 @@
+## 1.73.2 (June 13, 2022)
+
+BUGFIXES:
+* resource `tencentcloud_clb_attachment` disable target diff if using TCP-SSL listener
+* resource `tencentcloud_instance` support prepaid/postpaid charge type dual modify
+
+
+COMMON:
+* fix gaap, cvm datasource testcases
+
 ## 1.73.0 (June 08, 2022)
 
 FEATURES:
