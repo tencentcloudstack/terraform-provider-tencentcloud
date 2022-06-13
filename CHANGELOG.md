@@ -8,6 +8,13 @@ BUGFIXES:
 COMMON:
 * fix gaap, cvm datasource testcases
 
+## 1.73.1 (June 09, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_instance` remove unnecessary retries and optimize state management on launch failed cvm
+
+
 ## 1.73.0 (June 08, 2022)
 
 FEATURES:
