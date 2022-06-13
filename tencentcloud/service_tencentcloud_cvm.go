@@ -1038,12 +1038,14 @@ func (me *CvmService) ModifyInstanceChargeType(ctx context.Context, instanceId s
 	request := cvm.NewModifyInstancesChargeTypeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceChargeType = &chargeType
-	request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
-	if period != -1 {
-		request.InstanceChargePrepaid.Period = helper.IntInt64(period)
-	}
-	if renewFlag != "" {
-		request.InstanceChargePrepaid.RenewFlag = &renewFlag
+	if chargeType == CVM_CHARGE_TYPE_PREPAID {
+		request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
+		if period != -1 {
+			request.InstanceChargePrepaid.Period = helper.IntInt64(period)
+		}
+		if renewFlag != "" {
+			request.InstanceChargePrepaid.RenewFlag = &renewFlag
+		}
 	}
 
 	ratelimit.Check(request.GetAction())

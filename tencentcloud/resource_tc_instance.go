@@ -1016,20 +1016,23 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	var (
-		periodSet      = false
-		renewFlagSet   = false
-		alreadyPrepaid = *instanceInfo.InstanceChargeType == CVM_CHARGE_TYPE_PREPAID
+		periodSet         = false
+		renewFlagSet      = false
+		expectChargeType  = CVM_CHARGE_TYPE_POSTPAID
+		currentChargeType = *instanceInfo.InstanceChargeType
 	)
 
-	if d.HasChange("instance_charge_type") && !alreadyPrepaid {
-		old, chargeType := d.GetChange("instance_charge_type")
-		if old.(string) != CVM_CHARGE_TYPE_POSTPAID || chargeType.(string) != CVM_CHARGE_TYPE_PREPAID {
-			return fmt.Errorf("Only support change chargeType from POSTPAID_BY_HOUR to PREPAID.")
-		}
+	chargeType, chargeOk := d.GetOk("instance_charge_type")
+	if chargeOk {
+		expectChargeType = chargeType.(string)
+	}
+
+	if d.HasChange("instance_charge_type") && expectChargeType != currentChargeType {
 		var (
-			period    int
+			period    = -1
 			renewFlag string
 		)
+
 		if v, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
 			period = v.(int)
 		}
@@ -1037,7 +1040,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			renewFlag = v.(string)
 		}
 		// change charge type
-		err := cvmService.ModifyInstanceChargeType(ctx, instanceId, chargeType.(string), period, renewFlag)
+		err := cvmService.ModifyInstanceChargeType(ctx, instanceId, expectChargeType, period, renewFlag)
 		if err != nil {
 			return err
 		}
