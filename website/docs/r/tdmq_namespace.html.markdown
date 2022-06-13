@@ -37,11 +37,6 @@ The following arguments are supported:
 * `remark` - (Optional) Description of the namespace.
 * `retention_policy` - (Optional) The Policy of message to retain.
 
-The `retention_policy` object supports the following:
-
-* `size_in_mb` - (Optional) the size of message to retain.
-* `time_in_minutes` - (Optional) the time of message to retain.
-
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:

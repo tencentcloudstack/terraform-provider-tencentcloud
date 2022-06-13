@@ -1,6 +1,6 @@
 package tencentcloud
 
-import "github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 const (
 	VOD_AUDIO_CHANNEL_MONO   = "mono"

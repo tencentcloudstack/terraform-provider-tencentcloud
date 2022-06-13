@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 var testDataDayuL7RulesV2Name = "data.tencentcloud_dayu_l7_rules_v2.test"

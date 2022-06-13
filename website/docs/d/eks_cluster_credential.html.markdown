@@ -56,8 +56,6 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port.
   * `type` - Type of IP, can be `advertise`, `public`, etc.
 * `credential` - Credential info.
-  * `ca_cert` - CA root certification.
-  * `token` - Certification token.
 * `internal_lb` - Cluster internal access LoadBalancer info.
   * `enabled` - Indicates weather the internal access LB enabled.
   * `subnet_id` - ID of subnet which related to Internal LB.

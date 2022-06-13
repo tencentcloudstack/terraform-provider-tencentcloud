@@ -59,7 +59,7 @@ import (
 
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1183,9 +1183,6 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		if err := scfService.ModifyFunctionConfig(ctx, functionInfo); err != nil {
 			log.Printf("[CRITAL]%s update function configuration failed: %+v", logId, err)
 			return err
-		}
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
 		}
 	}
 
