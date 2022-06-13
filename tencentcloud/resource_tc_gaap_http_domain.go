@@ -90,7 +90,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				Optional:      true,
 				Computed:      true,
-				Set:           schema.HashString,
+				Set:           helper.InterfaceHashString,
 				ConflictsWith: []string{"client_certificate_id"},
 				Description:   "ID list of the poly client certificate.",
 			},
@@ -123,7 +123,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 			"realserver_certificate_ids": {
 				Type:          schema.TypeSet,
 				Elem:          &schema.Schema{Type: schema.TypeString},
-				Set:           schema.HashString,
+				Set:           helper.InterfaceHashString,
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"realserver_certificate_id"},
@@ -438,8 +438,6 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 	forwardProtocol := *listeners[0].ForwardProtocol
 
-	d.Partial(true)
-
 	if d.HasChange("certificate_id") || d.HasChange("client_certificate_id") || d.HasChange("client_certificate_ids") {
 		certificateId := d.Get("certificate_id").(string)
 
@@ -473,13 +471,13 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		}
 
 		if d.HasChange("certificate_id") {
-			d.SetPartial("certificate_id")
+
 		}
 		if d.HasChange("client_certificate_id") {
-			d.SetPartial("client_certificate_id")
+
 		}
 		if d.HasChange("client_certificate_ids") {
-			d.SetPartial("client_certificate_ids")
+
 		}
 	}
 
@@ -592,13 +590,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		); err != nil {
 			return err
 		}
-
-		for _, attr := range updateAdvancedAttr {
-			d.SetPartial(attr)
-		}
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudGaapHttpDomainRead(d, m)
 }

@@ -630,8 +630,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(contextNil)
 
-	d.Partial(true)
-
 	clbId := d.Id()
 	clbName := ""
 	targetRegionInfo := clb.TargetRegionInfo{}
@@ -719,16 +717,16 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 		if d.HasChange("clb_name") {
-			d.SetPartial("clb_name")
+
 		}
 		if d.HasChange("clb_vips") {
-			d.SetPartial("clb_vips")
+
 		}
 		if d.HasChange("target_region_info_region") {
-			d.SetPartial("target_region_info_region")
+
 		}
 		if d.HasChange("target_region_info_vpc_id") {
-			d.SetPartial("target_region_info_vpc_id")
+
 		}
 	}
 
@@ -761,7 +759,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -805,9 +803,8 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
-	d.Partial(false)
 
 	return nil
 }

@@ -1,6 +1,9 @@
 package helper
 
-import "strconv"
+import (
+	"hash/crc32"
+	"strconv"
+)
 
 func Bool(i bool) *bool { return &i }
 
@@ -163,4 +166,25 @@ func StrToBool(s string) (i bool) {
 		i = true
 	}
 	return
+}
+
+func InterfaceHashString(v interface{}) int {
+	return HashString(v.(string))
+}
+
+// HashString hashes a string to a unique hashcode.
+//
+// crc32 returns a uint32, but for our use we need
+// and non-negative integer. Here we cast to an integer
+// and invert it if the result is negative.
+func HashString(s string) int {
+	v := int(crc32.ChecksumIEEE([]byte(s)))
+	if v >= 0 {
+		return v
+	}
+	if -v >= 0 {
+		return -v
+	}
+	// v == MinInt
+	return 0
 }

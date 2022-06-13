@@ -189,8 +189,6 @@ func resourceTencentCloudClbCustomizedConfigUpdate(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 
-	d.Partial(true)
-
 	configId := d.Id()
 	request := clb.NewSetCustomizedConfigForLoadBalancerRequest()
 	request.UconfigId = &configId

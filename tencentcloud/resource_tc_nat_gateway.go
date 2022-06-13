@@ -243,7 +243,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
 	natGatewayId := d.Id()
 	request := vpc.NewModifyNatGatewayAttributeRequest()
 	request.NatGatewayId = &natGatewayId
@@ -274,10 +273,10 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 	if d.HasChange("name") {
-		d.SetPartial("name")
+
 	}
 	if d.HasChange("bandwidth") {
-		d.SetPartial("bandwidth")
+
 	}
 	//max concurrent
 	if d.HasChange("max_concurrent") {
@@ -299,7 +298,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify NAT gateway concurrent failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("max_concurrent")
+
 	}
 
 	//eip
@@ -433,7 +432,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					return err
 				}
 			}
-			d.SetPartial("assigned_eip_set")
+
 		}
 
 	}
@@ -450,10 +449,8 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
-	}
 
-	d.Partial(false)
+	}
 
 	return nil
 }

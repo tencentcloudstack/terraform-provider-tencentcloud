@@ -322,7 +322,6 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 	domain := d.Get("domain").(string)
 	sourceList := d.Get("source_list").(*schema.Set).List()
 
-	d.Partial(true)
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ruleFlag := false
@@ -385,10 +384,6 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		}
 		if !readyFlag {
 			return fmt.Errorf("Modify operation is timeout %s", ruleId)
-		}
-
-		for _, key := range ruleKey {
-			d.SetPartial(key)
 		}
 	}
 
@@ -485,10 +480,8 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 				return fmt.Errorf("Set switch is timeout %s", ruleId)
 			}
 		}
-		d.SetPartial("switch")
-	}
 
-	d.Partial(false)
+	}
 
 	return resourceTencentCloudDayuL7RuleRead(d, meta)
 }

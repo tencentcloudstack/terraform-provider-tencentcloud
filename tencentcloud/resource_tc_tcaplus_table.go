@@ -258,8 +258,6 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 	tableName := d.Get("table_name").(string)
 	tableId := d.Id()
 
-	d.Partial(true)
-
 	//description
 	if d.HasChange("description") {
 		err := tcaplusService.ModifyTableMemo(ctx, clusterId, groupId, tableId, tableName, d.Get("description").(string))
@@ -276,7 +274,7 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	//idl_id
@@ -321,15 +319,7 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
-
-		for _, key := range []string{"idl_id", "table_name", "table_idl_type"} {
-			if d.HasChange(key) {
-				d.SetPartial(key)
-			}
-		}
 	}
-
-	d.Partial(false)
 
 	time.Sleep(time.Second)
 

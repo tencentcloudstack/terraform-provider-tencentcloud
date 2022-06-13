@@ -153,15 +153,10 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		remark = old.(string)
 	}
 
-	d.Partial(true)
-
 	if err := service.ModifyTdmqInstanceAttribute(ctx, id, clusterName, remark); err != nil {
 		return err
 	}
-	d.SetPartial("cluster_name")
-	d.SetPartial("remark")
 
-	d.Partial(false)
 	return resourceTencentCloudTdmqRead(d, meta)
 }
 

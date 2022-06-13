@@ -109,7 +109,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
-				Set:           schema.HashString,
+				Set:           helper.InterfaceHashString,
 				ConflictsWith: []string{"client_certificate_id"},
 				Description:   "ID list of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},

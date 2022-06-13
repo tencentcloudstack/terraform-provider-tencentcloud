@@ -210,8 +210,6 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		return nil
 	}
 
-	d.Partial(true)
-
 	request := clb.NewModifyLoadBalancerAttributesRequest()
 	request.LoadBalancerId = helper.String(clbId)
 	request.LoadBalancerName = helper.String(d.Get("name").(string))
@@ -239,9 +237,6 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		log.Printf("[CRITAL]%s update clb instance failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
-	d.SetPartial("name")
-	d.Partial(false)
 
 	return resourceTencentCloudLBRead(d, meta)
 }

@@ -69,7 +69,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -197,7 +196,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
-					return hashcode.String(v.(string))
+					return helper.HashString(v.(string))
 				},
 				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.",
 			},
@@ -624,8 +623,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	tagService := TagService{client: client}
 	region := client.Region
 
-	d.Partial(true)
-
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
 	}
@@ -646,7 +643,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
@@ -888,7 +885,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis change password fail, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("password")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -897,7 +894,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -909,10 +906,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }

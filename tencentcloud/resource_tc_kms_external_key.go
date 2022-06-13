@@ -226,7 +226,6 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 	kmsService := KmsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	d.Partial(true)
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
@@ -241,7 +240,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	if d.HasChange("alias") {
@@ -257,7 +256,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key alias failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("alias")
+
 	}
 
 	if d.HasChange("key_material_base64") || d.HasChange("valid_to") {
@@ -267,10 +266,10 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 		if d.HasChange("key_material_base64") {
-			d.SetPartial("key_material_base64")
+
 		}
 		if d.HasChange("valid_to") {
-			d.SetPartial("valid_to")
+
 		}
 	}
 
@@ -295,7 +294,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_archived")
+
 		} else {
 			isEnabled := d.Get("is_enabled").(bool)
 			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
@@ -303,7 +302,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_enabled")
+
 		}
 	}
 
@@ -321,10 +320,8 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
-	}
 
-	d.Partial(false)
+	}
 
 	return resourceTencentCloudKmsKeyRead(d, meta)
 }

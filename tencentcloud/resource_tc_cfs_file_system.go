@@ -270,8 +270,6 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := cfsService.ModifyFileSystemName(ctx, fsId, d.Get("name").(string))
@@ -283,7 +281,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("access_group_id") {
@@ -297,7 +295,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("access_group_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -312,10 +310,8 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
-	}
 
-	d.Partial(false)
+	}
 
 	return resourceTencentCloudCfsFileSystemRead(d, meta)
 }

@@ -626,7 +626,7 @@ func resourceTencentcloudEKSClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	return resourceTencentcloudEKSClusterRead(d, meta)

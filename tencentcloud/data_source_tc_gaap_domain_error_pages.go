@@ -71,7 +71,7 @@ func dataSourceTencentCloudGaapDomainErrorPageInfoList() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Set:         schema.HashString,
+				Set:         helper.InterfaceHashString,
 				Description: "List of the error page info ID to be queried.",
 			},
 			"result_output_file": {

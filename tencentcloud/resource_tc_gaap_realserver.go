@@ -202,8 +202,6 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 
 	id := d.Id()
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		newName := d.Get("name").(string)
 
@@ -213,7 +211,6 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("tags") {
@@ -229,10 +226,7 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudGaapRealserverRead(d, m)
 }

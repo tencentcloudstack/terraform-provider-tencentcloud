@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 )
@@ -22,12 +21,12 @@ func DataResourceIdsHash(ids []string) string {
 		buf.WriteString(fmt.Sprintf("%s-", id))
 	}
 
-	return fmt.Sprintf("%d", hashcode.String(buf.String()))
+	return fmt.Sprintf("%d", HashString(buf.String()))
 }
 
 // Generates a hash for the set hash function used by the ID
 func DataResourceIdHash(id string) string {
-	return fmt.Sprintf("%d", hashcode.String(id))
+	return fmt.Sprintf("%d", HashString(id))
 }
 
 func GetTags(d *schema.ResourceData, k string) map[string]string {

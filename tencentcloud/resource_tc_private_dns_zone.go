@@ -408,7 +408,6 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	return resourceTencentCloudDPrivateDnsZoneRead(d, meta)

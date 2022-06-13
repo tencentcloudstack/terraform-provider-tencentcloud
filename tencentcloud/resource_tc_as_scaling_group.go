@@ -517,8 +517,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	request := as.NewModifyAutoScalingGroupRequest()
 	scalingGroupId := d.Id()
 
-	d.Partial(true)
-
 	var updateAttrs []string
 
 	request.AutoScalingGroupId = &scalingGroupId
@@ -621,10 +619,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	}); err != nil {
 		return err
 	}
-
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
-	}
 	updateAttrs = updateAttrs[:0]
 
 	balancerRequest := as.NewModifyLoadBalancersRequest()
@@ -700,10 +694,8 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
-	}
 
-	d.Partial(false)
+	}
 
 	return resourceTencentCloudAsScalingGroupRead(d, meta)
 }

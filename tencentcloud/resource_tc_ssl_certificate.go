@@ -300,7 +300,6 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		sslService = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
 	)
 
-	d.Partial(true)
 	if d.HasChange("name") {
 		aliasRequest := ssl.NewModifyCertificateAliasRequest()
 		aliasRequest.CertificateId = helper.String(id)
@@ -321,7 +320,7 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
+
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -345,9 +344,9 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("project_id")
+
 	}
-	d.Partial(false)
+
 	return resourceTencentCloudSslCertificateRead(d, m)
 }
 

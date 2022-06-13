@@ -214,7 +214,6 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 	}
 
 	if secretInfo.status == SSM_STATUS_ENABLED {
-		d.Partial(true)
 
 		param := make(map[string]interface{})
 		param["secret_name"] = secretName
@@ -238,11 +237,9 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 				log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("secret_binary")
-			d.SetPartial("secret_string")
+
 		}
 
-		d.Partial(false)
 	}
 
 	return resourceTencentCloudSsmSecretVersionRead(d, meta)

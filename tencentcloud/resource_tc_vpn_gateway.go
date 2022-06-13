@@ -347,7 +347,6 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	d.Partial(true)
 	gatewayId := d.Id()
 
 	unsupportedUpdateFields := []string{
@@ -389,10 +388,10 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		if d.HasChange("name") {
-			d.SetPartial("name")
+
 		}
 		if d.HasChange("charge_type") {
-			d.SetPartial("charge_type")
+
 		}
 	}
 
@@ -416,7 +415,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify VPN gateway bandwidth failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("bandwidth")
+
 	}
 
 	//tag
@@ -432,14 +431,12 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("cdc_id") || d.HasChange("max_connection") {
 		return fmt.Errorf("cdc_id and max_connection do not support change now.")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudVpnGatewayRead(d, meta)
 }

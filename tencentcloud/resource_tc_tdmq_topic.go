@@ -211,16 +211,11 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 		remark = old.(string)
 	}
 
-	d.Partial(true)
-
 	if err := service.ModifyTdmqTopicAttribute(ctx, environId, topicName,
 		partitions, remark, clusterId); err != nil {
 		return err
 	}
-	d.SetPartial("partitions")
-	d.SetPartial("remark")
 
-	d.Partial(false)
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
 

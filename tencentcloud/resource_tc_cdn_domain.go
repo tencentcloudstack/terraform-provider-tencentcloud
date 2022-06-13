@@ -1024,7 +1024,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cdnService := CdnService{client: client}
 
-	d.Partial(true)
 	updateAttrs := make([]string, 0)
 
 	domain := d.Id()
@@ -1257,10 +1256,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
-
 		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
@@ -1288,10 +1283,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudCdnDomainRead(d, meta)
 }

@@ -444,7 +444,7 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return err
 			}
 		}
-		d.SetPartial("security_policy")
+
 	}
 
 	if d.HasChange("tags") {
@@ -457,7 +457,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }

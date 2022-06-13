@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -104,8 +106,8 @@ func TestAccTencentCloudGaapDomainErrorPage_clearHeaders(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(403)), "403"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("Content-Length")), "Content-Length"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("X-TEST")), "X-TEST"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(helper.InterfaceHashString("Content-Length")), "Content-Length"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(helper.InterfaceHashString("X-TEST")), "X-TEST"),
 				),
 			},
 		},
@@ -156,8 +158,8 @@ func TestAccTencentCloudGaapDomainErrorPage_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(406)), "406"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(504)), "504"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("Content-Length")), "Content-Length"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("X-TEST")), "X-TEST"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(helper.InterfaceHashString("Content-Length")), "Content-Length"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(helper.InterfaceHashString("X-TEST")), "X-TEST"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "set_headers.X-TEST", "test"),
 				),
 			},

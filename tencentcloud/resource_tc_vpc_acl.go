@@ -210,8 +210,6 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		egress  []VpcACLRule
 	)
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		name = helper.String(d.Get("name").(string))
 		err := service.ModifyVpcNetworkAcl(ctx, &id, name)
@@ -219,7 +217,6 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 			return nil
 		}
 
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("ingress") {
@@ -272,10 +269,8 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
 			return err
 		}
-		d.SetPartial("ingress")
-		d.SetPartial("egress")
+
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudVpcACLRead(d, meta)
 }

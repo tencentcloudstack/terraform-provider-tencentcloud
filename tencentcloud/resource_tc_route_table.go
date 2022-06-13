@@ -210,15 +210,13 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
 		err := service.ModifyRouteTableAttribute(ctx, id, name)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("tags") {
@@ -234,10 +232,7 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudVpcRouteTableRead(d, meta)
 }

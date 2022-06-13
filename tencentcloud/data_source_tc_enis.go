@@ -28,7 +28,7 @@ func dataSourceTencentCloudEnis() *schema.Resource {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
-				Set:           schema.HashString,
+				Set:           helper.InterfaceHashString,
 				ConflictsWith: []string{"vpc_id", "subnet_id", "instance_id", "security_group", "name", "description", "ipv4", "tags"},
 				Description:   "ID of the ENIs to be queried. Conflict with `vpc_id`,`subnet_id`,`instance_id`,`security_group`,`name`,`ipv4` and `tags`.",
 			},
