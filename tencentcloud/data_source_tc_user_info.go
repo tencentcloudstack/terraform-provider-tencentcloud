@@ -100,12 +100,6 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 	appId := strconv.FormatUint(*result.AppId, 10)
 	uin := *result.Uin
 	ownerUin := *result.OwnerUin
-
-	d.SetId(fmt.Sprintf("user-%s-%s-%d", uin, appId, rand.Intn(10000)))
-
-	_ = d.Set("app_id", appId)
-	_ = d.Set("uin", uin)
-	_ = d.Set("owner_uin", ownerUin)
 	accountInfoRequest := cam.NewDescribeSubAccountsRequest()
 	accountInfoRequest.FilterSubAccountUin = []*uint64{helper.Uint64(helper.StrToUInt64(uin))}
 	accountInfoResponse, err := client.UseCamClient().DescribeSubAccounts(accountInfoRequest)
@@ -113,16 +107,24 @@ func datasourceTencentCloudUserInfoRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	subAccounts := accountInfoResponse.Response.SubAccounts
+	var name string
 	if len(subAccounts) > 0 {
-		name := *subAccounts[0].Name
-		_ = d.Set("name", name)
+		name = *subAccounts[0].Name
 	}
+	d.SetId(fmt.Sprintf("user-%s-%s-%d", uin, appId, rand.Intn(10000)))
+
+	_ = d.Set("app_id", appId)
+	_ = d.Set("uin", uin)
+	_ = d.Set("owner_uin", ownerUin)
+	_ = d.Set("name", name)
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), map[string]interface{}{
 			"app_id":   appId,
 			"uin":      uin,
 			"ownerUin": ownerUin,
+			"name":     name,
 		}); e != nil {
 			return e
 		}
