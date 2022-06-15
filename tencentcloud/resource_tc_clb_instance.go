@@ -421,9 +421,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		for k, v := range tags {
+			tmpKey := k
+			tmpValue := v
 			request.Tags = append(request.Tags, &clb.TagInfo{
-				TagKey:   &k,
-				TagValue: &v,
+				TagKey:   &tmpKey,
+				TagValue: &tmpValue,
 			})
 		}
 	}
