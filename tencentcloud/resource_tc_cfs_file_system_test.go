@@ -147,6 +147,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 func testAccCfsMasterInstance_multiTags(value string) string {
 	return fmt.Sprintf(
 		`
+%s
 resource "tencentcloud_vpc" "vpc" {
   name       = "test-cfs-vpc"
   cidr_block = "10.2.0.0/16"
@@ -163,7 +164,7 @@ resource "tencentcloud_subnet" "subnet" {
 resource "tencentcloud_cfs_file_system" "foo" {
   name = "test_cfs_file_system"
   availability_zone = "ap-guangzhou-3"
-  access_group_id = "%s"
+  access_group_id = local.cfs_access_group_id
   protocol = "NFS"
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
@@ -174,5 +175,5 @@ resource "tencentcloud_cfs_file_system" "foo" {
 	  role = "%s"
   }
 }
-`, BasicCfsAccessGroup, value)
+`, defaultCfsAccessGroup, value)
 }
