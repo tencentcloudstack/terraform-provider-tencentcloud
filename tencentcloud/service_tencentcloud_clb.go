@@ -1506,6 +1506,64 @@ func (me *ClbService) BindOrUnBindCustomizedConfigWithLbId(ctx context.Context, 
 	return
 }
 
+func (me *ClbService) CreateLoadBalancerSnatIps(ctx context.Context, id string, ips []*clb.SnatIp) (taskId string, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewCreateLoadBalancerSnatIpsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.LoadBalancerId = &id
+	request.SnatIps = ips
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().CreateLoadBalancerSnatIps(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	taskId = *response.Response.RequestId
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClbService) DeleteLoadBalancerSnatIps(ctx context.Context, id string, ips []*string) (taskId string, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDeleteLoadBalancerSnatIpsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.LoadBalancerId = &id
+	request.Ips = ips
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DeleteLoadBalancerSnatIps(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	taskId = *response.Response.RequestId
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func extractBindClbList(itemlist []*clb.BindDetailItem) (lbList []interface{}) {
 	result := make([]interface{}, 0, len(itemlist))
 	for _, v := range itemlist {

@@ -163,12 +163,19 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
 * `slave_zone_id` - (Optional) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
+* `snat_ips` - (Optional) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
+* `snat_pro` - (Optional) Indicates whether Binding IPs of other VPCs feature switch.
 * `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
 * `tags` - (Optional) The available tags within this CLB.
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
 * `zone_id` - (Optional) Available zone id, only applicable to open CLB.
+
+The `snat_ips` object supports the following:
+
+* `subnet_id` - (Required) Snat subnet ID.
+* `ip` - (Optional) Snat IP address, If set to empty will auto allocated.
 
 ## Attributes Reference
 
