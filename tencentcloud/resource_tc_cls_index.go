@@ -249,6 +249,7 @@ func resourceTencentCloudClsIndex() *schema.Resource {
 			"status": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to take effect. Default value: true.",
 			},
 			"include_internal_fields": {
@@ -283,8 +284,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
 		ruleInfo := cls.RuleInfo{}
-		if fullText, ok := dMap["full_text"]; ok {
-			fullTextMap := fullText.([]interface{})[0].(map[string]interface{})
+		if fullTextMap, ok := helper.InterfaceToMap(dMap, "full_text"); ok {
 			fullTextInfo := cls.FullTextInfo{}
 			if v, ok := fullTextMap["case_sensitive"]; ok {
 				fullTextInfo.CaseSensitive = helper.Bool(v.(bool))
@@ -298,8 +298,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 			ruleInfo.FullText = &fullTextInfo
 		}
 
-		if keyValue, ok := dMap["key_value"]; ok {
-			ruleKeyValueMap := keyValue.([]interface{})[0].(map[string]interface{})
+		if ruleKeyValueMap, ok := helper.InterfaceToMap(dMap, "key_value"); ok {
 			ruleKeyValueInfo := cls.RuleKeyValueInfo{}
 			if v, ok := ruleKeyValueMap["case_sensitive"]; ok {
 				ruleKeyValueInfo.CaseSensitive = helper.Bool(v.(bool))
@@ -311,8 +310,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					if v, ok := keyValueMap["key"]; ok {
 						keyValueInfo.Key = helper.String(v.(string))
 					}
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
+					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
 						valueInfo := cls.ValueInfo{}
 						if v, ok := valueMap["type"]; ok {
 							valueInfo.Type = helper.String(v.(string))
@@ -331,7 +329,6 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
 				}
 			}
-
 			ruleInfo.KeyValue = &ruleKeyValueInfo
 		}
 
@@ -347,8 +344,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					if v, ok := keyValueMap["key"]; ok {
 						keyValueInfo.Key = helper.String(v.(string))
 					}
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
+					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
 						valueInfo := cls.ValueInfo{}
 						if v, ok := valueMap["type"]; ok {
 							valueInfo.Type = helper.String(v.(string))

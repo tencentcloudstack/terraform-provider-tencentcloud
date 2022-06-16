@@ -100,8 +100,4 @@ resource "tencentcloud_cls_index" "index" {
   metadata_flag           = 1
 }
 
-
-
-
-
 `
