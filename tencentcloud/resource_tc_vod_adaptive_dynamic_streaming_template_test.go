@@ -97,7 +97,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.video.0.height", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.video.0.fill_type", "stretch"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.codec", "libmp3lame"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.codec", "libfdk_aac"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.bitrate", "129"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.sample_rate", "44100"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.audio_channel", "dual"),
@@ -233,7 +233,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       fill_type           = "stretch"
     }
     audio {
-      codec         = "libmp3lame"
+      codec         = "libfdk_aac"
       bitrate       = 129
       sample_rate   = 44100
       audio_channel = "dual"
