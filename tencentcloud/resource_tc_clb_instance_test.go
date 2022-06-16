@@ -82,6 +82,8 @@ func TestAccTencentCloudClbInstance_basic(t *testing.T) {
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "network_type", "OPEN"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "clb_name", BasicClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "tags.test", "tf"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "tags.test1", "tf1"),
 				),
 			},
 			{
@@ -303,6 +305,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
   clb_name     = "` + BasicClbName + `"
   tags = {
     test = "tf"
+    test1 = "tf1"
   }
 }
 `
