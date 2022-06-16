@@ -3,11 +3,63 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_cls_topic", &resource.Sweeper{
+		Name: "tencentcloud_cls_topic",
+		F:    testSweepClsTopic,
+	})
+}
+
+func testSweepClsTopic(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	clsService := ClsService{
+		client: client.apiV3Conn,
+	}
+
+	instances, err := clsService.DescribeClsTopicByFilter(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	for _, v := range instances {
+		instanceId := v.TopicId
+		instanceName := v.TopicName
+
+		now := time.Now()
+
+		createTime := stringTotime(*v.CreateTime)
+		interval := now.Sub(createTime).Minutes()
+		if strings.HasPrefix(*instanceName, keepResource) || strings.HasPrefix(*instanceName, defaultResource) {
+			continue
+		}
+		// less than 30 minute, not delete
+		if needProtect == 1 && int64(interval) < 30 {
+			continue
+		}
+
+		if err = clsService.DeleteClsTopic(ctx, *instanceId); err != nil {
+			log.Printf("[ERROR] sweep instance %s error: %s", *instanceId, err.Error())
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudClsTopic_basic(t *testing.T) {
 	t.Parallel()
