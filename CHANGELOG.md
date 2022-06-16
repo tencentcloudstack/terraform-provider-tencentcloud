@@ -1,3 +1,18 @@
+## 1.73.3 (June 16, 2022)
+
+FEATURES:
+
+* datasourcce `tencentcloud_user_info` support get userinfo
+
+BUGFIXES:
+
+* resource `resource_tc_cls_index` fix crash error
+* resource `resource_tc_clb_instance` fix tag error
+* resource `resource_tc_kubernetes_cluster` fix cluster_level error
+
+COMMON:
+* fix cls, cfs testcases
+
 ## 1.73.2 (June 13, 2022)
 
 BUGFIXES:
