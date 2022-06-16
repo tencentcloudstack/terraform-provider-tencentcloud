@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -14,6 +16,13 @@ import (
 
 type CdnService struct {
 	client *connectivity.TencentCloudClient
+}
+
+type CdnVerifyRecordResponse struct {
+	SubDomain  *string `json:"SubDomain,omitempty" name:"SubDomain"`
+	Record     *string `json:"Record,omitempty" name:"Record"`
+	RecordType *string `json:"RecordType,omitempty" name:"RecordType"`
+	RequestId  *string `json:"RequestId,omitempty" name:"RequestId"`
 }
 
 func (me *CdnService) DescribeDomainsConfigByDomain(ctx context.Context, domain string) (domainConfig *cdn.DetailDomain, errRet error) {
@@ -145,4 +154,181 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
 		offset += limit
 	}
 	return
+}
+
+func (me *CdnService) VerifyDomainRecord(ctx context.Context, domain string) (result bool, errRet error) {
+	logId := getLogId(ctx)
+	request := cdn.NewVerifyDomainRecordRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().VerifyDomainRecord(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.Result != nil {
+		result = *response.Response.Result
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CdnService) CreateVerifyRecord(ctx context.Context, domain string) (resp *CdnVerifyRecordResponse, errRet error) {
+	logId := getLogId(ctx)
+	request := cdn.NewCreateVerifyRecordRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Domain = &domain
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().CreateVerifyRecord(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if r := response.Response; r != nil {
+		resp = &CdnVerifyRecordResponse{
+			Record:     r.Record,
+			RecordType: r.RecordType,
+			SubDomain:  r.SubDomain,
+			RequestId:  r.RequestId,
+		}
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CdnService) DescribePurgeTasks(ctx context.Context, request *cdn.DescribePurgeTasksRequest) (task []*cdn.PurgeTask, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().DescribePurgeTasks(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response != nil {
+		task = response.Response.PurgeLogs
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CdnService) DescribePushTasks(ctx context.Context, request *cdn.DescribePushTasksRequest) (task []*cdn.PushTask, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().DescribePushTasks(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response != nil {
+		task = response.Response.PushLogs
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CdnService) PurgeUrlsCache(ctx context.Context, request *cdn.PurgeUrlsCacheRequest) (taskId string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().PurgeUrlsCache(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.TaskId != nil {
+		taskId = *response.Response.TaskId
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CdnService) PushUrlsCache(ctx context.Context, request *cdn.PushUrlsCacheRequest) (taskId string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().PushUrlsCache(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.TaskId != nil {
+		taskId = *response.Response.TaskId
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func GetUrlsHash(urls []string) string {
+	return hashcode.Strings(urls)
 }
