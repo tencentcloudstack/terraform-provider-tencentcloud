@@ -1896,7 +1896,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		basic.ClusterLevel = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
+	if v, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		basic.AutoUpgradeClusterLevel = helper.Bool(v.(bool))
 	}
 
