@@ -28,6 +28,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `app_id` - Current account App ID.
+* `name` - Current account Name. NOTE: only support subaccount.
 * `owner_uin` - Current account OwnerUIN.
 * `uin` - Current account UIN.
 
