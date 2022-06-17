@@ -43,3 +43,9 @@ const (
 	KMS_KEY_STATE_PENDINGIMPORT = "PendingImport"
 	KMS_KEY_STATE_ARCHIVED      = "Archived"
 )
+
+var KMS_RETRYABLE_ERROR = []string{
+	// client
+	"ClientError.NetworkError",
+	"ClientError.HttpStatusCodeError",
+}
