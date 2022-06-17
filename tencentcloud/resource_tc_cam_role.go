@@ -134,6 +134,11 @@ func resourceTencentCloudCamRole() *schema.Resource {
 				Computed:    true,
 				Description: "The last update time of the CAM role.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "A list of tags used to associate different resources.",
+			},
 		},
 	}
 }
@@ -216,6 +221,18 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	//modify tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cam", "role", region, roleId)
+
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
@@ -267,6 +284,16 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	} else {
 		_ = d.Set("console_login", false)
 	}
+
+	//tags
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "cam", "role", region, roleId)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -274,6 +301,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_cam_role.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 
@@ -342,6 +370,22 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	d.Partial(false)
+
+	//tag
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cam", "role", region, roleId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
 
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
