@@ -372,7 +372,11 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, keyId)
 			if e != nil {
-				return retryError(e)
+				ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+				if ok && IsContains(KMS_RETRYABLE_ERROR, ee.Code) {
+					return resource.RetryableError(fmt.Errorf("kms key disable error: %s, retrying", e.Error()))
+				}
+				return resource.NonRetryableError(e)
 			}
 			return nil
 		})
