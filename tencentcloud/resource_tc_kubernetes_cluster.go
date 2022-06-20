@@ -922,6 +922,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_level": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.",
 		},
 		"auto_upgrade_cluster_level": {
@@ -2389,7 +2390,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("cluster_level", info.ClusterLevel)
 	}
 
-	if _, ok := d.GetOk("auto_upgrade_cluster_level"); ok {
+	if _, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
 	}
 
@@ -2799,7 +2800,18 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		clusterDesc := d.Get("cluster_desc").(string)
 		clusterLevel := d.Get("cluster_level").(string)
 		autoUpgradeClusterLevel := d.Get("auto_upgrade_cluster_level").(bool)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+
+		ins, _, err := tkeService.DescribeCluster(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		//ignore same cluster level if same
+		if *ins.ClusterLevel == clusterLevel {
+			clusterLevel = ""
+		}
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			err := tkeService.ModifyClusterAttribute(ctx, id, projectId, clusterName, clusterDesc, clusterLevel, autoUpgradeClusterLevel)
 			if err != nil {
 				// create and update immediately may cause cluster level syntax error, this error can wait until cluster level state normal
