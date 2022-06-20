@@ -25,6 +25,9 @@ resource "tencentcloud_cam_user" "foo" {
   email               = "hello@test.com"
   country_code        = "86"
   force_delete        = true
+  tags = {
+    test = "tf-cam-user",
+  }
 }
 ```
 
@@ -41,6 +44,7 @@ The following arguments are supported:
 * `password` - (Optional) The password of the CAM user. Password should be at least 8 characters and no more than 32 characters, includes uppercase letters, lowercase letters, numbers and special characters. Only required when `console_login` is true. If not set, a random password will be automatically generated.
 * `phone_num` - (Optional) Phone number of the CAM user.
 * `remark` - (Optional) Remark of the CAM user.
+* `tags` - (Optional) A list of tags used to associate different resources.
 * `use_api` - (Optional) Indicate whether to generate the API secret key or not.
 
 ## Attributes Reference
