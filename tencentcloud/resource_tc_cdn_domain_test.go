@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -35,6 +36,11 @@ func init() {
 			for i := range domains {
 				item := domains[i]
 				name := *item.Domain
+
+				if isResourcePersist(name, nil) {
+					continue
+				}
+
 				if *item.Status != "offline" {
 					_ = service.StopDomain(ctx, name)
 				}
@@ -61,7 +67,13 @@ func testAccTencentCloudCdnDomainResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			if err := testAccCdnDomainVerify("www"); err != nil {
+				log.Printf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
+				t.Fatalf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
+			}
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
@@ -90,7 +102,8 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
-			if err := testAccCdnDomainVerify(); err != nil {
+			if err := testAccCdnDomainVerify("c"); err != nil {
+				log.Printf("[TestAccCentcentCloudCdnDomainWithHTTPs] Domain Verify failed: %s", err)
 				t.Fatalf("[TestAccCentcentCloudCdnDomainWithHTTPs] Domain Verify failed: %s", err)
 			}
 		},
@@ -202,9 +215,12 @@ func testAccGetTestingDomain() (string, error) {
 	return *domains[0].DomainName, nil
 }
 
-func testAccCdnDomainVerify() error {
+func testAccCdnDomainVerify(domainPrefix string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cli, _ := sharedClientForRegion("ap-guangzhou")
 	client := cli.(*TencentCloudClient).apiV3Conn
+	service := CdnService{client}
 	continueCode := []string{
 		// no record
 		cdn.UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED,
@@ -213,16 +229,13 @@ func testAccCdnDomainVerify() error {
 	}
 
 	domainName, err := testAccGetTestingDomain()
-	l3domain := fmt.Sprintf("c.%s", domainName)
+	l3domain := fmt.Sprintf("%s.%s", domainPrefix, domainName)
 
 	if err != nil {
 		return err
 	}
 
-	vRequest := cdn.NewVerifyDomainRecordRequest()
-	vRequest.Domain = &l3domain
-
-	vRes, err := client.UseCdnClient().VerifyDomainRecord(vRequest)
+	result, err := service.VerifyDomainRecord(ctx, l3domain)
 
 	if err != nil {
 
@@ -233,20 +246,18 @@ func testAccCdnDomainVerify() error {
 		}
 	}
 
-	if vRes.Response != nil && *vRes.Response.Result {
+	log.Printf("[Precheck] Domain Record Verify: %t", result)
+	if result {
 		return nil
 	}
 
-	cRequest := cdn.NewCreateVerifyRecordRequest()
-	cRequest.Domain = &l3domain
-
-	cRes, err := client.UseCdnClient().CreateVerifyRecord(cRequest)
+	cRes, err := service.CreateVerifyRecord(ctx, l3domain)
 	if err != nil {
 		return err
 	}
 
-	recordType := *cRes.Response.RecordType
-	record := *cRes.Response.Record
+	recordType := *cRes.RecordType
+	record := *cRes.Record
 
 	err = testAccSetDnsPodRecord(domainName, recordType, record)
 
@@ -255,11 +266,11 @@ func testAccCdnDomainVerify() error {
 	}
 
 	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
-		vRes, err = client.UseCdnClient().VerifyDomainRecord(vRequest)
+		result, err = service.VerifyDomainRecord(ctx, l3domain)
 		if err != nil {
 			return retryError(err, continueCode...)
 		}
-		if vRes.Response != nil && *vRes.Response.Result {
+		if result {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("verifying domain, retry"))

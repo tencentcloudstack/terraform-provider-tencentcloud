@@ -130,6 +130,8 @@ Content Delivery Network(CDN)
 
   Resource
 	tencentcloud_cdn_domain
+	tencentcloud_cdn_url_push
+	tencentcloud_cdn_url_purge
 
 Ckafka
   Data Source
@@ -1039,6 +1041,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_idl":                             resourceTencentCloudTcaplusIdl(),
 			"tencentcloud_tcaplus_table":                           resourceTencentCloudTcaplusTable(),
 			"tencentcloud_cdn_domain":                              resourceTencentCloudCdnDomain(),
+			"tencentcloud_cdn_url_push":                            resourceTencentCloudUrlPush(),
+			"tencentcloud_cdn_url_purge":                           resourceTencentCloudUrlPurge(),
 			"tencentcloud_monitor_policy_group":                    resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":                  resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_policy_binding_object":           resourceTencentMonitorPolicyBindingObject(),
