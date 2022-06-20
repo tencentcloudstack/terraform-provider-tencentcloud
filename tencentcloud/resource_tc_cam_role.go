@@ -24,6 +24,9 @@ resource "tencentcloud_cam_role" "foo" {
 EOF
   description   = "test"
   console_login = true
+  tags = {
+    test  = "tf-cam-role",
+  }
 }
 ```
 
@@ -225,10 +228,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	//modify tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("cam", "role", region, roleId)
-
+		resourceName := BuildTagResourceName("cam", "role", "", roleId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -287,8 +287,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
-	tags, err := tagService.DescribeResourceTags(ctx, "cam", "role", region, roleId)
+	tags, err := tagService.DescribeResourceTags(ctx, "cam", "role", "", roleId)
 	if err != nil {
 		return err
 	}
@@ -378,8 +377,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 		tagService := TagService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("cam", "role", region, roleId)
+		resourceName := BuildTagResourceName("cam", "role", "", roleId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err

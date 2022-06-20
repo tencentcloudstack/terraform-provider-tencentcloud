@@ -34,6 +34,9 @@ resource "tencentcloud_cam_role" "foo" {
 EOF
   description   = "test"
   console_login = true
+  tags = {
+    test = "tf-cam-role",
+  }
 }
 ```
 
@@ -69,6 +72,7 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of CAM role.
 * `console_login` - (Optional, ForceNew) Indicates whether the CAM role can login or not.
 * `description` - (Optional) Description of the CAM role.
+* `tags` - (Optional) A list of tags used to associate different resources.
 
 ## Attributes Reference
 

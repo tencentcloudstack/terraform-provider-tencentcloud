@@ -15,6 +15,9 @@ resource "tencentcloud_cam_user" "foo" {
   email               = "hello@test.com"
   country_code        = "86"
   force_delete        = true
+  tags = {
+    test  = "tf-cam-user",
+  }
 }
 ```
 
@@ -135,6 +138,11 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Computed:    true,
 				Description: "ID of the CAM user.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "A list of tags used to associate different resources.",
+			},
 		},
 	}
 }
@@ -239,6 +247,16 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		log.Printf("[CRITAL]%s wait for CAM user ready failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	//modify tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cam", "uin", region, helper.UInt64ToStr(*response.Response.Uin))
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamUserRead(d, meta)
 }
@@ -292,6 +310,15 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("console_login", true)
 	}
 
+	//tags
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "cam", "uin", region, helper.UInt64ToStr(*instance.Response.Uin))
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -299,6 +326,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_cam_user.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	userId := d.Id()
 
@@ -360,6 +388,45 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s update CAM user description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
+	}
+
+	//tag
+	if d.HasChange("tags") {
+		camService := CamService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+
+		var instance *cam.GetUserResponse
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := camService.DescribeUserById(ctx, userId)
+			if e != nil {
+				return retryError(e)
+			}
+			instance = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read CAM user failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+
+		if instance == nil || instance.Response == nil || instance.Response.Uid == nil {
+			d.SetId("")
+			return nil
+		}
+
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cam", "uin", region, helper.UInt64ToStr(*instance.Response.Uin))
+		err = tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
 	}
 
 	return nil
