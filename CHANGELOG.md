@@ -1,3 +1,9 @@
+## 1.74.1 (June 20, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kms_key` optimize kms key disable logic
+
 ## 1.74.0 (June 20, 2022)
 
 FEATURES:
