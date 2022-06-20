@@ -1,3 +1,20 @@
+## 1.74.0 (June 20, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_cdn_url_purge`
+* New resource `tencentcloud_cdn_url_push`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_cam_role` support tags
+* resource `tencentcloud_cam_user` support tags
+* resource `tencentcloud_kms_key` optimize delete logic
+* resource `tencentcloud_kubernetes_cluster` optimize cluster_level logic
+
+COMMON:
+* fix vod testcases
+
 ## 1.73.3 (June 16, 2022)
 
 FEATURES:
