@@ -154,7 +154,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 		Update: resourceTencentCloudCdnDomainUpdate,
 		Delete: resourceTencentCloudCdnDomainDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("authentication", []interface{}{map[string]interface{}{
+					"switch": "off",
+				}})
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 
 		Schema: map[string]*schema.Schema{
