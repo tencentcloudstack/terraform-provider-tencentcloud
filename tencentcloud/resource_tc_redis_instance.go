@@ -117,8 +117,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"redis_shard_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
-				Default:     1,
+				Computed:    true,
 				Description: "The number of instance shard. This is not required for standalone and master slave versions.",
 			},
 			"redis_replicas_num": {
