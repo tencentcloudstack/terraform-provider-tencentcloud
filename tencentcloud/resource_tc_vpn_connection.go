@@ -279,6 +279,24 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Computed:    true,
 				Description: "Net status of the VPN connection. Valid value: `AVAILABLE`.",
 			},
+			"enable_health_check": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether intra-tunnel health checks are supported.",
+			},
+			"health_check_local_ip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Health check the address of this terminal.",
+			},
+			"health_check_remote_ip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Health check peer address.",
+			},
 		},
 	}
 }
@@ -394,7 +412,15 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	ipsecSaLifetimeTraffic64 := uint64(ipsecSaLifetimeTraffic)
 	ipsecOptionsSpecification.IPSECSaLifetimeTraffic = &ipsecSaLifetimeTraffic64
 	request.IPSECOptionsSpecification = &ipsecOptionsSpecification
-
+	if v, ok := d.GetOk("enable_health_check"); ok {
+		request.EnableHealthCheck = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOk("health_check_local_ip"); ok {
+		request.HealthCheckLocalIp = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("health_check_remote_ip"); ok {
+		request.HealthCheckRemoteIp = helper.String(v.(string))
+	}
 	var response *vpc.CreateVpnConnectionResponse
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnConnection(request)
@@ -609,7 +635,9 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("vpn_proto", *connection.VpnProto)
 	_ = d.Set("encrypt_proto", *connection.EncryptProto)
 	_ = d.Set("route_type", *connection.RouteType)
-
+	_ = d.Set("enable_health_check", *connection.EnableHealthCheck)
+	_ = d.Set("health_check_local_ip", *connection.HealthCheckLocalIp)
+	_ = d.Set("health_check_remote_ip", *connection.HealthCheckRemoteIp)
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -639,6 +667,19 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	}
 	if d.HasChange("pre_share_key") {
 		request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
+		changeFlag = true
+	}
+	//healthcheck
+	if d.HasChange("enable_health_check") {
+		request.EnableHealthCheck = helper.Bool(d.Get("enable_health_check").(bool))
+		changeFlag = true
+	}
+	if d.HasChange("health_check_local_ip") {
+		request.HealthCheckLocalIp = helper.String(d.Get("health_check_local_ip").(string))
+		changeFlag = true
+	}
+	if d.HasChange("health_check_remote_ip") {
+		request.HealthCheckRemoteIp = helper.String(d.Get("health_check_remote_ip").(string))
 		changeFlag = true
 	}
 
@@ -779,6 +820,15 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	}
 	if d.HasChange("security_group_policy") {
 		d.SetPartial("security_group_policy")
+	}
+	if d.HasChange("enable_health_check") {
+		d.SetPartial("enable_health_check")
+	}
+	if d.HasChange("health_check_local_ip") {
+		d.SetPartial("health_check_local_ip")
+	}
+	if d.HasChange("health_check_remote_ip") {
+		d.SetPartial("health_check_remote_ip")
 	}
 
 	for key := range ikeChangeKeySet {

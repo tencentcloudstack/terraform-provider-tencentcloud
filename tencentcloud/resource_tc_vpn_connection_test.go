@@ -43,6 +43,9 @@ func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "encrypt_proto"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "route_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "vpn_proto"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_local_ip", "192.168.0.2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_remote_ip", "3.3.3.2"),
 				),
 			},
 			{
@@ -70,6 +73,7 @@ func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "encrypt_proto"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "route_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "vpn_proto"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "false"),
 				),
 			},
 		},
@@ -213,6 +217,9 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "test"
   }
+  enable_health_check = true
+  health_check_local_ip = "192.168.0.2"
+  health_check_remote_ip = "3.3.3.2"
 }
 `
 
@@ -265,5 +272,6 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "testt"
   }
+  enable_health_check = false
 }
 `
