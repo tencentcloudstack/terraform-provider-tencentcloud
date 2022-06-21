@@ -68,17 +68,35 @@ const (
 	// 内部服务错误，请联系腾讯云工程师进一步排查。
 	INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 
+	// 内部服务错误，请联系腾讯云工程师进一步排查。
+	INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+
 	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
 	INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
 
 	// 安全加速服务已停服，请重新购买套餐后开启。
 	INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
 
+	// 内部数据错误，请重试或联系客服人员解决。
+	INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
+
+	// 内部服务错误，请联系腾讯云工程师进一步排查。
+	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+
 	// 标签内部错误，请重试或联系客服人员解决。
 	INTERNALERROR_TAGSYSTEMERROR = "InternalError.TagSystemError"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 域名启用 HTTPS 配置需保持访问端口配置-443端口为开启状态。
+	INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
+
+	// 请删除域名的限流管理配置后再切换加速区域。
+	INVALIDPARAMETER_BANDLIMITREQUIREDMAINLAND = "InvalidParameter.BandLimitRequiredMainland"
+
+	// 源站类型为COS源或第三方对象存储的域名，用量封顶-超出阈值的处理方式仅支持访问返回404，请修改该配置后重试。
+	INVALIDPARAMETER_BANDWIDTHALERTCOUNTERMEASURECONFLICTORIGINTYPE = "InvalidParameter.BandwidthAlertCounterMeasureConflictOriginType"
 
 	// 域名状态不合法。
 	INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
@@ -122,7 +140,7 @@ const (
 	// 缓存配置不合法，请确认后重试。
 	INVALIDPARAMETER_CDNCONFIGINVALIDCACHE = "InvalidParameter.CdnConfigInvalidCache"
 
-	// 域名不合法。
+	// 域名不符合规范，请确认域名是否符合规范。
 	INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 
 	// 标签配置不合法。
@@ -134,7 +152,7 @@ const (
 	// 域名拥有特殊配置，需人工处理。
 	INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
 
-	// 内部域名不允许接入。
+	// 该域名属于指定账号域名，不允许接入。
 	INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 
 	// 错误的中间源配置。
@@ -145,6 +163,9 @@ const (
 
 	// 域名状态不合法。
 	INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
+
+	// 该域名为COS访问域名，无法接入，如需启动加速服务，请前往COS控制台启用默认 CDN 加速域。
+	INVALIDPARAMETER_CDNHOSTISCOSDEFAULTACCESS = "InvalidParameter.CdnHostIsCosDefaultAccess"
 
 	// 域名太长。
 	INVALIDPARAMETER_CDNHOSTTOOLONGHOST = "InvalidParameter.CdnHostTooLongHost"
@@ -160,6 +181,9 @@ const (
 
 	// ServiceType字段不合法，请确认后重试。
 	INVALIDPARAMETER_CDNINVALIDPARAMSERVICETYPE = "InvalidParameter.CdnInvalidParamServiceType"
+
+	// 配置暂不支持开启该配置。
+	INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
 
 	// QueryString字段不合法，请确认后重试。
 	INVALIDPARAMETER_CDNKEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.CdnKeyRulesInvalidQueryStringValue"
@@ -233,6 +257,18 @@ const (
 	// 内部接口错误，请重试或联系客服人员解决。
 	INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 
+	// 参数错误。
+	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+
+	// 正则子模式超出上限。
+	INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
+
+	// 域名所在平台不支持远程鉴权。
+	INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
+
+	// 域名所在平台不支持使用https协议访问远程鉴权地址。
+	INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
+
 	// 任务已过期,无法重试。
 	INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
 
@@ -260,6 +296,9 @@ const (
 	// 单个标签键对应标签值不能超过1000。
 	LIMITEXCEEDED_CAMTAGKEYTOOMANYTAGVALUE = "LimitExceeded.CamTagKeyTooManyTagValue"
 
+	// 域名绑定标签数量超出限制。
+	LIMITEXCEEDED_CAMTAGQUOTAEXCEEDLIMIT = "LimitExceeded.CamTagQuotaExceedLimit"
+
 	// 单个用户最多1000个不同的key。
 	LIMITEXCEEDED_CAMUSERTOOMANYTAGKEY = "LimitExceeded.CamUserTooManyTagKey"
 
@@ -268,6 +307,9 @@ const (
 
 	// 该账号已经创建了太多主题。
 	LIMITEXCEEDED_CDNCLSTOOMANYTOPICS = "LimitExceeded.CdnClsTooManyTopics"
+
+	// 缓存配置规则数超出限制。
+	LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 
 	// 域名操作过于频繁。
 	LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
@@ -293,7 +335,7 @@ const (
 	// 批量查询IP归属个数超过限制。
 	LIMITEXCEEDED_CDNQUERYIPBATCHTOOMANY = "LimitExceeded.CdnQueryIpBatchTooMany"
 
-	// 接入域名数超出限制。
+	// 用户域名数量已达上限，请联系腾讯云工程师处理。
 	LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
 
 	// 日志大小超限。
@@ -310,6 +352,12 @@ const (
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 操作被拒绝。
+	OPERATIONDENIED = "OperationDenied"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 域名与系统中已存在域名存在冲突。
 	RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
@@ -329,10 +377,7 @@ const (
 	// 标签键不存在。
 	RESOURCENOTFOUND_CAMTAGKEYNOTEXIST = "ResourceNotFound.CamTagKeyNotExist"
 
-	// 标签不存在。
-	RESOURCENOTFOUND_CAMTAGNOTEXIST = "ResourceNotFound.CamTagNotExist"
-
-	// 账号下无此域名，请确认后重试。
+	// 未查询到该域名，请确认域名是否正确。
 	RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 
 	// 项目不存在，请确认后重试。
@@ -341,7 +386,7 @@ const (
 	// 未开通CDN服务，请开通后使用此接口。
 	RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 
-	// 接入域名数超出限制。
+	// 用户域名数量已达上限，请联系腾讯云工程师处理。
 	RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
 
 	// 索引不存在。
@@ -374,17 +419,26 @@ const (
 	// 域名被锁定。
 	RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
 
+	// 该域名有违法违规风险，不可接入。
+	RESOURCEUNAVAILABLE_CDNHOSTISMALICIOUS = "ResourceUnavailable.CdnHostIsMalicious"
+
 	// 域名未下线。
 	RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE = "ResourceUnavailable.CdnHostIsNotOffline"
 
 	// 域名已下线，无法提交预热。
 	RESOURCEUNAVAILABLE_CDNHOSTISNOTONLINE = "ResourceUnavailable.CdnHostIsNotOnline"
 
-	// 域名未备案。
+	// 域名未备案，请将域名备案。备案同步周期为2小时，若域名已备案，可稍后重新接入。
 	RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
+
+	// 该域名已在云点播内接入，请先在云点播内删除域名后再接入。
+	RESOURCEUNAVAILABLE_HOSTEXISTINVOD = "ResourceUnavailable.HostExistInVod"
 
 	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
 	RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
+
+	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
+	RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -403,6 +457,9 @@ const (
 
 	// 域名在内部系统已存在，请提工单处理。
 	UNAUTHORIZEDOPERATION_CDNHOSTEXISTSININTERNAL = "UnauthorizedOperation.CdnHostExistsInInternal"
+
+	// 该域名涉及违法违规风险，不可接入。
+	UNAUTHORIZEDOPERATION_CDNHOSTINICPBLACKLIST = "UnauthorizedOperation.CdnHostInIcpBlacklist"
 
 	// 该域名属于其他账号，您没有权限接入。
 	UNAUTHORIZEDOPERATION_CDNHOSTISOWNEDBYOTHER = "UnauthorizedOperation.CdnHostIsOwnedByOther"
@@ -458,6 +515,12 @@ const (
 	// 内部服务错误，请联系腾讯云工程师进一步排查。
 	UNAUTHORIZEDOPERATION_CSRFERROR = "UnauthorizedOperation.CsrfError"
 
+	// 鉴权域名为空。
+	UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
+
+	// 请前往CDN控制台进行操作。
+	UNAUTHORIZEDOPERATION_ECDNMIGRATEDCDN = "UnauthorizedOperation.EcdnMigratedCdn"
+
 	// 未授权的操作。
 	UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 
@@ -467,8 +530,14 @@ const (
 	// 操作超出调用频次限制。
 	UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
 
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 不允许操作。
 	UNSUPPORTEDOPERATION_CLSNOTALLOWED = "UnsupportedOperation.ClsNotAllowed"

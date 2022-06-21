@@ -35,7 +35,7 @@ func TestAccTencentCloudCdnUrlPush(t *testing.T) {
 	})
 }
 
-const testAccCdnUrlPushBasic = testAccDomainForCDN + `
+const testAccCdnUrlPushBasic = testAccDomainCosForCDN + `
 resource "tencentcloud_cdn_url_push" "foo" {
   urls = [
     "http://keep.${local.domain}/alive",
@@ -45,7 +45,7 @@ resource "tencentcloud_cdn_url_push" "foo" {
 }
 `
 
-const testAccCdnUrlPushBasicUpdate = testAccDomainForCDN + `
+const testAccCdnUrlPushBasicUpdate = testAccDomainCosForCDN + `
 resource "tencentcloud_cdn_url_push" "foo" {
   urls = [
     "http://keep.${local.domain}/alive",

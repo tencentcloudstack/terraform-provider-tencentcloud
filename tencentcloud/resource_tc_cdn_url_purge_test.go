@@ -35,7 +35,7 @@ func TestAccTencentCloudCdnUrlPurge(t *testing.T) {
 	})
 }
 
-const testAccCdnUrlPurgeBasic = testAccDomainForCDN + `
+const testAccCdnUrlPurgeBasic = testAccDomainCosForCDN + `
 resource "tencentcloud_cdn_url_purge" "foo" {
   urls = [
     "http://keep.${local.domain}/ping",
@@ -45,7 +45,7 @@ resource "tencentcloud_cdn_url_purge" "foo" {
 }
 `
 
-const testAccCdnUrlPurgeBasicUpdate = testAccDomainForCDN + `
+const testAccCdnUrlPurgeBasicUpdate = testAccDomainCosForCDN + `
 resource "tencentcloud_cdn_url_purge" "foo" {
   urls = [
     "http://keep.${local.domain}/ping",

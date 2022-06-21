@@ -142,6 +142,8 @@ The following arguments are supported:
 * `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
 * `service_type` - (Required, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
 * `area` - (Optional) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
+* `authentication` - (Optional) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
+* `follow_redirect_switch` - (Optional) 301/302 redirect following switch, available values: `on`, `off` (default).
 * `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `ipv6_access_switch` - (Optional) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
@@ -150,6 +152,14 @@ The following arguments are supported:
 * `request_header` - (Optional) Request header configuration. It's a list and consist of at most one item.
 * `rule_cache` - (Optional) Advanced path cache configuration.
 * `tags` - (Optional) Tags of cdn domain.
+
+The `authentication` object supports the following:
+
+* `switch` - (Optional) Authentication switching, available values: `on`, `off`.
+* `type_a` - (Optional) Timestamp hotlink protection mode A configuration.
+* `type_b` - (Optional) Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.
+* `type_c` - (Optional) Timestamp hotlink protection mode C configuration.
+* `type_d` - (Optional) Timestamp hotlink protection mode D configuration.
 
 The `client_certificate_config` object supports the following:
 
@@ -215,6 +225,42 @@ The `server_certificate_config` object supports the following:
 * `certificate_id` - (Optional) Server certificate ID.
 * `message` - (Optional) Certificate remarks.
 * `private_key` - (Optional) Server key information. This is required when uploading an external certificate.
+
+The `type_a` object supports the following:
+
+* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `sign_param` - (Required) Signature parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
+* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+
+The `type_b` object supports the following:
+
+* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+
+The `type_c` object supports the following:
+
+* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `time_format` - (Optional) Timestamp formation, available values: `dec`, `hex`.
+
+The `type_d` object supports the following:
+
+* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `time_format` - (Optional) Timestamp formation, available values: `dec`, `hex`.
+* `time_param` - (Optional) Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
 
 ## Attributes Reference
 
