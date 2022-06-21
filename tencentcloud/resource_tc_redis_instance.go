@@ -118,7 +118,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "The number of instance shard. This is not required for standalone and master slave versions.",
+				Description: "The number of instance shard, default is 1. This is not required for standalone and master slave versions.",
 			},
 			"redis_replicas_num": {
 				Type:        schema.TypeInt,
@@ -282,7 +282,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	redisName := d.Get("name").(string)
 	redisType := d.Get("type").(string)
 	typeId := int64(d.Get("type_id").(int))
-	redisShardNum := d.Get("redis_shard_num").(int)
+	var redisShardNum int = 1
+	if v, ok := d.GetOk("redis_shard_num"); ok {
+		redisShardNum = v.(int)
+	}
 	redisReplicasNum := d.Get("redis_replicas_num").(int)
 	password := d.Get("password").(string)
 	noAuth := d.Get("no_auth").(bool)
