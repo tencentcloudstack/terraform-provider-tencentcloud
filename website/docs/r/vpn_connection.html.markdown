@@ -54,6 +54,9 @@ The following arguments are supported:
 * `pre_share_key` - (Required) Pre-shared key of the VPN connection.
 * `security_group_policy` - (Required) Security group policy of the VPN connection.
 * `vpn_gateway_id` - (Required, ForceNew) ID of the VPN gateway.
+* `enable_health_check` - (Optional) Whether intra-tunnel health checks are supported.
+* `health_check_local_ip` - (Optional) Health check the address of this terminal.
+* `health_check_remote_ip` - (Optional) Health check peer address.
 * `ike_dh_group_name` - (Optional) DH group name of the IKE operation specification. Valid values: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`. Default value is `GROUP1`.
 * `ike_exchange_mode` - (Optional) Exchange mode of the IKE operation specification. Valid values: `AGGRESSIVE`, `MAIN`. Default value is `MAIN`.
 * `ike_local_address` - (Optional) Local address of IKE operation specification, valid when ike_local_identity is `ADDRESS`, generally the value is `public_ip_address` of the related VPN gateway.
