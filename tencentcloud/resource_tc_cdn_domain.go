@@ -1307,7 +1307,8 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	httpsConfigs = append(httpsConfigs, httpsConfig)
 	_ = d.Set("https_config", httpsConfigs)
 
-	if authentication := domainConfig.Authentication; authentication != nil {
+	authRaw := d.Get("authentication").([]interface{})
+	if authentication := domainConfig.Authentication; authentication != nil && len(authRaw) > 0 {
 		auth := make(map[string]interface{})
 		auth["switch"] = authentication.Switch
 		if authType := authentication.TypeA; authType != nil {
