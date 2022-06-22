@@ -201,7 +201,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 				ResourceName:            "tencentcloud_cdn_domain.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"https_config"},
+				ImportStateVerifyIgnore: []string{"https_config", "authentication"},
 			},
 		},
 	})
