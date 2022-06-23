@@ -54,7 +54,6 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   mem_size          = 8192
   name              = "terraform_test"
   port              = 6379
-
   tags = {
     "test" = "test"
   }

@@ -266,6 +266,30 @@ func TestAccTencentCloudRedisInstance_Maz(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudRedisInstance_Cluster(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRedisInstanceCluster(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_cluster"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_cluster", "redis_shard_num", "1"),
+				),
+			},
+			{
+				Config: testAccRedisInstanceClusterUpdateShard(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_cluster"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_cluster", "redis_shard_num", "3"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -485,6 +509,40 @@ resource "tencentcloud_redis_instance" "redis_maz" {
   replica_zone_ids   = [100003, 100004, 100006, 100003]
   vpc_id 			 = var.vpc_id
   subnet_id 		 = var.subnet_id
+}`
+}
+
+func testAccRedisInstanceCluster() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_cluster" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 7
+  password           = "AAA123456BBB"
+  mem_size           = 4096
+  name               = "terraform_cluster"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 2
+  replica_zone_ids   = [100003, 100004]
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
+}`
+}
+
+func testAccRedisInstanceClusterUpdateShard() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_cluster" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 7
+  password           = "AAA123456BBB"
+  mem_size           = 4096
+  name               = "terraform_cluster"
+  port               = 6379
+  redis_shard_num    = 3
+  redis_replicas_num = 2
+  replica_zone_ids   = [100003, 100004]
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 }`
 }
 
