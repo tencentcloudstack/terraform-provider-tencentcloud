@@ -62,7 +62,7 @@ func resourceTencentCloudClsTopic() *schema.Resource {
 			"partition_count": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "Number of log topic partitions. Default value: 1. Maximum value: 10.",
 			},
 			"tags": {
@@ -73,25 +73,27 @@ func resourceTencentCloudClsTopic() *schema.Resource {
 			"auto_split": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
+				Computed:    true,
 				Description: "Whether to enable automatic split. Default value: true.",
 			},
 			"max_split_partitions": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				Computed: true,
 				Description: "Maximum number of partitions to split into for this topic if" +
 					" automatic split is enabled. Default value: 50.",
 			},
 			"storage_type": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
+				Computed: true,
 				Description: "Log topic storage class. Valid values: hot: real-time storage; cold: offline storage. Default value: hot. If cold is passed in, " +
 					"please contact the customer service to add the log topic to the allowlist first..",
 			},
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Lifecycle in days. Value range: 1~366. Default value: 30.",
 			},
 		},
@@ -122,14 +124,18 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		for k, v := range tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &k,
-				Value: &v,
+				Key:   &key,
+				Value: &value,
 			})
 		}
 	}
 
-	request.AutoSplit = helper.Bool(d.Get("auto_split").(bool))
+	if v, ok := d.GetOk("max_split_partitions"); ok {
+		request.AutoSplit = helper.Bool(v.(bool))
+	}
 
 	if v, ok := d.GetOk("max_split_partitions"); ok {
 		request.MaxSplitPartitions = helper.IntInt64(v.(int))
@@ -210,17 +216,28 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 
 	request.TopicId = helper.String(d.Id())
 
+	if d.HasChange("partition_count") {
+		return fmt.Errorf("`partition_count` do not support change now.")
+	}
+
+	if d.HasChange("storage_type") {
+		return fmt.Errorf("`storage_type` do not support change now.")
+	}
+
 	if d.HasChange("topic_name") {
 		request.TopicName = helper.String(d.Get("topic_name").(string))
 	}
 
 	if d.HasChange("tags") {
+
 		tags := d.Get("tags").(map[string]interface{})
 		request.Tags = make([]*cls.Tag, 0, len(tags))
 		for k, v := range tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &k,
-				Value: helper.String(v.(string)),
+				Key:   &key,
+				Value: helper.String(value.(string)),
 			})
 		}
 	}
