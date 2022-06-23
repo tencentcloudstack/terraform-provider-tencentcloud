@@ -166,17 +166,17 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 
 	request.LogsetId = helper.String(d.Id())
 
-	if d.HasChange("logset_name") {
+	if d.HasChange("logset_name") || d.HasChange("tags") {
 		request.LogsetName = helper.String(d.Get("logset_name").(string))
-	}
 
-	if d.HasChange("tags") {
 		tags := d.Get("tags").(map[string]interface{})
 		request.Tags = make([]*cls.Tag, 0, len(tags))
 		for k, v := range tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &k,
-				Value: helper.String(v.(string)),
+				Key:   &key,
+				Value: helper.String(value.(string)),
 			})
 		}
 	}
