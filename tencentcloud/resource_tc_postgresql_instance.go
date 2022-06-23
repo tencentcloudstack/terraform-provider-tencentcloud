@@ -685,7 +685,13 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
 			request.BackupPeriod = helper.InterfacesStringsPoint(v)
 		}
-		err := postgresqlService.ModifyBackupPlan(ctx, request)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := postgresqlService.ModifyBackupPlan(ctx, request)
+			if err != nil {
+				return retryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+			}
+			return nil
+		})
 		if err != nil {
 			return err
 		}

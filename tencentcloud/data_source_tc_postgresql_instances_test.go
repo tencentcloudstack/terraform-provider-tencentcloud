@@ -8,7 +8,7 @@ import (
 
 var testDataPostgresqlInstancesName = "data.tencentcloud_postgresql_instances.id_test"
 
-func TestAccTencentCloudDataPostgresqlInstances(t *testing.T) {
+func TestAccTencentCloudPostgresqlInstancesDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

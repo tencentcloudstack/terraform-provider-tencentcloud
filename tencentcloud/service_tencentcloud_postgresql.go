@@ -432,18 +432,18 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 
 func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int) (errRet error) {
 	logId := getLogId(ctx)
-	request := postgresql.NewUpgradeDBInstanceRequest()
+	request := postgresql.NewModifyDBInstanceSpecRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 	request.DBInstanceId = &instanceId
-	request.Storage = helper.IntInt64(storage)
-	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntUint64(storage)
+	request.Memory = helper.IntUint64(memory)
 
 	ratelimit.Check(request.GetAction())
-	_, err := me.client.UsePostgresqlClient().UpgradeDBInstance(request)
+	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceSpec(request)
 	return err
 }
 
