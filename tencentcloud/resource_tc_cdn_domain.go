@@ -154,7 +154,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 		Update: resourceTencentCloudCdnDomainUpdate,
 		Delete: resourceTencentCloudCdnDomainDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				_ = d.Set("authentication", []interface{}{map[string]interface{}{
+					"switch": "off",
+				}})
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -415,6 +420,193 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
 				Description:  "ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.",
 			},
+			"follow_redirect_switch": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CDN_SWITCH_OFF,
+				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				Description:  "301/302 redirect following switch, available values: `on`, `off` (default).",
+			},
+			"authentication": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "Authentication switching, available values: `on`, `off`.",
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+						},
+						"type_a": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Timestamp hotlink protection mode A configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"secret_key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.",
+									},
+									"sign_param": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Signature parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.",
+									},
+									"expire_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Signature expiration time in second. The maximum value is 630720000.",
+									},
+									"file_extensions": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.",
+									},
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.",
+									},
+									"backup_secret_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
+									},
+								},
+							},
+						},
+						"type_b": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"secret_key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.",
+									},
+									"expire_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Signature expiration time in second. The maximum value is 630720000.",
+									},
+									"file_extensions": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.",
+									},
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.",
+									},
+									"backup_secret_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
+									},
+								},
+							},
+						},
+						"type_c": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Timestamp hotlink protection mode C configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"secret_key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.",
+									},
+									"expire_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Signature expiration time in second. The maximum value is 630720000.",
+									},
+									"file_extensions": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.",
+									},
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.",
+									},
+									"time_format": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Timestamp formation, available values: `dec`, `hex`.",
+									},
+									"backup_secret_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
+									},
+								},
+							},
+						},
+						"type_d": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Timestamp hotlink protection mode D configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"secret_key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.",
+									},
+									"expire_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Signature expiration time in second. The maximum value is 630720000.",
+									},
+									"file_extensions": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.",
+									},
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.",
+									},
+									"time_param": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.",
+									},
+									"time_format": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Timestamp formation, available values: `dec`, `hex`.",
+									},
+									"backup_secret_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"rule_cache": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -612,6 +804,115 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("ipv6_access_switch"); ok {
 		request.Ipv6Access = &cdn.Ipv6Access{
 			Switch: helper.String(v.(string)),
+		}
+	}
+
+	if v, ok := d.GetOk("follow_redirect_switch"); ok {
+		request.FollowRedirect = &cdn.FollowRedirect{
+			Switch: helper.String(v.(string)),
+		}
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "authentication"); ok {
+		switchOn := v["switch"].(string)
+		request.Authentication = &cdn.Authentication{
+			Switch: &switchOn,
+		}
+
+		if v, ok := v["type_a"].([]interface{}); ok && len(v) > 0 {
+			var (
+				item           = v[0].(map[string]interface{})
+				secretKey      = item["secret_key"].(string)
+				signParam      = item["sign_param"].(string)
+				expireTime     = item["expire_time"].(int)
+				fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+				filterType     = item["filter_type"].(string)
+			)
+
+			request.Authentication.TypeA = &cdn.AuthenticationTypeA{
+				SecretKey:      &secretKey,
+				SignParam:      &signParam,
+				ExpireTime:     helper.IntInt64(expireTime),
+				FileExtensions: fileExtensions,
+				FilterType:     &filterType,
+			}
+
+			if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+				request.Authentication.TypeA.BackupSecretKey = &backupSecretKey
+			}
+		}
+
+		if v, ok := v["type_b"].([]interface{}); ok && len(v) > 0 {
+			var (
+				item           = v[0].(map[string]interface{})
+				secretKey      = item["secret_key"].(string)
+				expireTime     = item["expire_time"].(int)
+				fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+				filterType     = item["filter_type"].(string)
+			)
+
+			request.Authentication.TypeB = &cdn.AuthenticationTypeB{
+				SecretKey:      &secretKey,
+				ExpireTime:     helper.IntInt64(expireTime),
+				FileExtensions: fileExtensions,
+				FilterType:     &filterType,
+			}
+
+			if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+				request.Authentication.TypeB.BackupSecretKey = &backupSecretKey
+			}
+		}
+
+		if v, ok := v["type_c"].([]interface{}); ok && len(v) > 0 {
+			var (
+				item           = v[0].(map[string]interface{})
+				secretKey      = item["secret_key"].(string)
+				expireTime     = item["expire_time"].(int)
+				fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+				filterType     = item["filter_type"].(string)
+			)
+
+			request.Authentication.TypeC = &cdn.AuthenticationTypeC{
+				SecretKey:      &secretKey,
+				ExpireTime:     helper.IntInt64(expireTime),
+				FileExtensions: fileExtensions,
+				FilterType:     &filterType,
+			}
+
+			if timeFormat, ok := item["time_format"].(string); ok {
+				request.Authentication.TypeC.TimeFormat = &timeFormat
+			}
+
+			if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+				request.Authentication.TypeC.BackupSecretKey = &backupSecretKey
+			}
+		}
+
+		if v, ok := v["type_d"].([]interface{}); ok && len(v) > 0 {
+			var (
+				item           = v[0].(map[string]interface{})
+				secretKey      = item["secret_key"].(string)
+				expireTime     = item["expire_time"].(int)
+				fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+				filterType     = item["filter_type"].(string)
+				timeParam      = item["time_param"].(string)
+			)
+
+			request.Authentication.TypeD = &cdn.AuthenticationTypeD{
+				SecretKey:      &secretKey,
+				ExpireTime:     helper.IntInt64(expireTime),
+				FileExtensions: fileExtensions,
+				FilterType:     &filterType,
+				TimeParam:      &timeParam,
+			}
+
+			if timeFormat, ok := item["time_format"].(string); ok {
+				request.Authentication.TypeD.TimeFormat = &timeFormat
+			}
+
+			if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+				request.Authentication.TypeD.BackupSecretKey = &backupSecretKey
+			}
 		}
 	}
 
@@ -880,6 +1181,9 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	if domainConfig.Ipv6Access != nil {
 		_ = d.Set("ipv6_access_switch", domainConfig.Ipv6Access.Switch)
 	}
+	if domainConfig.FollowRedirect != nil {
+		_ = d.Set("follow_redirect_switch", domainConfig.FollowRedirect.Switch)
+	}
 	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
 		_ = d.Set("full_url_cache", false)
 	} else {
@@ -1008,6 +1312,57 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	httpsConfigs = append(httpsConfigs, httpsConfig)
 	_ = d.Set("https_config", httpsConfigs)
 
+	authRaw := d.Get("authentication").([]interface{})
+	if authentication := domainConfig.Authentication; authentication != nil && len(authRaw) > 0 {
+		auth := make(map[string]interface{})
+		auth["switch"] = authentication.Switch
+		if authType := authentication.TypeA; authType != nil {
+			dMap := map[string]interface{}{
+				"secret_key":        authType.SecretKey,
+				"sign_param":        authType.SignParam,
+				"expire_time":       authType.ExpireTime,
+				"file_extensions":   authType.FileExtensions,
+				"filter_type":       authType.FilterType,
+				"backup_secret_key": authType.BackupSecretKey,
+			}
+			auth["type_a"] = []interface{}{dMap}
+		}
+		if authType := authentication.TypeB; authType != nil {
+			dMap := map[string]interface{}{
+				"secret_key":        authType.SecretKey,
+				"expire_time":       authType.ExpireTime,
+				"file_extensions":   authType.FileExtensions,
+				"filter_type":       authType.FilterType,
+				"backup_secret_key": authType.BackupSecretKey,
+			}
+			auth["type_b"] = []interface{}{dMap}
+		}
+		if authType := authentication.TypeC; authType != nil {
+			dMap := map[string]interface{}{
+				"secret_key":        authType.SecretKey,
+				"expire_time":       authType.ExpireTime,
+				"file_extensions":   authType.FileExtensions,
+				"filter_type":       authType.FilterType,
+				"time_format":       authType.TimeFormat,
+				"backup_secret_key": authType.BackupSecretKey,
+			}
+			auth["type_c"] = []interface{}{dMap}
+		}
+		if authType := authentication.TypeD; authType != nil {
+			dMap := map[string]interface{}{
+				"secret_key":        authType.SecretKey,
+				"expire_time":       authType.ExpireTime,
+				"file_extensions":   authType.FileExtensions,
+				"filter_type":       authType.FilterType,
+				"time_param":        authType.TimeParam,
+				"time_format":       authType.TimeFormat,
+				"backup_secret_key": authType.BackupSecretKey,
+			}
+			auth["type_d"] = []interface{}{dMap}
+		}
+		_ = d.Set("authentication", []interface{}{auth})
+	}
+
 	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 	if errRet != nil {
 		return errRet
@@ -1062,6 +1417,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.Ipv6Access = &cdn.Ipv6Access{}
 		request.Ipv6Access.Switch = helper.String(d.Get("ipv6_access_switch").(string))
 		updateAttrs = append(updateAttrs, "ipv6_access_switch")
+	}
+	if d.HasChange("follow_redirect_switch") {
+		request.FollowRedirect = &cdn.FollowRedirect{}
+		request.FollowRedirect.Switch = helper.String(d.Get("follow_redirect_switch").(string))
+		updateAttrs = append(updateAttrs, "follow_redirect_switch")
 	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
@@ -1234,6 +1594,112 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 						redirect.RedirectStatusCode = helper.Int64(int64(rsc.(int)))
 					}
 					request.ForceRedirect = &redirect
+				}
+			}
+		}
+	}
+
+	if d.HasChange("authentication") {
+		updateAttrs = append(updateAttrs, "authentication")
+		if v, ok := helper.InterfacesHeadMap(d, "authentication"); ok {
+			switchOn := v["switch"].(string)
+			request.Authentication = &cdn.Authentication{
+				Switch: &switchOn,
+			}
+
+			if v, ok := v["type_a"].([]interface{}); ok && len(v) > 0 {
+				var (
+					item           = v[0].(map[string]interface{})
+					secretKey      = item["secret_key"].(string)
+					signParam      = item["sign_param"].(string)
+					expireTime     = item["expire_time"].(int)
+					fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+					filterType     = item["filter_type"].(string)
+				)
+
+				request.Authentication.TypeA = &cdn.AuthenticationTypeA{
+					SecretKey:      &secretKey,
+					SignParam:      &signParam,
+					ExpireTime:     helper.IntInt64(expireTime),
+					FileExtensions: fileExtensions,
+					FilterType:     &filterType,
+				}
+
+				if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+					request.Authentication.TypeA.BackupSecretKey = &backupSecretKey
+				}
+			}
+
+			if v, ok := v["type_b"].([]interface{}); ok && len(v) > 0 {
+				var (
+					item           = v[0].(map[string]interface{})
+					secretKey      = item["secret_key"].(string)
+					expireTime     = item["expire_time"].(int)
+					fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+					filterType     = item["filter_type"].(string)
+				)
+
+				request.Authentication.TypeB = &cdn.AuthenticationTypeB{
+					SecretKey:      &secretKey,
+					ExpireTime:     helper.IntInt64(expireTime),
+					FileExtensions: fileExtensions,
+					FilterType:     &filterType,
+				}
+
+				if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+					request.Authentication.TypeB.BackupSecretKey = &backupSecretKey
+				}
+			}
+
+			if v, ok := v["type_c"].([]interface{}); ok && len(v) > 0 {
+				var (
+					item           = v[0].(map[string]interface{})
+					secretKey      = item["secret_key"].(string)
+					expireTime     = item["expire_time"].(int)
+					fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+					filterType     = item["filter_type"].(string)
+				)
+
+				request.Authentication.TypeC = &cdn.AuthenticationTypeC{
+					SecretKey:      &secretKey,
+					ExpireTime:     helper.IntInt64(expireTime),
+					FileExtensions: fileExtensions,
+					FilterType:     &filterType,
+				}
+
+				if timeFormat, ok := item["time_format"].(string); ok {
+					request.Authentication.TypeC.TimeFormat = &timeFormat
+				}
+
+				if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+					request.Authentication.TypeC.BackupSecretKey = &backupSecretKey
+				}
+			}
+
+			if v, ok := v["type_d"].([]interface{}); ok && len(v) > 0 {
+				var (
+					item           = v[0].(map[string]interface{})
+					secretKey      = item["secret_key"].(string)
+					expireTime     = item["expire_time"].(int)
+					fileExtensions = helper.InterfacesStringsPoint(item["file_extensions"].([]interface{}))
+					filterType     = item["filter_type"].(string)
+					timeParam      = item["time_param"].(string)
+				)
+
+				request.Authentication.TypeD = &cdn.AuthenticationTypeD{
+					SecretKey:      &secretKey,
+					ExpireTime:     helper.IntInt64(expireTime),
+					FileExtensions: fileExtensions,
+					FilterType:     &filterType,
+					TimeParam:      &timeParam,
+				}
+
+				if timeFormat, ok := item["time_format"].(string); ok {
+					request.Authentication.TypeD.TimeFormat = &timeFormat
+				}
+
+				if backupSecretKey, ok := item["backup_secret_key"].(string); ok {
+					request.Authentication.TypeD.BackupSecretKey = &backupSecretKey
 				}
 			}
 		}

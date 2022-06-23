@@ -62,8 +62,7 @@ func init() {
 	})
 }
 
-// FIXME one domain can only add one auth record, leave this to next TestAccTencentCloudCdnDomainWithHTTPs testcase
-func testAccTencentCloudCdnDomainResource(t *testing.T) {
+func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -86,6 +85,16 @@ func testAccTencentCloudCdnDomainResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "cos"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.type_a.#", "1"),
+				),
+			},
+			{
+				Config: testAccCdnDomainBasicUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.type_c.#", "1"),
 				),
 			},
 			{
@@ -192,7 +201,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 				ResourceName:            "tencentcloud_cdn_domain.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"https_config"},
+				ImportStateVerifyIgnore: []string{"https_config", "authentication"},
 			},
 		},
 	})
@@ -385,22 +394,64 @@ func testAccCheckCdnDomainExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDomainForCDN = `
+const testAccDomainCosForCDN = `
 data "tencentcloud_domains" "domains" {}
+data "tencentcloud_user_info" "info" {}
 
 locals {
   domain = data.tencentcloud_domains.domains.list.0.domain_name
+  bucket_url = "keep-cdn-test-${data.tencentcloud_user_info.info.app_id}.cos.ap-singapore.myqcloud.com"
 }
 `
 
-const testAccCdnDomainBasic = testAccDomainForCDN + `
+const testAccCdnDomainBasic = testAccDomainCosForCDN + `
+
 resource "tencentcloud_cdn_domain" "foo" {
   domain = "www.${local.domain}"
   service_type = "web"
   area = "overseas"
   origin {
-	origin_type = "ip"
-	origin_list = ["43.133.14.92"]
+	origin_type          = "cos"
+	origin_list          = [local.bucket_url]
+	server_name			 = local.bucket_url
+    origin_pull_protocol = "follow"
+  }
+  authentication {
+    switch = "on"
+    type_a {
+      secret_key = "kXNgx2625Rre"
+      expire_time = 60
+      sign_param = "sign"
+      file_extensions = ["/test/1.jpg"]
+      filter_type = "whitelist"
+      backup_secret_key = "ujU4vsH3jbLzAg2DTUoTLj"
+    }
+  }
+}
+`
+
+const testAccCdnDomainBasicUpdate = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "foo" {
+  domain = "www.${local.domain}"
+  service_type = "web"
+  area = "overseas"
+  origin {
+	origin_type          = "cos"
+	origin_list          = [local.bucket_url]
+	server_name			 = local.bucket_url
+    origin_pull_protocol = "follow"
+  }
+  authentication {
+    switch = "on"
+    type_c {
+      secret_key = "MLjUov41L9aXO311"
+      expire_time = 60
+      file_extensions = ["/test/1.jpg"]
+      filter_type = "whitelist"
+      time_format = "dec"
+      backup_secret_key = "BQ6yVr"
+    }
   }
 }
 `
@@ -410,20 +461,12 @@ data "tencentcloud_ssl_certificates" "foo" {
   name = "keep-c-ssl"
 }
 
-data "tencentcloud_cos_buckets" "bucket" {
-  bucket_prefix = "keep-cdn-test"
-}
-
-
-data "tencentcloud_user_info" "info" {}
-
 locals {
   certId = data.tencentcloud_ssl_certificates.foo.certificates.0.id
-  bucket_url = "keep-cdn-test-${data.tencentcloud_user_info.info.app_id}.cos.ap-singapore.myqcloud.com"
 }
 `
 
-const testAccCdnDomainFull = testAccDomainForCDN + testAccSSLForCDN + `
+const testAccCdnDomainFull = testAccDomainCosForCDN + testAccSSLForCDN + `
 resource "tencentcloud_cdn_domain" "foo" {
   domain         = "c.${local.domain}"
   service_type   = "web"
@@ -481,7 +524,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 }
 `
 
-const testAccCdnDomainFullUpdate = testAccDomainForCDN + testAccSSLForCDN + `
+const testAccCdnDomainFullUpdate = testAccDomainCosForCDN + testAccSSLForCDN + `
 resource "tencentcloud_cdn_domain" "foo" {
   domain         = "c.${local.domain}"
   service_type   = "web"
