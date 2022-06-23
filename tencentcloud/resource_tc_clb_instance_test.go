@@ -13,6 +13,7 @@ import (
 )
 
 const BasicClbName = "tf-clb-basic"
+const SnatClbName = "tf-clb-snat"
 const InternalClbName = "tf-clb-internal"
 const InternalClbNameUpdate = "tf-clb-update-internal"
 const SingleClbName = "single-open-clb"
@@ -130,6 +131,27 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info_vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "tags.test", "test"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbInstance_snat(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance_snat,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "clb_name", SnatClbName),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_basic", "snat_pro", "true"),
 				),
 			},
 		},
@@ -306,6 +328,35 @@ resource "tencentcloud_clb_instance" "clb_basic" {
   tags = {
     test = "tf"
     test1 = "tf1"
+  }
+}
+`
+
+const testAccClbInstance_snat = `
+data "tencentcloud_vpc_instances" "gz3vpc" {
+  name = "Default-"
+  is_default = true
+}
+
+data "tencentcloud_vpc_subnets" "gz3" {
+  vpc_id = data.tencentcloud_vpc_instances.gz3vpc.instance_list.0.vpc_id
+}
+
+locals {
+  keep_clb_subnets = [for subnet in data.tencentcloud_vpc_subnets.gz3.instance_list: lookup(subnet, "subnet_id") if lookup(subnet, "name") == "keep-clb-sub"]
+  subnets = [for subnet in data.tencentcloud_vpc_subnets.gz3.instance_list: lookup(subnet, "subnet_id") ]
+  subnet_for_clb_snat = concat(local.keep_clb_subnets, local.subnets)
+}
+
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "` + SnatClbName + `"
+  snat_pro     = true
+  snat_ips {
+	subnet_id = local.subnet_for_clb_snat.0
+  }
+  snat_ips {
+    subnet_id = local.subnet_for_clb_snat.1
   }
 }
 `

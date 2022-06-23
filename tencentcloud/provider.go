@@ -244,6 +244,7 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_log_set
 	tencentcloud_clb_log_topic
 	tencentcloud_clb_customized_config
+    tencentcloud_clb_snat_ip
 
 Cloud Object Storage(COS)
   Data Source
@@ -966,6 +967,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_clb_log_set":                             resourceTencentCloudClbLogSet(),
 			"tencentcloud_clb_log_topic":                           resourceTencentCloudClbLogTopic(),
 			"tencentcloud_clb_customized_config":                   resourceTencentCloudClbCustomizedConfig(),
+			"tencentcloud_clb_snat_ip":                             resourceTencentCloudClbSnatIp(),
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),

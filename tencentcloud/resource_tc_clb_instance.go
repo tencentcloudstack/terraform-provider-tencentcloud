@@ -152,6 +152,8 @@ import (
 	"log"
 	"sync"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
@@ -252,6 +254,30 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.",
+			},
+			"snat_pro": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether Binding IPs of other VPCs feature switch.",
+			},
+			"snat_ips": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Snat IP address, If set to empty will auto allocated.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Snat subnet ID.",
+						},
+					},
+				},
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -364,6 +390,24 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support IP version setting")
 		}
 		request.AddressIPVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("snat_pro"); ok {
+		request.SnatPro = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.Get("snat_ips").([]interface{}); ok && len(v) > 0 {
+		for i := range v {
+			item := v[i].(map[string]interface{})
+			subnetId := item["subnet_id"].(string)
+			snatIp := &clb.SnatIp{
+				SubnetId: &subnetId,
+			}
+			if v, ok := item["ip"].(string); ok && v != "" {
+				snatIp.Ip = &v
+			}
+			request.SnatIps = append(request.SnatIps, snatIp)
+		}
 	}
 
 	v, ok := d.GetOk("internet_charge_type")
@@ -613,6 +657,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 
+	if _, ok := d.GetOk("snat_pro"); ok {
+		_ = d.Set("snat_pro", instance.SnatPro)
+	}
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
@@ -631,15 +679,19 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 
 	clbId := d.Id()
+	request := clb.NewModifyLoadBalancerAttributesRequest()
+	request.LoadBalancerId = helper.String(clbId)
 	clbName := ""
 	targetRegionInfo := clb.TargetRegionInfo{}
 	internet := clb.InternetAccessible{}
 	changed := false
 	isLoadBalancerPassToTgt := false
+	snatPro := d.Get("snat_pro").(bool)
 
 	if d.HasChange("clb_name") {
 		changed = true
@@ -651,6 +703,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if flag {
 			return fmt.Errorf("[CHECK][CLB instance][Update] check: Same CLB name %s exists!", clbName)
 		}
+		request.LoadBalancerName = helper.String(clbName)
 	}
 
 	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
@@ -664,6 +717,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			Region: &region,
 			VpcId:  &vpcId,
 		}
+		request.TargetRegionInfo = &targetRegionInfo
 	}
 
 	if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
@@ -679,28 +733,25 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if bandwidth > 0 {
 			internet.InternetMaxBandwidthOut = helper.IntInt64(bandwidth)
 		}
+		request.InternetChargeInfo = &internet
 	}
 
 	if d.HasChange("load_balancer_pass_to_target") {
 		changed = true
 		isLoadBalancerPassToTgt = d.Get("load_balancer_pass_to_target").(bool)
+		request.LoadBalancerPassToTarget = &isLoadBalancerPassToTgt
+	}
+
+	if d.HasChange("snat_pro") {
+		changed = true
+		request.SnatPro = &snatPro
+	}
+
+	if d.HasChange("snat_ips") {
+		return fmt.Errorf("`snat_ips`")
 	}
 
 	if changed {
-		request := clb.NewModifyLoadBalancerAttributesRequest()
-		request.LoadBalancerId = helper.String(clbId)
-		if d.HasChange("clb_name") {
-			request.LoadBalancerName = helper.String(clbName)
-		}
-		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
-			request.TargetRegionInfo = &targetRegionInfo
-		}
-		if d.HasChange("internet_charge_type") || d.HasChange("internet_bandwidth_max_out") {
-			request.InternetChargeInfo = &internet
-		}
-		if d.HasChange("load_balancer_pass_to_target") {
-			request.LoadBalancerPassToTarget = &isLoadBalancerPassToTgt
-		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
 			if e != nil {
@@ -719,18 +770,6 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance failed, reason:%+v", logId, err)
 			return err
-		}
-		if d.HasChange("clb_name") {
-			d.SetPartial("clb_name")
-		}
-		if d.HasChange("clb_vips") {
-			d.SetPartial("clb_vips")
-		}
-		if d.HasChange("target_region_info_region") {
-			d.SetPartial("target_region_info_region")
-		}
-		if d.HasChange("target_region_info_vpc_id") {
-			d.SetPartial("target_region_info_vpc_id")
 		}
 	}
 
@@ -794,7 +833,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -874,4 +913,16 @@ func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 	}
 	errRet = err
 	return
+}
+
+func snatIpSetInitFn(i interface{}) int {
+	item := i.(map[string]interface{})
+	subnet := item["subnet_id"].(string)
+	allocatedIp := item["allocated_snat_ip"].(string)
+	ip, ok := item["ip"].(string)
+
+	if !ok || ip == "" {
+		ip = allocatedIp
+	}
+	return hashcode.String(subnet + ip)
 }
