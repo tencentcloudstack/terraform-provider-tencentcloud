@@ -16,6 +16,35 @@ type SSLService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *SSLService) ApplyCertificate(ctx context.Context, request *ssl.ApplyCertificateRequest) (id string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSSLCertificateClient().ApplyCertificate(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response.CertificateId != nil {
+		id = *response.Response.CertificateId
+	} else {
+		errRet = fmt.Errorf("[%s] error, no certificate id response: %s", request.GetAction(), response.ToJsonString())
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *SSLService) CreateCertificate(ctx context.Context, request *ssl.CreateCertificateRequest) (certificateId, dealId string, errRet error) {
 	logId := getLogId(ctx)
 	client := me.client.UseSSLCertificateClient()
