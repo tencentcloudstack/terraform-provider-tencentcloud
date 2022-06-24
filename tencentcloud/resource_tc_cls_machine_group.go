@@ -150,9 +150,11 @@ func resourceTencentCloudClsMachineGroupCreate(d *schema.ResourceData, meta inte
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		for k, v := range tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &k,
-				Value: &v,
+				Key:   &key,
+				Value: &value,
 			})
 		}
 	}
@@ -273,9 +275,11 @@ func resourceTencentCloudClsMachineGroupUpdate(d *schema.ResourceData, meta inte
 		tags := d.Get("tags").(map[string]interface{})
 		request.Tags = make([]*cls.Tag, 0, len(tags))
 		for k, v := range tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &k,
-				Value: helper.String(v.(string)),
+				Key:   &key,
+				Value: helper.String(value.(string)),
 			})
 		}
 	}

@@ -133,7 +133,7 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if v, ok := d.GetOk("max_split_partitions"); ok {
+	if v, ok := d.GetOkExists("auto_split"); ok {
 		request.AutoSplit = helper.Bool(v.(bool))
 	}
 
