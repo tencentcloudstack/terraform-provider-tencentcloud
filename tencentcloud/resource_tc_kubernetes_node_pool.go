@@ -544,6 +544,16 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Computed:    true,
 				Description: "The total node count.",
 			},
+			"autoscaling_added_total": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The total of autoscaling added node.",
+			},
+			"manually_added_total": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The total of manually added node.",
+			},
 			"launch_config_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -927,7 +937,11 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 
 	_ = d.Set("name", nodePool.Name)
 	_ = d.Set("status", nodePool.LifeState)
-	_ = d.Set("node_count", nodePool.NodeCountSummary)
+	AutoscalingAddedTotal := *nodePool.NodeCountSummary.AutoscalingAdded.Total
+	ManuallyAddedTotal := *nodePool.NodeCountSummary.ManuallyAdded.Total
+	_ = d.Set("autoscaling_added_total", AutoscalingAddedTotal)
+	_ = d.Set("manually_added_total", ManuallyAddedTotal)
+	_ = d.Set("node_count", AutoscalingAddedTotal+ManuallyAddedTotal)
 	_ = d.Set("auto_scaling_group_id", nodePool.AutoscalingGroupId)
 	_ = d.Set("launch_config_id", nodePool.LaunchConfigurationId)
 	//set not force new parameters
