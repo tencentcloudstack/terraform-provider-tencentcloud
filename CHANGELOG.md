@@ -1,3 +1,24 @@
+## 1.74.3 (June 24, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_cls_machine_group` update tags
+* resource `tencentcloud_kubernetes_node_pool` fix node count
+
+## 1.74.2 (June 23, 2022)
+
+FEATURES:
+* new resource `tencentcloud_ssl_free_certificate`
+* new resource `tencentcloud_clb_snat_ip`
+
+ENHANCEMENTS:
+* resource `tencentcloud_vpn_connection` support healthcheck
+* resource `tencentcloud_postgresql_instance` add plan modify retry
+* resource `tencentcloud_cdn_domain` support follow redirect and authentication
+* resource `tencentcloud_redis_instance` update redis_shard_num
+* resource `tencentcloud_clb_instance` support snat pro and snat ips
+* resource `tencentcloud_cls_topic` update storage_type, auto_split, partition_count
+* resource `tencentcloud_cls_logset` update tags
+
 ## 1.74.1 (June 20, 2022)
 
 ENHANCEMENTS:
