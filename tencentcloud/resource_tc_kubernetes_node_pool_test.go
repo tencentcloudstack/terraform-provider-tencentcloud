@@ -94,6 +94,9 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "400"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "OLDEST_INSTANCE"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_count", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "autoscaling_added_total", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "manually_added_total", "0"),
 				),
 			},
 			{
@@ -270,6 +273,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
       "root-dir=/var/lib/kubelet"
     ]
   }
+  node_os="Tencent tlinux release 2.2 (Final)"
 }
 `
 

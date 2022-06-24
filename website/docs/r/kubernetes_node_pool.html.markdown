@@ -238,7 +238,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `auto_scaling_group_id` - The auto scaling group ID.
+* `autoscaling_added_total` - The total of autoscaling added node.
 * `launch_config_id` - The launch config ID.
+* `manually_added_total` - The total of manually added node.
 * `node_count` - The total node count.
 * `status` - Status of the node pool.
 
