@@ -66,6 +66,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -462,7 +463,7 @@ func resourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		if len(response.Response.InstanceIdSet) < instanceCount {
-			err = fmt.Errorf("instance id is less than %s", string(instanceCount))
+			err = fmt.Errorf("instance id is less than %s", strconv.Itoa(instanceCount))
 			return resource.NonRetryableError(err)
 		}
 		instanceIds = response.Response.InstanceIdSet

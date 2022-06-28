@@ -45,10 +45,7 @@ func (me *CvmService) DescribeInstanceSetByIds(ctx context.Context, instanceSetI
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	log.Println("-------dasdasdasdasdasdasdasdasddasd------")
-	log.Println(len(instanceSet))
-	log.Println("---dasdas----dasdasdasddasdasdasdasdasd------")
-	if len(response.Response.InstanceSet) < 1 {
+	if len(response.Response.InstanceSet) < len(instanceSet) {
 		return
 	}
 	instance = response.Response.InstanceSet
