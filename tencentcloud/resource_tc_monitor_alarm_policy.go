@@ -227,6 +227,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/go-multierror"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -832,11 +834,14 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 	}
 	_ = d.Set("policy_tag", tagSets)
 
-	if len(errs) > 0 {
-		return errs[0]
-	} else {
-		return nil
+	var errResults *multierror.Error
+	for i := range errs {
+		err := errs[i]
+		if err != nil {
+			errResults = multierror.Append(errResults, err)
+		}
 	}
+	return errResults.ErrorOrNil()
 }
 
 func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
