@@ -19,6 +19,39 @@ type CvmService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *CvmService) DescribeInstanceSetByIds(ctx context.Context, instanceSetIds string) (instance []*cvm.Instance, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeInstancesRequest()
+
+	instanceSet, err := helper.StrToStrList(instanceSetIds)
+	if err != nil {
+		return
+	}
+
+	for _, v := range instanceSet {
+		ins := v
+		instanceId := &ins
+		request.InstanceIds = append(request.InstanceIds, instanceId)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < len(instanceSet) {
+		return
+	}
+	instance = response.Response.InstanceSet
+	return
+}
+
 func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId string) (instance *cvm.Instance, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewDescribeInstancesRequest()
@@ -268,6 +301,34 @@ func (me *CvmService) DeleteInstance(ctx context.Context, instanceId string) err
 	logId := getLogId(ctx)
 	request := cvm.NewTerminateInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().TerminateInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) DeleteInstanceSetByIds(ctx context.Context, instanceSetIds string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewTerminateInstancesRequest()
+
+	instanceSet, err := helper.StrToStrList(instanceSetIds)
+	if err != nil {
+		return err
+	}
+
+	for _, v := range instanceSet {
+		ins := v
+		instanceId := &ins
+		request.InstanceIds = append(request.InstanceIds, instanceId)
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().TerminateInstances(request)

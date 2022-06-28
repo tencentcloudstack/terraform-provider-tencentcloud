@@ -1,6 +1,10 @@
 package helper
 
-import "strconv"
+import (
+	"encoding/base64"
+	"strconv"
+	"strings"
+)
 
 func Bool(i bool) *bool { return &i }
 
@@ -163,4 +167,26 @@ func StrToBool(s string) (i bool) {
 		i = true
 	}
 	return
+}
+
+func StrListToStr(strList []*string) string {
+	res := ""
+	for i, v := range strList {
+		res += *v
+		if i < len(strList)-1 {
+			res += ";"
+		}
+	}
+	return base64.StdEncoding.EncodeToString([]byte(res))
+}
+
+func StrToStrList(str string) (res []string, err error) {
+
+	decodeString, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return res, err
+	}
+
+	res = strings.Split(string(decodeString), ";")
+	return res, nil
 }

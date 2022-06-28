@@ -271,6 +271,7 @@ Cloud Virtual Machine(CVM)
 
   Resource
     tencentcloud_instance
+	tencentcloud_instance_set
     tencentcloud_eip
     tencentcloud_eip_association
     tencentcloud_key_pair
@@ -915,6 +916,7 @@ func Provider() terraform.ResourceProvider {
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_emr_cluster":                             resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                resourceTencentCloudInstance(),
+			"tencentcloud_instance_set":                            resourceTencentCloudInstanceSet(),
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),
 			"tencentcloud_placement_group":                         resourceTencentCloudPlacementGroup(),
