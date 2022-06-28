@@ -1,3 +1,8 @@
+## 1.75.1 (June 28, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_instance_set` update docs
+
 ## 1.75.0 (June 28, 2022)
 
 FEATURES:
