@@ -52,7 +52,7 @@ resource "tencentcloud_subnet" "app" {
 }
 
 // Create 10 CVM instances to host awesome_app
-resource "tencentcloud_instance" "my_awesome_app" {
+resource "tencentcloud_instance_set" "my_awesome_app" {
   instance_name     = "awesome_app"
   availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id          = data.tencentcloud_images.my_favorite_image.images.0.image_id
