@@ -262,12 +262,12 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 	var rwGroupId string
-	var roGroupId string
+	var roGroupIds []string
 	for _, insGrp := range insGrps.Response.InstanceGrpInfoList {
 		if *insGrp.Type == CYNOSDB_INSGRP_HA {
 			rwGroupId = *insGrp.InstanceGrpId
 		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
-			roGroupId = *insGrp.InstanceGrpId
+			roGroupIds = append(roGroupIds, *insGrp.InstanceGrpId)
 		}
 	}
 	if v, ok := d.GetOk("rw_group_sg"); ok {
@@ -280,14 +280,16 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 			return err
 		}
 	}
-	if v, ok := d.GetOk("ro_group_sg"); ok {
-		vv := v.([]interface{})
-		vvv := make([]*string, 0, len(vv))
-		for _, item := range vv {
-			vvv = append(vvv, helper.String(item.(string)))
-		}
-		if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
-			return err
+	if v, ok := d.GetOk("ro_group_sg"); ok && len(roGroupIds) > 0 {
+		for _, roGroupId := range roGroupIds {
+			vv := v.([]interface{})
+			vvv := make([]*string, 0, len(vv))
+			for _, item := range vv {
+				vvv = append(vvv, helper.String(item.(string)))
+			}
+			if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
+				return err
+			}
 		}
 	}
 
