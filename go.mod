@@ -10,6 +10,8 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/golangci/golangci-lint v1.27.0
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/hcl/v2 v2.6.0
 	github.com/hashicorp/terraform-plugin-sdk v1.14.0
 	github.com/katbyte/terrafmt v0.2.0

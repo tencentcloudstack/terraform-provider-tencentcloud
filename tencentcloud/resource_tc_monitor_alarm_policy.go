@@ -226,6 +226,10 @@ package tencentcloud
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"time"
+
+	"github.com/hashicorp/go-multierror"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -735,10 +739,25 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		d.Set("remark", policy.Remark),
 		d.Set("enable", policy.Enable),
 		d.Set("project_id", policy.ProjectId),
-		d.Set("conditon_template_id", policy.ConditionTemplateId),
-		d.Set("create_time", policy.InsertTime),
-		d.Set("update_time", policy.UpdateTime),
 	)
+
+	if policy.ConditionTemplateId != nil && *policy.ConditionTemplateId != "" {
+		id, err := strconv.ParseInt(*policy.ConditionTemplateId, 10, 64)
+		if id != 0 && err == nil {
+			errs = append(errs, d.Set("conditon_template_id", id))
+		}
+	}
+
+	if policy.InsertTime != nil {
+		t := time.Unix(*policy.InsertTime, 0)
+		tFmt := t.Format("2006-01-02 15:04:05")
+		errs = append(errs, d.Set("create_time", tFmt))
+	}
+	if policy.UpdateTime != nil {
+		t := time.Unix(*policy.UpdateTime, 0)
+		tFmt := t.Format("2006-01-02 15:04:05")
+		errs = append(errs, d.Set("update_time", tFmt))
+	}
 
 	var rules = make([]interface{}, 0, 100)
 	for _, rule := range policy.Condition.Rules {
@@ -832,11 +851,14 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 	}
 	_ = d.Set("policy_tag", tagSets)
 
-	if len(errs) > 0 {
-		return errs[0]
-	} else {
-		return nil
+	var errResults *multierror.Error
+	for i := range errs {
+		err := errs[i]
+		if err != nil {
+			errResults = multierror.Append(errResults, err)
+		}
 	}
+	return errResults.ErrorOrNil()
 }
 
 func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
