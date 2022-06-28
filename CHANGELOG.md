@@ -1,5 +1,13 @@
-## 1.74.3 (June 24, 2022)
+## 1.75.0 (June 28, 2022)
 
+FEATURES:
+* new resource `tencentcloud_instance_set`
+
+ENHANCEMENTS:
+* resource `tencentcloud_monitor_alarm_policy` optimize errors
+
+## 1.74.3 (June 24, 2022)
+∂
 ENHANCEMENTS:
 * resource `tencentcloud_cls_machine_group` update tags
 * resource `tencentcloud_kubernetes_node_pool` fix node count
