@@ -598,7 +598,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		if err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, d.Get("rw_group_id").(string), d.Get("available_zone").(string), vv); err != nil {
 			return err
 		}
-		d.SetPartial("rw_group_sg")
 	}
 	if d.HasChange("ro_group_sg") {
 		v := d.Get("ro_group_sg").([]interface{})
@@ -606,10 +605,12 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		for _, item := range v {
 			vv = append(vv, helper.String(item.(string)))
 		}
-		if err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, d.Get("ro_group_id").(string), d.Get("available_zone").(string), vv); err != nil {
-			return err
+		if roGroupId := d.Get("ro_group_id").(string); roGroupId != "" {
+			err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vv)
+			if err != nil {
+				return err
+			}
 		}
-		d.SetPartial("ro_group_sg")
 	}
 
 	d.Partial(false)
