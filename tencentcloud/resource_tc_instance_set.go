@@ -462,7 +462,7 @@ func resourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		if len(response.Response.InstanceIdSet) < instanceCount {
-			err = fmt.Errorf("instance id is less than %s", strconv.Itoa(instanceCount))
+			err = fmt.Errorf("number of instances is less than %s", strconv.Itoa(instanceCount))
 			return resource.NonRetryableError(err)
 		}
 		instanceIds = response.Response.InstanceIdSet

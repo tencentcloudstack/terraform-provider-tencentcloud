@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -57,6 +59,11 @@ import (
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+)
+
+const (
+	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
+	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -238,7 +245,8 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 		return me.cbsConn
 	}
 
-	cpf := me.NewClientProfile(300)
+	var reqTimeout = getEnvDefault(PROVIDER_CBS_REQUEST_TIMEOUT, 300)
+	cpf := me.NewClientProfile(reqTimeout)
 	me.cbsConn, _ = cbs.NewClient(me.Credential, me.Region, cpf)
 	me.cbsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -290,7 +298,8 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 		return me.cvmConn
 	}
 
-	cpf := me.NewClientProfile(300)
+	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
+	cpf := me.NewClientProfile(reqTimeout)
 	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
 	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -720,4 +729,16 @@ func (me *TencentCloudClient) UseAntiddosClient() *antiddos.Client {
 	me.antiddosConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.antiddosConn
+}
+
+func getEnvDefault(key string, defVal int) int {
+	val, ex := os.LookupEnv(key)
+	if !ex {
+		return defVal
+	}
+	int, err := strconv.Atoi(val)
+	if err != nil {
+		panic("TENCENTCLOUD_XXX_REQUEST_TIMEOUT must be int.")
+	}
+	return int
 }

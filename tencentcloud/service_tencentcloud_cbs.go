@@ -15,6 +15,26 @@ type CbsService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *CbsService) DescribeDiskSetByIds(ctx context.Context, diskSetIds string) (disks []*cbs.Disk, errRet error) {
+
+	diskSet, err := helper.StrToStrList(diskSetIds)
+	if err != nil {
+		return
+	}
+
+	disks, err = me.DescribeDiskList(ctx, helper.StringsStringsPoint(diskSet))
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(disks) < 1 {
+		return
+	}
+
+	return
+}
+
 func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk *cbs.Disk, errRet error) {
 	disks, err := me.DescribeDiskList(ctx, []*string{&diskId})
 	if err != nil {
@@ -31,6 +51,7 @@ func (me *CbsService) DescribeDiskList(ctx context.Context, diskIds []*string) (
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
 	request.DiskIds = diskIds
+	request.Limit = helper.IntUint64(100)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DescribeDisks(request)
 	if err != nil {
@@ -116,6 +137,28 @@ func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return nil
+}
+
+func (me *CbsService) DeleteDiskSetByIds(ctx context.Context, diskSetIds string) error {
+	logId := getLogId(ctx)
+	request := cbs.NewTerminateDisksRequest()
+
+	diskSet, err := helper.StrToStrList(diskSetIds)
+	if err != nil {
+		return err
+	}
+
+	request.DiskIds = helper.StringsStringsPoint(diskSet)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCbsClient().TerminateDisks(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
