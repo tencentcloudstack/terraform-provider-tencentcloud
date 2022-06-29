@@ -63,6 +63,7 @@ import (
 
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
+	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -244,7 +245,8 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 		return me.cbsConn
 	}
 
-	cpf := me.NewClientProfile(300)
+	var reqTimeout = getEnvDefault(PROVIDER_CBS_REQUEST_TIMEOUT, 300)
+	cpf := me.NewClientProfile(reqTimeout)
 	me.cbsConn, _ = cbs.NewClient(me.Credential, me.Region, cpf)
 	me.cbsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -296,8 +298,8 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 		return me.cvmConn
 	}
 
-	var readRetry = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
-	cpf := me.NewClientProfile(readRetry)
+	var reqTimeout = getEnvDefault(PROVIDER_CVM_REQUEST_TIMEOUT, 300)
+	cpf := me.NewClientProfile(reqTimeout)
 	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
 	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
 

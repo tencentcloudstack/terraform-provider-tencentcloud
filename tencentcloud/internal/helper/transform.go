@@ -81,6 +81,16 @@ func InterfacesStringsPoint(configured []interface{}) []*string {
 	return vs
 }
 
+func StringsStringsPoint(configured []string) []*string {
+	vs := make([]*string, 0, len(configured))
+	for _, v := range configured {
+		vv := v
+		vvv := &vv
+		vs = append(vs, vvv)
+	}
+	return vs
+}
+
 func InterfacesIntegers(configured []interface{}) []int {
 	vs := make([]int, 0, len(configured))
 	for _, v := range configured {
