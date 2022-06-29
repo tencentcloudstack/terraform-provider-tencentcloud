@@ -34,6 +34,8 @@ func (me *CvmService) DescribeInstanceSetByIds(ctx context.Context, instanceSetI
 		request.InstanceIds = append(request.InstanceIds, instanceId)
 	}
 
+	request.Limit = helper.IntInt64(100)
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().DescribeInstances(request)
 	if err != nil {
