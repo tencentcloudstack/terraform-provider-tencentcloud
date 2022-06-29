@@ -103,7 +103,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items"},
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items", "ro_group_sg"},
 			},
 			{
 				Config: testAccCynosdbCluster_update,
