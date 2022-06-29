@@ -93,7 +93,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_instances.0.instance_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.port"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "ro_group_id"),
+					//resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "ro_group_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.name", "character_set_server"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8"),
@@ -103,7 +103,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items"},
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items", "ro_group_sg"},
 			},
 			{
 				Config: testAccCynosdbCluster_update,

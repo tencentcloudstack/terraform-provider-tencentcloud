@@ -262,12 +262,12 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 	var rwGroupId string
-	var roGroupId string
+	var roGroupIds []string
 	for _, insGrp := range insGrps.Response.InstanceGrpInfoList {
 		if *insGrp.Type == CYNOSDB_INSGRP_HA {
 			rwGroupId = *insGrp.InstanceGrpId
 		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
-			roGroupId = *insGrp.InstanceGrpId
+			roGroupIds = append(roGroupIds, *insGrp.InstanceGrpId)
 		}
 	}
 	if v, ok := d.GetOk("rw_group_sg"); ok {
@@ -280,14 +280,16 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 			return err
 		}
 	}
-	if v, ok := d.GetOk("ro_group_sg"); ok {
-		vv := v.([]interface{})
-		vvv := make([]*string, 0, len(vv))
-		for _, item := range vv {
-			vvv = append(vvv, helper.String(item.(string)))
-		}
-		if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
-			return err
+	if v, ok := d.GetOk("ro_group_sg"); ok && len(roGroupIds) > 0 {
+		for _, roGroupId := range roGroupIds {
+			vv := v.([]interface{})
+			vvv := make([]*string, 0, len(vv))
+			for _, item := range vv {
+				vvv = append(vvv, helper.String(item.(string)))
+			}
+			if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -596,7 +598,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		if err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, d.Get("rw_group_id").(string), d.Get("available_zone").(string), vv); err != nil {
 			return err
 		}
-		d.SetPartial("rw_group_sg")
 	}
 	if d.HasChange("ro_group_sg") {
 		v := d.Get("ro_group_sg").([]interface{})
@@ -604,10 +605,12 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		for _, item := range v {
 			vv = append(vv, helper.String(item.(string)))
 		}
-		if err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, d.Get("ro_group_id").(string), d.Get("available_zone").(string), vv); err != nil {
-			return err
+		if roGroupId := d.Get("ro_group_id").(string); roGroupId != "" {
+			err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vv)
+			if err != nil {
+				return err
+			}
 		}
-		d.SetPartial("ro_group_sg")
 	}
 
 	d.Partial(false)
