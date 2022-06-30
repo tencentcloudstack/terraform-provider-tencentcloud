@@ -138,6 +138,7 @@ Ckafka
     tencentcloud_ckafka_users
     tencentcloud_ckafka_acls
     tencentcloud_ckafka_topics
+    tencentcloud_ckafka_instances
 
   Resource
 	tencentcloud_ckafka_instance
@@ -877,6 +878,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_users":                             dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                              dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                            dataSourceTencentCloudCkafkaTopics(),
+			"tencentcloud_ckafka_instances":                         dataSourceTencentCloudCkafkaInstances(),
 			"tencentcloud_audit_cos_regions":                        dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                          dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                   dataSourceTencentCloudAudits(),

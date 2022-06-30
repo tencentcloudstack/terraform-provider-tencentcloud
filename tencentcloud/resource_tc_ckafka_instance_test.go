@@ -28,6 +28,8 @@ func TestAccTencentCloudCkafkaInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "kafka_version", "1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "500"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_type", "CLOUD_BASIC"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_instance.kafka_instance", "vip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_instance.kafka_instance", "vport"),
 				),
 			},
 			{
