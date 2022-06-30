@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -100,6 +102,21 @@ func StringsContain(ss []string, str string) bool {
 	return false
 }
 
+func DiffSupressJSON(k, olds, news string, d *schema.ResourceData) bool {
+	var oldJson interface{}
+	err := json.Unmarshal([]byte(olds), &oldJson)
+	if err != nil {
+		return olds == news
+	}
+	var newJson interface{}
+	err = json.Unmarshal([]byte(news), &newJson)
+	if err != nil {
+		return olds == news
+	}
+	flag := reflect.DeepEqual(oldJson, newJson)
+	return flag
+}
+
 /*
     Serialize slice into the usage document
 	eg["status_change","abnormal"] will be "`abnormal`,`status_change`"
@@ -127,6 +144,15 @@ func InterfacesHeadMap(d *schema.ResourceData, key string) (result map[string]in
 	head := interfaces[0]
 	result, ok = head.(map[string]interface{})
 	return
+}
+
+func SetMapInterfaces(d *schema.ResourceData, key string, values ...map[string]interface{}) error {
+	val := make([]interface{}, 0, len(values))
+	for i := range values {
+		item := values[i]
+		val = append(val, item)
+	}
+	return d.Set(key, val)
 }
 
 func InterfaceToMap(d map[string]interface{}, key string) (result map[string]interface{}, ok bool) {

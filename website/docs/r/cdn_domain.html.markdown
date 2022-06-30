@@ -5,11 +5,13 @@ page_title: "TencentCloud: tencentcloud_cdn_domain"
 sidebar_current: "docs-tencentcloud-resource-cdn_domain"
 description: |-
   Provides a resource to create a CDN domain.
+~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 ---
 
 # tencentcloud_cdn_domain
 
 Provides a resource to create a CDN domain.
+~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 
 ## Example Usage
 
@@ -143,15 +145,39 @@ The following arguments are supported:
 * `service_type` - (Required, String, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
 * `area` - (Optional, String) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
 * `authentication` - (Optional, List) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
+* `aws_private_access` - (Optional, List) Access authentication for S3 origin.
+* `band_width_alert` - (Optional, List) Bandwidth cap configuration.
+* `compression` - (Optional, List) Smart compression configurations.
+* `downstream_capping` - (Optional, List) Downstream capping configuration.
+* `error_page` - (Optional, List) Error page configurations.
+* `explicit_using_dry_run` - (Optional, Bool) Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.
 * `follow_redirect_switch` - (Optional, String) 301/302 redirect following switch, available values: `on`, `off` (default).
 * `full_url_cache` - (Optional, Bool) Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional, List) HTTPS acceleration configuration. It's a list and consist of at most one item.
+* `hw_private_access` - (Optional, List) Access authentication for OBS origin.
+* `ip_filter` - (Optional, List) Specify Ip filter configurations.
+* `ip_freq_limit` - (Optional, List) Specify Ip frequency limit configurations.
 * `ipv6_access_switch` - (Optional, String) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
+* `max_age` - (Optional, List) Browser cache configuration. (This feature is in beta and not generally available yet).
+* `offline_cache_switch` - (Optional, String) Offline cache switch, available values: `on`, `off` (default).
+* `origin_pull_optimization` - (Optional, List) Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).
+* `origin_pull_timeout` - (Optional, List) Cross-border linkage optimization configuration.
+* `oss_private_access` - (Optional, List) Access authentication for OSS origin.
 * `project_id` - (Optional, Int) The project CDN belongs to, default to 0.
+* `qn_private_access` - (Optional, List) Access authentication for OBS origin.
+* `quic_switch` - (Optional, String) QUIC switch, available values: `on`, `off` (default).
 * `range_origin_switch` - (Optional, String) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
+* `referer` - (Optional, List) Referer configuration.
 * `request_header` - (Optional, List) Request header configuration. It's a list and consist of at most one item.
+* `response_header_cache_switch` - (Optional, String) Response header cache switch, available values: `on`, `off` (default).
+* `response_header` - (Optional, List) Response header configurations.
 * `rule_cache` - (Optional, List) Advanced path cache configuration.
+* `seo_switch` - (Optional, String) SEO switch, available values: `on`, `off` (default).
+* `specific_config_mainland` - (Optional, String) Specific configuration for mainland, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#MainlandConfig) for more details.
+* `specific_config_overseas` - (Optional, String) Specific configuration for oversea, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#OverseaConfig) for more details.
+* `status_code_cache` - (Optional, List) Status code cache configurations.
 * `tags` - (Optional, Map) Tags of cdn domain.
+* `video_seek_switch` - (Optional, String) Video seek switch, available values: `on`, `off` (default).
 
 The `authentication` object supports the following:
 
@@ -161,9 +187,70 @@ The `authentication` object supports the following:
 * `type_c` - (Optional, List) Timestamp hotlink protection mode C configuration.
 * `type_d` - (Optional, List) Timestamp hotlink protection mode D configuration.
 
+The `aws_private_access` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `access_key` - (Optional, String) Access ID.
+* `bucket` - (Optional, String) Bucket.
+* `region` - (Optional, String) Region.
+* `secret_key` - (Optional, String) Key.
+
+The `band_width_alert` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `alert_percentage` - (Optional, Int) Alert percentage.
+* `alert_switch` - (Optional, String) Switch alert.
+* `bps_threshold` - (Optional, Int) threshold of bps.
+* `counter_measure` - (Optional, String) Counter measure.
+* `metric` - (Optional, String) Metric.
+* `statistic_item` - (Optional, List) Specify statistic item configuration.
+
+The `cache_rules` object supports the following:
+
+* `cache_time` - (Required, Int) Status code cache expiration time (in seconds).
+* `status_code` - (Required, String) Code of status cache. available values: `403`, `404`.
+
+The `capping_rules` object supports the following:
+
+* `kbps_threshold` - (Required, Int) Capping rule kbps threshold.
+* `rule_paths` - (Required, List) List of capping rule path.
+* `rule_type` - (Required, String) Capping rule type.
+
 The `client_certificate_config` object supports the following:
 
 * `certificate_content` - (Required, String) Client Certificate PEM format, requires Base64 encoding.
+
+The `compression_rules` object supports the following:
+
+* `algorithms` - (Required, List) List of algorithms, available: `gzip` and `brotli`.
+* `compress` - (Required, Bool) Must be set as true, enables compression.
+* `max_length` - (Required, Int) The maximum file size to trigger compression (in bytes).
+* `min_length` - (Required, Int) The minimum file size to trigger compression (in bytes).
+* `file_extensions` - (Optional, List) List of file extensions like `jpg`, `txt`.
+* `rule_paths` - (Optional, List) List of rule paths for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
+* `rule_type` - (Optional, String) Rule type, available: `all`, `file`, `directory`, `path`, `contentType`.
+
+The `compression` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `compression_rules` - (Optional, List) List of compression rules.
+
+The `downstream_capping` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `capping_rules` - (Optional, List) List of capping rule.
+
+The `error_page` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `page_rules` - (Optional, List) List of error page rule.
+
+The `filter_rules` object supports the following:
+
+* `filter_type` - (Required, String) Ip filter `blacklist`/`whitelist` type of filter rules.
+* `filters` - (Required, List) Ip filter rule list, supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.
+* `rule_paths` - (Required, List) Content list for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
+* `rule_type` - (Required, String) Ip filter rule type of filter rules, available: `all`, `file`, `directory`, `path`.
 
 The `force_redirect` object supports the following:
 
@@ -179,6 +266,14 @@ The `header_rules` object supports the following:
 * `rule_paths` - (Required, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.
 * `rule_type` - (Required, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect.
 
+The `header_rules` object supports the following:
+
+* `header_mode` - (Required, String) Response header mode.
+* `header_name` - (Required, String) response header name of rule.
+* `header_value` - (Required, String) response header value of rule.
+* `rule_paths` - (Required, List) response rule paths of rule.
+* `rule_type` - (Required, String) response rule type of rule.
+
 The `https_config` object supports the following:
 
 * `https_switch` - (Required, String) HTTPS configuration switch. Valid values are `on` and `off`.
@@ -189,6 +284,48 @@ The `https_config` object supports the following:
 * `server_certificate_config` - (Optional, List) Server certificate configuration information.
 * `spdy_switch` - (Optional, String) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.
 * `verify_client` - (Optional, String) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
+
+The `hw_private_access` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `access_key` - (Optional, String) Access ID.
+* `bucket` - (Optional, String) Bucket.
+* `secret_key` - (Optional, String) Key.
+
+The `ip_filter` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `filter_rules` - (Optional, List) Ip filter rules, This feature is only available to selected beta customers.
+* `filter_type` - (Optional, String) IP `blacklist`/`whitelist` type.
+* `filters` - (Optional, List) Ip filter list, Supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.
+* `return_code` - (Optional, Int) Return code, available values: 400-499.
+
+The `ip_freq_limit` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `qps` - (Optional, Int) Sets the limited number of requests per second, 514 will be returned for requests that exceed the limit.
+
+The `max_age_rules` object supports the following:
+
+* `max_age_contents` - (Required, List) List of rule paths for each `max_age_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
+* `max_age_time` - (Required, Int) Max Age time in seconds, this can set to `0` that stands for no cache.
+* `max_age_type` - (Required, String) The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
+* `follow_origin` - (Optional, String) Whether to follow origin, values: `on`/`off`, if set to `on`, the `max_age_time` will be ignored.
+
+The `max_age` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `max_age_rules` - (Optional, List) List of Max Age rule configuration.
+
+The `origin_pull_optimization` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `optimization_type` - (Optional, String) Optimization type, values: `OVToCN` - Overseas to CN, `CNToOV` CN to Overseas.
+
+The `origin_pull_timeout` object supports the following:
+
+* `connect_timeout` - (Required, Int) The origin-pull connection timeout (in seconds). Valid range: 5-60.
+* `receive_timeout` - (Required, Int) The origin-pull receipt timeout (in seconds). Valid range: 10-60.
 
 The `origin` object supports the following:
 
@@ -201,10 +338,48 @@ The `origin` object supports the following:
 * `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
 * `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
+The `oss_private_access` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `access_key` - (Optional, String) Access ID.
+* `bucket` - (Optional, String) Bucket.
+* `region` - (Optional, String) Region.
+* `secret_key` - (Optional, String) Key.
+
+The `page_rules` object supports the following:
+
+* `redirect_code` - (Required, Int) Redirect code of error page rules.
+* `redirect_url` - (Required, String) Redirect url of error page rules.
+* `status_code` - (Required, Int) Status code of error page rules.
+
+The `qn_private_access` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `access_key` - (Optional, String) Access ID.
+* `secret_key` - (Optional, String) Key.
+
+The `referer_rules` object supports the following:
+
+* `allow_empty` - (Required, Bool) Whether to allow emptpy.
+* `referer_type` - (Required, String) Referer type.
+* `referers` - (Required, List) Referer list.
+* `rule_paths` - (Required, List) Referer rule path list.
+* `rule_type` - (Required, String) Referer rule type.
+
+The `referer` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `referer_rules` - (Optional, List) List of referer rules.
+
 The `request_header` object supports the following:
 
 * `header_rules` - (Optional, List) Custom request header configuration rules.
 * `switch` - (Optional, String) Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.
+
+The `response_header` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `header_rules` - (Optional, List) List of response header rule.
 
 The `rule_cache` object supports the following:
 
@@ -225,6 +400,23 @@ The `server_certificate_config` object supports the following:
 * `certificate_id` - (Optional, String) Server certificate ID.
 * `message` - (Optional, String) Certificate remarks.
 * `private_key` - (Optional, String) Server key information. This is required when uploading an external certificate.
+
+The `statistic_item` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `alert_percentage` - (Optional, Int) Alert percentage.
+* `alert_switch` - (Optional, String) Switch alert.
+* `bps_threshold` - (Optional, Int) threshold of bps.
+* `counter_measure` - (Optional, String) Counter measure, values: `RETURN_404`, `RESOLVE_DNS_TO_ORIGIN`.
+* `cycle` - (Optional, Int) Cycle of checking in minutes, values `60`, `1440`.
+* `metric` - (Optional, String) Metric.
+* `type` - (Optional, String) Type of statistic item.
+* `unblock_time` - (Optional, Int) Time of auto unblock.
+
+The `status_code_cache` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `cache_rules` - (Optional, List) List of cache rule.
 
 The `type_a` object supports the following:
 
@@ -269,6 +461,8 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cname` - CNAME address of domain name.
 * `create_time` - Creation time of domain name.
+* `dry_run_create_result` - Used for store `dry_run` request json.
+* `dry_run_update_result` - Used for store `dry_run` update request json.
 * `status` - Acceleration service status.
 
 

@@ -1,5 +1,6 @@
 /*
 Provides a resource to create a CDN domain.
+~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 
 Example Usage
 
@@ -136,6 +137,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -155,9 +157,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 		Delete: resourceTencentCloudCdnDomainDelete,
 		Importer: &schema.ResourceImporter{
 			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				_ = d.Set("authentication", []interface{}{map[string]interface{}{
-					"switch": "off",
-				}})
+				getDefaultSwitchOffMap := func() []interface{} {
+					return []interface{}{
+						map[string]interface{}{"switch": "off"},
+					}
+				}
+				_ = d.Set("authentication", getDefaultSwitchOffMap())
 				return []*schema.ResourceData{d}, nil
 			},
 		},
@@ -748,6 +753,725 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
+			// extensions
+			"ip_filter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Specify Ip filter configurations.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"filter_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IP `blacklist`/`whitelist` type.",
+						},
+						"filters": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Ip filter list, Supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"filter_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Ip filter rules, This feature is only available to selected beta customers.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"filter_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Ip filter `blacklist`/`whitelist` type of filter rules.",
+									},
+									"filters": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Ip filter rule list, supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Ip filter rule type of filter rules, available: `all`, `file`, `directory`, `path`.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Content list for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+								},
+							},
+						},
+						"return_code": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Return code, available values: 400-499.",
+						},
+					},
+				},
+			},
+			"ip_freq_limit": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Specify Ip frequency limit configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"qps": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Sets the limited number of requests per second, 514 will be returned for requests that exceed the limit.",
+						},
+					},
+				},
+			},
+			"status_code_cache": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Status code cache configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"cache_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of cache rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"status_code": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Code of status cache. available values: `403`, `404`.",
+									},
+									"cache_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Status code cache expiration time (in seconds).",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"compression": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Smart compression configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"compression_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of compression rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"compress": {
+										Type:        schema.TypeBool,
+										Required:    true,
+										Description: "Must be set as true, enables compression.",
+									},
+									"min_length": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The minimum file size to trigger compression (in bytes).",
+									},
+									"max_length": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "The maximum file size to trigger compression (in bytes).",
+									},
+									"algorithms": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "List of algorithms, available: `gzip` and `brotli`.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"file_extensions": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "List of file extensions like `jpg`, `txt`.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Rule type, available: `all`, `file`, `directory`, `path`, `contentType`.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "List of rule paths for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"band_width_alert": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Bandwidth cap configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"bps_threshold": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "threshold of bps.",
+						},
+						"counter_measure": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Counter measure.",
+						},
+						"last_trigger_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Last trigger time.",
+						},
+						"alert_switch": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Switch alert.",
+						},
+						"alert_percentage": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Alert percentage.",
+						},
+						"last_trigger_time_overseas": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Last trigger time of overseas.",
+						},
+						"metric": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Metric.",
+						},
+						"statistic_item": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Specify statistic item configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Configuration switch, available values: `on`, `off` (default).",
+									},
+									"type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Type of statistic item.",
+									},
+									"unblock_time": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Time of auto unblock.",
+									},
+									"bps_threshold": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "threshold of bps.",
+									},
+									"counter_measure": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Counter measure, values: `RETURN_404`, `RESOLVE_DNS_TO_ORIGIN`.",
+									},
+									"alert_switch": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Switch alert.",
+									},
+									"alert_percentage": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Alert percentage.",
+									},
+									"metric": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Metric.",
+									},
+									"cycle": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Cycle of checking in minutes, values `60`, `1440`.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"error_page": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Error page configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"page_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of error page rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"status_code": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Status code of error page rules.",
+									},
+									"redirect_code": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Redirect code of error page rules.",
+									},
+									"redirect_url": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Redirect url of error page rules.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"response_header": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Response header configurations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"header_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of response header rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"header_mode": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Response header mode.",
+									},
+									"header_name": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "response header name of rule.",
+									},
+									"header_value": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "response header value of rule.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "response rule type of rule.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "response rule paths of rule.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"downstream_capping": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Downstream capping configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"capping_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of capping rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Capping rule type.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "List of capping rule path.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"kbps_threshold": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Capping rule kbps threshold.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"response_header_cache_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Response header cache switch, available values: `on`, `off` (default).",
+			},
+			"origin_pull_optimization": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"optimization_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Optimization type, values: `OVToCN` - Overseas to CN, `CNToOV` CN to Overseas.",
+						},
+					},
+				},
+			},
+			"seo_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "SEO switch, available values: `on`, `off` (default).",
+			},
+			"referer": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Referer configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"referer_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of referer rules.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Referer rule type.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Referer rule path list.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"referer_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Referer type.",
+									},
+									"referers": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Referer list.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"allow_empty": {
+										Type:        schema.TypeBool,
+										Required:    true,
+										Description: "Whether to allow emptpy.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"video_seek_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Video seek switch, available values: `on`, `off` (default).",
+			},
+			"max_age": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Browser cache configuration. (This feature is in beta and not generally available yet).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"max_age_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of Max Age rule configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"max_age_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.",
+									},
+									"max_age_contents": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "List of rule paths for each `max_age_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
+									"max_age_time": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Max Age time in seconds, this can set to `0` that stands for no cache.",
+									},
+									"follow_origin": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Whether to follow origin, values: `on`/`off`, if set to `on`, the `max_age_time` will be ignored.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"specific_config_mainland": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Description:      "Specific configuration for mainland, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#MainlandConfig) for more details.",
+				DiffSuppressFunc: helper.DiffSupressJSON,
+			},
+			"specific_config_overseas": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Description:      "Specific configuration for oversea, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#OverseaConfig) for more details.",
+				DiffSuppressFunc: helper.DiffSupressJSON,
+			},
+			"origin_pull_timeout": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Cross-border linkage optimization configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connect_timeout": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "The origin-pull connection timeout (in seconds). Valid range: 5-60.",
+						},
+						"receive_timeout": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "The origin-pull receipt timeout (in seconds). Valid range: 10-60.",
+						},
+					},
+				},
+			},
+			"offline_cache_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Offline cache switch, available values: `on`, `off` (default).",
+			},
+			"quic_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "QUIC switch, available values: `on`, `off` (default).",
+			},
+			"aws_private_access": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Access authentication for S3 origin.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"access_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Access ID.",
+							Sensitive:   true,
+						},
+						"secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Key.",
+							Sensitive:   true,
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region.",
+						},
+						"bucket": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Bucket.",
+						},
+					},
+				},
+			},
+			"oss_private_access": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Access authentication for OSS origin.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"access_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Access ID.",
+							Sensitive:   true,
+						},
+						"secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Key.",
+							Sensitive:   true,
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region.",
+						},
+						"bucket": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Bucket.",
+						},
+					},
+				},
+			},
+			"hw_private_access": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Access authentication for OBS origin.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"access_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Access ID.",
+							Sensitive:   true,
+						},
+						"secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Key.",
+							Sensitive:   true,
+						},
+						"bucket": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Bucket.",
+						},
+					},
+				},
+			},
+			"qn_private_access": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Access authentication for OBS origin.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"access_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Access ID.",
+							Sensitive:   true,
+						},
+						"secret_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Key.",
+							Sensitive:   true,
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -769,6 +1493,21 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time of domain name.",
+			},
+			"explicit_using_dry_run": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.",
+			},
+			"dry_run_create_result": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Used for store `dry_run` request json.",
+			},
+			"dry_run_update_result": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Used for store `dry_run` update request json.",
 			},
 		},
 	}
@@ -1092,6 +1831,439 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	// more added
+	if v, ok := helper.InterfacesHeadMap(d, "ip_filter"); ok {
+		vSwitch := v["switch"].(string)
+		request.IpFilter = &cdn.IpFilter{
+			Switch: &vSwitch,
+		}
+		if vv, ok := v["filter_type"].(string); ok {
+			request.IpFilter.FilterType = &vv
+		}
+		if vv, ok := v["filters"].([]interface{}); ok {
+			request.IpFilter.Filters = helper.InterfacesStringsPoint(vv)
+		}
+
+		//need white list func
+		if vv, ok := v["filter_rules"].([]interface{}); ok && len(vv) > 0 {
+			filterRules := make([]*cdn.IpFilterPathRule, 0)
+			for i := range vv {
+				item := vv[i].(map[string]interface{})
+				rule := &cdn.IpFilterPathRule{}
+				if rv, ok := item["filter_type"].(string); ok && rv != "" {
+					rule.FilterType = &rv
+				}
+				if rv, ok := item["filters"].([]interface{}); ok && len(rv) > 0 {
+					rule.Filters = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := item["rule_type"].(string); ok && rv != "" {
+					rule.RuleType = &rv
+				}
+				if rv, ok := item["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					rule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				filterRules = append(filterRules, rule)
+			}
+			request.IpFilter.FilterRules = filterRules
+		}
+
+		if vv, ok := v["return_code"].(int); ok {
+			request.IpFilter.ReturnCode = helper.IntInt64(vv)
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "ip_freq_limit"); ok {
+		vSwitch := v["switch"].(string)
+		qps := v["qps"].(int)
+		request.IpFreqLimit = &cdn.IpFreqLimit{
+			Switch: &vSwitch,
+			Qps:    helper.IntInt64(qps),
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "status_code_cache"); ok {
+		vSwitch := v["switch"].(string)
+		request.StatusCodeCache = &cdn.StatusCodeCache{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.StatusCodeCacheRule, 0)
+		rules := v["cache_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.StatusCodeCacheRule{
+				StatusCode: helper.String(item["status_code"].(string)),
+			}
+			if v, ok := item["cache_time"].(int); ok && v > 0 {
+				rule.CacheTime = helper.IntInt64(v)
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.StatusCodeCache.CacheRules = requestRules
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "compression"); ok {
+		vSwitch := v["switch"].(string)
+		request.Compression = &cdn.Compression{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.CompressionRule, 0)
+		rules := v["compression_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			var (
+				compress = item["compress"].(bool)
+			)
+			rule := &cdn.CompressionRule{
+				Compress: &compress,
+			}
+			if v, ok := item["min_length"].(int); ok && v > 0 {
+				rule.MinLength = helper.IntInt64(v)
+			}
+			if v, ok := item["max_length"].(int); ok && v > 0 {
+				rule.MaxLength = helper.IntInt64(v)
+			}
+			if v, ok := item["algorithms"].([]interface{}); ok && len(v) > 0 {
+				rule.Algorithms = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["file_extensions"].([]interface{}); ok && len(v) > 0 {
+				rule.FileExtensions = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+
+			requestRules = append(requestRules, rule)
+		}
+		request.Compression.CompressionRules = requestRules
+
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "band_width_alert"); ok {
+		vSwitch := v["switch"].(string)
+		request.BandwidthAlert = &cdn.BandwidthAlert{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["bps_threshold"].(int); ok && v > 0 {
+			request.BandwidthAlert.BpsThreshold = helper.IntInt64(v)
+		}
+		if v, ok := v["counter_measure"].(string); ok && v != "" {
+			request.BandwidthAlert.CounterMeasure = &v
+		}
+		//if v, ok := v["last_trigger_time"].(string); ok && v != "" {
+		//	request.BandwidthAlert.LastTriggerTime = &v
+		//}
+		if v, ok := v["alert_switch"].(string); ok && v != "" {
+			request.BandwidthAlert.AlertSwitch = &v
+		}
+		if v, ok := v["alert_percentage"].(int); ok && v > 0 {
+			request.BandwidthAlert.AlertPercentage = helper.IntInt64(v)
+		}
+		//if v, ok := v["last_trigger_time_overseas"].(string); ok && v != "" {
+		//	request.BandwidthAlert.LastTriggerTimeOverseas = &v
+		//}
+		if v, ok := v["metric"].(string); ok && v != "" {
+			request.BandwidthAlert.Metric = &v
+		}
+		if statistic, ok := v["statistic_item"].([]interface{}); ok && len(statistic) > 0 {
+			for i := range statistic {
+				item := statistic[i].(map[string]interface{})
+				vSwitch := item["switch"].(string)
+				sItem := &cdn.StatisticItem{
+					Switch: &vSwitch,
+				}
+				if vv, ok := item["type"].(string); ok && vv != "" {
+					sItem.Type = &vv
+				}
+				if vv, ok := item["unblock_time"].(int); ok && vv != 0 {
+					sItem.UnBlockTime = helper.IntUint64(vv)
+				}
+				if vv, ok := item["bps_threshold"].(int); ok && vv != 0 {
+					sItem.BpsThreshold = helper.IntUint64(vv)
+				}
+				if vv, ok := item["counter_measure"].(string); ok && vv != "" {
+					sItem.CounterMeasure = &vv
+				}
+				if vv, ok := item["alert_switch"].(string); ok && vv != "" {
+					sItem.AlertSwitch = &vv
+				}
+				if vv, ok := item["alert_percentage"].(int); ok && vv != 0 {
+					sItem.AlertPercentage = helper.IntUint64(vv)
+				}
+				if vv, ok := item["metric"].(string); ok && vv != "" {
+					sItem.Metric = &vv
+				}
+				if vv, ok := item["cycle"].(int); ok && vv != 0 {
+					sItem.BpsThreshold = helper.IntUint64(vv)
+				}
+				request.BandwidthAlert.StatisticItems = append(request.BandwidthAlert.StatisticItems, sItem)
+			}
+
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "error_page"); ok {
+		vSwitch := v["switch"].(string)
+		request.ErrorPage = &cdn.ErrorPage{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.ErrorPageRule, 0)
+		rules := v["page_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.ErrorPageRule{}
+			if v, ok := item["status_code"].(int); ok && v != 0 {
+				rule.StatusCode = helper.IntInt64(v)
+			}
+			if v, ok := item["redirect_code"].(int); ok && v != 0 {
+				rule.RedirectCode = helper.IntInt64(v)
+			}
+			if v, ok := item["redirect_url"].(string); ok && v != "" {
+				rule.RedirectUrl = &v
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.ErrorPage.PageRules = requestRules
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "response_header"); ok {
+		vSwitch := v["switch"].(string)
+		request.ResponseHeader = &cdn.ResponseHeader{
+			Switch: &vSwitch,
+		}
+		responseRules := make([]*cdn.HttpHeaderPathRule, 0)
+		rules := v["header_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.HttpHeaderPathRule{}
+			if v, ok := item["header_mode"].(string); ok && v != "" {
+				rule.HeaderMode = &v
+			}
+			if v, ok := item["header_name"].(string); ok && v != "" {
+				rule.HeaderName = &v
+			}
+			if v, ok := item["header_value"].(string); ok && v != "" {
+				rule.HeaderValue = &v
+			}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			responseRules = append(responseRules, rule)
+		}
+		request.ResponseHeader.HeaderRules = responseRules
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "downstream_capping"); ok {
+		vSwitch := v["switch"].(string)
+		request.DownstreamCapping = &cdn.DownstreamCapping{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.CappingRule, 0)
+		rules := v["capping_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.CappingRule{}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["kbps_threshold"].(int); ok && v > 0 {
+				rule.KBpsThreshold = helper.IntInt64(v)
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.DownstreamCapping.CappingRules = requestRules
+	}
+	if v, ok := d.GetOk("response_header_cache_switch"); ok {
+		request.ResponseHeaderCache = &cdn.ResponseHeaderCache{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "origin_pull_optimization"); ok {
+		vSwitch := v["switch"].(string)
+		request.OriginPullOptimization = &cdn.OriginPullOptimization{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["optimization_type"].(string); ok && v != "" {
+			request.OriginPullOptimization.OptimizationType = &v
+		}
+	}
+	if v, ok := d.GetOk("seo_switch"); ok {
+		request.Seo = &cdn.Seo{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "referer"); ok {
+		vSwitch := v["switch"].(string)
+		request.Referer = &cdn.Referer{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.RefererRule, 0)
+		rules := v["referer_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.RefererRule{}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["referer_type"].(string); ok && v != "" {
+				rule.RefererType = &v
+			}
+			if v, ok := item["referers"].([]interface{}); ok && len(v) > 0 {
+				rule.Referers = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["allow_empty"].(bool); ok {
+				rule.AllowEmpty = &v
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.Referer.RefererRules = requestRules
+	}
+	if v, ok := d.GetOk("video_seek_switch"); ok {
+		request.VideoSeek = &cdn.VideoSeek{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "max_age"); ok {
+		vSwitch := v["switch"].(string)
+		request.MaxAge = &cdn.MaxAge{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.MaxAgeRule, 0)
+		rules := v["max_age_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.MaxAgeRule{}
+
+			if v, ok := item["max_age_type"].(string); ok && v != "" {
+				rule.MaxAgeType = &v
+			}
+			if v, ok := item["max_age_contents"].([]interface{}); ok && len(v) > 0 {
+				rule.MaxAgeContents = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["max_age_time"].(int); ok && v > 0 {
+				rule.MaxAgeTime = helper.IntInt64(v)
+			}
+			if v, ok := item["follow_origin"].(string); ok && v != "" {
+				rule.FollowOrigin = &v
+			}
+
+			requestRules = append(requestRules, rule)
+		}
+		request.MaxAge.MaxAgeRules = requestRules
+	}
+	if v, ok := d.GetOk("specific_config_mainland"); ok && v.(string) != "" {
+		request.SpecificConfig = &cdn.SpecificConfig{}
+		configStruct := cdn.MainlandConfig{}
+		err := json.Unmarshal([]byte(v.(string)), &configStruct)
+		if err != nil {
+			return fmt.Errorf("unmarshal specific_config_mainland fail: %s", err.Error())
+		}
+		request.SpecificConfig.Mainland = &configStruct
+	}
+	if v, ok := d.GetOk("specific_config_overseas"); ok && v.(string) != "" {
+		if request.SpecificConfig == nil {
+			request.SpecificConfig = &cdn.SpecificConfig{}
+		}
+		configStruct := cdn.OverseaConfig{}
+		err := json.Unmarshal([]byte(v.(string)), &configStruct)
+		if err != nil {
+			return fmt.Errorf("unmarshal specific_config_overseas fail: %s", err.Error())
+		}
+		request.SpecificConfig.Overseas = &configStruct
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "origin_pull_timeout"); ok {
+		request.OriginPullTimeout = &cdn.OriginPullTimeout{}
+		if vv, ok := v["connect_timeout"].(int); ok && vv > 0 {
+			request.OriginPullTimeout.ConnectTimeout = helper.IntUint64(vv)
+		}
+		if vv, ok := v["receive_timeout"].(int); ok && vv > 0 {
+			request.OriginPullTimeout.ReceiveTimeout = helper.IntUint64(vv)
+		}
+	}
+	if v, ok := d.GetOk("offline_cache_switch"); ok {
+		request.OfflineCache = &cdn.OfflineCache{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := d.GetOk("quic_switch"); ok {
+		request.Quic = &cdn.Quic{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "aws_private_access"); ok {
+		vSwitch := v["switch"].(string)
+		request.AwsPrivateAccess = &cdn.AwsPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.AwsPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.AwsPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.AwsPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.AwsPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "oss_private_access"); ok {
+		vSwitch := v["switch"].(string)
+		request.OssPrivateAccess = &cdn.OssPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.OssPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.OssPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.OssPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.OssPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "hw_private_access"); ok {
+		vSwitch := v["switch"].(string)
+		request.HwPrivateAccess = &cdn.HwPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.HwPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.HwPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.HwPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok := helper.InterfacesHeadMap(d, "qn_private_access"); ok {
+		vSwitch := v["switch"].(string)
+		request.QnPrivateAccess = &cdn.QnPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.QnPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.QnPrivateAccess.SecretKey = &v
+		}
+	}
+
+	if v := d.Get("explicit_using_dry_run").(bool); v {
+		d.SetId(domain)
+		_ = d.Set("dry_run_create_result", request.ToJsonString())
+		return nil
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().AddCdnDomain(request)
@@ -1152,6 +2324,12 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	tagService := TagService{client: client}
 
 	domain := d.Id()
+
+	if v, ok := d.Get("explicit_using_dry_run").(bool); ok && v {
+		d.SetId(domain)
+		return nil
+	}
+
 	var domainConfig *cdn.DetailDomain
 	var errRet error
 	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
@@ -1361,6 +2539,285 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			auth["type_d"] = []interface{}{dMap}
 		}
 		_ = d.Set("authentication", []interface{}{auth})
+	}
+
+	dc := domainConfig
+
+	if ok := checkCdnInfoWritable(d, "ip_filter", dc.IpFilter); ok {
+		dMap := map[string]interface{}{
+			"switch":      dc.IpFilter.Switch,
+			"filer_type":  dc.IpFilter.FilterType,
+			"filters":     dc.IpFilter.Filters,
+			"return_code": dc.IpFilter.ReturnCode,
+		}
+		if rules := dc.IpFilter.FilterRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"filter_type": item.FilterType,
+					"filters":     item.Filters,
+					"rule_type":   item.RuleType,
+					"rule_paths":  item.RulePaths,
+				}
+				list = append(list, rule)
+			}
+			dMap["filter_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "ip_filter", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "ip_freq_limit", dc.IpFreqLimit); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.IpFreqLimit.Switch,
+			"qps":    dc.IpFreqLimit.Qps,
+		}
+		_ = helper.SetMapInterfaces(d, "ip_freq_limit", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "status_code_cache", dc.StatusCodeCache); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.StatusCodeCache.Switch,
+		}
+		if rules := dc.StatusCodeCache.CacheRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"status_code": item.StatusCode,
+					"cache_time":  item.CacheTime,
+				}
+				list = append(list, rule)
+			}
+			dMap["cache_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "status_code_cache", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "compression", dc.Compression); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.Compression.Switch,
+		}
+		if rules := dc.Compression.CompressionRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"compress":        item.Compress,
+					"min_length":      item.MinLength,
+					"max_length":      item.MaxLength,
+					"algorithms":      item.Algorithms,
+					"file_extensions": item.FileExtensions,
+					"rule_type":       item.RuleType,
+					"rule_paths":      item.RulePaths,
+				}
+				list = append(list, rule)
+			}
+			dMap["compression_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "compression", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "band_width_alert", dc.BandwidthAlert); ok {
+		dMap := map[string]interface{}{
+			"switch":                     dc.BandwidthAlert.Switch,
+			"bps_threshold":              dc.BandwidthAlert.BpsThreshold,
+			"counter_measure":            dc.BandwidthAlert.CounterMeasure,
+			"last_trigger_time":          dc.BandwidthAlert.LastTriggerTime,
+			"alert_switch":               dc.BandwidthAlert.AlertSwitch,
+			"alert_percentage":           dc.BandwidthAlert.AlertPercentage,
+			"last_trigger_time_overseas": dc.BandwidthAlert.LastTriggerTimeOverseas,
+			"metric":                     dc.BandwidthAlert.Metric,
+		}
+		if si := dc.BandwidthAlert.StatisticItems; len(si) > 0 {
+			rules := make([]interface{}, 0)
+			for i := range si {
+				item := si[i]
+				rule := map[string]interface{}{
+					"switch":           item.Switch,
+					"type":             item.Type,
+					"unblock_time":     item.UnBlockTime,
+					"bps_threshold":    item.BpsThreshold,
+					"counter_measure":  item.CounterMeasure,
+					"alert_switch":     item.AlertSwitch,
+					"alert_percentage": item.AlertPercentage,
+					"metric":           item.Metric,
+					"cycle":            item.Cycle,
+				}
+				rules = append(rules, rule)
+			}
+			dMap["statistic_item"] = rules
+		}
+		_ = helper.SetMapInterfaces(d, "band_width_alert", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "error_page", dc.ErrorPage); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.ErrorPage.Switch,
+		}
+		if rules := dc.ErrorPage.PageRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"status_code":   item.StatusCode,
+					"redirect_code": item.RedirectCode,
+					"redirect_url":  item.RedirectUrl,
+				}
+				list = append(list, rule)
+			}
+			dMap["page_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "error_page", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "response_header", dc.ResponseHeader); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.ResponseHeader.Switch,
+		}
+		if rules := dc.ResponseHeader.HeaderRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"header_mode":  item.HeaderMode,
+					"header_name":  item.HeaderName,
+					"header_value": item.HeaderValue,
+					"rule_type":    item.RuleType,
+					"rule_paths":   item.RulePaths,
+				}
+				list = append(list, rule)
+			}
+			dMap["header_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "response_header", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "downstream_capping", dc.DownstreamCapping); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.DownstreamCapping.Switch,
+		}
+		if rules := dc.DownstreamCapping.CappingRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"rule_type":      item.RuleType,
+					"rule_paths":     item.RulePaths,
+					"kbps_threshold": item.KBpsThreshold,
+				}
+				list = append(list, rule)
+			}
+			dMap["capping_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "downstream_capping", dMap)
+	}
+	if _, ok := d.GetOk("response_header_cache_switch"); ok && dc.ResponseHeaderCache != nil {
+		_ = d.Set("response_header_cache_switch", dc.ResponseHeaderCache.Switch)
+	}
+	if ok := checkCdnInfoWritable(d, "origin_pull_optimization", dc.OriginPullOptimization); ok {
+		dMap := map[string]interface{}{
+			"switch":            dc.OriginPullOptimization.Switch,
+			"optimization_type": dc.OriginPullOptimization.OptimizationType,
+		}
+		_ = helper.SetMapInterfaces(d, "origin_pull_optimization", dMap)
+	}
+	if _, ok := d.GetOk("seo_switch"); ok && dc.Seo != nil {
+		_ = d.Set("seo_switch", dc.Seo.Switch)
+	}
+	if ok := checkCdnInfoWritable(d, "referer", dc.Referer); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.Referer.Switch,
+		}
+		if rules := dc.Referer.RefererRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"rule_type":    item.RuleType,
+					"rule_paths":   item.RulePaths,
+					"referer_type": item.RefererType,
+					"referers":     item.Referers,
+					"allow_empty":  item.AllowEmpty,
+				}
+				list = append(list, rule)
+			}
+			dMap["referer_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "referer", dMap)
+	}
+	if _, ok := d.GetOk("video_seek_switch"); ok && dc.VideoSeek != nil {
+		_ = d.Set("video_seek_switch", dc.VideoSeek.Switch)
+	}
+	if ok := checkCdnInfoWritable(d, "max_age", dc.MaxAge); ok {
+		dMap := map[string]interface{}{
+			"switch": dc.MaxAge.Switch,
+		}
+		if rules := dc.MaxAge.MaxAgeRules; len(rules) > 0 {
+			list := make([]map[string]interface{}, 0)
+			for i := range rules {
+				item := rules[i]
+				rule := map[string]interface{}{
+					"follow_origin":      item.FollowOrigin,
+					"max_agent_contents": item.MaxAgeContents,
+					"max_agent_type":     item.MaxAgeType,
+					"max_agent_time":     item.MaxAgeTime,
+				}
+				list = append(list, rule)
+			}
+			dMap["max_age_rules"] = list
+		}
+		_ = helper.SetMapInterfaces(d, "max_age", dMap)
+	}
+	if ok := checkCdnInfoWritable(d, "specific_config_mainland", dc.SpecificConfig); ok {
+		specConfig, err := json.Marshal(dc.SpecificConfig.Mainland)
+		if err == nil {
+			_ = d.Set("specific_config_mainland", string(specConfig))
+		}
+	}
+	if ok := checkCdnInfoWritable(d, "specific_config_overseas", dc.SpecificConfig); ok {
+		specConfig, err := json.Marshal(dc.SpecificConfig.Overseas)
+		if err == nil {
+			_ = d.Set("specific_config_overseas", string(specConfig))
+		}
+	}
+	if ok := checkCdnInfoWritable(d, "origin_pull_timeout", dc.OriginPullTimeout); ok {
+		_ = helper.SetMapInterfaces(d, "origin_pull_timeout", map[string]interface{}{
+			"connect_timeout": dc.OriginPullTimeout.ConnectTimeout,
+			"receive_timeout": dc.OriginPullTimeout.ReceiveTimeout,
+		})
+	}
+	if _, ok := d.GetOk("offline_cache_switch"); ok && dc.OfflineCache != nil {
+		_ = d.Set("offline_cache_switch", dc.OfflineCache.Switch)
+	}
+	if _, ok := d.GetOk("quic_switch"); ok && dc.Quic != nil {
+		_ = d.Set("quic_switch", dc.Quic.Switch)
+	}
+	if ok := checkCdnInfoWritable(d, "aws_private_access", dc.AwsPrivateAccess); ok {
+		_ = helper.SetMapInterfaces(d, "aws_private_access", map[string]interface{}{
+			"switch":     dc.AwsPrivateAccess.Switch,
+			"access_key": dc.AwsPrivateAccess.AccessKey,
+			"secret_key": dc.AwsPrivateAccess.SecretKey,
+			"bucket":     dc.AwsPrivateAccess.Bucket,
+			"region":     dc.AwsPrivateAccess.Region,
+		})
+	}
+	if ok := checkCdnInfoWritable(d, "oss_private_access", dc.OssPrivateAccess); ok {
+		_ = helper.SetMapInterfaces(d, "oss_private_access", map[string]interface{}{
+			"switch":     dc.OssPrivateAccess.Switch,
+			"access_key": dc.OssPrivateAccess.AccessKey,
+			"secret_key": dc.OssPrivateAccess.SecretKey,
+			"bucket":     dc.OssPrivateAccess.Bucket,
+			"region":     dc.OssPrivateAccess.Region,
+		})
+	}
+	if ok := checkCdnInfoWritable(d, "hw_private_access", dc.HwPrivateAccess); ok {
+		_ = helper.SetMapInterfaces(d, "hw_private_access", map[string]interface{}{
+			"switch":     dc.HwPrivateAccess.Switch,
+			"access_key": dc.HwPrivateAccess.AccessKey,
+			"secret_key": dc.HwPrivateAccess.SecretKey,
+			"bucket":     dc.HwPrivateAccess.Bucket,
+		})
+	}
+	if ok := checkCdnInfoWritable(d, "qn_private_access", dc.QnPrivateAccess); ok {
+		_ = helper.SetMapInterfaces(d, "qn_private_access", map[string]interface{}{
+			"switch":     dc.QnPrivateAccess.Switch,
+			"access_key": dc.QnPrivateAccess.AccessKey,
+			"secret_key": dc.QnPrivateAccess.SecretKey,
+		})
 	}
 
 	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
@@ -1705,6 +3162,403 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	// more added
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "ip_filter"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.IpFilter = &cdn.IpFilter{
+			Switch: &vSwitch,
+		}
+		if vv, ok := v["filter_type"].(string); ok {
+			request.IpFilter.FilterType = &vv
+		}
+		if vv, ok := v["filters"].([]interface{}); ok {
+			request.IpFilter.Filters = helper.InterfacesStringsPoint(vv)
+		}
+
+		//need white list func
+		if vv, ok := v["filter_rules"].([]interface{}); ok && len(vv) > 0 {
+			filterRules := make([]*cdn.IpFilterPathRule, 0)
+			for i := range vv {
+				item := vv[i].(map[string]interface{})
+				rule := &cdn.IpFilterPathRule{}
+				if rv, ok := item["filter_type"].(string); ok && rv != "" {
+					rule.FilterType = &rv
+				}
+				if rv, ok := item["filters"].([]interface{}); ok && len(rv) > 0 {
+					rule.Filters = helper.InterfacesStringsPoint(rv)
+				}
+				if rv, ok := item["rule_type"].(string); ok && rv != "" {
+					rule.RuleType = &rv
+				}
+				if rv, ok := item["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+					rule.RulePaths = helper.InterfacesStringsPoint(rv)
+				}
+				filterRules = append(filterRules, rule)
+			}
+			request.IpFilter.FilterRules = filterRules
+		}
+
+		if vv, ok := v["return_code"].(int); ok {
+			request.IpFilter.ReturnCode = helper.IntInt64(vv)
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "ip_freq_limit"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		qps := v["qps"].(int)
+		request.IpFreqLimit = &cdn.IpFreqLimit{
+			Switch: &vSwitch,
+			Qps:    helper.IntInt64(qps),
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "status_code_cache"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.StatusCodeCache = &cdn.StatusCodeCache{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.StatusCodeCacheRule, 0)
+		rules := v["cache_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.StatusCodeCacheRule{
+				StatusCode: helper.String(item["status_code"].(string)),
+			}
+			if v, ok := item["cache_time"].(int); ok && v > 0 {
+				rule.CacheTime = helper.IntInt64(v)
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.StatusCodeCache.CacheRules = requestRules
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "compression"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.Compression = &cdn.Compression{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.CompressionRule, 0)
+		rules := v["compression_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			var (
+				compress = item["compress"].(bool)
+			)
+			rule := &cdn.CompressionRule{
+				Compress: &compress,
+			}
+			if v, ok := item["min_length"].(int); ok && v > 0 {
+				rule.MinLength = helper.IntInt64(v)
+			}
+			if v, ok := item["max_length"].(int); ok && v > 0 {
+				rule.MaxLength = helper.IntInt64(v)
+			}
+			if v, ok := item["algorithms"].([]interface{}); ok && len(v) > 0 {
+				rule.Algorithms = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["file_extensions"].([]interface{}); ok && len(v) > 0 {
+				rule.FileExtensions = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+
+			requestRules = append(requestRules, rule)
+		}
+		request.Compression.CompressionRules = requestRules
+
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "band_width_alert"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.BandwidthAlert = &cdn.BandwidthAlert{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["bps_threshold"].(int); ok && v > 0 {
+			request.BandwidthAlert.BpsThreshold = helper.IntInt64(v)
+		}
+		if v, ok := v["counter_measure"].(string); ok && v != "" {
+			request.BandwidthAlert.CounterMeasure = &v
+		}
+		//if v, ok := v["last_trigger_time"].(string); ok && v != "" {
+		//	request.BandwidthAlert.LastTriggerTime = &v
+		//}
+		if v, ok := v["alert_switch"].(string); ok && v != "" {
+			request.BandwidthAlert.AlertSwitch = &v
+		}
+		if v, ok := v["alert_percentage"].(int); ok && v > 0 {
+			request.BandwidthAlert.AlertPercentage = helper.IntInt64(v)
+		}
+		//if v, ok := v["last_trigger_time_overseas"].(string); ok && v != "" {
+		//	request.BandwidthAlert.LastTriggerTimeOverseas = &v
+		//}
+		if v, ok := v["metric"].(string); ok && v != "" {
+			request.BandwidthAlert.Metric = &v
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "error_page"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.ErrorPage = &cdn.ErrorPage{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.ErrorPageRule, 0)
+		rules := v["page_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.ErrorPageRule{}
+			if v, ok := item["status_code"].(int); ok && v != 0 {
+				rule.StatusCode = helper.IntInt64(v)
+			}
+			if v, ok := item["redirect_code"].(int); ok && v != 0 {
+				rule.RedirectCode = helper.IntInt64(v)
+			}
+			if v, ok := item["redirect_url"].(string); ok && v != "" {
+				rule.RedirectUrl = &v
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.ErrorPage.PageRules = requestRules
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "response_header"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.ResponseHeader = &cdn.ResponseHeader{
+			Switch: &vSwitch,
+		}
+		responseRules := make([]*cdn.HttpHeaderPathRule, 0)
+		rules := v["header_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.HttpHeaderPathRule{}
+			if v, ok := item["header_mode"].(string); ok && v != "" {
+				rule.HeaderMode = &v
+			}
+			if v, ok := item["header_name"].(string); ok && v != "" {
+				rule.HeaderName = &v
+			}
+			if v, ok := item["header_value"].(string); ok && v != "" {
+				rule.HeaderValue = &v
+			}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			responseRules = append(responseRules, rule)
+		}
+		request.ResponseHeader.HeaderRules = responseRules
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "downstream_capping"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.DownstreamCapping = &cdn.DownstreamCapping{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.CappingRule, 0)
+		rules := v["capping_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.CappingRule{}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["kbps_threshold"].(int); ok && v > 0 {
+				rule.KBpsThreshold = helper.IntInt64(v)
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.DownstreamCapping.CappingRules = requestRules
+	}
+	if v, ok := d.GetOk("response_header_cache_switch"); ok {
+		request.ResponseHeaderCache = &cdn.ResponseHeaderCache{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_pull_optimization"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.OriginPullOptimization = &cdn.OriginPullOptimization{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["optimization_type"].(string); ok && v != "" {
+			request.OriginPullOptimization.OptimizationType = &v
+		}
+	}
+	if v, ok := d.GetOk("seo_switch"); ok {
+		request.Seo = &cdn.Seo{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "referer"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.Referer = &cdn.Referer{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.RefererRule, 0)
+		rules := v["referer_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.RefererRule{}
+			if v, ok := item["rule_type"].(string); ok && v != "" {
+				rule.RuleType = &v
+			}
+			if v, ok := item["rule_paths"].([]interface{}); ok && len(v) > 0 {
+				rule.RulePaths = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["referer_type"].(string); ok && v != "" {
+				rule.RefererType = &v
+			}
+			if v, ok := item["referers"].([]interface{}); ok && len(v) > 0 {
+				rule.Referers = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["allow_empty"].(bool); ok {
+				rule.AllowEmpty = &v
+			}
+			requestRules = append(requestRules, rule)
+		}
+		request.Referer.RefererRules = requestRules
+	}
+	if v, ok := d.GetOk("video_seek_switch"); ok {
+		request.VideoSeek = &cdn.VideoSeek{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "max_age"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.MaxAge = &cdn.MaxAge{
+			Switch: &vSwitch,
+		}
+		requestRules := make([]*cdn.MaxAgeRule, 0)
+		rules := v["max_age_rules"].([]interface{})
+		for i := range rules {
+			item := rules[i].(map[string]interface{})
+			rule := &cdn.MaxAgeRule{}
+
+			if v, ok := item["max_age_type"].(string); ok && v != "" {
+				rule.MaxAgeType = &v
+			}
+			if v, ok := item["max_age_contents"].([]interface{}); ok && len(v) > 0 {
+				rule.MaxAgeContents = helper.InterfacesStringsPoint(v)
+			}
+			if v, ok := item["max_age_time"].(int); ok && v > 0 {
+				rule.MaxAgeTime = helper.IntInt64(v)
+			}
+			if v, ok := item["follow_origin"].(string); ok && v != "" {
+				rule.FollowOrigin = &v
+			}
+
+			requestRules = append(requestRules, rule)
+		}
+		request.MaxAge.MaxAgeRules = requestRules
+	}
+	if v, ok := d.GetOk("specific_config_mainland"); ok && v.(string) != "" {
+		request.SpecificConfig = &cdn.SpecificConfig{}
+		configStruct := cdn.MainlandConfig{}
+		err := json.Unmarshal([]byte(v.(string)), &configStruct)
+		if err != nil {
+			return fmt.Errorf("unmarshal specific_config_mainland fail: %s", err.Error())
+		}
+		request.SpecificConfig.Mainland = &configStruct
+	}
+	if v, ok := d.GetOk("specific_config_overseas"); ok && v.(string) != "" {
+		if request.SpecificConfig == nil {
+			request.SpecificConfig = &cdn.SpecificConfig{}
+		}
+		configStruct := cdn.OverseaConfig{}
+		err := json.Unmarshal([]byte(v.(string)), &configStruct)
+		if err != nil {
+			return fmt.Errorf("unmarshal specific_config_overseas fail: %s", err.Error())
+		}
+		request.SpecificConfig.Overseas = &configStruct
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_pull_timeout"); ok && hasChanged {
+		request.OriginPullTimeout = &cdn.OriginPullTimeout{}
+		if vv, ok := v["connect_timeout"].(int); ok && vv > 0 {
+			request.OriginPullTimeout.ConnectTimeout = helper.IntUint64(vv)
+		}
+		if vv, ok := v["receive_timeout"].(int); ok && vv > 0 {
+			request.OriginPullTimeout.ReceiveTimeout = helper.IntUint64(vv)
+		}
+	}
+	if v, ok := d.GetOk("offline_cache_switch"); ok {
+		request.OfflineCache = &cdn.OfflineCache{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok := d.GetOk("quic_switch"); ok {
+		request.Quic = &cdn.Quic{
+			Switch: helper.String(v.(string)),
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "aws_private_access"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.AwsPrivateAccess = &cdn.AwsPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.AwsPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.AwsPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.AwsPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.AwsPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "oss_private_access"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.OssPrivateAccess = &cdn.OssPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.OssPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.OssPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["region"].(string); ok && v != "" {
+			request.OssPrivateAccess.Region = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.OssPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "hw_private_access"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.HwPrivateAccess = &cdn.HwPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.HwPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.HwPrivateAccess.SecretKey = &v
+		}
+		if v, ok := v["bucket"].(string); ok && v != "" {
+			request.HwPrivateAccess.Bucket = &v
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "qn_private_access"); ok && hasChanged {
+		vSwitch := v["switch"].(string)
+		request.QnPrivateAccess = &cdn.QnPrivateAccess{
+			Switch: &vSwitch,
+		}
+		if v, ok := v["access_key"].(string); ok && v != "" {
+			request.QnPrivateAccess.AccessKey = &v
+		}
+		if v, ok := v["secret_key"].(string); ok && v != "" {
+			request.QnPrivateAccess.SecretKey = &v
+		}
+	}
+
+	if v := d.Get("explicit_using_dry_run").(bool); v {
+		_ = d.Set("dry_run_update_result", request.ToJsonString())
+		return resourceTencentCloudCdnDomainRead(d, meta)
+	}
+
 	if len(updateAttrs) > 0 {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1770,6 +3624,12 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 	cdnService := CdnService{client: client}
 
 	domain := d.Id()
+
+	if v, ok := d.Get("explicit_using_dry_run").(bool); ok && v {
+		d.SetId("")
+		return nil
+	}
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: client}
 		region := client.Region
@@ -1838,4 +3698,15 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 	return nil
+}
+
+func checkCdnHeadMapOkAndChanged(d *schema.ResourceData, key string) (v map[string]interface{}, ok bool, changed bool) {
+	changed = d.HasChange(key)
+	v, ok = helper.InterfacesHeadMap(d, key)
+	return
+}
+
+func checkCdnInfoWritable(d *schema.ResourceData, key string, val interface{}) bool {
+	_, ok := helper.InterfacesHeadMap(d, key)
+	return val != nil && ok
 }
