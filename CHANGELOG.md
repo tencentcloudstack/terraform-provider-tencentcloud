@@ -1,3 +1,13 @@
+## 1.75.2 (June 30, 2022)
+
+FEATURES:
+* new datasource `tencentcloud_ckafka_instances`
+
+ENHANCEMENTS:
+* resource `tencentcloud_instance_set` add timeout
+* datasource `tencentcloud_instance` add field `instances_ids`
+* resource `tencentcloud_ckafka_instance` support vips
+
 ## 1.75.2 (June 29, 2022)
 
 FEATURES:
