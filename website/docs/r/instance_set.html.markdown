@@ -53,6 +53,13 @@ resource "tencentcloud_subnet" "app" {
 
 // Create 10 CVM instances to host awesome_app
 resource "tencentcloud_instance_set" "my_awesome_app" {
+  timeouts {
+    create = "5m"
+    read   = "20s"
+    delete = "1h"
+  }
+
+  instance_count    = 10
   instance_name     = "awesome_app"
   availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id          = data.tencentcloud_images.my_favorite_image.images.0.image_id
@@ -63,7 +70,6 @@ resource "tencentcloud_instance_set" "my_awesome_app" {
   project_id        = 0
   vpc_id            = tencentcloud_vpc.app.id
   subnet_id         = tencentcloud_subnet.app.id
-  instance_count    = 10
 }
 ```
 
@@ -72,14 +78,13 @@ resource "tencentcloud_instance_set" "my_awesome_app" {
 The following arguments are supported:
 
 * `availability_zone` - (Required, ForceNew) The available zone for the CVM instance.
-* `image_id` - (Required) The image to use for the instance. Changing `image_id` will cause the instance reset.
+* `image_id` - (Required, ForceNew) The image to use for the instance. Changing `image_id` will cause the instance reset.
 * `allocate_public_ip` - (Optional, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
 * `bandwidth_package_id` - (Optional) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `disable_monitor_service` - (Optional) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.
 * `hostname` - (Optional) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.
-* `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type` - (Optional) The charge type of instance. Only support `POSTPAID_BY_HOUR`.
 * `instance_count` - (Optional) The number of instances to be purchased. Value range:[1,100]; default value: 1.
 * `instance_name` - (Optional) The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
