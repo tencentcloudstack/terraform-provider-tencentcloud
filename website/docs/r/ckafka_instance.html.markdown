@@ -98,7 +98,8 @@ The `tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `vip` - Vip of instance.
+* `vport` - Type of instance.
 
 
 ## Import

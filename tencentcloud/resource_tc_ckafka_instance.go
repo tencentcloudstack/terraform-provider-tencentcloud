@@ -264,6 +264,16 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Timestamp.",
 			},
+			"vip": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Vip of instance.",
+			},
+			"vport": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of instance.",
+			},
 		},
 	}
 }
@@ -496,6 +506,8 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("kafka_version", info.Version)
 	_ = d.Set("disk_size", info.DiskSize)
 	bandWidth := info.Bandwidth
+	_ = d.Set("vip", info.Vip)
+	_ = d.Set("vport", info.Vport)
 	_ = d.Set("band_width", *bandWidth/8)
 	_ = d.Set("partition", info.MaxPartitionNumber)
 
