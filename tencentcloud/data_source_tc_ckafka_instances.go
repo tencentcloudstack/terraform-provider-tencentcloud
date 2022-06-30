@@ -64,7 +64,7 @@ func dataSourceTencentCloudCkafkaInstances() *schema.Resource {
 						},
 					},
 				},
-				Description: "Filter. filter. Name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId') ,filter. Values can pass up to 10 values.",
+				Description: "Filter. filter.name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId'), filter.values can pass up to 10 values.",
 			},
 			"offset": {
 				Type:        schema.TypeInt,
