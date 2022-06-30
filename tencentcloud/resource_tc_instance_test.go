@@ -33,7 +33,7 @@ func testSweepCvmInstance(region string) error {
 		client: client.apiV3Conn,
 	}
 
-	instances, err := cvmService.DescribeInstanceByFilter(ctx, nil)
+	instances, err := cvmService.DescribeInstanceByFilter(ctx, nil, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
 	}

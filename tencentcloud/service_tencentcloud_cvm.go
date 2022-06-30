@@ -77,16 +77,20 @@ func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId strin
 	return
 }
 
-func (me *CvmService) DescribeInstanceByFilter(ctx context.Context, filters map[string]string) (instances []*cvm.Instance, errRet error) {
+func (me *CvmService) DescribeInstanceByFilter(ctx context.Context, instancesId []*string, filters map[string]string) (instances []*cvm.Instance, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewDescribeInstancesRequest()
-	request.Filters = make([]*cvm.Filter, 0, len(filters))
-	for k, v := range filters {
-		filter := cvm.Filter{
-			Name:   helper.String(k),
-			Values: []*string{helper.String(v)},
+	if instancesId != nil {
+		request.InstanceIds = instancesId
+	} else {
+		request.Filters = make([]*cvm.Filter, 0, len(filters))
+		for k, v := range filters {
+			filter := cvm.Filter{
+				Name:   helper.String(k),
+				Values: []*string{helper.String(v)},
+			}
+			request.Filters = append(request.Filters, &filter)
 		}
-		request.Filters = append(request.Filters, &filter)
 	}
 
 	var offset int64 = 0
