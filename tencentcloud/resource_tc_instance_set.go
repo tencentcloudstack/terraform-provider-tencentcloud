@@ -43,6 +43,13 @@ resource "tencentcloud_subnet" "app" {
 
 // Create 10 CVM instances to host awesome_app
 resource "tencentcloud_instance_set" "my_awesome_app" {
+  timeouts {
+			create = "5m"
+			read   = "20s"
+			delete = "1h"
+  }
+
+  instance_count             = 10
   instance_name              = "awesome_app"
   availability_zone          = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
@@ -53,7 +60,6 @@ resource "tencentcloud_instance_set" "my_awesome_app" {
   project_id                 = 0
   vpc_id                     = tencentcloud_vpc.app.id
   subnet_id                  = tencentcloud_subnet.app.id
-  instance_count             = 10
 }
 ```
 
@@ -82,11 +88,17 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 		Read:   resourceTencentCloudInstanceSetRead,
 		Update: resourceTencentCloudInstanceSetUpdate,
 		Delete: resourceTencentCloudInstanceSetDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(600 * time.Second),
+			Read:   schema.DefaultTimeout(600 * time.Second),
+			Delete: schema.DefaultTimeout(600 * time.Second),
+		},
 
 		Schema: map[string]*schema.Schema{
 			"image_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The image to use for the instance. Changing `image_id` will cause the instance reset.",
 			},
 			"availability_zone": {
@@ -138,12 +150,6 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 				Default:      CVM_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue(CVM_CHARGE_TYPE),
 				Description:  "The charge type of instance. Only support `POSTPAID_BY_HOUR`.",
-			},
-			"instance_charge_type_prepaid_period": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
-				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 			},
 			// network
 			"internet_charge_type": {
@@ -315,6 +321,72 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 }
 
 func resourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutCreate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudInstanceSetCreate(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cvm instance set create action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func resourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutRead)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudInstanceSetRead(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cvm instance set read action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func resourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interface{}) (err error) {
+	defer logElapsed("resource.tencentcloud_instance_set.update")()
+
+	return fmt.Errorf("`resource_instance_set` do not support change now.")
+}
+
+func resourceTencentCloudInstanceSetDelete(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutDelete)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudInstanceSetDelete(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cvm instance set delete action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func doResourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance_set.create")()
 	logId := getLogId(contextNil)
 
@@ -473,13 +545,13 @@ func resourceTencentCloudInstanceSetCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	d.Set("instance_ids", instanceIds)
+	_ = d.Set("instance_ids", instanceIds)
 	d.SetId(helper.StrListToStr(instanceIds))
 
 	return nil
 }
 
-func resourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interface{}) error {
+func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance_set.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -547,13 +619,7 @@ func resourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interface{
 	return nil
 }
 
-func resourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interface{}) (err error) {
-	defer logElapsed("resource.tencentcloud_instance_set.update")()
-
-	return fmt.Errorf("`resource_instance_set` do not support change now.")
-}
-
-func resourceTencentCloudInstanceSetDelete(d *schema.ResourceData, meta interface{}) error {
+func doResourceTencentCloudInstanceSetDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance_set.delete")()
 
 	logId := getLogId(contextNil)
