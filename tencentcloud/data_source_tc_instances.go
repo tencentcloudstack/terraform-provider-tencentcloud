@@ -58,6 +58,16 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 				Optional:    true,
 				Description: "ID of a vpc subnetwork.",
 			},
+			"instance_set_ids": {
+				Type:          schema.TypeList,
+				Optional:      true,
+				MaxItems:      100,
+				ConflictsWith: []string{"instance_id", "instance_name", "availability_zone", "project_id", "vpc_id", "subnet_id", "tags"},
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Instance set ids, max length is 100, conflict with other field.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -251,6 +261,8 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	var instanceSetIds []*string
+
 	filter := make(map[string]string)
 	if v, ok := d.GetOk("instance_id"); ok {
 		filter["instance-id"] = v.(string)
@@ -270,6 +282,10 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("subnet_id"); ok {
 		filter["subnet-id"] = v.(string)
 	}
+	if v, ok := d.GetOk("instance_set_ids"); ok {
+		instanceSetIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+
 	if v, ok := d.GetOk("tags"); ok {
 		for key, value := range v.(map[string]interface{}) {
 			filter["tag:"+key] = value.(string)
@@ -279,7 +295,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	var instances []*cvm.Instance
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, filter)
+		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceSetIds, filter)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
