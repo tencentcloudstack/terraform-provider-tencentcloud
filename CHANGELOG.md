@@ -1,4 +1,4 @@
-## 1.75.2 (June 30, 2022)
+## 1.75.3 (June 30, 2022)
 
 FEATURES:
 * new datasource `tencentcloud_ckafka_instances`
