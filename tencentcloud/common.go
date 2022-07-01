@@ -306,3 +306,24 @@ func GetListIncrement(o []int, n []int) (result []int, err error) {
 	}
 	return
 }
+
+//GoRoutine Limit
+type GoRoutineLimit struct {
+	Count int
+	Chan  chan struct{}
+}
+
+func NewGoRoutine(num int) *GoRoutineLimit {
+	return &GoRoutineLimit{
+		Count: num,
+		Chan:  make(chan struct{}, num),
+	}
+}
+
+func (g *GoRoutineLimit) Run(f func()) {
+	g.Chan <- struct{}{}
+	go func() {
+		f()
+		<-g.Chan
+	}()
+}

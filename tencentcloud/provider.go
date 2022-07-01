@@ -176,6 +176,7 @@ Cloud Block Storage(CBS)
   Data Source
     tencentcloud_cbs_snapshots
     tencentcloud_cbs_storages
+	tencentcloud_cbs_storages_set
     tencentcloud_cbs_snapshot_policies
 
   Resource
@@ -264,6 +265,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_images
     tencentcloud_instance_types
     tencentcloud_instances
+	tencentcloud_instances_set
     tencentcloud_key_pairs
     tencentcloud_eip
     tencentcloud_eips
@@ -750,6 +752,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_availability_zones":                       dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":            dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_instances":                                dataSourceTencentCloudInstances(),
+			"tencentcloud_instances_set":                            dataSourceTencentCloudInstancesSet(),
 			"tencentcloud_reserved_instances":                       dataSourceTencentCloudReservedInstances(),
 			"tencentcloud_placement_groups":                         dataSourceTencentCloudPlacementGroups(),
 			"tencentcloud_key_pairs":                                dataSourceTencentCloudKeyPairs(),
@@ -810,6 +813,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
 			"tencentcloud_cbs_storages":                             dataSourceTencentCloudCbsStorages(),
+			"tencentcloud_cbs_storages_set":                         dataSourceTencentCloudCbsStoragesSet(),
 			"tencentcloud_cbs_snapshots":                            dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_cbs_snapshot_policies":                    dataSourceTencentCloudCbsSnapshotPolicies(),
 			"tencentcloud_clb_instances":                            dataSourceTencentCloudClbInstances(),
