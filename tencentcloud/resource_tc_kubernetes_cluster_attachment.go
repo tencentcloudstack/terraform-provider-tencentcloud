@@ -325,13 +325,15 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 				diskPartition      = value["disk_partition"].(string)
 				dataDisk           = tke.DataDisk{
 					DiskType:           &diskType,
-					DiskSize:           &diskSize,
 					FileSystem:         &fileSystem,
 					AutoFormatAndMount: &autoFormatAndMount,
 					MountTarget:        &mountTarget,
 					DiskPartition:      &diskPartition,
 				}
 			)
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
+			}
 			setting.DataDisks = append(setting.DataDisks, &dataDisk)
 		}
 	}

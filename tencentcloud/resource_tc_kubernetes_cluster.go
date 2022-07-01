@@ -615,6 +615,16 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 						Optional:    true,
 						Description: "Data disk snapshot ID.",
 					},
+					"encrypt": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Indicates whether to encrypt data disk, default `false`.",
+					},
+					"kms_key_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.",
+					},
 					"file_system": {
 						Type:        schema.TypeString,
 						ForceNew:    true,
@@ -1503,13 +1513,23 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 				diskType   = value["disk_type"].(string)
 				diskSize   = int64(value["disk_size"].(int))
 				snapshotId = value["snapshot_id"].(string)
+				encrypt    = value["encrypt"].(bool)
+				kmsKeyId   = value["kms_key_id"].(string)
 				dataDisk   = cvm.DataDisk{
 					DiskType: &diskType,
-					DiskSize: &diskSize,
 				}
 			)
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
+			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
+			}
+			if encrypt {
+				dataDisk.Encrypt = &encrypt
+			}
+			if kmsKeyId != "" {
+				dataDisk.KmsKeyId = &kmsKeyId
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
