@@ -264,6 +264,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_images
     tencentcloud_instance_types
     tencentcloud_instances
+	tencentcloud_instances_set
     tencentcloud_key_pairs
     tencentcloud_eip
     tencentcloud_eips
@@ -750,6 +751,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_availability_zones":                       dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":            dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_instances":                                dataSourceTencentCloudInstances(),
+			"tencentcloud_instances_set":                            dataSourceTencentCloudInstancesSet(),
 			"tencentcloud_reserved_instances":                       dataSourceTencentCloudReservedInstances(),
 			"tencentcloud_placement_groups":                         dataSourceTencentCloudPlacementGroups(),
 			"tencentcloud_key_pairs":                                dataSourceTencentCloudKeyPairs(),

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -118,6 +119,84 @@ func (me *CvmService) DescribeInstanceByFilter(ctx context.Context, instancesId 
 			break
 		}
 		offset += pageSize
+	}
+	return
+}
+
+func (me *CvmService) DescribeInstanceInParallelByFilter(ctx context.Context, filters map[string]string) (instances []*cvm.Instance, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeInstancesRequest()
+
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := cvm.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	if response == nil || len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	total := response.Response.TotalCount
+
+	var limit = 100
+
+	num := int(*total) / limit
+
+	g := NewGoRoutine(num + 1)
+	wg := sync.WaitGroup{}
+
+	var instanceSetList = make([]interface{}, num+1)
+
+	for i := 0; i <= num; i++ {
+		wg.Add(1)
+		value := i
+		goFunc := func() {
+			offset := value * limit
+			request := cvm.NewDescribeInstancesRequest()
+			request.Filters = make([]*cvm.Filter, 0, len(filters))
+			for k, v := range filters {
+				filter := cvm.Filter{
+					Name:   helper.String(k),
+					Values: []*string{helper.String(v)},
+				}
+				request.Filters = append(request.Filters, &filter)
+			}
+
+			request.Offset = helper.IntInt64(offset)
+			request.Limit = helper.IntInt64(limit)
+
+			ratelimit.Check(request.GetAction())
+			response, err := me.client.UseCvmClient().DescribeInstances(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				errRet = err
+				return
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			instanceSetList[value] = response.Response.InstanceSet
+
+			wg.Done()
+		}
+		g.Run(goFunc)
+	}
+	wg.Wait()
+
+	for _, v := range instanceSetList {
+		instances = append(instances, v.([]*cvm.Instance)...)
 	}
 	return
 }
