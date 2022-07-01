@@ -56,6 +56,7 @@ func resourceTencentCloudCbsStorageSet() *schema.Resource {
 			"disk_count": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "The number of disks to be purchased. Default 1.",
 			},
 			"charge_type": {
@@ -188,7 +189,7 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.Set("disk_ids", storageIds)
+	_ = d.Set("disk_ids", storageIds)
 	d.SetId(helper.StrListToStr(storageIds))
 
 	return nil
@@ -220,6 +221,7 @@ func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interfac
 
 	storage := storageSet[0]
 
+	_ = d.Set("disk_count", len(storageSet))
 	_ = d.Set("storage_type", storage.DiskType)
 	_ = d.Set("storage_size", storage.DiskSize)
 	_ = d.Set("availability_zone", storage.Placement.Zone)

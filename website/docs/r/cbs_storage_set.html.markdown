@@ -34,7 +34,7 @@ The following arguments are supported:
 * `storage_size` - (Required) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
 * `storage_type` - (Required, ForceNew) Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.
 * `charge_type` - (Optional) The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.
-* `disk_count` - (Optional) The number of disks to be purchased. Default 1.
+* `disk_count` - (Optional, ForceNew) The number of disks to be purchased. Default 1.
 * `encrypt` - (Optional, ForceNew) Indicates whether CBS is encrypted.
 * `project_id` - (Optional) ID of the project to which the instance belongs.
 * `snapshot_id` - (Optional) ID of the snapshot. If specified, created the CBS by this snapshot.
