@@ -176,6 +176,7 @@ Cloud Block Storage(CBS)
   Data Source
     tencentcloud_cbs_snapshots
     tencentcloud_cbs_storages
+	tencentcloud_cbs_storages_set
     tencentcloud_cbs_snapshot_policies
 
   Resource
@@ -812,6 +813,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
 			"tencentcloud_cbs_storages":                             dataSourceTencentCloudCbsStorages(),
+			"tencentcloud_cbs_storages_set":                         dataSourceTencentCloudCbsStoragesSet(),
 			"tencentcloud_cbs_snapshots":                            dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_cbs_snapshot_policies":                    dataSourceTencentCloudCbsSnapshotPolicies(),
 			"tencentcloud_clb_instances":                            dataSourceTencentCloudClbInstances(),

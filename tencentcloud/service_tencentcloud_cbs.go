@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"log"
+	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -114,6 +115,93 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 		}
 		offset += pageSize
 	}
+	return
+}
+
+func (me *CbsService) DescribeDisksInParallelByFilter(ctx context.Context, params map[string]interface{}) (disks []*cbs.Disk, errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewDescribeDisksRequest()
+
+	request.Filters = make([]*cbs.Filter, 0, len(params))
+	for k, v := range params {
+		filter := &cbs.Filter{
+			Name: helper.String(k),
+		}
+		switch v.(type) {
+		case string:
+			filter.Values = []*string{helper.String(v.(string))}
+		case []*string:
+			filter.Values = v.([]*string)
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+	response, err := me.client.UseCbsClient().DescribeDisks(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	if response == nil || len(response.Response.DiskSet) < 1 {
+		return
+	}
+
+	total := response.Response.TotalCount
+
+	var limit = 100
+	num := int(*total) / limit
+	g := NewGoRoutine(num + 1)
+	wg := sync.WaitGroup{}
+
+	var diskSetList = make([]interface{}, num+1)
+
+	for i := 0; i <= num; i++ {
+		wg.Add(1)
+		value := i
+		goFunc := func() {
+			offset := value * limit
+			request := cbs.NewDescribeDisksRequest()
+			request.Filters = make([]*cbs.Filter, 0, len(params))
+			for k, v := range params {
+				filter := &cbs.Filter{
+					Name: helper.String(k),
+				}
+				switch v.(type) {
+				case string:
+					filter.Values = []*string{helper.String(v.(string))}
+				case []*string:
+					filter.Values = v.([]*string)
+				}
+				request.Filters = append(request.Filters, filter)
+			}
+
+			request.Offset = helper.IntUint64(offset)
+			request.Limit = helper.IntUint64(limit)
+
+			ratelimit.Check(request.GetAction())
+			response, err := me.client.UseCbsClient().DescribeDisks(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				errRet = err
+				return
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			diskSetList[value] = response.Response.DiskSet
+
+			wg.Done()
+		}
+		g.Run(goFunc)
+	}
+	wg.Wait()
+
+	for _, v := range diskSetList {
+		disks = append(disks, v.([]*cbs.Disk)...)
+	}
+
 	return
 }
 

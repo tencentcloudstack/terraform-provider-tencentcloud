@@ -243,7 +243,7 @@ func dataSourceTencentCloudInstancesSet() *schema.Resource {
 }
 
 func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_instances.read")()
+	defer logElapsed("data_source.tencentcloud_instances_set.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
