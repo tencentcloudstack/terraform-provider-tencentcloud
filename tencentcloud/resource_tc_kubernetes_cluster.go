@@ -1505,9 +1505,11 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 				snapshotId = value["snapshot_id"].(string)
 				dataDisk   = cvm.DataDisk{
 					DiskType: &diskType,
-					DiskSize: &diskSize,
 				}
 			)
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
+			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
 			}

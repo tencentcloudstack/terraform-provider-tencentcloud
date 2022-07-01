@@ -654,7 +654,9 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
-				DiskSize: &diskSize,
+			}
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
@@ -796,7 +798,9 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
-				DiskSize: &diskSize,
+			}
+			if diskSize > 0 {
+				dataDisk.DiskSize = &diskSize
 			}
 			if snapshotId != "" {
 				dataDisk.SnapshotId = &snapshotId
@@ -1127,7 +1131,6 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 		logId           = getLogId(contextNil)
 		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
 		clusterId       = d.Get("cluster_id").(string)
-		nodeConfig      = d.Get("node_config").([]interface{})
 		enableAutoScale = d.Get("enable_auto_scale").(bool)
 		configParas     = d.Get("auto_scaling_config").([]interface{})
 		name            = d.Get("name").(string)
@@ -1135,10 +1138,6 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 	)
 	if len(configParas) != 1 {
 		return fmt.Errorf("need only one auto_scaling_config")
-	}
-
-	if len(nodeConfig) > 1 {
-		return fmt.Errorf("need only one node_config")
 	}
 
 	groupParaStr, err := composeParameterToAsScalingGroupParaSerial(d)
@@ -1155,13 +1154,8 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 	taints := GetTkeTaints(d, "taints")
 
 	//compose InstanceAdvancedSettings
-	if workConfig, ok := d.GetOk("node_config"); ok {
-		workConfigList := workConfig.([]interface{})
-		if len(workConfigList) == 1 {
-			workConfigPara := workConfigList[0].(map[string]interface{})
-			setting := tkeGetInstanceAdvancedPara(workConfigPara, meta)
-			iAdvanced = setting
-		}
+	if workConfig, ok := helper.InterfacesHeadMap(d, "node_config"); ok {
+		iAdvanced = tkeGetInstanceAdvancedPara(workConfig, meta)
 	}
 
 	if temp, ok := d.GetOk("extra_args"); ok {
