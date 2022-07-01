@@ -86,7 +86,7 @@ The following arguments are supported:
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.
 * `hostname` - (Optional) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.
 * `instance_charge_type` - (Optional) The charge type of instance. Only support `POSTPAID_BY_HOUR`.
-* `instance_count` - (Optional) The number of instances to be purchased. Value range:[1,100]; default value: 1.
+* `instance_count` - (Optional, ForceNew) The number of instances to be purchased. Value range:[1,100]; default value: 1.
 * `instance_name` - (Optional) The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
 * `instance_type` - (Optional) The type of the instance.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.

@@ -110,6 +110,7 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 			"instance_count": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
 			},
 			"instance_name": {
@@ -578,6 +579,7 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 
 	instance := instanceSet[0]
 
+	_ = d.Set("instance_count", len(instanceSet))
 	_ = d.Set("image_id", instance.ImageId)
 	_ = d.Set("availability_zone", instance.Placement.Zone)
 	_ = d.Set("instance_name", d.Get("instance_name"))
