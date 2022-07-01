@@ -1,3 +1,13 @@
+## 1.75.4 (July 01, 2022)
+
+FEATURES:
+* new datasource `tencentcloud_instances_set`
+* new datasource `tencentcloud_cbs_storages_set`
+
+ENHANCEMENTS:
+* resource `tencentcloud_kubernetes_cluster` support encrypt disk
+
+
 ## 1.75.3 (June 30, 2022)
 
 FEATURES:
