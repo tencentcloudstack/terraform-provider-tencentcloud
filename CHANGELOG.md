@@ -1,3 +1,10 @@
+## 1.75.5 (July 01, 2022)
+
+ENHANCEMENTS:
+*  datasource `tencentcloud_instances_set`  hard check `instance_count` either equal 
+*  datasource `tencentcloud_cbs_storages_set` hard check `disk_count` either equal
+
+
 ## 1.75.4 (July 01, 2022)
 
 FEATURES:
