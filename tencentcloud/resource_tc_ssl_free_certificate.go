@@ -148,7 +148,7 @@ func resourceTencentCloudSSLFreeCertificate() *schema.Resource {
 			"cert_end_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Certificate begin time.",
+				Description: "Certificate end time.",
 			},
 			"insert_time": {
 				Type:        schema.TypeString,

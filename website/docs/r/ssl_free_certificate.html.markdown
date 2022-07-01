@@ -53,7 +53,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `cert_begin_time` - Certificate begin time.
-* `cert_end_time` - Certificate begin time.
+* `cert_end_time` - Certificate end time.
 * `certificate_private_key` - Certificate private key.
 * `certificate_public_key` - Certificate public key.
 * `deployable` - Indicates whether the certificate deployable.
