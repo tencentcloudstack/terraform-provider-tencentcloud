@@ -511,7 +511,9 @@ The `data_disk` object supports the following:
 * `disk_partition` - (Optional, ForceNew) The name of the device or partition to mount.
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
+* `encrypt` - (Optional) Indicates whether to encrypt data disk, default `false`.
 * `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `kms_key_id` - (Optional) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
 * `mount_target` - (Optional, ForceNew) Mount target.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
