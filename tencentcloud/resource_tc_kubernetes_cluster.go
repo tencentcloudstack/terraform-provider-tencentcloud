@@ -2484,16 +2484,18 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
 	_ = d.Set("security_policy", policies)
 
-	if emptyStrFunc(securityRet.Response.ClusterExternalEndpoint) == "" {
-		_ = d.Set("cluster_internet", false)
-	} else {
-		_ = d.Set("cluster_internet", true)
-	}
+	if v, ok := d.GetOk("worker_config"); ok && len(v.([]interface{})) > 0 {
+		if emptyStrFunc(securityRet.Response.ClusterExternalEndpoint) == "" {
+			_ = d.Set("cluster_internet", false)
+		} else {
+			_ = d.Set("cluster_internet", true)
+		}
 
-	if emptyStrFunc(securityRet.Response.PgwEndpoint) == "" {
-		_ = d.Set("cluster_intranet", false)
-	} else {
-		_ = d.Set("cluster_intranet", true)
+		if emptyStrFunc(securityRet.Response.PgwEndpoint) == "" {
+			_ = d.Set("cluster_intranet", false)
+		} else {
+			_ = d.Set("cluster_intranet", true)
+		}
 	}
 
 	var globalConfig *tke.ClusterAsGroupOption
@@ -2777,7 +2779,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 				return err
 			}
 		}
-		d.SetPartial("cluster_internet")
 	}
 
 	if clusterInternet {
@@ -2790,8 +2791,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			}
 			d.SetPartial("managed_cluster_internet_security_policies")
 		}
-	} else {
-		d.SetPartial("managed_cluster_internet_security_policies")
 	}
 
 	if d.HasChange("project_id") || d.HasChange("cluster_name") || d.HasChange("cluster_desc") || d.HasChange("cluster_level") || d.HasChange("auto_upgrade_cluster_level") {
