@@ -165,8 +165,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"replicas_read_only": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
-				Default:     false,
+				Computed:    true,
 				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
 			},
 			"mem_size": {
@@ -298,7 +297,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	chargeType := d.Get("charge_type").(string)
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
-	replicasReadonly := d.Get("replicas_read_only").(bool)
+	var replicasReadonly bool
+	if v, ok := d.GetOk("replicas_read_only"); ok {
+		replicasReadonly = v.(bool)
+	}
 	var chargePeriod uint64 = 1
 	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
 		if period, ok := d.GetOk("prepaid_period"); ok {
