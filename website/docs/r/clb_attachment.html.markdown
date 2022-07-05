@@ -31,16 +31,17 @@ resource "tencentcloud_clb_attachment" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, String, ForceNew) ID of the CLB.
-* `listener_id` - (Required, String, ForceNew) ID of the CLB listener.
-* `targets` - (Required, Set) Information of the backends to be attached.
-* `rule_id` - (Optional, String, ForceNew) ID of the CLB listener rule. Only supports listeners of `HTTPS` and `HTTP` protocol.
+* `clb_id` - (Required, ForceNew) ID of the CLB.
+* `listener_id` - (Required, ForceNew) ID of the CLB listener.
+* `targets` - (Required) Information of the backends to be attached.
+* `rule_id` - (Optional, ForceNew) ID of the CLB listener rule. Only supports listeners of `HTTPS` and `HTTP` protocol.
 
 The `targets` object supports the following:
 
-* `instance_id` - (Required, String) Id of the backend server.
-* `port` - (Required, Int) Port of the backend server. Valid value ranges: (0~65535).
-* `weight` - (Optional, Int) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to `10`.
+* `port` - (Required) Port of the backend server. Valid value ranges: (0~65535).
+* `eni_ip` - (Optional) Eni IP address of the backend server, conflict with `instance_id` but must specify one of them.
+* `instance_id` - (Optional) CVM Instance Id of the backend server, conflict with `eni_ip` but must specify one of them.
+* `weight` - (Optional) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to `10`.
 
 ## Attributes Reference
 

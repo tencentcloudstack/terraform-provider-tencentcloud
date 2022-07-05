@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccTencentCloudAlbServerAttachmentTcp(t *testing.T) {
-	t.Parallel()
+	t.Skipf("Deprecated resource TestAccTencentCloudAlbServerAttachmentTcp, skip testing")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -42,7 +42,7 @@ func TestAccTencentCloudAlbServerAttachmentTcp(t *testing.T) {
 }
 
 func TestAccTencentCloudAlbServerAttachmentHttp(t *testing.T) {
-	t.Parallel()
+	t.Skipf("Deprecated resource TestAccTencentCloudAlbServerAttachmentTcp, skip testing")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

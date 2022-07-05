@@ -132,7 +132,7 @@ func resourceTencentCloudAlbServerAttachmentCreate(d *schema.ResourceData, meta 
 
 	for _, inst_ := range d.Get("backends").(*schema.Set).List() {
 		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -277,7 +277,7 @@ func resourceTencentCloudAlbServerAttachementRemove(d *schema.ResourceData, meta
 	}
 	for _, inst_ := range remove {
 		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -325,7 +325,7 @@ func resourceTencentCloudAlbServerAttachementAdd(d *schema.ResourceData, meta in
 
 	for _, inst_ := range add {
 		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		requestId := ""
