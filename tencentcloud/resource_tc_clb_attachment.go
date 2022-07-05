@@ -459,6 +459,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 					})
 				}
 
+				//FIXME : apply all ips
 			} else if len(v.PrivateIpAddresses) > 0 && *v.PrivateIpAddresses[0] != "" {
 				target := map[string]interface{}{
 					"weight": int(*v.Weight),

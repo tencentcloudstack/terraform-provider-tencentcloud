@@ -1012,8 +1012,8 @@ func flattenBackendList(list []*clb.Backend) (mapping []map[string]interface{}) 
 			"port":   v.Port,
 			"weight": v.Weight,
 		}
-		if *v.Type == "ENI" {
-			target["eni_ip"] = v.InstanceId
+		if *v.Type == "ENI" && len(v.PrivateIpAddresses) > 0 {
+			target["eni_ip"] = v.PrivateIpAddresses[0]
 		} else {
 			target["instance_id"] = v.InstanceId
 		}
