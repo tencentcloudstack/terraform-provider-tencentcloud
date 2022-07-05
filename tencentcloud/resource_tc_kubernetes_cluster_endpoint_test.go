@@ -84,18 +84,6 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   unschedulable = 0
 }
 
-resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
-  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
-  cluster_internet = true
-  cluster_intranet = true
-  managed_cluster_internet_security_policies = [
-    "192.168.0.0/24"
-  ]
-  cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
-  depends_on = [
-	tencentcloud_kubernetes_cluster_attachment.test_attach
-  ]
-}
 `
 
 const testAccTkeClusterEndpointBasic = testAccTkeClusterEndpointBasicDeps + `
