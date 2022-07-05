@@ -946,7 +946,11 @@ resource "tencentcloud_instance" "foo" {
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
-
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
   tags = %s
 }
 `,

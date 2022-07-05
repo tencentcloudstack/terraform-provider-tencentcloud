@@ -1399,8 +1399,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 		//tag disk ids
 		if dataDisks, ok := d.GetOk("data_disks"); ok {
-			dataDiskList := dataDisks.([]map[string]interface{})
-			for _, disk := range dataDiskList {
+			dataDiskList := dataDisks.([]interface{})
+			for _, dataDisk := range dataDiskList {
+				disk := dataDisk.(map[string]interface{})
 				dataDiskId := disk["data_disk_id"].(string)
 				resourceName = BuildTagResourceName("cvm", "volume", region, dataDiskId)
 				if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
