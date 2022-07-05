@@ -91,6 +91,7 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(600 * time.Second),
 			Read:   schema.DefaultTimeout(600 * time.Second),
+			Update: schema.DefaultTimeout(600 * time.Second),
 			Delete: schema.DefaultTimeout(600 * time.Second),
 		},
 
@@ -110,8 +111,15 @@ func resourceTencentCloudInstanceSet() *schema.Resource {
 			"instance_count": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The number of instances to be purchased. Value range:[1,100]; default value: 1.",
+			},
+			"exclude_instance_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "instance ids list to exclude.",
 			},
 			"instance_name": {
 				Type:         schema.TypeString,
@@ -361,10 +369,24 @@ func resourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interface{
 	}
 }
 
-func resourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interface{}) (err error) {
-	defer logElapsed("resource.tencentcloud_instance_set.update")()
+func resourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
 
-	return fmt.Errorf("`resource_instance_set` do not support change now.")
+	timeout := d.Timeout(schema.TimeoutUpdate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudInstanceSetUpdate(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cvm instance set update action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
 }
 
 func resourceTencentCloudInstanceSetDelete(d *schema.ResourceData, meta interface{}) error {
@@ -559,7 +581,10 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	instanceId := d.Id()
+	var instanceSetIds []*string
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceSetIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cvmService := CvmService{
@@ -567,7 +592,7 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	}
 	var instanceSet []*cvm.Instance
 	var errRet error
-	instanceSet, errRet = cvmService.DescribeInstanceSetByIds(ctx, instanceId)
+	instanceSet, errRet = cvmService.DescribeInstanceSetByIds(ctx, helper.StrListToStr(instanceSetIds))
 	if errRet != nil {
 		return errRet
 	}
@@ -579,7 +604,6 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 
 	instance := instanceSet[0]
 
-	_ = d.Set("instance_count", len(instanceSet))
 	_ = d.Set("image_id", instance.ImageId)
 	_ = d.Set("availability_zone", instance.Placement.Zone)
 	_ = d.Set("instance_name", d.Get("instance_name"))
@@ -621,21 +645,245 @@ func doResourceTencentCloudInstanceSetRead(d *schema.ResourceData, meta interfac
 	return nil
 }
 
+func doResourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interface{}) (err error) {
+	defer logElapsed("resource.tencentcloud_instance_set.update")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	if d.HasChange("exclude_instance_ids") {
+		old, new := d.GetChange("exclude_instance_ids")
+		olds := old.(*schema.Set)
+		news := new.(*schema.Set)
+		needExclude := news.Difference(olds).List()
+		needCreate := olds.Difference(news).List()
+
+		// need delete instance
+		if len(needExclude) > 0 {
+			instanceSetIds := helper.StrListToStr(helper.InterfacesStringsPoint(needExclude))
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				errRet := cvmService.DeleteInstanceSetByIds(ctx, instanceSetIds)
+				if errRet != nil {
+					log.Printf("[CRITAL][first delete]%s api[%s] fail, reason[%s]\n",
+						logId, "delete", errRet.Error())
+					e, ok := errRet.(*sdkErrors.TencentCloudSDKError)
+					if ok && IsContains(CVM_RETRYABLE_ERROR, e.Code) {
+						time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
+						return resource.RetryableError(fmt.Errorf("[first delete]cvm delete error: %s, retrying", e.Error()))
+					}
+					return resource.NonRetryableError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+
+		createInstanceIds := make([]*string, 0)
+		// need create instance
+		if len(needCreate) > 0 {
+			instanceCount := len(needCreate)
+			request := cvm.NewRunInstancesRequest()
+			request.ImageId = helper.String(d.Get("image_id").(string))
+			request.InstanceCount = helper.Int64(int64(instanceCount))
+			request.Placement = &cvm.Placement{
+				Zone: helper.String(d.Get("availability_zone").(string)),
+			}
+			if v, ok := d.GetOk("project_id"); ok {
+				projectId := int64(v.(int))
+				request.Placement.ProjectId = &projectId
+			}
+			if v, ok := d.GetOk("instance_name"); ok {
+				request.InstanceName = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("instance_type"); ok {
+				request.InstanceType = helper.String(v.(string))
+			}
+			if v, ok := d.GetOk("hostname"); ok {
+				request.HostName = helper.String(v.(string))
+			}
+			if v, ok := d.GetOk("cam_role_name"); ok {
+				request.CamRoleName = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("instance_charge_type"); ok {
+				instanceChargeType := v.(string)
+				request.InstanceChargeType = &instanceChargeType
+			}
+			if v, ok := d.GetOk("placement_group_id"); ok {
+				request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+			}
+
+			// network
+			request.InternetAccessible = &cvm.InternetAccessible{}
+			if v, ok := d.GetOk("internet_charge_type"); ok {
+				request.InternetAccessible.InternetChargeType = helper.String(v.(string))
+			}
+			if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+				maxBandwidthOut := int64(v.(int))
+				request.InternetAccessible.InternetMaxBandwidthOut = &maxBandwidthOut
+			}
+			if v, ok := d.GetOk("bandwidth_package_id"); ok {
+				request.InternetAccessible.BandwidthPackageId = helper.String(v.(string))
+			}
+			if v, ok := d.GetOkExists("allocate_public_ip"); ok {
+				allocatePublicIp := v.(bool)
+				request.InternetAccessible.PublicIpAssigned = &allocatePublicIp
+			}
+
+			// vpc
+			if v, ok := d.GetOk("vpc_id"); ok {
+				request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
+				request.VirtualPrivateCloud.VpcId = helper.String(v.(string))
+
+				if v, ok = d.GetOk("subnet_id"); ok {
+					request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
+				}
+			}
+
+			if v, ok := d.GetOk("security_groups"); ok {
+				securityGroups := v.(*schema.Set).List()
+				request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+				for _, securityGroup := range securityGroups {
+					request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(securityGroup.(string)))
+				}
+			}
+
+			// storage
+			request.SystemDisk = &cvm.SystemDisk{}
+			if v, ok := d.GetOk("system_disk_type"); ok {
+				request.SystemDisk.DiskType = helper.String(v.(string))
+			}
+			if v, ok := d.GetOk("system_disk_size"); ok {
+				diskSize := int64(v.(int))
+				request.SystemDisk.DiskSize = &diskSize
+			}
+
+			// enhanced service
+			request.EnhancedService = &cvm.EnhancedService{}
+			if v, ok := d.GetOkExists("disable_security_service"); ok {
+				securityService := !(v.(bool))
+				request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
+					Enabled: &securityService,
+				}
+			}
+			if v, ok := d.GetOkExists("disable_monitor_service"); ok {
+				monitorService := !(v.(bool))
+				request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
+					Enabled: &monitorService,
+				}
+			}
+
+			// login
+			request.LoginSettings = &cvm.LoginSettings{}
+			if v, ok := d.GetOk("key_name"); ok {
+				request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+			}
+			if v, ok := d.GetOk("password"); ok {
+				request.LoginSettings.Password = helper.String(v.(string))
+			}
+			v := d.Get("keep_image_login").(bool)
+			if v {
+				request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+			} else {
+				request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+			}
+
+			if v, ok := d.GetOk("user_data"); ok {
+				request.UserData = helper.String(v.(string))
+			}
+			if v, ok := d.GetOk("user_data_raw"); ok {
+				userData := base64.StdEncoding.EncodeToString([]byte(v.(string)))
+				request.UserData = &userData
+			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				ratelimit.Check("create")
+				response, err := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().RunInstances(request)
+				if err != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), err.Error())
+					e, ok := err.(*sdkErrors.TencentCloudSDKError)
+					if ok && IsContains(CVM_RETRYABLE_ERROR, e.Code) {
+						time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
+						return resource.RetryableError(fmt.Errorf("cvm create error: %s, retrying", e.Error()))
+					}
+					return resource.NonRetryableError(err)
+				}
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				if len(response.Response.InstanceIdSet) < instanceCount {
+					err = fmt.Errorf("number of instances is less than %s", strconv.Itoa(instanceCount))
+					return resource.NonRetryableError(err)
+				}
+				createInstanceIds = response.Response.InstanceIdSet
+
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+
+		}
+
+		var instanceSetIds []*string
+		if v, ok := d.GetOk("instance_ids"); ok {
+			instanceSetIds = helper.InterfacesStringsPoint(v.([]interface{}))
+		}
+
+		var newInstanceSetIds []*string
+		for _, v := range instanceSetIds {
+			ins := v
+			noEqual := true
+			for _, u := range needExclude {
+				if *ins == u.(string) {
+					noEqual = false
+				}
+			}
+			if noEqual {
+				newInstanceSetIds = append(newInstanceSetIds, ins)
+			}
+		}
+
+		if len(needCreate) > 0 {
+			for _, v := range createInstanceIds {
+				ins := v
+				newInstanceSetIds = append(newInstanceSetIds, ins)
+			}
+		}
+		_ = d.Set("instance_ids", newInstanceSetIds)
+
+	}
+
+	return nil
+}
+
 func doResourceTencentCloudInstanceSetDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance_set.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	instanceSetIds := d.Id()
+	//instanceSetIds := d.Id()
 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	var instanceSetIds []*string
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceSetIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+
 	// delete
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		errRet := cvmService.DeleteInstanceSetByIds(ctx, instanceSetIds)
+		errRet := cvmService.DeleteInstanceSetByIds(ctx, helper.StrListToStr(instanceSetIds))
 		if errRet != nil {
 			log.Printf("[CRITAL][first delete]%s api[%s] fail, reason[%s]\n",
 				logId, "delete", errRet.Error())
