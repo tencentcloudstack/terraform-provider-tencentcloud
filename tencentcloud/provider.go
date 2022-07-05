@@ -183,6 +183,7 @@ Cloud Block Storage(CBS)
     tencentcloud_cbs_storage
 	tencentcloud_cbs_storage_set
     tencentcloud_cbs_storage_attachment
+	tencentcloud_cbs_storage_set_attachment
     tencentcloud_cbs_snapshot
     tencentcloud_cbs_snapshot_policy
     tencentcloud_cbs_snapshot_policy_attachment
@@ -932,6 +933,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_storage":                             resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_set":                         resourceTencentCloudCbsStorageSet(),
 			"tencentcloud_cbs_storage_attachment":                  resourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_cbs_storage_set_attachment":              resourceTencentCloudCbsStorageSetAttachment(),
 			"tencentcloud_cbs_snapshot_policy_attachment":          resourceTencentCloudCbsSnapshotPolicyAttachment(),
 			"tencentcloud_vpc":                                     resourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                 resourceTencentCloudVpcACL(),
