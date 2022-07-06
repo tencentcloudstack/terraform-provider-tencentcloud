@@ -507,7 +507,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", 0, nil, nil)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, es.RESOURCEINUSE)
 			}
 			return nil
 		})
@@ -521,7 +521,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, 0, nil, nil)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, es.RESOURCEINUSE)
 			}
 			return nil
 		})
@@ -594,7 +594,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil, nil)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, es.RESOURCEINUSE)
 			}
 			return nil
 		})
@@ -605,7 +605,10 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("web_node_type_info") {
-		var err error
+		var (
+			err          error
+			startProcess = false
+		)
 		infos := d.Get("web_node_type_info").([]interface{})
 		for _, item := range infos {
 			value := item.(map[string]interface{})
@@ -613,10 +616,33 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeNum:  helper.IntUint64(value["node_num"].(int)),
 				NodeType: helper.String(value["node_type"].(string)),
 			}
+
+			err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+				instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet)
+				}
+
+				if instance.Status != nil {
+					if !startProcess && *instance.Status == 1 {
+						return resource.RetryableError(fmt.Errorf("waiting for instance %s update start", instanceId))
+					}
+					if *instance.Status == 0 {
+						startProcess = true
+						return resource.RetryableError(fmt.Errorf("status: %d waiting for instance %s status update", *instance.Status, instanceId))
+					}
+				}
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
+
 			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, info)
 				if errRet != nil {
-					return retryError(errRet)
+					return retryError(errRet, es.RESOURCEINUSE)
 				}
 				return nil
 			})
@@ -651,7 +677,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList, nil)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, es.RESOURCEINUSE)
 			}
 			return nil
 		})
