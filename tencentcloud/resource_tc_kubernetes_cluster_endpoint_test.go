@@ -19,6 +19,13 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_intranet", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "managed_cluster_internet_security_policies.#", "1"),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_kubernetes_cluster_endpoint.foo",
+						"managed_cluster_internet_security_policies.0",
+						"192.168.0.0/24",
+					),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_intranet_subnet_id"),
 				),
 			},
 			{
@@ -32,7 +39,7 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_id"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_intranet", "true"),
 				),
 			},
