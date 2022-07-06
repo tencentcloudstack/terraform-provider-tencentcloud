@@ -445,7 +445,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		exactTargets := make([]interface{}, 0)
 		for i := range onlineTargets {
 			v := onlineTargets[i]
-			if v.InstanceId != nil {
+			if *v.Type == "CVM" && v.InstanceId != nil {
 				target := map[string]interface{}{
 					"weight":      int(*v.Weight),
 					"port":        int(*v.Port),
@@ -459,7 +459,6 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 					})
 				}
 
-				//FIXME : apply all ips
 			} else if len(v.PrivateIpAddresses) > 0 && *v.PrivateIpAddresses[0] != "" {
 				target := map[string]interface{}{
 					"weight": int(*v.Weight),
