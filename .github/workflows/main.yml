@@ -29,5 +29,6 @@ jobs:
           if [[ $ref_name == "master" ]]; then
             git push -u -f --tags tgit_origin master:main
           else
+            git checkout $ref_name
             git push -u -f --tags tgit_origin $ref_name:$ref_name
           fi
