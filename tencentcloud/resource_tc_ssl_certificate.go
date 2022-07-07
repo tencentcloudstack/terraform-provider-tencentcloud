@@ -104,7 +104,12 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 					return
 				},
 			},
-
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tags of the SSL certificate.",
+			},
 			// computed
 			"product_zh_name": {
 				Type:        schema.TypeString,
@@ -208,6 +213,15 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 		log.Printf("[CRITAL]%s create certificate failed, reason: %v", logId, outErr)
 		return outErr
 	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagClient := m.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tagClient}
+		resourceName := BuildTagResourceName("ssl", "certificate", tagClient.Region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	d.SetId(id)
 
 	return resourceTencentCloudSslCertificateRead(d, m)
@@ -287,6 +301,14 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 	}
 	_ = d.Set("subject_names", subjectAltNames)
 
+	tagClient := m.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: tagClient}
+
+	tags, err := tagService.DescribeResourceTags(ctx, "ssl", "certificate", tagClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -346,6 +368,18 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 			return outErr
 		}
 		d.SetPartial("project_id")
+	}
+
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagClient := m.(*TencentCloudClient).apiV3Conn
+		tagService := TagService{client: tagClient}
+		resourceName := BuildTagResourceName("ssl", "certificate", tagClient.Region, id)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
 	}
 	d.Partial(false)
 	return resourceTencentCloudSslCertificateRead(d, m)

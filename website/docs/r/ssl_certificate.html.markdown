@@ -31,6 +31,7 @@ The following arguments are supported:
 * `key` - (Optional, ForceNew) Key of the SSL certificate and required when certificate type is `SVR`. Not allowed newline at the start and end.
 * `name` - (Optional) Name of the SSL certificate.
 * `project_id` - (Optional) Project ID of the SSL certificate. Default is `0`.
+* `tags` - (Optional) Tags of the SSL certificate.
 
 ## Attributes Reference
 
