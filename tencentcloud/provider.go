@@ -426,6 +426,7 @@ Monitor
 	tencentcloud_monitor_alarm_policy
 	tencentcloud_monitor_tmp_instance
 	tencentcloud_monitor_tmp_cvm_agent
+	tencentcloud_monitor_tmp_alert_rule
     tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
 

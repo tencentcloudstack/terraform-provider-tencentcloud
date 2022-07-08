@@ -29,7 +29,6 @@ monitor tmpAlertRule can be imported using the id, e.g.
 $ terraform import tencentcloud_monitor_tmp_alert_rule.tmpAlertRule instanceId#Rule_id
 ```
 */
-
 package tencentcloud
 
 import (
