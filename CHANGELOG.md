@@ -1,3 +1,17 @@
+## 1.75.6 (July 08, 2022)
+
+FEATURES:
+* new resource `tencentcloud_monitor_tmp_instance`
+* new resource `tencentcloud_monitor_tmp_cvm_agent`
+* new resource `tencentcloud_monitor_tmp_alert_rule`
+* new resource `tencentcloud_monitor_tmp_recording_rule`
+* new resource `tencentcloud_monitor_tmp_tke_template`
+* new resource `tencentcloud_kubernetes_cluster_endpoint`
+
+ENHANCEMENTS:
+* resource `tencentcloud_ssl_certificate` support tags
+
+
 ## 1.75.5 (July 01, 2022)
 
 ENHANCEMENTS:
