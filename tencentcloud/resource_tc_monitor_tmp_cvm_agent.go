@@ -5,9 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
-  instance_id = ""
-  name = ""
-  status =
+  instance_id = "prom-c89b3b3u"
+  name        = "test"
 }
 
 ```
@@ -15,7 +14,7 @@ Import
 
 monitor tmpCvmAgent can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent tmpCvmAgent_id
+$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instanceId#agentName
 ```
 */
 package tencentcloud
