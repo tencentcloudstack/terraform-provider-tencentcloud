@@ -18,7 +18,7 @@ func TestAccTencentCloudSsmSecretsDataSource(t *testing.T) {
 				Config: TestAccTencentCloudSsmSecretsDataSourceConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(dataSourceName),
-					resource.TestCheckResourceAttr(dataSourceName, "secret_list.0.secret_name", "unit-test"),
+					resource.TestCheckResourceAttr(dataSourceName, "secret_list.0.secret_name", "unit-test-for-data"),
 					resource.TestCheckResourceAttr(dataSourceName, "secret_list.0.description", "test secret"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "secret_list.0.kms_key_id"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "secret_list.0.create_uin"),
@@ -32,7 +32,7 @@ func TestAccTencentCloudSsmSecretsDataSource(t *testing.T) {
 
 const TestAccTencentCloudSsmSecretsDataSourceConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
+  secret_name = "unit-test-for-data"
   description = "test secret"
 
   tags = {
