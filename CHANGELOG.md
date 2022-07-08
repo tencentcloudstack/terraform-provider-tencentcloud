@@ -1,3 +1,9 @@
+## 1.75.7 (July 08, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_monitor_tmp_alert_rule` update docs
+
+
 ## 1.75.6 (July 08, 2022)
 
 FEATURES:
