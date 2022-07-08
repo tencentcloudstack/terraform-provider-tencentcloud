@@ -28,7 +28,7 @@ func TestAccTencentCloudSsmSecretVersionsDataSource(t *testing.T) {
 
 const TestAccTencentCloudSsmSecretVersionsDataSourceConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
+  secret_name = "unit-test-ver-data"
   description = "test secret"
 
   tags = {

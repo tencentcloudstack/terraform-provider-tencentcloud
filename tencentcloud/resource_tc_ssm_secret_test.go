@@ -4,11 +4,63 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
+
+	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_ssm_secret
+	resource.AddTestSweepers("tencentcloud_ssm_secret", &resource.Sweeper{
+		Name: "tencentcloud_ssm_secret",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := SsmService{client}
+
+			secrets, err := service.DescribeSecretsByFilter(ctx, nil)
+
+			if err != nil {
+				return err
+			}
+
+			for i := range secrets {
+				ss := secrets[i]
+				name := *ss.SecretName
+				createTime := ss.CreateTime
+				created := time.Time{}
+				if createTime != nil {
+					created = time.Unix(int64(*createTime), 0)
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				err = service.DisableSecret(ctx, name)
+				if err != nil {
+					continue
+				}
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					err := service.DeleteSecret(ctx, name, 0)
+					if err != nil {
+						return retryError(err, ssm.FAILEDOPERATION)
+					}
+					return nil
+				})
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 	t.Parallel()

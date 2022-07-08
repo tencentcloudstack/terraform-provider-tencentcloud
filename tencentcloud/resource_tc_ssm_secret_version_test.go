@@ -24,7 +24,7 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 				Config: TestAccTencentCloudSsmSecretVersion_basicConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretVersionExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
+					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test-for-version"),
 					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
 					resource.TestCheckResourceAttr(resourceName, "secret_binary", "MTIzMTIzMTIzMTIzMTIzQQ=="),
 				),
@@ -33,7 +33,7 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 				Config: TestAccTencentCloudSsmSecretVersion_secretStringConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretVersionExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
+					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test-for-version"),
 					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
 					resource.TestCheckResourceAttr(resourceName, "secret_string", "123456"),
 				),
@@ -118,7 +118,7 @@ func testAccCheckSsmSecretVersionExists(name string) resource.TestCheckFunc {
 
 const TestAccTencentCloudSsmSecretVersion_basicConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
+  secret_name = "unit-test-for-version"
   description = "test secret"
 
   tags = {
@@ -135,7 +135,7 @@ resource "tencentcloud_ssm_secret_version" "v1" {
 
 const TestAccTencentCloudSsmSecretVersion_secretStringConfig = `
 resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
+  secret_name = "unit-test-for-version"
   description = "test secret"
 
   tags = {
