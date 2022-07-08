@@ -425,7 +425,7 @@ Monitor
 	tencentcloud_monitor_alarm_policy
 	tencentcloud_monitor_tmp_instance
 	tencentcloud_monitor_tmp_cvm_agent
-
+    tencentcloud_monitor_tmp_recording_rule
 
 PostgreSQL
   Data Source
@@ -1070,6 +1070,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_instance":                    resourceTencentCloudMonitorTmpInstance(),
 			"tencentcloud_monitor_tmp_cvm_agent":                   resourceTencentCloudMonitorTmpCvmAgent(),
 			"tencentcloud_monitor_tmp_alert_rule":                  resourceTencentCloudMonitorTmpAlertRule(),
+			"tencentcloud_monitor_tmp_recording_rule":              resourceTencentCloudMonitorTmpRecordingRule(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),

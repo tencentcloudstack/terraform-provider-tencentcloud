@@ -415,3 +415,64 @@ func (me *MonitorService) DeleteMonitorTmpAlertRule(ctx context.Context, instanc
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorRecordingRuleById(ctx context.Context, instanceId string, recordingRuleId string) (instance *monitor.RecordingRuleSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeRecordingRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.RuleId = &recordingRuleId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeRecordingRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RecordingRuleSet) < 1 {
+		return
+	}
+	instance = response.Response.RecordingRuleSet[0]
+
+	return
+}
+
+func (me *MonitorService) DeleteMonitorRecordingRule(ctx context.Context, instanceId string, recordingRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteRecordingRulesRequest()
+	request.InstanceId = &instanceId
+	request.RuleIds = []*string{&recordingRuleId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteRecordingRules(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
