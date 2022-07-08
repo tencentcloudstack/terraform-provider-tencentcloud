@@ -104,6 +104,37 @@ func TestAccTencentCloudSslCertificate_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSslCertificate_tags(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSslCertificateDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSslCertificateWithTags(`{
+					tagKey1="tagValue1"
+				}`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.test-ssl-certificate-tag"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.test-ssl-certificate-tag", "tags.tagKey1", "tagValue1"),
+				),
+			},
+			{
+				Config: testAccSslCertificateWithTags(`{
+					tagKey1="tagValue1"
+					tagKey2="tagValue2"
+				}`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.test-ssl-certificate-tag"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.test-ssl-certificate-tag", "tags.tagKey1", "tagValue1"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.test-ssl-certificate-tag", "tags.tagKey2", "tagValue2"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudSslCertificate_svr(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -240,6 +271,17 @@ resource "tencentcloud_ssl_certificate" "foo" {
 	}
 
 	return fmt.Sprintf(str, certificateType, cert, name, key)
+}
+
+func testAccSslCertificateWithTags(tags string) string {
+	const str = `
+resource "tencentcloud_ssl_certificate" "test-ssl-certificate-tag" {
+  type = "CA"
+  cert = "%s"
+  name = "test-ssl-certificate-tag"
+  tags =%s
+}`
+	return fmt.Sprintf(str, testAccSslCertificateCA, tags)
 }
 
 const testAccSslCertificateCA = "-----BEGIN CERTIFICATE-----\\nMIIERzCCAq+gAwIBAgIBAjANBgkqhkiG9w0BAQsF" +
