@@ -38,6 +38,8 @@ import (
 	"context"
 	"fmt"
 
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	"github.com/hashicorp/go-multierror"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -376,33 +378,51 @@ func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id s
 }
 
 func tencentCloudClusterInternetSwitch(ctx context.Context, service *TkeService, id string, enable, isManagedCluster bool, policies []string) (err error) {
-	if enable {
-		if isManagedCluster {
-			err = service.CreateClusterEndpointVip(ctx, id, policies)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if enable {
+			if isManagedCluster {
+				err = service.CreateClusterEndpointVip(ctx, id, policies)
+			} else {
+				err = service.CreateClusterEndpoint(ctx, id, "", true)
+			}
+			if err != nil {
+				return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
+			}
 		} else {
-			err = service.CreateClusterEndpoint(ctx, id, "", true)
+			if isManagedCluster {
+				err = service.DeleteClusterEndpointVip(ctx, id)
+			} else {
+				err = service.DeleteClusterEndpoint(ctx, id, true)
+			}
+			if err != nil {
+				return retryError(err)
+			}
 		}
-	} else {
-		if isManagedCluster {
-			err = service.DeleteClusterEndpointVip(ctx, id)
-		} else {
-			err = service.DeleteClusterEndpoint(ctx, id, true)
-		}
+		return nil
+	})
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
 func tencentCloudClusterIntranetSwitch(ctx context.Context, service *TkeService, id, subnetId string, enable bool) (err error) {
-	if enable {
-		err = service.CreateClusterEndpoint(ctx, id, subnetId, false)
-		if err != nil {
-			return
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if enable {
+			err = service.CreateClusterEndpoint(ctx, id, subnetId, false)
+			if err != nil {
+				return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
+			}
+		} else {
+			err = service.DeleteClusterEndpoint(ctx, id, false)
+			if err != nil {
+				return retryError(err)
+			}
 		}
-	} else {
-		err = service.DeleteClusterEndpoint(ctx, id, false)
-		if err != nil {
-			return
-		}
+		return nil
+	})
+	if err != nil {
+		return err
 	}
 	return nil
 }
