@@ -50,7 +50,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentMonitorBindingAlarmReceiver() *schema.Resource {
+func resourceTencentCloudMonitorBindingAlarmReceiver() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentMonitorBindingAlarmReceiverCreate,
 		Read:   resourceTencentMonitorBindingAlarmReceiverRead,

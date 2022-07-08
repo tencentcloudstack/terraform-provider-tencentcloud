@@ -78,7 +78,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentMonitorPolicyBindingObject() *schema.Resource {
+func resourceTencentCloudMonitorPolicyBindingObject() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentMonitorPolicyBindingObjectCreate,
 		Read:   resourceTencentMonitorPolicyBindingObjectRead,
