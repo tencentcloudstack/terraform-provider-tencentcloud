@@ -373,6 +373,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_eks_container_instance
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
+	tencentcloud_kubernetes_cluster_endpoint
 
 TDMQ
   Resource
@@ -983,6 +984,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_container_cluster":                       resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":              resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                      resourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_cluster_endpoint":             resourceTencentCloudTkeClusterEndpoint(),
 			"tencentcloud_eks_cluster":                             resourceTencentCloudEksCluster(),
 			"tencentcloud_eks_container_instance":                  resourceTencentCloudEksContainerInstance(),
 			"tencentcloud_kubernetes_addon_attachment":             resourceTencentCloudTkeAddonAttachment(),
