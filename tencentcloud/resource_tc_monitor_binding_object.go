@@ -50,7 +50,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentMonitorBindingObject() *schema.Resource {
+func resourceTencentCloudMonitorBindingObject() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.60.5. Please use 'tencentcloud_monitor_policy_binding_object' instead.",
 		Create:             resourceTencentMonitorBindingObjectCreate,

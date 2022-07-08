@@ -424,6 +424,10 @@ Monitor
 	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
+	tencentcloud_monitor_tmp_instance
+	tencentcloud_monitor_tmp_cvm_agent
+    tencentcloud_monitor_tmp_recording_rule
+	tencentcloud_monitor_tmp_tke_template
 
 PostgreSQL
   Data Source
@@ -1061,11 +1065,16 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdn_domain":                              resourceTencentCloudCdnDomain(),
 			"tencentcloud_cdn_url_push":                            resourceTencentCloudUrlPush(),
 			"tencentcloud_cdn_url_purge":                           resourceTencentCloudUrlPurge(),
-			"tencentcloud_monitor_policy_group":                    resourceTencentMonitorPolicyGroup(),
-			"tencentcloud_monitor_binding_object":                  resourceTencentMonitorBindingObject(),
-			"tencentcloud_monitor_policy_binding_object":           resourceTencentMonitorPolicyBindingObject(),
-			"tencentcloud_monitor_binding_receiver":                resourceTencentMonitorBindingAlarmReceiver(),
-			"tencentcloud_monitor_alarm_policy":                    resourceTencentMonitorAlarmPolicy(),
+			"tencentcloud_monitor_policy_group":                    resourceTencentCloudMonitorPolicyGroup(),
+			"tencentcloud_monitor_binding_object":                  resourceTencentCloudMonitorBindingObject(),
+			"tencentcloud_monitor_policy_binding_object":           resourceTencentCloudMonitorPolicyBindingObject(),
+			"tencentcloud_monitor_binding_receiver":                resourceTencentCloudMonitorBindingAlarmReceiver(),
+			"tencentcloud_monitor_alarm_policy":                    resourceTencentCloudMonitorAlarmPolicy(),
+			"tencentcloud_monitor_tmp_instance":                    resourceTencentCloudMonitorTmpInstance(),
+			"tencentcloud_monitor_tmp_cvm_agent":                   resourceTencentCloudMonitorTmpCvmAgent(),
+			"tencentcloud_monitor_tmp_alert_rule":                  resourceTencentCloudMonitorTmpAlertRule(),
+			"tencentcloud_monitor_tmp_recording_rule":              resourceTencentCloudMonitorTmpRecordingRule(),
+			"tencentcloud_monitor_tmp_tke_template":                resourceTencentCloudMonitorTmpTkeTemplate(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),

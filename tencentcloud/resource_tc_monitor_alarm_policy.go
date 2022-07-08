@@ -319,7 +319,7 @@ func AlarmPolicyRule() map[string]*schema.Schema {
 	}
 }
 
-func resourceTencentMonitorAlarmPolicy() *schema.Resource {
+func resourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentMonitorAlarmPolicyCreate,
 		Read:   resourceTencentMonitorAlarmPolicyRead,

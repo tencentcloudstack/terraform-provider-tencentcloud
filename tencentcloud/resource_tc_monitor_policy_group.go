@@ -64,7 +64,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentMonitorPolicyGroup() *schema.Resource {
+func resourceTencentCloudMonitorPolicyGroup() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.59.18. Please use 'tencentcloud_monitor_alarm_policy' instead.",
 		Create:             resourceTencentMonitorPolicyGroupCreate,

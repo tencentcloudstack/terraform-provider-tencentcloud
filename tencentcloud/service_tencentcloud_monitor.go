@@ -260,3 +260,219 @@ func (me *MonitorService) DescribeBindingAlarmPolicyObjectList(ctx context.Conte
 
 	return
 }
+
+// tmp
+func (me *MonitorService) DescribeMonitorTmpInstanceById(ctx context.Context, tmpInstanceId string) (instance *monitor.PrometheusInstancesItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceIds = []*string{&tmpInstanceId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePrometheusInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+	instance = response.Response.InstanceSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorTmpInstance(ctx context.Context, tmpInstanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewTerminatePrometheusInstancesRequest()
+	request.InstanceIds = []*string{&tmpInstanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().TerminatePrometheusInstances(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpCvmAgentById(ctx context.Context, tmpId string, tmpCvmAgentName string) (instance *monitor.PrometheusAgent, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusAgentsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &tmpId
+	request.Name = &tmpCvmAgentName
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePrometheusAgents(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AgentSet) < 1 {
+		return
+	}
+	instance = response.Response.AgentSet[0]
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpAlertRuleById(ctx context.Context, instanceId string, tmpAlertRuleId string) (instance *monitor.PrometheusRuleSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAlertRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.RuleId = &tmpAlertRuleId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeAlertRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AlertRuleSet) < 1 {
+		return
+	}
+	instance = response.Response.AlertRuleSet[0]
+
+	return
+}
+
+func (me *MonitorService) DeleteMonitorTmpAlertRule(ctx context.Context, instanceId string, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteAlertRulesRequest()
+	request.InstanceId = &instanceId
+	request.RuleIds = []*string{&ruleId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteAlertRules(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorRecordingRuleById(ctx context.Context, instanceId string, recordingRuleId string) (instance *monitor.RecordingRuleSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeRecordingRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.RuleId = &recordingRuleId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeRecordingRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RecordingRuleSet) < 1 {
+		return
+	}
+	instance = response.Response.RecordingRuleSet[0]
+
+	return
+}
+
+func (me *MonitorService) DeleteMonitorRecordingRule(ctx context.Context, instanceId string, recordingRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteRecordingRulesRequest()
+	request.InstanceId = &instanceId
+	request.RuleIds = []*string{&recordingRuleId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteRecordingRules(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
