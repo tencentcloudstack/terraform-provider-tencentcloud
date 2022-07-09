@@ -14,11 +14,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func dataSourceTencentCloudInstancesSet() *schema.Resource {
@@ -334,7 +333,7 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 		instanceList = append(instanceList, mapping)
 		ids = append(ids, *instance.InstanceId)
 	}
-
+	log.Printf("===============set Instance attribute finished=================")
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err := d.Set("instance_list", instanceList)
 	if err != nil {
@@ -348,6 +347,8 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 			return err
 		}
 	}
+
+	log.Printf("===============all operate finished=================")
 	return nil
 
 }
