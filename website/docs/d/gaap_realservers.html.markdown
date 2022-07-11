@@ -28,12 +28,12 @@ data "tencentcloud_gaap_realservers" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Optional) Domain of the GAAP realserver to be queried, conflict with `ip`.
-* `ip` - (Optional) IP of the GAAP realserver to be queried, conflict with `domain`.
-* `name` - (Optional) Name of the GAAP realserver to be queried, the maximum length is 30.
-* `project_id` - (Optional) ID of the project within the GAAP realserver to be queried, default value is `-1`, no set means all projects.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.
+* `domain` - (Optional, String) Domain of the GAAP realserver to be queried, conflict with `ip`.
+* `ip` - (Optional, String) IP of the GAAP realserver to be queried, conflict with `domain`.
+* `name` - (Optional, String) Name of the GAAP realserver to be queried, the maximum length is 30.
+* `project_id` - (Optional, Int) ID of the project within the GAAP realserver to be queried, default value is `-1`, no set means all projects.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.
 
 ## Attributes Reference
 

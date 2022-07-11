@@ -23,9 +23,9 @@ data "tencentcloud_tcr_tokens" "name" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) ID of the instance that the token belongs to.
-* `result_output_file` - (Optional) Used to save results.
-* `token_id` - (Optional) ID of the TCR token to query.
+* `instance_id` - (Required, String) ID of the instance that the token belongs to.
+* `result_output_file` - (Optional, String) Used to save results.
+* `token_id` - (Optional, String) ID of the TCR token to query.
 
 ## Attributes Reference
 

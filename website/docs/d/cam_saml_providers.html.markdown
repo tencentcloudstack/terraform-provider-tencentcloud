@@ -23,9 +23,9 @@ data "tencentcloud_cam_saml_providers" "foo" {
 
 The following arguments are supported:
 
-* `description` - (Optional) The description of the CAM SAML provider.
-* `name` - (Optional) Name of the CAM SAML provider to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `description` - (Optional, String) The description of the CAM SAML provider.
+* `name` - (Optional, String) Name of the CAM SAML provider to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

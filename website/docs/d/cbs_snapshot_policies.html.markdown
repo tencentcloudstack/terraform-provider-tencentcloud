@@ -24,9 +24,9 @@ data "tencentcloud_cbs_snapshot_policies" "policies" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to save results.
-* `snapshot_policy_id` - (Optional) ID of the snapshot policy to be queried.
-* `snapshot_policy_name` - (Optional) Name of the snapshot policy to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `snapshot_policy_id` - (Optional, String) ID of the snapshot policy to be queried.
+* `snapshot_policy_name` - (Optional, String) Name of the snapshot policy to be queried.
 
 ## Attributes Reference
 

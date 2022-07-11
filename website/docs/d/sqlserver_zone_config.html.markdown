@@ -22,7 +22,7 @@ data "tencentcloud_sqlserver_zone_config" "mysqlserver" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to store results.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

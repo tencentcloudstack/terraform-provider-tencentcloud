@@ -24,8 +24,8 @@ resource "tencentcloud_postgresql_readonly_attachment" "attach" {
 
 The following arguments are supported:
 
-* `db_instance_id` - (Required, ForceNew) Read only instance ID.
-* `read_only_group_id` - (Required, ForceNew) Read only group ID.
+* `db_instance_id` - (Required, String, ForceNew) Read only instance ID.
+* `read_only_group_id` - (Required, String, ForceNew) Read only group ID.
 
 ## Attributes Reference
 

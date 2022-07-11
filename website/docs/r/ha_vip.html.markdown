@@ -26,10 +26,10 @@ resource "tencentcloud_ha_vip" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the HA VIP. The length of character is limited to 1-60.
-* `subnet_id` - (Required, ForceNew) Subnet ID.
-* `vpc_id` - (Required, ForceNew) VPC ID.
-* `vip` - (Optional, ForceNew) Virtual IP address, it must not be occupied and in this VPC network segment. If not set, it will be assigned after resource created automatically.
+* `name` - (Required, String) Name of the HA VIP. The length of character is limited to 1-60.
+* `subnet_id` - (Required, String, ForceNew) Subnet ID.
+* `vpc_id` - (Required, String, ForceNew) VPC ID.
+* `vip` - (Optional, String, ForceNew) Virtual IP address, it must not be occupied and in this VPC network segment. If not set, it will be assigned after resource created automatically.
 
 ## Attributes Reference
 

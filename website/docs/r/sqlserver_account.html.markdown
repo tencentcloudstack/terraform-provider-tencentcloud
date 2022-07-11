@@ -26,11 +26,11 @@ resource "tencentcloud_sqlserver_account" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) Instance ID that the account belongs to.
-* `name` - (Required) Name of the SQL Server account.
-* `password` - (Required) Password of the SQL Server account.
-* `is_admin` - (Optional) Indicate that the account is root account or not.
-* `remark` - (Optional) Remark of the SQL Server account.
+* `instance_id` - (Required, String, ForceNew) Instance ID that the account belongs to.
+* `name` - (Required, String) Name of the SQL Server account.
+* `password` - (Required, String) Password of the SQL Server account.
+* `is_admin` - (Optional, Bool) Indicate that the account is root account or not.
+* `remark` - (Optional, String) Remark of the SQL Server account.
 
 ## Attributes Reference
 

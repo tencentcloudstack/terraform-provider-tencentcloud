@@ -23,8 +23,8 @@ data "tencentcloud_sqlserver_dbs" "example" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) SQL Server instance ID which DB belongs to.
-* `result_output_file` - (Optional) Used to store results.
+* `instance_id` - (Required, String) SQL Server instance ID which DB belongs to.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

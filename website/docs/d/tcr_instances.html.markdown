@@ -23,9 +23,9 @@ data "tencentcloud_tcr_instances" "name" {
 
 The following arguments are supported:
 
-* `instance_id` - (Optional) ID of the TCR instance to query.
-* `name` - (Optional) Name of the TCR instance to query.
-* `result_output_file` - (Optional) Used to save results.
+* `instance_id` - (Optional, String) ID of the TCR instance to query.
+* `name` - (Optional, String) Name of the TCR instance to query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -42,16 +42,16 @@ resource "tencentcloud_alb_server_attachment" "service1" {
 
 The following arguments are supported:
 
-* `backends` - (Required) list of backend server.
-* `listener_id` - (Required, ForceNew) listener ID.
-* `loadbalancer_id` - (Required, ForceNew) loadbalancer ID.
-* `location_id` - (Optional, ForceNew) location ID, only support for layer 7 loadbalancer.
+* `backends` - (Required, Set) list of backend server.
+* `listener_id` - (Required, String, ForceNew) listener ID.
+* `loadbalancer_id` - (Required, String, ForceNew) loadbalancer ID.
+* `location_id` - (Optional, String, ForceNew) location ID, only support for layer 7 loadbalancer.
 
 The `backends` object supports the following:
 
-* `instance_id` - (Required) A list backend instance ID (CVM instance ID).
-* `port` - (Required) The port used by the backend server. Valid value range: [1-65535].
-* `weight` - (Optional) Weight of the backend server. Valid value range: [0-100]. Default to 10.
+* `instance_id` - (Required, String) A list backend instance ID (CVM instance ID).
+* `port` - (Required, Int) The port used by the backend server. Valid value range: [1-65535].
+* `weight` - (Optional, Int) Weight of the backend server. Valid value range: [0-100]. Default to 10.
 
 ## Attributes Reference
 

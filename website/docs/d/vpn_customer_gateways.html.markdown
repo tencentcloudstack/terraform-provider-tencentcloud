@@ -28,11 +28,11 @@ data "tencentcloud_customer_gateways" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the VPN customer gateway.
-* `name` - (Optional) Name of the customer gateway. The length of character is limited to 1-60.
-* `public_ip_address` - (Optional) Public ip address of the VPN customer gateway.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the VPN customer gateway to be queried.
+* `id` - (Optional, String) ID of the VPN customer gateway.
+* `name` - (Optional, String) Name of the customer gateway. The length of character is limited to 1-60.
+* `public_ip_address` - (Optional, String) Public ip address of the VPN customer gateway.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the VPN customer gateway to be queried.
 
 ## Attributes Reference
 

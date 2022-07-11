@@ -56,10 +56,10 @@ data "tencentcloud_clb_target_groups" "target_group_info_id" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to save results.
-* `target_group_id` - (Optional) ID of Target group. Mutually exclusive with `vpc_id` and `target_group_name`. `target_group_id` is preferred.
-* `target_group_name` - (Optional) Name of target group. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.
-* `vpc_id` - (Optional) Target group VPC ID. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.
+* `result_output_file` - (Optional, String) Used to save results.
+* `target_group_id` - (Optional, String) ID of Target group. Mutually exclusive with `vpc_id` and `target_group_name`. `target_group_id` is preferred.
+* `target_group_name` - (Optional, String) Name of target group. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.
+* `vpc_id` - (Optional, String) Target group VPC ID. Mutually exclusive with `target_group_id`. `target_group_id` is preferred.
 
 ## Attributes Reference
 

@@ -46,45 +46,45 @@ resource "tencentcloud_cls_cos_shipper" "shipper" {
 
 The following arguments are supported:
 
-* `bucket` - (Required) Destination bucket in the shipping rule to be created.
-* `prefix` - (Required) Prefix of the shipping directory in the shipping rule to be created.
-* `shipper_name` - (Required) Shipping rule name.
-* `topic_id` - (Required) ID of the log topic to which the shipping rule to be created belongs.
-* `compress` - (Optional) Compression configuration of shipped log.
-* `content` - (Optional) Format configuration of shipped log content.
-* `filter_rules` - (Optional) Filter rules for shipped logs. Only logs matching the rules can be shipped. All rules are in the AND relationship, and up to five rules can be added. If the array is empty, no filtering will be performed, and all logs will be shipped.
-* `interval` - (Optional) Shipping time interval in seconds. Default value: 300. Value range: 300~900.
-* `max_size` - (Optional) Maximum size of a file to be shipped, in MB. Default value: 256. Value range: 100~256.
-* `partition` - (Optional) Partition rule of shipped log, which can be represented in strftime time format.
+* `bucket` - (Required, String) Destination bucket in the shipping rule to be created.
+* `prefix` - (Required, String) Prefix of the shipping directory in the shipping rule to be created.
+* `shipper_name` - (Required, String) Shipping rule name.
+* `topic_id` - (Required, String) ID of the log topic to which the shipping rule to be created belongs.
+* `compress` - (Optional, List) Compression configuration of shipped log.
+* `content` - (Optional, List) Format configuration of shipped log content.
+* `filter_rules` - (Optional, List) Filter rules for shipped logs. Only logs matching the rules can be shipped. All rules are in the AND relationship, and up to five rules can be added. If the array is empty, no filtering will be performed, and all logs will be shipped.
+* `interval` - (Optional, Int) Shipping time interval in seconds. Default value: 300. Value range: 300~900.
+* `max_size` - (Optional, Int) Maximum size of a file to be shipped, in MB. Default value: 256. Value range: 100~256.
+* `partition` - (Optional, String) Partition rule of shipped log, which can be represented in strftime time format.
 
 The `compress` object supports the following:
 
-* `format` - (Required) Compression format. Valid values: gzip, lzop, none (no compression).
+* `format` - (Required, String) Compression format. Valid values: gzip, lzop, none (no compression).
 
 The `content` object supports the following:
 
-* `format` - (Required) Content format. Valid values: json, csv.
-* `csv` - (Optional) CSV format content description.Note: this field may return null, indicating that no valid values can be obtained.
-* `json` - (Optional) JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.
+* `format` - (Required, String) Content format. Valid values: json, csv.
+* `csv` - (Optional, List) CSV format content description.Note: this field may return null, indicating that no valid values can be obtained.
+* `json` - (Optional, List) JSON format content description.Note: this field may return null, indicating that no valid values can be obtained.
 
 The `csv` object supports the following:
 
-* `delimiter` - (Required) Field delimiter.
-* `escape_char` - (Required) Field delimiter.
-* `keys` - (Required) Names of keys.Note: this field may return null, indicating that no valid values can be obtained.
-* `non_existing_field` - (Required) Content used to populate non-existing fields.
-* `print_key` - (Required) Whether to print key on the first row of the CSV file.
+* `delimiter` - (Required, String) Field delimiter.
+* `escape_char` - (Required, String) Field delimiter.
+* `keys` - (Required, Set) Names of keys.Note: this field may return null, indicating that no valid values can be obtained.
+* `non_existing_field` - (Required, String) Content used to populate non-existing fields.
+* `print_key` - (Required, Bool) Whether to print key on the first row of the CSV file.
 
 The `filter_rules` object supports the following:
 
-* `key` - (Required) Filter rule key.
-* `regex` - (Required) Filter rule.
-* `value` - (Required) Filter rule value.
+* `key` - (Required, String) Filter rule key.
+* `regex` - (Required, String) Filter rule.
+* `value` - (Required, String) Filter rule value.
 
 The `json` object supports the following:
 
-* `enable_tag` - (Required) Enablement flag.
-* `meta_fields` - (Required) Metadata information list
+* `enable_tag` - (Required, Bool) Enablement flag.
+* `meta_fields` - (Required, Set) Metadata information list
 Note: this field may return null, indicating that no valid values can be obtained..
 
 ## Attributes Reference

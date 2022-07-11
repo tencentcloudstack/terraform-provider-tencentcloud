@@ -40,12 +40,12 @@ data "tencentcloud_gaap_layer7_listeners" "listenerId" {
 
 The following arguments are supported:
 
-* `protocol` - (Required) Protocol of the layer7 listener to be queried. Valid values: `HTTP` and `HTTPS`.
-* `listener_id` - (Optional) ID of the layer7 listener to be queried.
-* `listener_name` - (Optional) Name of the layer7 listener to be queried.
-* `port` - (Optional) Port of the layer7 listener to be queried.
-* `proxy_id` - (Optional) ID of the GAAP proxy to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `protocol` - (Required, String) Protocol of the layer7 listener to be queried. Valid values: `HTTP` and `HTTPS`.
+* `listener_id` - (Optional, String) ID of the layer7 listener to be queried.
+* `listener_name` - (Optional, String) Name of the layer7 listener to be queried.
+* `port` - (Optional, Int) Port of the layer7 listener to be queried.
+* `proxy_id` - (Optional, String) ID of the GAAP proxy to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

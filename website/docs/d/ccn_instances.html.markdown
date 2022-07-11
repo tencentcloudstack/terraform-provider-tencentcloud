@@ -33,9 +33,9 @@ data "tencentcloud_ccn_instances" "name_instances" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Optional) ID of the CCN to be queried.
-* `name` - (Optional) Name of the CCN to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `ccn_id` - (Optional, String) ID of the CCN to be queried.
+* `name` - (Optional, String) Name of the CCN to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

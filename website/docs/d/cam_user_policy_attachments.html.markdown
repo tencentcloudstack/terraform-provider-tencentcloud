@@ -30,12 +30,12 @@ data "tencentcloud_cam_user_policy_attachments" "bar" {
 
 The following arguments are supported:
 
-* `create_mode` - (Optional) Mode of Creation of the CAM user policy attachment. `1` means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.
-* `policy_id` - (Optional) ID of CAM policy to be queried.
-* `policy_type` - (Optional) Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
-* `result_output_file` - (Optional) Used to save results.
-* `user_id` - (Optional, **Deprecated**) It has been deprecated from version 1.59.6. Use `user_name` instead. ID of the attached CAM user to be queried.
-* `user_name` - (Optional) Name of the attached CAM user as unique key to be queried.
+* `create_mode` - (Optional, Int) Mode of Creation of the CAM user policy attachment. `1` means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.
+* `policy_id` - (Optional, String) ID of CAM policy to be queried.
+* `policy_type` - (Optional, String) Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
+* `result_output_file` - (Optional, String) Used to save results.
+* `user_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.59.6. Use `user_name` instead. ID of the attached CAM user to be queried.
+* `user_name` - (Optional, String) Name of the attached CAM user as unique key to be queried.
 
 ## Attributes Reference
 

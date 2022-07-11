@@ -24,8 +24,8 @@ resource "tencentcloud_cls_config_attachment" "attach" {
 
 The following arguments are supported:
 
-* `config_id` - (Required, ForceNew) Collection configuration id.
-* `group_id` - (Required, ForceNew) Machine group id.
+* `config_id` - (Required, String, ForceNew) Collection configuration id.
+* `group_id` - (Required, String, ForceNew) Machine group id.
 
 ## Attributes Reference
 

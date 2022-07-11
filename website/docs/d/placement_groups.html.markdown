@@ -24,9 +24,9 @@ data "tencentcloud_placement_groups" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the placement group to be queried.
-* `placement_group_id` - (Optional) ID of the placement group to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `name` - (Optional, String) Name of the placement group to be queried.
+* `placement_group_id` - (Optional, String) ID of the placement group to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

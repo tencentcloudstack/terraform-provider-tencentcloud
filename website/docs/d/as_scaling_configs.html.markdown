@@ -24,9 +24,9 @@ data "tencentcloud_as_scaling_configs" "as_configs" {
 
 The following arguments are supported:
 
-* `configuration_id` - (Optional) Launch configuration ID.
-* `configuration_name` - (Optional) Launch configuration name.
-* `result_output_file` - (Optional) Used to save results.
+* `configuration_id` - (Optional, String) Launch configuration ID.
+* `configuration_name` - (Optional, String) Launch configuration name.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

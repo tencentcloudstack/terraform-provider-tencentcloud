@@ -26,10 +26,10 @@ resource "tencentcloud_api_gateway_usage_plan" "plan" {
 
 The following arguments are supported:
 
-* `usage_plan_name` - (Required) Custom usage plan name.
-* `max_request_num_pre_sec` - (Optional) Limit of requests per second. Valid values: -1, [1,2000]. The default value is -1, which indicates no limit.
-* `max_request_num` - (Optional) Total number of requests allowed. Valid values: -1, [1,99999999]. The default value is -1, which indicates no limit.
-* `usage_plan_desc` - (Optional) Custom usage plan description.
+* `usage_plan_name` - (Required, String) Custom usage plan name.
+* `max_request_num_pre_sec` - (Optional, Int) Limit of requests per second. Valid values: -1, [1,2000]. The default value is -1, which indicates no limit.
+* `max_request_num` - (Optional, Int) Total number of requests allowed. Valid values: -1, [1,99999999]. The default value is -1, which indicates no limit.
+* `usage_plan_desc` - (Optional, String) Custom usage plan description.
 
 ## Attributes Reference
 

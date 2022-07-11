@@ -138,129 +138,129 @@ resource "tencentcloud_cdn_domain" "cdn" {
 
 The following arguments are supported:
 
-* `domain` - (Required, ForceNew) Name of the acceleration domain.
-* `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
-* `service_type` - (Required, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
-* `area` - (Optional) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
-* `authentication` - (Optional) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
-* `follow_redirect_switch` - (Optional) 301/302 redirect following switch, available values: `on`, `off` (default).
-* `full_url_cache` - (Optional) Whether to enable full-path cache. Default value is `true`.
-* `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
-* `ipv6_access_switch` - (Optional) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
-* `project_id` - (Optional) The project CDN belongs to, default to 0.
-* `range_origin_switch` - (Optional) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
-* `request_header` - (Optional) Request header configuration. It's a list and consist of at most one item.
-* `rule_cache` - (Optional) Advanced path cache configuration.
-* `tags` - (Optional) Tags of cdn domain.
+* `domain` - (Required, String, ForceNew) Name of the acceleration domain.
+* `origin` - (Required, List) Origin server configuration. It's a list and consist of at most one item.
+* `service_type` - (Required, String, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
+* `area` - (Optional, String) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
+* `authentication` - (Optional, List) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
+* `follow_redirect_switch` - (Optional, String) 301/302 redirect following switch, available values: `on`, `off` (default).
+* `full_url_cache` - (Optional, Bool) Whether to enable full-path cache. Default value is `true`.
+* `https_config` - (Optional, List) HTTPS acceleration configuration. It's a list and consist of at most one item.
+* `ipv6_access_switch` - (Optional, String) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
+* `project_id` - (Optional, Int) The project CDN belongs to, default to 0.
+* `range_origin_switch` - (Optional, String) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
+* `request_header` - (Optional, List) Request header configuration. It's a list and consist of at most one item.
+* `rule_cache` - (Optional, List) Advanced path cache configuration.
+* `tags` - (Optional, Map) Tags of cdn domain.
 
 The `authentication` object supports the following:
 
-* `switch` - (Optional) Authentication switching, available values: `on`, `off`.
-* `type_a` - (Optional) Timestamp hotlink protection mode A configuration.
-* `type_b` - (Optional) Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.
-* `type_c` - (Optional) Timestamp hotlink protection mode C configuration.
-* `type_d` - (Optional) Timestamp hotlink protection mode D configuration.
+* `switch` - (Optional, String) Authentication switching, available values: `on`, `off`.
+* `type_a` - (Optional, List) Timestamp hotlink protection mode A configuration.
+* `type_b` - (Optional, List) Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.
+* `type_c` - (Optional, List) Timestamp hotlink protection mode C configuration.
+* `type_d` - (Optional, List) Timestamp hotlink protection mode D configuration.
 
 The `client_certificate_config` object supports the following:
 
-* `certificate_content` - (Required) Client Certificate PEM format, requires Base64 encoding.
+* `certificate_content` - (Required, String) Client Certificate PEM format, requires Base64 encoding.
 
 The `force_redirect` object supports the following:
 
-* `redirect_status_code` - (Optional) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
-* `redirect_type` - (Optional) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
-* `switch` - (Optional) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
+* `redirect_status_code` - (Optional, Int) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
+* `redirect_type` - (Optional, String) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
+* `switch` - (Optional, String) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
 
 The `header_rules` object supports the following:
 
-* `header_mode` - (Required) Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.
-* `header_name` - (Required) Http header name.
-* `header_value` - (Required) Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.
-* `rule_paths` - (Required) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.
-* `rule_type` - (Required) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect.
+* `header_mode` - (Required, String) Http header setting method. The following types are supported: `add`: add a head, if a head already exists, there will be a duplicate head, `del`: delete the head.
+* `header_name` - (Required, String) Http header name.
+* `header_value` - (Required, String) Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.
+* `rule_paths` - (Required, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html.
+* `rule_type` - (Required, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect.
 
 The `https_config` object supports the following:
 
-* `https_switch` - (Required) HTTPS configuration switch. Valid values are `on` and `off`.
-* `client_certificate_config` - (Optional) Client certificate configuration information.
-* `force_redirect` - (Optional) Configuration of forced HTTP or HTTPS redirects.
-* `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
-* `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
-* `server_certificate_config` - (Optional) Server certificate configuration information.
-* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.
-* `verify_client` - (Optional) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
+* `https_switch` - (Required, String) HTTPS configuration switch. Valid values are `on` and `off`.
+* `client_certificate_config` - (Optional, List) Client certificate configuration information.
+* `force_redirect` - (Optional, List) Configuration of forced HTTP or HTTPS redirects.
+* `http2_switch` - (Optional, String) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `ocsp_stapling_switch` - (Optional, String) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `server_certificate_config` - (Optional, List) Server certificate configuration information.
+* `spdy_switch` - (Optional, String) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.
+* `verify_client` - (Optional, String) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
 
 The `origin` object supports the following:
 
-* `origin_list` - (Required) Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.
-* `origin_type` - (Required) Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.
-* `backup_origin_list` - (Optional) Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
-* `backup_origin_type` - (Optional) Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.
-* `backup_server_name` - (Optional) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
-* `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
-* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
-* `server_name` - (Optional) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
+* `origin_list` - (Required, List) Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.
+* `origin_type` - (Required, String) Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.
+* `backup_origin_list` - (Optional, List) Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
+* `backup_origin_type` - (Optional, String) Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.
+* `backup_server_name` - (Optional, String) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
+* `cos_private_access` - (Optional, String) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
+* `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
+* `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `request_header` object supports the following:
 
-* `header_rules` - (Optional) Custom request header configuration rules.
-* `switch` - (Optional) Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `header_rules` - (Optional, List) Custom request header configuration rules.
+* `switch` - (Optional, String) Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.
 
 The `rule_cache` object supports the following:
 
-* `cache_time` - (Required) Cache expiration time setting, the unit is second, the maximum can be set to 365 days.
-* `compare_max_age` - (Optional) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
-* `follow_origin_switch` - (Optional) Follow the source station configuration switch. Valid values are `on` and `off`.
-* `ignore_cache_control` - (Optional) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
-* `ignore_set_cookie` - (Optional) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
-* `no_cache_switch` - (Optional) Cache configuration switch. Valid values are `on` and `off`.
-* `re_validate` - (Optional) Always check back to origin. Valid values are `on` and `off`. Default value is `off`.
-* `rule_paths` - (Optional) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.
-* `rule_type` - (Optional) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
-* `switch` - (Optional) Cache configuration switch. Valid values are `on` and `off`.
+* `cache_time` - (Required, Int) Cache expiration time setting, the unit is second, the maximum can be set to 365 days.
+* `compare_max_age` - (Optional, String) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
+* `follow_origin_switch` - (Optional, String) Follow the source station configuration switch. Valid values are `on` and `off`.
+* `ignore_cache_control` - (Optional, String) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
+* `ignore_set_cookie` - (Optional, String) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
+* `no_cache_switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
+* `re_validate` - (Optional, String) Always check back to origin. Valid values are `on` and `off`. Default value is `off`.
+* `rule_paths` - (Optional, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.
+* `rule_type` - (Optional, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
+* `switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
 
 The `server_certificate_config` object supports the following:
 
-* `certificate_content` - (Optional) Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.
-* `certificate_id` - (Optional) Server certificate ID.
-* `message` - (Optional) Certificate remarks.
-* `private_key` - (Optional) Server key information. This is required when uploading an external certificate.
+* `certificate_content` - (Optional, String) Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.
+* `certificate_id` - (Optional, String) Server certificate ID.
+* `message` - (Optional, String) Certificate remarks.
+* `private_key` - (Optional, String) Server key information. This is required when uploading an external certificate.
 
 The `type_a` object supports the following:
 
-* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
-* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
-* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
-* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
-* `sign_param` - (Required) Signature parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
-* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required, String) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required, String) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `sign_param` - (Required, String) Signature parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
+* `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
 
 The `type_b` object supports the following:
 
-* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
-* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
-* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
-* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
-* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required, String) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required, String) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
 
 The `type_c` object supports the following:
 
-* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
-* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
-* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
-* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
-* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
-* `time_format` - (Optional) Timestamp formation, available values: `dec`, `hex`.
+* `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required, String) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required, String) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `time_format` - (Optional, String) Timestamp formation, available values: `dec`, `hex`.
 
 The `type_d` object supports the following:
 
-* `expire_time` - (Required) Signature expiration time in second. The maximum value is 630720000.
-* `file_extensions` - (Required) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
-* `filter_type` - (Required) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
-* `secret_key` - (Required) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
-* `backup_secret_key` - (Optional) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
-* `time_format` - (Optional) Timestamp formation, available values: `dec`, `hex`.
-* `time_param` - (Optional) Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
+* `expire_time` - (Required, Int) Signature expiration time in second. The maximum value is 630720000.
+* `file_extensions` - (Required, List) File extension list settings determining if authentication should be performed. NOTE: If it contains an asterisk (*), this indicates all files.
+* `filter_type` - (Required, String) Available values: `whitelist` - all types apart from `file_extensions` are authenticated, `blacklist`: - only the types in the `file_extensions` are authenticated.
+* `secret_key` - (Required, String) The key for signature calculation. Only digits, upper and lower-case letters are allowed. Length limit: 6-32 characters.
+* `backup_secret_key` - (Optional, String) Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.
+* `time_format` - (Optional, String) Timestamp formation, available values: `dec`, `hex`.
+* `time_param` - (Optional, String) Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
 
 ## Attributes Reference
 

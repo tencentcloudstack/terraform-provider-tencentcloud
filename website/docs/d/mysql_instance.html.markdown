@@ -24,21 +24,21 @@ data "tencentcloud_mysql_instance" "database" {
 
 The following arguments are supported:
 
-* `charge_type` - (Optional) Pay type of instance, valid values are `PREPAID` and `POSTPAID`.
-* `engine_version` - (Optional) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.
-* `init_flag` - (Optional) Initialization mark. Available values: `0` - Uninitialized; `1` - Initialized.
-* `instance_name` - (Optional) Name of mysql instance.
-* `instance_role` - (Optional) Instance type. Supported values include: `master` - master instance, `dr` - disaster recovery instance, and `ro` - read-only instance.
-* `limit` - (Optional) Number of results returned for a single request. Default is `20`, and maximum is 2000.
-* `mysql_id` - (Optional) Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.
-* `offset` - (Optional) Record offset. Default is 0.
-* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance, `0`: prepay, `1`: postpaid.
-* `result_output_file` - (Optional) Used to store results.
-* `security_group_id` - (Optional) Security groups ID of instance.
-* `status` - (Optional) Instance status. Available values: `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
-* `with_dr` - (Optional) Indicates whether to query disaster recovery instances.
-* `with_master` - (Optional) Indicates whether to query master instances.
-* `with_ro` - (Optional) Indicates whether to query read-only instances.
+* `charge_type` - (Optional, String) Pay type of instance, valid values are `PREPAID` and `POSTPAID`.
+* `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.
+* `init_flag` - (Optional, Int) Initialization mark. Available values: `0` - Uninitialized; `1` - Initialized.
+* `instance_name` - (Optional, String) Name of mysql instance.
+* `instance_role` - (Optional, String) Instance type. Supported values include: `master` - master instance, `dr` - disaster recovery instance, and `ro` - read-only instance.
+* `limit` - (Optional, Int) Number of results returned for a single request. Default is `20`, and maximum is 2000.
+* `mysql_id` - (Optional, String) Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.
+* `offset` - (Optional, Int) Record offset. Default is 0.
+* `pay_type` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance, `0`: prepay, `1`: postpaid.
+* `result_output_file` - (Optional, String) Used to store results.
+* `security_group_id` - (Optional, String) Security groups ID of instance.
+* `status` - (Optional, Int) Instance status. Available values: `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
+* `with_dr` - (Optional, Int) Indicates whether to query disaster recovery instances.
+* `with_master` - (Optional, Int) Indicates whether to query master instances.
+* `with_ro` - (Optional, Int) Indicates whether to query read-only instances.
 
 ## Attributes Reference
 

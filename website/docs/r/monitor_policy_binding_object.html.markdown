@@ -67,12 +67,12 @@ resource "tencentcloud_monitor_policy_binding_object" "binding" {
 
 The following arguments are supported:
 
-* `dimensions` - (Required, ForceNew) A list objects. Each element contains the following attributes:
-* `policy_id` - (Required, ForceNew) Alarm policy ID for binding objects.
+* `dimensions` - (Required, Set, ForceNew) A list objects. Each element contains the following attributes:
+* `policy_id` - (Required, String, ForceNew) Alarm policy ID for binding objects.
 
 The `dimensions` object supports the following:
 
-* `dimensions_json` - (Required, ForceNew) Represents a collection of dimensions of an object instance, json format.eg:'{"unInstanceId":"ins-ot3cq4bi"}'.
+* `dimensions_json` - (Required, String, ForceNew) Represents a collection of dimensions of an object instance, json format.eg:'{"unInstanceId":"ins-ot3cq4bi"}'.
 
 ## Attributes Reference
 

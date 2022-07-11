@@ -67,10 +67,10 @@ resource "tencentcloud_api_gateway_service_release" "service" {
 
 The following arguments are supported:
 
-* `environment_name` - (Required, ForceNew) API gateway service environment name to be released. Valid values: `test`, `prepub`, `release`.
-* `release_desc` - (Required, ForceNew) This release description of the API gateway service.
-* `service_id` - (Required, ForceNew) ID of API gateway service.
-* `release_version` - (Optional) The release version.
+* `environment_name` - (Required, String, ForceNew) API gateway service environment name to be released. Valid values: `test`, `prepub`, `release`.
+* `release_desc` - (Required, String, ForceNew) This release description of the API gateway service.
+* `service_id` - (Required, String, ForceNew) ID of API gateway service.
+* `release_version` - (Optional, String) The release version.
 
 ## Attributes Reference
 

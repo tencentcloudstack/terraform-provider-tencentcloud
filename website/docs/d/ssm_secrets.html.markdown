@@ -25,11 +25,11 @@ data "tencentcloud_ssm_secrets" "foo" {
 
 The following arguments are supported:
 
-* `order_type` - (Optional) The order to sort the create time of secret. `0` - desc, `1` - asc. Default value is `0`.
-* `result_output_file` - (Optional) Used to save results.
-* `secret_name` - (Optional) Secret name used to filter result.
-* `state` - (Optional) Filter by state of secret. `0` - all secrets are queried, `1` - only Enabled secrets are queried, `2` - only Disabled secrets are queried, `3` - only PendingDelete secrets are queried.
-* `tags` - (Optional) Tags to filter secret.
+* `order_type` - (Optional, Int) The order to sort the create time of secret. `0` - desc, `1` - asc. Default value is `0`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `secret_name` - (Optional, String) Secret name used to filter result.
+* `state` - (Optional, Int) Filter by state of secret. `0` - all secrets are queried, `1` - only Enabled secrets are queried, `2` - only Disabled secrets are queried, `3` - only PendingDelete secrets are queried.
+* `tags` - (Optional, Map) Tags to filter secret.
 
 ## Attributes Reference
 

@@ -26,10 +26,10 @@ resource "tencentcloud_monitor_tmp_recording_rule" "recordingRule" {
 
 The following arguments are supported:
 
-* `group` - (Required) Recording rule group.
-* `instance_id` - (Required) Instance id.
-* `name` - (Required) Recording rule name.
-* `rule_state` - (Optional) Rule state.
+* `group` - (Required, String) Recording rule group.
+* `instance_id` - (Required, String) Instance id.
+* `name` - (Required, String) Recording rule name.
+* `rule_state` - (Optional, Int) Rule state.
 
 ## Attributes Reference
 

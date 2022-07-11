@@ -63,10 +63,10 @@ resource tencentcloud_ccn_bandwidth_limit limit1 {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required, ForceNew) ID of the CCN.
-* `region` - (Required, ForceNew) Limitation of region.
-* `bandwidth_limit` - (Optional) Limitation of bandwidth.
-* `dst_region` - (Optional, ForceNew) Destination area restriction. If the `CCN` rate limit type is `OUTER_REGION_LIMIT`, this value does not need to be set.
+* `ccn_id` - (Required, String, ForceNew) ID of the CCN.
+* `region` - (Required, String, ForceNew) Limitation of region.
+* `bandwidth_limit` - (Optional, Int) Limitation of bandwidth.
+* `dst_region` - (Optional, String, ForceNew) Destination area restriction. If the `CCN` rate limit type is `OUTER_REGION_LIMIT`, this value does not need to be set.
 
 ## Attributes Reference
 

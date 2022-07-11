@@ -21,7 +21,7 @@ data "tencentcloud_user_info" "foo" {}
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used for save results.
+* `result_output_file` - (Optional, String) Used for save results.
 
 ## Attributes Reference
 

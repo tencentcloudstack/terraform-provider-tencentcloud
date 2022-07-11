@@ -31,16 +31,16 @@ resource "tencentcloud_tdmq_namespace" "bar" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The Dedicated Cluster Id.
-* `environ_name` - (Required) The name of namespace to be created.
-* `msg_ttl` - (Required) The expiration time of unconsumed message.
-* `remark` - (Optional) Description of the namespace.
-* `retention_policy` - (Optional) The Policy of message to retain.
+* `cluster_id` - (Required, String) The Dedicated Cluster Id.
+* `environ_name` - (Required, String) The name of namespace to be created.
+* `msg_ttl` - (Required, Int) The expiration time of unconsumed message.
+* `remark` - (Optional, String) Description of the namespace.
+* `retention_policy` - (Optional, Map) The Policy of message to retain.
 
 The `retention_policy` object supports the following:
 
-* `size_in_mb` - (Optional) the size of message to retain.
-* `time_in_minutes` - (Optional) the time of message to retain.
+* `size_in_mb` - (Optional, Int) the size of message to retain.
+* `time_in_minutes` - (Optional, Int) the time of message to retain.
 
 ## Attributes Reference
 

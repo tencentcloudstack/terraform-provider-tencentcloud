@@ -46,9 +46,9 @@ data "tencentcloud_api_gateway_usage_plan_environments" "environment_test" {
 
 The following arguments are supported:
 
-* `usage_plan_id` - (Required) ID of the usage plan to be queried.
-* `bind_type` - (Optional) Binding type. Valid values: `API`, `SERVICE`. Default value: `SERVICE`.
-* `result_output_file` - (Optional) Used to save results.
+* `usage_plan_id` - (Required, String) ID of the usage plan to be queried.
+* `bind_type` - (Optional, String) Binding type. Valid values: `API`, `SERVICE`. Default value: `SERVICE`.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -24,9 +24,9 @@ data "tencentcloud_ssm_secret_versions" "foo" {
 
 The following arguments are supported:
 
-* `secret_name` - (Required) Secret name used to filter result.
-* `result_output_file` - (Optional) Used to save results.
-* `version_id` - (Optional) VersionId used to filter result.
+* `secret_name` - (Required, String) Secret name used to filter result.
+* `result_output_file` - (Optional, String) Used to save results.
+* `version_id` - (Optional, String) VersionId used to filter result.
 
 ## Attributes Reference
 

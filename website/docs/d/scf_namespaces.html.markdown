@@ -27,9 +27,9 @@ data "tencentcloud_scf_namespaces" "foo" {
 
 The following arguments are supported:
 
-* `description` - (Optional) Description of the SCF namespace to be queried.
-* `namespace` - (Optional) Name of the SCF namespace to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `description` - (Optional, String) Description of the SCF namespace to be queried.
+* `namespace` - (Optional, String) Name of the SCF namespace to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

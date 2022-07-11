@@ -25,8 +25,8 @@ output "level5" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) Specify cluster Id, if set will only query current cluster's available levels.
-* `result_output_file` - (Optional) Used for save result.
+* `cluster_id` - (Optional, String) Specify cluster Id, if set will only query current cluster's available levels.
+* `result_output_file` - (Optional, String) Used for save result.
 
 ## Attributes Reference
 

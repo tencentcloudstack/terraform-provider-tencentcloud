@@ -23,8 +23,8 @@ data "tencentcloud_cam_group_memberships" "foo" {
 
 The following arguments are supported:
 
-* `group_id` - (Optional) ID of CAM group to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `group_id` - (Optional, String) ID of CAM group to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

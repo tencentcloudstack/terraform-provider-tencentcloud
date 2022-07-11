@@ -25,11 +25,11 @@ data "tencentcloud_as_scaling_groups" "as_scaling_groups" {
 
 The following arguments are supported:
 
-* `configuration_id` - (Optional) Filter results by launch configuration ID.
-* `result_output_file` - (Optional) Used to save results.
-* `scaling_group_id` - (Optional) A specified scaling group ID used to query.
-* `scaling_group_name` - (Optional) A scaling group name used to query.
-* `tags` - (Optional) Tags used to query.
+* `configuration_id` - (Optional, String) Filter results by launch configuration ID.
+* `result_output_file` - (Optional, String) Used to save results.
+* `scaling_group_id` - (Optional, String) A specified scaling group ID used to query.
+* `scaling_group_name` - (Optional, String) A scaling group name used to query.
+* `tags` - (Optional, Map) Tags used to query.
 
 ## Attributes Reference
 

@@ -39,8 +39,8 @@ resource "tencentcloud_vpc_acl_attachment" "attachment" {
 
 The following arguments are supported:
 
-* `acl_id` - (Required, ForceNew) ID of the attached ACL.
-* `subnet_id` - (Required, ForceNew) The Subnet instance ID.
+* `acl_id` - (Required, String, ForceNew) ID of the attached ACL.
+* `subnet_id` - (Required, String, ForceNew) The Subnet instance ID.
 
 ## Attributes Reference
 

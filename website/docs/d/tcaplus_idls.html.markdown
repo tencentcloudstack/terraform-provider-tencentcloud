@@ -23,8 +23,8 @@ data "tencentcloud_tcaplus_idls" "id_test" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) ID of the TcaplusDB cluster to be query.
-* `result_output_file` - (Optional) File for saving results.
+* `cluster_id` - (Required, String) ID of the TcaplusDB cluster to be query.
+* `result_output_file` - (Optional, String) File for saving results.
 
 ## Attributes Reference
 

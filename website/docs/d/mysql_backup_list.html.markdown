@@ -25,9 +25,9 @@ data "tencentcloud_mysql_backup_list" "default" {
 
 The following arguments are supported:
 
-* `mysql_id` - (Required) Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.
-* `max_number` - (Optional) The latest files to list, rang from 1 to 10000. And the default value is `10`.
-* `result_output_file` - (Optional) Used to store results.
+* `mysql_id` - (Required, String) Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.
+* `max_number` - (Optional, Int) The latest files to list, rang from 1 to 10000. And the default value is `10`.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

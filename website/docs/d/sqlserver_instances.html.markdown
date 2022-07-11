@@ -32,12 +32,12 @@ data "tencentcloud_sqlserver_instances" "id" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the SQL Server instance to be query.
-* `name` - (Optional) Name of the SQL Server instance to be query.
-* `project_id` - (Optional) Project ID of the SQL Server instance to be query.
-* `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) Subnet ID of the SQL Server instance to be query.
-* `vpc_id` - (Optional) Vpc ID of the SQL Server instance to be query.
+* `id` - (Optional, String) ID of the SQL Server instance to be query.
+* `name` - (Optional, String) Name of the SQL Server instance to be query.
+* `project_id` - (Optional, Int) Project ID of the SQL Server instance to be query.
+* `result_output_file` - (Optional, String) Used to save results.
+* `subnet_id` - (Optional, String) Subnet ID of the SQL Server instance to be query.
+* `vpc_id` - (Optional, String) Vpc ID of the SQL Server instance to be query.
 
 ## Attributes Reference
 

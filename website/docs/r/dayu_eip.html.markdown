@@ -27,11 +27,11 @@ resource "tencentcloud_dayu_eip" "test" {
 
 The following arguments are supported:
 
-* `bind_resource_id` - (Required, ForceNew) Resource id to bind.
-* `bind_resource_region` - (Required, ForceNew) Resource region to bind.
-* `bind_resource_type` - (Required, ForceNew) Resource type to bind, value range [`clb`, `cvm`].
-* `eip` - (Required, ForceNew) Eip of the resource.
-* `resource_id` - (Required, ForceNew) ID of the resource.
+* `bind_resource_id` - (Required, String, ForceNew) Resource id to bind.
+* `bind_resource_region` - (Required, String, ForceNew) Resource region to bind.
+* `bind_resource_type` - (Required, String, ForceNew) Resource type to bind, value range [`clb`, `cvm`].
+* `eip` - (Required, String, ForceNew) Eip of the resource.
+* `resource_id` - (Required, String, ForceNew) ID of the resource.
 
 ## Attributes Reference
 

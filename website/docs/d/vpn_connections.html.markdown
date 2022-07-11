@@ -30,13 +30,13 @@ data "tencentcloud_vpn_connections" "foo" {
 
 The following arguments are supported:
 
-* `customer_gateway_id` - (Optional) Customer gateway ID of the VPN connection.
-* `id` - (Optional) ID of the VPN connection.
-* `name` - (Optional) Name of the VPN connection. The length of character is limited to 1-60.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the VPN connection to be queried.
-* `vpc_id` - (Optional) ID of the VPC.
-* `vpn_gateway_id` - (Optional) VPN gateway ID of the VPN connection.
+* `customer_gateway_id` - (Optional, String) Customer gateway ID of the VPN connection.
+* `id` - (Optional, String) ID of the VPN connection.
+* `name` - (Optional, String) Name of the VPN connection. The length of character is limited to 1-60.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the VPN connection to be queried.
+* `vpc_id` - (Optional, String) ID of the VPC.
+* `vpn_gateway_id` - (Optional, String) VPN gateway ID of the VPN connection.
 
 ## Attributes Reference
 

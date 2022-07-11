@@ -23,10 +23,10 @@ data "tencentcloud_elasticsearch_instances" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Optional) ID of the instance to be queried.
-* `instance_name` - (Optional) Name of the instance to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tag of the instance to be queried.
+* `instance_id` - (Optional, String) ID of the instance to be queried.
+* `instance_name` - (Optional, String) Name of the instance to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tag of the instance to be queried.
 
 ## Attributes Reference
 

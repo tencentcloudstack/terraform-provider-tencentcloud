@@ -24,13 +24,13 @@ data "tencentcloud_cbs_snapshots" "snapshots" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the CBS instance locates at.
-* `project_id` - (Optional) ID of the project within the snapshot.
-* `result_output_file` - (Optional) Used to save results.
-* `snapshot_id` - (Optional) ID of the snapshot to be queried.
-* `snapshot_name` - (Optional) Name of the snapshot to be queried.
-* `storage_id` - (Optional) ID of the the CBS which this snapshot created from.
-* `storage_usage` - (Optional) Types of CBS which this snapshot created from, and available values include SYSTEM_DISK and DATA_DISK.
+* `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
+* `project_id` - (Optional, Int) ID of the project within the snapshot.
+* `result_output_file` - (Optional, String) Used to save results.
+* `snapshot_id` - (Optional, String) ID of the snapshot to be queried.
+* `snapshot_name` - (Optional, String) Name of the snapshot to be queried.
+* `storage_id` - (Optional, String) ID of the the CBS which this snapshot created from.
+* `storage_usage` - (Optional, String) Types of CBS which this snapshot created from, and available values include SYSTEM_DISK and DATA_DISK.
 
 ## Attributes Reference
 

@@ -23,10 +23,10 @@ data "tencentcloud_dayu_l4_rules_v2" "tencentcloud_dayu_l4_rules_v2" {
 
 The following arguments are supported:
 
-* `business` - (Required) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `ip` - (Optional) Ip of the resource.
-* `result_output_file` - (Optional) Used to save results.
-* `virtual_port` - (Optional) Virtual port of resource.
+* `business` - (Required, String) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `ip` - (Optional, String) Ip of the resource.
+* `result_output_file` - (Optional, String) Used to save results.
+* `virtual_port` - (Optional, Int) Virtual port of resource.
 
 ## Attributes Reference
 

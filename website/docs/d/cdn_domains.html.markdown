@@ -27,12 +27,12 @@ data "tencentcloud_cdn_domains" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Optional) Acceleration domain name.
-* `full_url_cache` - (Optional) Whether to enable full-path cache.
-* `https_switch` - (Optional) HTTPS configuration. Valid values: `on`, `off` and `processing`.
-* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values: `http`, `https` and `follow`.
-* `result_output_file` - (Optional) Used to save results.
-* `service_type` - (Optional) Service type of acceleration domain name. The available value include `web`, `download` and `media`.
+* `domain` - (Optional, String) Acceleration domain name.
+* `full_url_cache` - (Optional, Bool) Whether to enable full-path cache.
+* `https_switch` - (Optional, String) HTTPS configuration. Valid values: `on`, `off` and `processing`.
+* `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. Valid values: `http`, `https` and `follow`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `service_type` - (Optional, String) Service type of acceleration domain name. The available value include `web`, `download` and `media`.
 
 ## Attributes Reference
 

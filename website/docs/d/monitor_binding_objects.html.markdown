@@ -27,8 +27,8 @@ data "tencentcloud_monitor_binding_objects" "objects" {
 
 The following arguments are supported:
 
-* `group_id` - (Required) Policy group ID for query.
-* `result_output_file` - (Optional) Used to store results.
+* `group_id` - (Required, Int) Policy group ID for query.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

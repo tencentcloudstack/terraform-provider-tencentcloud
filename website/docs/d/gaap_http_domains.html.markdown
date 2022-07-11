@@ -44,9 +44,9 @@ data "tencentcloud_gaap_http_domains" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Required) Forward domain of the layer7 listener to be queried.
-* `listener_id` - (Required) ID of the layer7 listener to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `domain` - (Required, String) Forward domain of the layer7 listener to be queried.
+* `listener_id` - (Required, String) ID of the layer7 listener to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

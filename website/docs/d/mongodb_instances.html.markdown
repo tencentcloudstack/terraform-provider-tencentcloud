@@ -24,11 +24,11 @@ data "tencentcloud_mongodb_instances" "mongodb" {
 
 The following arguments are supported:
 
-* `cluster_type` - (Optional) Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).
-* `instance_id` - (Optional) ID of the Mongodb instance to be queried.
-* `instance_name_prefix` - (Optional) Name prefix of the Mongodb instance.
-* `result_output_file` - (Optional) Used to store results.
-* `tags` - (Optional) Tags of the Mongodb instance to be queried.
+* `cluster_type` - (Optional, String) Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).
+* `instance_id` - (Optional, String) ID of the Mongodb instance to be queried.
+* `instance_name_prefix` - (Optional, String) Name prefix of the Mongodb instance.
+* `result_output_file` - (Optional, String) Used to store results.
+* `tags` - (Optional, Map) Tags of the Mongodb instance to be queried.
 
 ## Attributes Reference
 

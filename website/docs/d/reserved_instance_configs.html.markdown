@@ -23,12 +23,12 @@ data "tencentcloud_reserved_instance_configs" "config" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the reserved instance locates at.
-* `duration` - (Optional) Validity period of the reserved instance. Valid values are `31536000`(1 year) and `94608000`(3 years).
-* `instance_type` - (Optional) The type of reserved instance.
-* `offering_type` - (Optional) Filter by Payment Type. Such as All Upfront.
-* `product_description` - (Optional) Filter by the Platform Description (that is, operating system) for Reserved Instance billing. Shaped like: linux.
-* `result_output_file` - (Optional) Used to save results.
+* `availability_zone` - (Optional, String) The available zone that the reserved instance locates at.
+* `duration` - (Optional, Int) Validity period of the reserved instance. Valid values are `31536000`(1 year) and `94608000`(3 years).
+* `instance_type` - (Optional, String) The type of reserved instance.
+* `offering_type` - (Optional, String) Filter by Payment Type. Such as All Upfront.
+* `product_description` - (Optional, String) Filter by the Platform Description (that is, operating system) for Reserved Instance billing. Shaped like: linux.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

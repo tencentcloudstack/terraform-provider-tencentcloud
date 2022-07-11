@@ -43,9 +43,9 @@ data "tencentcloud_api_gateway_ip_strategies" "name" {
 
 The following arguments are supported:
 
-* `service_id` - (Required) The service ID to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `strategy_name` - (Optional) Name of IP policy.
+* `service_id` - (Required, String) The service ID to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `strategy_name` - (Optional, String) Name of IP policy.
 
 ## Attributes Reference
 

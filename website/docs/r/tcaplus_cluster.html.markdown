@@ -30,12 +30,12 @@ resource "tencentcloud_tcaplus_cluster" "test" {
 
 The following arguments are supported:
 
-* `cluster_name` - (Required) Name of the TcaplusDB cluster. Name length should be between 1 and 30.
-* `idl_type` - (Required, ForceNew) IDL type of the TcaplusDB cluster. Valid values: `PROTO` and `TDR`.
-* `password` - (Required) Password of the TcaplusDB cluster. Password length should be between 12 and 16. The password must be a *mix* of uppercase letters (A-Z), lowercase *letters* (a-z) and *numbers* (0-9).
-* `subnet_id` - (Required, ForceNew) Subnet id of the TcaplusDB cluster.
-* `vpc_id` - (Required, ForceNew) VPC id of the TcaplusDB cluster.
-* `old_password_expire_last` - (Optional) Expiration time of old password after password update, unit: second.
+* `cluster_name` - (Required, String) Name of the TcaplusDB cluster. Name length should be between 1 and 30.
+* `idl_type` - (Required, String, ForceNew) IDL type of the TcaplusDB cluster. Valid values: `PROTO` and `TDR`.
+* `password` - (Required, String) Password of the TcaplusDB cluster. Password length should be between 12 and 16. The password must be a *mix* of uppercase letters (A-Z), lowercase *letters* (a-z) and *numbers* (0-9).
+* `subnet_id` - (Required, String, ForceNew) Subnet id of the TcaplusDB cluster.
+* `vpc_id` - (Required, String, ForceNew) VPC id of the TcaplusDB cluster.
+* `old_password_expire_last` - (Optional, Int) Expiration time of old password after password update, unit: second.
 
 ## Attributes Reference
 

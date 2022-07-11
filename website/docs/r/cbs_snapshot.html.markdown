@@ -24,8 +24,8 @@ resource "tencentcloud_cbs_snapshot" "snapshot" {
 
 The following arguments are supported:
 
-* `snapshot_name` - (Required) Name of the snapshot.
-* `storage_id` - (Required, ForceNew) ID of the the CBS which this snapshot created from.
+* `snapshot_name` - (Required, String) Name of the snapshot.
+* `storage_id` - (Required, String, ForceNew) ID of the the CBS which this snapshot created from.
 
 ## Attributes Reference
 

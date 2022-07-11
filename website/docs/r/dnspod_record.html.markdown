@@ -27,15 +27,15 @@ resource "tencentcloud_dnspod_record" "demo" {
 
 The following arguments are supported:
 
-* `domain` - (Required) The Domain.
-* `record_line` - (Required) The record line.
-* `record_type` - (Required) The record type.
-* `value` - (Required) The record value.
-* `mx` - (Optional) MX priority, valid when the record type is MX, range 1-20. Note: must set when record type equal MX.
-* `status` - (Optional) Records the initial state, with values ranging from ENABLE and DISABLE. The default is ENABLE, and if DISABLE is passed in, resolution will not take effect and the limits of load balancing will not be verified.
-* `sub_domain` - (Optional) The host records, default value is `@`.
-* `ttl` - (Optional) TTL, the range is 1-604800, and the minimum value of different levels of domain names is different. Default is 600.
-* `weight` - (Optional) Weight information. An integer from 0 to 100. Only enterprise VIP domain names are available, 0 means off, does not pass this parameter, means that the weight information is not set. Default is 0.
+* `domain` - (Required, String) The Domain.
+* `record_line` - (Required, String) The record line.
+* `record_type` - (Required, String) The record type.
+* `value` - (Required, String) The record value.
+* `mx` - (Optional, Int) MX priority, valid when the record type is MX, range 1-20. Note: must set when record type equal MX.
+* `status` - (Optional, String) Records the initial state, with values ranging from ENABLE and DISABLE. The default is ENABLE, and if DISABLE is passed in, resolution will not take effect and the limits of load balancing will not be verified.
+* `sub_domain` - (Optional, String) The host records, default value is `@`.
+* `ttl` - (Optional, Int) TTL, the range is 1-604800, and the minimum value of different levels of domain names is different. Default is 600.
+* `weight` - (Optional, Int) Weight information. An integer from 0 to 100. Only enterprise VIP domain names are available, 0 means off, does not pass this parameter, means that the weight information is not set. Default is 0.
 
 ## Attributes Reference
 

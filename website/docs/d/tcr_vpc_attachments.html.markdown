@@ -23,10 +23,10 @@ data "tencentcloud_tcr_vpc_attachments" "id" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) ID of the instance to query.
-* `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) ID of subnet to query.
-* `vpc_id` - (Optional) ID of VPC to query.
+* `instance_id` - (Required, String) ID of the instance to query.
+* `result_output_file` - (Optional, String) Used to save results.
+* `subnet_id` - (Optional, String) ID of subnet to query.
+* `vpc_id` - (Optional, String) ID of VPC to query.
 
 ## Attributes Reference
 

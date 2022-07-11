@@ -44,17 +44,17 @@ resource "tencentcloud_tcr_instance" "foo" {
 
 The following arguments are supported:
 
-* `instance_type` - (Required, ForceNew) TCR types. Valid values are: `standard`, `basic`, `premium`.
-* `name` - (Required, ForceNew) Name of the TCR instance.
-* `delete_bucket` - (Optional) Indicate to delete the COS bucket which is auto-created with the instance or not.
-* `open_public_operation` - (Optional) Control public network access.
-* `security_policy` - (Optional) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
-* `tags` - (Optional) The available tags within this TCR instance.
+* `instance_type` - (Required, String, ForceNew) TCR types. Valid values are: `standard`, `basic`, `premium`.
+* `name` - (Required, String, ForceNew) Name of the TCR instance.
+* `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
+* `open_public_operation` - (Optional, Bool) Control public network access.
+* `security_policy` - (Optional, Set) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
+* `tags` - (Optional, Map) The available tags within this TCR instance.
 
 The `security_policy` object supports the following:
 
-* `cidr_block` - (Optional) The public network IP address of the access source.
-* `description` - (Optional) Remarks of policy.
+* `cidr_block` - (Optional, String) The public network IP address of the access source.
+* `description` - (Optional, String) Remarks of policy.
 
 ## Attributes Reference
 

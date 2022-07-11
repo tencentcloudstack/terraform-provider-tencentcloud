@@ -24,8 +24,8 @@ resource "tencentcloud_clb_log_topic" "topic" {
 
 The following arguments are supported:
 
-* `log_set_id` - (Required, ForceNew) Log topic of CLB instance.
-* `topic_name` - (Required, ForceNew) Log topic of CLB instance.
+* `log_set_id` - (Required, String, ForceNew) Log topic of CLB instance.
+* `topic_name` - (Required, String, ForceNew) Log topic of CLB instance.
 
 ## Attributes Reference
 

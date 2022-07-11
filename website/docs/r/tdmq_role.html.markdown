@@ -46,9 +46,9 @@ resource "tencentcloud_tdmq_role" "bar" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The id of tdmq cluster.
-* `remark` - (Required) The description of tdmq role.
-* `role_name` - (Required) The name of tdmq role.
+* `cluster_id` - (Required, String) The id of tdmq cluster.
+* `remark` - (Required, String) The description of tdmq role.
+* `role_name` - (Required, String) The name of tdmq role.
 
 ## Attributes Reference
 

@@ -26,8 +26,8 @@ data "tencentcloud_container_clusters" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) An id identify the cluster, like `cls-xxxxxx`.
-* `limit` - (Optional) An int variable describe how many cluster in return at most.
+* `cluster_id` - (Optional, String) An id identify the cluster, like `cls-xxxxxx`.
+* `limit` - (Optional, Int) An int variable describe how many cluster in return at most.
 
 ## Attributes Reference
 

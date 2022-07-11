@@ -23,9 +23,9 @@ data "tencentcloud_protocol_templates" "name" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the protocol template to query.
-* `name` - (Optional) Name of the protocol template to query.
-* `result_output_file` - (Optional) Used to save results.
+* `id` - (Optional, String) ID of the protocol template to query.
+* `name` - (Optional, String) Name of the protocol template to query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

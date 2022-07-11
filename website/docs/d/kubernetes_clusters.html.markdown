@@ -27,10 +27,10 @@ data "tencentcloud_kubernetes_clusters" "id" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
-* `cluster_name` - (Optional) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the cluster.
+* `cluster_id` - (Optional, String) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
+* `cluster_name` - (Optional, String) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the cluster.
 
 ## Attributes Reference
 

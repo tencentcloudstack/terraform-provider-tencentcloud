@@ -34,8 +34,8 @@ data "tencentcloud_api_gateway_throttling_services" "id" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to save results.
-* `service_id` - (Optional) Service ID for query.
+* `result_output_file` - (Optional, String) Used to save results.
+* `service_id` - (Optional, String) Service ID for query.
 
 ## Attributes Reference
 

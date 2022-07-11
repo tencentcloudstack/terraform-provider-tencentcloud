@@ -24,8 +24,8 @@ resource "tencentcloud_cam_group" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of CAM group.
-* `remark` - (Optional) Description of the CAM group.
+* `name` - (Required, String) Name of CAM group.
+* `remark` - (Optional, String) Description of the CAM group.
 
 ## Attributes Reference
 

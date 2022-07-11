@@ -40,9 +40,9 @@ EOF
 
 The following arguments are supported:
 
-* `document` - (Required) Document of the CAM policy. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.
-* `name` - (Required, ForceNew) Name of CAM policy.
-* `description` - (Optional) Description of the CAM policy.
+* `document` - (Required, String) Document of the CAM policy. The syntax refers to [CAM POLICY](https://intl.cloud.tencent.com/document/product/598/10604). There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.
+* `name` - (Required, String, ForceNew) Name of CAM policy.
+* `description` - (Optional, String) Description of the CAM policy.
 
 ## Attributes Reference
 

@@ -47,26 +47,26 @@ resource "tencentcloud_dayu_l4_rule" "test_rule" {
 
 The following arguments are supported:
 
-* `d_port` - (Required) The destination port of the L4 rule.
-* `name` - (Required, ForceNew) Name of the rule. When the `resource_type` is `net`, this field should be set with valid domain.
-* `protocol` - (Required) Protocol of the rule. Valid values: `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.
-* `resource_id` - (Required, ForceNew) ID of the resource that the layer 4 rule works for.
-* `resource_type` - (Required, ForceNew) Type of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.
-* `s_port` - (Required) The source port of the L4 rule.
-* `source_list` - (Required) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 20.
-* `source_type` - (Required, ForceNew) Source type, `1` for source of host, `2` for source of IP.
-* `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.
-* `health_check_interval` - (Optional) Interval time of health check. The value range is 10-60 sec, and the default is 15 sec.
-* `health_check_switch` - (Optional) Indicates whether health check is enabled. The default is `false`. Only valid when source list has more than one source item.
-* `health_check_timeout` - (Optional) HTTP Status Code. The default is 26 and value range is 2-60.
-* `health_check_unhealth_num` - (Optional) Unhealthy threshold of health check, and the default is 3. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is 2-10.
-* `session_switch` - (Optional) Indicate that the session will keep or not, and default value is `false`.
-* `session_time` - (Optional) Session keep time, only valid when `session_switch` is true, the available value ranges from 1 to 300 and unit is second.
+* `d_port` - (Required, Int) The destination port of the L4 rule.
+* `name` - (Required, String, ForceNew) Name of the rule. When the `resource_type` is `net`, this field should be set with valid domain.
+* `protocol` - (Required, String) Protocol of the rule. Valid values: `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.
+* `resource_id` - (Required, String, ForceNew) ID of the resource that the layer 4 rule works for.
+* `resource_type` - (Required, String, ForceNew) Type of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.
+* `s_port` - (Required, Int) The source port of the L4 rule.
+* `source_list` - (Required, Set) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 20.
+* `source_type` - (Required, Int, ForceNew) Source type, `1` for source of host, `2` for source of IP.
+* `health_check_health_num` - (Optional, Int) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.
+* `health_check_interval` - (Optional, Int) Interval time of health check. The value range is 10-60 sec, and the default is 15 sec.
+* `health_check_switch` - (Optional, Bool) Indicates whether health check is enabled. The default is `false`. Only valid when source list has more than one source item.
+* `health_check_timeout` - (Optional, Int) HTTP Status Code. The default is 26 and value range is 2-60.
+* `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is 3. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is 2-10.
+* `session_switch` - (Optional, Bool) Indicate that the session will keep or not, and default value is `false`.
+* `session_time` - (Optional, Int) Session keep time, only valid when `session_switch` is true, the available value ranges from 1 to 300 and unit is second.
 
 The `source_list` object supports the following:
 
-* `source` - (Required) Source IP or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.
-* `weight` - (Required) Weight of the source, the valid value ranges from 0 to 100.
+* `source` - (Required, String) Source IP or domain, valid format of ip is like `1.1.1.1` and valid format of host source is like `abc.com`.
+* `weight` - (Required, Int) Weight of the source, the valid value ranges from 0 to 100.
 
 ## Attributes Reference
 

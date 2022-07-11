@@ -25,8 +25,8 @@ data "tencentcloud_security_group" "sglab" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the security group to be queried. Conflict with `security_group_id`.
-* `security_group_id` - (Optional) ID of the security group to be queried. Conflict with `name`.
+* `name` - (Optional, String) Name of the security group to be queried. Conflict with `security_group_id`.
+* `security_group_id` - (Optional, String) ID of the security group to be queried. Conflict with `name`.
 
 ## Attributes Reference
 

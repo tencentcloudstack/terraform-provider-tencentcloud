@@ -23,9 +23,9 @@ data "tencentcloud_address_template_groups" "name" {
 
 The following arguments are supported:
 
-* `id` - (Optional) Id of the address template group to query.
-* `name` - (Optional) Name of the address template group to query.
-* `result_output_file` - (Optional) Used to save results.
+* `id` - (Optional, String) Id of the address template group to query.
+* `name` - (Optional, String) Name of the address template group to query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

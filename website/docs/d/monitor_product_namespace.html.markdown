@@ -23,8 +23,8 @@ data "tencentcloud_monitor_product_namespace" "instances" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name for filter, eg:`Load Banlancer`.
-* `result_output_file` - (Optional) Used to store results.
+* `name` - (Optional, String) Name for filter, eg:`Load Banlancer`.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

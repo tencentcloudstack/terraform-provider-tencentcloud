@@ -70,45 +70,45 @@ resource "tencentcloud_cls_index" "index" {
 
 The following arguments are supported:
 
-* `topic_id` - (Required) Log topic ID.
-* `include_internal_fields` - (Optional) Internal field marker of full-text index. Default value: false. Valid value: false: excluding internal fields; true: including internal fields.
-* `metadata_flag` - (Optional) Metadata flag. Default value: 0. Valid value: 0: full-text index (including the metadata field with key-value index enabled); 1: full-text index (including all metadata fields); 2: full-text index (excluding metadata fields)..
-* `rule` - (Optional) Index rule.
-* `status` - (Optional) Whether to take effect. Default value: true.
+* `topic_id` - (Required, String) Log topic ID.
+* `include_internal_fields` - (Optional, Bool) Internal field marker of full-text index. Default value: false. Valid value: false: excluding internal fields; true: including internal fields.
+* `metadata_flag` - (Optional, Int) Metadata flag. Default value: 0. Valid value: 0: full-text index (including the metadata field with key-value index enabled); 1: full-text index (including all metadata fields); 2: full-text index (excluding metadata fields)..
+* `rule` - (Optional, List) Index rule.
+* `status` - (Optional, Bool) Whether to take effect. Default value: true.
 
 The `full_text` object supports the following:
 
-* `case_sensitive` - (Required) Case sensitivity.
-* `contain_z_h` - (Required) Whether Chinese characters are contained.
-* `tokenizer` - (Required) Full-Text index delimiter. Each character in the string represents a delimiter.
+* `case_sensitive` - (Required, Bool) Case sensitivity.
+* `contain_z_h` - (Required, Bool) Whether Chinese characters are contained.
+* `tokenizer` - (Required, String) Full-Text index delimiter. Each character in the string represents a delimiter.
 
 The `key_value` object supports the following:
 
-* `case_sensitive` - (Required) Case sensitivity.
-* `key_values` - (Optional) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
+* `case_sensitive` - (Required, Bool) Case sensitivity.
+* `key_values` - (Optional, List) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
 
 The `key_values` object supports the following:
 
-* `key` - (Required) When a key value or metafield index needs to be configured for a field, the metafield Key does not need to be prefixed with __TAG__. and is consistent with the one when logs are uploaded. __TAG__. will be prefixed automatically for display in the console..
-* `value` - (Optional) Field index description information.
+* `key` - (Required, String) When a key value or metafield index needs to be configured for a field, the metafield Key does not need to be prefixed with __TAG__. and is consistent with the one when logs are uploaded. __TAG__. will be prefixed automatically for display in the console..
+* `value` - (Optional, List) Field index description information.
 
 The `rule` object supports the following:
 
-* `full_text` - (Optional) Full-Text index configuration.
-* `key_value` - (Optional) Key-Value index configuration.
-* `tag` - (Optional) Metafield index configuration.
+* `full_text` - (Optional, List) Full-Text index configuration.
+* `key_value` - (Optional, List) Key-Value index configuration.
+* `tag` - (Optional, List) Metafield index configuration.
 
 The `tag` object supports the following:
 
-* `case_sensitive` - (Required) Case sensitivity.
-* `key_values` - (Optional) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
+* `case_sensitive` - (Required, Bool) Case sensitivity.
+* `key_values` - (Optional, List) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
 
 The `value` object supports the following:
 
-* `type` - (Required) Field type. Valid values: long, text, double.
-* `contain_z_h` - (Optional) Whether Chinese characters are contained.
-* `sql_flag` - (Optional) Whether the analysis feature is enabled for the field.
-* `tokenizer` - (Optional) Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.
+* `type` - (Required, String) Field type. Valid values: long, text, double.
+* `contain_z_h` - (Optional, Bool) Whether Chinese characters are contained.
+* `sql_flag` - (Optional, Bool) Whether the analysis feature is enabled for the field.
+* `tokenizer` - (Optional, String) Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.
 
 ## Attributes Reference
 

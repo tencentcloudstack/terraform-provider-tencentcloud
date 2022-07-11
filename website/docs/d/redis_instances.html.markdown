@@ -27,12 +27,12 @@ data "tencentcloud_redis_instances" "redislab" {
 
 The following arguments are supported:
 
-* `limit` - (Optional) The number limitation of results for a query.
-* `project_id` - (Optional) ID of the project to which redis instance belongs.
-* `result_output_file` - (Optional) Used to save results.
-* `search_key` - (Optional) Key words used to match the results, and the key words can be: instance ID, instance name and IP address.
-* `tags` - (Optional) Tags of redis instance.
-* `zone` - (Optional) ID of an available zone.
+* `limit` - (Optional, Int) The number limitation of results for a query.
+* `project_id` - (Optional, Int) ID of the project to which redis instance belongs.
+* `result_output_file` - (Optional, String) Used to save results.
+* `search_key` - (Optional, String) Key words used to match the results, and the key words can be: instance ID, instance name and IP address.
+* `tags` - (Optional, Map) Tags of redis instance.
+* `zone` - (Optional, String) ID of an available zone.
 
 ## Attributes Reference
 

@@ -24,8 +24,8 @@ resource "tencentcloud_placement_group" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the placement group, 1-60 characters in length.
-* `type` - (Required, ForceNew) Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.
+* `name` - (Required, String) Name of the placement group, 1-60 characters in length.
+* `type` - (Required, String, ForceNew) Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.
 
 ## Attributes Reference
 

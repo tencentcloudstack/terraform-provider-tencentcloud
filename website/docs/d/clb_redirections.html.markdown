@@ -28,12 +28,12 @@ data "tencentcloud_clb_redirections" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required) ID of the CLB to be queried.
-* `source_listener_id` - (Required) ID of source listener to be queried.
-* `source_rule_id` - (Required) Rule ID of source listener to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `target_listener_id` - (Optional) ID of target listener to be queried.
-* `target_rule_id` - (Optional) Rule ID of target listener to be queried.
+* `clb_id` - (Required, String) ID of the CLB to be queried.
+* `source_listener_id` - (Required, String) ID of source listener to be queried.
+* `source_rule_id` - (Required, String) Rule ID of source listener to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `target_listener_id` - (Optional, String) ID of target listener to be queried.
+* `target_rule_id` - (Optional, String) Rule ID of target listener to be queried.
 
 ## Attributes Reference
 

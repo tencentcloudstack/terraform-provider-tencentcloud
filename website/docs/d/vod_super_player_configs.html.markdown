@@ -44,10 +44,10 @@ data "tencentcloud_vod_super_player_configs" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of super player config.
-* `result_output_file` - (Optional) Used to save results.
-* `sub_app_id` - (Optional) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
-* `type` - (Optional) Config type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.
+* `name` - (Optional, String) Name of super player config.
+* `result_output_file` - (Optional, String) Used to save results.
+* `sub_app_id` - (Optional, Int) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
+* `type` - (Optional, String) Config type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.
 
 ## Attributes Reference
 

@@ -24,8 +24,8 @@ data "tencentcloud_monitor_policy_conditions" "monitor_policy_conditions" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the policy name, support partial matching, eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.
-* `result_output_file` - (Optional) Used to store results.
+* `name` - (Optional, String) Name of the policy name, support partial matching, eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

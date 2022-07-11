@@ -39,12 +39,12 @@ resource "tencentcloud_gaap_security_rule" "foo" {
 
 The following arguments are supported:
 
-* `action` - (Required, ForceNew) Policy of the rule. Valid value: `ACCEPT` and `DROP`.
-* `cidr_ip` - (Required, ForceNew) A network address block of the request source.
-* `policy_id` - (Required, ForceNew) ID of the security policy.
-* `name` - (Optional) Name of the security policy rule. Maximum length is 30.
-* `port` - (Optional, ForceNew) Target port. Default value is `ALL`. Valid examples: `80`, `80,443` and `3306-20000`.
-* `protocol` - (Optional, ForceNew) Protocol of the security policy rule. Default value is `ALL`. Valid value: `TCP`, `UDP` and `ALL`.
+* `action` - (Required, String, ForceNew) Policy of the rule. Valid value: `ACCEPT` and `DROP`.
+* `cidr_ip` - (Required, String, ForceNew) A network address block of the request source.
+* `policy_id` - (Required, String, ForceNew) ID of the security policy.
+* `name` - (Optional, String) Name of the security policy rule. Maximum length is 30.
+* `port` - (Optional, String, ForceNew) Target port. Default value is `ALL`. Valid examples: `80`, `80,443` and `3306-20000`.
+* `protocol` - (Optional, String, ForceNew) Protocol of the security policy rule. Default value is `ALL`. Valid value: `TCP`, `UDP` and `ALL`.
 
 ## Attributes Reference
 

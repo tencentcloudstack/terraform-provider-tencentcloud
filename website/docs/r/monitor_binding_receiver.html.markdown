@@ -50,18 +50,18 @@ resource "tencentcloud_monitor_binding_receiver" "receiver" {
 
 The following arguments are supported:
 
-* `group_id` - (Required, ForceNew) Policy group ID for binding receivers.
-* `receivers` - (Optional) A list of receivers(will overwrite the configuration of the server or other resources). Each element contains the following attributes:
+* `group_id` - (Required, Int, ForceNew) Policy group ID for binding receivers.
+* `receivers` - (Optional, List) A list of receivers(will overwrite the configuration of the server or other resources). Each element contains the following attributes:
 
 The `receivers` object supports the following:
 
-* `notify_way` - (Required) Method of warning notification.Optional `CALL`,`EMAIL`,`SITE`,`SMS`,`WECHAT`.
-* `receiver_type` - (Required) Receive type. Optional `group`,`user`.
-* `end_time` - (Optional) End of alarm period. Meaning with `start_time`.
-* `receive_language` - (Optional) Alert sending language. Optional `en-US`,`zh-CN`.
-* `receiver_group_list` - (Optional) Alarm receive group ID list.
-* `receiver_user_list` - (Optional) Alarm receiver ID list.
-* `start_time` - (Optional) Alarm period start time. Valid value ranges: (0~86399). which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.
+* `notify_way` - (Required, List) Method of warning notification.Optional `CALL`,`EMAIL`,`SITE`,`SMS`,`WECHAT`.
+* `receiver_type` - (Required, String) Receive type. Optional `group`,`user`.
+* `end_time` - (Optional, Int) End of alarm period. Meaning with `start_time`.
+* `receive_language` - (Optional, String) Alert sending language. Optional `en-US`,`zh-CN`.
+* `receiver_group_list` - (Optional, List) Alarm receive group ID list.
+* `receiver_user_list` - (Optional, List) Alarm receiver ID list.
+* `start_time` - (Optional, Int) Alarm period start time. Valid value ranges: (0~86399). which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.
 
 ## Attributes Reference
 

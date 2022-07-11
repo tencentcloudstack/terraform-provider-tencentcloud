@@ -24,8 +24,8 @@ resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Instance id.
-* `name` - (Required) Agent name.
+* `instance_id` - (Required, String) Instance id.
+* `name` - (Required, String) Agent name.
 
 ## Attributes Reference
 

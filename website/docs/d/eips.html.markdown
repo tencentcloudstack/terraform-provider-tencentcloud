@@ -23,11 +23,11 @@ data "tencentcloud_eips" "foo" {
 
 The following arguments are supported:
 
-* `eip_id` - (Optional) ID of the EIP to be queried.
-* `eip_name` - (Optional) Name of the EIP to be queried.
-* `public_ip` - (Optional) The elastic ip address.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) The tags of EIP.
+* `eip_id` - (Optional, String) ID of the EIP to be queried.
+* `eip_name` - (Optional, String) Name of the EIP to be queried.
+* `public_ip` - (Optional, String) The elastic ip address.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) The tags of EIP.
 
 ## Attributes Reference
 

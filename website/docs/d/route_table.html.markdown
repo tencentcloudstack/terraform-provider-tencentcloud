@@ -37,8 +37,8 @@ resource "tencentcloud_route_entry" "rtb_entry_instance" {
 
 The following arguments are supported:
 
-* `route_table_id` - (Required) The Route Table ID.
-* `name` - (Optional) The Route Table name.
+* `route_table_id` - (Required, String) The Route Table ID.
+* `name` - (Optional, String) The Route Table name.
 
 ## Attributes Reference
 

@@ -25,10 +25,10 @@ data "tencentcloud_nat_gateways" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the NAT gateway.
-* `name` - (Optional) Name of the NAT gateway.
-* `result_output_file` - (Optional) Used to save results.
-* `vpc_id` - (Optional) ID of the VPC.
+* `id` - (Optional, String) ID of the NAT gateway.
+* `name` - (Optional, String) Name of the NAT gateway.
+* `result_output_file` - (Optional, String) Used to save results.
+* `vpc_id` - (Optional, String) ID of the VPC.
 
 ## Attributes Reference
 

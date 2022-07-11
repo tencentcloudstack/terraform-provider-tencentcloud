@@ -34,18 +34,18 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Required, ForceNew) Specify domain name.
-* `dv_auth_method` - (Required, ForceNew) Specify DV authorize method, available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
-* `alias` - (Optional) Specify alias for remark.
-* `contact_email` - (Optional) Email address.
-* `contact_phone` - (Optional) Phone number.
-* `csr_encrypt_algo` - (Optional) Specify CSR encrypt algorithm, only support `RSA` for now.
-* `csr_key_parameter` - (Optional) Specify CSR key parameter, only support `"2048"` for now.
-* `csr_key_password` - (Optional) Specify CSR key password.
-* `old_certificate_id` - (Optional, ForceNew) Specify old certificate ID, used for re-apply.
-* `package_type` - (Optional) Type of package. Only support `"2"` (TrustAsia TLS RSA CA).
-* `project_id` - (Optional) ID of projects which this certification belong to.
-* `validity_period` - (Optional) Specify validity period in month, only support `"12"` months for now.
+* `domain` - (Required, String, ForceNew) Specify domain name.
+* `dv_auth_method` - (Required, String, ForceNew) Specify DV authorize method, available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
+* `alias` - (Optional, String) Specify alias for remark.
+* `contact_email` - (Optional, String) Email address.
+* `contact_phone` - (Optional, String) Phone number.
+* `csr_encrypt_algo` - (Optional, String) Specify CSR encrypt algorithm, only support `RSA` for now.
+* `csr_key_parameter` - (Optional, String) Specify CSR key parameter, only support `"2048"` for now.
+* `csr_key_password` - (Optional, String) Specify CSR key password.
+* `old_certificate_id` - (Optional, String, ForceNew) Specify old certificate ID, used for re-apply.
+* `package_type` - (Optional, String) Type of package. Only support `"2"` (TrustAsia TLS RSA CA).
+* `project_id` - (Optional, Int) ID of projects which this certification belong to.
+* `validity_period` - (Optional, String) Specify validity period in month, only support `"12"` months for now.
 
 ## Attributes Reference
 

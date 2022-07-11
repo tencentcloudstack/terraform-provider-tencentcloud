@@ -29,10 +29,10 @@ data "tencentcloud_cam_roles" "bar" {
 
 The following arguments are supported:
 
-* `description` - (Optional) The description of the CAM role to be queried.
-* `name` - (Optional) Name of the CAM policy to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `role_id` - (Optional) ID of the CAM role to be queried.
+* `description` - (Optional, String) The description of the CAM role to be queried.
+* `name` - (Optional, String) Name of the CAM policy to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `role_id` - (Optional, String) ID of the CAM role to be queried.
 
 ## Attributes Reference
 

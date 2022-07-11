@@ -24,8 +24,8 @@ resource "tencentcloud_cbs_storage_attachment" "attachment" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) ID of the CVM instance.
-* `storage_id` - (Required, ForceNew) ID of the mounted CBS.
+* `instance_id` - (Required, String, ForceNew) ID of the CVM instance.
+* `storage_id` - (Required, String, ForceNew) ID of the mounted CBS.
 
 ## Attributes Reference
 

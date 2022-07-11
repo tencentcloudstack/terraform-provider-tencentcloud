@@ -34,15 +34,15 @@ data "tencentcloud_cam_users" "far" {
 
 The following arguments are supported:
 
-* `console_login` - (Optional) Indicate whether the user can login in.
-* `country_code` - (Optional) Country code of the CAM user to be queried.
-* `email` - (Optional) Email of the CAM user to be queried.
-* `name` - (Optional) Name of CAM user to be queried.
-* `phone_num` - (Optional) Phone num of the CAM user to be queried.
-* `remark` - (Optional) Remark of the CAM user to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `uid` - (Optional) Uid of the CAM user to be queried.
-* `uin` - (Optional) Uin of the CAM user to be queried.
+* `console_login` - (Optional, Bool) Indicate whether the user can login in.
+* `country_code` - (Optional, String) Country code of the CAM user to be queried.
+* `email` - (Optional, String) Email of the CAM user to be queried.
+* `name` - (Optional, String) Name of CAM user to be queried.
+* `phone_num` - (Optional, String) Phone num of the CAM user to be queried.
+* `remark` - (Optional, String) Remark of the CAM user to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `uid` - (Optional, Int) Uid of the CAM user to be queried.
+* `uin` - (Optional, Int) Uin of the CAM user to be queried.
 
 ## Attributes Reference
 

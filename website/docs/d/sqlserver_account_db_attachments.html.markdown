@@ -24,10 +24,10 @@ data "tencentcloud_sqlserver_account_db_attachments" "test" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) SQL Server instance ID that the account belongs to.
-* `account_name` - (Optional) Name of the SQL Server account to be queried.
-* `db_name` - (Optional) Name of the DB to be queried.
-* `result_output_file` - (Optional) Used to store results.
+* `instance_id` - (Required, String) SQL Server instance ID that the account belongs to.
+* `account_name` - (Optional, String) Name of the SQL Server account to be queried.
+* `db_name` - (Optional, String) Name of the DB to be queried.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

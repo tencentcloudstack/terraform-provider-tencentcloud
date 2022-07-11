@@ -23,9 +23,9 @@ data "tencentcloud_availability_regions" "my_favourite_region" {
 
 The following arguments are supported:
 
-* `include_unavailable` - (Optional) A bool variable indicates that the query will include `UNAVAILABLE` regions.
-* `name` - (Optional) When specified, only the region with the exactly name match will be returned. `default` value means it consistent with the provider region.
-* `result_output_file` - (Optional) Used to save results.
+* `include_unavailable` - (Optional, Bool) A bool variable indicates that the query will include `UNAVAILABLE` regions.
+* `name` - (Optional, String) When specified, only the region with the exactly name match will be returned. `default` value means it consistent with the provider region.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

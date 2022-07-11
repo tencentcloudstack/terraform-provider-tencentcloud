@@ -78,21 +78,21 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgp" {
 
 The following arguments are supported:
 
-* `name` - (Required, ForceNew) Name of the CC self-define http policy. Length should between 1 and 20.
-* `resource_id` - (Required, ForceNew) ID of the resource that the CC self-define http policy works for.
-* `resource_type` - (Required, ForceNew) Type of the resource that the CC self-define http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `action` - (Optional) Action mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.
-* `frequency` - (Optional) Max frequency per minute, only valid when `smode` is `speedlimit`, the valid value ranges from 1 to 10000.
-* `ip` - (Optional) Ip of the CC self-define http policy, only valid when `resource_type` is `bgp-multip`. The num of list items can only be set one.
-* `rule_list` - (Optional) Rule list of the CC self-define http policy,  only valid when `smode` is `matching`.
-* `smode` - (Optional) Match mode, and valid values are `matching`, `speedlimit`. Note: the speed limit type CC self-define policy can only set one.
-* `switch` - (Optional) Indicate the CC self-define http policy takes effect or not.
+* `name` - (Required, String, ForceNew) Name of the CC self-define http policy. Length should between 1 and 20.
+* `resource_id` - (Required, String, ForceNew) ID of the resource that the CC self-define http policy works for.
+* `resource_type` - (Required, String, ForceNew) Type of the resource that the CC self-define http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `action` - (Optional, String) Action mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.
+* `frequency` - (Optional, Int) Max frequency per minute, only valid when `smode` is `speedlimit`, the valid value ranges from 1 to 10000.
+* `ip` - (Optional, String) Ip of the CC self-define http policy, only valid when `resource_type` is `bgp-multip`. The num of list items can only be set one.
+* `rule_list` - (Optional, Set) Rule list of the CC self-define http policy,  only valid when `smode` is `matching`.
+* `smode` - (Optional, String) Match mode, and valid values are `matching`, `speedlimit`. Note: the speed limit type CC self-define policy can only set one.
+* `switch` - (Optional, Bool) Indicate the CC self-define http policy takes effect or not.
 
 The `rule_list` object supports the following:
 
-* `operator` - (Optional) Operator of the rule. Valid values: `include`, `not_include`, `equal`.
-* `skey` - (Optional) Key of the rule. Valid values: `host`, `cgi`, `ua`, `referer`.
-* `value` - (Optional) Rule value, then length should be less than 31 bytes.
+* `operator` - (Optional, String) Operator of the rule. Valid values: `include`, `not_include`, `equal`.
+* `skey` - (Optional, String) Key of the rule. Valid values: `host`, `cgi`, `ua`, `referer`.
+* `value` - (Optional, String) Rule value, then length should be less than 31 bytes.
 
 ## Attributes Reference
 

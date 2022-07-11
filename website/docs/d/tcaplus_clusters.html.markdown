@@ -30,9 +30,9 @@ data "tencentcloud_tcaplus_clusters" "idname" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) ID of the TcaplusDB cluster to be query.
-* `cluster_name` - (Optional) Name of the TcaplusDB cluster to be query.
-* `result_output_file` - (Optional) File for saving results.
+* `cluster_id` - (Optional, String) ID of the TcaplusDB cluster to be query.
+* `cluster_name` - (Optional, String) Name of the TcaplusDB cluster to be query.
+* `result_output_file` - (Optional, String) File for saving results.
 
 ## Attributes Reference
 

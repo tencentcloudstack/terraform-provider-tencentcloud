@@ -27,9 +27,9 @@ resource "tencentcloud_ckafka_user" "foo" {
 
 The following arguments are supported:
 
-* `account_name` - (Required, ForceNew) Account name used to access to ckafka instance.
-* `instance_id` - (Required, ForceNew) ID of the ckafka instance.
-* `password` - (Required) Password of the account.
+* `account_name` - (Required, String, ForceNew) Account name used to access to ckafka instance.
+* `instance_id` - (Required, String, ForceNew) ID of the ckafka instance.
+* `password` - (Required, String) Password of the account.
 
 ## Attributes Reference
 

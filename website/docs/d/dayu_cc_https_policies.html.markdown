@@ -30,11 +30,11 @@ data "tencentcloud_dayu_cc_https_policies" "id_test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource that the CC https policy works for.
-* `resource_type` - (Required) Type of the resource that the CC https policy works for, valid value is `bgpip`.
-* `name` - (Optional) Name of the CC https policy to be queried.
-* `policy_id` - (Optional) Id of the CC https policy to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `resource_id` - (Required, String) Id of the resource that the CC https policy works for.
+* `resource_type` - (Required, String) Type of the resource that the CC https policy works for, valid value is `bgpip`.
+* `name` - (Optional, String) Name of the CC https policy to be queried.
+* `policy_id` - (Optional, String) Id of the CC https policy to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

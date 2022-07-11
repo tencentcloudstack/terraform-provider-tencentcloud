@@ -23,14 +23,14 @@ resource "tencentcloud_eip" "foo" {
 
 The following arguments are supported:
 
-* `anycast_zone` - (Optional, ForceNew) The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.
-* `applicable_for_clb` - (Optional, **Deprecated**) It has been deprecated from version 1.27.0. Indicates whether the anycast eip can be associated to a CLB.
-* `internet_charge_type` - (Optional, ForceNew) The charge type of eip. Valid value: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.
-* `internet_max_bandwidth_out` - (Optional) The bandwidth limit of EIP, unit is Mbps.
-* `internet_service_provider` - (Optional, ForceNew) Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.
-* `name` - (Optional) The name of eip.
-* `tags` - (Optional) The tags of eip.
-* `type` - (Optional, ForceNew) The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.
+* `anycast_zone` - (Optional, String, ForceNew) The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.
+* `applicable_for_clb` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.27.0. Indicates whether the anycast eip can be associated to a CLB.
+* `internet_charge_type` - (Optional, String, ForceNew) The charge type of eip. Valid value: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.
+* `internet_max_bandwidth_out` - (Optional, Int) The bandwidth limit of EIP, unit is Mbps.
+* `internet_service_provider` - (Optional, String, ForceNew) Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.
+* `name` - (Optional, String) The name of eip.
+* `tags` - (Optional, Map) The tags of eip.
+* `type` - (Optional, String, ForceNew) The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.
 
 ## Attributes Reference
 

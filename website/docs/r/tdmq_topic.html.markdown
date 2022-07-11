@@ -40,12 +40,12 @@ resource "tencentcloud_tdmq_topic" "bar" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The Dedicated Cluster Id.
-* `environ_id` - (Required, ForceNew) The name of tdmq namespace.
-* `partitions` - (Required) The partitions of topic.
-* `topic_name` - (Required, ForceNew) The name of topic to be created.
-* `topic_type` - (Required, ForceNew) The type of topic.
-* `remark` - (Optional) Description of the namespace.
+* `cluster_id` - (Required, String) The Dedicated Cluster Id.
+* `environ_id` - (Required, String, ForceNew) The name of tdmq namespace.
+* `partitions` - (Required, Int) The partitions of topic.
+* `topic_name` - (Required, String, ForceNew) The name of topic to be created.
+* `topic_type` - (Required, Int, ForceNew) The type of topic.
+* `remark` - (Optional, String) Description of the namespace.
 
 ## Attributes Reference
 

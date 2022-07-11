@@ -29,14 +29,14 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) ID of the SQL Server instance.
-* `pub_or_sub_instance_id` - (Optional) The subscribe/publish instance ID. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.
-* `pub_or_sub_instance_ip` - (Optional) The intranet IP of the subscribe/publish instance. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.
-* `publish_database` - (Optional) Name of publish database.
-* `publish_subscribe_id` - (Optional) The id of the Publish and Subscribe.
-* `publish_subscribe_name` - (Optional) The name of the Publish and Subscribe.
-* `result_output_file` - (Optional) Used to store results.
-* `subscribe_database` - (Optional) Name of subscribe database.
+* `instance_id` - (Required, String) ID of the SQL Server instance.
+* `pub_or_sub_instance_id` - (Optional, String) The subscribe/publish instance ID. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.
+* `pub_or_sub_instance_ip` - (Optional, String) The intranet IP of the subscribe/publish instance. It is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.
+* `publish_database` - (Optional, String) Name of publish database.
+* `publish_subscribe_id` - (Optional, Int) The id of the Publish and Subscribe.
+* `publish_subscribe_name` - (Optional, String) The name of the Publish and Subscribe.
+* `result_output_file` - (Optional, String) Used to store results.
+* `subscribe_database` - (Optional, String) Name of subscribe database.
 
 ## Attributes Reference
 

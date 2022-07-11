@@ -26,11 +26,11 @@ resource "tencentcloud_mysql_account" "default" {
 
 The following arguments are supported:
 
-* `mysql_id` - (Required, ForceNew) Instance ID to which the account belongs.
-* `name` - (Required, ForceNew) Account name.
-* `password` - (Required) Operation password.
-* `description` - (Optional) Database description.
-* `host` - (Optional, ForceNew) Account host, default is `%`.
+* `mysql_id` - (Required, String, ForceNew) Instance ID to which the account belongs.
+* `name` - (Required, String, ForceNew) Account name.
+* `password` - (Required, String) Operation password.
+* `description` - (Optional, String) Database description.
+* `host` - (Optional, String, ForceNew) Account host, default is `%`.
 
 ## Attributes Reference
 

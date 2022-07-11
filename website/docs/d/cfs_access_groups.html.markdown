@@ -24,9 +24,9 @@ data "tencentcloud_cfs_access_groups" "access_groups" {
 
 The following arguments are supported:
 
-* `access_group_id` - (Optional) A specified access group ID used to query.
-* `name` - (Optional) A access group Name used to query.
-* `result_output_file` - (Optional) Used to save results.
+* `access_group_id` - (Optional, String) A specified access group ID used to query.
+* `name` - (Optional, String) A access group Name used to query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

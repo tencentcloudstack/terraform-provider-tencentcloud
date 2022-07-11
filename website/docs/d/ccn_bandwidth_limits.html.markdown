@@ -39,8 +39,8 @@ resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required) ID of the CCN to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `ccn_id` - (Required, String) ID of the CCN to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

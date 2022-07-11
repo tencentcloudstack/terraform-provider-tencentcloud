@@ -24,9 +24,9 @@ data "tencentcloud_ckafka_users" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Id of the ckafka instance.
-* `account_name` - (Optional) Account name used when query ckafka users' infos. Could be a substr of user name.
-* `result_output_file` - (Optional) Used to save results.
+* `instance_id` - (Required, String) Id of the ckafka instance.
+* `account_name` - (Optional, String) Account name used when query ckafka users' infos. Could be a substr of user name.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

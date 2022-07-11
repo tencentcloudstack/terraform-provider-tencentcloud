@@ -32,9 +32,9 @@ data "tencentcloud_api_gateway_api_keys" "id" {
 
 The following arguments are supported:
 
-* `api_key_id` - (Optional) Created API key ID, this field is exactly the same as ID.
-* `result_output_file` - (Optional) Used to save results.
-* `secret_name` - (Optional) Custom key name.
+* `api_key_id` - (Optional, String) Created API key ID, this field is exactly the same as ID.
+* `result_output_file` - (Optional, String) Used to save results.
+* `secret_name` - (Optional, String) Custom key name.
 
 ## Attributes Reference
 

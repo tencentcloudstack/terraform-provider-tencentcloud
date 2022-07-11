@@ -27,12 +27,12 @@ resource "tencentcloud_monitor_tmp_instance" "tmpInstance" {
 
 The following arguments are supported:
 
-* `data_retention_time` - (Required) Data retention time.
-* `instance_name` - (Required) Instance name.
-* `subnet_id` - (Required) Subnet Id.
-* `vpc_id` - (Required) Vpc Id.
-* `zone` - (Required) Available zone.
-* `grafana_instance_id` - (Optional) Associated grafana instance id.
+* `data_retention_time` - (Required, Int) Data retention time.
+* `instance_name` - (Required, String) Instance name.
+* `subnet_id` - (Required, String) Subnet Id.
+* `vpc_id` - (Required, String) Vpc Id.
+* `zone` - (Required, String) Available zone.
+* `grafana_instance_id` - (Optional, String) Associated grafana instance id.
 
 ## Attributes Reference
 

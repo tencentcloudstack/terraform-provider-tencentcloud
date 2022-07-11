@@ -25,9 +25,9 @@ resource "tencentcloud_vod_sub_application" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Sub application name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.
-* `status` - (Required) Sub appliaction status.
-* `description` - (Optional) Sub application description.
+* `name` - (Required, String) Sub application name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.
+* `status` - (Required, String) Sub appliaction status.
+* `description` - (Optional, String) Sub application description.
 
 ## Attributes Reference
 

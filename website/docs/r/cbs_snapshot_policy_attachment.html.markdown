@@ -24,8 +24,8 @@ resource "tencentcloud_cbs_snapshot_policy_attachment" "foo" {
 
 The following arguments are supported:
 
-* `snapshot_policy_id` - (Required, ForceNew) ID of CBS snapshot policy.
-* `storage_id` - (Required, ForceNew) ID of CBS.
+* `snapshot_policy_id` - (Required, String, ForceNew) ID of CBS snapshot policy.
+* `storage_id` - (Required, String, ForceNew) ID of CBS.
 
 ## Attributes Reference
 

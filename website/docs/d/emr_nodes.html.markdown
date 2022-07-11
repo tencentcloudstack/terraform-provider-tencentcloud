@@ -26,8 +26,8 @@ data "tencentcloud_emr_nodes" "my_emr_nodes" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Cluster instance ID, the instance ID is as follows: emr-xxxxxxxx.
-* `node_flag` - (Required) Node ID, the value is:
+* `instance_id` - (Required, String) Cluster instance ID, the instance ID is as follows: emr-xxxxxxxx.
+* `node_flag` - (Required, String) Node ID, the value is:
 				- all: Means to get all type nodes, except cdb information.
 				- master: Indicates that the master node information is obtained.
 				- core: Indicates that the core node information is obtained.
@@ -39,10 +39,10 @@ The following arguments are supported:
 				- renew: Indicates that all node information to be renewed, including cddb information, is obtained, and the auto-renewal node will not be returned.
 				
 				Note: Only the above values are now supported, entering other values will cause an error.
-* `hardware_resource_type` - (Optional) Resource type: Support all/host/pod, default is all.
-* `limit` - (Optional) The number returned per page, the default value is 100, and the maximum value is 100.
-* `offset` - (Optional) Page number, with a default value of 0, represents the first page.
-* `result_output_file` - (Optional) Used to save results.
+* `hardware_resource_type` - (Optional, String) Resource type: Support all/host/pod, default is all.
+* `limit` - (Optional, Int) The number returned per page, the default value is 100, and the maximum value is 100.
+* `offset` - (Optional, Int) Page number, with a default value of 0, represents the first page.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

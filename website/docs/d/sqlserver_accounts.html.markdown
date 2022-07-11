@@ -28,9 +28,9 @@ data "tencentcloud_sqlserver_accounts" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) SQL server instance ID that the account belongs to.
-* `name` - (Optional) Name of the SQL server account to be queried.
-* `result_output_file` - (Optional) Used to store results.
+* `instance_id` - (Required, String) SQL server instance ID that the account belongs to.
+* `name` - (Optional, String) Name of the SQL server account to be queried.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

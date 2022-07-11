@@ -76,11 +76,11 @@ resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
 
 The following arguments are supported:
 
-* `environment` - (Required, ForceNew) The environment to be bound. Valid values: `test`, `prepub`, `release`.
-* `service_id` - (Required, ForceNew) ID of the service.
-* `usage_plan_id` - (Required, ForceNew) ID of the usage plan.
-* `api_id` - (Optional, ForceNew) ID of the API. This parameter will be required when `bind_type` is `API`.
-* `bind_type` - (Optional, ForceNew) Binding type. Valid values: `API`, `SERVICE`. Default value is `SERVICE`.
+* `environment` - (Required, String, ForceNew) The environment to be bound. Valid values: `test`, `prepub`, `release`.
+* `service_id` - (Required, String, ForceNew) ID of the service.
+* `usage_plan_id` - (Required, String, ForceNew) ID of the usage plan.
+* `api_id` - (Optional, String, ForceNew) ID of the API. This parameter will be required when `bind_type` is `API`.
+* `bind_type` - (Optional, String, ForceNew) Binding type. Valid values: `API`, `SERVICE`. Default value is `SERVICE`.
 
 ## Attributes Reference
 

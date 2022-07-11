@@ -23,8 +23,8 @@ data "tencentcloud_postgresql_specinfos" "foo" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required) The zone of the postgresql instance to query.
-* `result_output_file` - (Optional) Used to save results.
+* `availability_zone` - (Required, String) The zone of the postgresql instance to query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -29,13 +29,13 @@ resource "tencentcloud_private_dns_record" "foo" {
 
 The following arguments are supported:
 
-* `record_type` - (Required) Record type. Valid values: "A", "AAAA", "CNAME", "MX", "TXT", "PTR".
-* `record_value` - (Required) Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com..
-* `sub_domain` - (Required) Subdomain, such as "www", "m", and "@".
-* `zone_id` - (Required) Private domain ID.
-* `mx` - (Optional) MX priority, which is required when the record type is MX. Valid values: 5, 10, 15, 20, 30, 40, 50.
-* `ttl` - (Optional) Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.
-* `weight` - (Optional) Record weight. Value range: 1~100.
+* `record_type` - (Required, String) Record type. Valid values: "A", "AAAA", "CNAME", "MX", "TXT", "PTR".
+* `record_value` - (Required, String) Record value, such as IP: 192.168.10.2, CNAME: cname.qcloud.com, and MX: mail.qcloud.com..
+* `sub_domain` - (Required, String) Subdomain, such as "www", "m", and "@".
+* `zone_id` - (Required, String) Private domain ID.
+* `mx` - (Optional, Int) MX priority, which is required when the record type is MX. Valid values: 5, 10, 15, 20, 30, 40, 50.
+* `ttl` - (Optional, Int) Record cache time. The smaller the value, the faster the record will take effect. Value range: 1~86400s.
+* `weight` - (Optional, Int) Record weight. Value range: 1~100.
 
 ## Attributes Reference
 

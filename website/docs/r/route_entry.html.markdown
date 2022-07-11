@@ -47,11 +47,11 @@ resource "tencentcloud_route_entry" "rtb_entry_instance" {
 
 The following arguments are supported:
 
-* `cidr_block` - (Required, ForceNew) The RouteEntry's target network segment.
-* `next_hub` - (Required, ForceNew) The route entry's next hub. CVM instance ID or VPC router interface ID.
-* `next_type` - (Required, ForceNew) The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway`,`havip`,`local_gateway` and `instance`. `instance` points to CVM Instance.
-* `route_table_id` - (Required, ForceNew) The ID of the route table.
-* `vpc_id` - (Required, ForceNew) The VPC ID.
+* `cidr_block` - (Required, String, ForceNew) The RouteEntry's target network segment.
+* `next_hub` - (Required, String, ForceNew) The route entry's next hub. CVM instance ID or VPC router interface ID.
+* `next_type` - (Required, String, ForceNew) The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway`,`havip`,`local_gateway` and `instance`. `instance` points to CVM Instance.
+* `route_table_id` - (Required, String, ForceNew) The ID of the route table.
+* `vpc_id` - (Required, String, ForceNew) The VPC ID.
 
 ## Attributes Reference
 

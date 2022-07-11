@@ -24,8 +24,8 @@ resource "tencentcloud_cfs_access_group" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the access group, and max length is 64.
-* `description` - (Optional) Description of the access group, and max length is 255.
+* `name` - (Required, String) Name of the access group, and max length is 64.
+* `description` - (Optional, String) Description of the access group, and max length is 255.
 
 ## Attributes Reference
 

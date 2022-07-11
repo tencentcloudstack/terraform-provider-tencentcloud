@@ -39,13 +39,13 @@ resource "tencentcloud_clb_snat_ip" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required) CLB instance ID.
-* `ips` - (Optional) Snat IP address config.
+* `clb_id` - (Required, String) CLB instance ID.
+* `ips` - (Optional, Set) Snat IP address config.
 
 The `ips` object supports the following:
 
-* `ip` - (Required) Snat IP.
-* `subnet_id` - (Required) Subnet ID.
+* `ip` - (Required, String) Snat IP.
+* `subnet_id` - (Required, String) Subnet ID.
 
 ## Attributes Reference
 
