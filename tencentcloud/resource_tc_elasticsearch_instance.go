@@ -606,8 +606,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 	if d.HasChange("web_node_type_info") {
 		var (
-			err          error
-			startProcess = false
+			err error
 		)
 		infos := d.Get("web_node_type_info").([]interface{})
 		for _, item := range infos {
@@ -624,11 +623,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				}
 
 				if instance.Status != nil {
-					if !startProcess && *instance.Status == 1 {
-						return resource.RetryableError(fmt.Errorf("waiting for instance %s update start", instanceId))
-					}
 					if *instance.Status == 0 {
-						startProcess = true
 						return resource.RetryableError(fmt.Errorf("status: %d waiting for instance %s status update", *instance.Status, instanceId))
 					}
 				}
