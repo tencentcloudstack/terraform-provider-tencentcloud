@@ -62,8 +62,8 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request  = monitor.NewCreatePrometheusAgentRequest()
-		response *monitor.CreatePrometheusAgentResponse
+		request = monitor.NewCreatePrometheusAgentRequest()
+		//response *monitor.CreatePrometheusAgentResponse
 	)
 
 	var instanceId string
@@ -86,7 +86,7 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		//response = result
 		return nil
 	})
 
