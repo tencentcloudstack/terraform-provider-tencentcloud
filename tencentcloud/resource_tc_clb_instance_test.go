@@ -394,11 +394,11 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 
 const testAccClbInstance_open = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name = "keep-ci-temp-test-sg"
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
+  name       = "keep-guagua-ci-temp-test"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -423,7 +423,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
+  name       = "keep-clb-temp-test"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -450,11 +450,11 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 
 const testAccClbInstance_update_open = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test1-sg"
+  name = "keep-clb-test1-sg"
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
+  name       = "keep-clb-temp-test"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -480,20 +480,20 @@ variable "availability_zone" {
 
 resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
-  name              = "sdk-feature-test"
+  name              = "keep-sdk-feature-test"
   vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "sg_o0ek7r93"
+  name        = "keep-sg_o0ek7r93"
   description = "favourite sg"
   project_id  = 0
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "for-my-open-clb"
+  name         = "keep-for-my-open-clb"
   cidr_block   = "10.0.0.0/16"
 
   tags = {
@@ -525,20 +525,20 @@ variable "availability_zone" {
 
 resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
-  name              = "sdk-feature-test"
+  name              = "keep-sdk-feature-test"
   vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "sg_o0ek7r93"
+  name        = "keep-sg_o0ek7r93"
   description = "favourite sg"
   project_id  = 0
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "for-my-open-clb"
+  name         = "keep-for-my-open-clb"
   cidr_block   = "10.0.0.0/16"
 
   tags = {

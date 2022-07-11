@@ -105,7 +105,7 @@ data "tencentcloud_clb_instances" "clbs" {
 
 const testAccClbInstancesDataSource_open = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name = "keep-clb-temp-test-sg"
 }
 
 variable "availability_zone" {
