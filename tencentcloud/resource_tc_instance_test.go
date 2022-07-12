@@ -496,7 +496,7 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstancePostpaidToPrepaid(t *testing.T) {
+func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
