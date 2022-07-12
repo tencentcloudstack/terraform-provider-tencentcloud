@@ -45,19 +45,13 @@ type GaapService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *GaapService) CreateRealserver(ctx context.Context, address, name string, projectId int, tags map[string]string) (id string, err error) {
+func (me *GaapService) CreateRealserver(ctx context.Context, address, name string, projectId int) (id string, err error) {
 	logId := getLogId(ctx)
 
 	request := gaap.NewAddRealServersRequest()
 	request.RealServerName = &name
 	request.RealServerIP = []*string{&address}
 	request.ProjectId = helper.IntUint64(projectId)
-	for k, v := range tags {
-		request.TagSet = append(request.TagSet, &gaap.TagPair{
-			TagKey:   helper.String(k),
-			TagValue: helper.String(v),
-		})
-	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

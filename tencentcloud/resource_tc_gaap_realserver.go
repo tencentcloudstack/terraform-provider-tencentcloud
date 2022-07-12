@@ -108,9 +108,6 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
-
-	tags := helper.GetTags(d, "tags")
-
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	realservers, err := service.DescribeRealservers(ctx, &address, nil, nil, -1)
@@ -121,9 +118,18 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 		return fmt.Errorf("the realserver with ip/domain %s already exists", address)
 	}
 
-	id, err := service.CreateRealserver(ctx, address, name, projectId, tags)
+	id, err := service.CreateRealserver(ctx, address, name, projectId)
 	if err != nil {
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagClient := m.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tagClient}
+		resourceName := BuildTagResourceName("gaap", "realServer", tagClient.Region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	d.SetId(id)
@@ -183,14 +189,13 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	}
 	_ = d.Set("project_id", realserver.ProjectId)
 
-	respTags := make(map[string]string, len(realserver.TagSet))
-	for _, tag := range realserver.TagSet {
-		if tag.TagKey == nil || tag.TagValue == nil {
-			return errors.New("realserver tag key or value is nil")
-		}
-		respTags[*tag.TagKey] = *tag.TagValue
+	tagClient := m.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: tagClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "gaap", "realServer", tagClient.Region, id)
+	if err != nil {
+		return err
 	}
-	_ = d.Set("tags", respTags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -223,7 +228,7 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
 
 		region := m.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::gaap:%s:uin/:realserver/%s", region, id)
+		resourceName := BuildTagResourceName("gaap", "realServer", region, id)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
