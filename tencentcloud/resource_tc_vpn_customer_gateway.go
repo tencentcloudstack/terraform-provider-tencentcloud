@@ -29,8 +29,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -206,7 +206,6 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	d.Partial(true)
 	customerGatewayId := d.Id()
 	request := vpc.NewModifyCustomerGatewayAttributeRequest()
 	request.CustomerGatewayId = &customerGatewayId
@@ -225,7 +224,6 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s modify VPN customer gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("name")
 	}
 
 	//tag
@@ -241,9 +239,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudVpnCustomerGatewayRead(d, meta)
 }

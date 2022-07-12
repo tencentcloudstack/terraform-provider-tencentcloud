@@ -7,7 +7,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"

@@ -30,8 +30,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -322,7 +322,6 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		sslService = SSLService{client: m.(*TencentCloudClient).apiV3Conn}
 	)
 
-	d.Partial(true)
 	if d.HasChange("name") {
 		aliasRequest := ssl.NewModifyCertificateAliasRequest()
 		aliasRequest.CertificateId = helper.String(id)
@@ -343,7 +342,6 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -367,7 +365,6 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("tags") {
@@ -381,7 +378,7 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 	}
-	d.Partial(false)
+
 	return resourceTencentCloudSslCertificateRead(d, m)
 }
 

@@ -27,8 +27,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudSqlserverAccount() *schema.Resource {
@@ -139,7 +139,6 @@ func resourceTencentCloudSqlserverAccountUpdate(d *schema.ResourceData, meta int
 	}
 	instanceId := idStrs[0]
 	name := idStrs[1]
-	d.Partial(true)
 
 	var outErr, inErr error
 
@@ -162,7 +161,6 @@ func resourceTencentCloudSqlserverAccountUpdate(d *schema.ResourceData, meta int
 			return outErr
 		}
 
-		d.SetPartial("password")
 	}
 
 	//update remark
@@ -179,10 +177,7 @@ func resourceTencentCloudSqlserverAccountUpdate(d *schema.ResourceData, meta int
 			return outErr
 		}
 
-		d.SetPartial("remark")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudSqlserverAccountRead(d, meta)
 }

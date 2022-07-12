@@ -28,8 +28,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -227,7 +227,7 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 			break
 		}
 	}
-	d.Partial(true)
+
 	if attribuChange {
 		name := d.Get("name").(string)
 		cosBucketName := d.Get("cos_bucket").(string)
@@ -278,9 +278,6 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 			log.Printf("[CRITAL]%s delete audit %s failed, reason:%s\n", logId, name, err.Error())
 			return err
 		}
-		for _, attr := range attributeSet {
-			d.SetPartial(attr)
-		}
 	}
 	if d.HasChange("audit_switch") {
 		auditSwitch := d.Get("audit_switch").(bool)
@@ -290,9 +287,7 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 			errRet = err
 			return
 		}
-		d.SetPartial("audit_switch")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudAuditRead(d, meta)
 }

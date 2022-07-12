@@ -41,8 +41,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -325,8 +325,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	resourceId := items[1]
 	ruleId := items[2]
 
-	d.Partial(true)
-
 	sourceType := d.Get("source_type").(int)
 	protocol := d.Get("protocol").(string)
 	//check
@@ -395,10 +393,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
-		for _, key := range ruleKey {
-			d.SetPartial(key)
-		}
 	}
 
 	healthFlag := false
@@ -436,10 +430,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
-		for _, key := range healthKey {
-			d.SetPartial(key)
-		}
 	}
 
 	if d.HasChange("session_switch") || d.HasChange("session_time") {
@@ -463,11 +453,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("session_switch")
-		d.SetPartial("session_time")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudDayuL4RuleRead(d, meta)
 }

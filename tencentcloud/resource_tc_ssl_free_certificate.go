@@ -37,7 +37,7 @@ import (
 
 	ssl2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

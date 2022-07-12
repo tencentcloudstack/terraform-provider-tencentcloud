@@ -20,8 +20,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 )
 
@@ -203,8 +203,6 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 		accountHost = items[2]
 	}
 
-	d.Partial(true)
-
 	if d.HasChange("description") {
 
 		asyncRequestId, err := mysqlService.ModifyAccountDescription(ctx, mysqlId, accountName, accountHost, d.Get("description").(string))
@@ -232,7 +230,6 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 
-		d.SetPartial("description")
 	}
 
 	if d.HasChange("password") {
@@ -262,10 +259,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			log.Printf("[CRITAL]%s modify mysql account password fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("password")
 	}
-
-	d.Partial(false)
 
 	return nil
 }

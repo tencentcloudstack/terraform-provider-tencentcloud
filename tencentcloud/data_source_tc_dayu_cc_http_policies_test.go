@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 var testDataDayuCCHttpPoliciesName = "data.tencentcloud_dayu_cc_http_policies.id_test"

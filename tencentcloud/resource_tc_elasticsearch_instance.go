@@ -46,8 +46,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -499,8 +499,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	d.Partial(true)
-
 	if d.HasChange("instance_name") {
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
@@ -514,7 +512,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
@@ -528,7 +525,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("version") {
@@ -543,7 +539,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("version")
 
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
@@ -572,7 +567,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("license_type")
 
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
@@ -601,7 +595,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("basic_security_type")
 	}
 
 	if d.HasChange("web_node_type_info") {
@@ -658,7 +651,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("node_info_list")
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
@@ -685,10 +677,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return nil
 }

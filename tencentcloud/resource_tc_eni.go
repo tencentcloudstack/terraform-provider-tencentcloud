@@ -42,7 +42,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -416,8 +416,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 
 	id := d.Id()
 
-	d.Partial(true)
-
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
 	tagService := TagService{client: client}
@@ -448,10 +446,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 	if len(updateAttrs) > 0 {
 		if err := vpcService.ModifyEniAttribute(ctx, id, name, desc, sgs); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
 		}
 	}
 
@@ -565,7 +559,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			}
 		}
 
-		d.SetPartial("ipv4s")
 	}
 
 	if _, ok := d.GetOk("ipv4_count"); ok {
@@ -623,7 +616,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					}
 				}
 
-				d.SetPartial("ipv4_count")
 			}
 		}
 	}
@@ -638,10 +630,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudEniRead(d, m)
 }

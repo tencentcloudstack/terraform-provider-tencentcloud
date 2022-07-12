@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -210,8 +210,6 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		return nil
 	}
 
-	d.Partial(true)
-
 	request := clb.NewModifyLoadBalancerAttributesRequest()
 	request.LoadBalancerId = helper.String(clbId)
 	request.LoadBalancerName = helper.String(d.Get("name").(string))
@@ -239,9 +237,6 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		log.Printf("[CRITAL]%s update clb instance failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
-	d.SetPartial("name")
-	d.Partial(false)
 
 	return resourceTencentCloudLBRead(d, meta)
 }

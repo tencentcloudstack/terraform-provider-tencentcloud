@@ -51,8 +51,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -604,7 +604,8 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("ike_proto_authen_algorithm", *connection.IKEOptionsSpecification.PropoAuthenAlgorithm)
 	_ = d.Set("ike_exchange_mode", *connection.IKEOptionsSpecification.ExchangeMode)
 	_ = d.Set("ike_local_identity", *connection.IKEOptionsSpecification.LocalIdentity)
-	_ = d.Set("ike_remote_idetity", *connection.IKEOptionsSpecification.RemoteIdentity)
+	// FIXME: set but not been declared
+	//_ = d.Set("ike_remote_idetity", *connection.IKEOptionsSpecification.RemoteIdentity)
 	//optional
 	if connection.IKEOptionsSpecification.LocalAddress != nil {
 		_ = d.Set("ike_local_address", *connection.IKEOptionsSpecification.LocalAddress)
@@ -656,7 +657,6 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	d.Partial(true)
 	connectionId := d.Id()
 	request := vpc.NewModifyVpnConnectionAttributeRequest()
 	request.VpnConnectionId = &connectionId
@@ -812,36 +812,6 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 	time.Sleep(3 * time.Minute)
-	if d.HasChange("name") {
-		d.SetPartial("name")
-	}
-	if d.HasChange("pre_share_key") {
-		d.SetPartial("pre_share_key")
-	}
-	if d.HasChange("security_group_policy") {
-		d.SetPartial("security_group_policy")
-	}
-	if d.HasChange("enable_health_check") {
-		d.SetPartial("enable_health_check")
-	}
-	if d.HasChange("health_check_local_ip") {
-		d.SetPartial("health_check_local_ip")
-	}
-	if d.HasChange("health_check_remote_ip") {
-		d.SetPartial("health_check_remote_ip")
-	}
-
-	for key := range ikeChangeKeySet {
-		if ikeChangeKeySet[key] {
-			d.SetPartial(key)
-		}
-	}
-
-	for key := range ipsecChangeKeySet {
-		if ipsecChangeKeySet[key] {
-			d.SetPartial(key)
-		}
-	}
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")
@@ -855,9 +825,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudVpnConnectionRead(d, meta)
 }

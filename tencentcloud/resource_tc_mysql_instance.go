@@ -52,9 +52,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -171,7 +170,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional: true,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 			Set: func(v interface{}) int {
-				return hashcode.String(v.(string))
+				return helper.HashString(v.(string))
 			},
 			Description: "Security groups to use.",
 		},
@@ -1004,7 +1003,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err := mysqlService.ModifyDBInstanceName(ctx, d.Id(), d.Get("instance_name").(string)); err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 
 	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {
@@ -1030,13 +1028,10 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 		if d.HasChange("intranet_port") {
-			d.SetPartial("intranet_port")
 		}
 		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
 		}
 		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
 		}
 	}
 
@@ -1088,13 +1083,10 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 		if d.HasChange("mem_size") {
-			d.SetPartial("mem_size")
 		}
 		if d.HasChange("cpu") {
-			d.SetPartial("cpu")
 		}
 		if d.HasChange("volume_size") {
-			d.SetPartial("volume_size")
 		}
 	}
 
@@ -1126,7 +1118,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 		}
-		d.SetPartial("security_groups")
 	}
 
 	if d.HasChange("tags") {
@@ -1142,7 +1133,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("param_template_id") {
@@ -1164,7 +1154,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("parameters") {
@@ -1245,7 +1234,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				return err
 			}
 		}
-		d.SetPartial("parameters")
 	}
 
 	if d.HasChange("internet_service") {
@@ -1289,7 +1277,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
 			return err
 		}
-		d.SetPartial("internet_service")
 	}
 
 	if d.HasChange("root_password") {
@@ -1328,7 +1315,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			log.Printf("[CRITAL]%s change root password   fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("root_password")
 	}
 	return nil
 }
@@ -1347,7 +1333,6 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
 	}
 
 	if d.HasChange("period") || d.HasChange("prepaid_period") {
@@ -1374,7 +1359,6 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 
 	payType := getPayType(d).(int)
 
-	d.Partial(true)
 	if payType == MysqlPayByMonth {
 		err := mysqlUpdateInstancePayByMonth(ctx, d, meta)
 		if err != nil {
@@ -1388,7 +1372,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	} else {
 		return fmt.Errorf("mysql not support this pay type yet.")
 	}
-	d.Partial(false)
+
 	time.Sleep(7 * time.Second)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)

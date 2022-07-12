@@ -21,8 +21,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -210,34 +210,25 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 	request.Value = &value
 	request.SubDomain = &subDomain
 
-	d.SetPartial("record_type")
-	d.SetPartial("record_line")
-	d.SetPartial("value")
-	d.SetPartial("sub_domain")
-
 	if d.HasChange("status") {
 		status := d.Get("status").(string)
 		request.Status = &status
-		d.SetPartial("status")
 	}
 	if d.HasChange("mx") {
 		if v, ok := d.GetOk("mx"); ok {
 			request.MX = helper.IntUint64(v.(int))
-			d.SetPartial("mx")
 		}
 	}
 	if d.HasChange("ttl") {
 		ttl := d.Get("ttl").(int)
 		request.TTL = helper.IntUint64(ttl)
-		d.SetPartial("ttl")
 	}
 	if d.HasChange("weight") {
 		weight := d.Get("weight").(int)
 		request.TTL = helper.IntUint64(weight)
-		d.SetPartial("weight")
 
 	}
-	d.Partial(true)
+
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyRecord(request)
 		if e != nil {
@@ -249,7 +240,7 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	d.Partial(false)
+
 	return resourceTencentCloudDnspodRecordRead(d, meta)
 }
 

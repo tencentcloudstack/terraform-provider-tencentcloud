@@ -7,8 +7,10 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -225,18 +227,28 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBucket_lifecycle(),
+				Check: func(s *terraform.State) error {
+					ms := s.RootModule()
+					rs := ms.Outputs
+					log.Printf("outputs: %v", rs)
+
+					return nil
+				},
+			},
+			{
+				Config: testAccBucket_lifecycle(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.id", "rule1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.3672460294.days", "365"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.2000431762.days", "30"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.2000431762.storage_class", "STANDARD_IA"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.3491203533.days", "60"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.3491203533.storage_class", "ARCHIVE"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration", "days", "365"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "days", "30"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "storage_class", "STANDARD_IA"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "days", "60"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "storage_class", "ARCHIVE"),
 				),
 			},
 			// test update bucket lifecycle
@@ -247,14 +259,19 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.2736768241.days", "300"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.2000431762.days", "30"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.2000431762.storage_class", "STANDARD_IA"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.1139768587.days", "90"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.1139768587.storage_class", "ARCHIVE"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration", "days", "300"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "days", "30"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "storage_class", "STANDARD_IA"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "days", "90"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition", "storage_class", "ARCHIVE"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition.#", "2"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration", "non_current_days", "600"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition", "non_current_days", "90"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition", "storage_class", "STANDARD_IA"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition", "non_current_days", "180"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition", "storage_class", "ARCHIVE"),
 				),
 			},
 			{

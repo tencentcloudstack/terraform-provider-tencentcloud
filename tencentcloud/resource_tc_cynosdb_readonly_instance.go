@@ -40,8 +40,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -198,8 +198,6 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 		cynosdbService = CynosdbService{client: client}
 	)
 
-	d.Partial(true)
-
 	if d.HasChange("instance_cpu_core") || d.HasChange("instance_memory_size") {
 		cpu := int64(d.Get("instance_cpu_core").(int))
 		memory := int64(d.Get("instance_memory_size").(int))
@@ -228,8 +226,6 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 			return errUpdate
 		}
 
-		d.SetPartial("instance_cpu_core")
-		d.SetPartial("instance_memory_size")
 	}
 
 	if d.HasChange("instance_maintain_weekdays") || d.HasChange("instance_maintain_start_time") || d.HasChange("instance_maintain_duration") {
@@ -245,12 +241,7 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 			return err
 		}
 
-		d.SetPartial("instance_maintain_weekdays")
-		d.SetPartial("instance_maintain_start_time")
-		d.SetPartial("instance_maintain_duration")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudCynosdbReadonlyInstanceRead(d, meta)
 }

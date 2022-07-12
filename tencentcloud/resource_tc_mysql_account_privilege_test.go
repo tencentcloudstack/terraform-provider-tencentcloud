@@ -7,8 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -28,11 +30,15 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account_privilege.mysql_account_privilege", "account_name"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "database_names.#", "1"),
 
+					//resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.1274211008", "SELECT"),
+					//resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.2552575352", "UPDATE"),
+					//resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.3318521589", "INSERT"),
+					//resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.974290055", "DELETE"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.#", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.1274211008", "SELECT"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.2552575352", "UPDATE"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.3318521589", "INSERT"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.974290055", "DELETE"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges", "", "SELECT"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges", "", "UPDATE"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges", "", "INSERT"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges", "", "DELETE"),
 				),
 			},
 			{
@@ -44,7 +50,8 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "database_names.#", "1"),
 
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.443223901", "TRIGGER"),
+					//resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.443223901", "TRIGGER"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges", "", "TRIGGER"),
 				),
 			},
 		},

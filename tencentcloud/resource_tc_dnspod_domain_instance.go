@@ -26,8 +26,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 )
 
@@ -206,10 +206,6 @@ func resourceTencentCloudDnspodDomainInstanceUpdate(d *schema.ResourceData, meta
 		}
 	}
 
-	d.SetPartial("status")
-	d.SetPartial("remark")
-
-	d.Partial(false)
 	return resourceTencentCloudDnspodDomainInstanceRead(d, meta)
 }
 

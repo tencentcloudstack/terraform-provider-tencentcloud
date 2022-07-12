@@ -29,8 +29,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -270,8 +270,6 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := cfsService.ModifyFileSystemName(ctx, fsId, d.Get("name").(string))
@@ -283,7 +281,6 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("access_group_id") {
@@ -297,7 +294,6 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("access_group_id")
 	}
 
 	if d.HasChange("tags") {
@@ -312,10 +308,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudCfsFileSystemRead(d, meta)
 }

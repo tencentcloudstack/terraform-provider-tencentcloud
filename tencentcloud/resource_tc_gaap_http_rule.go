@@ -74,8 +74,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -182,7 +181,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Optional: true,
 				Set: func(v interface{}) int {
 					m := v.(map[string]interface{})
-					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
+					return helper.HashString(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
 
 				},
 				Description: "An information list of GAAP realserver.",
@@ -480,8 +479,6 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if err := service.ModifyHTTPRuleAttribute(
 		ctx,
 		listenerId, id, healthCheckPath, healthCheckMethod, sniSwitch, sni,
@@ -489,29 +486,19 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	); err != nil {
 		return err
 	}
-
-	for _, attr := range updateAttr {
-		d.SetPartial(attr)
-	}
-
 	if d.HasChange("forward_host") {
 		forwardHost := d.Get("forward_host").(string)
 		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
 			return err
 		}
 
-		d.SetPartial("forward_host")
 	}
 
 	if realserverUpdate {
 		if err := service.BindHttpRuleRealservers(ctx, listenerId, id, realservers); err != nil {
 			return err
 		}
-
-		d.SetPartial("realservers")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudGaapHttpRuleRead(d, m)
 }

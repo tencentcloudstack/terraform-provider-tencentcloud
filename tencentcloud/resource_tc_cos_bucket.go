@@ -246,8 +246,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -942,14 +941,11 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if d.HasChange("acl") {
 		err := resourceTencentCloudCosBucketAclUpdate(ctx, client, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("acl")
 	}
 
 	if d.HasChange("acl_body") {
@@ -965,7 +961,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cors_rules")
 	}
 
 	if d.HasChange("origin_pull_rules") {
@@ -990,7 +985,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("lifecycle_rules")
 	}
 
 	if d.HasChange("website") {
@@ -998,7 +992,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("website")
 	}
 
 	if d.HasChange("encryption_algorithm") {
@@ -1006,7 +999,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("encryption_algorithm")
 	}
 
 	if d.HasChange("versioning_enable") {
@@ -1014,7 +1006,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("versioning_enable")
 	}
 
 	if d.HasChange("replica_role") || d.HasChange("replica_rules") {
@@ -1033,7 +1024,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("log_enable") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
@@ -1041,12 +1031,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.SetPartial("log_enable")
-		d.SetPartial("log_target_bucket")
-		d.SetPartial("log_prefix")
 	}
-
-	d.Partial(false)
 
 	// wait for update cache
 	// if not, the data may be outdated.
@@ -1178,9 +1163,6 @@ func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service Cos
 			return err
 		}
 	}
-
-	d.SetPartial("replica_role")
-	d.SetPartial("replica_rules")
 
 	return nil
 }
@@ -1729,7 +1711,7 @@ func expirationHash(v interface{}) int {
 	if v, ok := m["days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentExpirationHash(v interface{}) int {
@@ -1738,7 +1720,7 @@ func nonCurrentExpirationHash(v interface{}) int {
 	if v, ok := m["non_current_days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func transitionHash(v interface{}) int {
@@ -1753,7 +1735,7 @@ func transitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentTransitionHash(v interface{}) int {
@@ -1765,7 +1747,7 @@ func nonCurrentTransitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.BucketReplicationRule, err error) {

@@ -25,4 +25,10 @@ jobs:
           cd terraform-provider-tencentcloud
           git remote add tgit_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/tencentcloudstack/terraform-provider-tencentcloud.git
           git fetch --all
-          git push -u -f --tags tgit_origin master:main 
+          ref_name=$GITHUB_REF_NAME
+          if [[ $ref_name == "master" ]]; then
+            git push -u -f --tags tgit_origin master:main
+          else
+            git checkout -t origin/$ref_name
+            git push -u -f --tags tgit_origin $ref_name:$ref_name
+          fi

@@ -33,8 +33,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -222,7 +222,8 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("name", *nat.NatGatewayName)
 	_ = d.Set("max_concurrent", *nat.MaxConcurrentConnection)
 	_ = d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
-	_ = d.Set("create_time", *nat.CreatedTime)
+	// FIXME: set but not been declared
+	//_ = d.Set("create_time", *nat.CreatedTime)
 	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -243,7 +244,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
 	natGatewayId := d.Id()
 	request := vpc.NewModifyNatGatewayAttributeRequest()
 	request.NatGatewayId = &natGatewayId
@@ -274,10 +274,8 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 	if d.HasChange("name") {
-		d.SetPartial("name")
 	}
 	if d.HasChange("bandwidth") {
-		d.SetPartial("bandwidth")
 	}
 	//max concurrent
 	if d.HasChange("max_concurrent") {
@@ -299,7 +297,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify NAT gateway concurrent failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("max_concurrent")
 	}
 
 	//eip
@@ -433,7 +430,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					return err
 				}
 			}
-			d.SetPartial("assigned_eip_set")
 		}
 
 	}
@@ -450,10 +446,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return nil
 }

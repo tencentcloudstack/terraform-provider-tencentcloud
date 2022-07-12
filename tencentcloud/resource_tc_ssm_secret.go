@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -226,7 +226,6 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	d.Partial(true)
 	secretName := d.Id()
 
 	if d.HasChange("description") {
@@ -242,7 +241,6 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s modify SSM secret description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
 	}
 
 	if d.HasChange("is_enabled") {
@@ -252,7 +250,6 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s modify SSM secret status failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("is_enabled")
 	}
 
 	if d.HasChange("tags") {
@@ -269,10 +266,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudSsmSecretRead(d, meta)
 }

@@ -54,8 +54,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -248,13 +248,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		change = true
 	}
 
-	d.Partial(true)
 	if change {
 		if err := service.ModifyCcnAttribute(ctx, d.Id(), name, description); err != nil {
 			return err
-		}
-		for _, val := range changeList {
-			d.SetPartial(val)
 		}
 	}
 	// modify band width limit type
@@ -268,7 +264,6 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("bandwidth_limit_type")
 	}
 
 	if d.HasChange("tags") {
@@ -283,9 +278,8 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
-	d.Partial(false)
+
 	return resourceTencentCloudCcnRead(d, meta)
 }
 

@@ -60,8 +60,8 @@ import (
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -516,7 +516,6 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("ids param is error. id:  %s", id)
 	}
 
-	d.Partial(true)
 	if d.HasChange("alias") {
 		aliasRequest := ssl.NewModifyCertificateAliasRequest()
 		aliasRequest.CertificateId = helper.String(ids[0])
@@ -537,7 +536,6 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("alias")
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -561,9 +559,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudSSLInstanceRead(d, meta)
 }

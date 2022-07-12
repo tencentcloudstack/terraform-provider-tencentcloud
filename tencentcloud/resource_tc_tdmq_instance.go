@@ -24,8 +24,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -153,15 +153,10 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		remark = old.(string)
 	}
 
-	d.Partial(true)
-
 	if err := service.ModifyTdmqInstanceAttribute(ctx, id, clusterName, remark); err != nil {
 		return err
 	}
-	d.SetPartial("cluster_name")
-	d.SetPartial("remark")
 
-	d.Partial(false)
 	return resourceTencentCloudTdmqRead(d, meta)
 }
 

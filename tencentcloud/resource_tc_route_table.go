@@ -30,8 +30,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -210,15 +210,12 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
 		err := service.ModifyRouteTableAttribute(ctx, id, name)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("tags") {
@@ -234,10 +231,7 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudVpcRouteTableRead(d, meta)
 }

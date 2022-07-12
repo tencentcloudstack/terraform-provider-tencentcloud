@@ -42,8 +42,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 )
 
@@ -225,10 +225,33 @@ func resourceTencentCloudDayuL4RuleReadV2(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	posRules := make([]dayu.NewL4RuleEntry, 0)
+	posRules := make([]interface{}, 0)
 	for _, rule := range rules {
 		if *rule.Id == resourceId {
-			posRules = append(posRules, *rule)
+			dMap := map[string]interface{}{
+				"protocol":     rule.Protocol,
+				"source_port":  rule.SourcePort,
+				"virtual_port": rule.VirtualPort,
+				"keeptime":     rule.KeepTime,
+				//"source_list": []map[string]interface{}{}
+				"lb_type":       rule.LbType,
+				"keep_enable":   rule.KeepEnable,
+				"source_type":   rule.SourceType,
+				"rule_name":     rule.RuleName,
+				"remove_switch": rule.RemoveSwitch,
+				"region":        rule.Region,
+			}
+			if len(rule.SourceList) > 0 {
+				sourceList := make([]interface{}, 0)
+				for i := range rule.SourceList {
+					item := rule.SourceList[i]
+					sourceList = append(sourceList, map[string]interface{}{
+						"source": item.Source,
+						"weight": item.Weight,
+					})
+				}
+			}
+			posRules = append(posRules, dMap)
 		}
 	}
 

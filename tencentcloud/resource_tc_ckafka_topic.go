@@ -35,9 +35,10 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -282,10 +283,15 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("instance_id", instanceId)
 	_ = d.Set("note", topicinfo.Note)
 	_ = d.Set("ip_white_list", topicinfo.IpWhiteList)
-	_ = d.Set("ip_white_list_count", topicListInfo.IpWhiteListCount)
+	// FIXME: set but not been declared
+	//_ = d.Set("ip_white_list_count", topicListInfo.IpWhiteListCount)
 	_ = d.Set("enable_white_list", *topicinfo.EnableWhiteList == 1)
 	_ = d.Set("replica_num", topicListInfo.ReplicaNum)
-	_ = d.Set("create_time", topicinfo.CreateTime)
+	if topicinfo.CreateTime != nil {
+		t := time.Unix(*topicinfo.CreateTime, 0)
+		tFmt := t.Format("2006-01-02 15:04:05")
+		_ = d.Set("create_time", tFmt)
+	}
 	_ = d.Set("partition_num", topicinfo.PartitionNum)
 	_ = d.Set("topic_name", topicListInfo.TopicName)
 	_ = d.Set("forward_interval", topicListInfo.ForwardInterval)

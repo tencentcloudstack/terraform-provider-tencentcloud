@@ -33,8 +33,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -310,8 +310,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		outErr, inErr error
 	)
 
-	d.Partial(true)
-
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
 	}
@@ -332,7 +330,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("host_name") {
@@ -346,7 +343,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("host_name")
 	}
 
 	if d.HasChange("prepaid_renew_flag") {
@@ -360,10 +356,7 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("prepaid_renew_flag")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudCdhInstanceRead(d, meta)
 }
