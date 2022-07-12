@@ -6,9 +6,64 @@ import (
 	"strings"
 	"testing"
 
+	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_namespace
+	resource.AddTestSweepers("tencentcloud_tcr_namespace", &resource.Sweeper{
+		Name: "tencentcloud_tcr_namespace",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := TCRService{client}
+
+			var filters []*tcr.Filter
+			filters = append(filters, &tcr.Filter{
+				Name:   helper.String("RegistryName"),
+				Values: []*string{helper.String(defaultTCRInstanceName)},
+			})
+
+			instances, err := service.DescribeTCRInstances(ctx, "", filters)
+
+			if err != nil {
+				return err
+			}
+
+			if len(instances) == 0 {
+				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+			}
+
+			instanceId := *instances[0].RegistryId
+
+			namespaces, err := service.DescribeTCRNameSpaces(ctx, instanceId, "test")
+
+			if err != nil {
+				return err
+			}
+
+			for i := range namespaces {
+				n := namespaces[i]
+				if isResourcePersist(*n.Name, nil) {
+					continue
+				}
+				err = service.DeleteTCRNameSpace(ctx, instanceId, *n.Name)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 	t.Parallel()
@@ -23,7 +78,6 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "true"),
 				),
-				Destroy: false,
 			},
 			{
 				ResourceName:      "tencentcloud_tcr_namespace.mytcr_namespace",
