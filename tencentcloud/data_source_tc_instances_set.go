@@ -334,7 +334,7 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 		instanceList = append(instanceList, mapping)
 		ids = append(ids, *instance.InstanceId)
 	}
-
+	log.Printf("[DEBUG]%s set instance attribute finished", logId)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err := d.Set("instance_list", instanceList)
 	if err != nil {
@@ -348,6 +348,8 @@ func dataSourceTencentCloudInstancesSetRead(d *schema.ResourceData, meta interfa
 			return err
 		}
 	}
+
+	log.Printf("[DEBUG]%s all operate finished", logId)
 	return nil
 
 }

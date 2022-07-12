@@ -153,7 +153,9 @@ func (me *CvmService) DescribeInstanceInParallelByFilter(ctx context.Context, fi
 
 	num := int(*total) / limit
 
-	g := NewGoRoutine(num + 1)
+	maxConcurrentNum := 50
+	//g := NewGoRoutine(num + 1)
+	g := NewGoRoutine(maxConcurrentNum)
 	wg := sync.WaitGroup{}
 
 	var instanceSetList = make([]interface{}, num+1)
@@ -190,14 +192,17 @@ func (me *CvmService) DescribeInstanceInParallelByFilter(ctx context.Context, fi
 			instanceSetList[value] = response.Response.InstanceSet
 
 			wg.Done()
+			log.Printf("[DEBUG]%s thread %d finished", logId, value)
 		}
 		g.Run(goFunc)
 	}
 	wg.Wait()
 
+	log.Printf("[DEBUG]%s DescribeInstance requet finished", logId)
 	for _, v := range instanceSetList {
 		instances = append(instances, v.([]*cvm.Instance)...)
 	}
+	log.Printf("[DEBUG]%s transfer Instance finished", logId)
 	return
 }
 
