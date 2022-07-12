@@ -24,7 +24,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
@@ -75,7 +76,7 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 					ValidateFunc: validateAllowedStringValueIgnoreCase(MYSQL_DATABASE_PRIVILEGE),
 				},
 				Set: func(v interface{}) int {
-					return hashcode.String(strings.ToLower(v.(string)))
+					return helper.HashString(strings.ToLower(v.(string)))
 				},
 			},
 			"database_names": {

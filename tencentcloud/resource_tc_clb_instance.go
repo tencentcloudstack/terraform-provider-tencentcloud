@@ -152,8 +152,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
@@ -919,5 +917,5 @@ func snatIpSetInitFn(i interface{}) int {
 	if !ok || ip == "" {
 		ip = allocatedIp
 	}
-	return hashcode.String(subnet + ip)
+	return helper.HashString(subnet + ip)
 }

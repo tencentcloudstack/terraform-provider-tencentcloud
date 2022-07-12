@@ -246,7 +246,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1712,7 +1711,7 @@ func expirationHash(v interface{}) int {
 	if v, ok := m["days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentExpirationHash(v interface{}) int {
@@ -1721,7 +1720,7 @@ func nonCurrentExpirationHash(v interface{}) int {
 	if v, ok := m["non_current_days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func transitionHash(v interface{}) int {
@@ -1736,7 +1735,7 @@ func transitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentTransitionHash(v interface{}) int {
@@ -1748,7 +1747,7 @@ func nonCurrentTransitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.BucketReplicationRule, err error) {
