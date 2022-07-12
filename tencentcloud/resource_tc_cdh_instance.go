@@ -310,8 +310,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		outErr, inErr error
 	)
 
-	d.Partial(true)
-
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
 	}
@@ -332,7 +330,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("host_name") {
@@ -346,7 +343,6 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("host_name")
 	}
 
 	if d.HasChange("prepaid_renew_flag") {
@@ -360,10 +356,7 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("prepaid_renew_flag")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudCdhInstanceRead(d, meta)
 }

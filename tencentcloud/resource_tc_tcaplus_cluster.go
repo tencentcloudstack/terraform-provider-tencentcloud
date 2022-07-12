@@ -246,8 +246,6 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if d.HasChange("cluster_name") {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			err := tcaplusService.ModifyClusterName(ctx, d.Id(), d.Get("cluster_name").(string))
@@ -259,7 +257,6 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cluster_name")
 	}
 
 	if d.HasChange("password") {
@@ -284,12 +281,9 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
 	if d.HasChange("old_password_expire_last") {
-		d.SetPartial("old_password_expire_last")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudTcaplusClusterRead(d, meta)
 }

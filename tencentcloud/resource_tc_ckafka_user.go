@@ -141,7 +141,6 @@ func resourceTencentCloudCkafkaUserUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	return resourceTencentCloudCkafkaUserRead(d, meta)

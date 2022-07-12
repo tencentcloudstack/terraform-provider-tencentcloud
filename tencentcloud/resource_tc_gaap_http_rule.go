@@ -480,8 +480,6 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	d.Partial(true)
-
 	if err := service.ModifyHTTPRuleAttribute(
 		ctx,
 		listenerId, id, healthCheckPath, healthCheckMethod, sniSwitch, sni,
@@ -489,29 +487,19 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	); err != nil {
 		return err
 	}
-
-	for _, attr := range updateAttr {
-		d.SetPartial(attr)
-	}
-
 	if d.HasChange("forward_host") {
 		forwardHost := d.Get("forward_host").(string)
 		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
 			return err
 		}
 
-		d.SetPartial("forward_host")
 	}
 
 	if realserverUpdate {
 		if err := service.BindHttpRuleRealservers(ctx, listenerId, id, realservers); err != nil {
 			return err
 		}
-
-		d.SetPartial("realservers")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudGaapHttpRuleRead(d, m)
 }

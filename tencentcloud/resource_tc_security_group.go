@@ -163,8 +163,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 
 	id := d.Id()
 
-	d.Partial(true)
-
 	var (
 		newName    *string
 		newDesc    *string
@@ -185,10 +183,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
 			return err
 		}
-
-		for _, attr := range attrUpdate {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("tags") {
@@ -200,10 +194,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }

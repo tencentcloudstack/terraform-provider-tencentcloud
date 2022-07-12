@@ -174,14 +174,10 @@ func resourceTencentCloudTdmqRoleUpdate(d *schema.ResourceData, meta interface{}
 		remark = old.(string)
 	}
 
-	d.Partial(true)
-
 	if err := service.ModifyTdmqRoleAttribute(ctx, roleName, clusterId, remark); err != nil {
 		return err
 	}
-	d.SetPartial("remark")
 
-	d.Partial(false)
 	return resourceTencentCloudTdmqRoleRead(d, meta)
 }
 

@@ -2563,7 +2563,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	service := TagService{client: client}
 	tkeService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := client.Region
-	d.Partial(true)
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
@@ -2573,7 +2572,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	var (
@@ -2667,7 +2665,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			}
 		}
 
-		d.SetPartial("cluster_intranet")
 	}
 
 	if d.HasChange("cluster_internet") {
@@ -2809,7 +2806,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			if err := tkeService.ModifyClusterEndpointSP(ctx, id, securityPolicies); err != nil {
 				return err
 			}
-			d.SetPartial("managed_cluster_internet_security_policies")
 		}
 	}
 
@@ -2913,7 +2909,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("node_pool_global_config")
 	}
 
 	if d.HasChange("auth_options") {
@@ -2921,7 +2916,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
 			return err
 		}
-		d.SetPartial("auth_options")
 	}
 
 	if d.HasChange("deletion_protection") {
@@ -2929,7 +2923,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyDeletionProtection(ctx, id, enable); err != nil {
 			return err
 		}
-		d.SetPartial("deletion_protection")
 	}
 
 	if d.HasChange("acquire_cluster_admin_role") {
@@ -2989,7 +2982,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
 	}

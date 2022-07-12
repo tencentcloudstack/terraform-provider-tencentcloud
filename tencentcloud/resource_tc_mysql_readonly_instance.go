@@ -320,8 +320,6 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 
 	payType := getPayType(d).(int)
 
-	d.Partial(true)
-
 	if payType == MysqlPayByMonth {
 		if d.HasChange("auto_renew_flag") {
 			renewFlag := int64(d.Get("auto_renew_flag").(int))
@@ -329,7 +327,6 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
 				return err
 			}
-			d.SetPartial("auto_renew_flag")
 		}
 	}
 	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
@@ -348,8 +345,6 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			return fmt.Errorf("argument `%s` cannot be modified for now", f)
 		}
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudMysqlReadonlyInstanceRead(d, meta)
 }

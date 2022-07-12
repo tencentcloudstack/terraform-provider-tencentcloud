@@ -931,8 +931,6 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 	}
 	namespace, name := split[0], split[1]
 
-	d.Partial(true)
-
 	functionInfo := scfFunctionInfo{
 		name:      name,
 		namespace: helper.String(namespace),
@@ -1071,10 +1069,6 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			log.Printf("[CRITAL]%s update function code failed: %+v", logId, err)
 			return err
 		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
 	}
 
 	updateAttrs = updateAttrs[:0]
@@ -1190,9 +1184,6 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			log.Printf("[CRITAL]%s update function configuration failed: %+v", logId, err)
 			return err
 		}
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("triggers") {
@@ -1243,7 +1234,6 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			return err
 		}
 
-		d.SetPartial("triggers")
 	}
 
 	if d.HasChange("tags") {
@@ -1262,13 +1252,10 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			log.Printf("[CRITAL]%s update function tags failed: %+v", logId, err)
 			return err
 		}
-		d.SetPartial("tags")
 
 		// wait for tags add successfully
 		time.Sleep(time.Second)
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudScfFunctionRead(d, m)
 }

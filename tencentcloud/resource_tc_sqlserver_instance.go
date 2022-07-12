@@ -379,7 +379,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
 	}
 
 	//upgrade storage and memory size
@@ -400,8 +399,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 			return outErr
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("storage")
 	}
 
 	if d.HasChange("security_groups") {
@@ -438,7 +435,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 			}
 		}
 
-		d.SetPartial("security_groups")
 	}
 
 	if d.HasChange("tags") {
@@ -450,7 +446,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	return nil
@@ -461,7 +456,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	d.Partial(true)
 
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {
@@ -489,7 +483,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("maintenance_week_set") || d.HasChange("maintenance_start_time") || d.HasChange("maintenance_time_span") {
@@ -514,9 +507,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("maintenance_week_set")
-		d.SetPartial("maintenance_start_time")
-		d.SetPartial("maintenance_time_span")
 	}
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
@@ -527,10 +517,7 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudSqlserverInstanceRead(d, meta)
 }

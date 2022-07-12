@@ -325,8 +325,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	resourceId := items[1]
 	ruleId := items[2]
 
-	d.Partial(true)
-
 	sourceType := d.Get("source_type").(int)
 	protocol := d.Get("protocol").(string)
 	//check
@@ -395,10 +393,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
-		for _, key := range ruleKey {
-			d.SetPartial(key)
-		}
 	}
 
 	healthFlag := false
@@ -463,11 +457,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("session_switch")
-		d.SetPartial("session_time")
 	}
-
-	d.Partial(false)
 
 	return resourceTencentCloudDayuL4RuleRead(d, meta)
 }

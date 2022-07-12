@@ -248,7 +248,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("privileges") || d.HasChange("database_names") {
-		d.Partial(true)
+
 		d.Get("privileges").(*schema.Set).Add(MYSQL_DATABASE_MUST_PRIVILEGE)
 		privileges := d.Get("privileges").(*schema.Set).List()
 
@@ -297,9 +297,6 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			log.Printf("[CRITAL]%s modify account privilege fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("privileges")
-		d.SetPartial("db_names")
-		d.Partial(false)
 
 	}
 

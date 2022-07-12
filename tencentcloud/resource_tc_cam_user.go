@@ -426,7 +426,6 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	return nil

@@ -516,7 +516,6 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("ids param is error. id:  %s", id)
 	}
 
-	d.Partial(true)
 	if d.HasChange("alias") {
 		aliasRequest := ssl.NewModifyCertificateAliasRequest()
 		aliasRequest.CertificateId = helper.String(ids[0])
@@ -537,7 +536,6 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("alias")
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -561,9 +559,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
 	}
-	d.Partial(false)
 
 	return resourceTencentCloudSSLInstanceRead(d, meta)
 }
