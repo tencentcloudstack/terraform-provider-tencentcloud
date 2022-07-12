@@ -466,7 +466,7 @@ The following arguments are supported:
 * `event_persistence` - (Optional, List) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `exist_instance` - (Optional, List, ForceNew) create tke cluster by existed instances.
 * `extension_addon` - (Optional, List, ForceNew) Information of the add-on to be installed.
-* `extra_args` - (Optional, List[`String`], ForceNew) Custom parameter information related to the node.
+* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `is_non_static_ip_mode` - (Optional, Bool, ForceNew) Indicates whether non-static ip mode is enabled. Default is false.

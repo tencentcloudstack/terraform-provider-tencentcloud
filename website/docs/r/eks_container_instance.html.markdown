@@ -102,7 +102,7 @@ The following arguments are supported:
 * `cbs_volume` - (Optional, List) List of CBS volume.
 * `cpu_type` - (Optional, String) Type of cpu, which can set to `intel` or `amd`. It also support backup list like `amd,intel` which indicates using `intel` when `amd` sold out.
 * `dns_config_options` - (Optional, Map, ForceNew) Map of DNS config options.
-* `dns_names_servers` - (Optional, List, ForceNew) IP Addresses of DNS Servers.
+* `dns_names_servers` - (Optional, List[`String`], ForceNew) IP Addresses of DNS Servers.
 * `dns_searches` - (Optional, List, ForceNew) List of DNS Search Domain.
 * `eip_delete_policy` - (Optional, Bool) Indicates weather the EIP release or not after instance deleted. Conflict with `existed_eip_ids`.
 * `eip_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). Conflict with `existed_eip_ids`.

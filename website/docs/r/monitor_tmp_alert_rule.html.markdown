@@ -38,7 +38,7 @@ The following arguments are supported:
 
 * `expr` - (Required, String) Rule expression.
 * `instance_id` - (Required, String) Instance id.
-* `receivers` - (Required, Set[`String`]) Alarm notification template id list.
+* `receivers` - (Required, Set) Alarm notification template id list.
 * `rule_name` - (Required, String) Rule name.
 * `annotations` - (Optional, List) Rule alarm duration.
 * `duration` - (Optional, String) Rule alarm duration.

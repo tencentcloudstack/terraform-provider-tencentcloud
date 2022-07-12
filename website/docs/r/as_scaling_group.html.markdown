@@ -59,10 +59,10 @@ The following arguments are supported:
 * `replace_monitor_unhealthy` - (Optional, Bool) Enables unhealthy instance replacement. If set to `true`, AS will replace instances that are flagged as unhealthy by Cloud Monitor.
 * `retry_policy` - (Optional, String) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `scaling_mode` - (Optional, String) Indicates scaling mode which creates and terminates instances (classic method), or method first tries to start stopped instances (wake up stopped) to perform scaling operations. Available values: `CLASSIC_SCALING`, `WAKE_UP_STOPPED_SCALING`. Default: `CLASSIC_SCALING`.
-* `subnet_ids` - (Optional, List) ID list of subnet, and for VPC it is required.
+* `subnet_ids` - (Optional, List[`String`]) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional, Map) Tags of a scaling group.
-* `termination_policies` - (Optional, List) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
-* `zones` - (Optional, List) List of available zones, for Basic network it is required.
+* `termination_policies` - (Optional, List[`String`]) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
+* `zones` - (Optional, List[`String`]) List of available zones, for Basic network it is required.
 
 The `forward_balancer_ids` object supports the following:
 

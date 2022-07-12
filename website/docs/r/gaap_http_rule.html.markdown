@@ -81,7 +81,7 @@ The following arguments are supported:
 * `forward_host` - (Optional, String) The default value of requested host which is forwarded to the realserver by the listener is `default`.
 * `health_check_method` - (Optional, String) Method of the health check. Valid value: `GET` and `HEAD`.
 * `health_check_path` - (Optional, String) Path of health check. Maximum length is 80.
-* `health_check_status_codes` - (Optional, Set) Return code of confirmed normal. Valid value: `100`, `200`, `300`, `400` and `500`.
+* `health_check_status_codes` - (Optional, Set[`Int`]) Return code of confirmed normal. Valid value: `100`, `200`, `300`, `400` and `500`.
 * `interval` - (Optional, Int) Interval of the health check, default value is 5s.
 * `realservers` - (Optional, Set) An information list of GAAP realserver.
 * `scheduler` - (Optional, String) Scheduling policy of the forward rule, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
