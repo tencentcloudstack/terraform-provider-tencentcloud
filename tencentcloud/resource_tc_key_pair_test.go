@@ -3,11 +3,59 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cvm_key_pair
+	resource.AddTestSweepers("tencentcloud_cvm_key_pair", &resource.Sweeper{
+		Name: "tencentcloud_cvm_key_pair",
+		F: func(region string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(region)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+
+			cvmService := CvmService{
+				client: client.apiV3Conn,
+			}
+			keyPairs, err := cvmService.DescribeKeyPairByFilter(ctx, "", "", nil)
+			if err != nil {
+				return fmt.Errorf("get instance list error: %s", err.Error())
+			}
+			for _, keyPair := range keyPairs {
+				instanceId := *keyPair.KeyId
+				instanceName := *keyPair.KeyName
+				createTime := stringTotime(*keyPair.CreatedTime)
+				now := time.Now()
+				interval := now.Sub(createTime).Minutes()
+
+				if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+					continue
+				}
+
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+
+				if err = cvmService.DeleteKeyPair(ctx, instanceId); err != nil {
+					log.Printf("[ERROR] sweep keyPair instance %s error: %s", instanceId, err.Error())
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudKeyPair(t *testing.T) {
 	t.Parallel()
