@@ -67,7 +67,7 @@ The following arguments are supported:
 * `pay_mode` - (Required, Int) The pay mode of instance. 0 is pay on an annual basis, 1 is pay on a measure basis.
 * `placement` - (Required, Map, ForceNew) The location of the instance.
 * `product_id` - (Required, Int, ForceNew) The product id of EMR instance.
-* `softwares` - (Required, List, ForceNew) The softwares of a EMR instance.
+* `softwares` - (Required, List[`String`], ForceNew) The softwares of a EMR instance.
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `time_span` - (Required, Int) The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.
 When TimeUnit is m, the number filled in by this parameter indicates the length of purchase of the monthly instance of the package year, such as 1 for one month of purchase.

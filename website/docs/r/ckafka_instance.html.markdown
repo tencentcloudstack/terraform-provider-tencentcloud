@@ -73,7 +73,7 @@ The following arguments are supported:
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
 * `tags` - (Optional, List) Partition size, the professional version does not need tag.
-* `zone_ids` - (Optional, Set) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
+* `zone_ids` - (Optional, Set[`Int`]) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 
 The `config` object supports the following:
 

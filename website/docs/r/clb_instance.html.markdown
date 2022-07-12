@@ -161,7 +161,7 @@ The following arguments are supported:
 * `log_topic_id` - (Optional, String) The id of log topic.
 * `master_zone_id` - (Optional, String) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
 * `project_id` - (Optional, Int, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
-* `security_groups` - (Optional, List[`String`]) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
+* `security_groups` - (Optional, List) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
 * `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
 * `snat_ips` - (Optional, List) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
 * `snat_pro` - (Optional, Bool) Indicates whether Binding IPs of other VPCs feature switch.

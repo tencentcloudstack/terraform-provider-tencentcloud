@@ -87,7 +87,7 @@ The following arguments are supported:
 * `packet_filters` - (Optional, List) Message filter options list.
 * `port_filters` - (Optional, List) Port limits of abnormal check of the DDos policy.
 * `watermark_filters` - (Optional, List) Watermark policy options, and only support one watermark policy at most.
-* `white_ips` - (Optional, Set) White IP list.
+* `white_ips` - (Optional, Set[`String`]) White IP list.
 
 The `drop_options` object supports the following:
 
