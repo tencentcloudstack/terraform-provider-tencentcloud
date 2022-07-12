@@ -24,10 +24,10 @@ data "tencentcloud_reserved_instances" "instances" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the reserved instance locates at.
-* `instance_type` - (Optional) The type of reserved instance.
-* `reserved_instance_id` - (Optional) ID of the reserved instance to be query.
-* `result_output_file` - (Optional) Used to save results.
+* `availability_zone` - (Optional, String) The available zone that the reserved instance locates at.
+* `instance_type` - (Optional, String) The type of reserved instance.
+* `reserved_instance_id` - (Optional, String) ID of the reserved instance to be query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

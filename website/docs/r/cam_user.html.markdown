@@ -35,17 +35,17 @@ resource "tencentcloud_cam_user" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required, ForceNew) Name of the CAM user.
-* `console_login` - (Optional) Indicate whether the CAM user can login to the web console or not.
-* `country_code` - (Optional) Country code of the phone number, for example: '86'.
-* `email` - (Optional) Email of the CAM user.
-* `force_delete` - (Optional) Indicate whether to force deletes the CAM user. If set false, the API secret key will be checked and failed when exists; otherwise the user will be deleted directly. Default is false.
-* `need_reset_password` - (Optional) Indicate whether the CAM user need to reset the password when first logins.
-* `password` - (Optional) The password of the CAM user. Password should be at least 8 characters and no more than 32 characters, includes uppercase letters, lowercase letters, numbers and special characters. Only required when `console_login` is true. If not set, a random password will be automatically generated.
-* `phone_num` - (Optional) Phone number of the CAM user.
-* `remark` - (Optional) Remark of the CAM user.
-* `tags` - (Optional) A list of tags used to associate different resources.
-* `use_api` - (Optional) Indicate whether to generate the API secret key or not.
+* `name` - (Required, String, ForceNew) Name of the CAM user.
+* `console_login` - (Optional, Bool) Indicate whether the CAM user can login to the web console or not.
+* `country_code` - (Optional, String) Country code of the phone number, for example: '86'.
+* `email` - (Optional, String) Email of the CAM user.
+* `force_delete` - (Optional, Bool) Indicate whether to force deletes the CAM user. If set false, the API secret key will be checked and failed when exists; otherwise the user will be deleted directly. Default is false.
+* `need_reset_password` - (Optional, Bool) Indicate whether the CAM user need to reset the password when first logins.
+* `password` - (Optional, String) The password of the CAM user. Password should be at least 8 characters and no more than 32 characters, includes uppercase letters, lowercase letters, numbers and special characters. Only required when `console_login` is true. If not set, a random password will be automatically generated.
+* `phone_num` - (Optional, String) Phone number of the CAM user.
+* `remark` - (Optional, String) Remark of the CAM user.
+* `tags` - (Optional, Map) A list of tags used to associate different resources.
+* `use_api` - (Optional, Bool) Indicate whether to generate the API secret key or not.
 
 ## Attributes Reference
 

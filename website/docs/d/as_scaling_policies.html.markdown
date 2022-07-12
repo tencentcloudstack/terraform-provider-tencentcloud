@@ -24,10 +24,10 @@ data "tencentcloud_as_scaling_policies" "as_scaling_policies" {
 
 The following arguments are supported:
 
-* `policy_name` - (Optional) Scaling policy name.
-* `result_output_file` - (Optional) Used to save results.
-* `scaling_group_id` - (Optional) Scaling group ID.
-* `scaling_policy_id` - (Optional) Scaling policy ID.
+* `policy_name` - (Optional, String) Scaling policy name.
+* `result_output_file` - (Optional, String) Used to save results.
+* `scaling_group_id` - (Optional, String) Scaling group ID.
+* `scaling_policy_id` - (Optional, String) Scaling policy ID.
 
 ## Attributes Reference
 

@@ -30,15 +30,15 @@ resource "tencentcloud_api_gateway_service" "service" {
 
 The following arguments are supported:
 
-* `net_type` - (Required) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
-* `protocol` - (Required) Service frontend request type. Valid values: `http`, `https`, `http&https`.
-* `service_name` - (Required) Custom service name.
-* `exclusive_set_name` - (Optional, ForceNew) Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
-* `ip_version` - (Optional, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.
-* `pre_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
-* `release_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
-* `service_desc` - (Optional) Custom service description.
-* `test_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `net_type` - (Required, Set: [`String`]) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
+* `protocol` - (Required, String) Service frontend request type. Valid values: `http`, `https`, `http&https`.
+* `service_name` - (Required, String) Custom service name.
+* `exclusive_set_name` - (Optional, String, ForceNew) Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
+* `ip_version` - (Optional, String, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.
+* `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `release_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `service_desc` - (Optional, String) Custom service description.
+* `test_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 
 ## Attributes Reference
 

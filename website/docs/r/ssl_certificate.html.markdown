@@ -26,12 +26,12 @@ resource "tencentcloud_ssl_certificate" "foo" {
 
 The following arguments are supported:
 
-* `cert` - (Required, ForceNew) Content of the SSL certificate. Not allowed newline at the start and end.
-* `type` - (Required, ForceNew) Type of the SSL certificate. Valid values: `CA` and `SVR`.
-* `key` - (Optional, ForceNew) Key of the SSL certificate and required when certificate type is `SVR`. Not allowed newline at the start and end.
-* `name` - (Optional) Name of the SSL certificate.
-* `project_id` - (Optional) Project ID of the SSL certificate. Default is `0`.
-* `tags` - (Optional) Tags of the SSL certificate.
+* `cert` - (Required, String, ForceNew) Content of the SSL certificate. Not allowed newline at the start and end.
+* `type` - (Required, String, ForceNew) Type of the SSL certificate. Valid values: `CA` and `SVR`.
+* `key` - (Optional, String, ForceNew) Key of the SSL certificate and required when certificate type is `SVR`. Not allowed newline at the start and end.
+* `name` - (Optional, String) Name of the SSL certificate.
+* `project_id` - (Optional, Int) Project ID of the SSL certificate. Default is `0`.
+* `tags` - (Optional, Map) Tags of the SSL certificate.
 
 ## Attributes Reference
 

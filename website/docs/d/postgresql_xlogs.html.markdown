@@ -25,10 +25,10 @@ data "tencentcloud_postgresql_xlogs" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) PostgreSQL instance id.
-* `end_time` - (Optional) Xlog end time, format `yyyy-MM-dd hh:mm:ss`.
-* `result_output_file` - (Optional) Used for save results.
-* `start_time` - (Optional) Xlog start time, format `yyyy-MM-dd hh:mm:ss`, start time cannot before 7 days ago.
+* `instance_id` - (Required, String) PostgreSQL instance id.
+* `end_time` - (Optional, String) Xlog end time, format `yyyy-MM-dd hh:mm:ss`.
+* `result_output_file` - (Optional, String) Used for save results.
+* `start_time` - (Optional, String) Xlog start time, format `yyyy-MM-dd hh:mm:ss`, start time cannot before 7 days ago.
 
 ## Attributes Reference
 

@@ -26,11 +26,11 @@ data "tencentcloud_cynosdb_clusters" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) ID of the cluster to be queried.
-* `cluster_name` - (Optional) Name of the cluster to be queried.
-* `db_type` - (Optional) Type of CynosDB, and available values include `MYSQL`, `POSTGRESQL`.
-* `project_id` - (Optional) ID of the project to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `cluster_id` - (Optional, String) ID of the cluster to be queried.
+* `cluster_name` - (Optional, String) Name of the cluster to be queried.
+* `db_type` - (Optional, String) Type of CynosDB, and available values include `MYSQL`, `POSTGRESQL`.
+* `project_id` - (Optional, Int) ID of the project to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

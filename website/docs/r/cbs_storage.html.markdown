@@ -32,20 +32,20 @@ resource "tencentcloud_cbs_storage" "storage" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) The available zone that the CBS instance locates at.
-* `storage_name` - (Required) Name of CBS. The maximum length can not exceed 60 bytes.
-* `storage_size` - (Required) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
-* `storage_type` - (Required, ForceNew) Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.
-* `charge_type` - (Optional) The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
-* `encrypt` - (Optional, ForceNew) Indicates whether CBS is encrypted.
-* `force_delete` - (Optional) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
-* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
-* `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
-* `prepaid_renew_flag` - (Optional) Auto Renewal flag. Value range: `NOTIFY_AND_AUTO_RENEW`: Notify expiry and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: Neither notify expiry nor renew automatically. Default value range: `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically. NOTE: it only works when charge_type is set to `PREPAID`.
-* `project_id` - (Optional) ID of the project to which the instance belongs.
-* `snapshot_id` - (Optional) ID of the snapshot. If specified, created the CBS by this snapshot.
-* `tags` - (Optional) The available tags within this CBS.
-* `throughput_performance` - (Optional) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
+* `availability_zone` - (Required, String, ForceNew) The available zone that the CBS instance locates at.
+* `storage_name` - (Required, String) Name of CBS. The maximum length can not exceed 60 bytes.
+* `storage_size` - (Required, Int) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
+* `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.
+* `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
+* `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
+* `force_delete` - (Optional, Bool) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
+* `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
+* `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
+* `prepaid_renew_flag` - (Optional, String) Auto Renewal flag. Value range: `NOTIFY_AND_AUTO_RENEW`: Notify expiry and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: Neither notify expiry nor renew automatically. Default value range: `NOTIFY_AND_MANUAL_RENEW`: Notify expiry but do not renew automatically. NOTE: it only works when charge_type is set to `PREPAID`.
+* `project_id` - (Optional, Int) ID of the project to which the instance belongs.
+* `snapshot_id` - (Optional, String) ID of the snapshot. If specified, created the CBS by this snapshot.
+* `tags` - (Optional, Map) The available tags within this CBS.
+* `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
 
 ## Attributes Reference
 

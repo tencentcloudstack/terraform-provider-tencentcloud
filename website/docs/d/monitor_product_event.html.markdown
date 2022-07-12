@@ -25,23 +25,23 @@ data "tencentcloud_monitor_product_event" "cvm_event_data" {
 
 The following arguments are supported:
 
-* `dimensions` - (Optional) Dimensional composition of instance objects.
-* `end_time` - (Optional) End timestamp for this query, eg:`1588232111`. Default start time is `now-3000`.
-* `event_name` - (Optional) Event name filtering, such as `guest_reboot` indicates that the machine restart.
-* `instance_id` - (Optional) Affect objects, such as `ins-19708ino`.
-* `is_alarm_config` - (Optional) Alarm status configuration filter, 1means configured, 0(default) means not configured.
-* `product_name` - (Optional) Product type filtering, such as `cvm` for cloud server.
-* `project_id` - (Optional) Project ID filter.
-* `region_list` - (Optional) Region filter, such as `gz`.
-* `result_output_file` - (Optional) Used to store results.
-* `start_time` - (Optional) Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.
-* `status` - (Optional) Event status filter, value range `-`,`alarm`,`recover`, indicating recovered, unrecovered and stateless.
-* `type` - (Optional) Event type filtering, with value range `abnormal`,`status_change`, indicating state change and abnormal events.
+* `dimensions` - (Optional, List) Dimensional composition of instance objects.
+* `end_time` - (Optional, Int) End timestamp for this query, eg:`1588232111`. Default start time is `now-3000`.
+* `event_name` - (Optional, List: [`String`]) Event name filtering, such as `guest_reboot` indicates that the machine restart.
+* `instance_id` - (Optional, List: [`String`]) Affect objects, such as `ins-19708ino`.
+* `is_alarm_config` - (Optional, Int) Alarm status configuration filter, 1means configured, 0(default) means not configured.
+* `product_name` - (Optional, List: [`String`]) Product type filtering, such as `cvm` for cloud server.
+* `project_id` - (Optional, List: [`String`]) Project ID filter.
+* `region_list` - (Optional, List: [`String`]) Region filter, such as `gz`.
+* `result_output_file` - (Optional, String) Used to store results.
+* `start_time` - (Optional, Int) Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.
+* `status` - (Optional, List: [`String`]) Event status filter, value range `-`,`alarm`,`recover`, indicating recovered, unrecovered and stateless.
+* `type` - (Optional, List: [`String`]) Event type filtering, with value range `abnormal`,`status_change`, indicating state change and abnormal events.
 
 The `dimensions` object supports the following:
 
-* `name` - (Optional) Instance dimension name, eg: `deviceWanIp` for internet ip.
-* `value` - (Optional) Instance dimension value, eg: `119.119.119.119` for internet ip.
+* `name` - (Optional, String) Instance dimension name, eg: `deviceWanIp` for internet ip.
+* `value` - (Optional, String) Instance dimension value, eg: `119.119.119.119` for internet ip.
 
 ## Attributes Reference
 

@@ -72,28 +72,28 @@ resource "tencentcloud_gaap_http_rule" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Required, ForceNew) Forward domain of the forward rule.
-* `health_check` - (Required) Indicates whether health check is enable.
-* `listener_id` - (Required, ForceNew) ID of the layer7 listener.
-* `path` - (Required) Path of the forward rule. Maximum length is 80.
-* `realserver_type` - (Required, ForceNew) Type of the realserver. Valid value: `IP` and `DOMAIN`.
-* `connect_timeout` - (Optional) Timeout of the health check response, default value is 2s.
-* `forward_host` - (Optional) The default value of requested host which is forwarded to the realserver by the listener is `default`.
-* `health_check_method` - (Optional) Method of the health check. Valid value: `GET` and `HEAD`.
-* `health_check_path` - (Optional) Path of health check. Maximum length is 80.
-* `health_check_status_codes` - (Optional) Return code of confirmed normal. Valid value: `100`, `200`, `300`, `400` and `500`.
-* `interval` - (Optional) Interval of the health check, default value is 5s.
-* `realservers` - (Optional) An information list of GAAP realserver.
-* `scheduler` - (Optional) Scheduling policy of the forward rule, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
-* `sni_switch` - (Optional) ServerNameIndication (SNI) switch. ON means on and OFF means off.
-* `sni` - (Optional) ServerNameIndication (SNI) is required when the SNI switch is turned on.
+* `domain` - (Required, String, ForceNew) Forward domain of the forward rule.
+* `health_check` - (Required, Bool) Indicates whether health check is enable.
+* `listener_id` - (Required, String, ForceNew) ID of the layer7 listener.
+* `path` - (Required, String) Path of the forward rule. Maximum length is 80.
+* `realserver_type` - (Required, String, ForceNew) Type of the realserver. Valid value: `IP` and `DOMAIN`.
+* `connect_timeout` - (Optional, Int) Timeout of the health check response, default value is 2s.
+* `forward_host` - (Optional, String) The default value of requested host which is forwarded to the realserver by the listener is `default`.
+* `health_check_method` - (Optional, String) Method of the health check. Valid value: `GET` and `HEAD`.
+* `health_check_path` - (Optional, String) Path of health check. Maximum length is 80.
+* `health_check_status_codes` - (Optional, Set: [`Int`]) Return code of confirmed normal. Valid value: `100`, `200`, `300`, `400` and `500`.
+* `interval` - (Optional, Int) Interval of the health check, default value is 5s.
+* `realservers` - (Optional, Set) An information list of GAAP realserver.
+* `scheduler` - (Optional, String) Scheduling policy of the forward rule, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
+* `sni_switch` - (Optional, String) ServerNameIndication (SNI) switch. ON means on and OFF means off.
+* `sni` - (Optional, String) ServerNameIndication (SNI) is required when the SNI switch is turned on.
 
 The `realservers` object supports the following:
 
-* `id` - (Required) ID of the GAAP realserver.
-* `ip` - (Required) IP of the GAAP realserver.
-* `port` - (Required) Port of the GAAP realserver.
-* `weight` - (Optional) Scheduling weight, default value is `1`. Valid value ranges: (1~100).
+* `id` - (Required, String) ID of the GAAP realserver.
+* `ip` - (Required, String) IP of the GAAP realserver.
+* `port` - (Required, Int) Port of the GAAP realserver.
+* `weight` - (Optional, Int) Scheduling weight, default value is `1`. Valid value ranges: (1~100).
 
 ## Attributes Reference
 

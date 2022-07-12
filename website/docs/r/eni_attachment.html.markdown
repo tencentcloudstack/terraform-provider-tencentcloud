@@ -75,8 +75,8 @@ resource "tencentcloud_eni_attachment" "foo" {
 
 The following arguments are supported:
 
-* `eni_id` - (Required, ForceNew) ID of the ENI.
-* `instance_id` - (Required, ForceNew) ID of the instance which bind the ENI.
+* `eni_id` - (Required, String, ForceNew) ID of the ENI.
+* `instance_id` - (Required, String, ForceNew) ID of the instance which bind the ENI.
 
 ## Attributes Reference
 

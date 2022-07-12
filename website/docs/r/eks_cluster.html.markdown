@@ -58,36 +58,36 @@ resource "tencentcloud_eks_cluster" "foo" {
 
 The following arguments are supported:
 
-* `cluster_name` - (Required) Name of EKS cluster.
-* `k8s_version` - (Required, ForceNew) Kubernetes version of EKS cluster.
-* `subnet_ids` - (Required) Subnet Ids for EKS cluster.
-* `vpc_id` - (Required, ForceNew) Vpc Id of EKS cluster.
-* `cluster_desc` - (Optional) Description of EKS cluster.
-* `dns_servers` - (Optional) List of cluster custom DNS Server info.
-* `enable_vpc_core_dns` - (Optional, ForceNew) Indicates whether to enable dns in user cluster, default value is `true`.
-* `extra_param` - (Optional, ForceNew) Extend parameters.
-* `internal_lb` - (Optional) Cluster internal access LoadBalancer info.
-* `need_delete_cbs` - (Optional) Delete CBS after EKS cluster remove.
-* `public_lb` - (Optional) Cluster public access LoadBalancer info.
-* `service_subnet_id` - (Optional) Subnet id of service.
-* `tags` - (Optional) Tags of EKS cluster.
+* `cluster_name` - (Required, String) Name of EKS cluster.
+* `k8s_version` - (Required, String, ForceNew) Kubernetes version of EKS cluster.
+* `subnet_ids` - (Required, List: [`String`]) Subnet Ids for EKS cluster.
+* `vpc_id` - (Required, String, ForceNew) Vpc Id of EKS cluster.
+* `cluster_desc` - (Optional, String) Description of EKS cluster.
+* `dns_servers` - (Optional, List) List of cluster custom DNS Server info.
+* `enable_vpc_core_dns` - (Optional, Bool, ForceNew) Indicates whether to enable dns in user cluster, default value is `true`.
+* `extra_param` - (Optional, Map, ForceNew) Extend parameters.
+* `internal_lb` - (Optional, List) Cluster internal access LoadBalancer info.
+* `need_delete_cbs` - (Optional, Bool) Delete CBS after EKS cluster remove.
+* `public_lb` - (Optional, List) Cluster public access LoadBalancer info.
+* `service_subnet_id` - (Optional, String) Subnet id of service.
+* `tags` - (Optional, Map) Tags of EKS cluster.
 
 The `dns_servers` object supports the following:
 
-* `domain` - (Optional) DNS Server domain. Empty indicates all domain.
-* `servers` - (Optional) List of DNS Server IP address, pattern: "ip[:port]".
+* `domain` - (Optional, String) DNS Server domain. Empty indicates all domain.
+* `servers` - (Optional, List) List of DNS Server IP address, pattern: "ip[:port]".
 
 The `internal_lb` object supports the following:
 
-* `enabled` - (Required) Indicates weather the internal access LB enabled.
-* `subnet_id` - (Optional) ID of subnet which related to Internal LB.
+* `enabled` - (Required, Bool) Indicates weather the internal access LB enabled.
+* `subnet_id` - (Optional, String) ID of subnet which related to Internal LB.
 
 The `public_lb` object supports the following:
 
-* `enabled` - (Required) Indicates weather the public access LB enabled.
-* `allow_from_cidrs` - (Optional) List of CIDRs which allowed to access.
-* `extra_param` - (Optional) Extra param text json.
-* `security_policies` - (Optional) List of security allow IP or CIDRs, default deny all.
+* `enabled` - (Required, Bool) Indicates weather the public access LB enabled.
+* `allow_from_cidrs` - (Optional, List) List of CIDRs which allowed to access.
+* `extra_param` - (Optional, String) Extra param text json.
+* `security_policies` - (Optional, List) List of security allow IP or CIDRs, default deny all.
 
 ## Attributes Reference
 

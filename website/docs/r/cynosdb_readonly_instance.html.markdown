@@ -39,14 +39,14 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) Cluster ID which the readonly instance belongs to.
-* `instance_cpu_core` - (Required) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
-* `instance_memory_size` - (Required) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
-* `instance_name` - (Required, ForceNew) Name of instance.
-* `force_delete` - (Optional) Indicate whether to delete readonly instance directly or not. Default is false. If set true, instance will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
-* `instance_maintain_duration` - (Optional) Duration time for maintenance, unit in second. `3600` by default.
-* `instance_maintain_start_time` - (Optional) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
-* `instance_maintain_weekdays` - (Optional) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID which the readonly instance belongs to.
+* `instance_cpu_core` - (Required, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `instance_memory_size` - (Required, Int) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `instance_name` - (Required, String, ForceNew) Name of instance.
+* `force_delete` - (Optional, Bool) Indicate whether to delete readonly instance directly or not. Default is false. If set true, instance will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
+* `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
+* `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
+* `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 
 ## Attributes Reference
 

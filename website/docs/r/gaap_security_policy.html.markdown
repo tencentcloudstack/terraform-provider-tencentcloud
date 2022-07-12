@@ -32,9 +32,9 @@ resource "tencentcloud_gaap_security_policy" "foo" {
 
 The following arguments are supported:
 
-* `action` - (Required, ForceNew) Default policy. Valid value: `ACCEPT` and `DROP`.
-* `proxy_id` - (Required, ForceNew) ID of the GAAP proxy.
-* `enable` - (Optional) Indicates whether policy is enable, default value is `true`.
+* `action` - (Required, String, ForceNew) Default policy. Valid value: `ACCEPT` and `DROP`.
+* `proxy_id` - (Required, String, ForceNew) ID of the GAAP proxy.
+* `enable` - (Optional, Bool) Indicates whether policy is enable, default value is `true`.
 
 ## Attributes Reference
 

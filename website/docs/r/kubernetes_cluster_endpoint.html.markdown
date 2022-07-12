@@ -38,11 +38,11 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) Specify cluster ID.
-* `cluster_internet` - (Optional) Open internet access or not.
-* `cluster_intranet_subnet_id` - (Optional) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
-* `cluster_intranet` - (Optional) Open intranet access or not.
-* `managed_cluster_internet_security_policies` - (Optional) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
+* `cluster_id` - (Required, String) Specify cluster ID.
+* `cluster_internet` - (Optional, Bool) Open internet access or not.
+* `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
+* `cluster_intranet` - (Optional, Bool) Open intranet access or not.
+* `managed_cluster_internet_security_policies` - (Optional, List: [`String`]) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 
 ## Attributes Reference
 

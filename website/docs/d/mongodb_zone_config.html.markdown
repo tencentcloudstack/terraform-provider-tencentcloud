@@ -23,8 +23,8 @@ data "tencentcloud_mongodb_zone_config" "mongodb" {
 
 The following arguments are supported:
 
-* `available_zone` - (Optional) The available zone of the Mongodb.
-* `result_output_file` - (Optional) Used to store results.
+* `available_zone` - (Optional, String) The available zone of the Mongodb.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

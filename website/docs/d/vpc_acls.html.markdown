@@ -30,10 +30,10 @@ data "tencentcloud_vpc_acls" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the network ACL instance.
-* `name` - (Optional) Name of the network ACL.
-* `result_output_file` - (Optional) Used to save results.
-* `vpc_id` - (Optional) ID of the VPC instance.
+* `id` - (Optional, String) ID of the network ACL instance.
+* `name` - (Optional, String) Name of the network ACL.
+* `result_output_file` - (Optional, String) Used to save results.
+* `vpc_id` - (Optional, String) ID of the VPC instance.
 
 ## Attributes Reference
 

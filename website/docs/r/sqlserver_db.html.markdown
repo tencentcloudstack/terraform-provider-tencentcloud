@@ -26,10 +26,10 @@ resource "tencentcloud_sqlserver_db" "example" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) SQL Server instance ID which DB belongs to.
-* `name` - (Required, ForceNew) Name of SQL Server DB. The database name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.
-* `charset` - (Optional, ForceNew) Character set DB uses. Valid values: `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`. Default value is `Chinese_PRC_CI_AS`.
-* `remark` - (Optional) Remark of the DB.
+* `instance_id` - (Required, String, ForceNew) SQL Server instance ID which DB belongs to.
+* `name` - (Required, String, ForceNew) Name of SQL Server DB. The database name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.
+* `charset` - (Optional, String, ForceNew) Character set DB uses. Valid values: `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`. Default value is `Chinese_PRC_CI_AS`.
+* `remark` - (Optional, String) Remark of the DB.
 
 ## Attributes Reference
 

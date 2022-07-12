@@ -53,10 +53,10 @@ resource "tencentcloud_tdmq_namespace_role_attachment" "bar" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The id of tdmq cluster.
-* `environ_id` - (Required) The name of tdmq namespace.
-* `permissions` - (Required) The permissions of tdmq role.
-* `role_name` - (Required) The name of tdmq role.
+* `cluster_id` - (Required, String) The id of tdmq cluster.
+* `environ_id` - (Required, String) The name of tdmq namespace.
+* `permissions` - (Required, List: [`String`]) The permissions of tdmq role.
+* `role_name` - (Required, String) The name of tdmq role.
 
 ## Attributes Reference
 

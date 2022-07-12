@@ -56,10 +56,10 @@ data "tencentcloud_api_gateway_apis" "name" {
 
 The following arguments are supported:
 
-* `service_id` - (Required) Service ID for query.
-* `api_id` - (Optional) Created API ID.
-* `api_name` - (Optional) Custom API name.
-* `result_output_file` - (Optional) Used to save results.
+* `service_id` - (Required, String) Service ID for query.
+* `api_id` - (Optional, String) Created API ID.
+* `api_name` - (Optional, String) Custom API name.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

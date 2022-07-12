@@ -116,14 +116,14 @@ resource "tencentcloud_nat_gateway_snat" "my_instance_snat" {
 
 The following arguments are supported:
 
-* `description` - (Required) Description.
-* `nat_gateway_id` - (Required, ForceNew) NAT gateway ID.
-* `public_ip_addr` - (Required) Elastic IP address pool.
-* `resource_type` - (Required, ForceNew) Resource type. Valid values: SUBNET, NETWORKINTERFACE.
-* `instance_id` - (Optional, ForceNew) Instance ID, required when `resource_type` is NETWORKINTERFACE.
-* `instance_private_ip_addr` - (Optional, ForceNew) Private IPs of the instance's primary ENI, required when `resource_type` is NETWORKINTERFACE.
-* `subnet_cidr_block` - (Optional, ForceNew) The IPv4 CIDR of the subnet, required when `resource_type` is SUBNET.
-* `subnet_id` - (Optional, ForceNew) Subnet instance ID, required when `resource_type` is SUBNET.
+* `description` - (Required, String) Description.
+* `nat_gateway_id` - (Required, String, ForceNew) NAT gateway ID.
+* `public_ip_addr` - (Required, List: [`String`]) Elastic IP address pool.
+* `resource_type` - (Required, String, ForceNew) Resource type. Valid values: SUBNET, NETWORKINTERFACE.
+* `instance_id` - (Optional, String, ForceNew) Instance ID, required when `resource_type` is NETWORKINTERFACE.
+* `instance_private_ip_addr` - (Optional, String, ForceNew) Private IPs of the instance's primary ENI, required when `resource_type` is NETWORKINTERFACE.
+* `subnet_cidr_block` - (Optional, String, ForceNew) The IPv4 CIDR of the subnet, required when `resource_type` is SUBNET.
+* `subnet_id` - (Optional, String, ForceNew) Subnet instance ID, required when `resource_type` is SUBNET.
 
 ## Attributes Reference
 

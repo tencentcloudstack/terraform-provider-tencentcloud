@@ -32,22 +32,22 @@ resource "tencentcloud_sqlserver_readonly_instance" "foo" {
 
 The following arguments are supported:
 
-* `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
-* `memory` - (Required) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
-* `name` - (Required) Name of the SQL Server instance.
-* `readonly_group_type` - (Required, ForceNew) Type of readonly group. Valid values: `1`, `3`. `1` for one auto-assigned readonly instance per one readonly group, `2` for creating new readonly group, `3` for all exist readonly instances stay in the exist readonly group. For now, only `1` and `3` are supported.
-* `storage` - (Required) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
-* `auto_voucher` - (Optional) Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.
-* `availability_zone` - (Optional, ForceNew) Availability zone.
-* `charge_type` - (Optional, ForceNew) Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.
-* `force_upgrade` - (Optional, ForceNew) Indicate that the master instance upgrade or not. `true` for upgrading the master SQL Server instance to cluster type by force. Default is false. Note: this is not supported with `DUAL`(ha_type), `2017`(engine_version) master SQL Server instance, for it will cause ha_type of the master SQL Server instance change.
-* `period` - (Optional) Purchase instance period in month. The value does not exceed 48.
-* `readonly_group_id` - (Optional) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
-* `security_groups` - (Optional) Security group bound to the instance.
-* `subnet_id` - (Optional, ForceNew) ID of subnet.
-* `tags` - (Optional) The tags of the SQL Server.
-* `voucher_ids` - (Optional) An array of voucher IDs, currently only one can be used for a single order.
-* `vpc_id` - (Optional, ForceNew) ID of VPC.
+* `master_instance_id` - (Required, String, ForceNew) Indicates the master instance ID of recovery instances.
+* `memory` - (Required, Int) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
+* `name` - (Required, String) Name of the SQL Server instance.
+* `readonly_group_type` - (Required, Int, ForceNew) Type of readonly group. Valid values: `1`, `3`. `1` for one auto-assigned readonly instance per one readonly group, `2` for creating new readonly group, `3` for all exist readonly instances stay in the exist readonly group. For now, only `1` and `3` are supported.
+* `storage` - (Required, Int) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
+* `auto_voucher` - (Optional, Int) Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.
+* `availability_zone` - (Optional, String, ForceNew) Availability zone.
+* `charge_type` - (Optional, String, ForceNew) Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.
+* `force_upgrade` - (Optional, Bool, ForceNew) Indicate that the master instance upgrade or not. `true` for upgrading the master SQL Server instance to cluster type by force. Default is false. Note: this is not supported with `DUAL`(ha_type), `2017`(engine_version) master SQL Server instance, for it will cause ha_type of the master SQL Server instance change.
+* `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
+* `readonly_group_id` - (Optional, String) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
+* `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
+* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `tags` - (Optional, Map) The tags of the SQL Server.
+* `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
+* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 ## Attributes Reference
 

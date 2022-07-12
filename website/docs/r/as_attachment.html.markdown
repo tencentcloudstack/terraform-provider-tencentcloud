@@ -24,8 +24,8 @@ resource "tencentcloud_as_attachment" "attachment" {
 
 The following arguments are supported:
 
-* `instance_ids` - (Required) ID list of CVM instances to be attached to the scaling group.
-* `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
+* `instance_ids` - (Required, Set: [`String`]) ID list of CVM instances to be attached to the scaling group.
+* `scaling_group_id` - (Required, String, ForceNew) ID of a scaling group.
 
 ## Attributes Reference
 

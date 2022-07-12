@@ -25,9 +25,9 @@ resource "tencentcloud_cam_saml_provider" "saml_provider_basic" {
 
 The following arguments are supported:
 
-* `description` - (Required) The description of the CAM SAML provider.
-* `meta_data` - (Required) The meta data document of the CAM SAML provider.
-* `name` - (Required, ForceNew) Name of CAM SAML provider.
+* `description` - (Required, String) The description of the CAM SAML provider.
+* `meta_data` - (Required, String) The meta data document of the CAM SAML provider.
+* `name` - (Required, String, ForceNew) Name of CAM SAML provider.
 
 ## Attributes Reference
 

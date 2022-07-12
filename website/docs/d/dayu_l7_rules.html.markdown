@@ -30,11 +30,11 @@ data "tencentcloud_dayu_l7_rules" "id_test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource that the layer 7 rule works for.
-* `resource_type` - (Required) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
-* `domain` - (Optional) Domain of the layer 7 rule to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) Id of the layer 7 rule to be queried.
+* `resource_id` - (Required, String) Id of the resource that the layer 7 rule works for.
+* `resource_type` - (Required, String) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
+* `domain` - (Optional, String) Domain of the layer 7 rule to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `rule_id` - (Optional, String) Id of the layer 7 rule to be queried.
 
 ## Attributes Reference
 

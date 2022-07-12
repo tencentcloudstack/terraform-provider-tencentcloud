@@ -29,10 +29,10 @@ data "tencentcloud_cam_groups" "bar" {
 
 The following arguments are supported:
 
-* `group_id` - (Optional) ID of CAM group to be queried.
-* `name` - (Optional) Name of the CAM group to be queried.
-* `remark` - (Optional) Description of the cam group to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `group_id` - (Optional, String) ID of CAM group to be queried.
+* `name` - (Optional, String) Name of the CAM group to be queried.
+* `remark` - (Optional, String) Description of the cam group to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

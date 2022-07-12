@@ -33,17 +33,17 @@ data "tencentcloud_scf_logs" "foo" {
 
 The following arguments are supported:
 
-* `function_name` - (Required) Name of the SCF function to be queried.
-* `end_time` - (Optional) The end time of the query, the format is `2017-05-16 20:00:00`, which can only be within one day from `start_time`.
-* `invoke_request_id` - (Optional) Corresponding requestId when executing function.
-* `limit` - (Optional) Number of logs, the default is `10000`, offset+limit cannot be greater than 10000.
-* `namespace` - (Optional) Namespace of the SCF function to be queried.
-* `offset` - (Optional) Log offset, default is `0`, offset+limit cannot be greater than 10000.
-* `order_by` - (Optional) Sort the logs according to the following fields: `function_name`, `duration`, `mem_usage`, `start_time`, default `start_time`.
-* `order` - (Optional) Order to sort the log, optional values `desc` and `asc`, default `desc`.
-* `result_output_file` - (Optional) Used to save results.
-* `ret_code` - (Optional) Use to filter log, optional value: `not0` only returns the error log. `is0` only returns the correct log. `TimeLimitExceeded` returns the log of the function call timeout. `ResourceLimitExceeded` returns the function call generation resource overrun log. `UserCodeException` returns logs of the user code error that occurred in the function call. Not passing the parameter means returning all logs.
-* `start_time` - (Optional) The start time of the query, the format is `2017-05-16 20:00:00`, which can only be within one day from `end_time`.
+* `function_name` - (Required, String) Name of the SCF function to be queried.
+* `end_time` - (Optional, String) The end time of the query, the format is `2017-05-16 20:00:00`, which can only be within one day from `start_time`.
+* `invoke_request_id` - (Optional, String) Corresponding requestId when executing function.
+* `limit` - (Optional, Int) Number of logs, the default is `10000`, offset+limit cannot be greater than 10000.
+* `namespace` - (Optional, String) Namespace of the SCF function to be queried.
+* `offset` - (Optional, Int) Log offset, default is `0`, offset+limit cannot be greater than 10000.
+* `order_by` - (Optional, String) Sort the logs according to the following fields: `function_name`, `duration`, `mem_usage`, `start_time`, default `start_time`.
+* `order` - (Optional, String) Order to sort the log, optional values `desc` and `asc`, default `desc`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `ret_code` - (Optional, String) Use to filter log, optional value: `not0` only returns the error log. `is0` only returns the correct log. `TimeLimitExceeded` returns the log of the function call timeout. `ResourceLimitExceeded` returns the function call generation resource overrun log. `UserCodeException` returns logs of the user code error that occurred in the function call. Not passing the parameter means returning all logs.
+* `start_time` - (Optional, String) The start time of the query, the format is `2017-05-16 20:00:00`, which can only be within one day from `end_time`.
 
 ## Attributes Reference
 

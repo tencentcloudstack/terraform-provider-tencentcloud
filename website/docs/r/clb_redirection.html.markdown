@@ -40,13 +40,13 @@ resource "tencentcloud_clb_redirection" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) ID of CLB instance.
-* `target_listener_id` - (Required, ForceNew) ID of source listener.
-* `target_rule_id` - (Required, ForceNew) Rule ID of target listener.
-* `delete_all_auto_rewrite` - (Optional) Indicates whether delete all auto redirection. Default is `false`. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.
-* `is_auto_rewrite` - (Optional, ForceNew) Indicates whether automatic forwarding is enable, default is `false`. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.
-* `source_listener_id` - (Optional, ForceNew) ID of source listener.
-* `source_rule_id` - (Optional, ForceNew) Rule ID of source listener.
+* `clb_id` - (Required, String, ForceNew) ID of CLB instance.
+* `target_listener_id` - (Required, String, ForceNew) ID of source listener.
+* `target_rule_id` - (Required, String, ForceNew) Rule ID of target listener.
+* `delete_all_auto_rewrite` - (Optional, Bool) Indicates whether delete all auto redirection. Default is `false`. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.
+* `is_auto_rewrite` - (Optional, Bool, ForceNew) Indicates whether automatic forwarding is enable, default is `false`. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.
+* `source_listener_id` - (Optional, String, ForceNew) ID of source listener.
+* `source_rule_id` - (Optional, String, ForceNew) Rule ID of source listener.
 
 ## Attributes Reference
 

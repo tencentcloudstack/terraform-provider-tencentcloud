@@ -29,15 +29,15 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 
 The following arguments are supported:
 
-* `database_tuples` - (Required) Database Publish and Publish relationship list. The elements inside can be deleted and added individually, but modification is not allowed.
-* `publish_instance_id` - (Required, ForceNew) ID of the SQL Server instance which publish.
-* `subscribe_instance_id` - (Required, ForceNew) ID of the SQL Server instance which subscribe.
-* `delete_subscribe_db` - (Optional) Whether to delete the subscriber database when deleting the Publish and Subscribe. `true` for deletes the subscribe database, `false` for does not delete the subscribe database. default is `false`.
-* `publish_subscribe_name` - (Optional) The name of the Publish and Subscribe. Default is `default_name`.
+* `database_tuples` - (Required, Set) Database Publish and Publish relationship list. The elements inside can be deleted and added individually, but modification is not allowed.
+* `publish_instance_id` - (Required, String, ForceNew) ID of the SQL Server instance which publish.
+* `subscribe_instance_id` - (Required, String, ForceNew) ID of the SQL Server instance which subscribe.
+* `delete_subscribe_db` - (Optional, Bool) Whether to delete the subscriber database when deleting the Publish and Subscribe. `true` for deletes the subscribe database, `false` for does not delete the subscribe database. default is `false`.
+* `publish_subscribe_name` - (Optional, String) The name of the Publish and Subscribe. Default is `default_name`.
 
 The `database_tuples` object supports the following:
 
-* `publish_database` - (Required) Publish the database.
+* `publish_database` - (Required, String) Publish the database.
 
 ## Attributes Reference
 

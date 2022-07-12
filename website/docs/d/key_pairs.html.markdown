@@ -27,10 +27,10 @@ data "tencentcloud_key_pairs" "name" {
 
 The following arguments are supported:
 
-* `key_id` - (Optional) ID of the key pair to be queried.
-* `key_name` - (Optional) Name of the key pair to be queried. Support regular expression search, only `^` and `$` are supported.
-* `project_id` - (Optional) Project ID of the key pair to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `key_id` - (Optional, String) ID of the key pair to be queried.
+* `key_name` - (Optional, String) Name of the key pair to be queried. Support regular expression search, only `^` and `$` are supported.
+* `project_id` - (Optional, Int) Project ID of the key pair to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

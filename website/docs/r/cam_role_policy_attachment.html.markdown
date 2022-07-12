@@ -24,8 +24,8 @@ resource "tencentcloud_cam_role_policy_attachment" "foo" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required, ForceNew) ID of the policy.
-* `role_id` - (Required, ForceNew) ID of the attached CAM role.
+* `policy_id` - (Required, String, ForceNew) ID of the policy.
+* `role_id` - (Required, String, ForceNew) ID of the attached CAM role.
 
 ## Attributes Reference
 

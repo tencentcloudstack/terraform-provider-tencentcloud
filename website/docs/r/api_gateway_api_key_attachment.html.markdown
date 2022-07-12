@@ -36,8 +36,8 @@ resource "tencentcloud_api_gateway_api_key_attachment" "attach" {
 
 The following arguments are supported:
 
-* `api_key_id` - (Required, ForceNew) ID of API key.
-* `usage_plan_id` - (Required, ForceNew) ID of the usage plan.
+* `api_key_id` - (Required, String, ForceNew) ID of API key.
+* `usage_plan_id` - (Required, String, ForceNew) ID of the usage plan.
 
 ## Attributes Reference
 

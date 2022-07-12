@@ -24,8 +24,8 @@ resource "tencentcloud_cam_group_policy_attachment" "foo" {
 
 The following arguments are supported:
 
-* `group_id` - (Required, ForceNew) ID of the attached CAM group.
-* `policy_id` - (Required, ForceNew) ID of the policy.
+* `group_id` - (Required, String, ForceNew) ID of the attached CAM group.
+* `policy_id` - (Required, String, ForceNew) ID of the policy.
 
 ## Attributes Reference
 

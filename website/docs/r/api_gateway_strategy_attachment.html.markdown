@@ -81,10 +81,10 @@ resource "tencentcloud_api_gateway_strategy_attachment" "test" {
 
 The following arguments are supported:
 
-* `bind_api_id` - (Required, ForceNew) The API that needs to be bound.
-* `environment_name` - (Required, ForceNew) The environment of the strategy association. Valid values: `test`, `release`, `prepub`.
-* `service_id` - (Required, ForceNew) The ID of the API gateway service.
-* `strategy_id` - (Required, ForceNew) The ID of the API gateway strategy.
+* `bind_api_id` - (Required, String, ForceNew) The API that needs to be bound.
+* `environment_name` - (Required, String, ForceNew) The environment of the strategy association. Valid values: `test`, `release`, `prepub`.
+* `service_id` - (Required, String, ForceNew) The ID of the API gateway service.
+* `strategy_id` - (Required, String, ForceNew) The ID of the API gateway strategy.
 
 ## Attributes Reference
 

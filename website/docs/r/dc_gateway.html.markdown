@@ -31,10 +31,10 @@ resource "tencentcloud_dc_gateway" "vpc_main" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the DCG.
-* `network_instance_id` - (Required, ForceNew) If the `network_type` value is `VPC`, the available value is VPC ID. But when the `network_type` value is `CCN`, the available value is CCN instance ID.
-* `network_type` - (Required, ForceNew) Type of associated network. Valid value: `VPC` and `CCN`.
-* `gateway_type` - (Optional, ForceNew) Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.
+* `name` - (Required, String) Name of the DCG.
+* `network_instance_id` - (Required, String, ForceNew) If the `network_type` value is `VPC`, the available value is VPC ID. But when the `network_type` value is `CCN`, the available value is CCN instance ID.
+* `network_type` - (Required, String, ForceNew) Type of associated network. Valid value: `VPC` and `CCN`.
+* `gateway_type` - (Optional, String, ForceNew) Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.
 
 ## Attributes Reference
 

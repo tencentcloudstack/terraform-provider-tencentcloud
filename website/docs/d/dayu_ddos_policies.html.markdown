@@ -24,9 +24,9 @@ data "tencentcloud_dayu_ddos_policies" "id_test" {
 
 The following arguments are supported:
 
-* `resource_type` - (Required) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `policy_id` - (Optional) ID of the DDoS policy to be query.
-* `result_output_file` - (Optional) Used to save results.
+* `resource_type` - (Required, String) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `policy_id` - (Optional, String) ID of the DDoS policy to be query.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

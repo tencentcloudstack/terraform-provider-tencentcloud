@@ -27,12 +27,12 @@ data "tencentcloud_ha_vips" "havips" {
 
 The following arguments are supported:
 
-* `address_ip` - (Optional) EIP of the HA VIP to be queried.
-* `id` - (Optional) ID of the HA VIP to be queried.
-* `name` - (Optional) Name of the HA VIP. The length of character is limited to 1-60.
-* `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) Subnet id of the HA VIP to be queried.
-* `vpc_id` - (Optional) VPC id of the HA VIP to be queried.
+* `address_ip` - (Optional, String) EIP of the HA VIP to be queried.
+* `id` - (Optional, String) ID of the HA VIP to be queried.
+* `name` - (Optional, String) Name of the HA VIP. The length of character is limited to 1-60.
+* `result_output_file` - (Optional, String) Used to save results.
+* `subnet_id` - (Optional, String) Subnet id of the HA VIP to be queried.
+* `vpc_id` - (Optional, String) VPC id of the HA VIP to be queried.
 
 ## Attributes Reference
 

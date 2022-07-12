@@ -28,15 +28,15 @@ resource "tencentcloud_cfs_file_system" "foo" {
 
 The following arguments are supported:
 
-* `access_group_id` - (Required) ID of a access group.
-* `availability_zone` - (Required, ForceNew) The available zone that the file system locates at.
-* `subnet_id` - (Required, ForceNew) ID of a subnet.
-* `vpc_id` - (Required, ForceNew) ID of a VPC network.
-* `mount_ip` - (Optional, ForceNew) IP of mount point.
-* `name` - (Optional) Name of a file system.
-* `protocol` - (Optional, ForceNew) File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.
-* `storage_type` - (Optional, ForceNew) File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.
-* `tags` - (Optional) Instance tags.
+* `access_group_id` - (Required, String) ID of a access group.
+* `availability_zone` - (Required, String, ForceNew) The available zone that the file system locates at.
+* `subnet_id` - (Required, String, ForceNew) ID of a subnet.
+* `vpc_id` - (Required, String, ForceNew) ID of a VPC network.
+* `mount_ip` - (Optional, String, ForceNew) IP of mount point.
+* `name` - (Optional, String) Name of a file system.
+* `protocol` - (Optional, String, ForceNew) File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.
+* `storage_type` - (Optional, String, ForceNew) File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.
+* `tags` - (Optional, Map) Instance tags.
 
 ## Attributes Reference
 

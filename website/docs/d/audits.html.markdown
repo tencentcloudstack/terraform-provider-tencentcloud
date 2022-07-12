@@ -23,8 +23,8 @@ data "tencentcloud_audits" "audits" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the audits.
-* `result_output_file` - (Optional) Used to save results.
+* `name` - (Optional, String) Name of the audits.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -25,10 +25,10 @@ data "tencentcloud_sqlserver_backups" "foo" {
 
 The following arguments are supported:
 
-* `end_time` - (Required) End time of the instance list, like yyyy-MM-dd HH:mm:ss.
-* `instance_id` - (Required) Instance ID.
-* `start_time` - (Required) Start time of the instance list, like yyyy-MM-dd HH:mm:ss.
-* `result_output_file` - (Optional) Used to store results.
+* `end_time` - (Required, String) End time of the instance list, like yyyy-MM-dd HH:mm:ss.
+* `instance_id` - (Required, String) Instance ID.
+* `start_time` - (Required, String) Start time of the instance list, like yyyy-MM-dd HH:mm:ss.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

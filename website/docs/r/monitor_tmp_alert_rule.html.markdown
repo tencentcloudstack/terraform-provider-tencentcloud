@@ -36,25 +36,25 @@ resource "tencentcloud_monitor_tmp_alert_rule" "tmpAlertRule" {
 
 The following arguments are supported:
 
-* `expr` - (Required) Rule expression.
-* `instance_id` - (Required) Instance id.
-* `receivers` - (Required) Alarm notification template id list.
-* `rule_name` - (Required) Rule name.
-* `annotations` - (Optional) Rule alarm duration.
-* `duration` - (Optional) Rule alarm duration.
-* `labels` - (Optional) Rule alarm duration.
-* `rule_state` - (Optional) Rule state code.
-* `type` - (Optional) Alarm Policy Template Classification.
+* `expr` - (Required, String) Rule expression.
+* `instance_id` - (Required, String) Instance id.
+* `receivers` - (Required, Set: [`String`]) Alarm notification template id list.
+* `rule_name` - (Required, String) Rule name.
+* `annotations` - (Optional, List) Rule alarm duration.
+* `duration` - (Optional, String) Rule alarm duration.
+* `labels` - (Optional, List) Rule alarm duration.
+* `rule_state` - (Optional, Int) Rule state code.
+* `type` - (Optional, String) Alarm Policy Template Classification.
 
 The `annotations` object supports the following:
 
-* `key` - (Required) key.
-* `value` - (Required) value.
+* `key` - (Required, String) key.
+* `value` - (Required, String) value.
 
 The `labels` object supports the following:
 
-* `key` - (Required) key.
-* `value` - (Required) value.
+* `key` - (Required, String) key.
+* `value` - (Required, String) value.
 
 ## Attributes Reference
 

@@ -58,19 +58,19 @@ resource "tencentcloud_dcx" "static_main" {
 
 The following arguments are supported:
 
-* `dc_id` - (Required, ForceNew) ID of the DC to be queried, application deployment offline.
-* `dcg_id` - (Required, ForceNew) ID of the DC Gateway. Currently only new in the console.
-* `name` - (Required) Name of the dedicated tunnel.
-* `vpc_id` - (Required, ForceNew) ID of the VPC or BMVPC.
-* `bandwidth` - (Optional, ForceNew) Bandwidth of the DC.
-* `bgp_asn` - (Optional, ForceNew) BGP ASN of the user. A required field within BGP.
-* `bgp_auth_key` - (Optional, ForceNew) BGP key of the user.
-* `customer_address` - (Optional, ForceNew) Interconnect IP of the DC within client.
-* `network_type` - (Optional, ForceNew) Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.
-* `route_filter_prefixes` - (Optional, ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
-* `route_type` - (Optional, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is `BGP`.
-* `tencent_address` - (Optional, ForceNew) Interconnect IP of the DC within Tencent.
-* `vlan` - (Optional, ForceNew) Vlan of the dedicated tunnels. Valid value ranges: (0~3000). `0` means that only one tunnel can be created for the physical connect.
+* `dc_id` - (Required, String, ForceNew) ID of the DC to be queried, application deployment offline.
+* `dcg_id` - (Required, String, ForceNew) ID of the DC Gateway. Currently only new in the console.
+* `name` - (Required, String) Name of the dedicated tunnel.
+* `vpc_id` - (Required, String, ForceNew) ID of the VPC or BMVPC.
+* `bandwidth` - (Optional, Int, ForceNew) Bandwidth of the DC.
+* `bgp_asn` - (Optional, Int, ForceNew) BGP ASN of the user. A required field within BGP.
+* `bgp_auth_key` - (Optional, String, ForceNew) BGP key of the user.
+* `customer_address` - (Optional, String, ForceNew) Interconnect IP of the DC within client.
+* `network_type` - (Optional, String, ForceNew) Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.
+* `route_filter_prefixes` - (Optional, Set: [`String`], ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
+* `route_type` - (Optional, String, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is `BGP`.
+* `tencent_address` - (Optional, String, ForceNew) Interconnect IP of the DC within Tencent.
+* `vlan` - (Optional, Int, ForceNew) Vlan of the dedicated tunnels. Valid value ranges: (0~3000). `0` means that only one tunnel can be created for the physical connect.
 
 ## Attributes Reference
 

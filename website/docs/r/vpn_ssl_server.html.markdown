@@ -33,15 +33,15 @@ resource "tencentcloud_vpn_ssl_server" "server" {
 
 The following arguments are supported:
 
-* `local_address` - (Required, ForceNew) List of local CIDR.
-* `remote_address` - (Required, ForceNew) Remote CIDR for client.
-* `ssl_vpn_server_name` - (Required, ForceNew) The name of ssl vpn server to be created.
-* `vpn_gateway_id` - (Required, ForceNew) VPN gateway ID.
-* `compress` - (Optional, ForceNew) need compressed. Default value: False.
-* `encrypt_algorithm` - (Optional, ForceNew) The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE.Default value: NONE.
-* `integrity_algorithm` - (Optional, ForceNew) The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.
-* `ssl_vpn_port` - (Optional, ForceNew) The port of ssl vpn. Default value: 1194.
-* `ssl_vpn_protocol` - (Optional, ForceNew) The protocol of ssl vpn. Default value: UDP.
+* `local_address` - (Required, List: [`String`], ForceNew) List of local CIDR.
+* `remote_address` - (Required, String, ForceNew) Remote CIDR for client.
+* `ssl_vpn_server_name` - (Required, String, ForceNew) The name of ssl vpn server to be created.
+* `vpn_gateway_id` - (Required, String, ForceNew) VPN gateway ID.
+* `compress` - (Optional, Bool, ForceNew) need compressed. Default value: False.
+* `encrypt_algorithm` - (Optional, String, ForceNew) The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE.Default value: NONE.
+* `integrity_algorithm` - (Optional, String, ForceNew) The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.
+* `ssl_vpn_port` - (Optional, Int, ForceNew) The port of ssl vpn. Default value: 1194.
+* `ssl_vpn_protocol` - (Optional, String, ForceNew) The protocol of ssl vpn. Default value: UDP.
 
 ## Attributes Reference
 

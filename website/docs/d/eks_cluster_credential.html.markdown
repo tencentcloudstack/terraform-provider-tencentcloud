@@ -44,8 +44,8 @@ output "internal_lb_subnet" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) EKS Cluster ID.
-* `result_output_file` - (Optional) Used for save result.
+* `cluster_id` - (Required, String) EKS Cluster ID.
+* `result_output_file` - (Optional, String) Used for save result.
 
 ## Attributes Reference
 

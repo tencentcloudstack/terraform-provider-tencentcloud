@@ -23,14 +23,14 @@ data "tencentcloud_instances_set" "foo" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the CVM instance locates at.
-* `instance_id` - (Optional) ID of the instances to be queried.
-* `instance_name` - (Optional) Name of the instances to be queried.
-* `project_id` - (Optional) The project CVM belongs to.
-* `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) ID of a vpc subnetwork.
-* `tags` - (Optional) Tags of the instance.
-* `vpc_id` - (Optional) ID of the vpc to be queried.
+* `availability_zone` - (Optional, String) The available zone that the CVM instance locates at.
+* `instance_id` - (Optional, String) ID of the instances to be queried.
+* `instance_name` - (Optional, String) Name of the instances to be queried.
+* `project_id` - (Optional, Int) The project CVM belongs to.
+* `result_output_file` - (Optional, String) Used to save results.
+* `subnet_id` - (Optional, String) ID of a vpc subnetwork.
+* `tags` - (Optional, Map) Tags of the instance.
+* `vpc_id` - (Optional, String) ID of the vpc to be queried.
 
 ## Attributes Reference
 

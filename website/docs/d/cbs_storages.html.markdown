@@ -38,20 +38,20 @@ data "tencentcloud_cbs_storages" "whats_new" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the CBS instance locates at.
-* `charge_type` - (Optional) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).
-* `instance_ips` - (Optional) List filter by attached instance public or private IPs.
-* `instance_name` - (Optional) List filter by attached instance name.
-* `portable` - (Optional) Filter by whether the disk is portable (Boolean `true` or `false`).
-* `project_id` - (Optional) ID of the project with which the CBS is associated.
-* `result_output_file` - (Optional) Used to save results.
-* `storage_id` - (Optional) ID of the CBS to be queried.
-* `storage_name` - (Optional) Name of the CBS to be queried.
-* `storage_state` - (Optional) List filter by disk state (`UNATTACHED` | `ATTACHING` | `ATTACHED` | `DETACHING` | `EXPANDING` | `ROLLBACKING` | `TORECYCLE`).
-* `storage_type` - (Optional) Filter by cloud disk media type (`CLOUD_BASIC`: HDD cloud disk | `CLOUD_PREMIUM`: Premium Cloud Storage | `CLOUD_SSD`: SSD cloud disk).
-* `storage_usage` - (Optional) Filter by cloud disk type (`SYSTEM_DISK`: system disk | `DATA_DISK`: data disk).
-* `tag_keys` - (Optional) List filter by tag keys.
-* `tag_values` - (Optional) List filter by tag values.
+* `availability_zone` - (Optional, String) The available zone that the CBS instance locates at.
+* `charge_type` - (Optional, List: [`String`]) List filter by disk charge type (`POSTPAID_BY_HOUR` | `PREPAID`).
+* `instance_ips` - (Optional, List: [`String`]) List filter by attached instance public or private IPs.
+* `instance_name` - (Optional, List: [`String`]) List filter by attached instance name.
+* `portable` - (Optional, Bool) Filter by whether the disk is portable (Boolean `true` or `false`).
+* `project_id` - (Optional, Int) ID of the project with which the CBS is associated.
+* `result_output_file` - (Optional, String) Used to save results.
+* `storage_id` - (Optional, String) ID of the CBS to be queried.
+* `storage_name` - (Optional, String) Name of the CBS to be queried.
+* `storage_state` - (Optional, List: [`String`]) List filter by disk state (`UNATTACHED` | `ATTACHING` | `ATTACHED` | `DETACHING` | `EXPANDING` | `ROLLBACKING` | `TORECYCLE`).
+* `storage_type` - (Optional, String) Filter by cloud disk media type (`CLOUD_BASIC`: HDD cloud disk | `CLOUD_PREMIUM`: Premium Cloud Storage | `CLOUD_SSD`: SSD cloud disk).
+* `storage_usage` - (Optional, String) Filter by cloud disk type (`SYSTEM_DISK`: system disk | `DATA_DISK`: data disk).
+* `tag_keys` - (Optional, List: [`String`]) List filter by tag keys.
+* `tag_values` - (Optional, List: [`String`]) List filter by tag values.
 
 ## Attributes Reference
 

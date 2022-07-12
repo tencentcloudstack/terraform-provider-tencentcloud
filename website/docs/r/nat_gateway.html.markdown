@@ -31,12 +31,12 @@ resource "tencentcloud_nat_gateway" "foo" {
 
 The following arguments are supported:
 
-* `assigned_eip_set` - (Required) EIP IP address set bound to the gateway. The value of at least 1 and at most 10.
-* `name` - (Required) Name of the NAT gateway.
-* `vpc_id` - (Required, ForceNew) ID of the vpc.
-* `bandwidth` - (Optional) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is 100.
-* `max_concurrent` - (Optional) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`.
-* `tags` - (Optional) The available tags within this NAT gateway.
+* `assigned_eip_set` - (Required, Set: [`String`]) EIP IP address set bound to the gateway. The value of at least 1 and at most 10.
+* `name` - (Required, String) Name of the NAT gateway.
+* `vpc_id` - (Required, String, ForceNew) ID of the vpc.
+* `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is 100.
+* `max_concurrent` - (Optional, Int) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`.
+* `tags` - (Optional, Map) The available tags within this NAT gateway.
 
 ## Attributes Reference
 

@@ -58,11 +58,11 @@ data "tencentcloud_gaap_http_rules" "foo" {
 
 The following arguments are supported:
 
-* `listener_id` - (Required) ID of the layer7 listener to be queried.
-* `domain` - (Optional) Forward domain of the layer7 listener to be queried.
-* `forward_host` - (Optional) Requested host which is forwarded to the realserver by the listener to be queried.
-* `path` - (Optional) Path of the forward rule to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `listener_id` - (Required, String) ID of the layer7 listener to be queried.
+* `domain` - (Optional, String) Forward domain of the layer7 listener to be queried.
+* `forward_host` - (Optional, String) Requested host which is forwarded to the realserver by the listener to be queried.
+* `path` - (Optional, String) Path of the forward rule to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

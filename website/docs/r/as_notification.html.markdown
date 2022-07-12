@@ -25,9 +25,9 @@ resource "tencentcloud_as_notification" "as_notification" {
 
 The following arguments are supported:
 
-* `notification_types` - (Required) A list of Notification Types that trigger notifications. Acceptable values are `SCALE_OUT_FAILED`, `SCALE_IN_SUCCESSFUL`, `SCALE_IN_FAILED`, `REPLACE_UNHEALTHY_INSTANCE_SUCCESSFUL` and `REPLACE_UNHEALTHY_INSTANCE_FAILED`.
-* `notification_user_group_ids` - (Required) A group of user IDs to be notified.
-* `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
+* `notification_types` - (Required, List: [`String`]) A list of Notification Types that trigger notifications. Acceptable values are `SCALE_OUT_FAILED`, `SCALE_IN_SUCCESSFUL`, `SCALE_IN_FAILED`, `REPLACE_UNHEALTHY_INSTANCE_SUCCESSFUL` and `REPLACE_UNHEALTHY_INSTANCE_FAILED`.
+* `notification_user_group_ids` - (Required, List: [`String`]) A group of user IDs to be notified.
+* `scaling_group_id` - (Required, String, ForceNew) ID of a scaling group.
 
 ## Attributes Reference
 

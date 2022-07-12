@@ -31,18 +31,18 @@ resource "tencentcloud_scf_layer" "foo" {
 
 The following arguments are supported:
 
-* `compatible_runtimes` - (Required) The compatible runtimes of layer.
-* `content` - (Required) The source code of layer.
-* `layer_name` - (Required) The name of layer.
-* `description` - (Optional) The description of layer.
-* `license_info` - (Optional) The license info of layer.
+* `compatible_runtimes` - (Required, List: [`String`]) The compatible runtimes of layer.
+* `content` - (Required, List) The source code of layer.
+* `layer_name` - (Required, String) The name of layer.
+* `description` - (Optional, String) The description of layer.
+* `license_info` - (Optional, String) The license info of layer.
 
 The `content` object supports the following:
 
-* `cos_bucket_name` - (Optional) Cos bucket name of the SCF layer, such as `cos-1234567890`, conflict with `zip_file`.
-* `cos_bucket_region` - (Optional) Cos bucket region of the SCF layer, conflict with `zip_file`.
-* `cos_object_name` - (Optional) Cos object name of the SCF layer, should have suffix `.zip` or `.jar`, conflict with `zip_file`.
-* `zip_file` - (Optional) Zip file of the SCF layer, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
+* `cos_bucket_name` - (Optional, String) Cos bucket name of the SCF layer, such as `cos-1234567890`, conflict with `zip_file`.
+* `cos_bucket_region` - (Optional, String) Cos bucket region of the SCF layer, conflict with `zip_file`.
+* `cos_object_name` - (Optional, String) Cos object name of the SCF layer, should have suffix `.zip` or `.jar`, conflict with `zip_file`.
+* `zip_file` - (Optional, String) Zip file of the SCF layer, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
 
 ## Attributes Reference
 

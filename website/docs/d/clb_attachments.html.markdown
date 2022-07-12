@@ -25,10 +25,10 @@ data "tencentcloud_clb_attachments" "clblab" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required) ID of the CLB to be queried.
-* `listener_id` - (Required) ID of the CLB listener to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) ID of the CLB listener rule. If the protocol of listener is `HTTP`/`HTTPS`, this para is required.
+* `clb_id` - (Required, String) ID of the CLB to be queried.
+* `listener_id` - (Required, String) ID of the CLB listener to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `rule_id` - (Optional, String) ID of the CLB listener rule. If the protocol of listener is `HTTP`/`HTTPS`, this para is required.
 
 ## Attributes Reference
 

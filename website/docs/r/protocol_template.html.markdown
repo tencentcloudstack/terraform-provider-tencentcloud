@@ -24,8 +24,8 @@ resource "tencentcloud_protocol_template" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required, ForceNew) Name of the protocol template.
-* `protocols` - (Required) Protocol list. Valid protocols are  `tcp`, `udp`, `icmp`, `gre`. Single port(tcp:80), multi-port(tcp:80,443), port range(tcp:3306-20000), all(tcp:all) format are support. Protocol `icmp` and `gre` cannot specify port.
+* `name` - (Required, String, ForceNew) Name of the protocol template.
+* `protocols` - (Required, Set: [`String`]) Protocol list. Valid protocols are  `tcp`, `udp`, `icmp`, `gre`. Single port(tcp:80), multi-port(tcp:80,443), port range(tcp:3306-20000), all(tcp:all) format are support. Protocol `icmp` and `gre` cannot specify port.
 
 ## Attributes Reference
 

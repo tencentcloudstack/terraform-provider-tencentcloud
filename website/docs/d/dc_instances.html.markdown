@@ -27,9 +27,9 @@ data "tencentcloud_dc_instances" "id" {
 
 The following arguments are supported:
 
-* `dc_id` - (Optional) ID of the DC to be queried.
-* `name` - (Optional) Name of the DC to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `dc_id` - (Optional, String) ID of the DC to be queried.
+* `name` - (Optional, String) Name of the DC to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -79,11 +79,11 @@ EOF
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) ID of cluster.
-* `name` - (Required, ForceNew) Name of addon.
-* `request_body` - (Optional) Serialized json string as request body of addon spec. If set, will ignore `version` and `values`.
-* `values` - (Optional) Values the addon passthroughs. Conflict with `request_body`.
-* `version` - (Optional) Addon version, default latest version. Conflict with `request_body`.
+* `cluster_id` - (Required, String, ForceNew) ID of cluster.
+* `name` - (Required, String, ForceNew) Name of addon.
+* `request_body` - (Optional, String) Serialized json string as request body of addon spec. If set, will ignore `version` and `values`.
+* `values` - (Optional, List: [`String`]) Values the addon passthroughs. Conflict with `request_body`.
+* `version` - (Optional, String) Addon version, default latest version. Conflict with `request_body`.
 
 ## Attributes Reference
 

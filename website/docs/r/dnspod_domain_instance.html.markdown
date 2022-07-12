@@ -24,11 +24,11 @@ resource "tencentcloud_dnspod_domain_instance" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Required) The Domain.
-* `group_id` - (Optional, ForceNew) The Group Id of Domain.
-* `is_mark` - (Optional, ForceNew) Whether to Mark the Domain.
-* `remark` - (Optional) The remark of Domain.
-* `status` - (Optional) The status of Domain.
+* `domain` - (Required, String) The Domain.
+* `group_id` - (Optional, Int, ForceNew) The Group Id of Domain.
+* `is_mark` - (Optional, String, ForceNew) Whether to Mark the Domain.
+* `remark` - (Optional, String) The remark of Domain.
+* `status` - (Optional, String) The status of Domain.
 
 ## Attributes Reference
 

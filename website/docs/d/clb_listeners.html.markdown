@@ -26,11 +26,11 @@ data "tencentcloud_clb_listeners" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required) Id of the CLB to be queried.
-* `listener_id` - (Optional) Id of the listener to be queried.
-* `port` - (Optional) Port of the CLB listener.
-* `protocol` - (Optional) Type of protocol within the listener, and available values are `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.
-* `result_output_file` - (Optional) Used to save results.
+* `clb_id` - (Required, String) Id of the CLB to be queried.
+* `listener_id` - (Optional, String) Id of the listener to be queried.
+* `port` - (Optional, Int) Port of the CLB listener.
+* `protocol` - (Optional, String) Type of protocol within the listener, and available values are `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

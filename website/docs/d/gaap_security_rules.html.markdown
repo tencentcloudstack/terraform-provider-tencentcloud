@@ -46,14 +46,14 @@ data "tencentcloud_gaap_security_rules" "protocol" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required) ID of the security policy to be queried.
-* `action` - (Optional) Policy of the rule to be queried.
-* `cidr_ip` - (Optional) A network address block of the request source to be queried.
-* `name` - (Optional) Name of the security policy rule to be queried.
-* `port` - (Optional) Port of the security policy rule to be queried.
-* `protocol` - (Optional) Protocol of the security policy rule to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) ID of the security policy rules to be queried.
+* `policy_id` - (Required, String) ID of the security policy to be queried.
+* `action` - (Optional, String) Policy of the rule to be queried.
+* `cidr_ip` - (Optional, String) A network address block of the request source to be queried.
+* `name` - (Optional, String) Name of the security policy rule to be queried.
+* `port` - (Optional, String) Port of the security policy rule to be queried.
+* `protocol` - (Optional, String) Protocol of the security policy rule to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `rule_id` - (Optional, String) ID of the security policy rules to be queried.
 
 ## Attributes Reference
 

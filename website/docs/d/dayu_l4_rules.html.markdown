@@ -30,11 +30,11 @@ data "tencentcloud_dayu_l4_rules" "id_test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource that the layer 4 rule works for.
-* `resource_type` - (Required) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `name` - (Optional) Name of the layer 4 rule to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) Id of the layer 4 rule to be queried.
+* `resource_id` - (Required, String) Id of the resource that the layer 4 rule works for.
+* `resource_type` - (Required, String) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `name` - (Optional, String) Name of the layer 4 rule to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `rule_id` - (Optional, String) Id of the layer 4 rule to be queried.
 
 ## Attributes Reference
 

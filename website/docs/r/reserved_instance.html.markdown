@@ -26,9 +26,9 @@ resource "tencentcloud_reserved_instance" "ri" {
 
 The following arguments are supported:
 
-* `config_id` - (Required) Configuration ID of the reserved instance.
-* `instance_count` - (Required) Number of reserved instances to be purchased.
-* `reserved_instance_name` - (Optional) Reserved Instance display name.
+* `config_id` - (Required, String) Configuration ID of the reserved instance.
+* `instance_count` - (Required, Int) Number of reserved instances to be purchased.
+* `reserved_instance_name` - (Optional, String) Reserved Instance display name.
 				- If you do not specify an instance display name, 'Unnamed' is displayed by default.
 				- Up to 60 characters (including pattern strings) are supported.
 

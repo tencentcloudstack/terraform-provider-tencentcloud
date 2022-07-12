@@ -25,13 +25,13 @@ data "tencentcloud_dayu_l7_rules_v2" "test" {
 
 The following arguments are supported:
 
-* `business` - (Required) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `domain` - (Optional) Domain of resource.
-* `ip` - (Optional) Ip of the resource.
-* `limit` - (Optional) The number of pages, default is `10`.
-* `offset` - (Optional) The page start offset, default is `0`.
-* `protocol` - (Optional) Protocol of resource, value range [`http`, `https`].
-* `result_output_file` - (Optional) Used to save results.
+* `business` - (Required, String) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `domain` - (Optional, String) Domain of resource.
+* `ip` - (Optional, String) Ip of the resource.
+* `limit` - (Optional, Int) The number of pages, default is `10`.
+* `offset` - (Optional, Int) The page start offset, default is `0`.
+* `protocol` - (Optional, String) Protocol of resource, value range [`http`, `https`].
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

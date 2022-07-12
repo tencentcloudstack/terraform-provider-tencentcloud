@@ -22,7 +22,7 @@ data "tencentcloud_audit_cos_regions" "foo" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to save results.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

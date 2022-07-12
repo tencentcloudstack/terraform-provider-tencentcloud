@@ -28,13 +28,13 @@ data "tencentcloud_clb_listener_rules" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required) ID of the CLB to be queried.
-* `listener_id` - (Required) ID of the CLB listener to be queried.
-* `domain` - (Optional) Domain name of the forwarding rule to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) ID of the forwarding rule to be queried.
-* `scheduler` - (Optional) Scheduling method of the forwarding rule of thr CLB listener, and available values include `WRR`, `IP HASH` and `LEAST_CONN`. The default is `WRR`.
-* `url` - (Optional) Url of the forwarding rule to be queried.
+* `clb_id` - (Required, String) ID of the CLB to be queried.
+* `listener_id` - (Required, String) ID of the CLB listener to be queried.
+* `domain` - (Optional, String) Domain name of the forwarding rule to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `rule_id` - (Optional, String) ID of the forwarding rule to be queried.
+* `scheduler` - (Optional, String) Scheduling method of the forwarding rule of thr CLB listener, and available values include `WRR`, `IP HASH` and `LEAST_CONN`. The default is `WRR`.
+* `url` - (Optional, String) Url of the forwarding rule to be queried.
 
 ## Attributes Reference
 

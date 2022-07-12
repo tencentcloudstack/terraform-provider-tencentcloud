@@ -30,14 +30,14 @@ resource "tencentcloud_cam_oidc_sso" "foo" {
 
 The following arguments are supported:
 
-* `authorization_endpoint` - (Required) Authorization request Endpoint, OpenID Connect identity provider authorization address. Corresponds to the value of the `authorization_endpoint` field in the Openid-configuration provided by the Enterprise IdP.
-* `client_id` - (Required) Client ID, the client ID registered with the OpenID Connect identity provider.
-* `identity_key` - (Required) The signature public key requires base64_encode. Verify the public key signed by the OpenID Connect identity provider ID Token. For the security of your account, we recommend that you rotate the signed public key regularly.
-* `identity_url` - (Required) Identity provider URL. OpenID Connect identity provider identity.Corresponds to the value of the `issuer` field in the Openid-configuration provided by the Enterprise IdP.
-* `mapping_filed` - (Required) Map field names. Which field in the IdP's id_token maps to the user name of the subuser, usually the sub or name field.
-* `response_mode` - (Required) Authorize the request Forsonse mode. Authorization request return mode, form_post and frogment two optional modes, recommended to select form_post mode.
-* `response_type` - (Required) Authorization requests The Response type, with a fixed value id_token.
-* `scope` - (Optional) Authorize the request Scope. openid; email; profile; Authorization request information scope. The default is required openid.
+* `authorization_endpoint` - (Required, String) Authorization request Endpoint, OpenID Connect identity provider authorization address. Corresponds to the value of the `authorization_endpoint` field in the Openid-configuration provided by the Enterprise IdP.
+* `client_id` - (Required, String) Client ID, the client ID registered with the OpenID Connect identity provider.
+* `identity_key` - (Required, String) The signature public key requires base64_encode. Verify the public key signed by the OpenID Connect identity provider ID Token. For the security of your account, we recommend that you rotate the signed public key regularly.
+* `identity_url` - (Required, String) Identity provider URL. OpenID Connect identity provider identity.Corresponds to the value of the `issuer` field in the Openid-configuration provided by the Enterprise IdP.
+* `mapping_filed` - (Required, String) Map field names. Which field in the IdP's id_token maps to the user name of the subuser, usually the sub or name field.
+* `response_mode` - (Required, String) Authorize the request Forsonse mode. Authorization request return mode, form_post and frogment two optional modes, recommended to select form_post mode.
+* `response_type` - (Required, String) Authorization requests The Response type, with a fixed value id_token.
+* `scope` - (Optional, Set: [`String`]) Authorize the request Scope. openid; email; profile; Authorization request information scope. The default is required openid.
 
 ## Attributes Reference
 

@@ -34,10 +34,10 @@ resource "tencentcloud_api_gateway_ip_strategy" "test" {
 
 The following arguments are supported:
 
-* `service_id` - (Required, ForceNew) The ID of the API gateway service.
-* `strategy_data` - (Required) IP address data.
-* `strategy_name` - (Required, ForceNew) User defined strategy name.
-* `strategy_type` - (Required, ForceNew) Blacklist or whitelist.
+* `service_id` - (Required, String, ForceNew) The ID of the API gateway service.
+* `strategy_data` - (Required, String) IP address data.
+* `strategy_name` - (Required, String, ForceNew) User defined strategy name.
+* `strategy_type` - (Required, String, ForceNew) Blacklist or whitelist.
 
 ## Attributes Reference
 

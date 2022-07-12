@@ -35,9 +35,9 @@ resource "tencentcloud_ckafka_topic" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Ckafka instance ID.
-* `result_output_file` - (Optional) Used to store results.
-* `topic_name` - (Optional) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.
+* `instance_id` - (Required, String) Ckafka instance ID.
+* `result_output_file` - (Optional, String) Used to store results.
+* `topic_name` - (Optional, String) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.
 
 ## Attributes Reference
 

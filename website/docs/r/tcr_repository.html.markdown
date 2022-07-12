@@ -29,11 +29,11 @@ resource "tencentcloud_tcr_repository" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) ID of the TCR instance.
-* `name` - (Required, ForceNew) Name of the TCR repository. Valid length is [2~200]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`, `/`), and cannot start, end or continue with separators. Support the use of multi-level address formats, such as `sub1/sub2/repo`.
-* `namespace_name` - (Required, ForceNew) Name of the TCR namespace.
-* `brief_desc` - (Optional) Brief description of the repository. Valid length is [1~100].
-* `description` - (Optional) Description of the repository. Valid length is [1~1000].
+* `instance_id` - (Required, String, ForceNew) ID of the TCR instance.
+* `name` - (Required, String, ForceNew) Name of the TCR repository. Valid length is [2~200]. It can only contain lowercase letters, numbers and separators (`.`, `_`, `-`, `/`), and cannot start, end or continue with separators. Support the use of multi-level address formats, such as `sub1/sub2/repo`.
+* `namespace_name` - (Required, String, ForceNew) Name of the TCR namespace.
+* `brief_desc` - (Optional, String) Brief description of the repository. Valid length is [1~100].
+* `description` - (Optional, String) Description of the repository. Valid length is [1~1000].
 
 ## Attributes Reference
 

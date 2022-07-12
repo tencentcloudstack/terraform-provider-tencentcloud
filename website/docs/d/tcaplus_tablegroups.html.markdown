@@ -36,10 +36,10 @@ data "tencentcloud_tcaplus_tablegroups" "all" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) Id of the TcaplusDB cluster to be query.
-* `result_output_file` - (Optional) File for saving results.
-* `tablegroup_id` - (Optional) Id of the table group to be query.
-* `tablegroup_name` - (Optional) Name of the table group to be query.
+* `cluster_id` - (Required, String) Id of the TcaplusDB cluster to be query.
+* `result_output_file` - (Optional, String) File for saving results.
+* `tablegroup_id` - (Optional, String) Id of the table group to be query.
+* `tablegroup_name` - (Optional, String) Name of the table group to be query.
 
 ## Attributes Reference
 

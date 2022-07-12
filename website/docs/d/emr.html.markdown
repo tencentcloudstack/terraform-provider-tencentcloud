@@ -26,10 +26,10 @@ data "tencentcloud_emr" "my_emr" {
 
 The following arguments are supported:
 
-* `display_strategy` - (Required) Display strategy(e.g.:clusterList, monitorManage).
-* `instance_ids` - (Optional) fetch all instances with same prefix(e.g.:emr-xxxxxx).
-* `project_id` - (Optional) Fetch all instances which owner same project. Default 0 meaning use default project id.
-* `result_output_file` - (Optional) Used to save results.
+* `display_strategy` - (Required, String) Display strategy(e.g.:clusterList, monitorManage).
+* `instance_ids` - (Optional, List: [`String`]) fetch all instances with same prefix(e.g.:emr-xxxxxx).
+* `project_id` - (Optional, Int) Fetch all instances which owner same project. Default 0 meaning use default project id.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

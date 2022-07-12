@@ -23,7 +23,7 @@ resource "tencentcloud_clb_log_set" "foo" {
 
 The following arguments are supported:
 
-* `period` - (Optional, ForceNew) Logset retention period in days. Maximun value is `90`.
+* `period` - (Optional, Int, ForceNew) Logset retention period in days. Maximun value is `90`.
 
 ## Attributes Reference
 

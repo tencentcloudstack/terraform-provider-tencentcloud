@@ -32,14 +32,14 @@ resource "tencentcloud_cls_topic" "topic" {
 
 The following arguments are supported:
 
-* `logset_id` - (Required) Logset ID.
-* `topic_name` - (Required) Log topic name.
-* `auto_split` - (Optional) Whether to enable automatic split. Default value: true.
-* `max_split_partitions` - (Optional) Maximum number of partitions to split into for this topic if automatic split is enabled. Default value: 50.
-* `partition_count` - (Optional) Number of log topic partitions. Default value: 1. Maximum value: 10.
-* `period` - (Optional) Lifecycle in days. Value range: 1~366. Default value: 30.
-* `storage_type` - (Optional) Log topic storage class. Valid values: hot: real-time storage; cold: offline storage. Default value: hot. If cold is passed in, please contact the customer service to add the log topic to the allowlist first..
-* `tags` - (Optional) Tag description list. Up to 10 tag key-value pairs are supported and must be unique.
+* `logset_id` - (Required, String) Logset ID.
+* `topic_name` - (Required, String) Log topic name.
+* `auto_split` - (Optional, Bool) Whether to enable automatic split. Default value: true.
+* `max_split_partitions` - (Optional, Int) Maximum number of partitions to split into for this topic if automatic split is enabled. Default value: 50.
+* `partition_count` - (Optional, Int) Number of log topic partitions. Default value: 1. Maximum value: 10.
+* `period` - (Optional, Int) Lifecycle in days. Value range: 1~366. Default value: 30.
+* `storage_type` - (Optional, String) Log topic storage class. Valid values: hot: real-time storage; cold: offline storage. Default value: hot. If cold is passed in, please contact the customer service to add the log topic to the allowlist first..
+* `tags` - (Optional, Map) Tag description list. Up to 10 tag key-value pairs are supported and must be unique.
 
 ## Attributes Reference
 

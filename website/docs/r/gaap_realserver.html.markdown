@@ -28,11 +28,11 @@ resource "tencentcloud_gaap_realserver" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the GAAP realserver, the maximum length is 30.
-* `domain` - (Optional, ForceNew) Domain of the GAAP realserver, conflict with `ip`.
-* `ip` - (Optional, ForceNew) IP of the GAAP realserver, conflict with `domain`.
-* `project_id` - (Optional, ForceNew) ID of the project within the GAAP realserver, '0' means is default project.
-* `tags` - (Optional) Tags of the GAAP realserver.
+* `name` - (Required, String) Name of the GAAP realserver, the maximum length is 30.
+* `domain` - (Optional, String, ForceNew) Domain of the GAAP realserver, conflict with `ip`.
+* `ip` - (Optional, String, ForceNew) IP of the GAAP realserver, conflict with `domain`.
+* `project_id` - (Optional, Int, ForceNew) ID of the project within the GAAP realserver, '0' means is default project.
+* `tags` - (Optional, Map) Tags of the GAAP realserver.
 
 ## Attributes Reference
 

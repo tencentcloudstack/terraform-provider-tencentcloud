@@ -24,8 +24,8 @@ resource "tencentcloud_vpn_ssl_client" "client" {
 
 The following arguments are supported:
 
-* `ssl_vpn_client_name` - (Required, ForceNew) The name of ssl vpn client to be created.
-* `ssl_vpn_server_id` - (Required, ForceNew) VPN ssl server id.
+* `ssl_vpn_client_name` - (Required, String, ForceNew) The name of ssl vpn client to be created.
+* `ssl_vpn_server_id` - (Required, String, ForceNew) VPN ssl server id.
 
 ## Attributes Reference
 

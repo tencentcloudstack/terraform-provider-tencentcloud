@@ -46,13 +46,13 @@ resource tencentcloud_gaap_domain_error_page "foo" {
 
 The following arguments are supported:
 
-* `body` - (Required, ForceNew) New response body.
-* `domain` - (Required, ForceNew) HTTP domain.
-* `error_codes` - (Required, ForceNew) Original error codes.
-* `listener_id` - (Required, ForceNew) ID of the layer7 listener.
-* `clear_headers` - (Optional, ForceNew) Response headers to be removed.
-* `new_error_code` - (Optional, ForceNew) New error code.
-* `set_headers` - (Optional, ForceNew) Response headers to be set.
+* `body` - (Required, String, ForceNew) New response body.
+* `domain` - (Required, String, ForceNew) HTTP domain.
+* `error_codes` - (Required, Set: [`Int`], ForceNew) Original error codes.
+* `listener_id` - (Required, String, ForceNew) ID of the layer7 listener.
+* `clear_headers` - (Optional, Set: [`String`], ForceNew) Response headers to be removed.
+* `new_error_code` - (Optional, Int, ForceNew) New error code.
+* `set_headers` - (Optional, Map, ForceNew) Response headers to be set.
 
 ## Attributes Reference
 

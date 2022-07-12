@@ -27,12 +27,12 @@ data "tencentcloud_cdh_instances" "list" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the CDH instance locates at.
-* `host_id` - (Optional) ID of the CDH instances to be queried.
-* `host_name` - (Optional) Name of the CDH instances to be queried.
-* `host_state` - (Optional) State of the CDH instances to be queried. Valid values: `PENDING`, `LAUNCH_FAILURE`, `RUNNING`, `EXPIRED`.
-* `project_id` - (Optional) The project CDH belongs to.
-* `result_output_file` - (Optional) Used to save results.
+* `availability_zone` - (Optional, String) The available zone that the CDH instance locates at.
+* `host_id` - (Optional, String) ID of the CDH instances to be queried.
+* `host_name` - (Optional, String) Name of the CDH instances to be queried.
+* `host_state` - (Optional, String) State of the CDH instances to be queried. Valid values: `PENDING`, `LAUNCH_FAILURE`, `RUNNING`, `EXPIRED`.
+* `project_id` - (Optional, Int) The project CDH belongs to.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -24,9 +24,9 @@ data "tencentcloud_redis_zone_config" "redislab" {
 
 The following arguments are supported:
 
-* `region` - (Optional) Name of a region. If this value is not set, the current region getting from provider's configuration will be used.
-* `result_output_file` - (Optional) Used to save results.
-* `type_id` - (Optional) Instance type ID.
+* `region` - (Optional, String) Name of a region. If this value is not set, the current region getting from provider's configuration will be used.
+* `result_output_file` - (Optional, String) Used to save results.
+* `type_id` - (Optional, Int) Instance type ID.
 
 ## Attributes Reference
 

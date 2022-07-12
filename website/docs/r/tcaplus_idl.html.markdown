@@ -68,12 +68,12 @@ resource "tencentcloud_tcaplus_idl" "main" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) ID of the TcaplusDB cluster to which the table group belongs.
-* `file_content` - (Required, ForceNew) IDL file content of the TcaplusDB table.
-* `file_ext_type` - (Required, ForceNew) File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.
-* `file_name` - (Required, ForceNew) Name of the IDL file.
-* `file_type` - (Required, ForceNew) Type of the IDL file. Valid values are PROTO and TDR.
-* `tablegroup_id` - (Required, ForceNew) ID of the table group to which the IDL file belongs.
+* `cluster_id` - (Required, String, ForceNew) ID of the TcaplusDB cluster to which the table group belongs.
+* `file_content` - (Required, String, ForceNew) IDL file content of the TcaplusDB table.
+* `file_ext_type` - (Required, String, ForceNew) File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.
+* `file_name` - (Required, String, ForceNew) Name of the IDL file.
+* `file_type` - (Required, String, ForceNew) Type of the IDL file. Valid values are PROTO and TDR.
+* `tablegroup_id` - (Required, String, ForceNew) ID of the table group to which the IDL file belongs.
 
 ## Attributes Reference
 

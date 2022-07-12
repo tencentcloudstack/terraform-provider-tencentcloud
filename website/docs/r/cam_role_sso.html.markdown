@@ -27,11 +27,11 @@ resource "tencentcloud_cam_role_sso" "foo" {
 
 The following arguments are supported:
 
-* `client_ids` - (Required) Client ids.
-* `identity_key` - (Required) Sign the public key.
-* `identity_url` - (Required) Identity provider URL.
-* `name` - (Required) The name of resource.
-* `description` - (Optional) The description of resource.
+* `client_ids` - (Required, Set: [`String`]) Client ids.
+* `identity_key` - (Required, String) Sign the public key.
+* `identity_url` - (Required, String) Identity provider URL.
+* `name` - (Required, String) The name of resource.
+* `description` - (Optional, String) The description of resource.
 
 ## Attributes Reference
 

@@ -23,9 +23,9 @@ data "tencentcloud_eks_clusters" "foo" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Optional) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
-* `cluster_name` - (Optional) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
-* `result_output_file` - (Optional) Used to save results.
+* `cluster_id` - (Optional, String) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
+* `cluster_name` - (Optional, String) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

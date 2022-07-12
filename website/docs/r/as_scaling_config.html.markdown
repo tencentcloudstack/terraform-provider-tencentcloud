@@ -58,44 +58,44 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 
 The following arguments are supported:
 
-* `configuration_name` - (Required) Name of a launch configuration.
-* `image_id` - (Required) An available image ID for a cvm instance.
-* `instance_types` - (Required) Specified types of CVM instances.
-* `cam_role_name` - (Optional) CAM role name authorized to access.
-* `data_disk` - (Optional) Configurations of data disk.
-* `disk_type_policy` - (Optional) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
-* `enhanced_monitor_service` - (Optional) To specify whether to enable cloud monitor service. Default is `TRUE`.
-* `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is `TRUE`.
-* `instance_charge_type_prepaid_period` - (Optional) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
-* `instance_charge_type_prepaid_renew_flag` - (Optional) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
-* `instance_charge_type` - (Optional) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
-* `instance_name_settings` - (Optional) Settings of CVM instance names.
-* `instance_tags` - (Optional) A list of tags used to associate different resources.
-* `internet_charge_type` - (Optional) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
-* `keep_image_login` - (Optional) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
-* `key_ids` - (Optional) ID list of keys.
-* `password` - (Optional) Password to access.
-* `project_id` - (Optional) Specifys to which project the configuration belongs.
-* `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
-* `spot_instance_type` - (Optional) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
-* `spot_max_price` - (Optional) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
-* `system_disk_size` - (Optional) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
-* `user_data` - (Optional) ase64-encoded User Data text, the length limit is 16KB.
+* `configuration_name` - (Required, String) Name of a launch configuration.
+* `image_id` - (Required, String) An available image ID for a cvm instance.
+* `instance_types` - (Required, List: [`String`]) Specified types of CVM instances.
+* `cam_role_name` - (Optional, String) CAM role name authorized to access.
+* `data_disk` - (Optional, List) Configurations of data disk.
+* `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
+* `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
+* `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is `TRUE`.
+* `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
+* `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
+* `instance_name_settings` - (Optional, List) Settings of CVM instance names.
+* `instance_tags` - (Optional, Map) A list of tags used to associate different resources.
+* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `keep_image_login` - (Optional, Bool) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
+* `key_ids` - (Optional, List: [`String`]) ID list of keys.
+* `password` - (Optional, String) Password to access.
+* `project_id` - (Optional, Int) Specifys to which project the configuration belongs.
+* `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
+* `security_group_ids` - (Optional, List: [`String`]) Security groups to which a CVM instance belongs.
+* `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
+* `system_disk_type` - (Optional, String) Type of a CVM disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`. valid when disk_type_policy is ORIGINAL.
+* `user_data` - (Optional, String) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:
 
-* `delete_with_instance` - (Optional) Indicates whether the disk remove after instance terminated.
-* `disk_size` - (Optional) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
-* `snapshot_id` - (Optional) Data disk snapshot ID.
+* `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated.
+* `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
+* `snapshot_id` - (Optional, String) Data disk snapshot ID.
 
 The `instance_name_settings` object supports the following:
 
-* `instance_name` - (Required) CVM instance name.
-* `instance_name_style` - (Optional) Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default is `ORIGINAL`.
+* `instance_name` - (Required, String) CVM instance name.
+* `instance_name_style` - (Optional, String) Type of CVM instance name. Valid values: `ORIGINAL` and `UNIQUE`. Default is `ORIGINAL`.
 
 ## Attributes Reference
 

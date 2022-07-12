@@ -26,8 +26,8 @@ resource "tencentcloud_cls_logset" "logset" {
 
 The following arguments are supported:
 
-* `logset_name` - (Required) Logset name, which must be unique.
-* `tags` - (Optional) Tag description list. Up to 10 tag key-value pairs are supported and must be unique.
+* `logset_name` - (Required, String) Logset name, which must be unique.
+* `tags` - (Optional, Map) Tag description list. Up to 10 tag key-value pairs are supported and must be unique.
 
 ## Attributes Reference
 

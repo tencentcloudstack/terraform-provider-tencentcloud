@@ -84,10 +84,10 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) ID of clusters.
-* `issuer` - (Required) Specify service-account-issuer.
-* `auto_create_discovery_anonymous_auth` - (Optional) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
-* `jwks_uri` - (Optional) Specify service-account-jwks-uri.
+* `cluster_id` - (Required, String) ID of clusters.
+* `issuer` - (Required, String) Specify service-account-issuer.
+* `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
+* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri.
 
 ## Attributes Reference
 

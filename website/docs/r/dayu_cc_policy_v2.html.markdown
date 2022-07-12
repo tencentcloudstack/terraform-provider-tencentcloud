@@ -66,70 +66,70 @@ resource "tencentcloud_dayu_cc_policy_v2" "demo" {
 
 The following arguments are supported:
 
-* `business` - (Required) Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
-* `resource_id` - (Required) The ID of the resource instance.
-* `cc_black_white_ips` - (Optional) Blacklist and whitelist.
-* `cc_geo_ip_policys` - (Optional) Details of the CC region blocking policy list.
-* `cc_precision_policys` - (Optional) CC Precision Protection List.
-* `cc_precision_req_limits` - (Optional) CC frequency throttling policy.
-* `thresholds` - (Optional) List of protection threshold configurations.
+* `business` - (Required, String) Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
+* `resource_id` - (Required, String) The ID of the resource instance.
+* `cc_black_white_ips` - (Optional, List) Blacklist and whitelist.
+* `cc_geo_ip_policys` - (Optional, List) Details of the CC region blocking policy list.
+* `cc_precision_policys` - (Optional, List) CC Precision Protection List.
+* `cc_precision_req_limits` - (Optional, List) CC frequency throttling policy.
+* `thresholds` - (Optional, List) List of protection threshold configurations.
 
 The `cc_black_white_ips` object supports the following:
 
-* `black_white_ip` - (Required) Blacklist and whitelist IP addresses.
-* `domain` - (Required) Domain.
-* `protocol` - (Required) Protocol.
-* `type` - (Required) IP type, value [black(blacklist IP), white (whitelist IP)].
-* `create_time` - (Optional) Create time.
-* `modify_time` - (Optional) Modify time.
+* `black_white_ip` - (Required, String) Blacklist and whitelist IP addresses.
+* `domain` - (Required, String) Domain.
+* `protocol` - (Required, String) Protocol.
+* `type` - (Required, String) IP type, value [black(blacklist IP), white (whitelist IP)].
+* `create_time` - (Optional, String) Create time.
+* `modify_time` - (Optional, String) Modify time.
 
 The `cc_geo_ip_policys` object supports the following:
 
-* `action` - (Required) User action, drop or arg.
-* `domain` - (Required) domain.
-* `protocol` - (Required) Protocol, preferably HTTP, HTTPS.
-* `region_type` - (Required) Regional types, divided into china, oversea and customized.
-* `area_list` - (Optional) The list of region IDs that the user selects to block.
-* `create_time` - (Optional) Create time.
-* `modify_time` - (Optional) Modify time.
+* `action` - (Required, String) User action, drop or arg.
+* `domain` - (Required, String) domain.
+* `protocol` - (Required, String) Protocol, preferably HTTP, HTTPS.
+* `region_type` - (Required, String) Regional types, divided into china, oversea and customized.
+* `area_list` - (Optional, List) The list of region IDs that the user selects to block.
+* `create_time` - (Optional, String) Create time.
+* `modify_time` - (Optional, String) Modify time.
 
 The `cc_precision_policys` object supports the following:
 
-* `domain` - (Required) Domain.
-* `ip` - (Required) Ip address.
-* `policy_action` - (Required) Policy mode (discard or captcha).
-* `policys` - (Required) A list of policies.
-* `protocol` - (Required) Protocol.
+* `domain` - (Required, String) Domain.
+* `ip` - (Required, String) Ip address.
+* `policy_action` - (Required, String) Policy mode (discard or captcha).
+* `policys` - (Required, List) A list of policies.
+* `protocol` - (Required, String) Protocol.
 
 The `cc_precision_req_limits` object supports the following:
 
-* `domain` - (Required) Domain.
-* `level` - (Required) Protection rating, the optional value of default means default policy, loose means loose, and strict means strict.
-* `policys` - (Required) The CC Frequency Limit Policy Item field.
-* `protocol` - (Required) Protocol, preferably HTTP, HTTPS.
+* `domain` - (Required, String) Domain.
+* `level` - (Required, String) Protection rating, the optional value of default means default policy, loose means loose, and strict means strict.
+* `policys` - (Required, List) The CC Frequency Limit Policy Item field.
+* `protocol` - (Required, String) Protocol, preferably HTTP, HTTPS.
 
 The `policys` object supports the following:
 
-* `action` - (Required) The frequency limit policy mode, the optional value of arg indicates the verification code, and drop indicates the discard.
-* `execute_duration` - (Required) The duration of the frequency limit policy can be taken from 1 to 86400 per second.
-* `mode` - (Required) The policy item is compared, and the optional value include indicates inclusion, and equal means equal.
-* `period` - (Required) Statistical period, take values 1, 10, 30, 60, in seconds.
-* `request_num` - (Required) The number of requests, the value is 1 to 20000.
-* `cookie` - (Optional) Cookies, one of the three policy entries can only be filled in.
-* `uri` - (Optional) Uri, one of the three policy entries can only be filled in.
-* `user_agent` - (Optional) User-Agent, only one of the three policy entries can be filled in.
+* `action` - (Required, String) The frequency limit policy mode, the optional value of arg indicates the verification code, and drop indicates the discard.
+* `execute_duration` - (Required, Int) The duration of the frequency limit policy can be taken from 1 to 86400 per second.
+* `mode` - (Required, String) The policy item is compared, and the optional value include indicates inclusion, and equal means equal.
+* `period` - (Required, Int) Statistical period, take values 1, 10, 30, 60, in seconds.
+* `request_num` - (Required, Int) The number of requests, the value is 1 to 20000.
+* `cookie` - (Optional, String) Cookies, one of the three policy entries can only be filled in.
+* `uri` - (Optional, String) Uri, one of the three policy entries can only be filled in.
+* `user_agent` - (Optional, String) User-Agent, only one of the three policy entries can be filled in.
 
 The `policys` object supports the following:
 
-* `field_name` - (Required) Configuration item types, currently only support value.
-* `field_type` - (Required) Configuration fields with the desirable values cgi, ua, cookie, referer, accept, srcip.
-* `value_operator` - (Required) Configure the item-value comparison mode, which can be taken as the value of evaluate, not_equal, include.
-* `value` - (Required) Configure the value.
+* `field_name` - (Required, String) Configuration item types, currently only support value.
+* `field_type` - (Required, String) Configuration fields with the desirable values cgi, ua, cookie, referer, accept, srcip.
+* `value_operator` - (Required, String) Configure the item-value comparison mode, which can be taken as the value of evaluate, not_equal, include.
+* `value` - (Required, String) Configure the value.
 
 The `thresholds` object supports the following:
 
-* `domain` - (Required) domain.
-* `threshold` - (Required) Cleaning threshold, -1 indicates that the `default` mode is turned on.
+* `domain` - (Required, String) domain.
+* `threshold` - (Required, Int) Cleaning threshold, -1 indicates that the `default` mode is turned on.
 
 ## Attributes Reference
 

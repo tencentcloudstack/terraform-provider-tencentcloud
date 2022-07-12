@@ -29,11 +29,11 @@ data "tencentcloud_vpn_gateways" "foo" {
 
 The following arguments are supported:
 
-* `vpn_gateway_id` - (Required) VPN gateway ID.
-* `destination_cidr` - (Optional) Destination IDC IP range.
-* `instance_id` - (Optional) Instance ID of the next hop.
-* `instance_type` - (Optional) Next hop type (type of the associated instance). Valid values: VPNCONN (VPN tunnel) and CCN (CCN instance).
-* `result_output_file` - (Optional) Used to save results.
+* `vpn_gateway_id` - (Required, String) VPN gateway ID.
+* `destination_cidr` - (Optional, String) Destination IDC IP range.
+* `instance_id` - (Optional, String) Instance ID of the next hop.
+* `instance_type` - (Optional, String) Next hop type (type of the associated instance). Valid values: VPNCONN (VPN tunnel) and CCN (CCN instance).
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

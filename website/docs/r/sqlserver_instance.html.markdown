@@ -30,26 +30,26 @@ resource "tencentcloud_sqlserver_instance" "foo" {
 
 The following arguments are supported:
 
-* `memory` - (Required) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
-* `name` - (Required) Name of the SQL Server instance.
-* `storage` - (Required) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
-* `auto_renew` - (Optional) Automatic renewal sign. 0 for normal renewal, 1 for automatic renewal (Default). Only valid when purchasing a prepaid instance.
-* `auto_voucher` - (Optional) Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.
-* `availability_zone` - (Optional, ForceNew) Availability zone.
-* `charge_type` - (Optional, ForceNew) Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.
-* `engine_version` - (Optional, ForceNew) Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
-* `ha_type` - (Optional, ForceNew) Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster). Default is `DUAL`.
-* `maintenance_start_time` - (Optional) Start time of the maintenance in one day, format like `HH:mm`.
-* `maintenance_time_span` - (Optional) The timespan of maintenance in one day, unit is hour.
-* `maintenance_week_set` - (Optional) A list of integer indicates weekly maintenance. For example, [2,7] presents do weekly maintenance on every Tuesday and Sunday.
-* `multi_zones` - (Optional, ForceNew) Indicate whether to deploy across availability zones.
-* `period` - (Optional) Purchase instance period in month. The value does not exceed 48.
-* `project_id` - (Optional) Project ID, default value is 0.
-* `security_groups` - (Optional) Security group bound to the instance.
-* `subnet_id` - (Optional, ForceNew) ID of subnet.
-* `tags` - (Optional) The tags of the SQL Server.
-* `voucher_ids` - (Optional) An array of voucher IDs, currently only one can be used for a single order.
-* `vpc_id` - (Optional, ForceNew) ID of VPC.
+* `memory` - (Required, Int) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
+* `name` - (Required, String) Name of the SQL Server instance.
+* `storage` - (Required, Int) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
+* `auto_renew` - (Optional, Int) Automatic renewal sign. 0 for normal renewal, 1 for automatic renewal (Default). Only valid when purchasing a prepaid instance.
+* `auto_voucher` - (Optional, Int) Whether to use the voucher automatically; 1 for yes, 0 for no, the default is 0.
+* `availability_zone` - (Optional, String, ForceNew) Availability zone.
+* `charge_type` - (Optional, String, ForceNew) Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`.
+* `engine_version` - (Optional, String, ForceNew) Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
+* `ha_type` - (Optional, String, ForceNew) Instance type. `DUAL` (dual-server high availability), `CLUSTER` (cluster). Default is `DUAL`.
+* `maintenance_start_time` - (Optional, String) Start time of the maintenance in one day, format like `HH:mm`.
+* `maintenance_time_span` - (Optional, Int) The timespan of maintenance in one day, unit is hour.
+* `maintenance_week_set` - (Optional, Set: [`Int`]) A list of integer indicates weekly maintenance. For example, [2,7] presents do weekly maintenance on every Tuesday and Sunday.
+* `multi_zones` - (Optional, Bool, ForceNew) Indicate whether to deploy across availability zones.
+* `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
+* `project_id` - (Optional, Int) Project ID, default value is 0.
+* `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
+* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `tags` - (Optional, Map) The tags of the SQL Server.
+* `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
+* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 ## Attributes Reference
 

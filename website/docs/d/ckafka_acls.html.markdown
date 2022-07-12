@@ -26,11 +26,11 @@ data "tencentcloud_ckafka_acls" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required) Id of the ckafka instance.
-* `resource_name` - (Required) ACL resource name, which is related to `resource_type`. For example, if `resource_type` is `TOPIC`, this field indicates the topic name; if `resource_type` is `GROUP`, this field indicates the group name.
-* `resource_type` - (Required) ACL resource type. Valid values are `UNKNOWN`, `ANY`, `TOPIC`, `GROUP`, `CLUSTER`, `TRANSACTIONAL_ID`. Currently, only `TOPIC` is available, and other fields will be used for future ACLs compatible with open-source Kafka.
-* `host` - (Optional) Host substr used for querying.
-* `result_output_file` - (Optional) Used to save results.
+* `instance_id` - (Required, String) Id of the ckafka instance.
+* `resource_name` - (Required, String) ACL resource name, which is related to `resource_type`. For example, if `resource_type` is `TOPIC`, this field indicates the topic name; if `resource_type` is `GROUP`, this field indicates the group name.
+* `resource_type` - (Required, String) ACL resource type. Valid values are `UNKNOWN`, `ANY`, `TOPIC`, `GROUP`, `CLUSTER`, `TRANSACTIONAL_ID`. Currently, only `TOPIC` is available, and other fields will be used for future ACLs compatible with open-source Kafka.
+* `host` - (Optional, String) Host substr used for querying.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

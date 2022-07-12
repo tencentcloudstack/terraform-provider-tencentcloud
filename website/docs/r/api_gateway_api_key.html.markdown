@@ -24,8 +24,8 @@ resource "tencentcloud_api_gateway_api_key" "test" {
 
 The following arguments are supported:
 
-* `secret_name` - (Required, ForceNew) Custom key name.
-* `status` - (Optional) Key status. Valid values: `on`, `off`.
+* `secret_name` - (Required, String, ForceNew) Custom key name.
+* `status` - (Optional, String) Key status. Valid values: `on`, `off`.
 
 ## Attributes Reference
 

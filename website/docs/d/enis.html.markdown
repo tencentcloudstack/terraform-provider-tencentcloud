@@ -23,16 +23,16 @@ data "tencentcloud_enis" "name" {
 
 The following arguments are supported:
 
-* `description` - (Optional) Description of the ENI. Conflict with `ids`.
-* `ids` - (Optional) ID of the ENIs to be queried. Conflict with `vpc_id`,`subnet_id`,`instance_id`,`security_group`,`name`,`ipv4` and `tags`.
-* `instance_id` - (Optional) ID of the instance which bind the ENI. Conflict with `ids`.
-* `ipv4` - (Optional) Intranet IP of the ENI. Conflict with `ids`.
-* `name` - (Optional) Name of the ENI to be queried. Conflict with `ids`.
-* `result_output_file` - (Optional) Used to save results.
-* `security_group` - (Optional) A set of security group IDs which bind the ENI. Conflict with `ids`.
-* `subnet_id` - (Optional) ID of the subnet within this vpc to be queried. Conflict with `ids`.
-* `tags` - (Optional) Tags of the ENI. Conflict with `ids`.
-* `vpc_id` - (Optional) ID of the vpc to be queried. Conflict with `ids`.
+* `description` - (Optional, String) Description of the ENI. Conflict with `ids`.
+* `ids` - (Optional, Set: [`String`]) ID of the ENIs to be queried. Conflict with `vpc_id`,`subnet_id`,`instance_id`,`security_group`,`name`,`ipv4` and `tags`.
+* `instance_id` - (Optional, String) ID of the instance which bind the ENI. Conflict with `ids`.
+* `ipv4` - (Optional, String) Intranet IP of the ENI. Conflict with `ids`.
+* `name` - (Optional, String) Name of the ENI to be queried. Conflict with `ids`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `security_group` - (Optional, String) A set of security group IDs which bind the ENI. Conflict with `ids`.
+* `subnet_id` - (Optional, String) ID of the subnet within this vpc to be queried. Conflict with `ids`.
+* `tags` - (Optional, Map) Tags of the ENI. Conflict with `ids`.
+* `vpc_id` - (Optional, String) ID of the vpc to be queried. Conflict with `ids`.
 
 ## Attributes Reference
 

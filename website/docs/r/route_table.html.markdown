@@ -29,9 +29,9 @@ resource "tencentcloud_route_table" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of routing table.
-* `vpc_id` - (Required, ForceNew) ID of VPC to which the route table should be associated.
-* `tags` - (Optional) The tags of routing table.
+* `name` - (Required, String) The name of routing table.
+* `vpc_id` - (Required, String, ForceNew) ID of VPC to which the route table should be associated.
+* `tags` - (Optional, Map) The tags of routing table.
 
 ## Attributes Reference
 

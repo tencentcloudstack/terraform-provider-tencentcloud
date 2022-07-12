@@ -40,20 +40,20 @@ resource "tencentcloud_eni" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the ENI, maximum length 60.
-* `subnet_id` - (Required, ForceNew) ID of the subnet within this vpc.
-* `vpc_id` - (Required, ForceNew) ID of the vpc.
-* `description` - (Optional) Description of the ENI, maximum length 60.
-* `ipv4_count` - (Optional) The number of intranet IPv4s. When it is greater than 1, there is only one primary intranet IP. The others are auxiliary intranet IPs, which conflict with `ipv4s`.
-* `ipv4s` - (Optional) Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:
-* `security_groups` - (Optional) A set of security group IDs.
-* `tags` - (Optional) Tags of the ENI.
+* `name` - (Required, String) Name of the ENI, maximum length 60.
+* `subnet_id` - (Required, String, ForceNew) ID of the subnet within this vpc.
+* `vpc_id` - (Required, String, ForceNew) ID of the vpc.
+* `description` - (Optional, String) Description of the ENI, maximum length 60.
+* `ipv4_count` - (Optional, Int) The number of intranet IPv4s. When it is greater than 1, there is only one primary intranet IP. The others are auxiliary intranet IPs, which conflict with `ipv4s`.
+* `ipv4s` - (Optional, Set) Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:
+* `security_groups` - (Optional, Set: [`String`]) A set of security group IDs.
+* `tags` - (Optional, Map) Tags of the ENI.
 
 The `ipv4s` object supports the following:
 
-* `ip` - (Required) Intranet IP.
-* `primary` - (Required) Indicates whether the IP is primary.
-* `description` - (Optional) Description of the IP, maximum length 25.
+* `ip` - (Required, String) Intranet IP.
+* `primary` - (Required, Bool) Indicates whether the IP is primary.
+* `description` - (Optional, String) Description of the IP, maximum length 25.
 
 ## Attributes Reference
 

@@ -33,8 +33,8 @@ data "tencentcloud_api_gateway_customer_domains" "id" {
 
 The following arguments are supported:
 
-* `service_id` - (Required) The service ID.
-* `result_output_file` - (Optional) Used to save results.
+* `service_id` - (Required, String) The service ID.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

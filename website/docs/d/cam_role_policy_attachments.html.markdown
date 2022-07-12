@@ -30,11 +30,11 @@ data "tencentcloud_cam_role_policy_attachments" "bar" {
 
 The following arguments are supported:
 
-* `role_id` - (Required) ID of the attached CAM role to be queried.
-* `create_mode` - (Optional) Mode of Creation of the CAM user policy attachment. `1` means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
-* `policy_id` - (Optional) ID of CAM policy to be queried.
-* `policy_type` - (Optional) Type of the policy strategy. Valid values are 'User', 'QCS'. 'User' means customer strategy and 'QCS' means preset strategy.
-* `result_output_file` - (Optional) Used to save results.
+* `role_id` - (Required, String) ID of the attached CAM role to be queried.
+* `create_mode` - (Optional, Int) Mode of Creation of the CAM user policy attachment. `1` means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
+* `policy_id` - (Optional, String) ID of CAM policy to be queried.
+* `policy_type` - (Optional, String) Type of the policy strategy. Valid values are 'User', 'QCS'. 'User' means customer strategy and 'QCS' means preset strategy.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -36,8 +36,8 @@ resource "tencentcloud_subnet" "main" {
 
 The following arguments are supported:
 
-* `id` - (Optional) The ID of the specific VPC to retrieve.
-* `name` - (Optional) The name of the specific VPC to retrieve.
+* `id` - (Optional, String) The ID of the specific VPC to retrieve.
+* `name` - (Optional, String) The name of the specific VPC to retrieve.
 
 ## Attributes Reference
 

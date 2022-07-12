@@ -70,31 +70,31 @@ resource "tencentcloud_mysql_privilege" "tttt" {
 
 The following arguments are supported:
 
-* `account_name` - (Required, ForceNew) Account name.the forbidden value is:root,mysql.sys,tencentroot.
-* `global` - (Required) Global privileges. available values for Privileges:ALTER,ALTER ROUTINE,CREATE,CREATE ROUTINE,CREATE TEMPORARY TABLES,CREATE USER,CREATE VIEW,DELETE,DROP,EVENT,EXECUTE,INDEX,INSERT,LOCK TABLES,PROCESS,REFERENCES,RELOAD,REPLICATION CLIENT,REPLICATION SLAVE,SELECT,SHOW DATABASES,SHOW VIEW,TRIGGER,UPDATE.
-* `mysql_id` - (Required, ForceNew) Instance ID.
-* `account_host` - (Optional, ForceNew) Account host, default is `%`.
-* `column` - (Optional) Column privileges list.
-* `database` - (Optional) Database privileges list.
-* `table` - (Optional) Table privileges list.
+* `account_name` - (Required, String, ForceNew) Account name.the forbidden value is:root,mysql.sys,tencentroot.
+* `global` - (Required, Set: [`String`]) Global privileges. available values for Privileges:ALTER,ALTER ROUTINE,CREATE,CREATE ROUTINE,CREATE TEMPORARY TABLES,CREATE USER,CREATE VIEW,DELETE,DROP,EVENT,EXECUTE,INDEX,INSERT,LOCK TABLES,PROCESS,REFERENCES,RELOAD,REPLICATION CLIENT,REPLICATION SLAVE,SELECT,SHOW DATABASES,SHOW VIEW,TRIGGER,UPDATE.
+* `mysql_id` - (Required, String, ForceNew) Instance ID.
+* `account_host` - (Optional, String, ForceNew) Account host, default is `%`.
+* `column` - (Optional, Set) Column privileges list.
+* `database` - (Optional, Set) Database privileges list.
+* `table` - (Optional, Set) Table privileges list.
 
 The `column` object supports the following:
 
-* `column_name` - (Required) Column name.
-* `database_name` - (Required) Database name.
-* `privileges` - (Required) Column privilege.available values for Privileges:SELECT,INSERT,UPDATE,REFERENCES.
-* `table_name` - (Required) Table name.
+* `column_name` - (Required, String) Column name.
+* `database_name` - (Required, String) Database name.
+* `privileges` - (Required, Set) Column privilege.available values for Privileges:SELECT,INSERT,UPDATE,REFERENCES.
+* `table_name` - (Required, String) Table name.
 
 The `database` object supports the following:
 
-* `database_name` - (Required) Database name.
-* `privileges` - (Required) Database privilege.available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,CREATE TEMPORARY TABLES,LOCK TABLES,EXECUTE,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,EVENT,TRIGGER.
+* `database_name` - (Required, String) Database name.
+* `privileges` - (Required, Set) Database privilege.available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,CREATE TEMPORARY TABLES,LOCK TABLES,EXECUTE,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,EVENT,TRIGGER.
 
 The `table` object supports the following:
 
-* `database_name` - (Required) Database name.
-* `privileges` - (Required) Table privilege.available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,CREATE VIEW,SHOW VIEW,TRIGGER.
-* `table_name` - (Required) Table name.
+* `database_name` - (Required, String) Database name.
+* `privileges` - (Required, Set) Table privilege.available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,CREATE VIEW,SHOW VIEW,TRIGGER.
+* `table_name` - (Required, String) Table name.
 
 ## Attributes Reference
 

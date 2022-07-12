@@ -45,12 +45,12 @@ resource "tencentcloud_vpc" "foo" {
 
 The following arguments are supported:
 
-* `cidr_block` - (Required, ForceNew) A network address block which should be a subnet of the three internal network segments (10.0.0.0/16, 172.16.0.0/12 and 192.168.0.0/16).
-* `name` - (Required) The name of the VPC.
-* `assistant_cidrs` - (Optional) List of Assistant CIDR.
-* `dns_servers` - (Optional) The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.
-* `is_multicast` - (Optional) Indicates whether VPC multicast is enabled. The default value is 'true'.
-* `tags` - (Optional) Tags of the VPC.
+* `cidr_block` - (Required, String, ForceNew) A network address block which should be a subnet of the three internal network segments (10.0.0.0/16, 172.16.0.0/12 and 192.168.0.0/16).
+* `name` - (Required, String) The name of the VPC.
+* `assistant_cidrs` - (Optional, List: [`String`]) List of Assistant CIDR.
+* `dns_servers` - (Optional, Set: [`String`]) The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.
+* `is_multicast` - (Optional, Bool) Indicates whether VPC multicast is enabled. The default value is 'true'.
+* `tags` - (Optional, Map) Tags of the VPC.
 
 ## Attributes Reference
 

@@ -52,11 +52,11 @@ resource "tencentcloud_clb_target_group_attachment" "group" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) ID of the CLB.
-* `listener_id` - (Required, ForceNew) ID of the CLB listener.
-* `rule_id` - (Optional, ForceNew) ID of the CLB listener rule.
-* `target_group_id` - (Optional, ForceNew) ID of the CLB target group.
-* `targrt_group_id` - (Optional, **Deprecated**) It has been deprecated from version 1.47.1. Use `target_group_id` instead. ID of the CLB target group.
+* `clb_id` - (Required, String, ForceNew) ID of the CLB.
+* `listener_id` - (Required, String, ForceNew) ID of the CLB listener.
+* `rule_id` - (Optional, String, ForceNew) ID of the CLB listener rule.
+* `target_group_id` - (Optional, String, ForceNew) ID of the CLB target group.
+* `targrt_group_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.47.1. Use `target_group_id` instead. ID of the CLB target group.
 
 ## Attributes Reference
 

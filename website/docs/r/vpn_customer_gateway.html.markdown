@@ -28,9 +28,9 @@ resource "tencentcloud_vpn_customer_gateway" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of the customer gateway. The length of character is limited to 1-60.
-* `public_ip_address` - (Required, ForceNew) Public IP of the customer gateway.
-* `tags` - (Optional) A list of tags used to associate different resources.
+* `name` - (Required, String) Name of the customer gateway. The length of character is limited to 1-60.
+* `public_ip_address` - (Required, String, ForceNew) Public IP of the customer gateway.
+* `tags` - (Optional, Map) A list of tags used to associate different resources.
 
 ## Attributes Reference
 

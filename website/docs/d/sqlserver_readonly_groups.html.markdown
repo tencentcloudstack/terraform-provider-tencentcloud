@@ -23,8 +23,8 @@ data "tencentcloud_sqlserver_readonly_groups" "master" {
 
 The following arguments are supported:
 
-* `master_instance_id` - (Optional) Master SQL Server instance ID.
-* `result_output_file` - (Optional) Used to store results.
+* `master_instance_id` - (Optional, String) Master SQL Server instance ID.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 

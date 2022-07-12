@@ -28,11 +28,11 @@ resource "tencentcloud_lb" "classic" {
 
 The following arguments are supported:
 
-* `type` - (Required, ForceNew) The network type of the LB. Valid value: 'OPEN', 'INTERNAL'.
-* `forward` - (Optional, ForceNew) The type of the LB. Valid value: 'CLASSIC', 'APPLICATION'.
-* `name` - (Optional) The name of the LB.
-* `project_id` - (Optional, ForceNew) The project id of the LB, unspecified or 0 stands for default project.
-* `vpc_id` - (Optional, ForceNew) The VPC ID of the LB, unspecified or 0 stands for CVM basic network.
+* `type` - (Required, String, ForceNew) The network type of the LB. Valid value: 'OPEN', 'INTERNAL'.
+* `forward` - (Optional, String, ForceNew) The type of the LB. Valid value: 'CLASSIC', 'APPLICATION'.
+* `name` - (Optional, String) The name of the LB.
+* `project_id` - (Optional, Int, ForceNew) The project id of the LB, unspecified or 0 stands for default project.
+* `vpc_id` - (Optional, String, ForceNew) The VPC ID of the LB, unspecified or 0 stands for CVM basic network.
 
 ## Attributes Reference
 

@@ -30,14 +30,14 @@ resource "tencentcloud_as_schedule" "schedule" {
 
 The following arguments are supported:
 
-* `desired_capacity` - (Required) The desired number of CVM instances that should be running in the group.
-* `max_size` - (Required) The maximum size for the Auto Scaling group.
-* `min_size` - (Required) The minimum size for the Auto Scaling group.
-* `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
-* `schedule_action_name` - (Required) The name of this scaling action.
-* `start_time` - (Required) The time for this action to start, in "YYYY-MM-DDThh:mm:ss+08:00" format (UTC+8).
-* `end_time` - (Optional) The time for this action to end, in "YYYY-MM-DDThh:mm:ss+08:00" format (UTC+8).
-* `recurrence` - (Optional) The time when recurring future actions will start. Start time is specified by the user following the Unix cron syntax format. And this argument should be set with end_time together.
+* `desired_capacity` - (Required, Int) The desired number of CVM instances that should be running in the group.
+* `max_size` - (Required, Int) The maximum size for the Auto Scaling group.
+* `min_size` - (Required, Int) The minimum size for the Auto Scaling group.
+* `scaling_group_id` - (Required, String, ForceNew) ID of a scaling group.
+* `schedule_action_name` - (Required, String) The name of this scaling action.
+* `start_time` - (Required, String) The time for this action to start, in "YYYY-MM-DDThh:mm:ss+08:00" format (UTC+8).
+* `end_time` - (Optional, String) The time for this action to end, in "YYYY-MM-DDThh:mm:ss+08:00" format (UTC+8).
+* `recurrence` - (Optional, String) The time when recurring future actions will start. Start time is specified by the user following the Unix cron syntax format. And this argument should be set with end_time together.
 
 ## Attributes Reference
 

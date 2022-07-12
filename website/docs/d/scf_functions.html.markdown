@@ -33,11 +33,11 @@ data "tencentcloud_scf_functions" "foo" {
 
 The following arguments are supported:
 
-* `description` - (Optional) Description of the SCF function to be queried.
-* `name` - (Optional) Name of the SCF function to be queried.
-* `namespace` - (Optional) Namespace of the SCF function to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the SCF function to be queried, can use up to 10 tags.
+* `description` - (Optional, String) Description of the SCF function to be queried.
+* `name` - (Optional, String) Name of the SCF function to be queried.
+* `namespace` - (Optional, String) Namespace of the SCF function to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the SCF function to be queried, can use up to 10 tags.
 
 ## Attributes Reference
 

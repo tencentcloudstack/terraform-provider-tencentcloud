@@ -34,12 +34,12 @@ resource "tencentcloud_cdn_url_push" "foo" {
 
 The following arguments are supported:
 
-* `urls` - (Required, ForceNew) List of url to push. NOTE: urls need include protocol prefix `http://` or `https://`.
-* `area` - (Optional) Specify push area. NOTE: only push same area cache contents.
-* `layer` - (Optional) Layer to push.
-* `parse_m3u8` - (Optional) Whether to recursive parse m3u8 files.
-* `redo` - (Optional) Change to push again. NOTE: this argument only works while resource update, if set to `0` or null will not be triggered.
-* `user_agent` - (Optional) Specify `User-Agent` HTTP header, default: `TencentCdn`.
+* `urls` - (Required, List: [`String`], ForceNew) List of url to push. NOTE: urls need include protocol prefix `http://` or `https://`.
+* `area` - (Optional, String) Specify push area. NOTE: only push same area cache contents.
+* `layer` - (Optional, String) Layer to push.
+* `parse_m3u8` - (Optional, Bool) Whether to recursive parse m3u8 files.
+* `redo` - (Optional, Int) Change to push again. NOTE: this argument only works while resource update, if set to `0` or null will not be triggered.
+* `user_agent` - (Optional, String) Specify `User-Agent` HTTP header, default: `TencentCdn`.
 
 ## Attributes Reference
 

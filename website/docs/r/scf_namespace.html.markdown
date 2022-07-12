@@ -23,8 +23,8 @@ resource "tencentcloud_scf_namespace" "foo" {
 
 The following arguments are supported:
 
-* `namespace` - (Required, ForceNew) Name of the SCF namespace.
-* `description` - (Optional) Description of the SCF namespace.
+* `namespace` - (Required, String, ForceNew) Name of the SCF namespace.
+* `description` - (Optional, String) Description of the SCF namespace.
 
 ## Attributes Reference
 

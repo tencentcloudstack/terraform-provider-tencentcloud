@@ -35,19 +35,19 @@ resource "tencentcloud_ckafka_topic" "foo" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, ForceNew) Ckafka instance ID.
-* `partition_num` - (Required) The number of partition.
-* `replica_num` - (Required) The number of replica.
-* `topic_name` - (Required, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-).
-* `clean_up_policy` - (Optional) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
-* `enable_white_list` - (Optional) Whether to open the ip whitelist, `true`: open, `false`: close.
-* `ip_white_list` - (Optional) Ip whitelist, quota limit, required when enableWhileList=true.
-* `max_message_bytes` - (Optional) Max message bytes.
-* `note` - (Optional) The subject note. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
-* `retention` - (Optional) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
-* `segment` - (Optional) Segment scrolling time, in ms, the current minimum is 3600000ms.
-* `sync_replica_min_num` - (Optional) Min number of sync replicas, Default is `1`.
-* `unclean_leader_election_enable` - (Optional) Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
+* `instance_id` - (Required, String, ForceNew) Ckafka instance ID.
+* `partition_num` - (Required, Int) The number of partition.
+* `replica_num` - (Required, Int) The number of replica.
+* `topic_name` - (Required, String, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-).
+* `clean_up_policy` - (Optional, String) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
+* `enable_white_list` - (Optional, Bool) Whether to open the ip whitelist, `true`: open, `false`: close.
+* `ip_white_list` - (Optional, List: [`String`]) Ip whitelist, quota limit, required when enableWhileList=true.
+* `max_message_bytes` - (Optional, Int) Max message bytes.
+* `note` - (Optional, String) The subject note. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
+* `retention` - (Optional, Int) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
+* `segment` - (Optional, Int) Segment scrolling time, in ms, the current minimum is 3600000ms.
+* `sync_replica_min_num` - (Optional, Int) Min number of sync replicas, Default is `1`.
+* `unclean_leader_election_enable` - (Optional, Bool) Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
 
 ## Attributes Reference
 

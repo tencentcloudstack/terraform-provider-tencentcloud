@@ -147,42 +147,42 @@ resource "tencentcloud_postgresql_instance" "pg" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.
-* `memory` - (Required) Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
-* `name` - (Required) Name of the postgresql instance.
-* `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
-* `storage` - (Required) Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
-* `backup_plan` - (Optional) Specify DB backup plan.
-* `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
-* `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `db_kernel_version` - (Optional) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
-* `db_major_vesion` - (Optional) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
-* `db_node_set` - (Optional) Specify instance node info for disaster migration.
-* `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.
-* `kms_key_id` - (Optional) KeyId of the custom key.
-* `kms_region` - (Optional) Region of the custom key.
-* `max_standby_archive_delay` - (Optional) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
-* `max_standby_streaming_delay` - (Optional) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
-* `need_support_tde` - (Optional) Whether to support data transparent encryption, 1: yes, 0: no (default).
-* `project_id` - (Optional) Project id, default value is `0`.
-* `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
-* `root_user` - (Optional, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
-* `security_groups` - (Optional) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
-* `subnet_id` - (Optional, ForceNew) ID of subnet.
-* `tags` - (Optional) The available tags within this postgresql.
-* `vpc_id` - (Optional, ForceNew) ID of VPC.
+* `availability_zone` - (Required, String, ForceNew) Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.
+* `memory` - (Required, Int) Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
+* `name` - (Required, String) Name of the postgresql instance.
+* `root_password` - (Required, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
+* `storage` - (Required, Int) Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
+* `backup_plan` - (Optional, List) Specify DB backup plan.
+* `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
+* `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
+* `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
+* `db_major_vesion` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
+* `db_node_set` - (Optional, Set) Specify instance node info for disaster migration.
+* `engine_version` - (Optional, String, ForceNew) Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.
+* `kms_key_id` - (Optional, String) KeyId of the custom key.
+* `kms_region` - (Optional, String) Region of the custom key.
+* `max_standby_archive_delay` - (Optional, Int) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
+* `max_standby_streaming_delay` - (Optional, Int) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
+* `need_support_tde` - (Optional, Int) Whether to support data transparent encryption, 1: yes, 0: no (default).
+* `project_id` - (Optional, Int) Project id, default value is `0`.
+* `public_access_switch` - (Optional, Bool) Indicates whether to enable the access to an instance from public network or not.
+* `root_user` - (Optional, String, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
+* `security_groups` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
+* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `tags` - (Optional, Map) The available tags within this postgresql.
+* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 The `backup_plan` object supports the following:
 
-* `backup_period` - (Optional) List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.
-* `base_backup_retention_period` - (Optional) Specify days of the retention.
-* `max_backup_start_time` - (Optional) Specify latest backup start time, format `hh:mm:ss`.
-* `min_backup_start_time` - (Optional) Specify earliest backup start time, format `hh:mm:ss`.
+* `backup_period` - (Optional, List) List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.
+* `base_backup_retention_period` - (Optional, Int) Specify days of the retention.
+* `max_backup_start_time` - (Optional, String) Specify latest backup start time, format `hh:mm:ss`.
+* `min_backup_start_time` - (Optional, String) Specify earliest backup start time, format `hh:mm:ss`.
 
 The `db_node_set` object supports the following:
 
-* `zone` - (Required) Indicates the node available zone.
-* `role` - (Optional) Indicates node type, available values:`Primary`, `Standby`. Default: `Standby`.
+* `zone` - (Required, String) Indicates the node available zone.
+* `role` - (Optional, String) Indicates node type, available values:`Primary`, `Standby`. Default: `Standby`.
 
 ## Attributes Reference
 

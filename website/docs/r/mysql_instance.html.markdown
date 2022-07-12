@@ -49,34 +49,34 @@ resource "tencentcloud_mysql_instance" "default" {
 
 The following arguments are supported:
 
-* `instance_name` - (Required) The name of a mysql instance.
-* `mem_size` - (Required) Memory size (in MB).
-* `volume_size` - (Required) Disk size (in GB).
-* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
-* `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
-* `charge_type` - (Optional, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
-* `cpu` - (Optional) CPU cores.
-* `device_type` - (Optional) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
-* `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.
-* `fast_upgrade` - (Optional) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
-* `first_slave_zone` - (Optional, ForceNew) Zone information about first slave instance.
-* `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
-* `internet_service` - (Optional) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
-* `intranet_port` - (Optional) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
-* `param_template_id` - (Optional) Specify parameter template id.
-* `parameters` - (Optional) List of parameters to use.
-* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
-* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
-* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
-* `project_id` - (Optional) Project ID, default value is 0.
-* `root_password` - (Optional) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
-* `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
-* `security_groups` - (Optional) Security groups to use.
-* `slave_deploy_mode` - (Optional, ForceNew) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
-* `slave_sync_mode` - (Optional, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
-* `subnet_id` - (Optional) Private network ID. If `vpc_id` is set, this value is required.
-* `tags` - (Optional) Instance tags.
-* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
+* `instance_name` - (Required, String) The name of a mysql instance.
+* `mem_size` - (Required, Int) Memory size (in MB).
+* `volume_size` - (Required, Int) Disk size (in GB).
+* `auto_renew_flag` - (Optional, Int) Auto renew flag. NOTES: Only supported prepaid instance.
+* `availability_zone` - (Optional, String, ForceNew) Indicates which availability zone will be used.
+* `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
+* `cpu` - (Optional, Int) CPU cores.
+* `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
+* `engine_version` - (Optional, String, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.
+* `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
+* `first_slave_zone` - (Optional, String, ForceNew) Zone information about first slave instance.
+* `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
+* `internet_service` - (Optional, Int) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
+* `intranet_port` - (Optional, Int) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
+* `param_template_id` - (Optional, Int) Specify parameter template id.
+* `parameters` - (Optional, Map) List of parameters to use.
+* `pay_type` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
+* `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
+* `prepaid_period` - (Optional, Int) Period of instance. NOTES: Only supported prepaid instance.
+* `project_id` - (Optional, Int) Project ID, default value is 0.
+* `root_password` - (Optional, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
+* `second_slave_zone` - (Optional, String, ForceNew) Zone information about second slave instance.
+* `security_groups` - (Optional, Set: [`String`]) Security groups to use.
+* `slave_deploy_mode` - (Optional, Int, ForceNew) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
+* `slave_sync_mode` - (Optional, Int, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
+* `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
+* `tags` - (Optional, Map) Instance tags.
+* `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
 
 ## Attributes Reference
 

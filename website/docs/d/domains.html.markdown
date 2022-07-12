@@ -22,9 +22,9 @@ data "tencentcloud_domains" "foo" {
 
 The following arguments are supported:
 
-* `limit` - (Optional) Specify data limit in range [1, 100]. Default: 20.
-* `offset` - (Optional) Specify data offset. Default: 0.
-* `result_output_file` - (Optional) Used for save response as file locally.
+* `limit` - (Optional, Int) Specify data limit in range [1, 100]. Default: 20.
+* `offset` - (Optional, Int) Specify data offset. Default: 0.
+* `result_output_file` - (Optional, String) Used for save response as file locally.
 
 ## Attributes Reference
 

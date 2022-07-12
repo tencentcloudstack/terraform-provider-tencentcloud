@@ -29,14 +29,14 @@ resource "tencentcloud_api_gateway_custom_domain" "foo" {
 
 The following arguments are supported:
 
-* `default_domain` - (Required) Default domain name.
-* `net_type` - (Required) Network type. Valid values: `OUTER`, `INNER`.
-* `protocol` - (Required) Protocol supported by service. Valid values: `http`, `https`, `http&https`.
-* `service_id` - (Required, ForceNew) Unique service ID.
-* `sub_domain` - (Required) Custom domain name to be bound.
-* `certificate_id` - (Optional) Unique certificate ID of the custom domain name to be bound. You can choose to upload for the `protocol` attribute value `https` or `http&https`.
-* `is_default_mapping` - (Optional) Whether the default path mapping is used. The default value is `true`. When it is `false`, it means custom path mapping. In this case, the `path_mappings` attribute is required.
-* `path_mappings` - (Optional) Custom domain name path mapping. The data format is: `path#environment`. Optional values for the environment are `test`, `prepub`, and `release`.
+* `default_domain` - (Required, String) Default domain name.
+* `net_type` - (Required, String) Network type. Valid values: `OUTER`, `INNER`.
+* `protocol` - (Required, String) Protocol supported by service. Valid values: `http`, `https`, `http&https`.
+* `service_id` - (Required, String, ForceNew) Unique service ID.
+* `sub_domain` - (Required, String) Custom domain name to be bound.
+* `certificate_id` - (Optional, String) Unique certificate ID of the custom domain name to be bound. You can choose to upload for the `protocol` attribute value `https` or `http&https`.
+* `is_default_mapping` - (Optional, Bool) Whether the default path mapping is used. The default value is `true`. When it is `false`, it means custom path mapping. In this case, the `path_mappings` attribute is required.
+* `path_mappings` - (Optional, Set: [`String`]) Custom domain name path mapping. The data format is: `path#environment`. Optional values for the environment are `test`, `prepub`, and `release`.
 
 ## Attributes Reference
 

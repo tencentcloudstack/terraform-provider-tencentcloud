@@ -23,8 +23,8 @@ resource "tencentcloud_mysql_default_params" "mysql_57" {
 
 The following arguments are supported:
 
-* `db_version` - (Optional) MySQL database version.
-* `result_output_file` - (Optional) Used for save results.
+* `db_version` - (Optional, String) MySQL database version.
+* `result_output_file` - (Optional, String) Used for save results.
 
 ## Attributes Reference
 

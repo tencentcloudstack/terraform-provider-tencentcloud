@@ -27,9 +27,9 @@ data "tencentcloud_dcx_instances" "id" {
 
 The following arguments are supported:
 
-* `dcx_id` - (Optional) ID of the dedicated tunnels to be queried.
-* `name` - (Optional) Name of the dedicated tunnels to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `dcx_id` - (Optional, String) ID of the dedicated tunnels to be queried.
+* `name` - (Optional, String) Name of the dedicated tunnels to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

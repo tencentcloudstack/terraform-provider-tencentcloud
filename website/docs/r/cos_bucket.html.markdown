@@ -236,92 +236,92 @@ resource "tencentcloud_cos_bucket" "mycos" {
 
 The following arguments are supported:
 
-* `bucket` - (Required, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
-* `acl_body` - (Optional) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
-* `acl` - (Optional) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
-* `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
-* `encryption_algorithm` - (Optional) The server-side encryption algorithm to use. Valid value is `AES256`.
-* `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).
-* `log_enable` - (Optional) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
-* `log_prefix` - (Optional) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
-* `log_target_bucket` - (Optional) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
-* `multi_az` - (Optional, ForceNew) Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.
-* `origin_domain_rules` - (Optional) Bucket Origin Domain settings.
-* `origin_pull_rules` - (Optional) Bucket Origin-Pull settings.
-* `replica_role` - (Optional) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
-* `replica_rules` - (Optional) List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.
-* `tags` - (Optional) The tags of a bucket.
-* `versioning_enable` - (Optional) Enable bucket versioning.
-* `website` - (Optional) A website object(documented below).
+* `bucket` - (Required, String, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
+* `acl_body` - (Optional, String) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
+* `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
+* `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
+* `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid value is `AES256`.
+* `lifecycle_rules` - (Optional, List) A configuration of object lifecycle management (documented below).
+* `log_enable` - (Optional, Bool) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
+* `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
+* `log_target_bucket` - (Optional, String) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
+* `multi_az` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.
+* `origin_domain_rules` - (Optional, List) Bucket Origin Domain settings.
+* `origin_pull_rules` - (Optional, List) Bucket Origin-Pull settings.
+* `replica_role` - (Optional, String) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
+* `replica_rules` - (Optional, List) List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.
+* `tags` - (Optional, Map) The tags of a bucket.
+* `versioning_enable` - (Optional, Bool) Enable bucket versioning.
+* `website` - (Optional, List) A website object(documented below).
 
 The `cors_rules` object supports the following:
 
-* `allowed_headers` - (Required) Specifies which headers are allowed.
-* `allowed_methods` - (Required) Specifies which methods are allowed. Can be `GET`, `PUT`, `POST`, `DELETE` or `HEAD`.
-* `allowed_origins` - (Required) Specifies which origins are allowed.
-* `expose_headers` - (Optional) Specifies expose header in the response.
-* `max_age_seconds` - (Optional) Specifies time in seconds that browser can cache the response for a preflight request.
+* `allowed_headers` - (Required, List) Specifies which headers are allowed.
+* `allowed_methods` - (Required, List) Specifies which methods are allowed. Can be `GET`, `PUT`, `POST`, `DELETE` or `HEAD`.
+* `allowed_origins` - (Required, List) Specifies which origins are allowed.
+* `expose_headers` - (Optional, List) Specifies expose header in the response.
+* `max_age_seconds` - (Optional, Int) Specifies time in seconds that browser can cache the response for a preflight request.
 
 The `expiration` object supports the following:
 
-* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
-* `delete_marker` - (Optional) Indicates whether the delete marker of an expired object will be removed.
+* `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.
+* `days` - (Optional, Int) Specifies the number of days after object creation when the specific rule action takes effect.
+* `delete_marker` - (Optional, Bool) Indicates whether the delete marker of an expired object will be removed.
 
 The `lifecycle_rules` object supports the following:
 
-* `filter_prefix` - (Required) Object key prefix identifying one or more objects to which the rule applies.
-* `expiration` - (Optional) Specifies a period in the object's expire (documented below).
-* `id` - (Optional) A unique identifier for the rule. It can be up to 255 characters.
-* `non_current_expiration` - (Optional) Specifies when non current object versions shall expire.
-* `non_current_transition` - (Optional) Specifies a period in the non current object's transitions.
-* `transition` - (Optional) Specifies a period in the object's transitions (documented below).
+* `filter_prefix` - (Required, String) Object key prefix identifying one or more objects to which the rule applies.
+* `expiration` - (Optional, Set) Specifies a period in the object's expire (documented below).
+* `id` - (Optional, String) A unique identifier for the rule. It can be up to 255 characters.
+* `non_current_expiration` - (Optional, Set) Specifies when non current object versions shall expire.
+* `non_current_transition` - (Optional, Set) Specifies a period in the non current object's transitions.
+* `transition` - (Optional, Set) Specifies a period in the object's transitions (documented below).
 
 The `non_current_expiration` object supports the following:
 
-* `non_current_days` - (Optional) Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.
+* `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect. The maximum value is 3650.
 
 The `non_current_transition` object supports the following:
 
-* `storage_class` - (Required) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
-* `non_current_days` - (Optional) Number of days after non current object creation when the specific rule action takes effect.
+* `storage_class` - (Required, String) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect.
 
 The `origin_domain_rules` object supports the following:
 
-* `domain` - (Required) Specify domain host.
-* `status` - (Optional) Domain status, default: `ENABLED`.
-* `type` - (Optional) Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.
+* `domain` - (Required, String) Specify domain host.
+* `status` - (Optional, String) Domain status, default: `ENABLED`.
+* `type` - (Optional, String) Specify origin domain type, available values: `REST`, `WEBSITE`, `ACCELERATE`, default: `REST`.
 
 The `origin_pull_rules` object supports the following:
 
-* `host` - (Required) Allows only a domain name or IP address. You can optionally append a port number to the address.
-* `priority` - (Required) Priority of origin-pull rules, do not set the same value for multiple rules.
-* `custom_http_headers` - (Optional) Specifies the custom headers that you can add for COS to access your origin server.
-* `follow_http_headers` - (Optional) Specifies the pass through headers when accessing the origin server.
-* `follow_query_string` - (Optional) Specifies whether to pass through COS request query string when accessing the origin server.
-* `follow_redirection` - (Optional) Specifies whether to follow 3XX redirect to another origin server to pull data from.
-* `prefix` - (Optional) Triggers the origin-pull rule when the requested file name matches this prefix.
-* `protocol` - (Optional) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
-* `sync_back_to_source` - (Optional) If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
+* `host` - (Required, String) Allows only a domain name or IP address. You can optionally append a port number to the address.
+* `priority` - (Required, Int) Priority of origin-pull rules, do not set the same value for multiple rules.
+* `custom_http_headers` - (Optional, Map) Specifies the custom headers that you can add for COS to access your origin server.
+* `follow_http_headers` - (Optional, List) Specifies the pass through headers when accessing the origin server.
+* `follow_query_string` - (Optional, Bool) Specifies whether to pass through COS request query string when accessing the origin server.
+* `follow_redirection` - (Optional, Bool) Specifies whether to follow 3XX redirect to another origin server to pull data from.
+* `prefix` - (Optional, String) Triggers the origin-pull rule when the requested file name matches this prefix.
+* `protocol` - (Optional, String) the protocol used for COS to access the specified origin server. The available value include `HTTP`, `HTTPS` and `FOLLOW`.
+* `sync_back_to_source` - (Optional, Bool) If `true`, COS will not return 3XX status code when pulling data from an origin server. Current available zone: ap-beijing, ap-shanghai, ap-singapore, ap-mumbai.
 
 The `replica_rules` object supports the following:
 
-* `destination_bucket` - (Required) Destination bucket identifier, format: `qcs::cos:<region>::<bucketname-appid>`. NOTE: destination bucket must enable versioning.
-* `status` - (Required) Status identifier, available values: `Enabled`, `Disabled`.
-* `destination_storage_class` - (Optional) Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.
-* `id` - (Optional) Name of a specific rule.
-* `prefix` - (Optional) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
+* `destination_bucket` - (Required, String) Destination bucket identifier, format: `qcs::cos:<region>::<bucketname-appid>`. NOTE: destination bucket must enable versioning.
+* `status` - (Required, String) Status identifier, available values: `Enabled`, `Disabled`.
+* `destination_storage_class` - (Optional, String) Storage class of destination, available values: `STANDARD`, `INTELLIGENT_TIERING`, `STANDARD_IA`. default is following current class of destination.
+* `id` - (Optional, String) Name of a specific rule.
+* `prefix` - (Optional, String) Prefix matching policy. Policies cannot overlap; otherwise, an error will be returned. To match the root directory, leave this parameter empty.
 
 The `transition` object supports the following:
 
-* `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
-* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
+* `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.
+* `days` - (Optional, Int) Specifies the number of days after object creation when the specific rule action takes effect.
 
 The `website` object supports the following:
 
-* `error_document` - (Optional) An absolute path to the document to return in case of a 4XX error.
-* `index_document` - (Optional) COS returns this index document when requests are made to the root domain or any of the subfolders.
+* `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
+* `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
 
 ## Attributes Reference
 

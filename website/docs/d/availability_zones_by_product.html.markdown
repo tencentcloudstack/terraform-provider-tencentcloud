@@ -27,10 +27,10 @@ data "tencentcloud_availability_zones_by_product" "all" {
 
 The following arguments are supported:
 
-* `product` - (Required) A string variable indicates that the query will use product information.
-* `include_unavailable` - (Optional) A bool variable indicates that the query will include `UNAVAILABLE` zones.
-* `name` - (Optional) When specified, only the zone with the exactly name match will be returned.
-* `result_output_file` - (Optional) Used to save results.
+* `product` - (Required, String) A string variable indicates that the query will use product information.
+* `include_unavailable` - (Optional, Bool) A bool variable indicates that the query will include `UNAVAILABLE` zones.
+* `name` - (Optional, String) When specified, only the zone with the exactly name match will be returned.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

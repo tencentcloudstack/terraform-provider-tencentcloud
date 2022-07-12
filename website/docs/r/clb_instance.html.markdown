@@ -150,32 +150,32 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 
 The following arguments are supported:
 
-* `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
-* `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
-* `address_ip_version` - (Optional) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
-* `bandwidth_package_id` - (Optional) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
-* `internet_bandwidth_max_out` - (Optional) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
-* `internet_charge_type` - (Optional) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `load_balancer_pass_to_target` - (Optional) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
-* `log_set_id` - (Optional) The id of log set.
-* `log_topic_id` - (Optional) The id of log topic.
-* `master_zone_id` - (Optional) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
-* `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
-* `security_groups` - (Optional) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
-* `slave_zone_id` - (Optional) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
-* `snat_ips` - (Optional) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
-* `snat_pro` - (Optional) Indicates whether Binding IPs of other VPCs feature switch.
-* `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
-* `tags` - (Optional) The available tags within this CLB.
-* `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
-* `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
-* `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
-* `zone_id` - (Optional) Available zone id, only applicable to open CLB.
+* `clb_name` - (Required, String) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
+* `network_type` - (Required, String, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
+* `address_ip_version` - (Optional, String) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
+* `bandwidth_package_id` - (Optional, String) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
+* `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
+* `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
+* `log_set_id` - (Optional, String) The id of log set.
+* `log_topic_id` - (Optional, String) The id of log topic.
+* `master_zone_id` - (Optional, String) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
+* `project_id` - (Optional, Int, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
+* `security_groups` - (Optional, List: [`String`]) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
+* `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
+* `snat_ips` - (Optional, List) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
+* `snat_pro` - (Optional, Bool) Indicates whether Binding IPs of other VPCs feature switch.
+* `subnet_id` - (Optional, String, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports `INTERNAL` CLBs. Default is `ipv4`.
+* `tags` - (Optional, Map) The available tags within this CLB.
+* `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
+* `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
+* `vpc_id` - (Optional, String, ForceNew) VPC ID of the CLB.
+* `zone_id` - (Optional, String) Available zone id, only applicable to open CLB.
 
 The `snat_ips` object supports the following:
 
-* `subnet_id` - (Required) Snat subnet ID.
-* `ip` - (Optional) Snat IP address, If set to empty will auto allocated.
+* `subnet_id` - (Required, String) Snat subnet ID.
+* `ip` - (Optional, String) Snat IP address, If set to empty will auto allocated.
 
 ## Attributes Reference
 

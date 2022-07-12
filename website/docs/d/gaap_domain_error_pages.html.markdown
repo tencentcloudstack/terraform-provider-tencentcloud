@@ -57,10 +57,10 @@ data tencentcloud_gaap_domain_error_pages "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Required) HTTP domain to be queried.
-* `listener_id` - (Required) ID of the layer7 listener to be queried.
-* `ids` - (Optional) List of the error page info ID to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `domain` - (Required, String) HTTP domain to be queried.
+* `listener_id` - (Required, String) ID of the layer7 listener to be queried.
+* `ids` - (Optional, Set: [`String`]) List of the error page info ID to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

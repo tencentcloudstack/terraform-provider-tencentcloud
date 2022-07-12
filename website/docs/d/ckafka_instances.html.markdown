@@ -23,19 +23,19 @@ data "tencentcloud_ckafka_instances" "foo" {
 
 The following arguments are supported:
 
-* `filters` - (Optional) Filter. filter.name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId'), filter.values can pass up to 10 values.
-* `instance_ids` - (Optional) Filter by instance ID.
-* `limit` - (Optional) The number of pages, default is `10`.
-* `offset` - (Optional) The page start offset, default is `0`.
-* `result_output_file` - (Optional) Used to save results.
-* `search_word` - (Optional) Filter by instance name, support fuzzy query.
-* `status` - (Optional) (Filter Criteria) The status of the instance. 0: Create, 1: Run, 2: Delete, do not fill the default return all.
-* `tag_key` - (Optional) Matches the tag key value.
+* `filters` - (Optional, List) Filter. filter.name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId'), filter.values can pass up to 10 values.
+* `instance_ids` - (Optional, List: [`String`]) Filter by instance ID.
+* `limit` - (Optional, Int) The number of pages, default is `10`.
+* `offset` - (Optional, Int) The page start offset, default is `0`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `search_word` - (Optional, String) Filter by instance name, support fuzzy query.
+* `status` - (Optional, List: [`Int`]) (Filter Criteria) The status of the instance. 0: Create, 1: Run, 2: Delete, do not fill the default return all.
+* `tag_key` - (Optional, String) Matches the tag key value.
 
 The `filters` object supports the following:
 
-* `name` - (Required) The field that needs to be filtered.
-* `values` - (Required) The filtered value of the field.
+* `name` - (Required, String) The field that needs to be filtered.
+* `values` - (Required, List) The filtered value of the field.
 
 ## Attributes Reference
 

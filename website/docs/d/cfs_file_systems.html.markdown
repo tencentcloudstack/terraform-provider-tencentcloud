@@ -25,12 +25,12 @@ data "tencentcloud_cfs_file_systems" "file_systems" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the file system locates at.
-* `file_system_id` - (Optional) A specified file system ID used to query.
-* `name` - (Optional) A file system name used to query.
-* `result_output_file` - (Optional) Used to save results.
-* `subnet_id` - (Optional) ID of a vpc subnet.
-* `vpc_id` - (Optional) ID of the vpc to be queried.
+* `availability_zone` - (Optional, String) The available zone that the file system locates at.
+* `file_system_id` - (Optional, String) A specified file system ID used to query.
+* `name` - (Optional, String) A file system name used to query.
+* `result_output_file` - (Optional, String) Used to save results.
+* `subnet_id` - (Optional, String) ID of a vpc subnet.
+* `vpc_id` - (Optional, String) ID of the vpc to be queried.
 
 ## Attributes Reference
 

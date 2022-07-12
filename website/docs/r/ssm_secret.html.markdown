@@ -30,12 +30,12 @@ resource "tencentcloud_ssm_secret" "foo" {
 
 The following arguments are supported:
 
-* `secret_name` - (Required, ForceNew) Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
-* `description` - (Optional) Description of secret. The maximum is 2048 bytes.
-* `is_enabled` - (Optional) Specify whether to enable secret. Default value is `true`.
-* `kms_key_id` - (Optional, ForceNew) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
-* `recovery_window_in_days` - (Optional) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
-* `tags` - (Optional) Tags of secret.
+* `secret_name` - (Required, String, ForceNew) Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
+* `description` - (Optional, String) Description of secret. The maximum is 2048 bytes.
+* `is_enabled` - (Optional, Bool) Specify whether to enable secret. Default value is `true`.
+* `kms_key_id` - (Optional, String, ForceNew) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
+* `recovery_window_in_days` - (Optional, Int) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
+* `tags` - (Optional, Map) Tags of secret.
 
 ## Attributes Reference
 

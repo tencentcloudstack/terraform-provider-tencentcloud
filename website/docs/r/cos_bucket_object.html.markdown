@@ -42,18 +42,18 @@ resource "tencentcloud_cos_bucket_object" "myobject" {
 
 The following arguments are supported:
 
-* `bucket` - (Required, ForceNew) The name of a bucket to use. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
-* `key` - (Required, ForceNew) The name of the object once it is in the bucket.
-* `acl` - (Optional) The canned ACL to apply. Available values include `private`, `public-read`, and `public-read-write`. Defaults to `private`.
-* `cache_control` - (Optional) Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.
-* `content_disposition` - (Optional) Specifies presentational information for the object.
-* `content_encoding` - (Optional) Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
-* `content_type` - (Optional) A standard MIME type describing the format of the object data.
-* `content` - (Optional) Literal string value to use as the object content, which will be uploaded as UTF-8-encoded text.
-* `etag` - (Optional) The ETag generated for the object (an MD5 sum of the object content).
-* `source` - (Optional) The path to the source file being uploaded to the bucket.
-* `storage_class` - (Optional) Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
-* `tags` - (Optional) Tag of the object.
+* `bucket` - (Required, String, ForceNew) The name of a bucket to use. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
+* `key` - (Required, String, ForceNew) The name of the object once it is in the bucket.
+* `acl` - (Optional, String) The canned ACL to apply. Available values include `private`, `public-read`, and `public-read-write`. Defaults to `private`.
+* `cache_control` - (Optional, String) Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.
+* `content_disposition` - (Optional, String) Specifies presentational information for the object.
+* `content_encoding` - (Optional, String) Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
+* `content_type` - (Optional, String) A standard MIME type describing the format of the object data.
+* `content` - (Optional, String) Literal string value to use as the object content, which will be uploaded as UTF-8-encoded text.
+* `etag` - (Optional, String) The ETag generated for the object (an MD5 sum of the object content).
+* `source` - (Optional, String) The path to the source file being uploaded to the bucket.
+* `storage_class` - (Optional, String) Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `tags` - (Optional, Map) Tag of the object.
 
 ## Attributes Reference
 

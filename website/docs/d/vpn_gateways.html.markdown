@@ -30,13 +30,13 @@ data "tencentcloud_vpn_gateways" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the VPN gateway.
-* `name` - (Optional) Name of the VPN gateway. The length of character is limited to 1-60.
-* `public_ip_address` - (Optional) Public ip address of the VPN gateway.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags of the VPN gateway to be queried.
-* `vpc_id` - (Optional) ID of the VPC.
-* `zone` - (Optional) Zone of the VPN gateway.
+* `id` - (Optional, String) ID of the VPN gateway.
+* `name` - (Optional, String) Name of the VPN gateway. The length of character is limited to 1-60.
+* `public_ip_address` - (Optional, String) Public ip address of the VPN gateway.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags of the VPN gateway to be queried.
+* `vpc_id` - (Optional, String) ID of the VPC.
+* `zone` - (Optional, String) Zone of the VPN gateway.
 
 ## Attributes Reference
 

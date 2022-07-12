@@ -23,11 +23,11 @@ data "tencentcloud_security_groups" "sglab" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the security group to be queried. Conflict with `security_group_id`.
-* `project_id` - (Optional) Project ID of the security group to be queried. Conflict with `security_group_id`.
-* `result_output_file` - (Optional) Used to save results.
-* `security_group_id` - (Optional) ID of the security group to be queried. Conflict with `name` and `project_id`.
-* `tags` - (Optional) Tags of the security group to be queried. Conflict with `security_group_id`.
+* `name` - (Optional, String) Name of the security group to be queried. Conflict with `security_group_id`.
+* `project_id` - (Optional, Int) Project ID of the security group to be queried. Conflict with `security_group_id`.
+* `result_output_file` - (Optional, String) Used to save results.
+* `security_group_id` - (Optional, String) ID of the security group to be queried. Conflict with `name` and `project_id`.
+* `tags` - (Optional, Map) Tags of the security group to be queried. Conflict with `security_group_id`.
 
 ## Attributes Reference
 

@@ -33,17 +33,17 @@ resource "tencentcloud_postgresql_readonly_group" "group" {
 
 The following arguments are supported:
 
-* `master_db_instance_id` - (Required, ForceNew) Primary instance ID.
-* `max_replay_lag` - (Required) Delay threshold in ms.
-* `max_replay_latency` - (Required) Delayed log size threshold in MB.
-* `min_delay_eliminate_reserve` - (Required) The minimum number of read-only replicas that must be retained in an RO group.
-* `name` - (Required) RO group name.
-* `project_id` - (Required) Project ID.
-* `replay_lag_eliminate` - (Required) Whether to remove a read-only replica from an RO group if the delay between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
-* `replay_latency_eliminate` - (Required) Whether to remove a read-only replica from an RO group if the sync log size difference between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
-* `subnet_id` - (Required) VPC subnet ID.
-* `vpc_id` - (Required, ForceNew) VPC ID.
-* `security_groups_ids` - (Optional) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
+* `master_db_instance_id` - (Required, String, ForceNew) Primary instance ID.
+* `max_replay_lag` - (Required, Int) Delay threshold in ms.
+* `max_replay_latency` - (Required, Int) Delayed log size threshold in MB.
+* `min_delay_eliminate_reserve` - (Required, Int) The minimum number of read-only replicas that must be retained in an RO group.
+* `name` - (Required, String) RO group name.
+* `project_id` - (Required, Int) Project ID.
+* `replay_lag_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the delay between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
+* `replay_latency_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the sync log size difference between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
+* `subnet_id` - (Required, String) VPC subnet ID.
+* `vpc_id` - (Required, String, ForceNew) VPC ID.
+* `security_groups_ids` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 
 ## Attributes Reference
 

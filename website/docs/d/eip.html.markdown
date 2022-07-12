@@ -30,14 +30,14 @@ data "tencentcloud_eip" "my_eip" {
 
 The following arguments are supported:
 
-* `filter` - (Optional) One or more name/value pairs to filter.
-* `include_arrears` - (Optional) Whether the IP is arrears.
-* `include_blocked` - (Optional) Whether the IP is blocked.
+* `filter` - (Optional, Set) One or more name/value pairs to filter.
+* `include_arrears` - (Optional, Bool) Whether the IP is arrears.
+* `include_blocked` - (Optional, Bool) Whether the IP is blocked.
 
 The `filter` object supports the following:
 
-* `name` - (Required) Key of the filter, valid keys: `address-id`,`address-name`,`address-ip`.
-* `values` - (Required) Value of the filter.
+* `name` - (Required, String) Key of the filter, valid keys: `address-id`,`address-name`,`address-ip`.
+* `values` - (Required, List) Value of the filter.
 
 ## Attributes Reference
 

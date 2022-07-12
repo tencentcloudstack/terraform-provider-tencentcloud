@@ -21,10 +21,10 @@ data "tencentcloud_kubernetes_charts" "name" {}
 
 The following arguments are supported:
 
-* `arch` - (Optional) Operation system app supported. Available values: `arm32`, `arm64`, `amd64`.
-* `cluster_type` - (Optional) Cluster type. Available values: `tke`, `eks`.
-* `kind` - (Optional) Kind of app chart. Available values: `log`, `scheduler`, `network`, `storage`, `monitor`, `dns`, `image`, `other`, `invisible`.
-* `result_output_file` - (Optional) Used to save results.
+* `arch` - (Optional, String) Operation system app supported. Available values: `arm32`, `arm64`, `amd64`.
+* `cluster_type` - (Optional, String) Cluster type. Available values: `tke`, `eks`.
+* `kind` - (Optional, String) Kind of app chart. Available values: `log`, `scheduler`, `network`, `storage`, `monitor`, `dns`, `image`, `other`, `invisible`.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

@@ -24,9 +24,9 @@ data "tencentcloud_cos_buckets" "cos_buckets" {
 
 The following arguments are supported:
 
-* `bucket_prefix` - (Optional) A prefix string to filter results by bucket name.
-* `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags to filter bucket.
+* `bucket_prefix` - (Optional, String) A prefix string to filter results by bucket name.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tags` - (Optional, Map) Tags to filter bucket.
 
 ## Attributes Reference
 

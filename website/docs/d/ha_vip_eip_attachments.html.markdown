@@ -24,9 +24,9 @@ data "tencentcloud_ha_vip_eip_attachments" "foo" {
 
 The following arguments are supported:
 
-* `havip_id` - (Required) ID of the attached HA VIP to be queried.
-* `address_ip` - (Optional) Public IP address of EIP to be queried.
-* `result_output_file` - (Optional) Used to save results.
+* `havip_id` - (Required, String) ID of the attached HA VIP to be queried.
+* `address_ip` - (Optional, String) Public IP address of EIP to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

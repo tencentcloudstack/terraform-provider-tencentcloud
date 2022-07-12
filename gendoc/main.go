@@ -202,6 +202,16 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		}
 		if v.Required {
 			opt := "Required"
+			sub := getSubStruct(0, k, v)
+			subStruct = append(subStruct, sub...)
+			// get type
+			res := parseSubtract(v, sub)
+			valueType := parseType(v)
+			if res == "" {
+				opt += fmt.Sprintf(", %s", valueType)
+			} else {
+				opt += fmt.Sprintf(", %s: [`%s`]", valueType, res)
+			}
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
@@ -210,9 +220,18 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else if v.Optional {
 			opt := "Optional"
+			sub := getSubStruct(0, k, v)
+			subStruct = append(subStruct, sub...)
+			// get type
+			res := parseSubtract(v, sub)
+			valueType := parseType(v)
+			if res == "" {
+				opt += fmt.Sprintf(", %s", valueType)
+			} else {
+				opt += fmt.Sprintf(", %s: [`%s`]", valueType, res)
+			}
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
@@ -221,7 +240,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else {
 			attrs := getAttributes(0, k, v)
 			if len(attrs) > 0 {
@@ -348,12 +366,16 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
 				if vv.Required {
 					opt := "Required"
+					valueType := parseType(vv)
+					opt += fmt.Sprintf(", %s", valueType)
 					if vv.ForceNew {
 						opt += ", ForceNew"
 					}
 					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
 				} else if vv.Optional {
 					opt := "Optional"
+					valueType := parseType(vv)
+					opt += fmt.Sprintf(", %s", valueType)
 					if vv.ForceNew {
 						opt += ", ForceNew"
 					}
@@ -450,4 +472,36 @@ func message(msg string, v ...interface{}) {
 	} else {
 		color.White(fmt.Sprintf(msg, v...))
 	}
+}
+
+func parseType(v *schema.Schema) string {
+	res := ""
+	switch v.Type {
+	case schema.TypeBool:
+		res = "Bool"
+	case schema.TypeInt:
+		res = "Int"
+	case schema.TypeFloat:
+		res = "Float64"
+	case schema.TypeString:
+		res = "String"
+	case schema.TypeList:
+		res = "List"
+	case schema.TypeMap:
+		res = "Map"
+	case schema.TypeSet:
+		res = "Set"
+	}
+	return res
+}
+
+func parseSubtract(v *schema.Schema, subStruct []string) string {
+	res := ""
+	if v.Type == schema.TypeSet || v.Type == schema.TypeList {
+		if len(subStruct) == 0 {
+			vv := v.Elem.(*schema.Schema)
+			res = parseType(vv)
+		}
+	}
+	return res
 }

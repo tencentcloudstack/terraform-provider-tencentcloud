@@ -36,10 +36,10 @@ resource "tencentcloud_cdn_url_purge" "foo" {
 
 The following arguments are supported:
 
-* `urls` - (Required, ForceNew) List of url to purge. NOTE: urls need include protocol prefix `http://` or `https://`.
-* `area` - (Optional) Specify purge area. NOTE: only purge same area cache contents.
-* `redo` - (Optional) Change to purge again. NOTE: this argument only works while resource update, if set to `0` or null will not be triggered.
-* `url_encode` - (Optional) Whether to encode urls, if set to `true` will auto encode instead of manual process.
+* `urls` - (Required, List: [`String`], ForceNew) List of url to purge. NOTE: urls need include protocol prefix `http://` or `https://`.
+* `area` - (Optional, String) Specify purge area. NOTE: only purge same area cache contents.
+* `redo` - (Optional, Int) Change to purge again. NOTE: this argument only works while resource update, if set to `0` or null will not be triggered.
+* `url_encode` - (Optional, Bool) Whether to encode urls, if set to `true` will auto encode instead of manual process.
 
 ## Attributes Reference
 

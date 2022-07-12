@@ -53,18 +53,18 @@ data "tencentcloud_monitor_data" "cos_monitor_data" {
 
 The following arguments are supported:
 
-* `dimensions` - (Required) Dimensional composition of instance objects.
-* `end_time` - (Required) End time for this query, eg:`2018-09-22T20:00:00+08:00`.
-* `metric_name` - (Required) Metric name, please refer to the documentation of monitor interface of each product.
-* `namespace` - (Required) Namespace of each cloud product in monitor system, refer to `data.tencentcloud_monitor_product_namespace`.
-* `start_time` - (Required) Start time for this query, eg:`2018-09-22T19:51:23+08:00`.
-* `period` - (Optional) Statistical period.
-* `result_output_file` - (Optional) Used to store results.
+* `dimensions` - (Required, List) Dimensional composition of instance objects.
+* `end_time` - (Required, String) End time for this query, eg:`2018-09-22T20:00:00+08:00`.
+* `metric_name` - (Required, String) Metric name, please refer to the documentation of monitor interface of each product.
+* `namespace` - (Required, String) Namespace of each cloud product in monitor system, refer to `data.tencentcloud_monitor_product_namespace`.
+* `start_time` - (Required, String) Start time for this query, eg:`2018-09-22T19:51:23+08:00`.
+* `period` - (Optional, Int) Statistical period.
+* `result_output_file` - (Optional, String) Used to store results.
 
 The `dimensions` object supports the following:
 
-* `name` - (Required) Instance dimension name, eg: `InstanceId` for cvm.
-* `value` - (Required) Instance dimension value, eg: `ins-j0hk02zo` for cvm.
+* `name` - (Required, String) Instance dimension name, eg: `InstanceId` for cvm.
+* `value` - (Required, String) Instance dimension value, eg: `ins-j0hk02zo` for cvm.
 
 ## Attributes Reference
 

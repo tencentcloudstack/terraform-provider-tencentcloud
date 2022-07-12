@@ -45,8 +45,8 @@ resource "tencentcloud_security_group_rule" "subnet" {
 
 The following arguments are supported:
 
-* `subnet_id` - (Required) The ID of the Subnet.
-* `vpc_id` - (Required) The VPC ID.
+* `subnet_id` - (Required, String) The ID of the Subnet.
+* `vpc_id` - (Required, String) The VPC ID.
 
 ## Attributes Reference
 

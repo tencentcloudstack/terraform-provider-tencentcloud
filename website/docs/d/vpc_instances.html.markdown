@@ -32,13 +32,13 @@ data "tencentcloud_vpc_instances" "name_instances" {
 
 The following arguments are supported:
 
-* `cidr_block` - (Optional) Filter VPC with this CIDR.
-* `is_default` - (Optional) Filter default or no default VPC.
-* `name` - (Optional) Name of the VPC to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `tag_key` - (Optional) Filter if VPC has this tag.
-* `tags` - (Optional) Tags of the VPC to be queried.
-* `vpc_id` - (Optional) ID of the VPC to be queried.
+* `cidr_block` - (Optional, String) Filter VPC with this CIDR.
+* `is_default` - (Optional, Bool) Filter default or no default VPC.
+* `name` - (Optional, String) Name of the VPC to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `tag_key` - (Optional, String) Filter if VPC has this tag.
+* `tags` - (Optional, Map) Tags of the VPC to be queried.
+* `vpc_id` - (Optional, String) ID of the VPC to be queried.
 
 ## Attributes Reference
 

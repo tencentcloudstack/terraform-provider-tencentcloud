@@ -23,10 +23,10 @@ data "tencentcloud_ssl_certificates" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the SSL certificate to be queried.
-* `name` - (Optional) Name of the SSL certificate to be queried.
-* `result_output_file` - (Optional) Used to save results.
-* `type` - (Optional) Type of the SSL certificate to be queried. Available values includes: `CA` and `SVR`.
+* `id` - (Optional, String) ID of the SSL certificate to be queried.
+* `name` - (Optional, String) Name of the SSL certificate to be queried.
+* `result_output_file` - (Optional, String) Used to save results.
+* `type` - (Optional, String) Type of the SSL certificate to be queried. Available values includes: `CA` and `SVR`.
 
 ## Attributes Reference
 

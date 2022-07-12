@@ -62,50 +62,50 @@ resource "tencentcloud_api_gateway_api" "api" {
 
 The following arguments are supported:
 
-* `api_name` - (Required) Custom API name.
-* `request_config_path` - (Required) Request frontend path configuration. Like `/user/getinfo`.
-* `service_id` - (Required, ForceNew) Which service this API belongs. Refer to resource `tencentcloud_api_gateway_service`.
-* `api_desc` - (Optional) Custom API description.
-* `auth_type` - (Optional) API authentication type. Valid values: `SECRET` (key pair authentication),`NONE` (no authentication). Default value: `NONE`.
-* `enable_cors` - (Optional) Whether to enable CORS. Default value: `true`.
-* `pre_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
-* `protocol` - (Optional, ForceNew) API frontend request type. Valid values: `HTTP`, `WEBSOCKET`. Default value: `HTTP`.
-* `release_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
-* `request_config_method` - (Optional) Request frontend method configuration. Valid values: `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.
-* `request_parameters` - (Optional) Frontend request parameters.
-* `response_error_codes` - (Optional) Custom error code configuration. Must keep at least one after set.
-* `response_fail_example` - (Optional) Response failure sample of custom response configuration.
-* `response_success_example` - (Optional) Successful response sample of custom response configuration.
-* `response_type` - (Optional) Return type. Valid values: `HTML`, `JSON`, `TEXT`, `BINARY`, `XML`. Default value: `HTML`.
-* `service_config_method` - (Optional) API backend service request method, such as `GET`. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_method` and backend method `service_config_method` can be different.
-* `service_config_mock_return_message` - (Optional) Returned information of API backend mocking. This parameter is required when `service_config_type` is `MOCK`.
-* `service_config_path` - (Optional) API backend service path, such as /path. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_path` and backend path `service_config_path` can be different.
-* `service_config_product` - (Optional) Backend type. This parameter takes effect when VPC is enabled. Currently, only `clb` is supported.
-* `service_config_scf_function_name` - (Optional) SCF function name. This parameter takes effect when `service_config_type` is `SCF`.
-* `service_config_scf_function_namespace` - (Optional) SCF function namespace. This parameter takes effect when `service_config_type` is `SCF`.
-* `service_config_scf_function_qualifier` - (Optional) SCF function version. This parameter takes effect when `service_config_type` is `SCF`.
-* `service_config_timeout` - (Optional) API backend service timeout period in seconds. Default value: `5`.
-* `service_config_type` - (Optional) API backend service type. Valid values: `WEBSOCKET`, `HTTP`, `SCF`, `MOCK`. Default value: `HTTP`.
-* `service_config_url` - (Optional) API backend service url. This parameter is required when `service_config_type` is `HTTP`.
-* `service_config_vpc_id` - (Optional) Unique VPC ID.
-* `test_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `api_name` - (Required, String) Custom API name.
+* `request_config_path` - (Required, String) Request frontend path configuration. Like `/user/getinfo`.
+* `service_id` - (Required, String, ForceNew) Which service this API belongs. Refer to resource `tencentcloud_api_gateway_service`.
+* `api_desc` - (Optional, String) Custom API description.
+* `auth_type` - (Optional, String) API authentication type. Valid values: `SECRET` (key pair authentication),`NONE` (no authentication). Default value: `NONE`.
+* `enable_cors` - (Optional, Bool) Whether to enable CORS. Default value: `true`.
+* `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `protocol` - (Optional, String, ForceNew) API frontend request type. Valid values: `HTTP`, `WEBSOCKET`. Default value: `HTTP`.
+* `release_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `request_config_method` - (Optional, String) Request frontend method configuration. Valid values: `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.
+* `request_parameters` - (Optional, Set) Frontend request parameters.
+* `response_error_codes` - (Optional, Set) Custom error code configuration. Must keep at least one after set.
+* `response_fail_example` - (Optional, String) Response failure sample of custom response configuration.
+* `response_success_example` - (Optional, String) Successful response sample of custom response configuration.
+* `response_type` - (Optional, String) Return type. Valid values: `HTML`, `JSON`, `TEXT`, `BINARY`, `XML`. Default value: `HTML`.
+* `service_config_method` - (Optional, String) API backend service request method, such as `GET`. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_method` and backend method `service_config_method` can be different.
+* `service_config_mock_return_message` - (Optional, String) Returned information of API backend mocking. This parameter is required when `service_config_type` is `MOCK`.
+* `service_config_path` - (Optional, String) API backend service path, such as /path. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_path` and backend path `service_config_path` can be different.
+* `service_config_product` - (Optional, String) Backend type. This parameter takes effect when VPC is enabled. Currently, only `clb` is supported.
+* `service_config_scf_function_name` - (Optional, String) SCF function name. This parameter takes effect when `service_config_type` is `SCF`.
+* `service_config_scf_function_namespace` - (Optional, String) SCF function namespace. This parameter takes effect when `service_config_type` is `SCF`.
+* `service_config_scf_function_qualifier` - (Optional, String) SCF function version. This parameter takes effect when `service_config_type` is `SCF`.
+* `service_config_timeout` - (Optional, Int) API backend service timeout period in seconds. Default value: `5`.
+* `service_config_type` - (Optional, String) API backend service type. Valid values: `WEBSOCKET`, `HTTP`, `SCF`, `MOCK`. Default value: `HTTP`.
+* `service_config_url` - (Optional, String) API backend service url. This parameter is required when `service_config_type` is `HTTP`.
+* `service_config_vpc_id` - (Optional, String) Unique VPC ID.
+* `test_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 
 The `request_parameters` object supports the following:
 
-* `name` - (Required) Parameter name.
-* `position` - (Required) Parameter location.
-* `type` - (Required) Parameter type.
-* `default_value` - (Optional) Parameter default value.
-* `desc` - (Optional) Parameter description.
-* `required` - (Optional) If this parameter required. Default value: `false`.
+* `name` - (Required, String) Parameter name.
+* `position` - (Required, String) Parameter location.
+* `type` - (Required, String) Parameter type.
+* `default_value` - (Optional, String) Parameter default value.
+* `desc` - (Optional, String) Parameter description.
+* `required` - (Optional, Bool) If this parameter required. Default value: `false`.
 
 The `response_error_codes` object supports the following:
 
-* `code` - (Required) Custom response configuration error code.
-* `msg` - (Required) Custom response configuration error message.
-* `converted_code` - (Optional) Custom error code conversion.
-* `desc` - (Optional) Parameter description.
-* `need_convert` - (Optional) Whether to enable error code conversion. Default value: `false`.
+* `code` - (Required, Int) Custom response configuration error code.
+* `msg` - (Required, String) Custom response configuration error message.
+* `converted_code` - (Optional, Int) Custom error code conversion.
+* `desc` - (Optional, String) Parameter description.
+* `need_convert` - (Optional, Bool) Whether to enable error code conversion. Default value: `false`.
 
 ## Attributes Reference
 

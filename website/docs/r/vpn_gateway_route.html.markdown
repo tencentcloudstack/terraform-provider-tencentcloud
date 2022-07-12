@@ -28,12 +28,12 @@ resource "tencentcloud_vpn_gateway_route" "route" {
 
 The following arguments are supported:
 
-* `destination_cidr_block` - (Required, ForceNew) Destination IDC IP range.
-* `instance_id` - (Required, ForceNew) Instance ID of the next hop.
-* `instance_type` - (Required, ForceNew) Next hop type (type of the associated instance). Valid values: VPNCONN (VPN tunnel) and CCN (CCN instance).
-* `priority` - (Required, ForceNew) Priority. Valid values: 0 and 100.
-* `status` - (Required) Status. Valid values: ENABLE and DISABLE.
-* `vpn_gateway_id` - (Required, ForceNew) VPN gateway ID.
+* `destination_cidr_block` - (Required, String, ForceNew) Destination IDC IP range.
+* `instance_id` - (Required, String, ForceNew) Instance ID of the next hop.
+* `instance_type` - (Required, String, ForceNew) Next hop type (type of the associated instance). Valid values: VPNCONN (VPN tunnel) and CCN (CCN instance).
+* `priority` - (Required, Int, ForceNew) Priority. Valid values: 0 and 100.
+* `status` - (Required, String) Status. Valid values: ENABLE and DISABLE.
+* `vpn_gateway_id` - (Required, String, ForceNew) VPN gateway ID.
 
 ## Attributes Reference
 

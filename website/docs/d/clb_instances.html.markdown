@@ -27,12 +27,12 @@ data "tencentcloud_clb_instances" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Optional) ID of the CLB to be queried.
-* `clb_name` - (Optional) Name of the CLB to be queried.
-* `master_zone` - (Optional) Master available zone id.
-* `network_type` - (Optional) Type of CLB instance, and available values include `OPEN` and `INTERNAL`.
-* `project_id` - (Optional) Project ID of the CLB.
-* `result_output_file` - (Optional) Used to save results.
+* `clb_id` - (Optional, String) ID of the CLB to be queried.
+* `clb_name` - (Optional, String) Name of the CLB to be queried.
+* `master_zone` - (Optional, String) Master available zone id.
+* `network_type` - (Optional, String) Type of CLB instance, and available values include `OPEN` and `INTERNAL`.
+* `project_id` - (Optional, Int) Project ID of the CLB.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

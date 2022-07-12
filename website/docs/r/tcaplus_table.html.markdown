@@ -81,16 +81,16 @@ resource "tencentcloud_tcaplus_table" "table" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) ID of the TcaplusDB cluster to which the table belongs.
-* `idl_id` - (Required) ID of the IDL File.
-* `reserved_read_cu` - (Required, ForceNew) Reserved read capacity units of the TcaplusDB table.
-* `reserved_volume` - (Required, ForceNew) Reserved storage capacity of the TcaplusDB table (unit: GB).
-* `reserved_write_cu` - (Required, ForceNew) Reserved write capacity units of the TcaplusDB table.
-* `table_idl_type` - (Required) IDL type of the TcaplusDB table. Valid values: `PROTO` and `TDR`.
-* `table_name` - (Required, ForceNew) Name of the TcaplusDB table.
-* `table_type` - (Required, ForceNew) Type of the TcaplusDB table. Valid values are `GENERIC` and `LIST`.
-* `tablegroup_id` - (Required, ForceNew) ID of the table group to which the table belongs.
-* `description` - (Optional) Description of the TcaplusDB table.
+* `cluster_id` - (Required, String, ForceNew) ID of the TcaplusDB cluster to which the table belongs.
+* `idl_id` - (Required, String) ID of the IDL File.
+* `reserved_read_cu` - (Required, Int, ForceNew) Reserved read capacity units of the TcaplusDB table.
+* `reserved_volume` - (Required, Int, ForceNew) Reserved storage capacity of the TcaplusDB table (unit: GB).
+* `reserved_write_cu` - (Required, Int, ForceNew) Reserved write capacity units of the TcaplusDB table.
+* `table_idl_type` - (Required, String) IDL type of the TcaplusDB table. Valid values: `PROTO` and `TDR`.
+* `table_name` - (Required, String, ForceNew) Name of the TcaplusDB table.
+* `table_type` - (Required, String, ForceNew) Type of the TcaplusDB table. Valid values are `GENERIC` and `LIST`.
+* `tablegroup_id` - (Required, String, ForceNew) ID of the table group to which the table belongs.
+* `description` - (Optional, String) Description of the TcaplusDB table.
 
 ## Attributes Reference
 

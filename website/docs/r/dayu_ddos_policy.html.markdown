@@ -80,69 +80,69 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 
 The following arguments are supported:
 
-* `drop_options` - (Required) Option list of abnormal check of the DDos policy, should set at least one policy.
-* `name` - (Required) Name of the DDoS policy. Length should between 1 and 32.
-* `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for. Valid values: `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `black_ips` - (Optional) Black IP list.
-* `packet_filters` - (Optional) Message filter options list.
-* `port_filters` - (Optional) Port limits of abnormal check of the DDos policy.
-* `watermark_filters` - (Optional) Watermark policy options, and only support one watermark policy at most.
-* `white_ips` - (Optional) White IP list.
+* `drop_options` - (Required, List) Option list of abnormal check of the DDos policy, should set at least one policy.
+* `name` - (Required, String) Name of the DDoS policy. Length should between 1 and 32.
+* `resource_type` - (Required, String, ForceNew) Type of the resource that the DDoS policy works for. Valid values: `bgpip`, `bgp`, `bgp-multip` and `net`.
+* `black_ips` - (Optional, Set: [`String`]) Black IP list.
+* `packet_filters` - (Optional, List) Message filter options list.
+* `port_filters` - (Optional, List) Port limits of abnormal check of the DDos policy.
+* `watermark_filters` - (Optional, List) Watermark policy options, and only support one watermark policy at most.
+* `white_ips` - (Optional, Set: [`String`]) White IP list.
 
 The `drop_options` object supports the following:
 
-* `bad_conn_threshold` - (Required) The number of new connections based on destination IP that trigger suppression of connections. Valid value ranges: (0~4294967295).
-* `check_sync_conn` - (Required) Indicate whether to check null connection or not.
-* `conn_timeout` - (Required) Connection timeout of abnormal connection check. Valid value ranges: (0~65535).
-* `d_conn_limit` - (Required) The limit of concurrent connections based on destination IP. Valid value ranges: (0~4294967295).
-* `d_new_limit` - (Required) The limit of new connections based on destination IP. Valid value ranges: (0~4294967295).
-* `drop_abroad` - (Required) Indicate whether to drop abroad traffic or not.
-* `drop_icmp` - (Required) Indicate whether to drop ICMP protocol or not.
-* `drop_other` - (Required) Indicate whether to drop other protocols(exclude TCP/UDP/ICMP) or not.
-* `drop_tcp` - (Required) Indicate whether to drop TCP protocol or not.
-* `drop_udp` - (Required) Indicate to drop UDP protocol or not.
-* `icmp_mbps_limit` - (Required) The limit of ICMP traffic rate. Valid value ranges: (0~4294967295)(Mbps).
-* `null_conn_enable` - (Required) Indicate to enable null connection or not.
-* `other_mbps_limit` - (Required) The limit of other protocols(exclude TCP/UDP/ICMP) traffic rate. Valid value ranges: (0~4294967295)(Mbps).
-* `s_conn_limit` - (Required) The limit of concurrent connections based on source IP. Valid value ranges: (0~4294967295).
-* `s_new_limit` - (Required) The limit of new connections based on source IP. Valid value ranges: (0~4294967295).
-* `syn_limit` - (Required) The limit of syn of abnormal connection check. Valid value ranges: (0~100).
-* `tcp_mbps_limit` - (Required) The limit of TCP traffic. Valid value ranges: (0~4294967295)(Mbps).
-* `udp_mbps_limit` - (Required) The limit of UDP traffic rate. Valid value ranges: (0~4294967295)(Mbps).
-* `syn_rate` - (Optional) The percentage of syn in ack of abnormal connection check. Valid value ranges: (0~100).
+* `bad_conn_threshold` - (Required, Int) The number of new connections based on destination IP that trigger suppression of connections. Valid value ranges: (0~4294967295).
+* `check_sync_conn` - (Required, Bool) Indicate whether to check null connection or not.
+* `conn_timeout` - (Required, Int) Connection timeout of abnormal connection check. Valid value ranges: (0~65535).
+* `d_conn_limit` - (Required, Int) The limit of concurrent connections based on destination IP. Valid value ranges: (0~4294967295).
+* `d_new_limit` - (Required, Int) The limit of new connections based on destination IP. Valid value ranges: (0~4294967295).
+* `drop_abroad` - (Required, Bool) Indicate whether to drop abroad traffic or not.
+* `drop_icmp` - (Required, Bool) Indicate whether to drop ICMP protocol or not.
+* `drop_other` - (Required, Bool) Indicate whether to drop other protocols(exclude TCP/UDP/ICMP) or not.
+* `drop_tcp` - (Required, Bool) Indicate whether to drop TCP protocol or not.
+* `drop_udp` - (Required, Bool) Indicate to drop UDP protocol or not.
+* `icmp_mbps_limit` - (Required, Int) The limit of ICMP traffic rate. Valid value ranges: (0~4294967295)(Mbps).
+* `null_conn_enable` - (Required, Bool) Indicate to enable null connection or not.
+* `other_mbps_limit` - (Required, Int) The limit of other protocols(exclude TCP/UDP/ICMP) traffic rate. Valid value ranges: (0~4294967295)(Mbps).
+* `s_conn_limit` - (Required, Int) The limit of concurrent connections based on source IP. Valid value ranges: (0~4294967295).
+* `s_new_limit` - (Required, Int) The limit of new connections based on source IP. Valid value ranges: (0~4294967295).
+* `syn_limit` - (Required, Int) The limit of syn of abnormal connection check. Valid value ranges: (0~100).
+* `tcp_mbps_limit` - (Required, Int) The limit of TCP traffic. Valid value ranges: (0~4294967295)(Mbps).
+* `udp_mbps_limit` - (Required, Int) The limit of UDP traffic rate. Valid value ranges: (0~4294967295)(Mbps).
+* `syn_rate` - (Optional, Int) The percentage of syn in ack of abnormal connection check. Valid value ranges: (0~100).
 
 The `packet_filters` object supports the following:
 
-* `action` - (Optional) Action of port to take. Valid values: `drop`, `drop_black`,`drop_rst`,`drop_black_rst`,`transmit`.`drop`(drop the packet), `drop_black`(drop the packet and black the ip),`drop_rst`(drop the packet and disconnect),`drop_black_rst`(drop the packet, black the ip and disconnect),`transmit`(transmit the packet).
-* `d_end_port` - (Optional) End port of the destination. Valid value ranges: (0~65535). It must be greater than `d_start_port`.
-* `d_start_port` - (Optional) Start port of the destination. Valid value ranges: (0~65535).
-* `depth` - (Optional) The depth of match. Valid value ranges: (0~1500).
-* `is_include` - (Optional) Indicate whether to include the key word/regular expression or not.
-* `match_begin` - (Optional) Indicate whether to check load or not, `begin_l5` means to match and `no_match` means not.
-* `match_str` - (Optional) The key word or regular expression.
-* `match_type` - (Optional) Match type. Valid values: `sunday` and `pcre`. `sunday` means key word match while `pcre` means regular match.
-* `offset` - (Optional) The offset of match. Valid value ranges: (0~1500).
-* `pkt_length_max` - (Optional) The max length of the packet. Valid value ranges: (0~1500)(Mbps). It must be greater than `pkt_length_min`.
-* `pkt_length_min` - (Optional) The minimum length of the packet. Valid value ranges: (0~1500)(Mbps).
-* `protocol` - (Optional) Protocol. Valid values: `tcp`, `udp`, `icmp`, `all`.
-* `s_end_port` - (Optional) End port of the source. Valid value ranges: (0~65535). It must be greater than `s_start_port`.
-* `s_start_port` - (Optional) Start port of the source. Valid value ranges: (0~65535).
+* `action` - (Optional, String) Action of port to take. Valid values: `drop`, `drop_black`,`drop_rst`,`drop_black_rst`,`transmit`.`drop`(drop the packet), `drop_black`(drop the packet and black the ip),`drop_rst`(drop the packet and disconnect),`drop_black_rst`(drop the packet, black the ip and disconnect),`transmit`(transmit the packet).
+* `d_end_port` - (Optional, Int) End port of the destination. Valid value ranges: (0~65535). It must be greater than `d_start_port`.
+* `d_start_port` - (Optional, Int) Start port of the destination. Valid value ranges: (0~65535).
+* `depth` - (Optional, Int) The depth of match. Valid value ranges: (0~1500).
+* `is_include` - (Optional, Bool) Indicate whether to include the key word/regular expression or not.
+* `match_begin` - (Optional, String) Indicate whether to check load or not, `begin_l5` means to match and `no_match` means not.
+* `match_str` - (Optional, String) The key word or regular expression.
+* `match_type` - (Optional, String) Match type. Valid values: `sunday` and `pcre`. `sunday` means key word match while `pcre` means regular match.
+* `offset` - (Optional, Int) The offset of match. Valid value ranges: (0~1500).
+* `pkt_length_max` - (Optional, Int) The max length of the packet. Valid value ranges: (0~1500)(Mbps). It must be greater than `pkt_length_min`.
+* `pkt_length_min` - (Optional, Int) The minimum length of the packet. Valid value ranges: (0~1500)(Mbps).
+* `protocol` - (Optional, String) Protocol. Valid values: `tcp`, `udp`, `icmp`, `all`.
+* `s_end_port` - (Optional, Int) End port of the source. Valid value ranges: (0~65535). It must be greater than `s_start_port`.
+* `s_start_port` - (Optional, Int) Start port of the source. Valid value ranges: (0~65535).
 
 The `port_filters` object supports the following:
 
-* `action` - (Optional) Action of port to take. Valid values: `drop`, `transmit`.
-* `end_port` - (Optional) End port. Valid value ranges: (0~65535). It must be greater than `start_port`.
-* `kind` - (Optional) The type of forbidden port. Valid values: `0`, `1`, `2`. `0` for destination ports make effect, `1` for source ports make effect. `2` for both destination and source ports.
-* `protocol` - (Optional) Protocol. Valid values are `tcp`, `udp`, `icmp`, `all`.
-* `start_port` - (Optional) Start port. Valid value ranges: (0~65535).
+* `action` - (Optional, String) Action of port to take. Valid values: `drop`, `transmit`.
+* `end_port` - (Optional, Int) End port. Valid value ranges: (0~65535). It must be greater than `start_port`.
+* `kind` - (Optional, Int) The type of forbidden port. Valid values: `0`, `1`, `2`. `0` for destination ports make effect, `1` for source ports make effect. `2` for both destination and source ports.
+* `protocol` - (Optional, String) Protocol. Valid values are `tcp`, `udp`, `icmp`, `all`.
+* `start_port` - (Optional, Int) Start port. Valid value ranges: (0~65535).
 
 The `watermark_filters` object supports the following:
 
-* `auto_remove` - (Optional) Indicate whether to auto-remove the watermark or not.
-* `offset` - (Optional) The offset of watermark. Valid value ranges: (0~1500).
-* `open_switch` - (Optional) Indicate whether to open watermark or not. It muse be set `true` when any field of watermark was set.
-* `tcp_port_list` - (Optional) Port range of TCP, the format is like `2000-3000`.
-* `udp_port_list` - (Optional) Port range of TCP, the format is like `2000-3000`.
+* `auto_remove` - (Optional, Bool) Indicate whether to auto-remove the watermark or not.
+* `offset` - (Optional, Int) The offset of watermark. Valid value ranges: (0~1500).
+* `open_switch` - (Optional, Bool) Indicate whether to open watermark or not. It muse be set `true` when any field of watermark was set.
+* `tcp_port_list` - (Optional, List) Port range of TCP, the format is like `2000-3000`.
+* `udp_port_list` - (Optional, List) Port range of TCP, the format is like `2000-3000`.
 
 ## Attributes Reference
 

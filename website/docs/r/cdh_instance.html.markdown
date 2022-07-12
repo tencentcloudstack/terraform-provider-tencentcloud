@@ -32,13 +32,13 @@ resource "tencentcloud_cdh_instance" "foo" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) The available zone for the CDH instance.
-* `charge_type` - (Optional) The charge type of instance. Valid values are `PREPAID`. The default is `PREPAID`.
-* `host_name` - (Optional) The name of the CDH instance. The max length of host_name is 60.
-* `host_type` - (Optional, ForceNew) The type of the CDH instance.
-* `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
-* `prepaid_renew_flag` - (Optional) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when charge_type is set to `PREPAID`.
-* `project_id` - (Optional) The project the instance belongs to, default to 0.
+* `availability_zone` - (Required, String, ForceNew) The available zone for the CDH instance.
+* `charge_type` - (Optional, String) The charge type of instance. Valid values are `PREPAID`. The default is `PREPAID`.
+* `host_name` - (Optional, String) The name of the CDH instance. The max length of host_name is 60.
+* `host_type` - (Optional, String, ForceNew) The type of the CDH instance.
+* `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when charge_type is set to `PREPAID`.
+* `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
 
 ## Attributes Reference
 

@@ -34,9 +34,9 @@ data "tencentcloud_api_gateway_usage_plans" "id" {
 
 The following arguments are supported:
 
-* `result_output_file` - (Optional) Used to save results.
-* `usage_plan_id` - (Optional) ID of the usage plan.
-* `usage_plan_name` - (Optional) Name of the usage plan.
+* `result_output_file` - (Optional, String) Used to save results.
+* `usage_plan_id` - (Optional, String) ID of the usage plan.
+* `usage_plan_name` - (Optional, String) Name of the usage plan.
 
 ## Attributes Reference
 

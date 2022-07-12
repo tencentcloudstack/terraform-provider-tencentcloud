@@ -21,65 +21,65 @@ Auto scaling group for kubernetes cluster (offlined).
 
 The following arguments are supported:
 
-* `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
-* `auto_scaling_group` - (Required) Auto scaling group parameters.
-* `cluster_id` - (Required, ForceNew) ID of the cluster.
-* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
-* `labels` - (Optional, ForceNew) Labels of kubernetes AS Group created nodes.
-* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `auto_scaling_config` - (Required, List, ForceNew) Auto scaling config parameters.
+* `auto_scaling_group` - (Required, List) Auto scaling group parameters.
+* `cluster_id` - (Required, String, ForceNew) ID of the cluster.
+* `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
+* `labels` - (Optional, Map, ForceNew) Labels of kubernetes AS Group created nodes.
+* `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 
 The `auto_scaling_config` object supports the following:
 
-* `configuration_name` - (Required, ForceNew) Name of a launch configuration.
-* `instance_type` - (Required, ForceNew) Specified types of CVM instance.
-* `data_disk` - (Optional, ForceNew) Configurations of data disk.
-* `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
-* `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `instance_tags` - (Optional, ForceNew) A list of tags used to associate different resources.
-* `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
-* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is `0`.
-* `key_ids` - (Optional, ForceNew) ID list of keys.
-* `password` - (Optional, ForceNew) Password to access.
-* `project_id` - (Optional, ForceNew) Specifys to which project the configuration belongs.
-* `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
-* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is `50`.
-* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
+* `configuration_name` - (Required, String, ForceNew) Name of a launch configuration.
+* `instance_type` - (Required, String, ForceNew) Specified types of CVM instance.
+* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
+* `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
+* `instance_tags` - (Optional, Map, ForceNew) A list of tags used to associate different resources.
+* `internet_charge_type` - (Optional, String, ForceNew) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
+* `key_ids` - (Optional, List, ForceNew) ID list of keys.
+* `password` - (Optional, String, ForceNew) Password to access.
+* `project_id` - (Optional, Int, ForceNew) Specifys to which project the configuration belongs.
+* `public_ip_assigned` - (Optional, Bool, ForceNew) Specify whether to assign an Internet IP address.
+* `security_group_ids` - (Optional, List, ForceNew) Security groups to which a CVM instance belongs.
+* `system_disk_size` - (Optional, Int, ForceNew) Volume of system disk in GB. Default is `50`.
+* `system_disk_type` - (Optional, String, ForceNew) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
 The `auto_scaling_group` object supports the following:
 
-* `max_size` - (Required) Maximum number of CVM instances (0~2000).
-* `min_size` - (Required) Minimum number of CVM instances (0~2000).
-* `scaling_group_name` - (Required, ForceNew) Name of a scaling group.
-* `vpc_id` - (Required, ForceNew) ID of VPC network.
-* `default_cooldown` - (Optional, ForceNew) Default cooldown time in second, and default value is 300.
-* `desired_capacity` - (Optional, ForceNew) Desired volume of CVM instances, which is between max_size and min_size.
-* `forward_balancer_ids` - (Optional, ForceNew) List of application load balancers, which can't be specified with load_balancer_ids together.
-* `load_balancer_ids` - (Optional, ForceNew) ID list of traditional load balancers.
-* `project_id` - (Optional, ForceNew) Specifys to which project the scaling group belongs.
-* `retry_policy` - (Optional, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
-* `subnet_ids` - (Optional, ForceNew) ID list of subnet, and for VPC it is required.
-* `tags` - (Optional, ForceNew) Tags of a scaling group.
-* `termination_policies` - (Optional, ForceNew) Available values for termination policies include `OLDEST_INSTANCE` and `NEWEST_INSTANCE`.
-* `zones` - (Optional, ForceNew) List of available zones, for Basic network it is required.
+* `max_size` - (Required, Int) Maximum number of CVM instances (0~2000).
+* `min_size` - (Required, Int) Minimum number of CVM instances (0~2000).
+* `scaling_group_name` - (Required, String, ForceNew) Name of a scaling group.
+* `vpc_id` - (Required, String, ForceNew) ID of VPC network.
+* `default_cooldown` - (Optional, Int, ForceNew) Default cooldown time in second, and default value is 300.
+* `desired_capacity` - (Optional, Int, ForceNew) Desired volume of CVM instances, which is between max_size and min_size.
+* `forward_balancer_ids` - (Optional, List, ForceNew) List of application load balancers, which can't be specified with load_balancer_ids together.
+* `load_balancer_ids` - (Optional, List, ForceNew) ID list of traditional load balancers.
+* `project_id` - (Optional, Int, ForceNew) Specifys to which project the scaling group belongs.
+* `retry_policy` - (Optional, String, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
+* `subnet_ids` - (Optional, List, ForceNew) ID list of subnet, and for VPC it is required.
+* `tags` - (Optional, Map, ForceNew) Tags of a scaling group.
+* `termination_policies` - (Optional, List, ForceNew) Available values for termination policies include `OLDEST_INSTANCE` and `NEWEST_INSTANCE`.
+* `zones` - (Optional, List, ForceNew) List of available zones, for Basic network it is required.
 
 The `data_disk` object supports the following:
 
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, ForceNew) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
-* `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
+* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 
 The `forward_balancer_ids` object supports the following:
 
-* `listener_id` - (Required, ForceNew) Listener ID for application load balancers.
-* `load_balancer_id` - (Required, ForceNew) ID of available load balancers.
-* `target_attribute` - (Required, ForceNew) Attribute list of target rules.
-* `rule_id` - (Optional, ForceNew) ID of forwarding rules.
+* `listener_id` - (Required, String, ForceNew) Listener ID for application load balancers.
+* `load_balancer_id` - (Required, String, ForceNew) ID of available load balancers.
+* `target_attribute` - (Required, List, ForceNew) Attribute list of target rules.
+* `rule_id` - (Optional, String, ForceNew) ID of forwarding rules.
 
 The `target_attribute` object supports the following:
 
-* `port` - (Required, ForceNew) Port number.
-* `weight` - (Required, ForceNew) Weight.
+* `port` - (Required, Int, ForceNew) Port number.
+* `weight` - (Required, Int, ForceNew) Weight.
 
 ## Attributes Reference
 

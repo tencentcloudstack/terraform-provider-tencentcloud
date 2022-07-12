@@ -36,13 +36,13 @@ resource "tencentcloud_subnet" "subnet" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) The availability zone within which the subnet should be created.
-* `cidr_block` - (Required, ForceNew) A network address block of the subnet.
-* `name` - (Required) The name of subnet to be created.
-* `vpc_id` - (Required, ForceNew) ID of the VPC to be associated.
-* `is_multicast` - (Optional) Indicates whether multicast is enabled. The default value is 'true'.
-* `route_table_id` - (Optional) ID of a routing table to which the subnet should be associated.
-* `tags` - (Optional) Tags of the subnet.
+* `availability_zone` - (Required, String, ForceNew) The availability zone within which the subnet should be created.
+* `cidr_block` - (Required, String, ForceNew) A network address block of the subnet.
+* `name` - (Required, String) The name of subnet to be created.
+* `vpc_id` - (Required, String, ForceNew) ID of the VPC to be associated.
+* `is_multicast` - (Optional, Bool) Indicates whether multicast is enabled. The default value is 'true'.
+* `route_table_id` - (Optional, String) ID of a routing table to which the subnet should be associated.
+* `tags` - (Optional, Map) Tags of the subnet.
 
 ## Attributes Reference
 

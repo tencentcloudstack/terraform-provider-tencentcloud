@@ -34,14 +34,14 @@ data "tencentcloud_dnats" "foo" {
 
 The following arguments are supported:
 
-* `description` - (Optional) Description of the NAT forward.
-* `elastic_ip` - (Optional) Network address of the EIP.
-* `elastic_port` - (Optional) Port of the EIP.
-* `nat_id` - (Optional) ID of the NAT gateway.
-* `private_ip` - (Optional) Network address of the backend service.
-* `private_port` - (Optional) Port of intranet.
-* `result_output_file` - (Optional) Used to save results.
-* `vpc_id` - (Optional) ID of the VPC.
+* `description` - (Optional, String) Description of the NAT forward.
+* `elastic_ip` - (Optional, String) Network address of the EIP.
+* `elastic_port` - (Optional, String) Port of the EIP.
+* `nat_id` - (Optional, String) ID of the NAT gateway.
+* `private_ip` - (Optional, String) Network address of the backend service.
+* `private_port` - (Optional, String) Port of intranet.
+* `result_output_file` - (Optional, String) Used to save results.
+* `vpc_id` - (Optional, String) ID of the VPC.
 
 ## Attributes Reference
 

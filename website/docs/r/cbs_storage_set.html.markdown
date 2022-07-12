@@ -29,16 +29,16 @@ resource "tencentcloud_cbs_storage_set" "storage" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) The available zone that the CBS instance locates at.
-* `storage_name` - (Required) Name of CBS. The maximum length can not exceed 60 bytes.
-* `storage_size` - (Required) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
-* `storage_type` - (Required, ForceNew) Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.
-* `charge_type` - (Optional) The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.
-* `disk_count` - (Optional, ForceNew) The number of disks to be purchased. Default 1.
-* `encrypt` - (Optional, ForceNew) Indicates whether CBS is encrypted.
-* `project_id` - (Optional) ID of the project to which the instance belongs.
-* `snapshot_id` - (Optional) ID of the snapshot. If specified, created the CBS by this snapshot.
-* `throughput_performance` - (Optional) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
+* `availability_zone` - (Required, String, ForceNew) The available zone that the CBS instance locates at.
+* `storage_name` - (Required, String) Name of CBS. The maximum length can not exceed 60 bytes.
+* `storage_size` - (Required, Int) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
+* `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.
+* `charge_type` - (Optional, String) The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.
+* `disk_count` - (Optional, Int, ForceNew) The number of disks to be purchased. Default 1.
+* `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
+* `project_id` - (Optional, Int) ID of the project to which the instance belongs.
+* `snapshot_id` - (Optional, String) ID of the snapshot. If specified, created the CBS by this snapshot.
+* `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
 
 ## Attributes Reference
 

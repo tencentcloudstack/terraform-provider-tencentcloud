@@ -23,11 +23,11 @@ data "tencentcloud_dayu_eip" "test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource.
-* `bind_status` - (Optional) The binding state of the instance, value range [BINDING, BIND, UNBINDING, UNBIND], default is [BINDING, BIND, UNBINDING, UNBIND].
-* `limit` - (Optional) The number of pages, default is `10`.
-* `offset` - (Optional) The page start offset, default is `0`.
-* `result_output_file` - (Optional) Used to save results.
+* `resource_id` - (Required, String) Id of the resource.
+* `bind_status` - (Optional, List: [`String`]) The binding state of the instance, value range [BINDING, BIND, UNBINDING, UNBIND], default is [BINDING, BIND, UNBINDING, UNBIND].
+* `limit` - (Optional, Int) The number of pages, default is `10`.
+* `offset` - (Optional, Int) The page start offset, default is `0`.
+* `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
 

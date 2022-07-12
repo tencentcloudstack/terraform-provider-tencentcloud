@@ -108,44 +108,44 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) ID of the cluster.
-* `instance_id` - (Required, ForceNew) ID of the CVM instance, this cvm will reinstall the system.
-* `hostname` - (Optional, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
-* `key_ids` - (Optional, ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
-* `labels` - (Optional, ForceNew) Labels of tke attachment exits CVM.
-* `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
-* `unschedulable` - (Optional, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
-* `worker_config_overrides` - (Optional, ForceNew) Override variable worker_config, commonly used to attach existing instances.
-* `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
+* `cluster_id` - (Required, String, ForceNew) ID of the cluster.
+* `instance_id` - (Required, String, ForceNew) ID of the CVM instance, this cvm will reinstall the system.
+* `hostname` - (Optional, String, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
+* `key_ids` - (Optional, List: [`String`], ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
+* `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
+* `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
+* `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+* `worker_config_overrides` - (Optional, List, ForceNew) Override variable worker_config, commonly used to attach existing instances.
+* `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
 
 The `data_disk` object supports the following:
 
-* `auto_format_and_mount` - (Optional, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
-* `disk_partition` - (Optional, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
-* `file_system` - (Optional, ForceNew) File system, e.g. `ext3/ext4/xfs`.
-* `mount_target` - (Optional, ForceNew) Mount target.
+* `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
+* `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
+* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
+* `mount_target` - (Optional, String, ForceNew) Mount target.
 
 The `worker_config_overrides` object supports the following:
 
-* `data_disk` - (Optional, ForceNew) Configurations of data disk.
-* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
-* `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
-* `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
-* `user_data` - (Optional, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
+* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 The `worker_config` object supports the following:
 
-* `data_disk` - (Optional, ForceNew) Configurations of data disk.
-* `desired_pod_num` - (Optional, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
-* `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
-* `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
-* `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
-* `user_data` - (Optional, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+* `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
+* `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
+* `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
+* `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
+* `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
 

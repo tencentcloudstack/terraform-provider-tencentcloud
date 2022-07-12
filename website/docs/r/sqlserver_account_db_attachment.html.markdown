@@ -26,10 +26,10 @@ resource "tencentcloud_sqlserver_account_db_attachment" "foo" {
 
 The following arguments are supported:
 
-* `account_name` - (Required, ForceNew) SQL Server account name.
-* `db_name` - (Required, ForceNew) SQL Server DB name.
-* `instance_id` - (Required, ForceNew) SQL Server instance ID that the account belongs to.
-* `privilege` - (Required) Privilege of the account on DB. Valid values: `ReadOnly`, `ReadWrite`.
+* `account_name` - (Required, String, ForceNew) SQL Server account name.
+* `db_name` - (Required, String, ForceNew) SQL Server DB name.
+* `instance_id` - (Required, String, ForceNew) SQL Server instance ID that the account belongs to.
+* `privilege` - (Required, String) Privilege of the account on DB. Valid values: `ReadOnly`, `ReadWrite`.
 
 ## Attributes Reference
 

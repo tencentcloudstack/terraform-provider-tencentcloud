@@ -24,8 +24,8 @@ data "tencentcloud_mysql_zone_config" "mysql" {
 
 The following arguments are supported:
 
-* `region` - (Optional) Region parameter, which is used to identify the region to which the data you want to work with belongs.
-* `result_output_file` - (Optional) Used to store results.
+* `region` - (Optional, String) Region parameter, which is used to identify the region to which the data you want to work with belongs.
+* `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference
 
