@@ -31,7 +31,7 @@ resource "tencentcloud_scf_layer" "foo" {
 
 The following arguments are supported:
 
-* `compatible_runtimes` - (Required, List[`String`]) The compatible runtimes of layer.
+* `compatible_runtimes` - (Required, List: [`String`]) The compatible runtimes of layer.
 * `content` - (Required, List) The source code of layer.
 * `layer_name` - (Required, String) The name of layer.
 * `description` - (Optional, String) The description of layer.

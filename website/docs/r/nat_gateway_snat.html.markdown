@@ -118,7 +118,7 @@ The following arguments are supported:
 
 * `description` - (Required, String) Description.
 * `nat_gateway_id` - (Required, String, ForceNew) NAT gateway ID.
-* `public_ip_addr` - (Required, List[`String`]) Elastic IP address pool.
+* `public_ip_addr` - (Required, List: [`String`]) Elastic IP address pool.
 * `resource_type` - (Required, String, ForceNew) Resource type. Valid values: SUBNET, NETWORKINTERFACE.
 * `instance_id` - (Optional, String, ForceNew) Instance ID, required when `resource_type` is NETWORKINTERFACE.
 * `instance_private_ip_addr` - (Optional, String, ForceNew) Private IPs of the instance's primary ENI, required when `resource_type` is NETWORKINTERFACE.

@@ -74,7 +74,7 @@ data "tencentcloud_api_gateway_throttling_apis" "foo" {
 
 The following arguments are supported:
 
-* `environment_names` - (Optional, List[`String`]) Environment list.
+* `environment_names` - (Optional, List: [`String`]) Environment list.
 * `result_output_file` - (Optional, String) Used to save results.
 * `service_id` - (Optional, String) Unique service ID of API.
 

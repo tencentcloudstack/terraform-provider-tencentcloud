@@ -30,7 +30,7 @@ The following arguments are supported:
 * `nat_gateway_id` - (Required, String) NAT gateway ID.
 * `description` - (Optional, String) Description.
 * `instance_id` - (Optional, String) Instance ID.
-* `public_ip_addr` - (Optional, List[`String`]) Elastic IP address pool.
+* `public_ip_addr` - (Optional, List: [`String`]) Elastic IP address pool.
 * `result_output_file` - (Optional, String) Used to save results.
 * `subnet_id` - (Optional, String) Subnet instance ID.
 

@@ -28,7 +28,7 @@ data "tencentcloud_monitor_policy_groups" "name" {
 The following arguments are supported:
 
 * `name` - (Optional, String) Policy group name for query.
-* `policy_view_names` - (Optional, List[`String`]) The policy view for query.
+* `policy_view_names` - (Optional, List: [`String`]) The policy view for query.
 * `result_output_file` - (Optional, String) Used to store results.
 
 ## Attributes Reference

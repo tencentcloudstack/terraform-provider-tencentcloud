@@ -24,7 +24,7 @@ data "tencentcloud_enis" "name" {
 The following arguments are supported:
 
 * `description` - (Optional, String) Description of the ENI. Conflict with `ids`.
-* `ids` - (Optional, Set[`String`]) ID of the ENIs to be queried. Conflict with `vpc_id`,`subnet_id`,`instance_id`,`security_group`,`name`,`ipv4` and `tags`.
+* `ids` - (Optional, Set: [`String`]) ID of the ENIs to be queried. Conflict with `vpc_id`,`subnet_id`,`instance_id`,`security_group`,`name`,`ipv4` and `tags`.
 * `instance_id` - (Optional, String) ID of the instance which bind the ENI. Conflict with `ids`.
 * `ipv4` - (Optional, String) Intranet IP of the ENI. Conflict with `ids`.
 * `name` - (Optional, String) Name of the ENI to be queried. Conflict with `ids`.

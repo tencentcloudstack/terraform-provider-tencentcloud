@@ -202,14 +202,15 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		}
 		if v.Required {
 			opt := "Required"
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
+			sub := getSubStruct(0, k, v)
+			subStruct = append(subStruct, sub...)
 			// get type
-			res := parseSubtract(v, subStruct)
+			res := parseSubtract(v, sub)
 			valueType := parseType(v)
 			if res == "" {
 				opt += fmt.Sprintf(", %s", valueType)
 			} else {
-				opt += fmt.Sprintf(", %s[`%s`]", valueType, res)
+				opt += fmt.Sprintf(", %s: [`%s`]", valueType, res)
 			}
 			if v.ForceNew {
 				opt += ", ForceNew"
@@ -221,14 +222,15 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 		} else if v.Optional {
 			opt := "Optional"
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
+			sub := getSubStruct(0, k, v)
+			subStruct = append(subStruct, sub...)
 			// get type
-			res := parseSubtract(v, subStruct)
+			res := parseSubtract(v, sub)
 			valueType := parseType(v)
 			if res == "" {
 				opt += fmt.Sprintf(", %s", valueType)
 			} else {
-				opt += fmt.Sprintf(", %s[`%s`]", valueType, res)
+				opt += fmt.Sprintf(", %s: [`%s`]", valueType, res)
 			}
 			if v.ForceNew {
 				opt += ", ForceNew"

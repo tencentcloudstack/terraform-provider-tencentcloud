@@ -26,7 +26,7 @@ The following arguments are supported:
 * `availability_zone` - (Optional, String) The available zone that the CVM instance locates at.
 * `instance_id` - (Optional, String) ID of the instances to be queried.
 * `instance_name` - (Optional, String) Name of the instances to be queried.
-* `instance_set_ids` - (Optional, List[`String`]) Instance set ids, max length is 100, conflict with other field.
+* `instance_set_ids` - (Optional, List: [`String`]) Instance set ids, max length is 100, conflict with other field.
 * `project_id` - (Optional, Int) The project CVM belongs to.
 * `result_output_file` - (Optional, String) Used to save results.
 * `subnet_id` - (Optional, String) ID of a vpc subnetwork.

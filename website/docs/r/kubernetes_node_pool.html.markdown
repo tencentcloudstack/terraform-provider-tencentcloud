@@ -171,11 +171,11 @@ The following arguments are supported:
 * `scaling_group_name` - (Optional, String) Name of relative scaling group.
 * `scaling_group_project_id` - (Optional, Int) Project ID the scaling group belongs to.
 * `scaling_mode` - (Optional, String, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
-* `subnet_ids` - (Optional, List[`String`], ForceNew) ID list of subnet, and for VPC it is required.
+* `subnet_ids` - (Optional, List: [`String`], ForceNew) ID list of subnet, and for VPC it is required.
 * `taints` - (Optional, List) Taints of kubernetes node pool created nodes.
-* `termination_policies` - (Optional, List) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
+* `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
-* `zones` - (Optional, List) List of auto scaling group available zones, for Basic network it is required.
+* `zones` - (Optional, List: [`String`]) List of auto scaling group available zones, for Basic network it is required.
 
 The `auto_scaling_config` object supports the following:
 

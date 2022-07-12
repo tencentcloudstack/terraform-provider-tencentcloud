@@ -30,7 +30,7 @@ The following arguments are supported:
 
 * `config_content` - (Required, String) Content of Customized Config.
 * `config_name` - (Required, String) Name of Customized Config.
-* `load_balancer_ids` - (Optional, Set[`String`]) List of LoadBalancer Ids.
+* `load_balancer_ids` - (Optional, Set: [`String`]) List of LoadBalancer Ids.
 
 ## Attributes Reference
 

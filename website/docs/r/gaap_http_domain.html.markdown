@@ -45,13 +45,13 @@ The following arguments are supported:
 * `basic_auth` - (Optional, Bool) Indicates whether basic authentication is enable, default value is `false`.
 * `certificate_id` - (Optional, String) ID of the server certificate, default value is `default`.
 * `client_certificate_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.26.0. Set `client_certificate_ids` instead. ID of the client certificate, default value is `default`.
-* `client_certificate_ids` - (Optional, Set[`String`]) ID list of the poly client certificate.
+* `client_certificate_ids` - (Optional, Set: [`String`]) ID list of the poly client certificate.
 * `gaap_auth_id` - (Optional, String) ID of the SSL certificate.
 * `gaap_auth` - (Optional, Bool) Indicates whether SSL certificate authentication is enable, default value is `false`.
 * `realserver_auth` - (Optional, Bool) Indicates whether realserver authentication is enable, default value is `false`.
 * `realserver_certificate_domain` - (Optional, String) CA certificate domain of the realserver. It has been deprecated.
 * `realserver_certificate_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.28.0. Set `realserver_certificate_ids` instead. CA certificate ID of the realserver.
-* `realserver_certificate_ids` - (Optional, Set[`String`]) CA certificate ID list of the realserver.
+* `realserver_certificate_ids` - (Optional, Set: [`String`]) CA certificate ID list of the realserver.
 
 ## Attributes Reference
 

@@ -83,11 +83,11 @@ The following arguments are supported:
 * `drop_options` - (Required, List) Option list of abnormal check of the DDos policy, should set at least one policy.
 * `name` - (Required, String) Name of the DDoS policy. Length should between 1 and 32.
 * `resource_type` - (Required, String, ForceNew) Type of the resource that the DDoS policy works for. Valid values: `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `black_ips` - (Optional, Set) Black IP list.
+* `black_ips` - (Optional, Set: [`String`]) Black IP list.
 * `packet_filters` - (Optional, List) Message filter options list.
 * `port_filters` - (Optional, List) Port limits of abnormal check of the DDos policy.
 * `watermark_filters` - (Optional, List) Watermark policy options, and only support one watermark policy at most.
-* `white_ips` - (Optional, Set) White IP list.
+* `white_ips` - (Optional, Set: [`String`]) White IP list.
 
 The `drop_options` object supports the following:
 

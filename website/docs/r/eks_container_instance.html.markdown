@@ -94,7 +94,7 @@ The following arguments are supported:
 * `cpu` - (Required, Float64) The number of CPU cores. Check https://intl.cloud.tencent.com/document/product/457/34057 for specification references.
 * `memory` - (Required, Float64) Memory size. Check https://intl.cloud.tencent.com/document/product/457/34057 for specification references.
 * `name` - (Required, String) Name of EKS container instance.
-* `security_groups` - (Required, List) List of security group id.
+* `security_groups` - (Required, List: [`String`]) List of security group id.
 * `subnet_id` - (Required, String) Subnet ID of container instance.
 * `vpc_id` - (Required, String) VPC ID.
 * `auto_create_eip` - (Optional, Bool) Indicates whether to create EIP instead of specify existing EIPs. Conflict with `existed_eip_ids`.
@@ -102,12 +102,12 @@ The following arguments are supported:
 * `cbs_volume` - (Optional, List) List of CBS volume.
 * `cpu_type` - (Optional, String) Type of cpu, which can set to `intel` or `amd`. It also support backup list like `amd,intel` which indicates using `intel` when `amd` sold out.
 * `dns_config_options` - (Optional, Map, ForceNew) Map of DNS config options.
-* `dns_names_servers` - (Optional, List[`String`], ForceNew) IP Addresses of DNS Servers.
-* `dns_searches` - (Optional, List, ForceNew) List of DNS Search Domain.
+* `dns_names_servers` - (Optional, List: [`String`], ForceNew) IP Addresses of DNS Servers.
+* `dns_searches` - (Optional, List: [`String`], ForceNew) List of DNS Search Domain.
 * `eip_delete_policy` - (Optional, Bool) Indicates weather the EIP release or not after instance deleted. Conflict with `existed_eip_ids`.
 * `eip_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). Conflict with `existed_eip_ids`.
 * `eip_service_provider` - (Optional, String) EIP service provider. Default is `BGP`, values `CMCC`,`CTCC`,`CUCC` are available for whitelist customer. Conflict with `existed_eip_ids`.
-* `existed_eip_ids` - (Optional, List) Existed EIP ID List which used to bind container instance. Conflict with `auto_create_eip` and auto create EIP options.
+* `existed_eip_ids` - (Optional, List: [`String`]) Existed EIP ID List which used to bind container instance. Conflict with `auto_create_eip` and auto create EIP options.
 * `gpu_count` - (Optional, Int) Count of GPU. Check https://intl.cloud.tencent.com/document/product/457/34057 for specification references.
 * `gpu_type` - (Optional, String) Type of GPU. Check https://intl.cloud.tencent.com/document/product/457/34057 for specification references.
 * `image_registry_credential` - (Optional, List) List of credentials which pull from image registry.

@@ -33,7 +33,7 @@ resource "tencentcloud_vpn_ssl_server" "server" {
 
 The following arguments are supported:
 
-* `local_address` - (Required, List[`String`], ForceNew) List of local CIDR.
+* `local_address` - (Required, List: [`String`], ForceNew) List of local CIDR.
 * `remote_address` - (Required, String, ForceNew) Remote CIDR for client.
 * `ssl_vpn_server_name` - (Required, String, ForceNew) The name of ssl vpn server to be created.
 * `vpn_gateway_id` - (Required, String, ForceNew) VPN gateway ID.

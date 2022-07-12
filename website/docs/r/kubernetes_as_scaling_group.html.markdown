@@ -24,7 +24,7 @@ The following arguments are supported:
 * `auto_scaling_config` - (Required, List, ForceNew) Auto scaling config parameters.
 * `auto_scaling_group` - (Required, List) Auto scaling group parameters.
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node.
+* `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes AS Group created nodes.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 

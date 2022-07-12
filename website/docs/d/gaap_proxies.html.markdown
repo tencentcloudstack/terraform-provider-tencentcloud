@@ -32,7 +32,7 @@ data "tencentcloud_gaap_proxies" "foo" {
 The following arguments are supported:
 
 * `access_region` - (Optional, String) Access region of the GAAP proxy to be queried. Conflict with `ids`.
-* `ids` - (Optional, Set[`String`]) ID of the GAAP proxy to be queried. Conflict with `project_id`, `access_region` and `realserver_region`.
+* `ids` - (Optional, Set: [`String`]) ID of the GAAP proxy to be queried. Conflict with `project_id`, `access_region` and `realserver_region`.
 * `project_id` - (Optional, Int) Project ID of the GAAP proxy to be queried. Conflict with `ids`.
 * `realserver_region` - (Optional, String) Region of the GAAP realserver to be queried. Conflict with `ids`.
 * `result_output_file` - (Optional, String) Used to save results.

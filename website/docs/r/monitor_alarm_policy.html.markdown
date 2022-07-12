@@ -234,7 +234,7 @@ The following arguments are supported:
 * `conditon_template_id` - (Optional, Int, ForceNew) ID of trigger condition template.
 * `enable` - (Optional, Int) Whether to enable, default is `1`.
 * `event_conditions` - (Optional, List) A list of event trigger condition.
-* `notice_ids` - (Optional, List) List of notification rule IDs.
+* `notice_ids` - (Optional, List: [`String`]) List of notification rule IDs.
 * `policy_tag` - (Optional, List, ForceNew) Policy tag to bind object.
 * `project_id` - (Optional, Int, ForceNew) Project ID. For products with different projects, a value other than -1 must be passed in.
 * `remark` - (Optional, String) The remark of policy group.

@@ -119,7 +119,7 @@ The following arguments are supported:
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node.
+* `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.

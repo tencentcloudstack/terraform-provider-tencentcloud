@@ -61,7 +61,7 @@ The following arguments are supported:
 * `exclude_paths` - (Optional, List) Collection path blocklist.
 * `extract_rule` - (Optional, List) Extraction rule. If ExtractRule is set, LogType must be set.
 * `group_id` - (Optional, String) Binding group id.
-* `group_ids` - (Optional, Set, ForceNew) Binding group ids.
+* `group_ids` - (Optional, Set: [`String`], ForceNew) Binding group ids.
 * `host_file` - (Optional, List) Node file config info.
 * `user_define_rule` - (Optional, String) Custom collection rule, which is a serialized JSON string.
 

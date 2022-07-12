@@ -43,7 +43,7 @@ The following arguments are supported:
 * `scaling_group_id` - (Required, String, ForceNew) ID of a scaling group.
 * `threshold` - (Required, Int) Alarm threshold.
 * `cooldown` - (Optional, Int) Cooldwon time in second. Default is `30`0.
-* `notification_user_group_ids` - (Optional, List[`String`]) An ID group of users to be notified when an alarm is triggered.
+* `notification_user_group_ids` - (Optional, List: [`String`]) An ID group of users to be notified when an alarm is triggered.
 * `statistic` - (Optional, String) Statistic types. Valid values: `AVERAGE`, `MAXIMUM` and `MINIMUM`. Default is `AVERAGE`.
 
 ## Attributes Reference
