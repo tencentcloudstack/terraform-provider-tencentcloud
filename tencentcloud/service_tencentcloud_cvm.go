@@ -192,17 +192,17 @@ func (me *CvmService) DescribeInstanceInParallelByFilter(ctx context.Context, fi
 			instanceSetList[value] = response.Response.InstanceSet
 
 			wg.Done()
-			log.Printf("===============thread %i finished=================", value)
+			log.Printf("[DEBUG]%s thread %d finished", logId, value)
 		}
 		g.Run(goFunc)
 	}
 	wg.Wait()
 
-	log.Printf("===============DescribeInstance requet finished=================")
+	log.Printf("[DEBUG]%s DescribeInstance requet finished", logId)
 	for _, v := range instanceSetList {
 		instances = append(instances, v.([]*cvm.Instance)...)
 	}
-	log.Printf("===============transfer Instance finished=================")
+	log.Printf("[DEBUG]%s transfer Instance finished", logId)
 	return
 }
 
