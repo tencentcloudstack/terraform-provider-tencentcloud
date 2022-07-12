@@ -9,6 +9,38 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_vod_procedure_template
+	resource.AddTestSweepers("tencentcloud_vod_procedure_template", &resource.Sweeper{
+		Name: "tencentcloud_vod_procedure_template",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			vodService := VodService{
+				client: client.apiV3Conn,
+			}
+			filter := make(map[string]interface{})
+			templates, err := vodService.DescribeProcedureTemplatesByFilter(ctx, filter)
+			if err != nil {
+				return err
+			}
+			for _, template := range templates {
+				ee := vodService.DeleteProcedureTemplate(ctx, *template.Name, uint64(0))
+				if ee != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
+
 func TestAccTencentCloudVodProcedureTemplateResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
