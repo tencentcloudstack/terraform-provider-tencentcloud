@@ -43,10 +43,10 @@ The following arguments are supported:
 * `force_upgrade` - (Optional, Bool, ForceNew) Indicate that the master instance upgrade or not. `true` for upgrading the master SQL Server instance to cluster type by force. Default is false. Note: this is not supported with `DUAL`(ha_type), `2017`(engine_version) master SQL Server instance, for it will cause ha_type of the master SQL Server instance change.
 * `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
 * `readonly_group_id` - (Optional, String) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
-* `security_groups` - (Optional, Set) Security group bound to the instance.
+* `security_groups` - (Optional, Set[`String`]) Security group bound to the instance.
 * `subnet_id` - (Optional, String, ForceNew) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
-* `voucher_ids` - (Optional, Set) An array of voucher IDs, currently only one can be used for a single order.
+* `voucher_ids` - (Optional, Set[`String`]) An array of voucher IDs, currently only one can be used for a single order.
 * `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 ## Attributes Reference

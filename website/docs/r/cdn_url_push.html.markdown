@@ -34,7 +34,7 @@ resource "tencentcloud_cdn_url_push" "foo" {
 
 The following arguments are supported:
 
-* `urls` - (Required, List, ForceNew) List of url to push. NOTE: urls need include protocol prefix `http://` or `https://`.
+* `urls` - (Required, List[`String`], ForceNew) List of url to push. NOTE: urls need include protocol prefix `http://` or `https://`.
 * `area` - (Optional, String) Specify push area. NOTE: only push same area cache contents.
 * `layer` - (Optional, String) Layer to push.
 * `parse_m3u8` - (Optional, Bool) Whether to recursive parse m3u8 files.

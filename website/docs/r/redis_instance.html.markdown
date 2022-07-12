@@ -80,9 +80,9 @@ The following arguments are supported:
 * `project_id` - (Optional, Int) Specifies which project the instance should belong to.
 * `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions.
 * `redis_shard_num` - (Optional, Int) The number of instance shard, default is 1. This is not required for standalone and master slave versions.
-* `replica_zone_ids` - (Optional, List) ID of replica nodes available zone. This is not required for standalone and master slave versions.
+* `replica_zone_ids` - (Optional, List[`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions.
 * `replicas_read_only` - (Optional, Bool) Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.
-* `security_groups` - (Optional, Set, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
+* `security_groups` - (Optional, Set[`String`], ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, String, ForceNew) Specifies which subnet the instance should belong to.
 * `tags` - (Optional, Map) Instance tags.
 * `type_id` - (Optional, Int, ForceNew) Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069).

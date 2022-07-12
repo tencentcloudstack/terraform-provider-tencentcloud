@@ -46,18 +46,18 @@ resource "tencentcloud_dayu_ddos_policy_case" "foo" {
 
 The following arguments are supported:
 
-* `app_protocols` - (Required, Set) App protocol set of the DDoS policy case.
+* `app_protocols` - (Required, Set[`String`]) App protocol set of the DDoS policy case.
 * `app_type` - (Required, String) App type of the DDoS policy case. Valid values: `WEB`, `GAME`, `APP` and `OTHER`.
 * `has_abroad` - (Required, String) Indicate whether the service involves overseas or not. Valid values: `no` and `yes`.
 * `has_initiate_tcp` - (Required, String) Indicate whether the service actively initiates TCP requests or not. Valid values: `no` and `yes`.
 * `name` - (Required, String, ForceNew) Name of the DDoS policy case. Length should between 1 and 64.
-* `platform_types` - (Required, Set) Platform set of the DDoS policy case.
+* `platform_types` - (Required, Set[`String`]) Platform set of the DDoS policy case.
 * `resource_type` - (Required, String, ForceNew) Type of the resource that the DDoS policy case works for. Valid values: `bgpip`, `bgp` and `bgp-multip`.
 * `tcp_end_port` - (Required, String) End port of the TCP service. Valid value ranges: (0~65535). It must be greater than `tcp_start_port`.
 * `tcp_start_port` - (Required, String) Start port of the TCP service. Valid value ranges: (0~65535).
 * `udp_end_port` - (Required, String) End port of the UDP service. Valid value ranges: (0~65535). It must be greater than `udp_start_port`.
 * `udp_start_port` - (Required, String) Start port of the UDP service. Valid value ranges: (0~65535).
-* `web_api_urls` - (Required, Set) Web API url set.
+* `web_api_urls` - (Required, Set[`String`]) Web API url set.
 * `has_initiate_udp` - (Optional, String) Indicate whether the actively initiate UDP requests or not. Valid values: `no` and `yes`.
 * `has_vpn` - (Optional, String) Indicate whether the service involves VPN service or not. Valid values: `no` and `yes`.
 * `max_tcp_package_len` - (Optional, String) The max length of TCP message package, valid value length should be greater than 0 and less than 1500. It should be greater than `min_tcp_package_len`.

@@ -71,7 +71,7 @@ resource "tencentcloud_mysql_privilege" "tttt" {
 The following arguments are supported:
 
 * `account_name` - (Required, String, ForceNew) Account name.the forbidden value is:root,mysql.sys,tencentroot.
-* `global` - (Required, Set) Global privileges. available values for Privileges:ALTER,ALTER ROUTINE,CREATE,CREATE ROUTINE,CREATE TEMPORARY TABLES,CREATE USER,CREATE VIEW,DELETE,DROP,EVENT,EXECUTE,INDEX,INSERT,LOCK TABLES,PROCESS,REFERENCES,RELOAD,REPLICATION CLIENT,REPLICATION SLAVE,SELECT,SHOW DATABASES,SHOW VIEW,TRIGGER,UPDATE.
+* `global` - (Required, Set[`String`]) Global privileges. available values for Privileges:ALTER,ALTER ROUTINE,CREATE,CREATE ROUTINE,CREATE TEMPORARY TABLES,CREATE USER,CREATE VIEW,DELETE,DROP,EVENT,EXECUTE,INDEX,INSERT,LOCK TABLES,PROCESS,REFERENCES,RELOAD,REPLICATION CLIENT,REPLICATION SLAVE,SELECT,SHOW DATABASES,SHOW VIEW,TRIGGER,UPDATE.
 * `mysql_id` - (Required, String, ForceNew) Instance ID.
 * `account_host` - (Optional, String, ForceNew) Account host, default is `%`.
 * `column` - (Optional, Set) Column privileges list.

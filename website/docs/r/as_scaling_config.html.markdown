@@ -60,7 +60,7 @@ The following arguments are supported:
 
 * `configuration_name` - (Required, String) Name of a launch configuration.
 * `image_id` - (Required, String) An available image ID for a cvm instance.
-* `instance_types` - (Required, List) Specified types of CVM instances.
+* `instance_types` - (Required, List[`String`]) Specified types of CVM instances.
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `data_disk` - (Optional, List) Configurations of data disk.
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
@@ -78,7 +78,7 @@ The following arguments are supported:
 * `password` - (Optional, String) Password to access.
 * `project_id` - (Optional, Int) Specifys to which project the configuration belongs.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, List) Security groups to which a CVM instance belongs.
+* `security_group_ids` - (Optional, List[`String`]) Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.

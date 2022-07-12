@@ -52,17 +52,17 @@ The following arguments are supported:
 * `default_cooldown` - (Optional, Int) Default cooldown time in second, and default value is `300`.
 * `desired_capacity` - (Optional, Int) Desired volume of CVM instances, which is between `max_size` and `min_size`.
 * `forward_balancer_ids` - (Optional, List) List of application load balancers, which can't be specified with `load_balancer_ids` together.
-* `load_balancer_ids` - (Optional, List) ID list of traditional load balancers.
+* `load_balancer_ids` - (Optional, List[`String`]) ID list of traditional load balancers.
 * `multi_zone_subnet_policy` - (Optional, String) Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
 * `project_id` - (Optional, Int) Specifies to which project the scaling group belongs.
 * `replace_load_balancer_unhealthy` - (Optional, Bool) Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.
 * `replace_monitor_unhealthy` - (Optional, Bool) Enables unhealthy instance replacement. If set to `true`, AS will replace instances that are flagged as unhealthy by Cloud Monitor.
 * `retry_policy` - (Optional, String) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `scaling_mode` - (Optional, String) Indicates scaling mode which creates and terminates instances (classic method), or method first tries to start stopped instances (wake up stopped) to perform scaling operations. Available values: `CLASSIC_SCALING`, `WAKE_UP_STOPPED_SCALING`. Default: `CLASSIC_SCALING`.
-* `subnet_ids` - (Optional, List) ID list of subnet, and for VPC it is required.
+* `subnet_ids` - (Optional, List[`String`]) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional, Map) Tags of a scaling group.
-* `termination_policies` - (Optional, List) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
-* `zones` - (Optional, List) List of available zones, for Basic network it is required.
+* `termination_policies` - (Optional, List[`String`]) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
+* `zones` - (Optional, List[`String`]) List of available zones, for Basic network it is required.
 
 The `forward_balancer_ids` object supports the following:
 

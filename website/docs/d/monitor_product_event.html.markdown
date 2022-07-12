@@ -27,11 +27,11 @@ The following arguments are supported:
 
 * `dimensions` - (Optional, List) Dimensional composition of instance objects.
 * `end_time` - (Optional, Int) End timestamp for this query, eg:`1588232111`. Default start time is `now-3000`.
-* `event_name` - (Optional, List) Event name filtering, such as `guest_reboot` indicates that the machine restart.
-* `instance_id` - (Optional, List) Affect objects, such as `ins-19708ino`.
+* `event_name` - (Optional, List[`String`]) Event name filtering, such as `guest_reboot` indicates that the machine restart.
+* `instance_id` - (Optional, List[`String`]) Affect objects, such as `ins-19708ino`.
 * `is_alarm_config` - (Optional, Int) Alarm status configuration filter, 1means configured, 0(default) means not configured.
 * `product_name` - (Optional, List) Product type filtering, such as `cvm` for cloud server.
-* `project_id` - (Optional, List) Project ID filter.
+* `project_id` - (Optional, List[`String`]) Project ID filter.
 * `region_list` - (Optional, List) Region filter, such as `gz`.
 * `result_output_file` - (Optional, String) Used to store results.
 * `start_time` - (Optional, Int) Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.

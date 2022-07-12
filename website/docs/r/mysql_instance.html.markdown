@@ -71,7 +71,7 @@ The following arguments are supported:
 * `project_id` - (Optional, Int) Project ID, default value is 0.
 * `root_password` - (Optional, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `second_slave_zone` - (Optional, String, ForceNew) Zone information about second slave instance.
-* `security_groups` - (Optional, Set) Security groups to use.
+* `security_groups` - (Optional, Set[`String`]) Security groups to use.
 * `slave_deploy_mode` - (Optional, Int, ForceNew) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
 * `slave_sync_mode` - (Optional, Int, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.

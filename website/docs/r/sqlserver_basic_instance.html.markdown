@@ -52,13 +52,13 @@ The following arguments are supported:
 * `engine_version` - (Optional, String, ForceNew) Version of the SQL Server basic database engine. Allowed values are `2008R2`(SQL Server 2008 Enterprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.
 * `maintenance_start_time` - (Optional, String) Start time of the maintenance in one day, format like `HH:mm`.
 * `maintenance_time_span` - (Optional, Int) The timespan of maintenance in one day, unit is hour.
-* `maintenance_week_set` - (Optional, Set) A list of integer indicates weekly maintenance. For example, [1,7] presents do weekly maintenance on every Monday and Sunday.
+* `maintenance_week_set` - (Optional, Set[`Int`]) A list of integer indicates weekly maintenance. For example, [1,7] presents do weekly maintenance on every Monday and Sunday.
 * `period` - (Optional, Int) Purchase instance period, the default value is 1, which means one month. The value does not exceed 48.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
-* `security_groups` - (Optional, Set) Security group bound to the instance.
+* `security_groups` - (Optional, Set[`String`]) Security group bound to the instance.
 * `subnet_id` - (Optional, String, ForceNew) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server basic instance.
-* `voucher_ids` - (Optional, Set) An array of voucher IDs, currently only one can be used for a single order.
+* `voucher_ids` - (Optional, Set[`String`]) An array of voucher IDs, currently only one can be used for a single order.
 * `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 ## Attributes Reference

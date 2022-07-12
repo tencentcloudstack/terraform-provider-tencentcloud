@@ -42,7 +42,7 @@ The following arguments are supported:
 * `memory` - (Required, Int) Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
 * `name` - (Required, String) Instance name.
 * `project_id` - (Required, Int) Project ID.
-* `security_groups_ids` - (Required, Set) ID of security group.
+* `security_groups_ids` - (Required, Set[`String`]) ID of security group.
 * `storage` - (Required, Int) Instance storage capacity in GB.
 * `subnet_id` - (Required, String) VPC subnet ID.
 * `vpc_id` - (Required, String, ForceNew) VPC ID.

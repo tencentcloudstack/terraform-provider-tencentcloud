@@ -30,7 +30,7 @@ resource "tencentcloud_api_gateway_service" "service" {
 
 The following arguments are supported:
 
-* `net_type` - (Required, Set) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
+* `net_type` - (Required, Set[`String`]) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
 * `protocol` - (Required, String) Service frontend request type. Valid values: `http`, `https`, `http&https`.
 * `service_name` - (Required, String) Custom service name.
 * `exclusive_set_name` - (Optional, String, ForceNew) Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.

@@ -202,8 +202,15 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		}
 		if v.Required {
 			opt := "Required"
+			subStruct = append(subStruct, getSubStruct(0, k, v)...)
+			// get type
+			res := parseSubtract(v, subStruct)
 			valueType := parseType(v)
-			opt += fmt.Sprintf(", %s", valueType)
+			if res == "" {
+				opt += fmt.Sprintf(", %s", valueType)
+			} else {
+				opt += fmt.Sprintf(", %s[`%s`]", valueType, res)
+			}
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
@@ -212,11 +219,17 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else if v.Optional {
 			opt := "Optional"
+			subStruct = append(subStruct, getSubStruct(0, k, v)...)
+			// get type
+			res := parseSubtract(v, subStruct)
 			valueType := parseType(v)
-			opt += fmt.Sprintf(", %s", valueType)
+			if res == "" {
+				opt += fmt.Sprintf(", %s", valueType)
+			} else {
+				opt += fmt.Sprintf(", %s[`%s`]", valueType, res)
+			}
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
@@ -225,7 +238,6 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
-			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else {
 			attrs := getAttributes(0, k, v)
 			if len(attrs) > 0 {
@@ -462,21 +474,32 @@ func message(msg string, v ...interface{}) {
 
 func parseType(v *schema.Schema) string {
 	res := ""
-	switch v.Type{
-	case schema.TypeBool :
+	switch v.Type {
+	case schema.TypeBool:
 		res = "Bool"
-	case schema.TypeInt :
+	case schema.TypeInt:
 		res = "Int"
-	case schema.TypeFloat :
+	case schema.TypeFloat:
 		res = "Float64"
-	case schema.TypeString :
+	case schema.TypeString:
 		res = "String"
-	case schema.TypeList :
+	case schema.TypeList:
 		res = "List"
-	case schema.TypeMap :
+	case schema.TypeMap:
 		res = "Map"
-	case schema.TypeSet :
+	case schema.TypeSet:
 		res = "Set"
+	}
+	return res
+}
+
+func parseSubtract(v *schema.Schema, subStruct []string) string {
+	res := ""
+	if v.Type == schema.TypeSet || v.Type == schema.TypeList {
+		if len(subStruct) == 0 {
+			vv := v.Elem.(*schema.Schema)
+			res = parseType(vv)
+		}
 	}
 	return res
 }

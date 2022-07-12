@@ -37,7 +37,7 @@ The following arguments are supported:
 * `mapping_filed` - (Required, String) Map field names. Which field in the IdP's id_token maps to the user name of the subuser, usually the sub or name field.
 * `response_mode` - (Required, String) Authorize the request Forsonse mode. Authorization request return mode, form_post and frogment two optional modes, recommended to select form_post mode.
 * `response_type` - (Required, String) Authorization requests The Response type, with a fixed value id_token.
-* `scope` - (Optional, Set) Authorize the request Scope. openid; email; profile; Authorization request information scope. The default is required openid.
+* `scope` - (Optional, Set[`String`]) Authorize the request Scope. openid; email; profile; Authorization request information scope. The default is required openid.
 
 ## Attributes Reference
 

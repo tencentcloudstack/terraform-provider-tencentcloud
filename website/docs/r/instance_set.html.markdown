@@ -84,7 +84,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String, ForceNew) CAM role name authorized to access.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifying will cause the instance reset.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifying will cause the instance reset.
-* `exclude_instance_ids` - (Optional, Set) instance ids list to exclude.
+* `exclude_instance_ids` - (Optional, Set[`String`]) instance ids list to exclude.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.
 * `instance_charge_type` - (Optional, String) The charge type of instance. Only support `POSTPAID_BY_HOUR`.
 * `instance_count` - (Optional, Int) The number of instances to be purchased. Value range:[1,100]; default value: 1.
@@ -98,7 +98,7 @@ The following arguments are supported:
 * `placement_group_id` - (Optional, String, ForceNew) The ID of a placement group.
 * `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
-* `security_groups` - (Optional, Set) A list of security group IDs to associate with.
+* `security_groups` - (Optional, Set[`String`]) A list of security group IDs to associate with.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
 * `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
 * `system_disk_size` - (Optional, Int) Size of the system disk. Valid value ranges: (50~1000). and unit is GB. Default is 50GB. If modified, the instance may force stop.

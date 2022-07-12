@@ -45,7 +45,7 @@ The following arguments are supported:
 * `protocol` - (Required, String) Protocol of the rule. Valid values: `http`, `https`.
 * `resource_id` - (Required, String, ForceNew) ID of the resource that the layer 7 rule works for.
 * `resource_type` - (Required, String, ForceNew) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
-* `source_list` - (Required, Set) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 16.
+* `source_list` - (Required, Set[`String`]) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 16.
 * `source_type` - (Required, Int) Source type, `1` for source of host, `2` for source of IP.
 * `switch` - (Required, Bool) Indicate the rule will take effect or not.
 * `health_check_code` - (Optional, Int) HTTP Status Code. The default is `26`. Valid value ranges: [1~31]. `1` means the return value '1xx' is health. `2` means the return value '2xx' is health. `4` means the return value '3xx' is health. `8` means the return value '4xx' is health. `16` means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.

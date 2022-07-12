@@ -25,7 +25,7 @@ resource "tencentcloud_address_template_group" "foo" {
 The following arguments are supported:
 
 * `name` - (Required, String, ForceNew) Name of the address template group.
-* `template_ids` - (Required, Set) Template ID list.
+* `template_ids` - (Required, Set[`String`]) Template ID list.
 
 ## Attributes Reference
 

@@ -55,7 +55,7 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) The id of tdmq cluster.
 * `environ_id` - (Required, String) The name of tdmq namespace.
-* `permissions` - (Required, List) The permissions of tdmq role.
+* `permissions` - (Required, List[`String`]) The permissions of tdmq role.
 * `role_name` - (Required, String) The name of tdmq role.
 
 ## Attributes Reference

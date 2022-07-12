@@ -81,8 +81,8 @@ The following arguments are supported:
 * `port` - (Optional, Int, ForceNew) Port of CynosDB cluster.
 * `prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
-* `ro_group_sg` - (Optional, List) IDs of security group for `ro_group`.
-* `rw_group_sg` - (Optional, List) IDs of security group for `rw_group`.
+* `ro_group_sg` - (Optional, List[`String`]) IDs of security group for `ro_group`.
+* `rw_group_sg` - (Optional, List[`String`]) IDs of security group for `rw_group`.
 * `storage_limit` - (Optional, Int, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
