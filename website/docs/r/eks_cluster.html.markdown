@@ -60,7 +60,7 @@ The following arguments are supported:
 
 * `cluster_name` - (Required, String) Name of EKS cluster.
 * `k8s_version` - (Required, String, ForceNew) Kubernetes version of EKS cluster.
-* `subnet_ids` - (Required, List[`String`]) Subnet Ids for EKS cluster.
+* `subnet_ids` - (Required, List) Subnet Ids for EKS cluster.
 * `vpc_id` - (Required, String, ForceNew) Vpc Id of EKS cluster.
 * `cluster_desc` - (Optional, String) Description of EKS cluster.
 * `dns_servers` - (Optional, List) List of cluster custom DNS Server info.

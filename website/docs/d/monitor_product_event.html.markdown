@@ -35,8 +35,8 @@ The following arguments are supported:
 * `region_list` - (Optional, List) Region filter, such as `gz`.
 * `result_output_file` - (Optional, String) Used to store results.
 * `start_time` - (Optional, Int) Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.
-* `status` - (Optional, List) Event status filter, value range `-`,`alarm`,`recover`, indicating recovered, unrecovered and stateless.
-* `type` - (Optional, List) Event type filtering, with value range `abnormal`,`status_change`, indicating state change and abnormal events.
+* `status` - (Optional, List[`String`]) Event status filter, value range `-`,`alarm`,`recover`, indicating recovered, unrecovered and stateless.
+* `type` - (Optional, List[`String`]) Event type filtering, with value range `abnormal`,`status_change`, indicating state change and abnormal events.
 
 The `dimensions` object supports the following:
 

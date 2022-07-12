@@ -24,7 +24,7 @@ data "tencentcloud_ckafka_instances" "foo" {
 The following arguments are supported:
 
 * `filters` - (Optional, List) Filter. filter.name supports ('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId'), filter.values can pass up to 10 values.
-* `instance_ids` - (Optional, List) Filter by instance ID.
+* `instance_ids` - (Optional, List[`String`]) Filter by instance ID.
 * `limit` - (Optional, Int) The number of pages, default is `10`.
 * `offset` - (Optional, Int) The page start offset, default is `0`.
 * `result_output_file` - (Optional, String) Used to save results.
