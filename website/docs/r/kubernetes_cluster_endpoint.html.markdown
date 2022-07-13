@@ -28,7 +28,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
     "192.168.0.0/24"
   ]
   cluster_intranet_subnet_id = "subnet-xxxxxxxx"
-  depends_on[
+  depends_on = [
     tencentcloud_kubernetes_nodepool.pool1
   ]
 }
