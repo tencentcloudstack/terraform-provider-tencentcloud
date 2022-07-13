@@ -45,8 +45,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -679,10 +679,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 			return nil
 		}); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
 		}
 	}
 

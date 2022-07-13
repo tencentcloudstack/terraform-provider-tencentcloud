@@ -15,7 +15,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cloud "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 )
 
@@ -33,7 +33,7 @@ var (
 )
 
 func main() {
-	provider := cloud.Provider().(*schema.Provider)
+	provider := cloud.Provider()
 	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
 
 	filename, _ := vProvider.FileLine(0)

@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 var testDataDayuDdosPolicyCasesName = "data.tencentcloud_dayu_ddos_policy_cases.id_test"
