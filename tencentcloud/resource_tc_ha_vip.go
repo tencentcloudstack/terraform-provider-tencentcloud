@@ -171,7 +171,8 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 	_ = d.Set("vip", *haVip.Vip)
 	_ = d.Set("vpc_id", *haVip.VpcId)
 	_ = d.Set("subnet_id", *haVip.SubnetId)
-	_ = d.Set("address_id", *haVip.AddressIp)
+	// FIXME: set but not been declared
+	//_ = d.Set("address_id", *haVip.AddressIp)
 	_ = d.Set("state", *haVip.State)
 	_ = d.Set("network_interface_id", *haVip.NetworkInterfaceId)
 	_ = d.Set("instance_id", *haVip.InstanceId)

@@ -358,7 +358,8 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
-	_ = d.Set("status", instance.DBInstanceStatus)
+	// FIXME: set but not been declared
+	//_ = d.Set("status", instance.DBInstanceStatus)
 
 	return nil
 }

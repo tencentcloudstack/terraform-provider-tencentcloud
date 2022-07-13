@@ -7,8 +7,12 @@ import (
 	"fmt"
 	"hash/crc32"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
@@ -173,4 +177,53 @@ func HashStrings(strings []string) string {
 	}
 
 	return fmt.Sprintf("%d", String(buf.String()))
+}
+
+// CheckSchemaSetResourceAttr can be used for checking attributes which type is schema.TypeSet
+// @params
+// name:  resource name e.g. `tencentcloud_cos_bucket.foo`
+// path:  path to TypeSet arguments e.g. `lifecycle_rules.0.expiration`
+// key:   elem key without index, because TypeSet is unordered. e.g. `days`, this can set to empty "" to test as primitive elems
+// value: expect value includes in argument set
+func CheckSchemaSetResourceAttr(name, path, key, value string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		ms := s.RootModule()
+		rs, ok := ms.Resources[name]
+		if !ok {
+			return fmt.Errorf("Not found: %s in %s", name, ms.Path)
+		}
+
+		is := rs.Primary
+		if is == nil {
+			return fmt.Errorf("No primary instance: %s in %s", name, ms.Path)
+		}
+		mapSize, ok := is.Attributes[fmt.Sprintf("%s.#", path)]
+		length, err := strconv.Atoi(mapSize)
+		if !ok || err != nil {
+			return fmt.Errorf("cannot read atribute %s.%s.\\# , got %s", name, path, mapSize)
+		}
+		if length == 0 {
+			return fmt.Errorf("%s.%s has no elements", name, path)
+		}
+		values := make([]string, 0)
+		hit := false
+		for i := 0; i < length; i++ {
+			fullKey := fmt.Sprintf("%s.%d.%s", path, i, key)
+			if key == "" {
+				fullKey = fmt.Sprintf("%s.%d", path, i)
+			}
+			val, ok := is.Attributes[fullKey]
+			if ok && val == value {
+				hit = true
+				break
+			}
+			values = append(values, val)
+		}
+
+		if !hit {
+			return fmt.Errorf("unexpected assert of %s.%s, expect: %v, got %s", name, key, value, values)
+		}
+
+		return nil
+	}
 }

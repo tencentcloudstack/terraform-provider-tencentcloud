@@ -150,6 +150,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -605,8 +606,9 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
+	client := meta.(*TencentCloudClient).apiV3Conn
 	clbService := ClbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client,
 	}
 	var instance *clb.LoadBalancer
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -649,9 +651,18 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
-	_ = d.Set("master_zone_id", instance.MasterZone)
-	_ = d.Set("zone_id", instance.MasterZone)
-	_ = d.Set("slave_zone_id", instance.MasterZone)
+	if instance.MasterZone != nil {
+		if _, ok := d.GetOk("master_zone_id"); ok {
+			_ = d.Set("master_zone_id", strconv.FormatUint(*instance.MasterZone.ZoneId, 10))
+		}
+		if _, ok := d.GetOk("zone_id"); ok {
+			_ = d.Set("zone_id", strconv.FormatUint(*instance.MasterZone.ZoneId, 10))
+		}
+		_, slaveOk := d.GetOk("slave_zone_id")
+		if backups := instance.BackupZoneSet; slaveOk && len(backups) > 0 {
+			_ = d.Set("slave_zone_id", strconv.FormatUint(*backups[0].ZoneId, 10))
+		}
+	}
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 

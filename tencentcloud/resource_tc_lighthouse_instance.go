@@ -432,6 +432,7 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 		instanceChargePrepaidMap := map[string]interface{}{
 			"renew_flag": instance.RenewFlag,
 		}
+		// FIXME: no list block declared
 		_ = d.Set("instance_charge_prepaid", []interface{}{instanceChargePrepaidMap})
 	}
 
