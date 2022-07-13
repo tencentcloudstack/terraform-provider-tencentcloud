@@ -38,8 +38,9 @@ The following arguments are supported:
 
 The `targets` object supports the following:
 
-* `instance_id` - (Required, String) Id of the backend server.
 * `port` - (Required, Int) Port of the backend server. Valid value ranges: (0~65535).
+* `eni_ip` - (Optional, String) Eni IP address of the backend server, conflict with `instance_id` but must specify one of them.
+* `instance_id` - (Optional, String) CVM Instance Id of the backend server, conflict with `eni_ip` but must specify one of them.
 * `weight` - (Optional, Int) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to `10`.
 
 ## Attributes Reference

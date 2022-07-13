@@ -12,7 +12,7 @@ const (
 	targetGroupResource = "tencentcloud_clb_target_group.test"
 )
 
-func TestAccTencentCloudDataSourceClbTargetGroup(t *testing.T) {
+func TestAccTencentCloudClbTargetGroupDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -53,10 +53,11 @@ func TestAccTencentCloudDataSourceClbTargetGroup(t *testing.T) {
 	})
 }
 
-const tareGetGroupBase = `
+const tareGetGroupBase = defaultVpcSubnets + `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf-clb-rule-basic"
+    vpc_id = local.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -78,13 +79,14 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 
 resource "tencentcloud_clb_target_group" "test"{
     target_group_name = "test-target-keep-1"
+    vpc_id = local.vpc_id
 }
 
 resource "tencentcloud_clb_target_group_attachment" "group" {
     clb_id          = tencentcloud_clb_instance.clb_basic.id
     listener_id     = tencentcloud_clb_listener.listener_basic.listener_id
     rule_id         = tencentcloud_clb_listener_rule.rule_basic.rule_id
-    targrt_group_id = tencentcloud_clb_target_group.test.id 
+    target_group_id = tencentcloud_clb_target_group.test.id 
 }
 `
 

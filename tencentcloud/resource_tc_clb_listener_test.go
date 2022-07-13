@@ -602,6 +602,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
   session_expire_time        = 60
   scheduler                  = "WRR"
   health_check_type          = "TCP"
+  health_check_port          = 333
 }
 `
 

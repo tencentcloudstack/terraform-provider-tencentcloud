@@ -425,6 +425,7 @@ data "tencentcloud_instances" "instance" {
 locals {
   cvm_id = data.tencentcloud_instances.instance.instance_list.0.instance_id
   cvm_az = "` + defaultAZone + `"
+  cvm_private_ip = data.tencentcloud_instances.instance.instance_list.0.private_ip
 }
 `
 

@@ -522,7 +522,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	request.LoadBalancerId = &clbId
 	for _, inst_ := range targets {
 		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 	if locationId != "" {
 		request.LocationId = &locationId
@@ -1006,29 +1006,38 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 
 func flattenBackendList(list []*clb.Backend) (mapping []map[string]interface{}) {
 	result := make([]map[string]interface{}, 0, len(list))
-	for _, v := range list {
+	for i := range list {
+		v := list[i]
 		target := map[string]interface{}{
-			"instance_id": v.InstanceId,
-			"port":        v.Port,
-			"weight":      v.Weight,
+			"port":   v.Port,
+			"weight": v.Weight,
+		}
+		if *v.Type == "ENI" && len(v.PrivateIpAddresses) > 0 {
+			target["eni_ip"] = v.PrivateIpAddresses[0]
+		} else {
+			target["instance_id"] = v.InstanceId
 		}
 		result = append(result, target)
 	}
 	return result
 }
 
-func clbNewTarget(instanceId, port, weight interface{}) *clb.Target {
-	id := instanceId.(string)
+func clbNewTarget(instanceId, eniIp, port, weight interface{}) *clb.Target {
 	p := int64(port.(int))
-	bk := clb.Target{
-		InstanceId: &id,
-		Port:       &p,
+	target := clb.Target{
+		Port: &p,
+	}
+	if id, ok := instanceId.(string); ok && id != "" {
+		target.InstanceId = &id
+	}
+	if ip, ok := eniIp.(string); ok && ip != "" {
+		target.EniIp = &ip
 	}
 	if w, ok := weight.(int); ok {
 		weight64 := int64(w)
-		bk.Weight = &weight64
+		target.Weight = &weight64
 	}
-	return &bk
+	return &target
 }
 
 func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string, port uint64,

@@ -32,7 +32,7 @@ const testAccTencentCloudDataSourceClbServerAttachments = instanceCommonTestCase
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = var.instance_name
-  vpc_id       = var.vpc_id
+  vpc_id       = var.cvm_vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {

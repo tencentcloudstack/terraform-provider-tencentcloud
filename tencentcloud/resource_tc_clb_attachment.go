@@ -85,8 +85,13 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Id of the backend server.",
+							Optional:    true,
+							Description: "CVM Instance Id of the backend server, conflict with `eni_ip` but must specify one of them.",
+						},
+						"eni_ip": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Eni IP address of the backend server, conflict with `instance_id` but must specify one of them.",
 						},
 						"port": {
 							Type:         schema.TypeInt,
@@ -147,7 +152,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 				break
 			}
 			inst := insList[index].(map[string]interface{})
-			request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+			request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 		}
 
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -220,7 +225,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 				break
 			}
 			inst := insList[index].(map[string]interface{})
-			request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+			request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 		}
 
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -318,9 +323,9 @@ func resourceTencentCloudClbServerAttachmentAdd(d *schema.ResourceData, meta int
 		}
 	}
 
-	for _, inst_ := range add {
-		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+	for _, v := range add {
+		inst := v.(map[string]interface{})
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
 	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		requestId := ""
@@ -432,21 +437,44 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	//this may cause problems when there are members in two dimensions array
 	//need to read state of the tfstate file to clear the relationships
 	//in this situation, import action is not supported
+	// TL,DR: just update partial targets which this resource declared.
 	stateTargets := d.Get("targets").(*schema.Set)
 	if stateTargets.Len() != 0 {
 		//the old state exist
 		//create a new attachment with state
-		exactTargets := make([]*clb.Backend, 0)
-		for _, v := range onlineTargets {
-			if stateTargets.Contains(map[string]interface{}{
-				"weight":      int(*v.Weight),
-				"port":        int(*v.Port),
-				"instance_id": *v.InstanceId,
-			}) {
-				exactTargets = append(exactTargets, v)
+		exactTargets := make([]interface{}, 0)
+		for i := range onlineTargets {
+			v := onlineTargets[i]
+			if *v.Type == "CVM" && v.InstanceId != nil {
+				target := map[string]interface{}{
+					"weight":      int(*v.Weight),
+					"port":        int(*v.Port),
+					"instance_id": *v.InstanceId,
+				}
+				if stateTargets.Contains(target) {
+					exactTargets = append(exactTargets, map[string]interface{}{
+						"weight":      int(*v.Weight),
+						"port":        int(*v.Port),
+						"instance_id": *v.InstanceId,
+					})
+				}
+
+			} else if len(v.PrivateIpAddresses) > 0 && *v.PrivateIpAddresses[0] != "" {
+				target := map[string]interface{}{
+					"weight": int(*v.Weight),
+					"port":   int(*v.Port),
+					"eni_ip": *v.PrivateIpAddresses[0],
+				}
+				if stateTargets.Contains(target) {
+					exactTargets = append(exactTargets, map[string]interface{}{
+						"weight": int(*v.Weight),
+						"port":   int(*v.Port),
+						"eni_ip": *v.PrivateIpAddresses[0],
+					})
+				}
 			}
 		}
-		_ = d.Set("targets", flattenBackendList(exactTargets))
+		_ = d.Set("targets", exactTargets)
 	} else {
 		_ = d.Set("targets", flattenBackendList(onlineTargets))
 	}
@@ -466,7 +494,7 @@ func getRemoveCandidates(ctx context.Context, clbService ClbService, clbId strin
 
 	for _, item := range remove {
 		target := item.(map[string]interface{})
-		if targetGroupContainsInstance(existTargetGroups, target["instance_id"].(string)) {
+		if targetGroupContainsInstance(existTargetGroups, target["instance_id"]) || targetGroupContainsEni(existTargetGroups, target["eni_ip"]) {
 			removeCandidates = append(removeCandidates, target)
 		}
 	}
@@ -474,14 +502,42 @@ func getRemoveCandidates(ctx context.Context, clbService ClbService, clbId strin
 	return removeCandidates
 }
 
-func targetGroupContainsInstance(targets []*clb.Backend, instanceId string) (contains bool) {
+func targetGroupContainsInstance(targets []*clb.Backend, instanceId interface{}) (contains bool) {
 	contains = false
+	id, ok := instanceId.(string)
+	if !ok || id == "" {
+		return
+	}
 	for _, target := range targets {
-		if instanceId == *target.InstanceId {
-			log.Printf("[WARN] Instance %s applied.", instanceId)
+		if target.InstanceId == nil {
+			continue
+		}
+		if id == *target.InstanceId {
+			log.Printf("[WARN] Instance %s applied.", id)
 			return true
 		}
 	}
-	log.Printf("[WARN] Instance %s not exist, skip deregister.", instanceId)
+	log.Printf("[WARN] Instance %s not exist, skip deregister.", id)
+
+	return
+}
+
+func targetGroupContainsEni(targets []*clb.Backend, eniIp interface{}) (contains bool) {
+	contains = false
+	ip, ok := eniIp.(string)
+	if !ok || ip == "" {
+		return
+	}
+	for _, target := range targets {
+		if len(target.PrivateIpAddresses) > 0 && target.PrivateIpAddresses[0] != nil {
+			continue
+		}
+		if ip == *target.PrivateIpAddresses[0] {
+			log.Printf("[WARN] IP %s applied.", ip)
+			return true
+		}
+	}
+	log.Printf("[WARN] IP %s not exist, skip deregister.", ip)
+
 	return
 }

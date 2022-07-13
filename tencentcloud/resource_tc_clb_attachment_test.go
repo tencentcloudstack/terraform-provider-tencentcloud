@@ -199,7 +199,7 @@ resource "tencentcloud_clb_attachment" "foo" {
 }
 `
 
-const testAccClbServerAttachment_tcp_update = instanceCommonTestCase + `
+const testAccClbServerAttachment_tcp_update = instanceCommonTestCase + presetCVM + `
 data "tencentcloud_ssl_certificates" "foo" {
   name = "keep"
 }
@@ -208,6 +208,7 @@ resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-test"
   vpc_id       = var.cvm_vpc_id
+  snat_pro     = true
 }
 
 resource "tencentcloud_clb_listener" "foo" {
@@ -229,14 +230,14 @@ resource "tencentcloud_clb_attachment" "foo" {
   listener_id = tencentcloud_clb_listener.foo.listener_id
 
   targets {
-    instance_id = tencentcloud_instance.default.id
+    eni_ip      = local.cvm_private_ip
     port        = 23
     weight      = 50
   }
 }
 `
 
-const testAccClbServerAttachment_tcp_update_ssl = instanceCommonTestCase + `
+const testAccClbServerAttachment_tcp_update_ssl = instanceCommonTestCase + presetCVM + `
 data "tencentcloud_ssl_certificates" "foo" {
   name = "keep"
 }
@@ -245,6 +246,7 @@ resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-ssl"
   vpc_id       = var.cvm_vpc_id
+  snat_pro     = true
 }
 
 # This is will force new as expected
@@ -263,15 +265,16 @@ resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = tencentcloud_clb_instance.foo.id
   listener_id = tencentcloud_clb_listener.foo.listener_id
 
+  # cross network target
   targets {
-    instance_id = tencentcloud_instance.default.id
+    eni_ip      = local.cvm_private_ip
     port        = 23
     weight      = 50
   }
 }
 `
 
-const testAccClbServerAttachment_http = instanceCommonTestCase + `
+const testAccClbServerAttachment_http = instanceCommonTestCase + presetCVM + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-http-test"
