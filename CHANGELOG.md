@@ -1,3 +1,19 @@
+## 1.76.0 (July 13, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_clb_attachment` support `eni_ip` for `target`
+
+BUGFIXES:
+
+* resource `tencentcloud_gaap_realserver` fix tag for loop mismatch
+
+COMMON:
+
+* document - add data type for every argument description
+* fix clb, cls, vod, key-pair testcases
+* service `service_tencentcloud_cvm` add max thread concurrent num
+
 ## 1.75.7 (July 08, 2022)
 
 ENHANCEMENTS:
