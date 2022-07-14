@@ -7,7 +7,7 @@ This resource allows you to create an empty cluster first without any workers. O
 Example Usage
 
 ```hcl
-resource "tencentcloud_kubernetes_nodepool" "pool1" {}
+resource "tencentcloud_kubernetes_node_pool" "pool1" {}
 
 resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = "cls-xxxxxxxx"
@@ -17,8 +17,8 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
     "192.168.0.0/24"
   ]
   cluster_intranet_subnet_id = "subnet-xxxxxxxx"
-  depends_on [
-	tencentcloud_kubernetes_nodepool.pool1
+  depends_on = [
+	tencentcloud_kubernetes_node_pool.pool1
   ]
 }
 ```
