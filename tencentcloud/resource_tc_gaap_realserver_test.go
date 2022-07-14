@@ -5,11 +5,48 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_gaap_realserver
+	resource.AddTestSweepers("tencentcloud_gaap_realserver", &resource.Sweeper{
+		Name: "tencentcloud_gaap_realserver",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			service := GaapService{client: client.apiV3Conn}
+
+			realservers, err := service.DescribeRealservers(ctx, nil, nil, nil, -1)
+			if err != nil {
+				return err
+			}
+			for _, realserver := range realservers {
+				instanceName := *realserver.RealServerName
+
+				if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+					continue
+				}
+
+				ee := service.DeleteRealserver(ctx, *realserver.RealServerId)
+				if ee != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 	t.Parallel()
