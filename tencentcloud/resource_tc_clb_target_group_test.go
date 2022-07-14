@@ -3,12 +3,47 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_clb_target_group
+	resource.AddTestSweepers("tencentcloud_clb_target_group", &resource.Sweeper{
+		Name: "tencentcloud_clb_target_group",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := ClbService{client}
+
+			tgs, err := service.DescribeTargetGroups(ctx, "", nil)
+			if err != nil {
+				return err
+			}
+
+			for i := range tgs {
+				tg := tgs[i]
+				created := parseTimeFromCommonLayout(tg.CreatedTime)
+				if isResourcePersist(*tg.TargetGroupName, &created) {
+					continue
+				}
+				log.Printf("%s will be remvoed", *tg.TargetGroupName)
+				err = service.DeleteTarget(ctx, *tg.TargetGroupId)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudClbTargetGroup_basic(t *testing.T) {
 	t.Parallel()

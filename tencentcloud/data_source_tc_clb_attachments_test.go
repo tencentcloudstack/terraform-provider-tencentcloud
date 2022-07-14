@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudDataSourceClbServerAttachments(t *testing.T) {
+func TestAccTencentCloudClbServerAttachmentsDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

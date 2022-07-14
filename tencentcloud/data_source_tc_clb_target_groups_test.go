@@ -56,8 +56,8 @@ func TestAccTencentCloudClbTargetGroupDataSource(t *testing.T) {
 const tareGetGroupBase = defaultVpcSubnets + `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-rule-basic"
-    vpc_id = local.vpc_id
+  clb_name     = "tf-clb-rule-data"
+  vpc_id = local.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
