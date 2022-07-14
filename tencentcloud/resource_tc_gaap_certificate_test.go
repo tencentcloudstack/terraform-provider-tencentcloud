@@ -4,11 +4,56 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_gaap_certificate
+	resource.AddTestSweepers("tencentcloud_gaap_certificate", &resource.Sweeper{
+		Name: "tencentcloud_gaap_certificate",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			service := GaapService{client: client.apiV3Conn}
+
+			respCertificates, err := service.DescribeCertificates(ctx, nil, nil, nil)
+			if err != nil {
+				return err
+			}
+			for _, respCertificate := range respCertificates {
+				instanceName := *respCertificate.CertificateName
+				now := time.Now()
+				createTime := time.Unix(int64(*respCertificate.CreateTime), 0)
+				interval := now.Sub(createTime).Minutes()
+
+				if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+					continue
+				}
+
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+
+				ee := service.DeleteCertificate(ctx, *respCertificate.CertificateId)
+				if ee != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudGaapCertificate_basic(t *testing.T) {
 	t.Parallel()
