@@ -122,7 +122,8 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCbsStorage_prepaid(t *testing.T) {
+// Prepaid Disks has quota every period
+func TestAccTencentCloudNeedFixCbsStorage_prepaid(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
