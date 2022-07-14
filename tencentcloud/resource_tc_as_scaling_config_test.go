@@ -3,11 +3,57 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_as_scaling_config
+	resource.AddTestSweepers("tencentcloud_as_scaling_config", &resource.Sweeper{
+		Name: "tencentcloud_as_scaling_config",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			asService := AsService{
+				client: client.apiV3Conn,
+			}
+			configs, err := asService.DescribeLaunchConfigurationByFilter(ctx, "", "")
+			if err != nil {
+				return err
+			}
+			for _, config := range configs {
+				instanceName := *config.LaunchConfigurationName
+				now := time.Now()
+				createTime := stringTotime(*config.CreatedTime)
+				interval := now.Sub(createTime).Minutes()
+
+				if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+					continue
+				}
+
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+
+				ee := asService.DeleteLaunchConfiguration(ctx, *config.LaunchConfigurationId)
+				if ee != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
