@@ -1074,7 +1074,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			}
 			if v, ok := config["force_redirect"]; ok {
 				forceRedirect := v.([]interface{})
-				if len(forceRedirect) > 0 {
+				if len(forceRedirect) > 0 && forceRedirect[0] != nil {
 					var redirect cdn.ForceRedirect
 					redirectMap := forceRedirect[0].(map[string]interface{})
 					if sw := redirectMap["switch"]; sw.(string) != "" {
@@ -1257,7 +1257,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		oldHttpsConfigs = d.Get("https_config").([]interface{})
 	}
 	oldHttpsConfig := make(map[string]interface{})
-	if len(oldHttpsConfigs) > 0 {
+	if len(oldHttpsConfigs) > 0 && oldHttpsConfigs[0] != nil {
 		oldHttpsConfig = oldHttpsConfigs[0].(map[string]interface{})
 	}
 	oldServerConfigs := make([]interface{}, 0)
@@ -1265,7 +1265,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		oldServerConfigs = oldHttpsConfig["server_certificate_config"].([]interface{})
 	}
 	oldServerConfig := make(map[string]interface{})
-	if len(oldServerConfigs) > 0 {
+	if len(oldServerConfigs) > 0 && oldServerConfigs[0] != nil {
 		oldServerConfig = oldServerConfigs[0].(map[string]interface{})
 	}
 	oldClientConfigs := make([]interface{}, 0)
@@ -1273,7 +1273,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		oldClientConfigs = oldHttpsConfig["client_certificate_config"].([]interface{})
 	}
 	oldClientConfig := make(map[string]interface{})
-	if len(oldClientConfigs) > 0 {
+	if len(oldClientConfigs) > 0 && oldClientConfigs[0] != nil {
 		oldClientConfig = oldClientConfigs[0].(map[string]interface{})
 	}
 
@@ -1581,7 +1581,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			}
 			if v, ok := config["force_redirect"]; ok {
 				forceRedirect := v.([]interface{})
-				if len(forceRedirect) > 0 {
+				if len(forceRedirect) > 0 && forceRedirect[0] != nil {
 					var redirect cdn.ForceRedirect
 					redirectMap := forceRedirect[0].(map[string]interface{})
 					if sw := redirectMap["switch"]; sw.(string) != "" {
