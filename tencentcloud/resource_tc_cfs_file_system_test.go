@@ -3,11 +3,54 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_cfs_file_system
+	resource.AddTestSweepers("tencentcloud_cfs_file_system", &resource.Sweeper{
+		Name: "tencentcloud_cfs_file_system",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+
+			service := CfsService{client}
+
+			fsList, err := service.DescribeFileSystem(ctx, "", "", "")
+			if err != nil {
+				return err
+			}
+			for i := range fsList {
+				item := fsList[i]
+				id := *item.FileSystemId
+				name := *item.FsName
+				created := time.Time{}
+				if item.CreationTime != nil {
+					if result, err := time.Parse(time.RFC3339, *item.CreationTime); err != nil {
+						created = result
+					}
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				log.Printf("%s -> %s will be sweep", id, name)
+				err = service.DeleteFileSystem(ctx, id)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCfsFileSystem(t *testing.T) {
 	t.Parallel()
