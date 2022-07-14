@@ -3,12 +3,59 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_ckafka_topic
+	resource.AddTestSweepers("tencentcloud_ckafka_topic", &resource.Sweeper{
+		Name: "tencentcloud_ckafka_topic",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			ckafkcService := CkafkaService{
+				client: client.apiV3Conn,
+			}
+			instanceId := defaultKafkaInstanceId
+			topicDetails, err := ckafkcService.DescribeCkafkaTopics(ctx, instanceId, "")
+			if err != nil {
+				return err
+			}
+			for _, topicDetail := range topicDetails {
+				log.Println(*topicDetail.TopicName)
+				topicName := *topicDetail.TopicName
+				now := time.Now()
+				createTime := time.Unix(*topicDetail.CreateTime, 0)
+				interval := now.Sub(createTime).Minutes()
+
+				if strings.HasPrefix(topicName, keepResource) || strings.HasPrefix(topicName, defaultResource) {
+					continue
+				}
+
+				if needProtect == 1 && int64(interval) < 30 {
+					continue
+				}
+				err := ckafkcService.DeleteCkafkaTopic(ctx, instanceId, topicName)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudCkafkaTopicResource(t *testing.T) {
 	t.Parallel()
