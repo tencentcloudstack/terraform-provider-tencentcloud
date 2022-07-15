@@ -16,7 +16,7 @@ delta_test_files=`git diff --name-status origin/master | egrep "_test\.go$" | aw
 delta_test_files="$delta_test_files $need_test_files $update_sources"
 delta_test_files=`echo $delta_test_files | xargs -n1 | sort | uniq`
 for delta_test_file in ${delta_test_files}; do
-    test_casts=`egrep "func TestAcc.+\(" ${delta_test_file} | awk -F "(" '{print $1}' | awk '{print $2}'`
+    test_casts=`egrep "func TestAcc.+\(" ${delta_test_file} | awk -F "(" '{print $1}' | awk '{print $2}' | grep -v "NeedFix"`
     echo "[$delta_test_file]: $test_casts"
     for test_cast in ${test_casts}; do
         go_test_cmd="go test -v -run ${test_cast} -timeout=0 ./tencentcloud/"
