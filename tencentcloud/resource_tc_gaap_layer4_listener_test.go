@@ -4,12 +4,87 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_gaap_layer4_listener
+	resource.AddTestSweepers("tencentcloud_gaap_layer4_listener", &resource.Sweeper{
+		Name: "tencentcloud_gaap_layer4_listener",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			service := GaapService{client: client.apiV3Conn}
+			proxyIds := []string{defaultGaapProxyId, defaultGaapProxyId2}
+			for _, proxyId := range proxyIds {
+				proxyIdTmp := proxyId
+				tcpListeners, err := service.DescribeTCPListeners(ctx, &proxyIdTmp, nil, nil, nil)
+				if err != nil {
+					return err
+				}
+				for _, tcpListener := range tcpListeners {
+					instanceName := *tcpListener.ListenerName
+
+					now := time.Now()
+					createTime := time.Unix(int64(*tcpListener.CreateTime), 0)
+					interval := now.Sub(createTime).Minutes()
+
+					if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+						continue
+					}
+
+					if needProtect == 1 && int64(interval) < 30 {
+						continue
+					}
+
+					ee := service.DeleteLayer4Listener(ctx, *tcpListener.ListenerId, proxyId, *tcpListener.Protocol)
+					if ee != nil {
+						continue
+					}
+
+				}
+				udpListeners, err := service.DescribeUDPListeners(ctx, &proxyIdTmp, nil, nil, nil)
+				if err != nil {
+					return err
+				}
+
+				for _, udpListener := range udpListeners {
+					instanceName := *udpListener.ListenerName
+
+					now := time.Now()
+					createTime := time.Unix(int64(*udpListener.CreateTime), 0)
+					interval := now.Sub(createTime).Minutes()
+
+					if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+						continue
+					}
+
+					if needProtect == 1 && int64(interval) < 30 {
+						continue
+					}
+
+					ee := service.DeleteLayer4Listener(ctx, *udpListener.ListenerId, proxyId, *udpListener.Protocol)
+					if ee != nil {
+						continue
+					}
+
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 	t.Parallel()

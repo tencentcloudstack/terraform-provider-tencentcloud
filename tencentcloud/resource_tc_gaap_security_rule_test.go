@@ -4,11 +4,48 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_gaap_security_rule
+	resource.AddTestSweepers("tencentcloud_gaap_security_rule", &resource.Sweeper{
+		Name: "tencentcloud_gaap_security_rule",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			sharedClient, err := sharedClientForRegion(r)
+			if err != nil {
+				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+			}
+			client := sharedClient.(*TencentCloudClient)
+			service := GaapService{client: client.apiV3Conn}
+
+			securityRules, err := service.DescribeSecurityRules(ctx, defaultGaapSecurityPolicyId)
+			if err != nil {
+				return err
+			}
+			for _, securityRule := range securityRules {
+				instanceName := *securityRule.AliasName
+
+				if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+					continue
+				}
+
+				ee := service.DeleteSecurityRule(ctx, defaultGaapSecurityPolicyId, *securityRule.RuleId)
+				if ee != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 	t.Parallel()
