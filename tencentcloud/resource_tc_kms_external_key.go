@@ -316,7 +316,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	return resourceTencentCloudKmsKeyRead(d, meta)
+	return resourceTencentCloudKmsExternalKeyRead(d, meta)
 }
 
 func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta interface{}) error {

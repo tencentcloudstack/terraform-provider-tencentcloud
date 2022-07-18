@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -35,7 +34,7 @@ func TestAccTencentCloudMysqlPrivilege(t *testing.T) {
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "1"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("TRIGGER")), "TRIGGER"),
+					helper.CheckSchemaSetResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global", "", "TRIGGER"),
 				),
 			},
 			{
@@ -44,13 +43,13 @@ func TestAccTencentCloudMysqlPrivilege(t *testing.T) {
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "account_name"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("TRIGGER")), "TRIGGER"),
+					helper.CheckSchemaSetResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global", "", "TRIGGER"),
 
 					//diff
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "2"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "2"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "0"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("SELECT")), "SELECT"),
+					helper.CheckSchemaSetResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global", "", "SELECT"),
 				),
 			},
 		},

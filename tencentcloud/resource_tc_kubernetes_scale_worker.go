@@ -428,7 +428,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	}
 
 	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
-	newWorkerLabelList := make([]map[string]string, 0, len(workers))
+	//newWorkerLabelList := make([]map[string]string, 0, len(workers))
 	for _, cvm := range workers {
 		if _, ok := instanceMap[cvm.InstanceId]; !ok {
 			continue
@@ -441,12 +441,12 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		tempMap["lan_ip"] = cvm.LanIp
 		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
 
-		labels := cvm.InstanceAdvancedSettings.Labels
-		var labelsMap = make(map[string]string, len(labels))
-		for _, v := range labels {
-			labelsMap[*v.Name] = *v.Value
-		}
-		newWorkerLabelList = append(newWorkerLabelList, labelsMap)
+		//labels := cvm.InstanceAdvancedSettings.Labels
+		//var labelsMap = make(map[string]string)
+		//for _, v := range labels {
+		//	labelsMap[*v.Name] = *v.Value
+		//}
+		//newWorkerLabelList = append(newWorkerLabelList, labelsMap)
 	}
 
 	// The machines I generated was deleted by others.
@@ -455,9 +455,10 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	_ = d.Set("labels", newWorkerLabelList)
+	//_ = d.Set("labels", newWorkerLabelList)
 	return d.Set("worker_instances_list", newWorkerInstancesList)
 }
+
 func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.delete")()
