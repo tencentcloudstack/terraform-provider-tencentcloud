@@ -3,14 +3,63 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixSqlserverPublishSubscribeResource(t *testing.T) {
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_publish_subscribe
+	resource.AddTestSweepers("tencentcloud_sqlserver_publish_subscribe", &resource.Sweeper{
+		Name: "tencentcloud_sqlserver_publish_subscribe",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := SqlserverService{client}
+			subInstances, err := service.DescribeSqlserverInstances(ctx, "", defaultSubSQLServerName, -1, "", "", 1)
+
+			if err != nil {
+				return err
+			}
+
+			subInstanceId := *subInstances[0].InstanceId
+
+			database, err := service.DescribeDBsOfInstance(ctx, subInstanceId)
+			if err != nil {
+				return err
+			}
+
+			if len(database) == 0 {
+				log.Printf("no DBs in %s", subInstanceId)
+				return nil
+			}
+
+			for i := range database {
+				item := database[i]
+				created := time.Time{}
+				name := *item.Name
+				if item.CreateTime != nil {
+					created = stringTotime(*item.CreateTime)
+				}
+				if name != defaultSQLServerPubSubDB || isResourcePersist("", &created) {
+					continue
+				}
+				if err := service.DeleteSqlserverDB(ctx, subInstanceId, []*string{item.Name}); err != nil {
+					log.Printf("err: %s", err.Error())
+				}
+			}
+			return nil
+		},
+	})
+}
+
+func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -101,7 +150,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = local.pub_sqlserver_id
 	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example"
-	delete_subscribe_db             = true
+	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = local.sqlserver_pubsub_db
 	}
@@ -112,7 +161,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = local.pub_sqlserver_id
 	subscribe_instance_id           = local.sub_sqlserver_id
 	publish_subscribe_name          = "example1"
-	delete_subscribe_db             = true
+	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = local.sqlserver_pubsub_db
 	}

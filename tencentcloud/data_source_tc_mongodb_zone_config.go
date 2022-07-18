@@ -84,6 +84,16 @@ func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 							Computed:    true,
 							Description: "Version of the Mongodb version.",
 						},
+						"min_replicate_set_num": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Minimum replicate set num for sharding cluster.",
+						},
+						"max_replicate_set_num": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum replicate set num for sharding cluster.",
+						},
 					},
 				},
 			},
@@ -117,15 +127,17 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 				clusterType = MONGODB_CLUSTER_TYPE_SHARD
 			}
 			mapping := map[string]interface{}{
-				"available_zone":  info.Zone,
-				"cluster_type":    clusterType,
-				"machine_type":    item.MachineType,
-				"cpu":             item.Cpu,
-				"memory":          item.Memory,
-				"default_storage": item.DefaultStorage,
-				"min_storage":     item.MinStorage,
-				"max_storage":     item.MaxStorage,
-				"engine_version":  item.Version,
+				"available_zone":        info.Zone,
+				"cluster_type":          clusterType,
+				"machine_type":          item.MachineType,
+				"cpu":                   item.Cpu,
+				"memory":                item.Memory,
+				"default_storage":       item.DefaultStorage,
+				"min_storage":           item.MinStorage,
+				"max_storage":           item.MaxStorage,
+				"engine_version":        item.Version,
+				"min_replicate_set_num": item.MinReplicateSetNum,
+				"max_replicate_set_num": item.MaxReplicateSetNum,
 			}
 			configList = append(configList, mapping)
 		}

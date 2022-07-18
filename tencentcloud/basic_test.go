@@ -695,6 +695,15 @@ locals {
   volume = local.spec.0.min_storage / 1024
   engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
 }
+
+locals {
+  filtered_sharding_spec = [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0 && lookup(i, "machine_type") == "HIO10G" && lookup(i, "engine_version") != "3.2"]
+  sharding_spec = concat(local.filtered_sharding_spec, [for i in data.tencentcloud_mongodb_zone_config.zone_config.list: i if lookup(i, "cluster_type") == "SHARD" && lookup(i, "min_replicate_set_num") > 0])
+  sharding_machine_type = local.sharding_spec.0.machine_type
+  sharding_memory = local.sharding_spec.0.memory / 1024
+  sharding_volume = local.sharding_spec.0.min_storage / 1024
+  sharding_engine_version = lookup(var.engine_versions, local.sharding_spec.0.engine_version)
+}
 `
 
 // End of MongoDB
