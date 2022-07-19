@@ -40,7 +40,7 @@ func TestAccTencentCloudClbListener_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbListener_tcp(t *testing.T) {
+func TestAccTencentCloudClbListener_tcp_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -63,6 +63,7 @@ func TestAccTencentCloudClbListener_tcp(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "target_type", "NODE"),
 				),
 			},
 			{
@@ -80,6 +81,7 @@ func TestAccTencentCloudClbListener_tcp(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_unhealth_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "target_type", "TARGETGROUP"),
 				),
 			},
 			{
@@ -459,7 +461,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
-  target_type         = "TARGETGROUP"
+  target_type         = "NODE"
 }
 `
 
