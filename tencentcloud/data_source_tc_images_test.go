@@ -40,6 +40,13 @@ func TestAccTencentCloudDataSourceImagesBase(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_images.foo", "images.#"),
 				),
 			},
+			{
+				Config: testAccTencentCloudDataSourceImagesBaseWithInstanceType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_images.foo"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_images.foo", "images.#"),
+				),
+			},
 		},
 	})
 }
@@ -67,5 +74,11 @@ const testAccTencentCloudDataSourceImagesBaseWithImageNameRegex = `
 data "tencentcloud_images" "foo" {
   image_type = ["PUBLIC_IMAGE"]
   image_name_regex = "^CentOS\\s+7\\.5\\s+64\\w*"
+}
+`
+
+const testAccTencentCloudDataSourceImagesBaseWithInstanceType = `
+data "tencentcloud_images" "foo" {
+  instance_type = "S1.SMALL1"
 }
 `

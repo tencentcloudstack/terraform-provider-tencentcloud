@@ -254,7 +254,11 @@ func CompleteCommonParams(request Request, region string) {
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
+<<<<<<< HEAD
 	params["RequestClient"] = "SDK_GO_1.0.443"
+=======
+	params["RequestClient"] = "SDK_GO_1.0.445"
+>>>>>>> fix: support query cvm images by instance_type
 }
 
 func ConstructParams(req Request) (err error) {

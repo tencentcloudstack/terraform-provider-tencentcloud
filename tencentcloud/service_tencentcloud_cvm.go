@@ -1118,7 +1118,7 @@ func (me *CvmService) DescribeImageById(ctx context.Context, keyId string, isDel
 	return
 }
 
-func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string) (images []*cvm.Image, errRet error) {
+func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string, instanceType string) (images []*cvm.Image, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cvm.NewDescribeImagesRequest()
@@ -1133,7 +1133,9 @@ func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[st
 		}
 		request.Filters = append(request.Filters, &filter)
 	}
-
+	if instanceType != "" {
+		request.InstanceType = helper.String(instanceType)
+	}
 	var offset uint64 = 0
 	var pageSize uint64 = 100
 	images = make([]*cvm.Image, 0)

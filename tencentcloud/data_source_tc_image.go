@@ -115,7 +115,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 	var images []*cvm.Image
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		images, errRet = cvmService.DescribeImagesByFilter(ctx, filter)
+		images, errRet = cvmService.DescribeImagesByFilter(ctx, filter, "")
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
