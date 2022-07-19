@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"testing"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
@@ -35,7 +35,7 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "GET"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
@@ -72,7 +72,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "GET"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
@@ -88,8 +88,8 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/health"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "HEAD"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(100)), "100"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "100"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 				),
 			},
 			{
@@ -133,7 +133,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "GET"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 				),
 			},
@@ -234,7 +234,7 @@ func TestAccTencentCloudGaapHttpRule_noRealserver(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "GET"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
@@ -271,7 +271,7 @@ func TestAccTencentCloudGaapHttpRule_deleteRealserver(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "GET"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes", "", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),

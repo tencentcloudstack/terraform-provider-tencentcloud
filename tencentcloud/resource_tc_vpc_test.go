@@ -122,8 +122,8 @@ func TestAccTencentCloudVpcV3Update(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "dns_servers.#"),
 
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", helper.HashString("119.29.29.29")), "119.29.29.29"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", helper.HashString("182.254.116.116")), "182.254.116.116"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_vpc.foo", "dns_servers", "", "119.29.29.29"),
+					helper.CheckSchemaSetResourceAttr("tencentcloud_vpc.foo", "dns_servers", "", "182.254.116.116"),
 				),
 			},
 		},
