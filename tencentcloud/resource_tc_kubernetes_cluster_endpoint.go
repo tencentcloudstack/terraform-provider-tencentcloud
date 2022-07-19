@@ -279,6 +279,21 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
+	if !d.HasChange("cluster_internet") && d.HasChange("managed_cluster_internet_security_policies") {
+		clusterInternet := d.Get("cluster_internet").(bool)
+		if clusterInternet {
+			policies := helper.InterfacesStrings(d.Get("managed_cluster_internet_security_policies").([]interface{}))
+			err := service.ModifyClusterEndpointVip(ctx, id, policies)
+			if err != nil {
+				return err
+			}
+			err = waitForClusterEndpointFinish(ctx, &service, id, clusterInternet, isManagedCluster)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if d.HasChange("cluster_intranet") {
 		clusterIntranet := d.Get("cluster_intranet").(bool)
 		subnetId := d.Get("cluster_intranet_subnet_id").(string)

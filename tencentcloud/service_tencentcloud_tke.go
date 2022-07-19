@@ -795,6 +795,26 @@ func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id string, s
 	return
 }
 
+func (me *TkeService) ModifyClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterEndpointSPRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = helper.String(id)
+	request.SecurityPolicies = helper.Strings(securityPolicies)
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().ModifyClusterEndpointSP(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
 func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id string) (status string, message string, errRet error) {
 	logId := getLogId(ctx)
 
