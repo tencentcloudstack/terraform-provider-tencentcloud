@@ -12,7 +12,7 @@ import (
 func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -23,11 +23,11 @@ func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "shard_quantity", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "nodes_per_shard", "3"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "memory", "8"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "volume", "200"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "engine_version", "MONGO_36_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "machine_type", MONGODB_MACHINE_TYPE_HIO10G),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "memory"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "volume"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "engine_version"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "machine_type"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "available_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "vip"),
@@ -43,8 +43,6 @@ func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding-update"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "memory", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "volume", "100"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.abc", "abc"),
 				),
@@ -62,11 +60,7 @@ func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "shard_quantity", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "nodes_per_shard", "3"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "memory", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "volume", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "engine_version", "MONGO_40_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "machine_type", MONGODB_MACHINE_TYPE_HIO10G),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-6"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "vip"),
@@ -83,8 +77,6 @@ func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid-update"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "memory", "8"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "volume", "200"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "tags.prepaid", "prepaid"),
 				),
@@ -117,16 +109,16 @@ func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccMongodbShardingInstance = `
+const testAccMongodbShardingInstance = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = 8
-  volume          = 200
-  engine_version  = "MONGO_36_WT"
-  machine_type    = "TGIO"
-  available_zone  = "ap-guangzhou-3"
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
+  engine_version  = local.sharding_engine_version
+  machine_type    = local.sharding_machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234"
 
@@ -136,16 +128,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 `
 
-const testAccMongodbShardingInstanceUpdate = `
+const testAccMongodbShardingInstanceUpdate = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = 4
-  volume          = 100
-  engine_version  = "MONGO_36_WT"
-  machine_type    = "TGIO"
-  available_zone  = "ap-guangzhou-3"
+  memory          = local.sharding_memory * 2
+  volume          = local.sharding_volume + 50
+  engine_version  = local.sharding_engine_version
+  machine_type    = local.sharding_machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234update"
 
@@ -155,16 +147,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 `
 
-const testAccMongodbShardingInstancePrepaid = `
+const testAccMongodbShardingInstancePrepaid = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = 4
-  volume          = 100
-  engine_version  = "MONGO_40_WT"
-  machine_type    = "HIO10G"
-  available_zone  = "ap-guangzhou-3"
+  memory          = local.sharding_memory * 2
+  volume          = local.sharding_volume + 50
+  engine_version  = local.sharding_engine_version
+  machine_type    = local.sharding_machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234"
   charge_type     = "PREPAID"
@@ -177,16 +169,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
 }
 `
 
-const testAccMongodbShardingInstancePrepaid_update = `
+const testAccMongodbShardingInstancePrepaid_update = DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = 8
-  volume          = 200
-  engine_version  = "MONGO_40_WT"
-  machine_type    = "HIO10G"
-  available_zone  = "ap-guangzhou-3"
+  memory          = local.sharding_memory * 2
+  volume          = local.sharding_volume + 50
+  engine_version  = local.sharding_engine_version
+  machine_type    = local.sharding_machine_type
+  available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234update"
   charge_type     = "PREPAID"

@@ -236,7 +236,7 @@ func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudNeedFixSqlserverInstanceMultiClusterResource(t *testing.T) {
+func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

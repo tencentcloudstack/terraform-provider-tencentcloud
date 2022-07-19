@@ -37,8 +37,10 @@ In addition to all arguments above, the following attributes are exported:
   * `default_storage` - Default disk size.
   * `engine_version` - Version of the Mongodb version.
   * `machine_type` - Type of Mongodb instance.
+  * `max_replicate_set_num` - Maximum replicate set num for sharding cluster.
   * `max_storage` - Maximum size of the disk.
   * `memory` - Memory size.
+  * `min_replicate_set_num` - Minimum replicate set num for sharding cluster.
   * `min_storage` - Minimum sie of the disk.
 
 
