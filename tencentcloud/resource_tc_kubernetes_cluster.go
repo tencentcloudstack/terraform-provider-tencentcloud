@@ -927,13 +927,14 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     false,
+			Deprecated:  "This argument is deprecated because the TKE auto-scaling group was no longer available.",
 			Description: "Indicates whether to enable cluster node auto scaling. Default is false.",
 		},
 		"cluster_level": {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
-			Description: "Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.",
+			Description: "Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `L20`, `L50`, `L100`, etc.",
 		},
 		"auto_upgrade_cluster_level": {
 			Type:        schema.TypeBool,
