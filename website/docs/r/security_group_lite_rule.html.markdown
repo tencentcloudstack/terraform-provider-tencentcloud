@@ -27,9 +27,9 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
     "ACCEPT#192.168.1.0/24#80#TCP",
     "DROP#8.8.8.8#80,90#UDP",
     "ACCEPT#0.0.0.0/0#80-90#TCP",
-    "ACCEPT#sg-7ixn3foj/0#80-90#TCP",
-    "ACCEPT#ipm-epjq5kn0/0#80-90#TCP",
-    "ACCEPT#ipmg-3loavam6/0#80-90#TCP",
+    "ACCEPT#sg-7ixn3foj#80-90#TCP",
+    "ACCEPT#ipm-epjq5kn0#80-90#TCP",
+    "ACCEPT#ipmg-3loavam6#80-90#TCP",
   ]
 
   egress = [
