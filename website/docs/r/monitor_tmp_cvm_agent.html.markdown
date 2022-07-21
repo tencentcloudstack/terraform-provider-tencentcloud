@@ -15,8 +15,8 @@ Provides a resource to create a monitor tmpCvmAgent
 
 ```hcl
 resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
-  instance_id = "prom-c89b3b3u"
-  name        = "test"
+  instance_id = "prom-dko9d0nu"
+  name        = "agent"
 }
 ```
 
@@ -24,8 +24,8 @@ resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String) Instance id.
-* `name` - (Required, String) Agent name.
+* `instance_id` - (Required, String, ForceNew) Instance id.
+* `name` - (Required, String, ForceNew) Agent name.
 
 ## Attributes Reference
 
@@ -39,6 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 
 monitor tmpCvmAgent can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instanceId#agentName
+$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent tmpCvmAgent_id
 ```
 

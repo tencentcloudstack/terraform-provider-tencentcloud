@@ -16,13 +16,6 @@ resource "tencentcloud_monitor_tmp_tke_template" "template" {
   }
 }
 
-```
-Import
-
-tmp tke template can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_monitor_tmp_tke_template.template template_id
-```
 */
 package tencentcloud
 

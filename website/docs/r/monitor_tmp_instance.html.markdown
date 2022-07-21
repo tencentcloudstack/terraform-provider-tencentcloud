@@ -15,11 +15,14 @@ Provides a resource to create a monitor tmpInstance
 
 ```hcl
 resource "tencentcloud_monitor_tmp_instance" "tmpInstance" {
-  instance_name       = "logset-hello"
+  instance_name       = "demo"
   vpc_id              = "vpc-2hfyray3"
   subnet_id           = "subnet-rdkj0agk"
   data_retention_time = 30
   zone                = "ap-guangzhou-3"
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -32,7 +35,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) Subnet Id.
 * `vpc_id` - (Required, String) Vpc Id.
 * `zone` - (Required, String) Available zone.
-* `grafana_instance_id` - (Optional, String) Associated grafana instance id.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 
@@ -44,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-monitor tmp instance can be imported using the id, e.g.
+monitor tmpInstance can be imported using the id, e.g.
 ```
 $ terraform import tencentcloud_monitor_tmp_instance.tmpInstance tmpInstance_id
 ```

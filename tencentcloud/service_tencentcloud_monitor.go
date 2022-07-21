@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -343,7 +345,7 @@ func (me *MonitorService) DeleteMonitorTmpInstanceById(ctx context.Context, tmpI
 	return
 }
 
-func (me *MonitorService) DescribeMonitorTmpCvmAgentById(ctx context.Context, tmpId string, tmpCvmAgentName string) (instance *monitor.PrometheusAgent, errRet error) {
+func (me *MonitorService) DescribeMonitorTmpCvmAgent(ctx context.Context, instanceId string, tmpCvmAgentId string) (tmpCvmAgent *monitor.PrometheusAgent, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = monitor.NewDescribePrometheusAgentsRequest()
@@ -355,11 +357,9 @@ func (me *MonitorService) DescribeMonitorTmpCvmAgentById(ctx context.Context, tm
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
+	request.InstanceId = &instanceId
+	request.AgentIds = []*string{&tmpCvmAgentId}
 
-	request.InstanceId = &tmpId
-	request.Name = &tmpCvmAgentName
-
-	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMonitorClient().DescribePrometheusAgents(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -373,7 +373,137 @@ func (me *MonitorService) DescribeMonitorTmpCvmAgentById(ctx context.Context, tm
 	if len(response.Response.AgentSet) < 1 {
 		return
 	}
-	instance = response.Response.AgentSet[0]
+	tmpCvmAgent = response.Response.AgentSet[0]
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpScrapeJob(ctx context.Context, tmpScrapeJobId string) (tmpScrapeJob *monitor.PrometheusScrapeJob, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusScrapeJobsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids := strings.Split(tmpScrapeJobId, FILED_SP)
+
+	request.JobIds = []*string{&ids[0]}
+	request.InstanceId = &ids[1]
+	request.AgentId = &ids[2]
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusScrapeJobs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ScrapeJobSet) < 1 {
+		return
+	}
+	tmpScrapeJob = response.Response.ScrapeJobSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorTmpScrapeJobById(ctx context.Context, tmpScrapeJobId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	ids := strings.Split(tmpScrapeJobId, FILED_SP)
+	request := monitor.NewDeletePrometheusScrapeJobsRequest()
+	request.JobIds = []*string{&ids[0]}
+	request.InstanceId = &ids[1]
+	request.AgentId = &ids[2]
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusScrapeJobs(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Context, tmpExporterIntegrationId string) (tmpExporterIntegration *monitor.IntegrationConfiguration, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeExporterIntegrationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids := strings.Split(tmpExporterIntegrationId, FILED_SP)
+	request.Name = &ids[0]
+	request.InstanceId = &ids[1]
+	kubeType, _ := strconv.Atoi(ids[2])
+	request.KubeType = helper.IntInt64(kubeType)
+	request.ClusterId = &ids[3]
+
+	response, err := me.client.UseMonitorClient().DescribeExporterIntegrations(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.IntegrationSet) < 1 {
+		return
+	}
+	tmpExporterIntegration = response.Response.IntegrationSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorTmpExporterIntegrationById(ctx context.Context, tmpExporterIntegrationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteExporterIntegrationRequest()
+	ids := strings.Split(tmpExporterIntegrationId, FILED_SP)
+	request.Name = &ids[0]
+	request.InstanceId = &ids[1]
+	kubeType, _ := strconv.Atoi(ids[2])
+	request.KubeType = helper.IntInt64(kubeType)
+	request.ClusterId = &ids[3]
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteExporterIntegration(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

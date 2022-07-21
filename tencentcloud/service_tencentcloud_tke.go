@@ -1833,3 +1833,59 @@ func (me *TkeService) DeleteTmpTkeTemplate(ctx context.Context, tempId string) (
 
 	return
 }
+
+func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, tmpAlertPolicyId string) (tmpAlertPolicy *tke.PrometheusAlertPolicyItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribePrometheusAlertPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &tmpAlertPolicyId
+
+	response, err := me.client.UseTkeClient().DescribePrometheusAlertPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AlertRules) < 1 {
+		return
+	}
+	tmpAlertPolicy = response.Response.AlertRules[0]
+	return
+}
+
+func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, tmpAlertPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDeletePrometheusAlertPolicyRequest()
+	request.InstanceId = &tmpAlertPolicyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeletePrometheusAlertPolicy(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

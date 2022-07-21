@@ -23,7 +23,6 @@ monitor tmpInstance can be imported using the id, e.g.
 $ terraform import tencentcloud_monitor_tmp_instance.tmpInstance tmpInstance_id
 ```
 */
-
 package tencentcloud
 
 import (
