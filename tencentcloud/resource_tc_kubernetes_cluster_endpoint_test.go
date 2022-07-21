@@ -47,7 +47,7 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + ClusterAttachmentInstanceType + defaultImages + `
+const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + ClusterAttachmentInstanceType + defaultImages + defaultSecurityGroupData + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -94,7 +94,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = local.type1
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
+    security_group_ids = [local.sg_id]
 
     cam_role_name = "TCB_QcsRole"
     data_disk {
@@ -121,6 +121,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
   cluster_internet = true
   cluster_intranet = true
+  cluster_internet_security_id = local.sg_id
   managed_cluster_internet_security_policies = [
     "192.168.0.0/24"
   ]
@@ -136,6 +137,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
   cluster_internet = false
   cluster_intranet = true
+  cluster_internet_security_id = local.sg_id
   cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
   depends_on = [
 	tencentcloud_kubernetes_node_pool.np_test

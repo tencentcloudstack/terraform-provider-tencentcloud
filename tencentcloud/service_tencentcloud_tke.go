@@ -767,32 +767,10 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 }
 
 /*
-  for MANAGED_CLUSTER open internet access
+  deprecated: for MANAGED_CLUSTER open internet access
 */
-func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := tke.NewCreateClusterEndpointVipRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = &id
-	if len(securityPolicies) > 0 {
-		request.SecurityPolicies = make([]*string, 0, len(securityPolicies))
-		for _, v := range securityPolicies {
-			request.SecurityPolicies = append(request.SecurityPolicies, helper.String(v))
-		}
-	}
-
-	ratelimit.Check(request.GetAction())
-
-	_, err := me.client.UseTkeClient().CreateClusterEndpointVip(request)
-	if err != nil {
-		errRet = err
-	}
-	return
+func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id, securityGroupId string) (errRet error) {
+	return me.CreateClusterEndpoint(ctx, id, "", securityGroupId, true)
 }
 
 func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id string) (status string, message string, errRet error) {
@@ -823,9 +801,9 @@ func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id s
 }
 
 /*
-  for INDEPENDENT_CLUSTER open internet access
+  open internet access
 */
-func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId string, internet bool) (errRet error) {
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tke.NewCreateClusterEndpointRequest()
@@ -840,6 +818,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 
 	if subnetId != "" {
 		request.SubnetId = &subnetId
+	}
+
+	if securityGroupId != "" {
+		request.SecurityGroup = &securityGroupId
 	}
 
 	ratelimit.Check(request.GetAction())

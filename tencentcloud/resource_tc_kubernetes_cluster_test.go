@@ -243,6 +243,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
+  cluster_internet_security_id               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
@@ -289,6 +290,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   ]
 }
 `
+
 const testAccTkeClusterUpdateDesc = TkeDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
@@ -306,6 +308,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
+  cluster_internet_security_id               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
@@ -369,6 +372,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L20"
   auto_upgrade_cluster_level				 = false
+  cluster_internet_security_id               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
