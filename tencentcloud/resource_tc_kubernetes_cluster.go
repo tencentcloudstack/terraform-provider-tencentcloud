@@ -41,7 +41,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
 
   worker_config {
@@ -134,7 +134,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
 
   worker_config {
@@ -221,7 +221,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
 
   worker_config {
@@ -295,7 +295,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
 
   worker_config {
@@ -360,7 +360,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 256
   cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   cluster_deploy_type                        = "MANAGED_CLUSTER"
   network_type								 = "VPC-CNI"
   eni_subnet_ids							 = ["subnet-bk1etlyu"]
@@ -1064,9 +1064,10 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Specify security group, NOTE: This argument must not be empty if cluster internet enabled.",
 		},
 		"managed_cluster_internet_security_policies": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
+			Type:       schema.TypeList,
+			Optional:   true,
+			Elem:       &schema.Schema{Type: schema.TypeString},
+			Deprecated: "this argument was deprecated, use `cluster_internet_security_group` instead.",
 			Description: "Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all." +
 				" This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true." +
 				" `managed_cluster_internet_security_policies` can not delete or empty once be set.",
@@ -1856,7 +1857,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		iAdvanced                    InstanceAdvancedSettings
 		iDiskMountSettings           []*tke.InstanceDataDiskMountSetting
 		cidrSet                      ClusterCidrSettings
-		securityPolicies             []string
 		extensionAddons              []*tke.ExtensionAddon
 		clusterInternet              = d.Get("cluster_internet").(bool)
 		clusterIntranet              = d.Get("cluster_intranet").(bool)
@@ -1864,9 +1864,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		clusterInternetSecurityGroup = d.Get("cluster_internet_security_group").(string)
 	)
 
-	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
-		securityPolicies = helper.InterfacesStrings(temp.([]interface{}))
-	}
 	clusterDeployType := d.Get("cluster_deploy_type").(string)
 
 	if clusterIntranet && intranetSubnetId == "" {
@@ -1874,18 +1871,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 	if !clusterIntranet && intranetSubnetId != "" {
 		return fmt.Errorf("`cluster_intranet_subnet_id` can only set when `cluster_intranet` is true")
-	}
-
-	if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
-		if len(securityPolicies) != 0 {
-			return fmt.Errorf("`managed_cluster_internet_security_policies` can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true.")
-		}
-	}
-
-	if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
-		if !clusterInternet && len(securityPolicies) != 0 {
-			return fmt.Errorf("`managed_cluster_internet_security_policies` can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true.")
-		}
 	}
 
 	vpcId := d.Get("vpc_id").(string)
@@ -2036,11 +2021,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		if masterCount < 3 {
 			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
 		}
-	} else {
-		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
-			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` , You need define the master yourself")
-		}
-
+	} else if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+		return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` , You need define the master yourself")
 	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
@@ -2224,40 +2206,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	//TKE_DEPLOY_TYPE_MANAGED Open the internet
-	if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED && clusterInternet {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpointVip(ctx, id, clusterInternetSecurityGroup)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			status, message, inErr := service.DescribeClusterEndpointVipStatus(ctx, id, true)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create cluster endpoint vip status still is %s", id, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
-				return nil
-			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create cluster endpoint vip error ,status is %s,message is %s", id, status, message))
-		})
-		if err != nil {
-			return err
-		}
-	}
-
-	//TKE_DEPLOY_TYPE_INDEPENDENT Open the internet
-	if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT && clusterInternet {
+	if clusterInternet {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true)
 			if inErr != nil {
@@ -2583,32 +2532,21 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	var (
-		securityPolicies             []string
 		clusterInternet              = d.Get("cluster_internet").(bool)
 		clusterIntranet              = d.Get("cluster_intranet").(bool)
 		intranetSubnetId             = d.Get("cluster_intranet_subnet_id").(string)
 		clusterInternetSecurityGroup = d.Get("cluster_internet_security_group").(string)
 	)
 
-	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
-		securityPolicies = helper.InterfacesStrings(temp.([]interface{}))
-	}
-	clusterDeployType := d.Get("cluster_deploy_type").(string)
-
-	if d.HasChange("cluster_intranet_subnet_id") {
-		oldKey, newKey := d.GetChange("cluster_intranet_subnet_id")
-		if (oldKey.(string) != "" && newKey.(string) == "") || (oldKey.(string) != "" && newKey.(string) != "") {
-			return fmt.Errorf("`cluster_intranet_subnet_id` can not modify once be set")
-		}
-	}
 	if clusterIntranet && intranetSubnetId == "" {
 		return fmt.Errorf("`cluster_intranet_subnet_id` must set when `cluster_intranet` is true")
 	}
 
-	if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
-		if len(securityPolicies) != 0 {
-			return fmt.Errorf("`managed_cluster_internet_security_policies` can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' ")
-		}
+	if d.HasChange("cluster_intranet_subnet_id") && !d.HasChange("cluster_intranet") {
+		return fmt.Errorf("`cluster_intranet_subnet_id` must modified with `cluster_intranet`")
+	}
+	if d.HasChange("cluster_internet_security_group") && !d.HasChange("cluster_internet") {
+		return fmt.Errorf("`cluster_internet_security_group` must modified with `cluster_internet`")
 	}
 
 	if d.HasChange("cluster_intranet") {
@@ -2679,8 +2617,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("cluster_internet") {
 
-		//TKE_DEPLOY_TYPE_INDEPENDENT open internet
-		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT && clusterInternet {
+		if clusterInternet {
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				inErr := tkeService.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true)
 				if inErr != nil {
@@ -2709,10 +2646,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			if err != nil {
 				return err
 			}
-		}
-
-		//TKE_DEPLOY_TYPE_INDEPENDENT close internet
-		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT && !clusterInternet {
+		} else {
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				inErr := tkeService.DeleteClusterEndpoint(ctx, id, true)
 				if inErr != nil {
@@ -2741,82 +2675,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			if err != nil {
 				return err
 			}
-		}
-
-		//TKE_DEPLOY_TYPE_MANAGED open internet
-		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED && clusterInternet {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.CreateClusterEndpointVip(ctx, id, clusterInternetSecurityGroup)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointVipStatus(ctx, id, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusCreating {
-					return resource.RetryableError(
-						fmt.Errorf("%s create cluster endpoint vip status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s create cluster endpoint vip error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
-		}
-
-		//TKE_DEPLOY_TYPE_MANAGED close internet
-		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED && !clusterInternet {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.DeleteClusterEndpointVip(ctx, id)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointVipStatus(ctx, id, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusDeleting {
-					return resource.RetryableError(
-						fmt.Errorf("%s close cluster internet endpoint status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s close cluster internet endpoint error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	if clusterInternet {
-		if !d.HasChange("cluster_internet") && d.HasChange("managed_cluster_internet_security_policies") {
-			if len(securityPolicies) == 0 {
-				return fmt.Errorf("`managed_cluster_internet_security_policies` can not delete or empty once be setted")
-			}
-			if err := tkeService.ModifyClusterEndpointSP(ctx, id, securityPolicies); err != nil {
-				return err
-			}
-			d.SetPartial("managed_cluster_internet_security_policies")
 		}
 	}
 

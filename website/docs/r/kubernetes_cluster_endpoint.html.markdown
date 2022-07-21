@@ -24,13 +24,13 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id       = "cls-xxxxxxxx"
   cluster_internet = true
   cluster_intranet = true
-  managed_cluster_internet_security_policies = [
-    "192.168.0.0/24"
-  ]
-  cluster_intranet_subnet_id = "subnet-xxxxxxxx"
-  depends_on = [
-    tencentcloud_kubernetes_node_pool.pool1
-  ]
+  # managed_cluster_internet_security_policies = [
+  "192.168.0.0/24"
+]
+cluster_intranet_subnet_id = "subnet-xxxxxxxx"
+depends_on = [
+  tencentcloud_kubernetes_node_pool.pool1
+]
 }
 ```
 
@@ -43,7 +43,7 @@ The following arguments are supported:
 * `cluster_internet` - (Optional, Bool) Open internet access or not.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not.
-* `managed_cluster_internet_security_policies` - (Optional, List: [`String`]) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
+* `managed_cluster_internet_security_policies` - (Optional, List: [`String`], **Deprecated**) this argument was deprecated, use `cluster_internet_security_group` instead. Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 
 ## Attributes Reference
 

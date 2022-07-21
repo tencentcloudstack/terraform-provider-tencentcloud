@@ -767,40 +767,6 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 }
 
 /*
-  deprecated: for MANAGED_CLUSTER open internet access
-*/
-func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id, securityGroupId string) (errRet error) {
-	return me.CreateClusterEndpoint(ctx, id, "", securityGroupId, true)
-}
-
-func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id string, isExtranet bool) (status string, message string, errRet error) {
-	//logId := getLogId(ctx)
-	//
-	//request := tke.NewDescribeClusterEndpointVipStatusRequest()
-	//defer func() {
-	//	if errRet != nil {
-	//		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-	//	}
-	//}()
-	//request.ClusterId = &id
-	//
-	//ratelimit.Check(request.GetAction())
-	//
-	//response, err := me.client.UseTkeClient().DescribeClusterEndpointVipStatus(request)
-	//if err != nil {
-	//	errRet = err
-	//	return
-	//}
-	//if response.Response == nil || response.Response.Status == nil {
-	//	errRet = fmt.Errorf("sdk DescribeClusterEndpointVipStatus return empty status")
-	//	return
-	//}
-	//status = *response.Response.Status
-	//message = *response.Response.ErrorMsg
-	return me.DescribeClusterEndpointStatus(ctx, id, isExtranet)
-}
-
-/*
   open internet access
 */
 func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool) (errRet error) {
@@ -879,26 +845,6 @@ func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string, isIn
 		return
 	}
 	return
-}
-
-func (me *TkeService) DeleteClusterEndpointVip(ctx context.Context, id string) (errRet error) {
-	//logId := getLogId(ctx)
-	//request := tke.NewDeleteClusterEndpointVipRequest()
-	//defer func() {
-	//	if errRet != nil {
-	//		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-	//	}
-	//}()
-	//request.ClusterId = &id
-	//
-	//ratelimit.Check(request.GetAction())
-	//
-	//_, err := me.client.UseTkeClient().DeleteClusterEndpointVip(request)
-	//if err != nil {
-	//	errRet = err
-	//	return
-	//}
-	return me.DeleteClusterEndpoint(ctx, id, true)
 }
 
 func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, securityPolicies []string) (errRet error) {
