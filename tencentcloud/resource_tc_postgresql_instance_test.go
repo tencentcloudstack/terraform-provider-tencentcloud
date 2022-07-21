@@ -112,6 +112,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "db_major_vesion"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "db_major_version"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.#", "1"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.min_backup_start_time", "00:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "01:10:11"),
