@@ -13,19 +13,7 @@ Provides a resource to create a tmp tke template
 
 ## Example Usage
 
-```hcl
-resource "tencentcloud_monitor_tmp_tke_template" "template" {
-  template {
-    name     = "test"
-    level    = "cluster"
-    describe = "template"
-    service_monitors {
-      name   = "test"
-      config = "xxxxx"
-    }
-  }
-}
-```
+
 
 ## Argument Reference
 
@@ -78,11 +66,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-tmp tke template can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_monitor_tmp_tke_template.template template_id
-```
 
