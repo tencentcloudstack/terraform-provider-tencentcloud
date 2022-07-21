@@ -29,10 +29,17 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_kubernetes_cluster_endpoint.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"cluster_intranet_subnet_id"},
+				ResourceName:      "tencentcloud_kubernetes_cluster_endpoint.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					// FIXME waiting for DescribeEndpoints available
+					"cluster_intranet_subnet_id",
+					"cluster_internet",
+					"cluster_internet_security_group",
+					"cluster_intranet",
+					"managed_cluster_internet_security_policies",
+				},
 			},
 			{
 				Config: testAccTkeClusterEndpointBasicUpdate,
