@@ -166,13 +166,13 @@ func resourceTencentCloudTkeClusterEndpointRead(d *schema.ResourceData, meta int
 	}
 
 	var (
-		security        = response.Response
-		clusterInternet = security.ClusterExternalEndpoint != nil && *security.ClusterExternalEndpoint != ""
-		clusterIntranet = security.PgwEndpoint != nil && *security.PgwEndpoint != ""
+		security = response.Response
+		//clusterInternet = security.ClusterExternalEndpoint != nil && *security.ClusterExternalEndpoint != ""
+		//clusterIntranet = security.PgwEndpoint != nil && *security.PgwEndpoint != ""
 	)
 
-	_ = d.Set("cluster_internet", clusterInternet)
-	_ = d.Set("cluster_intranet", clusterIntranet)
+	//_ = d.Set("cluster_internet", clusterInternet)
+	//_ = d.Set("cluster_intranet", clusterIntranet)
 	_ = d.Set("user_name", security.UserName)
 	_ = d.Set("password", security.Password)
 	_ = d.Set("certification_authority", security.CertificationAuthority)
@@ -244,7 +244,7 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		err = waitForClusterEndpointFinish(ctx, &service, id, true, isManagedCluster)
+		err = waitForClusterEndpointFinish(ctx, &service, id, true, isManagedCluster, true)
 		if err != nil {
 			return err
 		}
@@ -280,7 +280,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		err = waitForClusterEndpointFinish(ctx, &service, id, clusterInternet, isManagedCluster)
+		err = waitForClusterEndpointFinish(ctx, &service, id, clusterInternet, isManagedCluster, true)
 		if err != nil {
 			return err
 		}
@@ -332,7 +332,7 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 		if err != nil {
 			errs = *multierror.Append(err)
 		} else {
-			taskErr := waitForClusterEndpointFinish(ctx, &service, id, false, isManagedCluster)
+			taskErr := waitForClusterEndpointFinish(ctx, &service, id, false, isManagedCluster, true)
 			if taskErr != nil {
 				errs = *multierror.Append(taskErr)
 			}
@@ -349,7 +349,7 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 	return errs.ErrorOrNil()
 }
 
-func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id string, enabled bool, isManagedCluster bool) (err error) {
+func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id string, enabled bool, isManagedCluster bool, isInternet bool) (err error) {
 	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		var (
 			status         string
@@ -364,7 +364,7 @@ func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id s
 			finishStates = []string{TkeInternetStatusNotfound, TkeInternetStatusDeleted}
 		}
 
-		status, message, inErr = service.DescribeClusterEndpointStatus(ctx, id)
+		status, message, inErr = service.DescribeClusterEndpointStatus(ctx, id, isInternet)
 
 		if inErr != nil {
 			return retryError(inErr)
