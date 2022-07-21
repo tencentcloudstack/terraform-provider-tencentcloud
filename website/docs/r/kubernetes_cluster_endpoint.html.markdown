@@ -39,6 +39,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String) Specify cluster ID.
+* `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not.
