@@ -33,13 +33,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.283
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
-<<<<<<< HEAD
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.443
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.385
-=======
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445
->>>>>>> fix: support query cvm images by instance_type
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.359
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
