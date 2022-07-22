@@ -370,10 +370,13 @@ func (me *TkeService) DescribeClusterLevelAttribute(ctx context.Context, id stri
 	return
 }
 
-func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string) (config string, errRet error) {
+func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string, isPublic bool) (config string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterKubeconfigRequest()
+	if isPublic {
+		request.IsExtranet = &isPublic
+	}
 
 	defer func() {
 		if errRet != nil {

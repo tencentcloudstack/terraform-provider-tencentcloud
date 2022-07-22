@@ -379,9 +379,15 @@ LOOP:
 		infoMap["pgw_endpoint"] = emptyStrFunc(securityRet.Response.PgwEndpoint)
 		infoMap["security_policy"] = policies
 
-		config, err := service.DescribeClusterConfig(ctx, info.ClusterId)
+		config, err := service.DescribeClusterConfig(ctx, info.ClusterId, true)
 		if err != nil {
-			config, err = service.DescribeClusterConfig(ctx, info.ClusterId)
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
 		}
 		if err != nil {
 			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterInstances fail, reason:%s\n ", logId, err.Error())

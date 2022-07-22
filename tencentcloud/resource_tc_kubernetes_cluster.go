@@ -2369,10 +2369,10 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
 	}
 
-	config, err := service.DescribeClusterConfig(ctx, d.Id())
+	config, err := service.DescribeClusterConfig(ctx, d.Id(), true)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			config, err = service.DescribeClusterConfig(ctx, d.Id())
+			config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
 			if err != nil {
 				return retryError(err)
 			}
