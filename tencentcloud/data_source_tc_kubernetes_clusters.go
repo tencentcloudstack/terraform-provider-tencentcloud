@@ -192,7 +192,12 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"kube_config": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "kubernetes config.",
+			Description: "Kubernetes config.",
+		},
+		"kube_config_intranet": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Kubernetes config of private network.",
 		},
 	}
 
@@ -394,7 +399,23 @@ LOOP:
 			return err
 		}
 
+		intranetConfig, err := service.DescribeClusterConfig(ctx, info.ClusterId, false)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				config, err = service.DescribeClusterConfig(ctx, d.Id(), false)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+		}
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterInstances fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
 		infoMap["kube_config"] = config
+		infoMap["kube_config_intranet"] = intranetConfig
 		list = append(list, infoMap)
 	}
 

@@ -623,7 +623,8 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.
-* `kube_config` - kubernetes config.
+* `kube_config_intranet` - Kubernetes config of private network.
+* `kube_config` - Kubernetes config.
 * `password` - Password of account.
 * `pgw_endpoint` - The Intranet address used for access.
 * `security_policy` - Access policy.
