@@ -1431,7 +1431,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"kube_config": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "kubernetes config.",
+			Description: "Kubernetes config.",
+		},
+		"kube_config_intranet": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Kubernetes config of private network.",
 		},
 	}
 
@@ -2369,10 +2374,10 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
 	}
 
-	config, err := service.DescribeClusterConfig(ctx, d.Id())
+	config, err := service.DescribeClusterConfig(ctx, d.Id(), true)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			config, err = service.DescribeClusterConfig(ctx, d.Id())
+			config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
 			if err != nil {
 				return retryError(err)
 			}
@@ -2385,6 +2390,23 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	}
 
 	_ = d.Set("kube_config", config)
+
+	intranetConfig, err := service.DescribeClusterConfig(ctx, d.Id(), false)
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			intranetConfig, err = service.DescribeClusterConfig(ctx, d.Id(), false)
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	_ = d.Set("kube_config_intranet", intranetConfig)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
