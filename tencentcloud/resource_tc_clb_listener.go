@@ -676,6 +676,12 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.Certificate = certificateInput
 	}
 
+	if d.HasChange("target_type") {
+		changed = true
+		targetType := d.Get("target_type").(string)
+		request.TargetType = helper.String(targetType)
+	}
+
 	if changed {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyListener(request)
