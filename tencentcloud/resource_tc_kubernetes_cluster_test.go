@@ -70,8 +70,8 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "user_name"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "password"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.test", "test"),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "security_policy.#", "2"),
-					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
+					//resource.TestCheckResourceAttr(testTkeClusterResourceKey, "security_policy.#", "2"),
+					//resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L5"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "auto_upgrade_cluster_level", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
@@ -79,7 +79,7 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTkeClusterUpdateDesc,
+				Config: testAccTkeClusterUpdateAccess,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test2"),
@@ -239,10 +239,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_intranet                           = true
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
+  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
@@ -289,7 +292,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   ]
 }
 `
-const testAccTkeClusterUpdateDesc = TkeDeps + `
+
+const testAccTkeClusterUpdateAccess = TkeDeps + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -301,7 +305,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_name                               = "test2"
   cluster_desc                               = "test cluster desc 2"
   cluster_max_service_num                    = 32
-  cluster_internet                           = true
+  cluster_internet                           = false
+  cluster_intranet                           = false
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
@@ -364,7 +369,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_name                               = "test2"
   cluster_desc                               = "test cluster desc 3"
   cluster_max_service_num                    = 32
-  cluster_internet                           = true
+  cluster_internet                           = false
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L20"

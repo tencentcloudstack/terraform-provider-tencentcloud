@@ -193,6 +193,14 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description: "Version of the postgresql database engine. Valid values: `10.4`, `11.8`, `12.4`.",
 			},
 			"db_major_vesion": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "`db_major_vesion` will be deprecated, use `db_major_version` instead.",
+				Description: "PostgreSQL major version number. Valid values: 10, 11, 12, 13. " +
+					"If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.",
+			},
+			"db_major_version": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
@@ -457,6 +465,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	)
 
 	if v, ok := d.GetOk("db_major_vesion"); ok {
+		dbMajorVersion = v.(string)
+	}
+	if v, ok := d.GetOk("db_major_version"); ok {
 		dbMajorVersion = v.(string)
 	}
 	if v, ok := d.GetOk("db_kernel_version"); ok {
@@ -941,7 +952,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
 	}
-	if d.HasChange("db_major_vesion") || d.HasChange("db_kernel_version") {
+	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("db_kernel_version") {
 		return fmt.Errorf("Not support change db major version or kernel version.")
 	}
 
@@ -1025,6 +1036,7 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
+	_ = d.Set("db_major_version", instance.DBMajorVersion)
 	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)

@@ -44,15 +44,15 @@ data "tencentcloud_vpc_subnets" "vpc_second" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr            = var.cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_internet        = true
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -137,15 +137,15 @@ data "tencentcloud_vpc_subnets" "vpc_second" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr            = var.cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_internet        = true
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -224,15 +224,15 @@ data "tencentcloud_vpc_subnets" "vpc_first" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr            = var.cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_internet        = true
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -298,15 +298,15 @@ variable "default_instance_type" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
-  vpc_id                                     = var.vpc
-  cluster_cidr                               = "10.1.0.0/16"
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+  vpc_id                  = var.vpc
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+  cluster_internet        = true
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -365,17 +365,17 @@ variable "default_instance_type" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = var.vpc
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 256
-  cluster_internet                           = true
-  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-  network_type                               = "VPC-CNI"
-  eni_subnet_ids                             = ["subnet-bk1etlyu"]
-  service_cidr                               = "10.1.0.0/24"
+  vpc_id                  = var.vpc
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 256
+  cluster_internet        = true
+  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type = "MANAGED_CLUSTER"
+  network_type        = "VPC-CNI"
+  eni_subnet_ids      = ["subnet-bk1etlyu"]
+  service_cidr        = "10.1.0.0/24"
 
   worker_config {
     count                      = 1
@@ -441,17 +441,18 @@ The following arguments are supported:
 * `auto_upgrade_cluster_level` - (Optional, Bool) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, Int, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional, Int) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
-* `cluster_as_enabled` - (Optional, Bool, ForceNew) Indicates whether to enable cluster node auto scaling. Default is false.
+* `cluster_as_enabled` - (Optional, Bool, ForceNew, **Deprecated**) This argument is deprecated because the TKE auto-scaling group was no longer available. Indicates whether to enable cluster node auto scaling. Default is false.
 * `cluster_audit` - (Optional, List) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, String, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional, String) Description of the cluster.
 * `cluster_extra_args` - (Optional, List, ForceNew) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
+* `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
 * `cluster_ipvs` - (Optional, Bool, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
-* `cluster_level` - (Optional, String) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.
+* `cluster_level` - (Optional, String) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `L20`, `L50`, `L100`, etc.
 * `cluster_max_pod_num` - (Optional, Int, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_max_service_num` - (Optional, Int, ForceNew) The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_name` - (Optional, String) Name of the cluster.
@@ -473,7 +474,7 @@ The following arguments are supported:
 * `kube_proxy_mode` - (Optional, String) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.
 * `labels` - (Optional, Map, ForceNew) Labels of tke cluster nodes.
 * `log_agent` - (Optional, List) Specify cluster log agent config.
-* `managed_cluster_internet_security_policies` - (Optional, List: [`String`]) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
+* `managed_cluster_internet_security_policies` - (Optional, List: [`String`], **Deprecated**) this argument was deprecated, use `cluster_internet_security_group` instead. Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `network_type` - (Optional, String, ForceNew) Cluster network type, GR or VPC-CNI. Default is GR.
@@ -622,7 +623,8 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.
-* `kube_config` - kubernetes config.
+* `kube_config_intranet` - Kubernetes config of private network.
+* `kube_config` - Kubernetes config.
 * `password` - Password of account.
 * `pgw_endpoint` - The Intranet address used for access.
 * `security_policy` - Access policy.

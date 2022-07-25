@@ -370,10 +370,13 @@ func (me *TkeService) DescribeClusterLevelAttribute(ctx context.Context, id stri
 	return
 }
 
-func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string) (config string, errRet error) {
+func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string, isPublic bool) (config string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterKubeconfigRequest()
+	if isPublic {
+		request.IsExtranet = &isPublic
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -767,85 +770,9 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 }
 
 /*
-  for MANAGED_CLUSTER open internet access
+  open internet access
 */
-func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := tke.NewCreateClusterEndpointVipRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = &id
-	if len(securityPolicies) > 0 {
-		request.SecurityPolicies = make([]*string, 0, len(securityPolicies))
-		for _, v := range securityPolicies {
-			request.SecurityPolicies = append(request.SecurityPolicies, helper.String(v))
-		}
-	}
-
-	ratelimit.Check(request.GetAction())
-
-	_, err := me.client.UseTkeClient().CreateClusterEndpointVip(request)
-	if err != nil {
-		errRet = err
-	}
-	return
-}
-
-func (me *TkeService) ModifyClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
-	logId := getLogId(ctx)
-	request := tke.NewModifyClusterEndpointSPRequest()
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = helper.String(id)
-	request.SecurityPolicies = helper.Strings(securityPolicies)
-	ratelimit.Check(request.GetAction())
-
-	_, err := me.client.UseTkeClient().ModifyClusterEndpointSP(request)
-	if err != nil {
-		errRet = err
-	}
-	return
-}
-
-func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id string) (status string, message string, errRet error) {
-	logId := getLogId(ctx)
-
-	request := tke.NewDescribeClusterEndpointVipStatusRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = &id
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseTkeClient().DescribeClusterEndpointVipStatus(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	if response.Response == nil || response.Response.Status == nil {
-		errRet = fmt.Errorf("sdk DescribeClusterEndpointVipStatus return empty status")
-		return
-	}
-	status = *response.Response.Status
-	message = *response.Response.ErrorMsg
-	return
-}
-
-/*
-  for INDEPENDENT_CLUSTER open internet access
-*/
-func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId string, internet bool) (errRet error) {
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tke.NewCreateClusterEndpointRequest()
@@ -862,6 +789,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 		request.SubnetId = &subnetId
 	}
 
+	if securityGroupId != "" && internet {
+		request.SecurityGroup = &securityGroupId
+	}
+
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().CreateClusterEndpoint(request)
 	if err != nil {
@@ -870,7 +801,7 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 	return
 }
 
-func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id string) (status string, message string, errRet error) {
+func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id string, isExtranet bool) (status string, message string, errRet error) {
 	logId := getLogId(ctx)
 
 	request := tke.NewDescribeClusterEndpointStatusRequest()
@@ -880,6 +811,7 @@ func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id stri
 		}
 	}()
 	request.ClusterId = &id
+	request.IsExtranet = &isExtranet
 
 	ratelimit.Check(request.GetAction())
 
@@ -911,26 +843,6 @@ func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string, isIn
 	ratelimit.Check(request.GetAction())
 
 	_, err := me.client.UseTkeClient().DeleteClusterEndpoint(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	return
-}
-
-func (me *TkeService) DeleteClusterEndpointVip(ctx context.Context, id string) (errRet error) {
-	logId := getLogId(ctx)
-	request := tke.NewDeleteClusterEndpointVipRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-	request.ClusterId = &id
-
-	ratelimit.Check(request.GetAction())
-
-	_, err := me.client.UseTkeClient().DeleteClusterEndpointVip(request)
 	if err != nil {
 		errRet = err
 		return
@@ -1861,6 +1773,62 @@ func (me *TkeService) DeleteTmpTkeTemplate(ctx context.Context, tempId string) (
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().DeletePrometheusTemp(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, tmpAlertPolicyId string) (tmpAlertPolicy *tke.PrometheusAlertPolicyItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribePrometheusAlertPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &tmpAlertPolicyId
+
+	response, err := me.client.UseTkeClient().DescribePrometheusAlertPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AlertRules) < 1 {
+		return
+	}
+	tmpAlertPolicy = response.Response.AlertRules[0]
+	return
+}
+
+func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, tmpAlertPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDeletePrometheusAlertPolicyRequest()
+	request.InstanceId = &tmpAlertPolicyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeletePrometheusAlertPolicy(request)
 	if err != nil {
 		errRet = err
 		return err

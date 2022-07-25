@@ -95,6 +95,7 @@ func resourceTencentCloudClsIndex() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Index rule.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -438,38 +439,54 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 		ruleMap := map[string]interface{}{}
 
 		if res.Rule.FullText != nil {
-			fullTextMap := map[string]interface{}{
-				"case_sensitive": res.Rule.FullText.CaseSensitive,
-				"tokenizer":      res.Rule.FullText.Tokenizer,
-				"contain_z_h":    res.Rule.FullText.ContainZH,
+			FullTextMap := map[string]interface{}{}
+			if res.Rule.FullText.CaseSensitive != nil {
+				FullTextMap["case_sensitive"] = res.Rule.FullText.CaseSensitive
 			}
-			ruleMap["full_text"] = []interface{}{fullTextMap}
+			if res.Rule.FullText.Tokenizer != nil {
+				FullTextMap["tokenizer"] = res.Rule.FullText.Tokenizer
+			}
+			if res.Rule.FullText.ContainZH != nil {
+				FullTextMap["contain_z_h"] = res.Rule.FullText.ContainZH
+			}
+
+			ruleMap["full_text"] = []interface{}{FullTextMap}
 		}
 
 		if res.Rule.KeyValue != nil {
-			ruleKeyValueMap := map[string]interface{}{
-				"case_sensitive": res.Rule.KeyValue.CaseSensitive,
+			RuleKeyValueMap := map[string]interface{}{}
+			if res.Rule.KeyValue.CaseSensitive != nil {
+				RuleKeyValueMap["case_sensitive"] = res.Rule.KeyValue.CaseSensitive
 			}
+
 			if res.Rule.KeyValue.KeyValues != nil {
 				keyValuesList := []interface{}{}
 				for _, keyValueInfo := range res.Rule.KeyValue.KeyValues {
-					keyValueInfoMap := map[string]interface{}{
-						"key": keyValueInfo.Key,
+					keyValueInfoMap := map[string]interface{}{}
+					if keyValueInfo.Key != nil {
+						keyValueInfoMap["key"] = keyValueInfo.Key
 					}
 					if keyValueInfo.Value != nil {
-						valueInfoMap := map[string]interface{}{
-							"type":        keyValueInfo.Value.Type,
-							"tokenizer":   keyValueInfo.Value.Tokenizer,
-							"sql_flag":    keyValueInfo.Value.SqlFlag,
-							"contain_z_h": keyValueInfo.Value.ContainZH,
+						valueInfoMap := map[string]interface{}{}
+						if keyValueInfo.Value.Type != nil {
+							valueInfoMap["type"] = keyValueInfo.Value.Type
+						}
+						if keyValueInfo.Value.Tokenizer != nil {
+							valueInfoMap["tokenizer"] = keyValueInfo.Value.Tokenizer
+						}
+						if keyValueInfo.Value.SqlFlag != nil {
+							valueInfoMap["sql_flag"] = keyValueInfo.Value.SqlFlag
+						}
+						if keyValueInfo.Value.ContainZH != nil {
+							valueInfoMap["contain_z_h"] = keyValueInfo.Value.ContainZH
 						}
 						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
 					}
 					keyValuesList = append(keyValuesList, keyValueInfoMap)
 				}
-				ruleKeyValueMap["key_values"] = keyValuesList
+				RuleKeyValueMap["key_values"] = keyValuesList
 			}
-			ruleMap["key_value"] = []interface{}{ruleKeyValueMap}
+			ruleMap["key_value"] = []interface{}{RuleKeyValueMap}
 		}
 
 		if res.Rule.Tag != nil {
@@ -529,7 +546,7 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 
 	request.TopicId = &id
 
-	if d.HasChange("rule") || d.HasChange("status") || d.HasChange("include_internal_fields") || d.HasChange("metadata_flag") {
+	if d.HasChange("rule") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
 			ruleInfo := cls.RuleInfo{}
 			if fullTextMap, ok := helper.InterfaceToMap(dMap, "full_text"); ok {
@@ -618,34 +635,38 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 			}
 			request.Rule = &ruleInfo
 		}
+	}
 
+	if d.HasChange("status") {
 		if v, ok := d.GetOk("status"); ok {
 			request.Status = helper.Bool(v.(bool))
 		}
-
+	}
+	if d.HasChange("include_internal_fields") {
 		if v, ok := d.GetOk("include_internal_fields"); ok {
 			request.IncludeInternalFields = helper.Bool(v.(bool))
 		}
-
+	}
+	if d.HasChange("metadata_flag") {
 		if v, ok := d.GetOk("metadata_flag"); ok {
 			request.MetadataFlag = helper.IntUint64(v.(int))
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyIndex(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-
-		if err != nil {
-			return err
-		}
 	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyIndex(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return resourceTencentCloudClsIndexRead(d, meta)
 }
 

@@ -55,6 +55,11 @@ func dataSourceTencentCloudImages() *schema.Resource {
 				ValidateFunc:  validateNotEmpty,
 				Description:   "A string to apply with fuzzy match to the os_name attribute on the image list returned by TencentCloud, conflict with 'image_name_regex'.",
 			},
+			"instance_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance type, such as `S1.SMALL1`.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -229,10 +234,15 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		osName = v.(string)
 	}
 
+	var instanceType string
+	if v, ok := d.GetOk("instance_type"); ok {
+		instanceType = v.(string)
+	}
+
 	var images []*cvm.Image
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var e error
-		images, e = cvmService.DescribeImagesByFilter(ctx, filter)
+		images, e = cvmService.DescribeImagesByFilter(ctx, filter, instanceType)
 		if e != nil {
 			return retryError(e, InternalError)
 		}

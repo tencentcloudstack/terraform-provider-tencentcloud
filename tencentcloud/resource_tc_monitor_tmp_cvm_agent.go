@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
-  instance_id = "prom-c89b3b3u"
-  name        = "test"
+  instance_id = "prom-dko9d0nu"
+  name = "agent"
 }
 
 ```
@@ -14,7 +14,7 @@ Import
 
 monitor tmpCvmAgent can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instanceId#agentName
+$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent tmpCvmAgent_id
 ```
 */
 package tencentcloud
@@ -35,7 +35,7 @@ func resourceTencentCloudMonitorTmpCvmAgent() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudMonitorTmpCvmAgentRead,
 		Create: resourceTencentCloudMonitorTmpCvmAgentCreate,
-		Update: resourceTencentCloudMonitorTmpCvmAgentUpdate,
+		//Update: resourceTencentCloudMonitorTmpCvmAgentUpdate,
 		Delete: resourceTencentCloudMonitorTmpCvmAgentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -44,11 +44,14 @@ func resourceTencentCloudMonitorTmpCvmAgent() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance id.",
 			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Agent name.",
 			},
 		},
@@ -62,20 +65,19 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request = monitor.NewCreatePrometheusAgentRequest()
-		//response *monitor.CreatePrometheusAgentResponse
+		request  = monitor.NewCreatePrometheusAgentRequest()
+		response *monitor.CreatePrometheusAgentResponse
 	)
 
 	var instanceId string
-	var agentName string
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(instanceId)
 	}
+
 	if v, ok := d.GetOk("name"); ok {
-		agentName = v.(string)
-		request.Name = helper.String(agentName)
+		request.Name = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -86,7 +88,7 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		//response = result
+		response = result
 		return nil
 	})
 
@@ -95,13 +97,14 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, agentName}, FILED_SP))
+	tmpCvmAgentId := *response.Response.AgentId
 
+	d.SetId(strings.Join([]string{instanceId, tmpCvmAgentId}, FILED_SP))
 	return resourceTencentCloudMonitorTmpCvmAgentRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.read")()
+	defer logElapsed("resource.tencentcloud_monitor_tmpCvmAgent.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -114,7 +117,7 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
-	tmpCvmAgent, err := service.DescribeMonitorTmpCvmAgentById(ctx, ids[0], ids[1])
+	tmpCvmAgent, err := service.DescribeMonitorTmpCvmAgent(ctx, ids[0], ids[1])
 
 	if err != nil {
 		return err
@@ -122,12 +125,13 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 
 	if tmpCvmAgent == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tencentcloud_monitor_tmp_cvm_agent` does not exist")
+		return fmt.Errorf("resource `tmpCvmAgent` %s does not exist", ids[1])
 	}
 
 	if tmpCvmAgent.InstanceId != nil {
 		_ = d.Set("instance_id", tmpCvmAgent.InstanceId)
 	}
+
 	if tmpCvmAgent.Name != nil {
 		_ = d.Set("name", tmpCvmAgent.Name)
 	}
@@ -146,5 +150,5 @@ func resourceTencentCloudMonitorTmpCvmAgentDelete(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	return fmt.Errorf("resource `tencentcloud_monitor_tmp_cvm_agent` does not support delete")
+	return nil
 }
