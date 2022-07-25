@@ -441,7 +441,7 @@ The following arguments are supported:
 * `auto_upgrade_cluster_level` - (Optional, Bool) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, Int, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional, Int) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
-* `cluster_as_enabled` - (Optional, Bool, ForceNew) Indicates whether to enable cluster node auto scaling. Default is false.
+* `cluster_as_enabled` - (Optional, Bool, ForceNew, **Deprecated**) This argument is deprecated because the TKE auto-scaling group was no longer available. Indicates whether to enable cluster node auto scaling. Default is false.
 * `cluster_audit` - (Optional, List) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, String, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
@@ -452,7 +452,7 @@ The following arguments are supported:
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
 * `cluster_ipvs` - (Optional, Bool, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
-* `cluster_level` - (Optional, String) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `LL20`, `L50`, `L100`, etc.
+* `cluster_level` - (Optional, String) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `L20`, `L50`, `L100`, etc.
 * `cluster_max_pod_num` - (Optional, Int, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_max_service_num` - (Optional, Int, ForceNew) The maximum number of services in the cluster. Default is 256. The range is from 32 to 32768. When its power unequal to 2, it will round upward to the closest power of 2.
 * `cluster_name` - (Optional, String) Name of the cluster.
