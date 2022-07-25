@@ -673,7 +673,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

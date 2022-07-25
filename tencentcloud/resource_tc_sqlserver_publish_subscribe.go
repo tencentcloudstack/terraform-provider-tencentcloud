@@ -85,6 +85,11 @@ func resourceTencentCloudSqlserverPublishSubscribe() *schema.Resource {
 					},
 				},
 			},
+			"publish_subscribe_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "ID of PubSub.",
+			},
 		},
 	}
 }

@@ -144,6 +144,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -1164,18 +1165,26 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		}
 
 		if backupPlan != nil {
+
+			plan := make(map[string]interface{}, 0)
 			if _, ok := d.GetOk("backup_plan.0.min_backup_start_time"); ok {
-				_ = d.Set("backup_plan.0.min_backup_start_time", backupPlan.MinBackupStartTime)
+				plan["min_backup_start_time"] = backupPlan.MinBackupStartTime
 			}
 			if _, ok := d.GetOk("backup_plan.0.max_backup_start_time"); ok {
-				_ = d.Set("backup_plan.0.max_backup_start_time", backupPlan.MaxBackupStartTime)
+				plan["max_backup_start_time"] = backupPlan.MaxBackupStartTime
 			}
 			if _, ok := d.GetOk("backup_plan.0.base_backup_retention_period"); ok {
-				_ = d.Set("backup_plan.0.base_backup_retention_period", backupPlan.BaseBackupRetentionPeriod)
+				plan["base_backup_retention_period"] = backupPlan.BaseBackupRetentionPeriod
 			}
 			if _, ok := d.GetOk("backup_plan.0.backup_period"); ok {
-				_ = d.Set("backup_plan.0.backup_period", backupPlan.BackupPeriod)
+				periods := make([]string, 0)
+				err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &periods)
+				if err != nil {
+					periods = []string{*backupPlan.BackupPeriod}
+				}
+				plan["backup_period"] = periods
 			}
+			_ = helper.SetMapInterfaces(d, "backup_plan", plan)
 		}
 
 	}

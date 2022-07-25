@@ -3167,10 +3167,10 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.IpFilter = &cdn.IpFilter{
 			Switch: &vSwitch,
 		}
-		if vv, ok := v["filter_type"].(string); ok {
+		if vv, ok := v["filter_type"].(string); ok && vv != "" {
 			request.IpFilter.FilterType = &vv
 		}
-		if vv, ok := v["filters"].([]interface{}); ok {
+		if vv, ok := v["filters"].([]interface{}); ok && len(vv) > 0 {
 			request.IpFilter.Filters = helper.InterfacesStringsPoint(vv)
 		}
 
@@ -3197,7 +3197,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.IpFilter.FilterRules = filterRules
 		}
 
-		if vv, ok := v["return_code"].(int); ok {
+		if vv, ok := v["return_code"].(int); ok && vv > 0 {
 			request.IpFilter.ReturnCode = helper.IntInt64(vv)
 		}
 	}
@@ -3369,9 +3369,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.DownstreamCapping.CappingRules = requestRules
 	}
-	if v, ok := d.GetOk("response_header_cache_switch"); ok {
+	if v, hasChanged := checkCdnSwitchChanged(d, "response_header_cache_switch"); hasChanged {
 		request.ResponseHeaderCache = &cdn.ResponseHeaderCache{
-			Switch: helper.String(v.(string)),
+			Switch: v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_pull_optimization"); ok && hasChanged {
@@ -3383,9 +3383,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.OriginPullOptimization.OptimizationType = &v
 		}
 	}
-	if v, ok := d.GetOk("seo_switch"); ok {
+	if v, hasChanged := checkCdnSwitchChanged(d, "seo_switch"); hasChanged {
 		request.Seo = &cdn.Seo{
-			Switch: helper.String(v.(string)),
+			Switch: v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "referer"); ok && hasChanged {
@@ -3417,9 +3417,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.Referer.RefererRules = requestRules
 	}
-	if v, ok := d.GetOk("video_seek_switch"); ok {
+	if v, hasChanged := checkCdnSwitchChanged(d, "video_seek_switch"); hasChanged {
 		request.VideoSeek = &cdn.VideoSeek{
-			Switch: helper.String(v.(string)),
+			Switch: v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "max_age"); ok && hasChanged {
@@ -3450,7 +3450,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.MaxAge.MaxAgeRules = requestRules
 	}
-	if v, ok := d.GetOk("specific_config_mainland"); ok && v.(string) != "" {
+	if v, ok := d.GetOk("specific_config_mainland"); ok && v.(string) != "" && d.HasChange("specific_config_mainland") {
 		request.SpecificConfig = &cdn.SpecificConfig{}
 		configStruct := cdn.MainlandConfig{}
 		err := json.Unmarshal([]byte(v.(string)), &configStruct)
@@ -3459,7 +3459,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.SpecificConfig.Mainland = &configStruct
 	}
-	if v, ok := d.GetOk("specific_config_overseas"); ok && v.(string) != "" {
+	if v, ok := d.GetOk("specific_config_overseas"); ok && v.(string) != "" && d.HasChange("specific_config_overseas") {
 		if request.SpecificConfig == nil {
 			request.SpecificConfig = &cdn.SpecificConfig{}
 		}
@@ -3479,14 +3479,14 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.OriginPullTimeout.ReceiveTimeout = helper.IntUint64(vv)
 		}
 	}
-	if v, ok := d.GetOk("offline_cache_switch"); ok {
+	if v, hasChanged := checkCdnSwitchChanged(d, "offline_cache_switch"); hasChanged {
 		request.OfflineCache = &cdn.OfflineCache{
-			Switch: helper.String(v.(string)),
+			Switch: v,
 		}
 	}
-	if v, ok := d.GetOk("quic_switch"); ok {
+	if v, hasChanged := checkCdnSwitchChanged(d, "quic_switch"); hasChanged {
 		request.Quic = &cdn.Quic{
-			Switch: helper.String(v.(string)),
+			Switch: v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "aws_private_access"); ok && hasChanged {
@@ -3695,6 +3695,18 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 func checkCdnHeadMapOkAndChanged(d *schema.ResourceData, key string) (v map[string]interface{}, ok bool, changed bool) {
 	changed = d.HasChange(key)
 	v, ok = helper.InterfacesHeadMap(d, key)
+	return
+}
+
+func checkCdnSwitchChanged(d *schema.ResourceData, key string) (value *string, changed bool) {
+	if changed = d.HasChange(key); !changed {
+		return
+	}
+	if v, ok := d.Get(key).(string); ok && v != "" {
+		value = &v
+	} else {
+		value = helper.String("off")
+	}
 	return
 }
 

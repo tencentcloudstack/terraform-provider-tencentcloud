@@ -15,6 +15,7 @@ var testPostgresqlInstanceResourceName = "tencentcloud_postgresql_instance"
 var testPostgresqlInstanceResourceKey = testPostgresqlInstanceResourceName + ".test"
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_postgresql_instance
 	resource.AddTestSweepers(testPostgresqlInstanceResourceName, &resource.Sweeper{
 		Name: testPostgresqlInstanceResourceName,
 		F: func(r string) error {
@@ -36,6 +37,7 @@ func init() {
 				id := *v.DBInstanceId
 				name := *v.DBInstanceName
 				vpcId := *v.VpcId
+				status := *v.DBInstanceStatus
 
 				now := time.Now()
 				createTime := stringTotime(*v.CreateTime)
@@ -50,9 +52,12 @@ func init() {
 					continue
 				}
 				// isolate
-				err := postgresqlService.IsolatePostgresqlInstance(ctx, id)
-				if err != nil {
-					continue
+				var err error
+				if status == "running" {
+					err = postgresqlService.IsolatePostgresqlInstance(ctx, id)
+					if err != nil {
+						continue
+					}
 				}
 				// describe status
 				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -535,6 +536,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 }
 
 func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string) error {
+	time.Sleep(time.Second * 3)
 	// check status
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)

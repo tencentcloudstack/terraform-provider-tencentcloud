@@ -170,8 +170,8 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 				},
 			},
 			{
-				ExpectNonEmptyPlan: true,
-				Config:             testAccCndDryRunDomainResource(2),
+				//ExpectNonEmptyPlan: true,
+				Config: testAccCndDryRunDomainResource(2),
 				Check: func(state *terraform.State) error {
 					for _, rs := range state.RootModule().Resources {
 						if rs.Type != "tencentcloud_cdn_domain" {
@@ -179,6 +179,7 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 						}
 
 						request := cdn.NewUpdateDomainConfigRequest()
+						request.Domain = helper.String("www.example1.com")
 						request.IpFilter = &cdn.IpFilter{
 							Switch: helper.String("off"),
 						}

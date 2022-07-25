@@ -6,6 +6,7 @@ debug.sh
 debug.tf
 dev_watch.sh
 export_env.sh
+.*.sh
 .idea
 *.log
 *.exe

@@ -485,6 +485,7 @@ func getContainerDataInterface(resContainers []*tke.Container, isInit bool) []in
 				if item.LivenessProbe.HttpGet != nil {
 					probe["http_get_port"] = item.LivenessProbe.HttpGet.Port
 					probe["http_get_path"] = item.LivenessProbe.HttpGet.Path
+					probe["http_get_scheme"] = item.LivenessProbe.HttpGet.Scheme
 				}
 				if item.LivenessProbe.TcpSocket != nil {
 					probe["tcp_socket_port"] = item.LivenessProbe.TcpSocket.Port
@@ -508,6 +509,7 @@ func getContainerDataInterface(resContainers []*tke.Container, isInit bool) []in
 				if item.ReadinessProbe.HttpGet != nil {
 					probe["http_get_port"] = item.ReadinessProbe.HttpGet.Port
 					probe["http_get_path"] = item.ReadinessProbe.HttpGet.Path
+					probe["http_get_scheme"] = item.ReadinessProbe.HttpGet.Scheme
 				}
 				if item.ReadinessProbe.TcpSocket != nil {
 					probe["tcp_socket_port"] = item.ReadinessProbe.TcpSocket.Port

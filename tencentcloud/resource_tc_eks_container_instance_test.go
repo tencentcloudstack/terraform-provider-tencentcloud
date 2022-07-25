@@ -60,7 +60,7 @@ func TestAccTencentCloudEKSContainerInstance_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEksCi,
-				Check: resource.ComposeTestCheckFunc(
+				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_eks_container_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "name", "foo"),
 					resource.TestCheckResourceAttr("tencentcloud_eks_container_instance.foo", "cpu", "2"),

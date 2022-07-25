@@ -44,7 +44,7 @@ The `database_tuples` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `publish_subscribe_id` - ID of PubSub.
 
 
 ## Import
