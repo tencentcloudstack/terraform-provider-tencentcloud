@@ -115,6 +115,11 @@ func dataSourceTencentCloudCfsFileSystems() *schema.Resource {
 							Computed:    true,
 							Description: "Size used of the file system.",
 						},
+						"mount_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IP of the file system.",
+						},
 					},
 				},
 			},
@@ -184,6 +189,17 @@ func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta inter
 			"create_time":       fileSystem.CreationTime,
 			"size_limit":        fileSystem.SizeLimit,
 			"size_used":         fileSystem.SizeByte,
+		}
+		targets, err := cfsService.DescribeMountTargets(ctx, *fileSystem.FileSystemId)
+		if err != nil {
+			return err
+		}
+		var mountTarget *cfs.MountInfo
+		if len(targets) > 0 {
+			mountTarget = targets[0]
+		}
+		if mountTarget != nil {
+			mapping["mount_ip"] = mountTarget.IpAddress
 		}
 		fileSystemList = append(fileSystemList, mapping)
 		ids = append(ids, *fileSystem.FileSystemId)

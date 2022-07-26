@@ -25,6 +25,7 @@ func TestAccTencentCloudCfsFileSystemsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_file_systems.file_systems", "file_system_list.0.access_group_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_file_systems.file_systems", "file_system_list.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_file_systems.file_systems", "file_system_list.0.create_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cfs_file_systems.file_systems", "file_system_list.0.mount_ip"),
 				),
 			},
 		},
