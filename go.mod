@@ -67,5 +67,5 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.33
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 )
