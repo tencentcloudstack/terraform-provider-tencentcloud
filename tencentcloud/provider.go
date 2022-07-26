@@ -418,6 +418,7 @@ Monitor
 	tencentcloud_monitor_binding_objects
 	tencentcloud_monitor_policy_groups
 	tencentcloud_monitor_product_namespace
+	tencentcloud_monitor_alarm_notices
 
   Resource
     tencentcloud_monitor_policy_group
@@ -891,6 +892,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_objects":                  dataSourceTencentMonitorBindingObjects(),
 			"tencentcloud_monitor_policy_groups":                    dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":                dataSourceTencentMonitorProductNamespace(),
+			"tencentcloud_monitor_alarm_notices":                    dataSourceTencentMonitorAlarmNotices(),
 			"tencentcloud_elasticsearch_instances":                  dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                     dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                     dataSourceTencentCloudPostgresqlSpecinfos(),
