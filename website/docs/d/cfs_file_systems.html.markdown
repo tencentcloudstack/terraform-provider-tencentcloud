@@ -41,6 +41,7 @@ In addition to all arguments above, the following attributes are exported:
   * `availability_zone` - The available zone that the file system locates at.
   * `create_time` - Creation time of the file system.
   * `file_system_id` - ID of the file system.
+  * `mount_ip` - IP of the file system.
   * `name` - Name of the file system.
   * `protocol` - Protocol of the file system.
   * `size_limit` - Size limit of the file system.
