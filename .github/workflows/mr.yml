@@ -28,7 +28,7 @@ jobs:
             TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
             TENCENTCLOUD_SECRET_ID: ${{ secrets.TENCENTCLOUD_SECRET_ID }}
         run: |
-          echo $TENCENTCLOUD_SECRET_KEY ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
+          echo TENCENTCLOUD_SECRET_KEY: $TENCENTCLOUD_SECRET_KEY, TENCENTCLOUD_SECRET_KEY2: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
           git fetch origin master
           
           export TF_ACC=true
