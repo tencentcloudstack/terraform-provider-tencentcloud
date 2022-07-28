@@ -730,7 +730,11 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 	}
 	if *scalingGroup.InstanceCount > 0 || *scalingGroup.DesiredCapacity > 0 {
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			return retryError(asService.ClearScalingGroupInstance(ctx, scalingGroupId))
+			inErr := asService.ClearScalingGroupInstance(ctx, scalingGroupId)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
 		}); err != nil {
 			return err
 		}
