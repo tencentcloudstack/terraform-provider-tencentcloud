@@ -24,7 +24,11 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: MR INFO
+        env: 
+            TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
+            TENCENTCLOUD_SECRET_ID: ${{ secrets.TENCENTCLOUD_SECRET_ID }}
         run: |
+          echo $TENCENTCLOUD_SECRET_KEY ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
           git fetch origin master
           
           export TF_ACC=true
