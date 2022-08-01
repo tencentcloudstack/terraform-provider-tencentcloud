@@ -45,5 +45,4 @@ jobs:
           export TENCENTCLOUD_SECRET_ID_COMMON=${{ secrets.TENCENTCLOUD_SECRET_ID }}
           export TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT=${{ secrets.TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT }}
           export TENCENTCLOUD_SECRET_ID_SUB_ACCOUNT=${{ secrets.TENCENTCLOUD_SECRET_ID_SUB_ACCOUNT }}
-          env
           sh .githooks/pre-commit
