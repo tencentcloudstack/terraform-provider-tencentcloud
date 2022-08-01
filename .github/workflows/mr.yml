@@ -20,7 +20,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+            ref: ${{ github.event.pull_request.head.sha }}
 
       # Runs a set of commands using the runners shell
       - name: MR INFO
@@ -43,4 +45,5 @@ jobs:
           export TENCENTCLOUD_SECRET_ID_COMMON=${{ secrets.TENCENTCLOUD_SECRET_ID }}
           export TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT=${{ secrets.TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT }}
           export TENCENTCLOUD_SECRET_ID_SUB_ACCOUNT=${{ secrets.TENCENTCLOUD_SECRET_ID_SUB_ACCOUNT }}
+          env
           sh .githooks/pre-commit
