@@ -5,20 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "logset"
-  tags        = {
-    "test" = "test"
+  logset_name = "demo"
+  tags = {
+    "createdBy" = "terraform"
   }
 }
 
 ```
-
 Import
 
 cls logset can be imported using the id, e.g.
-
 ```
-$ terraform import tencentcloud_cls_logset.logset 5cd3a17e-fb0b-418c-afd7-77b365397426
+$ terraform import tencentcloud_cls_logset.logset logset_id
 ```
 */
 package tencentcloud
@@ -36,10 +34,10 @@ import (
 
 func resourceTencentCloudClsLogset() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudClsLogsetCreate,
 		Read:   resourceTencentCloudClsLogsetRead,
-		Delete: resourceTencentCloudClsLogsetDelete,
+		Create: resourceTencentCloudClsLogsetCreate,
 		Update: resourceTencentCloudClsLogsetUpdate,
+		Delete: resourceTencentCloudClsLogsetDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -49,27 +47,29 @@ func resourceTencentCloudClsLogset() *schema.Resource {
 				Required:    true,
 				Description: "Logset name, which must be unique.",
 			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list. Up to 10 tag key-value pairs are supported and must be unique.",
-			},
 
-			//computed
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time.",
 			},
+
 			"topic_count": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Number of log topics in logset.",
 			},
+
 			"role_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "If AssumerUin is not empty, it indicates the service provider who creates the logset.",
+				Description: "If assumer_uin is not empty, it indicates the service provider who creates the logset.",
+			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 		},
 	}
@@ -77,6 +77,7 @@ func resourceTencentCloudClsLogset() *schema.Resource {
 
 func resourceTencentCloudClsLogsetCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_logset.create")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
@@ -87,18 +88,6 @@ func resourceTencentCloudClsLogsetCreate(d *schema.ResourceData, meta interface{
 
 	if v, ok := d.GetOk("logset_name"); ok {
 		request.LogsetName = helper.String(v.(string))
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		request.Tags = make([]*cls.Tag, 0, len(tags))
-		for k, v := range tags {
-			key := k
-			value := v
-			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &key,
-				Value: &value,
-			})
-		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -118,8 +107,18 @@ func resourceTencentCloudClsLogsetCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	id := *response.Response.LogsetId
-	d.SetId(id)
+	logsetId := *response.Response.LogsetId
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::cls:%s:uin/:logset/%s", region, logsetId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+	d.SetId(logsetId)
 	return resourceTencentCloudClsLogsetRead(d, meta)
 }
 
@@ -129,55 +128,63 @@ func resourceTencentCloudClsLogsetRead(d *schema.ResourceData, meta interface{})
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	id := d.Id()
+	logsetId := d.Id()
 
-	logSet, err := service.DescribeClsLogsetById(ctx, id)
+	logset, err := service.DescribeClsLogset(ctx, logsetId)
 
 	if err != nil {
 		return err
 	}
 
-	if logSet == nil {
+	if logset == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `Logset` %s does not exist", id)
+		return fmt.Errorf("resource `logset` %s does not exist", logsetId)
 	}
 
-	_ = d.Set("logset_name", logSet.LogsetName)
+	if logset.LogsetName != nil {
+		_ = d.Set("logset_name", logset.LogsetName)
+	}
 
-	tags := make(map[string]string, len(logSet.Tags))
-	for _, tag := range logSet.Tags {
-		tags[*tag.Key] = *tag.Value
+	if logset.CreateTime != nil {
+		_ = d.Set("create_time", logset.CreateTime)
+	}
+
+	if logset.TopicCount != nil {
+		_ = d.Set("topic_count", logset.TopicCount)
+	}
+
+	if logset.RoleName != nil {
+		_ = d.Set("role_name", logset.RoleName)
+	}
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cls", "logset", tcClient.Region, d.Id())
+	if err != nil {
+		return err
 	}
 	_ = d.Set("tags", tags)
-
-	_ = d.Set("create_time", logSet.CreateTime)
-	_ = d.Set("topic_count", logSet.TopicCount)
-	_ = d.Set("role_name", logSet.RoleName)
 
 	return nil
 }
 
 func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_logset.update")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	request := cls.NewModifyLogsetRequest()
 
 	request.LogsetId = helper.String(d.Id())
 
-	if d.HasChange("logset_name") || d.HasChange("tags") {
-		request.LogsetName = helper.String(d.Get("logset_name").(string))
-
-		tags := d.Get("tags").(map[string]interface{})
-		request.Tags = make([]*cls.Tag, 0, len(tags))
-		for k, v := range tags {
-			key := k
-			value := v
-			request.Tags = append(request.Tags, &cls.Tag{
-				Key:   &key,
-				Value: helper.String(value.(string)),
-			})
+	if d.HasChange("logset_name") {
+		if v, ok := d.GetOk("logset_name"); ok {
+			request.LogsetName = helper.String(v.(string))
 		}
 	}
 
@@ -196,18 +203,31 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("cls", "logset", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudClsLogsetRead(d, meta)
 }
 
 func resourceTencentCloudClsLogsetDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_logset.delete")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id := d.Id()
 
-	if err := service.DeleteClsLogset(ctx, id); err != nil {
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logsetId := d.Id()
+
+	if err := service.DeleteClsLogsetById(ctx, logsetId); err != nil {
 		return err
 	}
 

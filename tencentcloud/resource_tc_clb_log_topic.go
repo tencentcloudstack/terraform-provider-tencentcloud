@@ -83,7 +83,7 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	}
 
 	if v, ok := d.GetOk("log_set_id"); ok {
-		info, err := clsService.DescribeClsLogsetById(ctx, v.(string))
+		info, err := clsService.DescribeClsLogset(ctx, v.(string))
 		if err != nil {
 			return err
 		}
