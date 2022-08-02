@@ -19,7 +19,6 @@ cls logset can be imported using the id, e.g.
 $ terraform import tencentcloud_cls_logset.logset logset_id
 ```
 */
-
 package tencentcloud
 
 import (
