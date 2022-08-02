@@ -16,6 +16,90 @@ type ClsService struct {
 }
 
 // cls logset
+func (me *ClsService) DescribeClsLogset(ctx context.Context, logsetId string) (logset *cls.LogsetInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeLogsetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = append(
+		request.Filters,
+		&cls.Filter{
+			Key:    helper.String("logsetId"),
+			Values: []*string{&logsetId},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances := make([]*cls.LogsetInfo, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClsClient().DescribeLogsets(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Logsets) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Logsets...)
+		if len(response.Response.Logsets) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	logset = instances[0]
+
+	return
+
+}
+
+func (me *ClsService) DeleteClsLogsetById(ctx context.Context, logsetId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteLogsetRequest()
+	request.LogsetId = &logsetId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClsClient().DeleteLogset(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *ClsService) DescribeClsLogsetByFilter(ctx context.Context, filters map[string]string) (instances []*cls.LogsetInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -64,91 +148,6 @@ func (me *ClsService) DescribeClsLogsetByFilter(ctx context.Context, filters map
 		}
 		offset += pageSize
 	}
-	return
-}
-
-func (me *ClsService) DescribeClsLogsetById(ctx context.Context, logSetId string) (logset *cls.LogsetInfo, errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		request = cls.NewDescribeLogsetsRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	filter := make(map[string]string, 0)
-	filter["logsetId"] = logSetId
-	request.Filters = append(
-		request.Filters,
-		&cls.Filter{
-			Key:    helper.String("logsetId"),
-			Values: []*string{&logSetId},
-		},
-	)
-	ratelimit.Check(request.GetAction())
-
-	var offset int64 = 0
-	var pageSize int64 = 100
-	instances := make([]*cls.LogsetInfo, 0)
-
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseClsClient().DescribeLogsets(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.Logsets) < 1 {
-			break
-		}
-		instances = append(instances, response.Response.Logsets...)
-		if len(response.Response.Logsets) < int(pageSize) {
-			break
-		}
-		offset += pageSize
-	}
-
-	if len(instances) < 1 {
-		return
-	}
-	logset = instances[0]
-
-	return
-}
-
-func (me *ClsService) DeleteClsLogset(ctx context.Context, id string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := cls.NewDeleteLogsetRequest()
-	request.LogsetId = &id
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseClsClient().DeleteLogset(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	return
 }
 

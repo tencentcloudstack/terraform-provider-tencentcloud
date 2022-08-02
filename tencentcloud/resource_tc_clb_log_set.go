@@ -74,7 +74,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 
 	id := d.Id()
 
-	info, err := service.DescribeClsLogsetById(ctx, id)
+	info, err := service.DescribeClsLogset(ctx, id)
 
 	if err != nil {
 		return err
@@ -87,10 +87,6 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 
 	_ = d.Set("name", info.LogsetName)
 
-	//
-	//if _, ok := d.GetOk("period"); !ok {
-	//	_ = d.Set("period", info)
-	//}
 	_ = d.Set("create_time", info.CreateTime)
 	_ = d.Set("topic_count", info.TopicCount)
 
@@ -105,6 +101,11 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	_, _, err := service.DescribeClbLogSet(ctx)
+	if err != nil {
+		return err
+	}
 
 	var (
 		period = d.Get("period").(int)
@@ -157,7 +158,7 @@ func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
 
-	if err := service.DeleteClsLogset(ctx, id); err != nil {
+	if err := service.DeleteClsLogsetById(ctx, id); err != nil {
 		return err
 	}
 

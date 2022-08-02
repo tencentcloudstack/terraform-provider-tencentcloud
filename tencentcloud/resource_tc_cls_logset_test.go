@@ -54,7 +54,7 @@ func testSweepClsLogset(region string) error {
 			continue
 		}
 
-		if err = clsService.DeleteClsLogset(ctx, *instanceId); err != nil {
+		if err = clsService.DeleteClsLogsetById(ctx, *instanceId); err != nil {
 			log.Printf("[ERROR] sweep instance %s error: %s", *instanceId, err.Error())
 		}
 	}
@@ -102,7 +102,7 @@ func testAccCheckClsLogsetExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		resourceId := rs.Primary.ID
-		instance, err := service.DescribeClsLogsetById(ctx, resourceId)
+		instance, err := service.DescribeClsLogset(ctx, resourceId)
 		if err != nil {
 			return err
 		}

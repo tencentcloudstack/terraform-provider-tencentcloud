@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixClbLogset_basic(t *testing.T) {
+func TestAccTencentCloudClbLogset_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -24,7 +24,6 @@ func TestAccTencentCloudNeedFixClbLogset_basic(t *testing.T) {
 					testAccCheckClbLogsetExists("tencentcloud_clb_log_set.test_logset"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_log_set.test_logset", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_log_set.test_logset", "name", "clb_logset"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_set.test_logset", "period", "7"),
 				),
 			},
 			{
@@ -49,7 +48,7 @@ func testAccCheckClbLogsetDestroy(s *terraform.State) error {
 		}
 		time.Sleep(5 * time.Second)
 		resourceId := rs.Primary.ID
-		info, err := clsService.DescribeClsLogsetById(ctx, resourceId)
+		info, err := clsService.DescribeClsLogset(ctx, resourceId)
 		if info != nil && err == nil {
 			return fmt.Errorf("[CHECK][CLB logset][Destroy] check: CLB logset still exists: %s", rs.Primary.ID)
 		}
@@ -73,7 +72,7 @@ func testAccCheckClbLogsetExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		resourceId := rs.Primary.ID
-		instance, err := service.DescribeClsLogsetById(ctx, resourceId)
+		instance, err := service.DescribeClsLogset(ctx, resourceId)
 		if err != nil {
 			return err
 		}
@@ -86,6 +85,5 @@ func testAccCheckClbLogsetExists(n string) resource.TestCheckFunc {
 
 const testAccClbLogset_basic = `
 resource "tencentcloud_clb_log_set" "test_logset" {
-  period = 7
 }
 `
