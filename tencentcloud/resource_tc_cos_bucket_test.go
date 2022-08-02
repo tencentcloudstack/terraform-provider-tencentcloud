@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -348,8 +350,21 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("origin")),
+						"origin",
+					),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("host")),
+						"host",
+					),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("expires")),
+						"expires",
+					),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "custom_value"),
 				),
 			},
@@ -364,8 +379,21 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.protocol", "FOLLOW"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_query_string", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_redirection", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.0", "origin"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.follow_http_headers.1", "host"),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("origin")),
+						"origin",
+					),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("host")),
+						"host",
+					),
+					resource.TestCheckResourceAttr(
+						"tencentcloud_cos_bucket.with_origin",
+						fmt.Sprintf("origin_pull_rules.0.follow_http_headers.%d", hashcode.String("expires")),
+						"expires",
+					),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_origin", "origin_pull_rules.0.custom_http_headers.x-custom-header", "test"),
 				),
 			},
@@ -796,7 +824,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     protocol = "FOLLOW" // "HTTP" "HTTPS"
     follow_query_string = true
     follow_redirection = true
-    follow_http_headers = ["origin", "host"]
+    follow_http_headers = ["origin", "host", "expires"]
     custom_http_headers = {
 	  "x-custom-header" = "custom_value"
     }
@@ -820,7 +848,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
     protocol = "FOLLOW" // "HTTP" "HTTPS"
     follow_query_string = true
     follow_redirection = true
-    follow_http_headers = ["origin", "host"]
+    follow_http_headers = ["origin", "host", "expires"]
     custom_http_headers = {
 	  "x-custom-header" = "test"
     }
