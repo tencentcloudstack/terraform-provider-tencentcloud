@@ -12,8 +12,10 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1
+	github.com/hashicorp/go-plugin v1.2.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.6.0
-	github.com/hashicorp/terraform-plugin-sdk v1.14.0
+	github.com/hashicorp/terraform-plugin-sdk v1.7.0
+	github.com/hashicorp/terraform-plugin-test v1.3.0 // indirect
 	github.com/katbyte/terrafmt v0.2.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
@@ -66,5 +68,7 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.33
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
+	google.golang.org/genproto v0.0.0-20200310143817-43be25429f5a // indirect
 )

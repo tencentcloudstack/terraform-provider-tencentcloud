@@ -157,11 +157,11 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Description: "Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.",
 			},
 			"zone_ids": {
-				Type:         schema.TypeSet,
-				Optional:     true,
-				Description:  "List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.",
-				RequiredWith: []string{"multi_zone_flag"},
-				Elem:         &schema.Schema{Type: schema.TypeInt},
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.",
+				//RequiredWith: []string{"multi_zone_flag"},
+				Elem: &schema.Schema{Type: schema.TypeInt},
 			},
 			"tags": {
 				Type:        schema.TypeList,

@@ -439,16 +439,16 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Description: "Enable bucket versioning.",
 			},
 			"replica_role": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				RequiredWith: []string{"replica_rules", "versioning_enable"},
-				Description:  "Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.",
+				Type:     schema.TypeString,
+				Optional: true,
+				//RequiredWith: []string{"replica_rules", "versioning_enable"},
+				Description: "Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.",
 			},
 			"replica_rules": {
-				Type:         schema.TypeList,
-				Optional:     true,
-				Description:  "List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.",
-				RequiredWith: []string{"replica_role", "versioning_enable"},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.",
+				//RequiredWith: []string{"replica_role", "versioning_enable"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
