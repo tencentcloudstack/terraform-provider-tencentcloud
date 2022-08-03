@@ -99,12 +99,6 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 				},
 			},
 
-			//"notice_id": {
-			//	Type:        schema.TypeString,
-			//	Computed:    true,
-			//	Description: "Alarm notification template ID.",
-			//},
-
 			"notice_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -194,7 +188,6 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewCreateAlarmNoticeRequest()
-		//err            error
 	)
 	request.Module = helper.String("monitor")
 	request.Name = helper.String(d.Get("name").(string))
@@ -215,10 +208,6 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(*noticeId)
-
-	//if err = d.Set("notice_id", noticeId); err != nil {
-	//	return err
-	//}
 
 	return resourceTencentMonitorAlarmNoticeRead(d, meta)
 }
