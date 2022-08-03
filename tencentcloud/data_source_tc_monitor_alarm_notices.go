@@ -140,8 +140,8 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 		err            error
 		notices        []interface{}
 	)
-	request.Module = helper.String(d.Get("module").(string))
-	request.PageNumber = helper.IntInt64(d.Get("pagenumber").(int))
+	request.Module = helper.String("monitor")
+	request.PageNumber = helper.IntInt64(1)
 	request.PageSize = helper.IntInt64(d.Get("pagesize").(int))
 	request.Order = helper.String(d.Get("order").(string))
 
@@ -166,15 +166,15 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 			"notice_language": noticesItem.NoticeLanguage,
 		}
 
-		user_noticesItems := make([]interface{}, 0, 100)
-		for _, user_noticesItem := range noticesItem.UserNotices {
-			user_noticesItems = append(user_noticesItems, map[string]interface{}{
-				"receiver_type": user_noticesItem.ReceiverType,
-				"start_time":    user_noticesItem.StartTime,
-				"endtime":       user_noticesItem.EndTime,
+		userNoticesItems := make([]interface{}, 0, 100)
+		for _, NoticesItem := range noticesItem.UserNotices {
+			userNoticesItems = append(userNoticesItems, map[string]interface{}{
+				"receiver_type": NoticesItem.ReceiverType,
+				"start_time":    NoticesItem.StartTime,
+				"endtime":       NoticesItem.EndTime,
 			})
 		}
-		noticesItemMap["user_notices"] = user_noticesItems
+		noticesItemMap["user_notices"] = userNoticesItems
 		notices = append(notices, noticesItemMap)
 	}
 

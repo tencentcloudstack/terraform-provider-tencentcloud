@@ -14,8 +14,6 @@ resource "tencentcloud_monitor_alarm_notice" "example" {
 
 ```
 
-
-
 */
 package tencentcloud
 
@@ -101,17 +99,11 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 				},
 			},
 
-			"notice_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Alarm notification template ID.",
-			},
-
-			"request_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Unique request ID, returned on every request. When locating the problem, you need to provide the RequestId of the request.",
-			},
+			//"notice_id": {
+			//	Type:        schema.TypeString,
+			//	Computed:    true,
+			//	Description: "Alarm notification template ID.",
+			//},
 
 			"notice_ids": {
 				Type:        schema.TypeList,
@@ -202,41 +194,29 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewCreateAlarmNoticeRequest()
-		err            error
-		//noticeids      []interface{}
+		//err            error
 	)
 	request.Module = helper.String("monitor")
 	request.Name = helper.String(d.Get("name").(string))
 	request.NoticeType = helper.String(d.Get("notice_type").(string))
 	request.NoticeLanguage = helper.String(d.Get("notice_language").(string))
 
-	var noticeid *string
-	var requestid *string
+	var noticeId *string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := monitorService.client.UseMonitorClient().CreateAlarmNotice(request)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
-		noticeid = response.Response.NoticeId
-		requestid = response.Response.RequestId
+		noticeId = response.Response.NoticeId
 		return nil
 	}); err != nil {
 		return err
 	}
 
-	d.SetId(*noticeid)
-	if err = d.Set("request_id", requestid); err != nil {
-		return err
-	}
+	d.SetId(*noticeId)
 
-	if err = d.Set("notice_id", noticeid); err != nil {
-		return err
-	}
-
-	//noticeids = append(noticeids, noticeid)
-	//
-	//if err = d.Set("notice_ids", noticeids); err != nil {
+	//if err = d.Set("notice_id", noticeId); err != nil {
 	//	return err
 	//}
 
@@ -258,7 +238,6 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 	noticeId := d.Id()
 	request.NoticeId = &noticeId
 
-	var requestid *string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := monitorService.client.UseMonitorClient().DescribeAlarmNotice(request)
@@ -286,7 +265,6 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 		}
 		noticesItemMap["user_notices"] = userNoticesItems
 		notice = append(notice, noticesItemMap)
-		requestid = response.Response.RequestId
 
 		return nil
 	}); err != nil {
@@ -296,9 +274,6 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 	d.SetId(noticeId)
 
 	if err = d.Set("notices", notice); err != nil {
-		return err
-	}
-	if err = d.Set("request_id", requestid); err != nil {
 		return err
 	}
 
@@ -311,8 +286,6 @@ func resourceTencentMonitorAlarmNoticeUpdate(d *schema.ResourceData, meta interf
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmNoticeRequest()
-		err            error
-		//noticeids      []interface{}
 	)
 
 	request.Module = helper.String("monitor")
@@ -322,29 +295,16 @@ func resourceTencentMonitorAlarmNoticeUpdate(d *schema.ResourceData, meta interf
 	noticeId := d.Id()
 	request.NoticeId = &noticeId
 
-	var requestid *string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := monitorService.client.UseMonitorClient().ModifyAlarmNotice(request)
+		_, err := monitorService.client.UseMonitorClient().ModifyAlarmNotice(request)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
-		requestid = response.Response.RequestId
-
 		return nil
 	}); err != nil {
 		return err
 	}
-
-	if err = d.Set("request_id", requestid); err != nil {
-		return err
-	}
-
-	//noticeids = append(noticeids, &noticeId)
-	//
-	//if err = d.Set("notice_ids", noticeids); err != nil {
-	//	return err
-	//}
 
 	return resourceTencentMonitorAlarmNoticeRead(d, meta)
 }
@@ -355,7 +315,6 @@ func resourceTencentMonitorAlarmNoticeDelete(d *schema.ResourceData, meta interf
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewDeleteAlarmNoticesRequest()
-		err            error
 	)
 
 	request.Module = helper.String("monitor")
@@ -363,30 +322,16 @@ func resourceTencentMonitorAlarmNoticeDelete(d *schema.ResourceData, meta interf
 	var n = []*string{&noticeId}
 	request.NoticeIds = n
 
-	//if v, ok := d.GetOk("notice_ids"); ok {
-	//	notice := make([]*string, 0, 10)
-	//	for _, item := range v.([]interface{}) {
-	//		notice = append(notice, helper.String(item.(string)))
-	//	}
-	//	request.NoticeIds = append(notice, nil)
-	//}
-
-	var requestid *string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := monitorService.client.UseMonitorClient().DeleteAlarmNotices(request)
+		_, err := monitorService.client.UseMonitorClient().DeleteAlarmNotices(request)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
-		requestid = response.Response.RequestId
-
 		return nil
 	}); err != nil {
 		return err
 	}
 
-	if err = d.Set("request_id", requestid); err != nil {
-		return err
-	}
 	return nil
 }
