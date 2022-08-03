@@ -167,11 +167,11 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 		}
 
 		userNoticesItems := make([]interface{}, 0, 100)
-		for _, NoticesItem := range noticesItem.UserNotices {
+		for _, userNotices := range noticesItem.UserNotices {
 			userNoticesItems = append(userNoticesItems, map[string]interface{}{
-				"receiver_type": NoticesItem.ReceiverType,
-				"start_time":    NoticesItem.StartTime,
-				"endtime":       NoticesItem.EndTime,
+				"receiver_type": userNotices.ReceiverType,
+				"start_time":    userNotices.StartTime,
+				"endtime":       userNotices.EndTime,
 			})
 		}
 		noticesItemMap["user_notices"] = userNoticesItems
