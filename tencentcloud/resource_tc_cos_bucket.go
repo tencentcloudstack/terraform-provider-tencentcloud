@@ -316,8 +316,11 @@ func originPullRules() *schema.Resource {
 			//	Description: "",
 			//},
 			"follow_http_headers": {
-				Type:        schema.TypeList,
-				Optional:    true,
+				Type:     schema.TypeSet,
+				Optional: true,
+				Set: func(i interface{}) int {
+					return hashcode.String(i.(string))
+				},
 				Description: "Specifies the pass through headers when accessing the origin server.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
@@ -1622,7 +1625,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 		}
 		if v, ok := dMap["follow_http_headers"]; ok {
 			var followHeaders []cos.OriginHttpHeader
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				header := cos.OriginHttpHeader{
 					Key:   item.(string),
 					Value: "",

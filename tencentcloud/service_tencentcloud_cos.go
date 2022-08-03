@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -984,7 +986,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 		return nil, errRet
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(originConfig)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body response body [%s]\n",
 		logId, "GetBucketPullOrigin", resp)
@@ -1017,11 +1019,13 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 				}
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
-					headers := make([]*string, 0)
+					headers := schema.NewSet(func(i interface{}) int {
+						return hashcode.String(i.(string))
+					}, nil)
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
-						headers = append(headers, helper.String(header.Key))
+						headers.Add(header.Key)
 					}
-					item["follow_http_headers"] = &headers
+					item["follow_http_headers"] = headers
 				}
 
 			}

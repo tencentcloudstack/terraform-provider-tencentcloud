@@ -297,7 +297,7 @@ The `origin_pull_rules` object supports the following:
 * `host` - (Required, String) Allows only a domain name or IP address. You can optionally append a port number to the address.
 * `priority` - (Required, Int) Priority of origin-pull rules, do not set the same value for multiple rules.
 * `custom_http_headers` - (Optional, Map) Specifies the custom headers that you can add for COS to access your origin server.
-* `follow_http_headers` - (Optional, List) Specifies the pass through headers when accessing the origin server.
+* `follow_http_headers` - (Optional, Set) Specifies the pass through headers when accessing the origin server.
 * `follow_query_string` - (Optional, Bool) Specifies whether to pass through COS request query string when accessing the origin server.
 * `follow_redirection` - (Optional, Bool) Specifies whether to follow 3XX redirect to another origin server to pull data from.
 * `prefix` - (Optional, String) Triggers the origin-pull rule when the requested file name matches this prefix.

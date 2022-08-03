@@ -17,14 +17,14 @@ func TestAccTencentCloudCosBucketPolicy(t *testing.T) {
 		CheckDestroy: testAccCheckCosBucketPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucketPolicyBasic(appid, ownerUin, ownerUin),
+				Config: testAccCosBucketPolicyBasic(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCosBucketPolicyExists("tencentcloud_cos_bucket_policy.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "bucket"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "policy"),
 				),
 			}, {
-				Config: testAccCosBucketPolicyUpdate(appid),
+				Config: testAccCosBucketPolicyUpdate(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCosBucketPolicyExists("tencentcloud_cos_bucket_policy.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_policy.foo", "bucket"),
@@ -86,11 +86,10 @@ func testAccCheckCosBucketPolicyExists(n string) resource.TestCheckFunc {
 	}
 }
 
-func testAccCosBucketPolicyBasic(id, uin, targetUin string) string {
-	bucket := "for-terraform-policy-" + id
-	return fmt.Sprintf(`
+func testAccCosBucketPolicyBasic() string {
+	return userInfoData + `
 resource "tencentcloud_cos_bucket" "bucket" {
-  bucket = "%s"
+  bucket = "test-tf-policy-${local.app_id}"
   acl    = "private"
 }
 
@@ -115,7 +114,7 @@ resource "tencentcloud_cos_bucket_policy" "foo" {
         "name/cos:OptionsObject"
       ],
       "Resource": [
-        "qcs::cos:ap-guangzhou:uid/%s:%s/*"
+        "qcs::cos:ap-guangzhou:uid/${local.app_id}:test-tf-policy-${local.app_id}/*"
       ]
     }
   ],
@@ -123,14 +122,12 @@ resource "tencentcloud_cos_bucket_policy" "foo" {
 }
 EOF
 }
-`,
-		bucket, id, bucket)
+`
 }
-func testAccCosBucketPolicyUpdate(id string) string {
-	bucket := "for-terraform-policy-" + id
-	return fmt.Sprintf(`
+func testAccCosBucketPolicyUpdate() string {
+	return userInfoData + `
 resource "tencentcloud_cos_bucket" "bucket" {
-  bucket = "%s"
+  bucket = "test-tf-policy-${local.app_id}"
   acl    = "private"
 }
 
@@ -155,7 +152,7 @@ resource "tencentcloud_cos_bucket_policy" "foo" {
         "name/cos:OptionsObject"
       ],
       "Resource": [
-        "qcs::cos:ap-guangzhou:uid/%s:%s/*"
+        "qcs::cos:ap-guangzhou:uid/${local.app_id}:test-tf-policy-${local.app_id}/*"
       ]
     }
   ],
@@ -163,5 +160,5 @@ resource "tencentcloud_cos_bucket_policy" "foo" {
 }
 EOF
 }
-`, bucket, id, bucket)
+`
 }
