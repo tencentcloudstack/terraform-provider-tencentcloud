@@ -163,7 +163,7 @@ The following arguments are supported:
 * `desired_capacity` - (Optional, Int) Desired capacity ot the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
 * `enable_auto_scale` - (Optional, Bool) Indicate whether to enable auto scaling or not.
 * `labels` - (Optional, Map) Labels of kubernetes node pool created nodes. The label key name does not exceed 63 characters, only supports English, numbers,'/','-', and does not allow beginning with ('/').
-* `multi_zone_subnet_policy` - (Optional, String, ForceNew) Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.
+* `multi_zone_subnet_policy` - (Optional, String) Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.
 * `node_config` - (Optional, List) Node config.
 * `node_os_type` - (Optional, String) The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.
 * `node_os` - (Optional, String) Operating system of the cluster, the available values include: `tlinux2.4x86_64`, `ubuntu18.04.1x86_64`, `ubuntu16.04.1 LTSx86_64`, `centos7.6.0_x64` and `centos7.2x86_64`. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.
