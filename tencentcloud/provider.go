@@ -660,6 +660,9 @@ TEM
 	tencentcloud_tem_log_config
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
+Teo
+  Resource
+	tencentcloud_teo_zone
 
 */
 package tencentcloud
@@ -1178,6 +1181,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
+<<<<<<< HEAD
 			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
 			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
@@ -1185,6 +1189,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
+=======
+			"tencentcloud_teo_zone":                                resourceTencentCloudTeoZone(),
+>>>>>>> dcc0f574 (support teo)
 		},
 
 		ConfigureFunc: providerConfigure,
