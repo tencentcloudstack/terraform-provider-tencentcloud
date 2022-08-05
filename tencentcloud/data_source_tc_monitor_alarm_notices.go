@@ -5,9 +5,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_monitor_alarm_notices" "notices" {
-  module     = "monitor"
-  pagenumber = 1
-  pagesize   = 20
   order      = "DESC"
 
 }
@@ -17,58 +14,76 @@ data "tencentcloud_monitor_alarm_notices" "notices" {
 package tencentcloud
 
 import (
+	"context"
 	"crypto/md5"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentMonitorAlarmNoticesRead,
 		Schema: map[string]*schema.Schema{
-			"module": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Module name, fill in 'monitor' here.",
-			},
-			"pagenumber": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Page number minimum 1.",
-			},
-			"pagesize": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Page size 1-200.",
-			},
 			"order": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Sort by update time ASC=forward order DESC=reverse order.",
 			},
+			"owner_uid": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The primary account uid is used to create a preset notification.",
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Alarm notification template name Used for fuzzy search.",
+			},
+			"receiver_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "To filter alarm notification templates according to recipients, you need to select the notification user type. USER=user GROUP=user group Leave blank = not filter by recipient.",
+			},
+			"user_ids": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of recipients.",
+				Elem:        &schema.Schema{Type: schema.TypeInt},
+			},
+			"group_ids": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Receive group list.",
+				Elem:        &schema.Schema{Type: schema.TypeInt},
+			},
+			"notice_ids": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Receive group list.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to store results.",
 			},
 
-			"notices": {
+			"alarm_notice": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Alarm notification template list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"notices_id": {
+						"id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Alarm notification template ID.",
 						},
-						"notices_name": {
+						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Alarm notification template name.",
@@ -104,10 +119,16 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 										Optional:    true,
 										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
 									},
-									"endtime": {
+									"end_time": {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
+									},
+									"notice_way": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Notification Channel List EMAIL=Mail SMS=SMS CALL=Telephone WECHAT=WeChat RTX=Enterprise WeChat.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 								},
 							},
@@ -123,6 +144,12 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 							Optional:    true,
 							Description: "Notification language zh-CN=Chinese en-US=English.",
 						},
+						"policy_ids": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "List of alarm policy IDs bound to the alarm notification template.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
 					},
 				},
 			},
@@ -135,35 +162,68 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request        = monitor.NewDescribeAlarmNoticesRequest()
-		response       *monitor.DescribeAlarmNoticesResponse
 		err            error
-		notices        []interface{}
+		alarmNotices   []interface{}
+		alarmNotice    []*monitor.AlarmNotice
 	)
-	request.Module = helper.String("monitor")
-	request.PageNumber = helper.IntInt64(1)
-	request.PageSize = helper.IntInt64(d.Get("pagesize").(int))
-	request.Order = helper.String(d.Get("order").(string))
 
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().DescribeAlarmNotices(request); err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	}); err != nil {
-		return err
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	alarmNoticeMap := make(map[string]interface{})
+	alarmNoticeMap["order"] = helper.String(d.Get("order").(string))
+
+	if v, ok := d.GetOk("owner_uid"); ok {
+		alarmNoticeMap["ownerUid"] = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.GetOk("name"); ok {
+		alarmNoticeMap["name"] = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("receiver_type"); ok {
+		alarmNoticeMap["receiverType"] = helper.String(v.(string))
 	}
 
-	for _, noticesItem := range response.Response.Notices {
+	if v, ok := d.GetOk("user_ids"); ok {
+		userIds := v.(*schema.Set).List()
+		userIdsArr := make([]*int64, 0, len(userIds))
+		for _, userId := range userIds {
+			userIdsArr = append(userIdsArr, helper.Int64(userId.(int64)))
+		}
+		alarmNoticeMap["userIdArr"] = userIdsArr
+	}
+
+	if v, ok := d.GetOk("group_ids"); ok {
+		groupIds := v.(*schema.Set).List()
+		groupIdsArr := make([]*int64, 0, len(groupIds))
+		for _, groupId := range groupIds {
+			groupIdsArr = append(groupIdsArr, helper.Int64(groupId.(int64)))
+		}
+		alarmNoticeMap["groupArr"] = groupIdsArr
+	}
+
+	if v, ok := d.GetOk("notice_ids"); ok {
+		noticeIds := v.(*schema.Set).List()
+		noticeIdsArr := make([]*string, 0, len(noticeIds))
+		for _, noticeId := range noticeIds {
+			noticeIdsArr = append(noticeIdsArr, helper.String(noticeId.(string)))
+		}
+		alarmNoticeMap["noticeArr"] = noticeIdsArr
+	}
+
+	alarmNotice, err = monitorService.DescribeAlarmNoticeById(ctx, alarmNoticeMap)
+	if err != nil {
+		return err
+	}
+	for _, noticesItem := range alarmNotice {
 		noticesItemMap := map[string]interface{}{
-			"notices_id":      noticesItem.Id,
-			"notices_name":    noticesItem.Name,
+			"id":              noticesItem.Id,
+			"name":            noticesItem.Name,
 			"updated_at":      noticesItem.UpdatedAt,
 			"updated_by":      noticesItem.UpdatedBy,
 			"notice_type":     noticesItem.NoticeType,
 			"is_preset":       noticesItem.IsPreset,
 			"notice_language": noticesItem.NoticeLanguage,
+			"policy_ids":      noticesItem.PolicyIds,
 		}
 
 		userNoticesItems := make([]interface{}, 0, 100)
@@ -171,23 +231,23 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 			userNoticesItems = append(userNoticesItems, map[string]interface{}{
 				"receiver_type": userNotices.ReceiverType,
 				"start_time":    userNotices.StartTime,
-				"endtime":       userNotices.EndTime,
+				"end_time":      userNotices.EndTime,
+				"notice_way":    userNotices.NoticeWay,
 			})
 		}
 		noticesItemMap["user_notices"] = userNoticesItems
-		notices = append(notices, noticesItemMap)
+		alarmNotices = append(alarmNotices, noticesItemMap)
 	}
 
 	md := md5.New()
-	_, _ = md.Write([]byte(request.ToJsonString()))
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
 
-	if err = d.Set("notices", notices); err != nil {
+	if err = d.Set("alarm_notice", alarmNotices); err != nil {
 		return err
 	}
 	if output, ok := d.GetOk("result_output_file"); ok {
-		return writeToFile(output.(string), notices)
+		return writeToFile(output.(string), alarmNotices)
 	}
 	return nil
 }

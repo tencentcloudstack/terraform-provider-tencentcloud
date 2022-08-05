@@ -5,7 +5,6 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_alarm_notice" "example" {
-  module                = "monitor"
   name                  = "yourname"
   notice_type           = "ALL"
   notice_language       = "zh-CN"
@@ -36,91 +35,36 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"module": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Module name, fill in 'monitor' here.",
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Notification template name within 60.",
 			},
-
 			"notice_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Alarm notification type ALARM=Notification not restored OK=Notification restored ALL.",
 			},
-
 			"notice_language": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Notification language zh-CN=Chinese en-US=English.",
 			},
 
-			"user_notices": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Alarm notification template list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"receiver_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Recipient Type USER=User GROUP=User Group.",
-						},
-						"start_time": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
-						},
-						"endtime": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
-						},
-
-						"notice_way": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: "Notification Channel List EMAIL=Mail SMS=SMS CALL=Telephone WECHAT=WeChat RTX=Enterprise WeChat.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"endtime": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-
 			"notice_ids": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "List of notification rule IDs.",
-				Elem: &schema.Schema{
-					Type:        schema.TypeString,
-					Description: "ID of the notification rule to be queried.",
-				},
+				Description: "Receive group list.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 
-			"notices": {
+			"alarm_notice": {
 				Type:        schema.TypeList,
-				Computed:    true,
+				Optional:    true,
 				Description: "Alarm notification template list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"notices_id": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Alarm notification template ID.",
-						},
-						"notices_name": {
+						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Alarm notification template name.",
@@ -156,10 +100,16 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 										Optional:    true,
 										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
 									},
-									"endtime": {
+									"end_time": {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
+									},
+									"notice_way": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Notification Channel List EMAIL=Mail SMS=SMS CALL=Telephone WECHAT=WeChat RTX=Enterprise WeChat.",
+										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 								},
 							},
@@ -170,10 +120,11 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 							Default:     1,
 							Description: "Whether it is the system default notification template 0=No 1=Yes.",
 						},
-						"notice_language": {
-							Type:        schema.TypeString,
+						"policy_ids": {
+							Type:        schema.TypeSet,
 							Optional:    true,
-							Description: "Notification language zh-CN=Chinese en-US=English.",
+							Description: "List of alarm policy IDs bound to the alarm notification template.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 					},
 				},
@@ -218,51 +169,44 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request        = monitor.NewDescribeAlarmNoticeRequest()
-		notice         []interface{}
 		err            error
+		alarmNotices   []interface{}
+		alarmNotice    []*monitor.AlarmNotice
 	)
 
-	request.Module = helper.String("monitor")
-	noticeId := d.Id()
-	request.NoticeId = &noticeId
+	alarmNoticeMap := make(map[string]interface{})
+	alarmNoticeMap["order"] = helper.String("ASC")
+	var tmpAlarmNotice = []*string{helper.String(d.Id())}
+	alarmNoticeMap["noticeArr"] = tmpAlarmNotice
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		response, err := monitorService.client.UseMonitorClient().DescribeAlarmNotice(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		noticeItem := response.Response.Notice
+	alarmNotice, err = monitorService.DescribeAlarmNoticeById(nil, alarmNoticeMap)
+	if err != nil {
+		return err
+	}
+	for _, noticesItem := range alarmNotice {
 		noticesItemMap := map[string]interface{}{
-			"notices_id":      &noticeId,
-			"notices_name":    noticeItem.Name,
-			"updated_at":      noticeItem.UpdatedAt,
-			"updated_by":      noticeItem.UpdatedBy,
-			"notice_type":     noticeItem.NoticeType,
-			"is_preset":       noticeItem.IsPreset,
-			"notice_language": noticeItem.NoticeLanguage,
+			"name":        noticesItem.Name,
+			"updated_at":  noticesItem.UpdatedAt,
+			"updated_by":  noticesItem.UpdatedBy,
+			"notice_type": noticesItem.NoticeType,
+			"is_preset":   noticesItem.IsPreset,
+			"policy_ids":  noticesItem.PolicyIds,
 		}
 
 		userNoticesItems := make([]interface{}, 0, 100)
-		for _, noticesItem := range noticeItem.UserNotices {
+		for _, userNotices := range noticesItem.UserNotices {
 			userNoticesItems = append(userNoticesItems, map[string]interface{}{
-				"receiver_type": noticesItem.ReceiverType,
-				"start_time":    noticesItem.StartTime,
-				"endtime":       noticesItem.EndTime,
+				"receiver_type": userNotices.ReceiverType,
+				"start_time":    userNotices.StartTime,
+				"end_time":      userNotices.EndTime,
+				"notice_way":    userNotices.NoticeWay,
 			})
 		}
 		noticesItemMap["user_notices"] = userNoticesItems
-		notice = append(notice, noticesItemMap)
-
-		return nil
-	}); err != nil {
-		return err
+		alarmNotices = append(alarmNotices, noticesItemMap)
 	}
 
-	d.SetId(noticeId)
-
-	if err = d.Set("notices", notice); err != nil {
+	if err = d.Set("alarm_notice", alarmNotices); err != nil {
 		return err
 	}
 
@@ -281,8 +225,7 @@ func resourceTencentMonitorAlarmNoticeUpdate(d *schema.ResourceData, meta interf
 	request.Name = helper.String(d.Get("name").(string))
 	request.NoticeType = helper.String(d.Get("notice_type").(string))
 	request.NoticeLanguage = helper.String(d.Get("notice_language").(string))
-	noticeId := d.Id()
-	request.NoticeId = &noticeId
+	request.NoticeId = helper.String(d.Id())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
