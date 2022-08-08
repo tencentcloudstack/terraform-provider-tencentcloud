@@ -24,7 +24,6 @@ teo zone can be imported using the id, e.g.
 $ terraform import tencentcloud_teo_zone.zone zone_id
 ```
 */
-
 package tencentcloud
 
 import (
@@ -89,7 +88,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Indicates whether the site is disabled",
+				Description: "Indicates whether the site is disabled.",
 			},
 
 			"created_on": {

@@ -1,0 +1,68 @@
+---
+subcategory: "Teo"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_teo_zone"
+sidebar_current: "docs-tencentcloud-resource-teo_zone"
+description: |-
+  Provides a resource to create a teo zone
+---
+
+# tencentcloud_teo_zone
+
+Provides a resource to create a teo zone
+
+## Example Usage
+
+```hcl
+resource "tencentcloud_teo_zone" "zone" {
+  vanity_name_servers {
+
+  }
+  vanity_name_servers_ips {
+
+  }
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `name` - (Required, String) Site name.
+* `cname_speed_up` - (Optional, String) Specifies whether to enable CNAME acceleration.
+* `paused` - (Optional, Bool) Indicates whether the site is disabled.
+* `tags` - (Optional, Map) Tag description list.
+* `type` - (Optional, String) Specifies how the site is connected to EdgeOne.
+* `vanity_name_servers` - (Optional, List) User-defined name server information.
+
+The `vanity_name_servers` object supports the following:
+
+* `switch` - (Required, String) Whether to enable the custom name server.
+* `servers` - (Optional, Set) List of custom name servers.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `cname_status` - Ownership verification status of the site when it accesses via CNAME.
+* `created_on` - Site creation date.
+* `modified_on` - Site modification date.
+* `name_servers` - List of name servers assigned to users by Tencent Cloud.
+* `original_name_servers` - List of name servers used.
+* `status` - Site status.
+* `vanity_name_servers_ips` - User-defined name server IP information.
+  * `i_pv4` - IPv4 address of the custom name server.
+  * `name` - Name of the custom name server.
+
+
+## Import
+
+teo zone can be imported using the id, e.g.
+```
+$ terraform import tencentcloud_teo_zone.zone zone_id
+```
+
