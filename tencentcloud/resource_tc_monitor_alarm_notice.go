@@ -51,79 +51,52 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 				Description: "Notification language zh-CN=Chinese en-US=English.",
 			},
 
-			"notice_ids": {
-				Type:        schema.TypeSet,
+			"updated_by": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last Modified By.",
+			},
+			"updated_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last modified time.",
+			},
+			"is_preset": {
+				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Receive group list.",
+				Description: "Whether it is the system default notification template 0=No 1=Yes.",
+			},
+			"policy_ids": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "List of alarm policy IDs bound to the alarm notification template.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
-
-			"alarm_notice": {
+			"user_notices": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Alarm notification template list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": {
+						"receiver_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Alarm notification template name.",
+							Description: "Recipient Type USER=User GROUP=User Group.",
 						},
-						"updated_at": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Last modified time.",
-						},
-						"updated_by": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Last Modified By.",
-						},
-						"notice_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Alarm notification type ALARM=Notification not restored OK=Notification restored ALL.",
-						},
-						"user_notices": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: "Alarm notification template list.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"receiver_type": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "Recipient Type USER=User GROUP=User Group.",
-									},
-									"start_time": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
-									},
-									"end_time": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
-									},
-									"notice_way": {
-										Type:        schema.TypeSet,
-										Optional:    true,
-										Description: "Notification Channel List EMAIL=Mail SMS=SMS CALL=Telephone WECHAT=WeChat RTX=Enterprise WeChat.",
-										Elem:        &schema.Schema{Type: schema.TypeString},
-									},
-								},
-							},
-						},
-						"is_preset": {
+						"start_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Default:     1,
-							Description: "Whether it is the system default notification template 0=No 1=Yes.",
+							Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
 						},
-						"policy_ids": {
+						"end_time": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The number of seconds since the notification start time 00:00:00 (value range 0-86399).",
+						},
+						"notice_way": {
 							Type:        schema.TypeSet,
 							Optional:    true,
-							Description: "List of alarm policy IDs bound to the alarm notification template.",
+							Description: "Notification Channel List EMAIL=Mail SMS=SMS CALL=Telephone WECHAT=WeChat RTX=Enterprise WeChat.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 					},
@@ -165,12 +138,10 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_alarm_notice.read")()
-	defer inconsistentCheck(d, meta)()
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		err            error
-		alarmNotices   []interface{}
 		alarmNotice    []*monitor.AlarmNotice
 	)
 
@@ -184,13 +155,26 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	for _, noticesItem := range alarmNotice {
-		noticesItemMap := map[string]interface{}{
-			"name":        noticesItem.Name,
-			"updated_at":  noticesItem.UpdatedAt,
-			"updated_by":  noticesItem.UpdatedBy,
-			"notice_type": noticesItem.NoticeType,
-			"is_preset":   noticesItem.IsPreset,
-			"policy_ids":  noticesItem.PolicyIds,
+		if err = d.Set("name", noticesItem.Name); err != nil {
+			return err
+		}
+		if err = d.Set("notice_type", noticesItem.NoticeType); err != nil {
+			return err
+		}
+		if err = d.Set("notice_language", noticesItem.NoticeLanguage); err != nil {
+			return err
+		}
+		if err = d.Set("updated_by", noticesItem.UpdatedBy); err != nil {
+			return err
+		}
+		if err = d.Set("updated_at", noticesItem.UpdatedAt); err != nil {
+			return err
+		}
+		if err = d.Set("is_preset", noticesItem.IsPreset); err != nil {
+			return err
+		}
+		if err = d.Set("policy_ids", noticesItem.PolicyIds); err != nil {
+			return err
 		}
 
 		userNoticesItems := make([]interface{}, 0, 100)
@@ -202,12 +186,9 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 				"notice_way":    userNotices.NoticeWay,
 			})
 		}
-		noticesItemMap["user_notices"] = userNoticesItems
-		alarmNotices = append(alarmNotices, noticesItemMap)
-	}
-
-	if err = d.Set("alarm_notice", alarmNotices); err != nil {
-		return err
+		if err = d.Set("user_notices", userNoticesItems); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -237,6 +218,8 @@ func resourceTencentMonitorAlarmNoticeUpdate(d *schema.ResourceData, meta interf
 	}); err != nil {
 		return err
 	}
+
+	d.SetId(d.Id())
 
 	return resourceTencentMonitorAlarmNoticeRead(d, meta)
 }

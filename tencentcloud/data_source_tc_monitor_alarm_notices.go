@@ -74,7 +74,7 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 
 			"alarm_notice": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Computed:    true,
 				Description: "Alarm notification template list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
