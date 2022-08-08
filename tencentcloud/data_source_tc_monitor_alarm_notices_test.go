@@ -25,9 +25,6 @@ func TestAccAlarmNoticesDatasourceBasic(t *testing.T) {
 
 func testAccDataSourceAlarmNotices() string {
 	return `data "tencentcloud_monitor_alarm_notices" "notices" {
-  module     = "monitor"
-  pagenumber = 1
-  pagesize   = 20
   order      = "DESC"
 }`
 }
