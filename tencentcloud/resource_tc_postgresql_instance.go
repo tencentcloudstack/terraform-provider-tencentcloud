@@ -758,7 +758,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return outErr
 		}
 		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, true)
 		if checkErr != nil {
 			return checkErr
 		}

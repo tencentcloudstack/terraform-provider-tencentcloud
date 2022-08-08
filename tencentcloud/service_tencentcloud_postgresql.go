@@ -534,19 +534,29 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 	return err
 }
 
-func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string) error {
+func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string, waitForStatusDelay ...bool) error {
+
+	var started = true
+	if len(waitForStatusDelay) > 0 && waitForStatusDelay[0] {
+		started = false
+	}
 	// check status
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return retryError(err)
-		} else if has && *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
-			return nil
-		} else if !has {
-			return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail", instanceId))
-		} else {
-			return resource.RetryableError(fmt.Errorf("checking postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 		}
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail", instanceId))
+		}
+		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
+			if !started {
+				return resource.RetryableError(fmt.Errorf("waiting for upgrading start"))
+			}
+			return nil
+		}
+		started = true
+		return resource.RetryableError(fmt.Errorf("checking postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 	})
 
 	return err
