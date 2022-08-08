@@ -24,7 +24,6 @@ func TestAccTencentCloudMonitorAlarmNoticeResource(t *testing.T) {
 
 const testAccMonitorAlarmNotice string = `
 resource "tencentcloud_monitor_alarm_notice" "example" {
-  module                = "monitor"
   name                  = "test_alarm_notice_123"
   notice_type           = "ALL"
   notice_language       = "zh-CN"
