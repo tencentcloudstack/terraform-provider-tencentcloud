@@ -663,6 +663,9 @@ TEM
 Teo
   Resource
 	tencentcloud_teo_zone
+	tencentcloud_teo_dns_record
+	tencentcloud_teo_load_balancing
+	tencentcloud_teo_origin_group
 
 */
 package tencentcloud
@@ -1181,7 +1184,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
-<<<<<<< HEAD
 			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
 			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
@@ -1189,9 +1191,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
-=======
 			"tencentcloud_teo_zone":                                resourceTencentCloudTeoZone(),
->>>>>>> dcc0f574 (support teo)
+			"tencentcloud_teo_dns_record":                          resourceTencentCloudTeoDnsRecord(),
+			"tencentcloud_teo_load_balancing":                      resourceTencentCloudTeoLoadBalancing(),
+			"tencentcloud_teo_origin_group":                        resourceTencentCloudTeoOriginGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,
