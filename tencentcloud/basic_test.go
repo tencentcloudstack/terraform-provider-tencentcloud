@@ -95,6 +95,13 @@ const (
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
 )
 
+// Project
+const defaultProjectVariable = `
+variable "default_project" {
+  default = ` + defaultProjectId + `
+}
+`
+
 // EMR
 const (
 	defaultEMRVpcId    = defaultVpcId
@@ -642,7 +649,7 @@ variable "tke_cidr_c" {
 
 const TkeDefaultNodeInstanceVar = `
 variable "ins_type" {
-  default = "S5.MEDIUM4"
+  default = "SA2.LARGE8"
 }
 `
 
