@@ -660,6 +660,26 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	return
 }
 
+func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId string) error {
+	return resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		_, workers, err := me.DescribeClusterInstances(ctx, clusterId)
+		if err != nil {
+			return retryError(err)
+		}
+		if len(workers) == 0 {
+			return nil
+		}
+
+		for i := range workers {
+			worker := workers[i]
+			if worker.InstanceState == "running" {
+				return nil
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("cluster %s waiting for one of the workers ready", clusterId))
+	})
+}
+
 /*
 	if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
 */

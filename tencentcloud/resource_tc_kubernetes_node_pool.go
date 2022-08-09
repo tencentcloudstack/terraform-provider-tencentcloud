@@ -1064,21 +1064,6 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 
-	// asg node unschedulable
-	clusterAsg, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, *nodePool.AutoscalingGroupId)
-
-	if err != nil {
-		return err
-	}
-
-	unschedulable := 0
-	if clusterAsg != nil {
-		if clusterAsg.IsUnschedulable != nil && *clusterAsg.IsUnschedulable {
-			unschedulable = 1
-		}
-	}
-	_ = d.Set("unschedulable", unschedulable)
-
 	// Relative scaling group status
 	asg, hasAsg, err := asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
 	if err != nil {
