@@ -26,38 +26,6 @@ type TdmqService struct {
 
 // ////////api
 // tdmq instance
-func (me *TdmqService) CreateTdmqInstance(ctx context.Context, clusterName string, bindClusterId uint64,
-	remark string) (clusterId string, errRet error) {
-	logId := getLogId(ctx)
-	request := tdmq.NewCreateClusterRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	request.ClusterName = &clusterName
-	request.BindClusterId = &bindClusterId
-	request.Remark = &remark
-
-	var response *tdmq.CreateClusterResponse
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseTdmqClient().CreateCluster(request)
-		if err != nil {
-			return retryError(err)
-		}
-		response = result
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s create tdmq failed, reason: %v", logId, err)
-		errRet = err
-		return
-	}
-	clusterId = *response.Response.ClusterId
-	return
-}
 
 func (me *TdmqService) DescribeTdmqInstanceById(ctx context.Context,
 	clusterId string) (info *tdmq.Cluster, has bool, errRet error) {
@@ -132,17 +100,13 @@ func (me *TdmqService) DeleteTdmqInstance(ctx context.Context, clusterId string)
 		}
 	}()
 	request.ClusterId = &clusterId
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err := me.client.UseTdmqClient().DeleteCluster(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s delete tdmq failed, reason: %v", logId, err)
+	response, err := me.client.UseTdmqClient().DeleteCluster(request)
+	if err != nil {
+		errRet = err
 		return err
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }
 

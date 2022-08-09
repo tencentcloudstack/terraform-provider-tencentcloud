@@ -7,6 +7,9 @@ Example Usage
 resource "tencentcloud_tdmq_instance" "foo" {
   cluster_name = "example"
   remark = "this is description."
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -23,10 +26,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudTdmqInstance() *schema.Resource {
@@ -55,6 +60,11 @@ func resourceTencentCloudTdmqInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Description of the tdmq cluster.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -65,30 +75,50 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	var (
-		clusterName   string
-		bindClusterId uint64
-		remark        string
+		request  = tdmq.NewCreateClusterRequest()
+		response *tdmq.CreateClusterResponse
 	)
-	if temp, ok := d.GetOk("cluster_name"); ok {
-		clusterName = temp.(string)
-		if len(clusterName) < 1 {
-			return fmt.Errorf("cluster_name should be not empty string")
+	if v, ok := d.GetOk("cluster_name"); ok {
+		request.ClusterName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("bind_cluster_id"); ok {
+		request.BindClusterId = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateCluster(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create cls logset failed, reason:%+v", logId, err)
+		return err
+	}
+
+	clusterId := *response.Response.ClusterId
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
 		}
 	}
 
-	bindClusterId = uint64(d.Get("bind_cluster_id").(int))
-
-	if temp, ok := d.GetOk("remark"); ok {
-		remark = temp.(string)
-	}
-
-	clusterId, err := tdmqService.CreateTdmqInstance(ctx, clusterName, bindClusterId, remark)
-	if err != nil {
-		return err
-	}
 	d.SetId(clusterId)
 
 	return resourceTencentCloudTdmqRead(d, meta)
@@ -122,6 +152,15 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 	if err != nil {
 		return err
 	}
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "tdmq", "cluster", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -153,15 +192,20 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		remark = old.(string)
 	}
 
-	d.Partial(true)
-
 	if err := service.ModifyTdmqInstanceAttribute(ctx, id, clusterName, remark); err != nil {
 		return err
 	}
-	d.SetPartial("cluster_name")
-	d.SetPartial("remark")
 
-	d.Partial(false)
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tdmq", "cluster", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudTdmqRead(d, meta)
 }
 
@@ -172,18 +216,11 @@ func resourceTencentCloudTdmqDelete(d *schema.ResourceData, meta interface{}) er
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	clusterId := d.Id()
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err := service.DeleteTdmqInstance(ctx, d.Id()); err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == VPCNotFound {
-					return nil
-				}
-			}
-			return resource.RetryableError(err)
-		}
-		return nil
-	})
+	if err := service.DeleteTdmqInstance(ctx, clusterId); err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
