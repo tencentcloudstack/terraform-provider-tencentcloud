@@ -257,6 +257,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "https"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_status_code", "302"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.tls_versions.0", "TLSv1"),
 				),
 			},
 			{
@@ -294,6 +295,7 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_type", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.force_redirect.0.redirect_status_code", "302"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.tls_versions.#", "2"),
 				),
 			},
 			{
@@ -1063,6 +1065,7 @@ resource "tencentcloud_cdn_domain" "foo" {
       certificate_id = local.certId
       message = "test"
     }
+	tls_versions = ["TLSv1"]
   }
 
   tags = {
@@ -1118,6 +1121,7 @@ resource "tencentcloud_cdn_domain" "foo" {
       certificate_id = local.certId
       message = "test"
     }
+	tls_versions = ["TLSv1", "TLSv1.1"]
   }
 
   tags = {

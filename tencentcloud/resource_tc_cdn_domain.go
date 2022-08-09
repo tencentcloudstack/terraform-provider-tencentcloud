@@ -408,6 +408,13 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 								},
 							},
 						},
+						"tls_versions": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Tls version settings, only support some Advanced domain names, support settings TLSv1, TLSV1.1, TLSV1.2, TLSv1.3, when modifying must open consecutive versions.",
+						},
 					},
 				},
 			},
@@ -1828,6 +1835,9 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 					request.ForceRedirect = &redirect
 				}
 			}
+			if v, ok := config["tls_versions"]; ok {
+				request.Https.TlsVersion = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
 		}
 	}
 
@@ -2487,6 +2497,13 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			},
 		}
 	}
+	if len(domainConfig.Https.TlsVersion) > 0 {
+		tlsVersions := make([]string, 0)
+		for _, tlsVersionItem := range domainConfig.Https.TlsVersion {
+			tlsVersions = append(tlsVersions, *tlsVersionItem)
+		}
+		httpsConfig["tls_versions"] = tlsVersions
+	}
 	httpsConfigs = append(httpsConfigs, httpsConfig)
 	_ = d.Set("https_config", httpsConfigs)
 
@@ -3052,6 +3069,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 					}
 					request.ForceRedirect = &redirect
 				}
+			}
+			if v, ok := config["tls_versions"]; ok {
+				request.Https.TlsVersion = helper.InterfacesStringsPoint(v.([]interface{}))
 			}
 		}
 	}
