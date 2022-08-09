@@ -127,6 +127,7 @@ Auto Scaling(AS)
 Content Delivery Network(CDN)
   Data Source
     tencentcloud_cdn_domains
+    tencentcloud_cdn_domain_verifier
 
   Resource
 	tencentcloud_cdn_domain
@@ -875,6 +876,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_saml_providers":                       dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_user_info":                                datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                              dataSourceTencentCloudCdnDomains(),
+			"tencentcloud_cdn_domain_verifier":                      dataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                            dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                           dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                                 dataSourceTencentCloudScfLogs(),

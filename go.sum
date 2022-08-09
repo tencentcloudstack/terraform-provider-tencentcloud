@@ -462,8 +462,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199 h1:MkIdFgE
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199/go.mod h1:PTp058qpOV//RukBVdYQT962rZg71lIt6eHLK1zdvEc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409 h1:fKFSxvMzS8T+z2z2qm67dgTClnkryeVTykclVkHh3qE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409/go.mod h1:q89YBv3T1bzENpcovtwnjxfVn9vx9pCYAssp0HPuivU=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.425 h1:Oarla/dwb+hB0Caz4z3MMRRgVwconi/kV7qCbRk86bg=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.425/go.mod h1:ZIoqtsL6fBOUBIsUKPgbu3tbpKGd0GJ3boKlNwpRjpE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.466 h1:64xA7zyG0jrtBE63cqjALXiRRzAQIE719kZUsp79018=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.466/go.mod h1:mESUvfIm3Ze/Ov8C45E3yh2EtjudAxvprGaxNjWUliA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199 h1:VyOKZOlgTXW0szboWhI1N35khPsaHE4CyH9pf42o7P8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199/go.mod h1:9ldm0D1ToaztnlD2bFC5yjMMqvQfVeAMhvcoCCVnZb8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403 h1:rD9H4dQkULnRpq1BiD2KuDKsd9VEKHun2gMT+V6DNOE=
@@ -488,12 +488,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.409/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.412/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.413/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.414/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.425/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.438/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.443/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.445/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.470 h1:mzWxkpEvDr3QaxLuSJMsKMFXitiQh5k2vVyLrf9nVcM=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.470/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.466/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.472 h1:kQxDatbhm8AbZebhnP7xgBBsXHqt3WfGfIPxE9Qmdmk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.472/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445 h1:Bh7XD0ypNMHYyBOM8hhKsSu+y0VVKUnJVS+YKKhfpGg=
@@ -547,8 +545,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267 h1:Aqnh1ed
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267/go.mod h1:SEUO10oGtg+4AGCfpJDn9ynf47P+ZiyvhzOyXLt0mOY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268 h1:ez5lvKQVWGQV90BV3m9SeFODaoDbrtkMzw2S0DRMncA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268/go.mod h1:fchXZhmqaYaG2c4wTCBTdnW6TFAtxl3D/P/yuuuLMfA=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.470 h1:BKhlhypbdycSXlt1WxJ67SFjMFqhPwYUIeQIVDpM+uw=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.470/go.mod h1:PWJnwsvanCABRxRdw2mnuGbM5WkSqZtxU2fSucp0ZLU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472 h1:9Jzrgx78+5XnZ8myNYjCYZn5ZF+tbSIpF6KWGgWr0uY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472/go.mod h1:ayIL2FNqk7HH5fPQrkWtYjgU4jL7if63f7x+yRwb4a0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.438 h1:pVN2u4lXOaz+A79IeBPnyDYwW3Z2unCi6rxCW2O7LPo=
