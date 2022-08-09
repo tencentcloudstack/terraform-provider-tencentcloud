@@ -6,6 +6,7 @@ import (
 
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -46,6 +47,7 @@ func (me *TemService) DeleteTemApplicationById(ctx context.Context, applicationI
 
 	request := tem.NewDeleteApplicationRequest()
 	request.ApplicationId = &applicationId
+	request.EnvironmentId = helper.String("")
 
 	defer func() {
 		if errRet != nil {

@@ -127,6 +127,8 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 		request.RepoName = helper.String(v.(string))
 	}
 
+	request.DeployMode = helper.String("IMAGE")
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().CreateApplication(request)
 		if e != nil {
@@ -163,6 +165,10 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 
 	applications, err := service.DescribeTemApplication(ctx, applicationId)
 
+	if len(applications.Result.Records) != 1 {
+		d.SetId("")
+		return nil
+	}
 	application := applications.Result.Records[0]
 
 	if err != nil {
