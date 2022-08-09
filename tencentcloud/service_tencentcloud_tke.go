@@ -660,13 +660,16 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	return
 }
 
-func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId string) error {
+func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId string, mustHaveWorkers bool) error {
 	return resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
 		_, workers, err := me.DescribeClusterInstances(ctx, clusterId)
 		if err != nil {
 			return retryError(err)
 		}
 		if len(workers) == 0 {
+			if mustHaveWorkers {
+				return resource.RetryableError(fmt.Errorf("waiting for workers created"))
+			}
 			return nil
 		}
 
