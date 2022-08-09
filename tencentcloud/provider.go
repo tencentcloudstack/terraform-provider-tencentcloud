@@ -643,6 +643,10 @@ Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
 
+TEM
+  Resource
+	tencentcloud_tem_application
+
 */
 package tencentcloud
 
@@ -1152,6 +1156,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
 		},
 
 		ConfigureFunc: providerConfigure,
