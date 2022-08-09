@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -534,14 +535,15 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 	return err
 }
 
-func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string, waitForStatusDelay ...bool) error {
+func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string, retryMinutes ...int) error {
 
-	var started = true
-	if len(waitForStatusDelay) > 0 && waitForStatusDelay[0] {
-		started = false
+	var timeout = 2 * readRetryTimeout
+	if len(retryMinutes) > 0 && retryMinutes[0] > 0 {
+		times := retryMinutes[0]
+		timeout = time.Minute * time.Duration(times)
 	}
 	// check status
-	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return retryError(err)
@@ -550,12 +552,8 @@ func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instance
 			return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail", instanceId))
 		}
 		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
-			if !started {
-				return resource.RetryableError(fmt.Errorf("waiting for upgrading start"))
-			}
 			return nil
 		}
-		started = true
 		return resource.RetryableError(fmt.Errorf("checking postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 	})
 
