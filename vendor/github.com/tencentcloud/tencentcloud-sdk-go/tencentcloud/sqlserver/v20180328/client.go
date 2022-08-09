@@ -546,6 +546,7 @@ func NewCreateBasicDBInstancesResponse() (response *CreateBasicDBInstancesRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_VPCERROR = "InternalError.VPCError"
@@ -567,6 +568,7 @@ func (c *Client) CreateBasicDBInstances(request *CreateBasicDBInstancesRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_VPCERROR = "InternalError.VPCError"
@@ -696,6 +698,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -718,6 +721,7 @@ func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -2424,6 +2428,7 @@ func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsRespon
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2441,6 +2446,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2486,6 +2492,7 @@ func NewDescribeMaintenanceSpanResponse() (response *DescribeMaintenanceSpanResp
 // 本接口（DescribeMaintenanceSpan）根据实例ID查询该实例的可维护时间窗。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2500,6 +2507,7 @@ func (c *Client) DescribeMaintenanceSpan(request *DescribeMaintenanceSpanRequest
 // 本接口（DescribeMaintenanceSpan）根据实例ID查询该实例的可维护时间窗。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3131,6 +3139,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 // 本接口 (DescribeRegions) 用于查询售卖地域信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -3145,6 +3154,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 // 本接口 (DescribeRegions) 用于查询售卖地域信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -3247,6 +3257,7 @@ func NewDescribeSlowlogsResponse() (response *DescribeSlowlogsResponse) {
 // 本接口（DescribeSlowlogs）用于获取慢查询日志文件信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_COSERROR = "InternalError.CosError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -3263,6 +3274,7 @@ func (c *Client) DescribeSlowlogs(request *DescribeSlowlogsRequest) (response *D
 // 本接口（DescribeSlowlogs）用于获取慢查询日志文件信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_COSERROR = "InternalError.CosError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -3558,6 +3570,7 @@ func NewInquiryPriceCreateDBInstancesResponse() (response *InquiryPriceCreateDBI
 // 本接口（InquiryPriceCreateDBInstances）用于查询申请实例价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3577,6 +3590,7 @@ func (c *Client) InquiryPriceCreateDBInstances(request *InquiryPriceCreateDBInst
 // 本接口（InquiryPriceCreateDBInstances）用于查询申请实例价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3966,6 +3980,7 @@ func NewModifyBackupNameResponse() (response *ModifyBackupNameResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_BACKUPNAMEISILLEGAL = "InvalidParameterValue.BackupNameIsIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
@@ -3982,6 +3997,7 @@ func (c *Client) ModifyBackupName(request *ModifyBackupNameRequest) (response *M
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_BACKUPNAMEISILLEGAL = "InvalidParameterValue.BackupNameIsIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
@@ -4028,6 +4044,7 @@ func NewModifyBackupStrategyResponse() (response *ModifyBackupStrategyResponse) 
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupStrategy(request *ModifyBackupStrategyRequest) (response *ModifyBackupStrategyResponse, err error) {
     return c.ModifyBackupStrategyWithContext(context.Background(), request)
@@ -4042,6 +4059,7 @@ func (c *Client) ModifyBackupStrategy(request *ModifyBackupStrategyRequest) (res
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupStrategyWithContext(ctx context.Context, request *ModifyBackupStrategyRequest) (response *ModifyBackupStrategyResponse, err error) {
     if request == nil {
@@ -4157,6 +4175,7 @@ func NewModifyDBInstanceNetworkResponse() (response *ModifyDBInstanceNetworkResp
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -4187,6 +4206,7 @@ func (c *Client) ModifyDBInstanceNetwork(request *ModifyDBInstanceNetworkRequest
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -5274,6 +5294,7 @@ func NewRemoveBackupsResponse() (response *RemoveBackupsResponse) {
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 func (c *Client) RemoveBackups(request *RemoveBackupsRequest) (response *RemoveBackupsResponse, err error) {
     return c.RemoveBackupsWithContext(context.Background(), request)
 }
@@ -5287,6 +5308,7 @@ func (c *Client) RemoveBackups(request *RemoveBackupsRequest) (response *RemoveB
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 func (c *Client) RemoveBackupsWithContext(ctx context.Context, request *RemoveBackupsRequest) (response *RemoveBackupsResponse, err error) {
     if request == nil {
         request = NewRemoveBackupsRequest()
@@ -5639,6 +5661,7 @@ func NewRollbackInstanceResponse() (response *RollbackInstanceResponse) {
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RollbackInstance(request *RollbackInstanceRequest) (response *RollbackInstanceResponse, err error) {
@@ -5655,6 +5678,7 @@ func (c *Client) RollbackInstance(request *RollbackInstanceRequest) (response *R
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RollbackInstanceWithContext(ctx context.Context, request *RollbackInstanceRequest) (response *RollbackInstanceResponse, err error) {

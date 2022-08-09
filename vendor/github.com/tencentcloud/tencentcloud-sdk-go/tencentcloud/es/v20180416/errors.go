@@ -50,7 +50,7 @@ const (
 	// 不支持在滚动重启扩容计算资源同时扩容磁盘数量。
 	FAILEDOPERATION_UNSUPPORTRESETNODETYPEANDSCALEOUTDISK = "FailedOperation.UnsupportResetNodeTypeAndScaleoutDisk"
 
-	// 不支持滚动缩容计算资源同时修改磁盘大小。
+	// 不支持在滚动重启缩容计算资源同时修改磁盘大小
 	FAILEDOPERATION_UNSUPPORTRESETSCALEDOWNANDMODIFYDISK = "FailedOperation.UnsupportResetScaledownAndModifyDisk"
 
 	// 不支持反向调节节点配置和磁盘容量。
@@ -61,6 +61,15 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"

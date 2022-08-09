@@ -940,6 +940,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),
 			"tencentcloud_placement_group":                         resourceTencentCloudPlacementGroup(),
+			"tencentcloud_cbs_copy_snapshot_cross_regions":         resourceTencentCloudCbsCopySnapshotCrossRegions(),
 			"tencentcloud_cbs_snapshot":                            resourceTencentCloudCbsSnapshot(),
 			"tencentcloud_cbs_snapshot_policy":                     resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                             resourceTencentCloudCbsStorage(),

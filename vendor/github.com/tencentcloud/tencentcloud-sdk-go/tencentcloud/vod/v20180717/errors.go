@@ -35,6 +35,9 @@ const (
 	// 操作失败：不支持的封面类型。
 	FAILEDOPERATION_COVERTYPE = "FailedOperation.CoverType"
 
+	// 域名部署中，不能变更配置。
+	FAILEDOPERATION_DOMAINDEPLOYING = "FailedOperation.DomainDeploying"
+
 	// 用户账户异常。
 	FAILEDOPERATION_INVALIDACCOUNT = "FailedOperation.InvalidAccount"
 
@@ -173,7 +176,7 @@ const (
 	// 参数值错误：裁剪时间段太长。
 	INVALIDPARAMETERVALUE_CLIPDURATION = "InvalidParameterValue.ClipDuration"
 
-	// 无效的音频/视频编编码格式。
+	// 无效的音频/视频编码格式。
 	INVALIDPARAMETERVALUE_CODEC = "InvalidParameterValue.Codec"
 
 	// 参数值错误：ColumnCount。
@@ -238,6 +241,9 @@ const (
 
 	// 参数错误：不存在的域名。
 	INVALIDPARAMETERVALUE_DOMAINNAME = "InvalidParameterValue.DomainName"
+
+	// 恶意域名，无法添加。
+	INVALIDPARAMETERVALUE_DOMAINNAMEINBLACKLIST = "InvalidParameterValue.DomainNameInBlackList"
 
 	// 参数值，域名列表太大。
 	INVALIDPARAMETERVALUE_DOMAINNAMES = "InvalidParameterValue.DomainNames"
@@ -326,6 +332,9 @@ const (
 	// 参数错误：图片水印模板。
 	INVALIDPARAMETERVALUE_IMAGETEMPLATE = "InvalidParameterValue.ImageTemplate"
 
+	// 参数值错误：Interval 无效。
+	INVALIDPARAMETERVALUE_INTERVAL = "InvalidParameterValue.Interval"
+
 	// 参数错误：无效的操作类型。
 	INVALIDPARAMETERVALUE_INVALIDOPERATIONTYPE = "InvalidParameterValue.InvalidOperationType"
 
@@ -368,6 +377,9 @@ const (
 	// Names数组中元素过多。
 	INVALIDPARAMETERVALUE_NAMES = "InvalidParameterValue.Names"
 
+	// 参数错误：文件不支持解冻。
+	INVALIDPARAMETERVALUE_NOTRESTORABLE = "InvalidParameterValue.NotRestorable"
+
 	// 参数值错误：物体库参数非法。
 	INVALIDPARAMETERVALUE_OBJECTLIBRARY = "InvalidParameterValue.ObjectLibrary"
 
@@ -379,6 +391,9 @@ const (
 
 	// 参数值错误：Operation 无效。
 	INVALIDPARAMETERVALUE_OPERATION = "InvalidParameterValue.Operation"
+
+	// 参数值错误：文件原存储类型异常。
+	INVALIDPARAMETERVALUE_ORIGINALSTORAGECLASS = "InvalidParameterValue.OriginalStorageClass"
 
 	// 参数值错误：ParentId 无效。
 	INVALIDPARAMETERVALUE_PARENTID = "InvalidParameterValue.ParentId"
@@ -406,6 +421,12 @@ const (
 
 	// 无效的ResolutionAdaptive。
 	INVALIDPARAMETERVALUE_RESOLUTIONADAPTIVE = "InvalidParameterValue.ResolutionAdaptive"
+
+	// 参数错误：解冻天数错误。
+	INVALIDPARAMETERVALUE_RESTOREDAY = "InvalidParameterValue.RestoreDay"
+
+	// 参数错误：不支持的解冻模式。
+	INVALIDPARAMETERVALUE_RESTORETIER = "InvalidParameterValue.RestoreTier"
 
 	// 参数值错误：ReviewConfidence 参数取值非法。
 	INVALIDPARAMETERVALUE_REVIEWCONFIDENCE = "InvalidParameterValue.ReviewConfidence"
@@ -463,6 +484,9 @@ const (
 
 	// 参数值错误：人工确认结果取值非法。
 	INVALIDPARAMETERVALUE_STATUS = "InvalidParameterValue.Status"
+
+	// 参数值错误：目标存储类型不在可选值中。
+	INVALIDPARAMETERVALUE_STORAGECLASS = "InvalidParameterValue.StorageClass"
 
 	// 参数值错误：存储地域。
 	INVALIDPARAMETERVALUE_STORAGEREGION = "InvalidParameterValue.StorageRegion"
@@ -536,6 +560,15 @@ const (
 	// 去重识别码一天内重复，请求被去重。
 	INVALIDPARAMETERVALUE_UNIQUEIDENTIFIER = "InvalidParameterValue.UniqueIdentifier"
 
+	// 参数值错误：文件不支持该解冻方式。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDRESTORETIER = "InvalidParameterValue.UnsupportedRestoreTier"
+
+	// 参数值错误：不支持的目标存储类型，深度归档只支持部分园区。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDSTORAGECLASS = "InvalidParameterValue.UnsupportedStorageClass"
+
+	// 参数值错误：不支持的存储类型转换。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDTRANSITION = "InvalidParameterValue.UnsupportedTransition"
+
 	// 参数错误：无效的Url。
 	INVALIDPARAMETERVALUE_URL = "InvalidParameterValue.Url"
 
@@ -581,6 +614,9 @@ const (
 	// 超过限制值：模板数超限。
 	LIMITEXCEEDED_TOOMUCHTEMPLATE = "LimitExceeded.TooMuchTemplate"
 
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
@@ -593,6 +629,9 @@ const (
 	// 资源不存在：人物。
 	RESOURCENOTFOUND_PERSON = "ResourceNotFound.Person"
 
+	// 没有开通服务。
+	RESOURCENOTFOUND_SERVICENOTEXIST = "ResourceNotFound.ServiceNotExist"
+
 	// 资源不存在：模板不存在。
 	RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
 
@@ -601,6 +640,9 @@ const (
 
 	// 资源不存在：关键词。
 	RESOURCENOTFOUND_WORD = "ResourceNotFound.Word"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
 	// 参数错误：不支持MasterPlaylist的M3u8。
 	RESOURCEUNAVAILABLE_MASTERPLAYLIST = "ResourceUnavailable.MasterPlaylist"

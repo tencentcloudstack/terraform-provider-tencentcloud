@@ -20,10 +20,83 @@ import (
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
+// Predefined struct for user
+type DescribeProductsRequestParams struct {
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+type DescribeProductsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *DescribeProductsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProductsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProductsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeProductsResponseParams struct {
+	// 产品详细信息列表。
+	Products []*RegionProduct `json:"Products,omitempty" name:"Products"`
+
+	// 产品总数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeProductsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeProductsResponseParams `json:"Response"`
+}
+
+func (r *DescribeProductsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProductsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeRegionsRequestParams struct {
+	// 待查询产品的名称，例如cvm，具体取值请查询DescribeProducts接口
+	Product *string `json:"Product,omitempty" name:"Product"`
+}
+
 type DescribeRegionsRequest struct {
 	*tchttp.BaseRequest
-
-	// 待查询产品的名称，例如cvm、vpc
+	
+	// 待查询产品的名称，例如cvm，具体取值请查询DescribeProducts接口
 	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
@@ -46,19 +119,21 @@ func (r *DescribeRegionsRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeRegionsResponseParams struct {
+	// 地域数量
+	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 地域列表信息
+	RegionSet []*RegionInfo `json:"RegionSet,omitempty" name:"RegionSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeRegionsResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 地域数量
-		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
-
-		// 地域列表信息
-		RegionSet []*RegionInfo `json:"RegionSet,omitempty" name:"RegionSet"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeRegionsResponseParams `json:"Response"`
 }
 
 func (r *DescribeRegionsResponse) ToJsonString() string {
@@ -72,10 +147,16 @@ func (r *DescribeRegionsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeZonesRequestParams struct {
+	// 待查询产品的名称，例如cvm，具体取值请查询DescribeProducts接口
+	Product *string `json:"Product,omitempty" name:"Product"`
+}
+
 type DescribeZonesRequest struct {
 	*tchttp.BaseRequest
-
-	// 待查询产品的名称，例如cvm、vpc
+	
+	// 待查询产品的名称，例如cvm，具体取值请查询DescribeProducts接口
 	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
@@ -98,19 +179,21 @@ func (r *DescribeZonesRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeZonesResponseParams struct {
+	// 可用区数量。
+	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 可用区列表信息。
+	ZoneSet []*ZoneInfo `json:"ZoneSet,omitempty" name:"ZoneSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeZonesResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 可用区数量。
-		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
-
-		// 可用区列表信息。
-		ZoneSet []*ZoneInfo `json:"ZoneSet,omitempty" name:"ZoneSet"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeZonesResponseParams `json:"Response"`
 }
 
 func (r *DescribeZonesResponse) ToJsonString() string {
@@ -125,7 +208,6 @@ func (r *DescribeZonesResponse) FromJsonString(s string) error {
 }
 
 type RegionInfo struct {
-
 	// 地域名称，例如，ap-guangzhou
 	Region *string `json:"Region,omitempty" name:"Region"`
 
@@ -136,8 +218,12 @@ type RegionInfo struct {
 	RegionState *string `json:"RegionState,omitempty" name:"RegionState"`
 }
 
-type ZoneInfo struct {
+type RegionProduct struct {
+	// 产品名称，如cvm
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
 
+type ZoneInfo struct {
 	// 可用区名称，例如，ap-guangzhou-3
 	// 全网可用区名称如下：
 	// <li> ap-chongqing-1 </li>

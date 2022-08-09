@@ -29,6 +29,12 @@ const (
 	// 解密失败。
 	FAILEDOPERATION_DECRYPTERROR = "FailedOperation.DecryptError"
 
+	// 加密操作失败。
+	FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+
+	// 标签服务错误。
+	FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -55,6 +61,9 @@ const (
 
 	// 密文格式错误。
 	INVALIDPARAMETERVALUE_INVALIDCIPHERTEXT = "InvalidParameterValue.InvalidCiphertext"
+
+	// 无效的 HSM 集群 ID。
+	INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
 
 	// KeyId不合法。
 	INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
@@ -86,6 +95,9 @@ const (
 	// 创建的密钥个数超过限制。
 	LIMITEXCEEDED_KEYLIMITEXCEEDED = "LimitExceeded.KeyLimitExceeded"
 
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
@@ -112,6 +124,9 @@ const (
 
 	// 密钥已被禁用。
 	RESOURCEUNAVAILABLE_KEYDISABLED = "ResourceUnavailable.KeyDisabled"
+
+	// 不可用密钥：密钥待删除。
+	RESOURCEUNAVAILABLE_KEYPENDINGDELETE = "ResourceUnavailable.KeyPendingDelete"
 
 	// 白盒密钥服务尚未开通。
 	RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"

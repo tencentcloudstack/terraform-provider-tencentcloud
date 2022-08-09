@@ -15,6 +15,8 @@
 package v20201106
 
 import (
+    "context"
+    "errors"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -43,11 +45,54 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewDescribeProductsRequest() (request *DescribeProductsRequest) {
+    request = &DescribeProductsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("api", APIVersion, "DescribeProducts")
+    
+    
+    return
+}
+
+func NewDescribeProductsResponse() (response *DescribeProductsResponse) {
+    response = &DescribeProductsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeProducts
+// 本接口(DescribeProducts)用于查询各个支持地域列表查询的产品信息。
+func (c *Client) DescribeProducts(request *DescribeProductsRequest) (response *DescribeProductsResponse, err error) {
+    return c.DescribeProductsWithContext(context.Background(), request)
+}
+
+// DescribeProducts
+// 本接口(DescribeProducts)用于查询各个支持地域列表查询的产品信息。
+func (c *Client) DescribeProductsWithContext(ctx context.Context, request *DescribeProductsRequest) (response *DescribeProductsResponse, err error) {
+    if request == nil {
+        request = NewDescribeProductsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeProducts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeProductsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
     request = &DescribeRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("api", APIVersion, "DescribeRegions")
+    
+    
     return
 }
 
@@ -59,15 +104,32 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 }
 
 // DescribeRegions
-// 本接口(DescribeRegions)用于查询各个产品支持地域信息，当前只支持cvm。
+// 本接口(DescribeRegions)用于查询各个产品支持地域信息。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
+    return c.DescribeRegionsWithContext(context.Background(), request)
+}
+
+// DescribeRegions
+// 本接口(DescribeRegions)用于查询各个产品支持地域信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRegions require credential")
+    }
+
+    request.SetContext(ctx)
+    
     response = NewDescribeRegionsResponse()
     err = c.Send(request, response)
     return
@@ -78,6 +140,8 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
         BaseRequest: &tchttp.BaseRequest{},
     }
     request.Init().WithApiInfo("api", APIVersion, "DescribeZones")
+    
+    
     return
 }
 
@@ -89,14 +153,32 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 }
 
 // DescribeZones
-// 本接口(DescribeZones)用于查询产品可用区信息，当前只支持cvm。
+// 本接口(DescribeZones)用于查询产品可用区信息。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
+    return c.DescribeZonesWithContext(context.Background(), request)
+}
+
+// DescribeZones
+// 本接口(DescribeZones)用于查询产品可用区信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeZonesWithContext(ctx context.Context, request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
     if request == nil {
         request = NewDescribeZonesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeZones require credential")
+    }
+
+    request.SetContext(ctx)
+    
     response = NewDescribeZonesResponse()
     err = c.Send(request, response)
     return

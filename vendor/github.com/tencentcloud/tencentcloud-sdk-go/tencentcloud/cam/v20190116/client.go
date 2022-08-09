@@ -631,6 +631,7 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 // 该接口（CreatePolicyVersion）用于新增策略版本，用户创建了一个策略版本之后可以方便的通过变更策略版本的方式来变更策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -652,6 +653,7 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -673,6 +675,7 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 // 该接口（CreatePolicyVersion）用于新增策略版本，用户创建了一个策略版本之后可以方便的通过变更策略版本的方式来变更策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -694,6 +697,7 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -1228,6 +1232,7 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
 // 本接口（DeletePolicyVersion）可用于删除一个策略的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1261,6 +1266,7 @@ func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (respo
 // 本接口（DeletePolicyVersion）可用于删除一个策略的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1327,6 +1333,7 @@ func NewDeleteRoleResponse() (response *DeleteRoleResponse) {
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) DeleteRole(request *DeleteRoleRequest) (response *DeleteRoleResponse, err error) {
     return c.DeleteRoleWithContext(context.Background(), request)
 }
@@ -1339,6 +1346,7 @@ func (c *Client) DeleteRole(request *DeleteRoleRequest) (response *DeleteRoleRes
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) DeleteRoleWithContext(ctx context.Context, request *DeleteRoleRequest) (response *DeleteRoleResponse, err error) {
     if request == nil {
         request = NewDeleteRoleRequest()
@@ -2929,6 +2937,7 @@ func NewListAccessKeysResponse() (response *ListAccessKeysResponse) {
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) ListAccessKeys(request *ListAccessKeysRequest) (response *ListAccessKeysResponse, err error) {
     return c.ListAccessKeysWithContext(context.Background(), request)
 }
@@ -2944,6 +2953,7 @@ func (c *Client) ListAccessKeys(request *ListAccessKeysRequest) (response *ListA
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) ListAccessKeysWithContext(ctx context.Context, request *ListAccessKeysRequest) (response *ListAccessKeysResponse, err error) {
     if request == nil {
         request = NewListAccessKeysRequest()
@@ -3279,10 +3289,7 @@ func NewListGroupsResponse() (response *ListGroupsResponse) {
 // 查询用户组列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_ENTITYFILTERERROR = "InvalidParameter.EntityFilterError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) ListGroups(request *ListGroupsRequest) (response *ListGroupsResponse, err error) {
     return c.ListGroupsWithContext(context.Background(), request)
 }
@@ -3291,10 +3298,7 @@ func (c *Client) ListGroups(request *ListGroupsRequest) (response *ListGroupsRes
 // 查询用户组列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_ENTITYFILTERERROR = "InvalidParameter.EntityFilterError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) ListGroupsWithContext(ctx context.Context, request *ListGroupsRequest) (response *ListGroupsResponse, err error) {
     if request == nil {
         request = NewListGroupsRequest()
@@ -3332,6 +3336,7 @@ func NewListGroupsForUserResponse() (response *ListGroupsForUserResponse) {
 // 列出用户关联的用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) ListGroupsForUser(request *ListGroupsForUserRequest) (response *ListGroupsForUserResponse, err error) {
     return c.ListGroupsForUserWithContext(context.Background(), request)
@@ -3341,6 +3346,7 @@ func (c *Client) ListGroupsForUser(request *ListGroupsForUserRequest) (response 
 // 列出用户关联的用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) ListGroupsForUserWithContext(ctx context.Context, request *ListGroupsForUserRequest) (response *ListGroupsForUserResponse, err error) {
     if request == nil {
@@ -3644,6 +3650,7 @@ func NewListUsersForGroupResponse() (response *ListUsersForGroupResponse) {
 // 查询用户组关联的用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListUsersForGroup(request *ListUsersForGroupRequest) (response *ListUsersForGroupResponse, err error) {
     return c.ListUsersForGroupWithContext(context.Background(), request)
@@ -3653,6 +3660,7 @@ func (c *Client) ListUsersForGroup(request *ListUsersForGroupRequest) (response 
 // 查询用户组关联的用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListUsersForGroupWithContext(ctx context.Context, request *ListUsersForGroupRequest) (response *ListUsersForGroupResponse, err error) {
     if request == nil {
@@ -3691,6 +3699,7 @@ func NewListWeChatWorkSubAccountsResponse() (response *ListWeChatWorkSubAccounts
 // 获取企业微信子用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListWeChatWorkSubAccounts(request *ListWeChatWorkSubAccountsRequest) (response *ListWeChatWorkSubAccountsResponse, err error) {
     return c.ListWeChatWorkSubAccountsWithContext(context.Background(), request)
@@ -3700,6 +3709,7 @@ func (c *Client) ListWeChatWorkSubAccounts(request *ListWeChatWorkSubAccountsReq
 // 获取企业微信子用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListWeChatWorkSubAccountsWithContext(ctx context.Context, request *ListWeChatWorkSubAccountsRequest) (response *ListWeChatWorkSubAccountsResponse, err error) {
     if request == nil {
@@ -4098,6 +4108,7 @@ func NewTagRoleResponse() (response *TagRoleResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
 //  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
 //  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
@@ -4114,6 +4125,7 @@ func (c *Client) TagRole(request *TagRoleRequest) (response *TagRoleResponse, er
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
 //  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
 //  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
@@ -4303,6 +4315,7 @@ func NewUpdateGroupResponse() (response *UpdateGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) UpdateGroup(request *UpdateGroupRequest) (response *UpdateGroupResponse, err error) {
     return c.UpdateGroupWithContext(context.Background(), request)
@@ -4315,6 +4328,7 @@ func (c *Client) UpdateGroup(request *UpdateGroupRequest) (response *UpdateGroup
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGroupRequest) (response *UpdateGroupResponse, err error) {
     if request == nil {
@@ -4353,6 +4367,7 @@ func NewUpdateOIDCConfigResponse() (response *UpdateOIDCConfigResponse) {
 // 修改角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -4368,6 +4383,7 @@ func (c *Client) UpdateOIDCConfig(request *UpdateOIDCConfigRequest) (response *U
 // 修改角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"

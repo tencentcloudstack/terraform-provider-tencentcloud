@@ -56,6 +56,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 快照策略未找到。
+	INVALIDPARAMETER_AUTOPOLICYNOTFOUND = "InvalidParameter.AutoPolicyNotFound"
+
 	// 用于保证请求幂等性的字符串长度超过限制（不能超过64字节）。
 	INVALIDPARAMETERVALUE_CLIENTTOKENLIMITEXCEEDED = "InvalidParameterValue.ClientTokenLimitExceeded"
 
@@ -116,8 +119,14 @@ const (
 	// 用户区域选择错误 (ZoneName) 或 (ZoneId, Region)二者必选一。
 	INVALIDPARAMETERVALUE_INVALIDREGIONZONEINFO = "InvalidParameterValue.InvalidRegionZoneInfo"
 
+	// 参数值错误: 资源标签值错误。
+	INVALIDPARAMETERVALUE_INVALIDRESOURCETAGS = "InvalidParameterValue.InvalidResourceTags"
+
 	// 读写权限设置错误。
 	INVALIDPARAMETERVALUE_INVALIDRWPERMISSION = "InvalidParameterValue.InvalidRwPermission"
+
+	// 无效的快照状态。
+	INVALIDPARAMETERVALUE_INVALIDSNAPSHOTSTATUS = "InvalidParameterValue.InvalidSnapshotStatus"
 
 	// 资源包不存在或已绑定。
 	INVALIDPARAMETERVALUE_INVALIDSTORAGERESOURCEPKG = "InvalidParameterValue.InvalidStorageResourcePkg"
@@ -130,6 +139,12 @@ const (
 
 	// 标签键不能为空。
 	INVALIDPARAMETERVALUE_INVALIDTAGKEY = "InvalidParameterValue.InvalidTagKey"
+
+	// 标签值为空或字符无效。
+	INVALIDPARAMETERVALUE_INVALIDTAGVALUE = "InvalidParameterValue.InvalidTagValue"
+
+	// 无效的容量值。
+	INVALIDPARAMETERVALUE_INVALIDTURBOCAPACITY = "InvalidParameterValue.InvalidTurboCapacity"
 
 	// 用户权限设置错误。
 	INVALIDPARAMETERVALUE_INVALIDUSERPERMISSION = "InvalidParameterValue.InvalidUserPermission"
@@ -194,6 +209,9 @@ const (
 	// 权限组规则和权限组不匹配。
 	INVALIDPARAMETERVALUE_RULENOTMATCHPGROUP = "InvalidParameterValue.RuleNotMatchPgroup"
 
+	// 参数值错误: 标签键个数超过上限（6个）。
+	INVALIDPARAMETERVALUE_TAGKEYFILTERLIMITEXCEEDED = "InvalidParameterValue.TagKeyFilterLimitExceeded"
+
 	// 标签键长度超过限制（不能超过127字节）。
 	INVALIDPARAMETERVALUE_TAGKEYLIMITEXCEEDED = "InvalidParameterValue.TagKeyLimitExceeded"
 
@@ -226,6 +244,9 @@ const (
 
 	// 该资源的标签个数达到最大限制。
 	RESOURCEINSUFFICIENT_TAGLIMITEXCEEDED = "ResourceInsufficient.TagLimitExceeded"
+
+	// 标签限额不足。
+	RESOURCEINSUFFICIENT_TAGQUOTASEXCEEDED = "ResourceInsufficient.TagQuotasExceeded"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"

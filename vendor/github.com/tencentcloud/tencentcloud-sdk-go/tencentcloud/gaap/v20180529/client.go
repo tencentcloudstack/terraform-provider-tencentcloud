@@ -70,12 +70,16 @@ func NewAddRealServersResponse() (response *AddRealServersResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DUPLICATERS = "InvalidParameterValue.DuplicateRS"
 //  INVALIDPARAMETERVALUE_INVALIDTAGS = "InvalidParameterValue.InvalidTags"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTBELONG = "InvalidParameterValue.ProjectIdNotBelong"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
@@ -92,12 +96,16 @@ func (c *Client) AddRealServers(request *AddRealServersRequest) (response *AddRe
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DUPLICATERS = "InvalidParameterValue.DuplicateRS"
 //  INVALIDPARAMETERVALUE_INVALIDTAGS = "InvalidParameterValue.InvalidTags"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTBELONG = "InvalidParameterValue.ProjectIdNotBelong"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
@@ -114,6 +122,81 @@ func (c *Client) AddRealServersWithContext(ctx context.Context, request *AddReal
     request.SetContext(ctx)
     
     response = NewAddRealServersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBanAndRecoverProxyRequest() (request *BanAndRecoverProxyRequest) {
+    request = &BanAndRecoverProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "BanAndRecoverProxy")
+    
+    
+    return
+}
+
+func NewBanAndRecoverProxyResponse() (response *BanAndRecoverProxyResponse) {
+    response = &BanAndRecoverProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// BanAndRecoverProxy
+// 本接口（BanAndRecoverProxy）用于联通封禁解封GAAP跨境通道实例，支持按照客户UIN维度下发请求。被封禁的实例带宽上限将会被限制到0Mbps，无法正常处理客户端和源站之间的请求。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEHADBEENDONE = "FailedOperation.ResourceHadBeenDone"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BanAndRecoverProxy(request *BanAndRecoverProxyRequest) (response *BanAndRecoverProxyResponse, err error) {
+    return c.BanAndRecoverProxyWithContext(context.Background(), request)
+}
+
+// BanAndRecoverProxy
+// 本接口（BanAndRecoverProxy）用于联通封禁解封GAAP跨境通道实例，支持按照客户UIN维度下发请求。被封禁的实例带宽上限将会被限制到0Mbps，无法正常处理客户端和源站之间的请求。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCEHADBEENDONE = "FailedOperation.ResourceHadBeenDone"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) BanAndRecoverProxyWithContext(ctx context.Context, request *BanAndRecoverProxyRequest) (response *BanAndRecoverProxyResponse, err error) {
+    if request == nil {
+        request = NewBanAndRecoverProxyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BanAndRecoverProxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBanAndRecoverProxyResponse()
     err = c.Send(request, response)
     return
 }
@@ -151,6 +234,7 @@ func NewBindListenerRealServersResponse() (response *BindListenerRealServersResp
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -180,6 +264,7 @@ func (c *Client) BindListenerRealServers(request *BindListenerRealServersRequest
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -238,6 +323,7 @@ func NewBindRuleRealServersResponse() (response *BindRuleRealServersResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -267,6 +353,7 @@ func (c *Client) BindRuleRealServers(request *BindRuleRealServersRequest) (respo
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -317,6 +404,7 @@ func NewCheckProxyCreateResponse() (response *CheckProxyCreateResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -338,6 +426,7 @@ func (c *Client) CheckProxyCreate(request *CheckProxyCreateRequest) (response *C
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -391,6 +480,7 @@ func NewCloseProxiesResponse() (response *CloseProxiesResponse) {
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -415,6 +505,7 @@ func (c *Client) CloseProxies(request *CloseProxiesRequest) (response *CloseProx
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -467,6 +558,7 @@ func NewCloseProxyGroupResponse() (response *CloseProxyGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -489,6 +581,7 @@ func (c *Client) CloseProxyGroup(request *CloseProxyGroupRequest) (response *Clo
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -540,6 +633,7 @@ func NewCloseSecurityPolicyResponse() (response *CloseSecurityPolicyResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_PROXYSECURITYALREADYCLOSE = "FailedOperation.ProxySecurityAlreadyClose"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -563,6 +657,7 @@ func (c *Client) CloseSecurityPolicy(request *CloseSecurityPolicyRequest) (respo
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_PROXYSECURITYALREADYCLOSE = "FailedOperation.ProxySecurityAlreadyClose"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -612,6 +707,7 @@ func NewCreateCertificateResponse() (response *CreateCertificateResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -633,6 +729,7 @@ func (c *Client) CreateCertificate(request *CreateCertificateRequest) (response 
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -689,6 +786,7 @@ func NewCreateCustomHeaderResponse() (response *CreateCustomHeaderResponse) {
 //  FAILEDOPERATION_INVALIDLISTENERPROTOCOL = "FailedOperation.InvalidListenerProtocol"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -712,6 +810,7 @@ func (c *Client) CreateCustomHeader(request *CreateCustomHeaderRequest) (respons
 //  FAILEDOPERATION_INVALIDLISTENERPROTOCOL = "FailedOperation.InvalidListenerProtocol"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -768,6 +867,7 @@ func NewCreateDomainResponse() (response *CreateDomainResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -798,6 +898,7 @@ func (c *Client) CreateDomain(request *CreateDomainRequest) (response *CreateDom
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -852,6 +953,7 @@ func NewCreateDomainErrorPageInfoResponse() (response *CreateDomainErrorPageInfo
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -874,6 +976,7 @@ func (c *Client) CreateDomainErrorPageInfo(request *CreateDomainErrorPageInfoReq
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -892,6 +995,95 @@ func (c *Client) CreateDomainErrorPageInfoWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewCreateDomainErrorPageInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateFirstLinkSessionRequest() (request *CreateFirstLinkSessionRequest) {
+    request = &CreateFirstLinkSessionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "CreateFirstLinkSession")
+    
+    
+    return
+}
+
+func NewCreateFirstLinkSessionResponse() (response *CreateFirstLinkSessionResponse) {
+    response = &CreateFirstLinkSessionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateFirstLinkSession
+// 本接口（CreateFirstLinkSession）用于创建接入段加速会话，创建有可能成功，也可能失败，需要通过返回码来进行判断。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CTCCTOKENEXPIRED = "FailedOperation.CTCCTokenExpired"
+//  FAILEDOPERATION_CREATEQOSEXCEEDLIMIT = "FailedOperation.CreateQosExceedLimit"
+//  FAILEDOPERATION_IPUNMATCHED = "FailedOperation.IPUnmatched"
+//  FAILEDOPERATION_NORESOURCEBOUND = "FailedOperation.NoResourceBound"
+//  FAILEDOPERATION_REQUESTVENDORTIMEOUT = "FailedOperation.RequestVendorTimeout"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_SESSIONNOTEXIST = "FailedOperation.SessionNotExist"
+//  FAILEDOPERATION_USEROUTOFCOVERAGE = "FailedOperation.UserOutOfCoverage"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateFirstLinkSession(request *CreateFirstLinkSessionRequest) (response *CreateFirstLinkSessionResponse, err error) {
+    return c.CreateFirstLinkSessionWithContext(context.Background(), request)
+}
+
+// CreateFirstLinkSession
+// 本接口（CreateFirstLinkSession）用于创建接入段加速会话，创建有可能成功，也可能失败，需要通过返回码来进行判断。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CTCCTOKENEXPIRED = "FailedOperation.CTCCTokenExpired"
+//  FAILEDOPERATION_CREATEQOSEXCEEDLIMIT = "FailedOperation.CreateQosExceedLimit"
+//  FAILEDOPERATION_IPUNMATCHED = "FailedOperation.IPUnmatched"
+//  FAILEDOPERATION_NORESOURCEBOUND = "FailedOperation.NoResourceBound"
+//  FAILEDOPERATION_REQUESTVENDORTIMEOUT = "FailedOperation.RequestVendorTimeout"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_SESSIONNOTEXIST = "FailedOperation.SessionNotExist"
+//  FAILEDOPERATION_USEROUTOFCOVERAGE = "FailedOperation.UserOutOfCoverage"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateFirstLinkSessionWithContext(ctx context.Context, request *CreateFirstLinkSessionRequest) (response *CreateFirstLinkSessionResponse, err error) {
+    if request == nil {
+        request = NewCreateFirstLinkSessionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateFirstLinkSession require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateFirstLinkSessionResponse()
     err = c.Send(request, response)
     return
 }
@@ -928,6 +1120,7 @@ func NewCreateHTTPListenerResponse() (response *CreateHTTPListenerResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -957,6 +1150,7 @@ func (c *Client) CreateHTTPListener(request *CreateHTTPListenerRequest) (respons
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1014,6 +1208,7 @@ func NewCreateHTTPSListenerResponse() (response *CreateHTTPSListenerResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1043,6 +1238,7 @@ func (c *Client) CreateHTTPSListener(request *CreateHTTPSListenerRequest) (respo
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1099,7 +1295,10 @@ func NewCreateProxyResponse() (response *CreateProxyResponse) {
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_LIMITNUMOFLISTENER = "FailedOperation.LimitNumofListener"
 //  FAILEDOPERATION_PROXYSELLOUT = "FailedOperation.ProxySellOut"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
 //  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1110,6 +1309,7 @@ func NewCreateProxyResponse() (response *CreateProxyResponse) {
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTBELONG = "InvalidParameterValue.ProjectIdNotBelong"
 //  INVALIDPARAMETERVALUE_PROXYANDGROUPFEATURECONFLICT = "InvalidParameterValue.ProxyAndGroupFeatureConflict"
 //  INVALIDPARAMETERVALUE_PROXYANDREGIONFEATURECONFLICT = "InvalidParameterValue.ProxyAndRegionFeatureConflict"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -1132,7 +1332,10 @@ func (c *Client) CreateProxy(request *CreateProxyRequest) (response *CreateProxy
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_LIMITNUMOFLISTENER = "FailedOperation.LimitNumofListener"
 //  FAILEDOPERATION_PROXYSELLOUT = "FailedOperation.ProxySellOut"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
 //  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1143,6 +1346,7 @@ func (c *Client) CreateProxy(request *CreateProxyRequest) (response *CreateProxy
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTBELONG = "InvalidParameterValue.ProjectIdNotBelong"
 //  INVALIDPARAMETERVALUE_PROXYANDGROUPFEATURECONFLICT = "InvalidParameterValue.ProxyAndGroupFeatureConflict"
 //  INVALIDPARAMETERVALUE_PROXYANDREGIONFEATURECONFLICT = "InvalidParameterValue.ProxyAndRegionFeatureConflict"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -1191,11 +1395,15 @@ func NewCreateProxyGroupResponse() (response *CreateProxyGroupResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_LIMITNUMOFPROXIESINGROUP = "FailedOperation.LimitNumofProxiesInGroup"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_FEATURECONFLICT = "InvalidParameterValue.FeatureConflict"
 //  INVALIDPARAMETERVALUE_INVALIDTAGS = "InvalidParameterValue.InvalidTags"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -1215,11 +1423,15 @@ func (c *Client) CreateProxyGroup(request *CreateProxyGroupRequest) (response *C
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_LIMITNUMOFPROXIESINGROUP = "FailedOperation.LimitNumofProxiesInGroup"
+//  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_FEATURECONFLICT = "InvalidParameterValue.FeatureConflict"
 //  INVALIDPARAMETERVALUE_INVALIDTAGS = "InvalidParameterValue.InvalidTags"
+//  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -1267,6 +1479,7 @@ func NewCreateProxyGroupDomainResponse() (response *CreateProxyGroupDomainRespon
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1288,6 +1501,7 @@ func (c *Client) CreateProxyGroupDomain(request *CreateProxyGroupDomainRequest) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1346,6 +1560,7 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_RULEALREADYEXISTED = "FailedOperation.RuleAlreadyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1373,6 +1588,7 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_RULEALREADYEXISTED = "FailedOperation.RuleAlreadyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1423,6 +1639,7 @@ func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) 
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYEXISTED = "FailedOperation.ProxySecurityPolicyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1446,6 +1663,7 @@ func (c *Client) CreateSecurityPolicy(request *CreateSecurityPolicyRequest) (res
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYEXISTED = "FailedOperation.ProxySecurityPolicyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1500,6 +1718,7 @@ func NewCreateSecurityRulesResponse() (response *CreateSecurityRulesResponse) {
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDEFAULTRULE = "FailedOperation.ProxySecurityPolicyDefaultRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDUPLICATEDRULE = "FailedOperation.ProxySecurityPolicyDuplicatedRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYOPERATING = "FailedOperation.ProxySecurityPolicyOperating"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1525,6 +1744,7 @@ func (c *Client) CreateSecurityRules(request *CreateSecurityRulesRequest) (respo
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDEFAULTRULE = "FailedOperation.ProxySecurityPolicyDefaultRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDUPLICATEDRULE = "FailedOperation.ProxySecurityPolicyDuplicatedRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYOPERATING = "FailedOperation.ProxySecurityPolicyOperating"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1584,6 +1804,7 @@ func NewCreateTCPListenersResponse() (response *CreateTCPListenersResponse) {
 //  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1615,6 +1836,7 @@ func (c *Client) CreateTCPListeners(request *CreateTCPListenersRequest) (respons
 //  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1672,6 +1894,7 @@ func NewCreateUDPListenersResponse() (response *CreateUDPListenersResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1700,6 +1923,7 @@ func (c *Client) CreateUDPListeners(request *CreateUDPListenersRequest) (respons
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_OPERATELIMITNUMOFLISTENER = "FailedOperation.OperateLimitNumofListener"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1751,6 +1975,7 @@ func NewDeleteCertificateResponse() (response *DeleteCertificateResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CERTIFICATEISUSING = "FailedOperation.CertificateIsUsing"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1772,6 +1997,7 @@ func (c *Client) DeleteCertificate(request *DeleteCertificateRequest) (response 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CERTIFICATEISUSING = "FailedOperation.CertificateIsUsing"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1829,6 +2055,7 @@ func NewDeleteDomainResponse() (response *DeleteDomainResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1854,6 +2081,7 @@ func (c *Client) DeleteDomain(request *DeleteDomainRequest) (response *DeleteDom
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1905,6 +2133,7 @@ func NewDeleteDomainErrorPageInfoResponse() (response *DeleteDomainErrorPageInfo
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1926,6 +2155,7 @@ func (c *Client) DeleteDomainErrorPageInfo(request *DeleteDomainErrorPageInfoReq
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1943,6 +2173,83 @@ func (c *Client) DeleteDomainErrorPageInfoWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDeleteDomainErrorPageInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteFirstLinkSessionRequest() (request *DeleteFirstLinkSessionRequest) {
+    request = &DeleteFirstLinkSessionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "DeleteFirstLinkSession")
+    
+    
+    return
+}
+
+func NewDeleteFirstLinkSessionResponse() (response *DeleteFirstLinkSessionResponse) {
+    response = &DeleteFirstLinkSessionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteFirstLinkSession
+// 本接口（DeleteFirstLinkSession）用于删除接入段加速会话，删除加速会话后会停止加速。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REQUESTVENDORTIMEOUT = "FailedOperation.RequestVendorTimeout"
+//  FAILEDOPERATION_SESSIONNOTEXIST = "FailedOperation.SessionNotExist"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteFirstLinkSession(request *DeleteFirstLinkSessionRequest) (response *DeleteFirstLinkSessionResponse, err error) {
+    return c.DeleteFirstLinkSessionWithContext(context.Background(), request)
+}
+
+// DeleteFirstLinkSession
+// 本接口（DeleteFirstLinkSession）用于删除接入段加速会话，删除加速会话后会停止加速。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_REQUESTVENDORTIMEOUT = "FailedOperation.RequestVendorTimeout"
+//  FAILEDOPERATION_SESSIONNOTEXIST = "FailedOperation.SessionNotExist"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteFirstLinkSessionWithContext(ctx context.Context, request *DeleteFirstLinkSessionRequest) (response *DeleteFirstLinkSessionResponse, err error) {
+    if request == nil {
+        request = NewDeleteFirstLinkSessionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteFirstLinkSession require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteFirstLinkSessionResponse()
     err = c.Send(request, response)
     return
 }
@@ -1977,6 +2284,7 @@ func NewDeleteListenersResponse() (response *DeleteListenersResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2001,6 +2309,7 @@ func (c *Client) DeleteListeners(request *DeleteListenersRequest) (response *Del
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2051,6 +2360,8 @@ func NewDeleteProxyGroupResponse() (response *DeleteProxyGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DELETEPROXYGROUPPROXYREMAINED = "FailedOperation.DeleteProxyGroupProxyRemained"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2074,6 +2385,8 @@ func (c *Client) DeleteProxyGroup(request *DeleteProxyGroupRequest) (response *D
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DELETEPROXYGROUPPROXYREMAINED = "FailedOperation.DeleteProxyGroupProxyRemained"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2131,6 +2444,7 @@ func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2156,6 +2470,7 @@ func (c *Client) DeleteRule(request *DeleteRuleRequest) (response *DeleteRuleRes
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2203,6 +2518,7 @@ func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2225,6 +2541,7 @@ func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2277,6 +2594,7 @@ func NewDeleteSecurityRulesResponse() (response *DeleteSecurityRulesResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2299,6 +2617,7 @@ func (c *Client) DeleteSecurityRules(request *DeleteSecurityRulesRequest) (respo
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2350,6 +2669,7 @@ func NewDescribeAccessRegionsResponse() (response *DescribeAccessRegionsResponse
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2370,6 +2690,7 @@ func (c *Client) DescribeAccessRegions(request *DescribeAccessRegionsRequest) (r
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2418,6 +2739,7 @@ func NewDescribeAccessRegionsByDestRegionResponse() (response *DescribeAccessReg
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2438,6 +2760,7 @@ func (c *Client) DescribeAccessRegionsByDestRegion(request *DescribeAccessRegion
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2487,6 +2810,7 @@ func NewDescribeBlackHeaderResponse() (response *DescribeBlackHeaderResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2506,6 +2830,7 @@ func (c *Client) DescribeBlackHeader(request *DescribeBlackHeaderRequest) (respo
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2553,6 +2878,7 @@ func NewDescribeCertificateDetailResponse() (response *DescribeCertificateDetail
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2573,6 +2899,7 @@ func (c *Client) DescribeCertificateDetail(request *DescribeCertificateDetailReq
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2623,6 +2950,7 @@ func NewDescribeCertificatesResponse() (response *DescribeCertificatesResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2643,6 +2971,7 @@ func (c *Client) DescribeCertificates(request *DescribeCertificatesRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2692,6 +3021,7 @@ func NewDescribeCountryAreaMappingResponse() (response *DescribeCountryAreaMappi
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2713,6 +3043,7 @@ func (c *Client) DescribeCountryAreaMapping(request *DescribeCountryAreaMappingR
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2734,6 +3065,69 @@ func (c *Client) DescribeCountryAreaMappingWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeCountryAreaMappingResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCrossBorderProxiesRequest() (request *DescribeCrossBorderProxiesRequest) {
+    request = &DescribeCrossBorderProxiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "DescribeCrossBorderProxies")
+    
+    
+    return
+}
+
+func NewDescribeCrossBorderProxiesResponse() (response *DescribeCrossBorderProxiesResponse) {
+    response = &DescribeCrossBorderProxiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeCrossBorderProxies
+// 本接口（DescribeCrossBorderProxies）用于查询跨境通道实例列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeCrossBorderProxies(request *DescribeCrossBorderProxiesRequest) (response *DescribeCrossBorderProxiesResponse, err error) {
+    return c.DescribeCrossBorderProxiesWithContext(context.Background(), request)
+}
+
+// DescribeCrossBorderProxies
+// 本接口（DescribeCrossBorderProxies）用于查询跨境通道实例列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeCrossBorderProxiesWithContext(ctx context.Context, request *DescribeCrossBorderProxiesRequest) (response *DescribeCrossBorderProxiesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCrossBorderProxiesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCrossBorderProxies require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCrossBorderProxiesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2763,6 +3157,7 @@ func NewDescribeCustomHeaderResponse() (response *DescribeCustomHeaderResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2782,6 +3177,7 @@ func (c *Client) DescribeCustomHeader(request *DescribeCustomHeaderRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2830,6 +3226,7 @@ func NewDescribeDestRegionsResponse() (response *DescribeDestRegionsResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2849,6 +3246,7 @@ func (c *Client) DescribeDestRegions(request *DescribeDestRegionsRequest) (respo
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2898,9 +3296,11 @@ func NewDescribeDomainErrorPageInfoResponse() (response *DescribeDomainErrorPage
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
 func (c *Client) DescribeDomainErrorPageInfo(request *DescribeDomainErrorPageInfoRequest) (response *DescribeDomainErrorPageInfoResponse, err error) {
     return c.DescribeDomainErrorPageInfoWithContext(context.Background(), request)
@@ -2915,9 +3315,11 @@ func (c *Client) DescribeDomainErrorPageInfo(request *DescribeDomainErrorPageInf
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
 func (c *Client) DescribeDomainErrorPageInfoWithContext(ctx context.Context, request *DescribeDomainErrorPageInfoRequest) (response *DescribeDomainErrorPageInfoResponse, err error) {
     if request == nil {
@@ -2961,6 +3363,7 @@ func NewDescribeDomainErrorPageInfoByIdsResponse() (response *DescribeDomainErro
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2978,6 +3381,7 @@ func (c *Client) DescribeDomainErrorPageInfoByIds(request *DescribeDomainErrorPa
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2994,6 +3398,79 @@ func (c *Client) DescribeDomainErrorPageInfoByIdsWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewDescribeDomainErrorPageInfoByIdsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeFirstLinkSessionRequest() (request *DescribeFirstLinkSessionRequest) {
+    request = &DescribeFirstLinkSessionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "DescribeFirstLinkSession")
+    
+    
+    return
+}
+
+func NewDescribeFirstLinkSessionResponse() (response *DescribeFirstLinkSessionResponse) {
+    response = &DescribeFirstLinkSessionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirstLinkSession
+// 本接口（DescribeFirstLinkSession）用于查询接入段加速会话状态，包括会话状态，生效时长，加速套餐等信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeFirstLinkSession(request *DescribeFirstLinkSessionRequest) (response *DescribeFirstLinkSessionResponse, err error) {
+    return c.DescribeFirstLinkSessionWithContext(context.Background(), request)
+}
+
+// DescribeFirstLinkSession
+// 本接口（DescribeFirstLinkSession）用于查询接入段加速会话状态，包括会话状态，生效时长，加速套餐等信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_VENDORRETURNERROR = "FailedOperation.VendorReturnError"
+//  FAILEDOPERATION_VENDORSERVERERROR = "FailedOperation.VendorServerError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeFirstLinkSessionWithContext(ctx context.Context, request *DescribeFirstLinkSessionRequest) (response *DescribeFirstLinkSessionResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirstLinkSessionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirstLinkSession require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirstLinkSessionResponse()
     err = c.Send(request, response)
     return
 }
@@ -3024,6 +3501,7 @@ func NewDescribeGroupAndStatisticsProxyResponse() (response *DescribeGroupAndSta
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3044,6 +3522,7 @@ func (c *Client) DescribeGroupAndStatisticsProxy(request *DescribeGroupAndStatis
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3093,6 +3572,7 @@ func NewDescribeGroupDomainConfigResponse() (response *DescribeGroupDomainConfig
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3115,6 +3595,7 @@ func (c *Client) DescribeGroupDomainConfig(request *DescribeGroupDomainConfigReq
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3167,6 +3648,7 @@ func NewDescribeHTTPListenersResponse() (response *DescribeHTTPListenersResponse
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3189,6 +3671,7 @@ func (c *Client) DescribeHTTPListeners(request *DescribeHTTPListenersRequest) (r
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3240,6 +3723,7 @@ func NewDescribeHTTPSListenersResponse() (response *DescribeHTTPSListenersRespon
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3261,6 +3745,7 @@ func (c *Client) DescribeHTTPSListeners(request *DescribeHTTPSListenersRequest) 
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3309,6 +3794,7 @@ func NewDescribeListenerRealServersResponse() (response *DescribeListenerRealSer
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3328,6 +3814,7 @@ func (c *Client) DescribeListenerRealServers(request *DescribeListenerRealServer
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3377,6 +3864,7 @@ func NewDescribeListenerStatisticsResponse() (response *DescribeListenerStatisti
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3397,6 +3885,7 @@ func (c *Client) DescribeListenerStatistics(request *DescribeListenerStatisticsR
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3445,6 +3934,7 @@ func NewDescribeProxiesResponse() (response *DescribeProxiesResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3465,6 +3955,7 @@ func (c *Client) DescribeProxies(request *DescribeProxiesRequest) (response *Des
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3515,6 +4006,7 @@ func NewDescribeProxiesStatusResponse() (response *DescribeProxiesStatusResponse
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3536,6 +4028,7 @@ func (c *Client) DescribeProxiesStatus(request *DescribeProxiesStatusRequest) (r
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3585,6 +4078,7 @@ func NewDescribeProxyAndStatisticsListenersResponse() (response *DescribeProxyAn
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3603,6 +4097,7 @@ func (c *Client) DescribeProxyAndStatisticsListeners(request *DescribeProxyAndSt
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3798,6 +4293,7 @@ func NewDescribeProxyGroupListResponse() (response *DescribeProxyGroupListRespon
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3819,6 +4315,7 @@ func (c *Client) DescribeProxyGroupList(request *DescribeProxyGroupListRequest) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3870,6 +4367,7 @@ func NewDescribeProxyGroupStatisticsResponse() (response *DescribeProxyGroupStat
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3890,6 +4388,7 @@ func (c *Client) DescribeProxyGroupStatistics(request *DescribeProxyGroupStatist
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3939,6 +4438,7 @@ func NewDescribeProxyStatisticsResponse() (response *DescribeProxyStatisticsResp
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3959,6 +4459,7 @@ func (c *Client) DescribeProxyStatistics(request *DescribeProxyStatisticsRequest
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4007,6 +4508,7 @@ func NewDescribeRealServerStatisticsResponse() (response *DescribeRealServerStat
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4025,6 +4527,7 @@ func (c *Client) DescribeRealServerStatistics(request *DescribeRealServerStatist
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4072,6 +4575,7 @@ func NewDescribeRealServersResponse() (response *DescribeRealServersResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4091,6 +4595,7 @@ func (c *Client) DescribeRealServers(request *DescribeRealServersRequest) (respo
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4140,6 +4645,7 @@ func NewDescribeRealServersStatusResponse() (response *DescribeRealServersStatus
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REALSERVERNOTINPROJECT = "FailedOperation.RealServerNotInProject"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4160,6 +4666,7 @@ func (c *Client) DescribeRealServersStatus(request *DescribeRealServersStatusReq
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REALSERVERNOTINPROJECT = "FailedOperation.RealServerNotInProject"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4208,6 +4715,7 @@ func NewDescribeRegionAndPriceResponse() (response *DescribeRegionAndPriceRespon
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4227,6 +4735,7 @@ func (c *Client) DescribeRegionAndPrice(request *DescribeRegionAndPriceRequest) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4275,6 +4784,7 @@ func NewDescribeResourcesByTagResponse() (response *DescribeResourcesByTagRespon
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4294,6 +4804,7 @@ func (c *Client) DescribeResourcesByTag(request *DescribeResourcesByTagRequest) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4343,6 +4854,7 @@ func NewDescribeRuleRealServersResponse() (response *DescribeRuleRealServersResp
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4362,6 +4874,7 @@ func (c *Client) DescribeRuleRealServers(request *DescribeRuleRealServersRequest
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4409,6 +4922,7 @@ func NewDescribeRulesResponse() (response *DescribeRulesResponse) {
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4428,6 +4942,7 @@ func (c *Client) DescribeRules(request *DescribeRulesRequest) (response *Describ
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4477,6 +4992,7 @@ func NewDescribeRulesByRuleIdsResponse() (response *DescribeRulesByRuleIdsRespon
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4500,6 +5016,7 @@ func (c *Client) DescribeRulesByRuleIds(request *DescribeRulesByRuleIdsRequest) 
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4551,6 +5068,7 @@ func NewDescribeSecurityPolicyDetailResponse() (response *DescribeSecurityPolicy
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4572,6 +5090,7 @@ func (c *Client) DescribeSecurityPolicyDetail(request *DescribeSecurityPolicyDet
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4623,6 +5142,7 @@ func NewDescribeSecurityRulesResponse() (response *DescribeSecurityRulesResponse
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4646,6 +5166,7 @@ func (c *Client) DescribeSecurityRules(request *DescribeSecurityRulesRequest) (r
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4697,6 +5218,7 @@ func NewDescribeTCPListenersResponse() (response *DescribeTCPListenersResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4717,6 +5239,7 @@ func (c *Client) DescribeTCPListeners(request *DescribeTCPListenersRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4766,6 +5289,7 @@ func NewDescribeUDPListenersResponse() (response *DescribeUDPListenersResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4785,6 +5309,7 @@ func (c *Client) DescribeUDPListeners(request *DescribeUDPListenersRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4839,6 +5364,8 @@ func NewDestroyProxiesResponse() (response *DestroyProxiesResponse) {
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4867,6 +5394,8 @@ func (c *Client) DestroyProxies(request *DestroyProxiesRequest) (response *Destr
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4919,6 +5448,7 @@ func NewInquiryPriceCreateProxyResponse() (response *InquiryPriceCreateProxyResp
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -4945,6 +5475,7 @@ func (c *Client) InquiryPriceCreateProxy(request *InquiryPriceCreateProxyRequest
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEUPGRADING = "FailedOperation.ResourceUpgrading"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5003,6 +5534,7 @@ func NewModifyCertificateResponse() (response *ModifyCertificateResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5028,6 +5560,7 @@ func (c *Client) ModifyCertificate(request *ModifyCertificateRequest) (response 
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5078,6 +5611,7 @@ func NewModifyCertificateAttributesResponse() (response *ModifyCertificateAttrib
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CERTIFICATEISUSING = "FailedOperation.CertificateIsUsing"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5099,6 +5633,7 @@ func (c *Client) ModifyCertificateAttributes(request *ModifyCertificateAttribute
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CERTIFICATEISUSING = "FailedOperation.CertificateIsUsing"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5156,6 +5691,7 @@ func NewModifyDomainResponse() (response *ModifyDomainResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5184,6 +5720,7 @@ func (c *Client) ModifyDomain(request *ModifyDomainRequest) (response *ModifyDom
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSTATUSNOTINRUNING = "FailedOperation.ProxyStatusNotInRuning"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5234,6 +5771,7 @@ func NewModifyGroupDomainConfigResponse() (response *ModifyGroupDomainConfigResp
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5255,6 +5793,7 @@ func (c *Client) ModifyGroupDomainConfig(request *ModifyGroupDomainConfigRequest
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5311,6 +5850,7 @@ func NewModifyHTTPListenerAttributeResponse() (response *ModifyHTTPListenerAttri
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5335,6 +5875,7 @@ func (c *Client) ModifyHTTPListenerAttribute(request *ModifyHTTPListenerAttribut
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_NOTSUPPORTPROXYGROUP = "FailedOperation.NotSupportProxyGroup"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5387,6 +5928,7 @@ func NewModifyHTTPSListenerAttributeResponse() (response *ModifyHTTPSListenerAtt
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5411,6 +5953,7 @@ func (c *Client) ModifyHTTPSListenerAttribute(request *ModifyHTTPSListenerAttrib
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5463,6 +6006,7 @@ func NewModifyProxiesAttributeResponse() (response *ModifyProxiesAttributeRespon
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5488,6 +6032,7 @@ func (c *Client) ModifyProxiesAttribute(request *ModifyProxiesAttributeRequest) 
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_RESOURCECANNOTACCESS = "FailedOperation.ResourceCanNotAccess"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5541,6 +6086,7 @@ func NewModifyProxiesProjectResponse() (response *ModifyProxiesProjectResponse) 
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5565,6 +6111,7 @@ func (c *Client) ModifyProxiesProject(request *ModifyProxiesProjectRequest) (res
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5621,6 +6168,7 @@ func NewModifyProxyConfigurationResponse() (response *ModifyProxyConfigurationRe
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTSCALAR = "FailedOperation.NotSupportScalar"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5648,6 +6196,7 @@ func (c *Client) ModifyProxyConfiguration(request *ModifyProxyConfigurationReque
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTSCALAR = "FailedOperation.NotSupportScalar"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5698,6 +6247,7 @@ func NewModifyProxyGroupAttributeResponse() (response *ModifyProxyGroupAttribute
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5719,6 +6269,7 @@ func (c *Client) ModifyProxyGroupAttribute(request *ModifyProxyGroupAttributeReq
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5769,6 +6320,7 @@ func NewModifyRealServerNameResponse() (response *ModifyRealServerNameResponse) 
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5788,6 +6340,7 @@ func (c *Client) ModifyRealServerName(request *ModifyRealServerNameRequest) (res
 //  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5840,6 +6393,7 @@ func NewModifyRuleAttributeResponse() (response *ModifyRuleAttributeResponse) {
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_RULEALREADYEXISTED = "FailedOperation.RuleAlreadyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5862,6 +6416,7 @@ func (c *Client) ModifyRuleAttribute(request *ModifyRuleAttributeRequest) (respo
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_RULEALREADYEXISTED = "FailedOperation.RuleAlreadyExisted"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5912,6 +6467,7 @@ func NewModifySecurityRuleResponse() (response *ModifySecurityRuleResponse) {
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDEFAULTRULE = "FailedOperation.ProxySecurityPolicyDefaultRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDUPLICATEDRULE = "FailedOperation.ProxySecurityPolicyDuplicatedRule"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5936,6 +6492,7 @@ func (c *Client) ModifySecurityRule(request *ModifySecurityRuleRequest) (respons
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDEFAULTRULE = "FailedOperation.ProxySecurityPolicyDefaultRule"
 //  FAILEDOPERATION_PROXYSECURITYPOLICYDUPLICATEDRULE = "FailedOperation.ProxySecurityPolicyDuplicatedRule"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -5991,6 +6548,7 @@ func NewModifyTCPListenerAttributeResponse() (response *ModifyTCPListenerAttribu
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6015,6 +6573,7 @@ func (c *Client) ModifyTCPListenerAttribute(request *ModifyTCPListenerAttributeR
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6068,6 +6627,7 @@ func NewModifyUDPListenerAttributeResponse() (response *ModifyUDPListenerAttribu
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6092,6 +6652,7 @@ func (c *Client) ModifyUDPListenerAttribute(request *ModifyUDPListenerAttributeR
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6143,6 +6704,7 @@ func NewOpenProxiesResponse() (response *OpenProxiesResponse) {
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6167,6 +6729,7 @@ func (c *Client) OpenProxies(request *OpenProxiesRequest) (response *OpenProxies
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6219,6 +6782,7 @@ func NewOpenProxyGroupResponse() (response *OpenProxyGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6240,6 +6804,7 @@ func (c *Client) OpenProxyGroup(request *OpenProxyGroupRequest) (response *OpenP
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCOUNTBALANCEINSUFFICIENT = "FailedOperation.AccountBalanceInsufficient"
 //  FAILEDOPERATION_DUPLICATEDREQUEST = "FailedOperation.DuplicatedRequest"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6290,6 +6855,7 @@ func NewOpenSecurityPolicyResponse() (response *OpenSecurityPolicyResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_PROXYSECURITYALREADYOPEN = "FailedOperation.ProxySecurityAlreadyOpen"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6313,6 +6879,7 @@ func (c *Client) OpenSecurityPolicy(request *OpenSecurityPolicyRequest) (respons
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACTIONISDOING = "FailedOperation.ActionIsDoing"
 //  FAILEDOPERATION_PROXYSECURITYALREADYOPEN = "FailedOperation.ProxySecurityAlreadyOpen"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6364,6 +6931,8 @@ func NewRemoveRealServersResponse() (response *RemoveRealServersResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6385,6 +6954,8 @@ func (c *Client) RemoveRealServers(request *RemoveRealServersRequest) (response 
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REALSERVERALREADYBOUND = "FailedOperation.RealServerAlreadyBound"
+//  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6439,6 +7010,7 @@ func NewSetAuthenticationResponse() (response *SetAuthenticationResponse) {
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -6466,6 +7038,7 @@ func (c *Client) SetAuthentication(request *SetAuthenticationRequest) (response 
 //  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_PROXYVERSIONNOTSUPPORT = "FailedOperation.ProxyVersionNotSupport"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"

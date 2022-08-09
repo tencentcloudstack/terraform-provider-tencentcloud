@@ -101,23 +101,17 @@ const (
 	// 无效的Content。
 	INVALIDPARAMETER_CONTENT = "InvalidParameter.Content"
 
-	// 数据加工任务冲突。
-	INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
-
-	// 数据加工任务不存在。
-	INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
-
 	// 数据库唯一键冲突。
 	INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+
+	// 导出任务已经存在。
+	INVALIDPARAMETER_EXPORTCONFLICT = "InvalidParameter.ExportConflict"
 
 	// 低频不支持配置kv和tag索引。
 	INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
 
 	// 指定日志主题已经存在索引规则。
 	INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
-
-	// 无效的数据加工语句。
-	INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
 
 	// 相同的日志集已存在。
 	INVALIDPARAMETER_LOGSETCONFLICT = "InvalidParameter.LogsetConflict"
@@ -159,10 +153,13 @@ const (
 	LIMITEXCEEDED_MACHINEGROUPIP = "LimitExceeded.MachineGroupIp"
 
 	// 机器组Label超过限制。
-	LIMITEXCEEDED_MACHINEGROUPLABELS = "LimitExceeded.MachineGroupLabels"
+	LIMITEXCEEDED_MACHINEGROUPIPLABELS = "LimitExceeded.MachineGroupIpLabels"
 
 	// 分区超过限制。
 	LIMITEXCEEDED_PARTITION = "LimitExceeded.Partition"
+
+	// 检索内存超限。
+	LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
 
 	// 检索接口返回的日志量太大， 超过20MB限制。
 	LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"

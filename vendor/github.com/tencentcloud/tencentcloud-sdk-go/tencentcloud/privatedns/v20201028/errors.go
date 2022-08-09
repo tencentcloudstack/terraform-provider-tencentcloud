@@ -38,8 +38,14 @@ const (
 	// 私有域创建失败。
 	FAILEDOPERATION_CREATEZONEFAILED = "FailedOperation.CreateZoneFailed"
 
+	// 数据异常。
+	FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+
 	// 当前私有域已关联 VPC，如需清空解析记录请先解除 VPC 关联。
 	FAILEDOPERATION_DELETELASTBINDVPCRECORDFAILED = "FailedOperation.DeleteLastBindVpcRecordFailed"
+
+	// 记录删除失败。
+	FAILEDOPERATION_DELETERECORDFAILED = "FailedOperation.DeleteRecordFailed"
 
 	// 解析域删除失败。
 	FAILEDOPERATION_DELETEZONEFAILED = "FailedOperation.DeleteZoneFailed"
@@ -58,6 +64,9 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 已经存在绑定的账号。
+	INVALIDPARAMETER_ACCOUNTEXIST = "InvalidParameter.AccountExist"
 
 	// 非法CIDR。
 	INVALIDPARAMETER_ILLEGALCIDR = "InvalidParameter.IllegalCidr"
@@ -134,8 +143,17 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// 内部保留域名，不支持创建。
+	INVALIDPARAMETERVALUE_RESERVEDDOMAIN = "InvalidParameterValue.ReservedDomain"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
+
+	// 超过自定义TLD额度。
+	LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+
+	// 使用自定义TLD的私有域超过总额度。
+	LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
@@ -161,6 +179,9 @@ const (
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
+	// TLD增值包已过期。
+	RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+
 	// 资源售罄。
 	RESOURCESSOLDOUT = "ResourcesSoldOut"
 
@@ -181,4 +202,13 @@ const (
 
 	// 账号未绑定。
 	UNSUPPORTEDOPERATION_ACCOUNTNOTBOUND = "UnsupportedOperation.AccountNotBound"
+
+	// 存在绑定的VPC资源。
+	UNSUPPORTEDOPERATION_EXISTBOUNDVPC = "UnsupportedOperation.ExistBoundVpc"
+
+	// 接口调用超过限频。
+	UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
+
+	// 不支持设置子域名递归解析。
+	UNSUPPORTEDOPERATION_NOTSUPPORTDNSFORWARD = "UnsupportedOperation.NotSupportDnsForward"
 )

@@ -176,6 +176,12 @@ const (
 	// sql错误。
 	INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
 
+	// 执行http请求错误。
+	INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+
+	// sql执行失败。
+	INTERNALERROR_EXECUTESQLERROR = "InternalError.ExecuteSQLError"
+
 	// 文件传输异常。
 	INTERNALERROR_FTPERROR = "InternalError.FtpError"
 
@@ -415,6 +421,9 @@ const (
 
 	// 该实例无此功能权限。
 	OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
+
+	// 当前类型实例不支持该操作。
+	OPERATIONDENIED_INSTTYPENOTSUPPORT = "OperationDenied.InstTypeNotSupport"
 
 	// 实例锁冲突，请稍后重试。
 	OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"

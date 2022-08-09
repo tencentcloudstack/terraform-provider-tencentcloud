@@ -45,6 +45,79 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewCreateIndexRequest() (request *CreateIndexRequest) {
+    request = &CreateIndexRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "CreateIndex")
+    
+    
+    return
+}
+
+func NewCreateIndexResponse() (response *CreateIndexResponse) {
+    response = &CreateIndexResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateIndex
+// 创建索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateIndex(request *CreateIndexRequest) (response *CreateIndexResponse, err error) {
+    return c.CreateIndexWithContext(context.Background(), request)
+}
+
+// CreateIndex
+// 创建索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateIndexWithContext(ctx context.Context, request *CreateIndexRequest) (response *CreateIndexResponse, err error) {
+    if request == nil {
+        request = NewCreateIndexRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateIndex require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateIndexResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
     request = &CreateInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -66,6 +139,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 // 创建指定规格的ES集群实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
@@ -85,6 +159,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 // 创建指定规格的ES集群实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
@@ -108,6 +183,142 @@ func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateI
     request.SetContext(ctx)
     
     response = NewCreateInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateLogstashInstanceRequest() (request *CreateLogstashInstanceRequest) {
+    request = &CreateLogstashInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "CreateLogstashInstance")
+    
+    
+    return
+}
+
+func NewCreateLogstashInstanceResponse() (response *CreateLogstashInstanceResponse) {
+    response = &CreateLogstashInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateLogstashInstance
+// 用于创建Logstash实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) CreateLogstashInstance(request *CreateLogstashInstanceRequest) (response *CreateLogstashInstanceResponse, err error) {
+    return c.CreateLogstashInstanceWithContext(context.Background(), request)
+}
+
+// CreateLogstashInstance
+// 用于创建Logstash实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+func (c *Client) CreateLogstashInstanceWithContext(ctx context.Context, request *CreateLogstashInstanceRequest) (response *CreateLogstashInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateLogstashInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLogstashInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLogstashInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteIndexRequest() (request *DeleteIndexRequest) {
+    request = &DeleteIndexRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DeleteIndex")
+    
+    
+    return
+}
+
+func NewDeleteIndexResponse() (response *DeleteIndexResponse) {
+    response = &DeleteIndexResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteIndex
+// 删除索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteIndex(request *DeleteIndexRequest) (response *DeleteIndexResponse, err error) {
+    return c.DeleteIndexWithContext(context.Background(), request)
+}
+
+// DeleteIndex
+// 删除索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteIndexWithContext(ctx context.Context, request *DeleteIndexRequest) (response *DeleteIndexResponse, err error) {
+    if request == nil {
+        request = NewDeleteIndexRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteIndex require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteIndexResponse()
     err = c.Send(request, response)
     return
 }
@@ -161,6 +372,256 @@ func (c *Client) DeleteInstanceWithContext(ctx context.Context, request *DeleteI
     request.SetContext(ctx)
     
     response = NewDeleteInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLogstashInstanceRequest() (request *DeleteLogstashInstanceRequest) {
+    request = &DeleteLogstashInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DeleteLogstashInstance")
+    
+    
+    return
+}
+
+func NewDeleteLogstashInstanceResponse() (response *DeleteLogstashInstanceResponse) {
+    response = &DeleteLogstashInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteLogstashInstance
+// 用于删除Logstash实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLogstashInstance(request *DeleteLogstashInstanceRequest) (response *DeleteLogstashInstanceResponse, err error) {
+    return c.DeleteLogstashInstanceWithContext(context.Background(), request)
+}
+
+// DeleteLogstashInstance
+// 用于删除Logstash实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLogstashInstanceWithContext(ctx context.Context, request *DeleteLogstashInstanceRequest) (response *DeleteLogstashInstanceResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogstashInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLogstashInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogstashInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLogstashPipelinesRequest() (request *DeleteLogstashPipelinesRequest) {
+    request = &DeleteLogstashPipelinesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DeleteLogstashPipelines")
+    
+    
+    return
+}
+
+func NewDeleteLogstashPipelinesResponse() (response *DeleteLogstashPipelinesResponse) {
+    response = &DeleteLogstashPipelinesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteLogstashPipelines
+// 用于批量删除Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DeleteLogstashPipelines(request *DeleteLogstashPipelinesRequest) (response *DeleteLogstashPipelinesResponse, err error) {
+    return c.DeleteLogstashPipelinesWithContext(context.Background(), request)
+}
+
+// DeleteLogstashPipelines
+// 用于批量删除Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DeleteLogstashPipelinesWithContext(ctx context.Context, request *DeleteLogstashPipelinesRequest) (response *DeleteLogstashPipelinesResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogstashPipelinesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLogstashPipelines require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogstashPipelinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIndexListRequest() (request *DescribeIndexListRequest) {
+    request = &DescribeIndexListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeIndexList")
+    
+    
+    return
+}
+
+func NewDescribeIndexListResponse() (response *DescribeIndexListResponse) {
+    response = &DescribeIndexListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeIndexList
+// 获取索引列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeIndexList(request *DescribeIndexListRequest) (response *DescribeIndexListResponse, err error) {
+    return c.DescribeIndexListWithContext(context.Background(), request)
+}
+
+// DescribeIndexList
+// 获取索引列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeIndexListWithContext(ctx context.Context, request *DescribeIndexListRequest) (response *DescribeIndexListResponse, err error) {
+    if request == nil {
+        request = NewDescribeIndexListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIndexList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIndexListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIndexMetaRequest() (request *DescribeIndexMetaRequest) {
+    request = &DescribeIndexMetaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeIndexMeta")
+    
+    
+    return
+}
+
+func NewDescribeIndexMetaResponse() (response *DescribeIndexMetaResponse) {
+    response = &DescribeIndexMetaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeIndexMeta
+// 获取索引元数据
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeIndexMeta(request *DescribeIndexMetaRequest) (response *DescribeIndexMetaResponse, err error) {
+    return c.DescribeIndexMetaWithContext(context.Background(), request)
+}
+
+// DescribeIndexMeta
+// 获取索引元数据
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeIndexMetaWithContext(ctx context.Context, request *DescribeIndexMetaRequest) (response *DescribeIndexMetaResponse, err error) {
+    if request == nil {
+        request = NewDescribeIndexMetaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIndexMeta require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIndexMetaResponse()
     err = c.Send(request, response)
     return
 }
@@ -289,6 +750,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
     return c.DescribeInstancesWithContext(context.Background(), request)
 }
@@ -300,6 +762,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeInstancesRequest()
@@ -312,6 +775,206 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogstashInstanceLogsRequest() (request *DescribeLogstashInstanceLogsRequest) {
+    request = &DescribeLogstashInstanceLogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeLogstashInstanceLogs")
+    
+    
+    return
+}
+
+func NewDescribeLogstashInstanceLogsResponse() (response *DescribeLogstashInstanceLogsResponse) {
+    response = &DescribeLogstashInstanceLogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogstashInstanceLogs
+// 查询用户该地域下符合条件的Logstash实例的日志
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashInstanceLogs(request *DescribeLogstashInstanceLogsRequest) (response *DescribeLogstashInstanceLogsResponse, err error) {
+    return c.DescribeLogstashInstanceLogsWithContext(context.Background(), request)
+}
+
+// DescribeLogstashInstanceLogs
+// 查询用户该地域下符合条件的Logstash实例的日志
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashInstanceLogsWithContext(ctx context.Context, request *DescribeLogstashInstanceLogsRequest) (response *DescribeLogstashInstanceLogsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogstashInstanceLogsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogstashInstanceLogs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogstashInstanceLogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogstashInstanceOperationsRequest() (request *DescribeLogstashInstanceOperationsRequest) {
+    request = &DescribeLogstashInstanceOperationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeLogstashInstanceOperations")
+    
+    
+    return
+}
+
+func NewDescribeLogstashInstanceOperationsResponse() (response *DescribeLogstashInstanceOperationsResponse) {
+    response = &DescribeLogstashInstanceOperationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogstashInstanceOperations
+// 查询实例指定条件下的操作记录
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DescribeLogstashInstanceOperations(request *DescribeLogstashInstanceOperationsRequest) (response *DescribeLogstashInstanceOperationsResponse, err error) {
+    return c.DescribeLogstashInstanceOperationsWithContext(context.Background(), request)
+}
+
+// DescribeLogstashInstanceOperations
+// 查询实例指定条件下的操作记录
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DescribeLogstashInstanceOperationsWithContext(ctx context.Context, request *DescribeLogstashInstanceOperationsRequest) (response *DescribeLogstashInstanceOperationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogstashInstanceOperationsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogstashInstanceOperations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogstashInstanceOperationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogstashInstancesRequest() (request *DescribeLogstashInstancesRequest) {
+    request = &DescribeLogstashInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeLogstashInstances")
+    
+    
+    return
+}
+
+func NewDescribeLogstashInstancesResponse() (response *DescribeLogstashInstancesResponse) {
+    response = &DescribeLogstashInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogstashInstances
+// 查询用户该地域下符合条件的所有Logstash实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashInstances(request *DescribeLogstashInstancesRequest) (response *DescribeLogstashInstancesResponse, err error) {
+    return c.DescribeLogstashInstancesWithContext(context.Background(), request)
+}
+
+// DescribeLogstashInstances
+// 查询用户该地域下符合条件的所有Logstash实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashInstancesWithContext(ctx context.Context, request *DescribeLogstashInstancesRequest) (response *DescribeLogstashInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogstashInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogstashInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogstashInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogstashPipelinesRequest() (request *DescribeLogstashPipelinesRequest) {
+    request = &DescribeLogstashPipelinesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "DescribeLogstashPipelines")
+    
+    
+    return
+}
+
+func NewDescribeLogstashPipelinesResponse() (response *DescribeLogstashPipelinesResponse) {
+    response = &DescribeLogstashPipelinesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogstashPipelines
+// 用于获取Logstash实例管道列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashPipelines(request *DescribeLogstashPipelinesRequest) (response *DescribeLogstashPipelinesResponse, err error) {
+    return c.DescribeLogstashPipelinesWithContext(context.Background(), request)
+}
+
+// DescribeLogstashPipelines
+// 用于获取Logstash实例管道列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeLogstashPipelinesWithContext(ctx context.Context, request *DescribeLogstashPipelinesRequest) (response *DescribeLogstashPipelinesResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogstashPipelinesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogstashPipelines require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogstashPipelinesResponse()
     err = c.Send(request, response)
     return
 }
@@ -496,6 +1159,7 @@ func NewRestartInstanceResponse() (response *RestartInstanceResponse) {
 // 重启ES集群实例(用于系统版本更新等操作) 
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -507,6 +1171,7 @@ func (c *Client) RestartInstance(request *RestartInstanceRequest) (response *Res
 // 重启ES集群实例(用于系统版本更新等操作) 
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -577,6 +1242,61 @@ func (c *Client) RestartKibanaWithContext(ctx context.Context, request *RestartK
     return
 }
 
+func NewRestartLogstashInstanceRequest() (request *RestartLogstashInstanceRequest) {
+    request = &RestartLogstashInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "RestartLogstashInstance")
+    
+    
+    return
+}
+
+func NewRestartLogstashInstanceResponse() (response *RestartLogstashInstanceResponse) {
+    response = &RestartLogstashInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RestartLogstashInstance
+// 用于重启Logstash实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) RestartLogstashInstance(request *RestartLogstashInstanceRequest) (response *RestartLogstashInstanceResponse, err error) {
+    return c.RestartLogstashInstanceWithContext(context.Background(), request)
+}
+
+// RestartLogstashInstance
+// 用于重启Logstash实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) RestartLogstashInstanceWithContext(ctx context.Context, request *RestartLogstashInstanceRequest) (response *RestartLogstashInstanceResponse, err error) {
+    if request == nil {
+        request = NewRestartLogstashInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartLogstashInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestartLogstashInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRestartNodesRequest() (request *RestartNodesRequest) {
     request = &RestartNodesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -628,6 +1348,153 @@ func (c *Client) RestartNodesWithContext(ctx context.Context, request *RestartNo
     request.SetContext(ctx)
     
     response = NewRestartNodesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSaveAndDeployLogstashPipelineRequest() (request *SaveAndDeployLogstashPipelineRequest) {
+    request = &SaveAndDeployLogstashPipelineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "SaveAndDeployLogstashPipeline")
+    
+    
+    return
+}
+
+func NewSaveAndDeployLogstashPipelineResponse() (response *SaveAndDeployLogstashPipelineResponse) {
+    response = &SaveAndDeployLogstashPipelineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SaveAndDeployLogstashPipeline
+// 用于下发并且部署管道
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) SaveAndDeployLogstashPipeline(request *SaveAndDeployLogstashPipelineRequest) (response *SaveAndDeployLogstashPipelineResponse, err error) {
+    return c.SaveAndDeployLogstashPipelineWithContext(context.Background(), request)
+}
+
+// SaveAndDeployLogstashPipeline
+// 用于下发并且部署管道
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) SaveAndDeployLogstashPipelineWithContext(ctx context.Context, request *SaveAndDeployLogstashPipelineRequest) (response *SaveAndDeployLogstashPipelineResponse, err error) {
+    if request == nil {
+        request = NewSaveAndDeployLogstashPipelineRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SaveAndDeployLogstashPipeline require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSaveAndDeployLogstashPipelineResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartLogstashPipelinesRequest() (request *StartLogstashPipelinesRequest) {
+    request = &StartLogstashPipelinesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "StartLogstashPipelines")
+    
+    
+    return
+}
+
+func NewStartLogstashPipelinesResponse() (response *StartLogstashPipelinesResponse) {
+    response = &StartLogstashPipelinesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// StartLogstashPipelines
+// 用于启动Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) StartLogstashPipelines(request *StartLogstashPipelinesRequest) (response *StartLogstashPipelinesResponse, err error) {
+    return c.StartLogstashPipelinesWithContext(context.Background(), request)
+}
+
+// StartLogstashPipelines
+// 用于启动Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) StartLogstashPipelinesWithContext(ctx context.Context, request *StartLogstashPipelinesRequest) (response *StartLogstashPipelinesResponse, err error) {
+    if request == nil {
+        request = NewStartLogstashPipelinesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartLogstashPipelines require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartLogstashPipelinesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopLogstashPipelinesRequest() (request *StopLogstashPipelinesRequest) {
+    request = &StopLogstashPipelinesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "StopLogstashPipelines")
+    
+    
+    return
+}
+
+func NewStopLogstashPipelinesResponse() (response *StopLogstashPipelinesResponse) {
+    response = &StopLogstashPipelinesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// StopLogstashPipelines
+// 用于批量停止Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) StopLogstashPipelines(request *StopLogstashPipelinesRequest) (response *StopLogstashPipelinesResponse, err error) {
+    return c.StopLogstashPipelinesWithContext(context.Background(), request)
+}
+
+// StopLogstashPipelines
+// 用于批量停止Logstash管道
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) StopLogstashPipelinesWithContext(ctx context.Context, request *StopLogstashPipelinesRequest) (response *StopLogstashPipelinesResponse, err error) {
+    if request == nil {
+        request = NewStopLogstashPipelinesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopLogstashPipelines require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopLogstashPipelinesResponse()
     err = c.Send(request, response)
     return
 }
@@ -710,7 +1577,12 @@ func NewUpdateDictionariesResponse() (response *UpdateDictionariesResponse) {
 // 更新ES集群词典
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) UpdateDictionaries(request *UpdateDictionariesRequest) (response *UpdateDictionariesResponse, err error) {
     return c.UpdateDictionariesWithContext(context.Background(), request)
 }
@@ -719,7 +1591,12 @@ func (c *Client) UpdateDictionaries(request *UpdateDictionariesRequest) (respons
 // 更新ES集群词典
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) UpdateDictionariesWithContext(ctx context.Context, request *UpdateDictionariesRequest) (response *UpdateDictionariesResponse, err error) {
     if request == nil {
         request = NewUpdateDictionariesRequest()
@@ -732,6 +1609,79 @@ func (c *Client) UpdateDictionariesWithContext(ctx context.Context, request *Upd
     request.SetContext(ctx)
     
     response = NewUpdateDictionariesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateIndexRequest() (request *UpdateIndexRequest) {
+    request = &UpdateIndexRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "UpdateIndex")
+    
+    
+    return
+}
+
+func NewUpdateIndexResponse() (response *UpdateIndexResponse) {
+    response = &UpdateIndexResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateIndex
+// 更新索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateIndex(request *UpdateIndexRequest) (response *UpdateIndexResponse, err error) {
+    return c.UpdateIndexWithContext(context.Background(), request)
+}
+
+// UpdateIndex
+// 更新索引
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateIndexWithContext(ctx context.Context, request *UpdateIndexRequest) (response *UpdateIndexResponse, err error) {
+    if request == nil {
+        request = NewUpdateIndexRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateIndex require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateIndexResponse()
     err = c.Send(request, response)
     return
 }
@@ -910,6 +1860,144 @@ func (c *Client) UpdateJdkWithContext(ctx context.Context, request *UpdateJdkReq
     return
 }
 
+func NewUpdateLogstashInstanceRequest() (request *UpdateLogstashInstanceRequest) {
+    request = &UpdateLogstashInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "UpdateLogstashInstance")
+    
+    
+    return
+}
+
+func NewUpdateLogstashInstanceResponse() (response *UpdateLogstashInstanceResponse) {
+    response = &UpdateLogstashInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateLogstashInstance
+// 对集群进行节点规格变更，修改实例名称，修改配置，等操作。参数中InstanceId为必传参数，参数传递组合及含义如下：
+//
+// - InstanceName：修改实例名称(仅用于标识实例)
+//
+// - NodeNum: 修改实例节点数量（节点横向扩缩容，纵向扩缩容等）
+//
+// - YMLConfig: 修改实例YML配置
+//
+// - BindedES：修改绑定的ES集群配置
+//
+// 以上参数组合只能传递一种，多传或少传均会导致请求失败
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateLogstashInstance(request *UpdateLogstashInstanceRequest) (response *UpdateLogstashInstanceResponse, err error) {
+    return c.UpdateLogstashInstanceWithContext(context.Background(), request)
+}
+
+// UpdateLogstashInstance
+// 对集群进行节点规格变更，修改实例名称，修改配置，等操作。参数中InstanceId为必传参数，参数传递组合及含义如下：
+//
+// - InstanceName：修改实例名称(仅用于标识实例)
+//
+// - NodeNum: 修改实例节点数量（节点横向扩缩容，纵向扩缩容等）
+//
+// - YMLConfig: 修改实例YML配置
+//
+// - BindedES：修改绑定的ES集群配置
+//
+// 以上参数组合只能传递一种，多传或少传均会导致请求失败
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UpdateLogstashInstanceWithContext(ctx context.Context, request *UpdateLogstashInstanceRequest) (response *UpdateLogstashInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpdateLogstashInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateLogstashInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateLogstashInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateLogstashPipelineDescRequest() (request *UpdateLogstashPipelineDescRequest) {
+    request = &UpdateLogstashPipelineDescRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("es", APIVersion, "UpdateLogstashPipelineDesc")
+    
+    
+    return
+}
+
+func NewUpdateLogstashPipelineDescResponse() (response *UpdateLogstashPipelineDescResponse) {
+    response = &UpdateLogstashPipelineDescResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateLogstashPipelineDesc
+// 用于更新管道描述信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) UpdateLogstashPipelineDesc(request *UpdateLogstashPipelineDescRequest) (response *UpdateLogstashPipelineDescResponse, err error) {
+    return c.UpdateLogstashPipelineDescWithContext(context.Background(), request)
+}
+
+// UpdateLogstashPipelineDesc
+// 用于更新管道描述信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) UpdateLogstashPipelineDescWithContext(ctx context.Context, request *UpdateLogstashPipelineDescRequest) (response *UpdateLogstashPipelineDescResponse, err error) {
+    if request == nil {
+        request = NewUpdateLogstashPipelineDescRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateLogstashPipelineDesc require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateLogstashPipelineDescResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdatePluginsRequest() (request *UpdatePluginsRequest) {
     request = &UpdatePluginsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1054,6 +2142,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1071,6 +2160,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
+//  FAILEDOPERATION_ERRORCLUSTERSTATEUNHEALTH = "FailedOperation.ErrorClusterStateUnhealth"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"

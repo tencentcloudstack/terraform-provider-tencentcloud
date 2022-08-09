@@ -21,7 +21,6 @@ import (
 )
 
 type AclConfig struct {
-
 	// 协议类型, 可取值tcp, udp, all
 	ForwardProtocol *string `json:"ForwardProtocol,omitempty" name:"ForwardProtocol"`
 
@@ -46,7 +45,6 @@ type AclConfig struct {
 }
 
 type AclConfigRelation struct {
-
 	// acl策略
 	AclConfig *AclConfig `json:"AclConfig,omitempty" name:"AclConfig"`
 
@@ -54,9 +52,42 @@ type AclConfigRelation struct {
 	InstanceDetailList []*InstanceRelation `json:"InstanceDetailList,omitempty" name:"InstanceDetailList"`
 }
 
+type AnycastOutPackRelation struct {
+	// 业务带宽(单位M)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NormalBandwidth *uint64 `json:"NormalBandwidth,omitempty" name:"NormalBandwidth"`
+
+	// 转发规则数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ForwardRulesLimit *uint64 `json:"ForwardRulesLimit,omitempty" name:"ForwardRulesLimit"`
+
+	// 自动续费标记
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoRenewFlag *uint64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 到期时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurDeadline *string `json:"CurDeadline,omitempty" name:"CurDeadline"`
+}
+
+// Predefined struct for user
+type AssociateDDoSEipAddressRequestParams struct {
+	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 资源实例ID对应的高防弹性公网IP。
+	Eip *string `json:"Eip,omitempty" name:"Eip"`
+
+	// 要绑定的实例 ID。实例 ID 形如：ins-11112222。可通过登录控制台查询，也可通过 DescribeInstances 接口返回值中的InstanceId获取。
+	CvmInstanceID *string `json:"CvmInstanceID,omitempty" name:"CvmInstanceID"`
+
+	// cvm实例所在地域，例如：ap-hongkong。
+	CvmRegion *string `json:"CvmRegion,omitempty" name:"CvmRegion"`
+}
+
 type AssociateDDoSEipAddressRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -92,13 +123,15 @@ func (r *AssociateDDoSEipAddressRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type AssociateDDoSEipAddressResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type AssociateDDoSEipAddressResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *AssociateDDoSEipAddressResponseParams `json:"Response"`
 }
 
 func (r *AssociateDDoSEipAddressResponse) ToJsonString() string {
@@ -112,9 +145,27 @@ func (r *AssociateDDoSEipAddressResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type AssociateDDoSEipLoadBalancerRequestParams struct {
+	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 资源实例ID对应的高防弹性公网IP。
+	Eip *string `json:"Eip,omitempty" name:"Eip"`
+
+	// 要绑定的负载均衡ID。负载均衡 ID 形如：lb-0000002i。可通过登录控制台查询，也可通过 DescribeLoadBalancers 接口返回值中的LoadBalancerId获取。
+	LoadBalancerID *string `json:"LoadBalancerID,omitempty" name:"LoadBalancerID"`
+
+	// CLB所在地域，例如：ap-hongkong。
+	LoadBalancerRegion *string `json:"LoadBalancerRegion,omitempty" name:"LoadBalancerRegion"`
+
+	// CLB内网IP
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+}
+
 type AssociateDDoSEipLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -154,13 +205,15 @@ func (r *AssociateDDoSEipLoadBalancerRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type AssociateDDoSEipLoadBalancerResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type AssociateDDoSEipLoadBalancerResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *AssociateDDoSEipLoadBalancerResponseParams `json:"Response"`
 }
 
 func (r *AssociateDDoSEipLoadBalancerResponse) ToJsonString() string {
@@ -175,7 +228,6 @@ func (r *AssociateDDoSEipLoadBalancerResponse) FromJsonString(s string) error {
 }
 
 type BGPIPInstance struct {
-
 	// 资产实例的详细信息
 	InstanceDetail *InstanceRelation `json:"InstanceDetail,omitempty" name:"InstanceDetail"`
 
@@ -252,10 +304,26 @@ type BGPIPInstance struct {
 	// 是否Ipv6版本的IP, 是为1，否为0
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	V6Flag *uint64 `json:"V6Flag,omitempty" name:"V6Flag"`
+
+	// 是否渠道版高防IP，是为1，否为0
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BGPIPChannelFlag *uint64 `json:"BGPIPChannelFlag,omitempty" name:"BGPIPChannelFlag"`
+
+	// 资源关联标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagInfoList []*TagInfo `json:"TagInfoList,omitempty" name:"TagInfoList"`
+
+	// 资产实例所属的全力防护套餐包详情，
+	// 注意：当资产实例不是全力防护套餐包的实例时，此字段为null
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AnycastOutPackRelation *AnycastOutPackRelation `json:"AnycastOutPackRelation,omitempty" name:"AnycastOutPackRelation"`
+
+	// 资源实例版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceVersion *uint64 `json:"InstanceVersion,omitempty" name:"InstanceVersion"`
 }
 
 type BGPIPInstanceSpecification struct {
-
 	// 保底防护峰值，单位Mbps
 	ProtectBandwidth *uint64 `json:"ProtectBandwidth,omitempty" name:"ProtectBandwidth"`
 
@@ -288,7 +356,6 @@ type BGPIPInstanceSpecification struct {
 }
 
 type BGPIPInstanceUsages struct {
-
 	// 已使用的端口规则数，单位条
 	PortRulesUsage *uint64 `json:"PortRulesUsage,omitempty" name:"PortRulesUsage"`
 
@@ -300,7 +367,6 @@ type BGPIPInstanceUsages struct {
 }
 
 type BGPInstance struct {
-
 	// 资产实例的详细信息
 	InstanceDetail *InstanceRelation `json:"InstanceDetail,omitempty" name:"InstanceDetail"`
 
@@ -351,10 +417,15 @@ type BGPInstance struct {
 
 	// CC防护开关
 	CCEnable *int64 `json:"CCEnable,omitempty" name:"CCEnable"`
+
+	// 资源关联标签
+	TagInfoList []*TagInfo `json:"TagInfoList,omitempty" name:"TagInfoList"`
+
+	// 新版本1ip高防包
+	IpCountNewFlag *uint64 `json:"IpCountNewFlag,omitempty" name:"IpCountNewFlag"`
 }
 
 type BGPInstanceSpecification struct {
-
 	// 保底防护峰值，单位Gbps
 	ProtectBandwidth *uint64 `json:"ProtectBandwidth,omitempty" name:"ProtectBandwidth"`
 
@@ -369,10 +440,33 @@ type BGPInstanceSpecification struct {
 	// 1：开启了自动续费
 	// ]
 	AutoRenewFlag *uint64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 联合产品标记，0代表普通高防包，1代表联合高防包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnionPackFlag *uint64 `json:"UnionPackFlag,omitempty" name:"UnionPackFlag"`
+
+	// 业务带宽
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceBandWidth *uint64 `json:"ServiceBandWidth,omitempty" name:"ServiceBandWidth"`
+
+	// 战斗服版本标记，0表示普通高防包，1表示战斗服高防包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BattleEditionFlag *uint64 `json:"BattleEditionFlag,omitempty" name:"BattleEditionFlag"`
+
+	// 渠道版标记，0表示普通高防包，1表示渠道版高防包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChannelEditionFlag *uint64 `json:"ChannelEditionFlag,omitempty" name:"ChannelEditionFlag"`
+
+	// 高防包企业版标记，0表示普通高防包；1表示企业版高防包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnterpriseFlag *uint64 `json:"EnterpriseFlag,omitempty" name:"EnterpriseFlag"`
+
+	// 高防包企业版弹性阈值，0表示未开启；大于0为弹性防护阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ElasticLimit *uint64 `json:"ElasticLimit,omitempty" name:"ElasticLimit"`
 }
 
 type BGPInstanceUsages struct {
-
 	// 已使用的防护次数，单位次
 	ProtectCountUsage *uint64 `json:"ProtectCountUsage,omitempty" name:"ProtectCountUsage"`
 
@@ -384,7 +478,6 @@ type BGPInstanceUsages struct {
 }
 
 type BlackWhiteIpRelation struct {
-
 	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
@@ -396,10 +489,12 @@ type BlackWhiteIpRelation struct {
 
 	// ip掩码，0表示32位完整ip
 	Mask *uint64 `json:"Mask,omitempty" name:"Mask"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
 }
 
 type BoundIpInfo struct {
-
 	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
@@ -409,7 +504,7 @@ type BoundIpInfo struct {
 	// IP所属的资源实例ID，绑定操作为必填项，解绑操作可不填。例如是弹性网卡的IP，则InstanceId填写弹性网卡的ID(eni-*); 如果绑定的是托管IP没有对应的资源实例ID，请填写"none";
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 产品分类下的子类型，绑定操作为必填项，解绑操作可不填。取值[cvm（CVM），lb（负载均衡器），eni（弹性网卡），vpngw（VPN），natgw（NAT），waf（WAF），fpc（金融），gaap（GAAP），other（托管IP），eip（黑石弹性IP）]
+	// 产品分类下的子类型，绑定操作为必填项，解绑操作可不填。取值[cvm（CVM），lb（负载均衡器），eni（弹性网卡），vpngw（VPN），natgw（NAT），waf（WAF），fpc（金融），gaap（GAAP），other（托管IP），eip（弹性公网常规IP）]
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
 	// 运营商，绑定操作为必填项，解绑操作可不填。0：电信；1：联通；2：移动；5：BGP
@@ -417,7 +512,6 @@ type BoundIpInfo struct {
 }
 
 type CCLevelPolicy struct {
-
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -441,7 +535,6 @@ type CCLevelPolicy struct {
 }
 
 type CCPrecisionPlyRecord struct {
-
 	// 配置项类型，当前仅支持value
 	FieldType *string `json:"FieldType,omitempty" name:"FieldType"`
 
@@ -456,7 +549,6 @@ type CCPrecisionPlyRecord struct {
 }
 
 type CCPrecisionPolicy struct {
-
 	// 策略Id
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
@@ -486,7 +578,6 @@ type CCPrecisionPolicy struct {
 }
 
 type CCReqLimitPolicy struct {
-
 	// 策略Id
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
@@ -513,7 +604,6 @@ type CCReqLimitPolicy struct {
 }
 
 type CCReqLimitPolicyRecord struct {
-
 	// 统计周期，可取值1，10，30，60，单位秒
 	Period *uint64 `json:"Period,omitempty" name:"Period"`
 
@@ -540,7 +630,6 @@ type CCReqLimitPolicyRecord struct {
 }
 
 type CCThresholdPolicy struct {
-
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -564,7 +653,6 @@ type CCThresholdPolicy struct {
 }
 
 type CcBlackWhiteIpPolicy struct {
-
 	// 策略Id
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
@@ -597,7 +685,6 @@ type CcBlackWhiteIpPolicy struct {
 }
 
 type CcGeoIPBlockConfig struct {
-
 	// 区域类型，取值[
 	// oversea(海外)
 	// china(国内)
@@ -619,7 +706,6 @@ type CcGeoIPBlockConfig struct {
 }
 
 type CcGeoIpPolicyNew struct {
-
 	// 策略Id
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
@@ -652,7 +738,6 @@ type CcGeoIpPolicyNew struct {
 }
 
 type CertIdInsL7Rules struct {
-
 	// 使用证书的规则列表
 	L7Rules []*InsL7Rules `json:"L7Rules,omitempty" name:"L7Rules"`
 
@@ -661,7 +746,6 @@ type CertIdInsL7Rules struct {
 }
 
 type ConnectLimitConfig struct {
-
 	// 基于源IP+目的IP的每秒新建数限制
 	SdNewLimit *uint64 `json:"SdNewLimit,omitempty" name:"SdNewLimit"`
 
@@ -691,7 +775,6 @@ type ConnectLimitConfig struct {
 }
 
 type ConnectLimitRelation struct {
-
 	// 连接抑制配置
 	ConnectLimitConfig *ConnectLimitConfig `json:"ConnectLimitConfig,omitempty" name:"ConnectLimitConfig"`
 
@@ -699,9 +782,21 @@ type ConnectLimitRelation struct {
 	InstanceDetailList []*InstanceRelation `json:"InstanceDetailList,omitempty" name:"InstanceDetailList"`
 }
 
+// Predefined struct for user
+type CreateBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
 type CreateBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -733,13 +828,15 @@ func (r *CreateBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *CreateBlackWhiteIpListResponse) ToJsonString() string {
@@ -753,9 +850,27 @@ func (r *CreateBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateBoundIPRequestParams struct {
+	// 大禹子产品代号（bgp表示独享包；bgp-multip表示共享包）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 绑定到资源实例的IP数组，当资源实例为高防包(独享包)时，数组只允许填1个IP；当没有要绑定的IP时可以为空数组；但是BoundDevList和UnBoundDevList至少有一个不为空；
+	BoundDevList []*BoundIpInfo `json:"BoundDevList,omitempty" name:"BoundDevList"`
+
+	// 与资源实例解绑的IP数组，当资源实例为高防包(独享包)时，数组只允许填1个IP；当没有要解绑的IP时可以为空数组；但是BoundDevList和UnBoundDevList至少有一个不为空；
+	UnBoundDevList []*BoundIpInfo `json:"UnBoundDevList,omitempty" name:"UnBoundDevList"`
+
+	// 已弃用，不填
+	CopyPolicy *string `json:"CopyPolicy,omitempty" name:"CopyPolicy"`
+}
+
 type CreateBoundIPRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgp表示独享包；bgp-multip表示共享包）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -795,16 +910,18 @@ func (r *CreateBoundIPRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateBoundIPResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateBoundIPResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 成功码
-		Success *SuccessCode `json:"Success,omitempty" name:"Success"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateBoundIPResponseParams `json:"Response"`
 }
 
 func (r *CreateBoundIPResponse) ToJsonString() string {
@@ -818,9 +935,30 @@ func (r *CreateBoundIPResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCCPrecisionPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP值
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 协议， 可取值HTTP，HTTPS
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 策略方式，可取值alg表示验证码，drop表示丢弃
+	PolicyAction *string `json:"PolicyAction,omitempty" name:"PolicyAction"`
+
+	// 策略记录
+	PolicyList []*CCPrecisionPlyRecord `json:"PolicyList,omitempty" name:"PolicyList"`
+}
+
 type CreateCCPrecisionPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -864,13 +1002,15 @@ func (r *CreateCCPrecisionPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCCPrecisionPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateCCPrecisionPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateCCPrecisionPolicyResponseParams `json:"Response"`
 }
 
 func (r *CreateCCPrecisionPolicyResponse) ToJsonString() string {
@@ -884,9 +1024,8 @@ func (r *CreateCCPrecisionPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type CreateCCReqLimitPolicyRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type CreateCCReqLimitPolicyRequestParams struct {
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -901,6 +1040,31 @@ type CreateCCReqLimitPolicyRequest struct {
 
 	// 策略项
 	Policy *CCReqLimitPolicyRecord `json:"Policy,omitempty" name:"Policy"`
+
+	// 是否为兜底频控
+	IsGlobal *int64 `json:"IsGlobal,omitempty" name:"IsGlobal"`
+}
+
+type CreateCCReqLimitPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP值
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 协议，可取值HTTP，HTTPS
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 策略项
+	Policy *CCReqLimitPolicyRecord `json:"Policy,omitempty" name:"Policy"`
+
+	// 是否为兜底频控
+	IsGlobal *int64 `json:"IsGlobal,omitempty" name:"IsGlobal"`
 }
 
 func (r *CreateCCReqLimitPolicyRequest) ToJsonString() string {
@@ -920,19 +1084,22 @@ func (r *CreateCCReqLimitPolicyRequest) FromJsonString(s string) error {
 	delete(f, "Protocol")
 	delete(f, "Domain")
 	delete(f, "Policy")
+	delete(f, "IsGlobal")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCCReqLimitPolicyRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCCReqLimitPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateCCReqLimitPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateCCReqLimitPolicyResponseParams `json:"Response"`
 }
 
 func (r *CreateCCReqLimitPolicyResponse) ToJsonString() string {
@@ -946,9 +1113,30 @@ func (r *CreateCCReqLimitPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCcBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*IpSegment `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// Ip地址
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
 type CreateCcBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -992,13 +1180,15 @@ func (r *CreateCcBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCcBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateCcBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateCcBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *CreateCcBlackWhiteIpListResponse) ToJsonString() string {
@@ -1012,9 +1202,27 @@ func (r *CreateCcBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCcGeoIPBlockConfigRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// ip地址
+	IP *string `json:"IP,omitempty" name:"IP"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议类型
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// CC区域封禁配置，填写参数时配置ID请为空
+	CcGeoIPBlockConfig *CcGeoIPBlockConfig `json:"CcGeoIPBlockConfig,omitempty" name:"CcGeoIPBlockConfig"`
+}
+
 type CreateCcGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1054,13 +1262,15 @@ func (r *CreateCcGeoIPBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCcGeoIPBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateCcGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateCcGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateCcGeoIPBlockConfigResponse) ToJsonString() string {
@@ -1074,9 +1284,21 @@ func (r *CreateCcGeoIPBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSAIRequestParams struct {
+	// 资源实例ID列表
+	InstanceIdList []*string `json:"InstanceIdList,omitempty" name:"InstanceIdList"`
+
+	// AI防护开关，取值[
+	// on(开启)
+	// off(关闭)
+	// ]
+	DDoSAI *string `json:"DDoSAI,omitempty" name:"DDoSAI"`
+}
+
 type CreateDDoSAIRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID列表
 	InstanceIdList []*string `json:"InstanceIdList,omitempty" name:"InstanceIdList"`
 
@@ -1107,13 +1329,15 @@ func (r *CreateDDoSAIRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSAIResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDDoSAIResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDDoSAIResponseParams `json:"Response"`
 }
 
 func (r *CreateDDoSAIResponse) ToJsonString() string {
@@ -1127,9 +1351,21 @@ func (r *CreateDDoSAIResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*IpSegment `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
 type CreateDDoSBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1161,13 +1397,15 @@ func (r *CreateDDoSBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDDoSBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDDoSBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *CreateDDoSBlackWhiteIpListResponse) ToJsonString() string {
@@ -1181,9 +1419,18 @@ func (r *CreateDDoSBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSConnectLimitRequestParams struct {
+	// 资源实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 连接抑制配置
+	ConnectLimitConfig *ConnectLimitConfig `json:"ConnectLimitConfig,omitempty" name:"ConnectLimitConfig"`
+}
+
 type CreateDDoSConnectLimitRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1211,13 +1458,15 @@ func (r *CreateDDoSConnectLimitRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSConnectLimitResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDDoSConnectLimitResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDDoSConnectLimitResponseParams `json:"Response"`
 }
 
 func (r *CreateDDoSConnectLimitResponse) ToJsonString() string {
@@ -1231,9 +1480,18 @@ func (r *CreateDDoSConnectLimitResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSGeoIPBlockConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// DDoS区域封禁配置，填写参数时配置ID请为空
+	DDoSGeoIPBlockConfig *DDoSGeoIPBlockConfig `json:"DDoSGeoIPBlockConfig,omitempty" name:"DDoSGeoIPBlockConfig"`
+}
+
 type CreateDDoSGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1261,13 +1519,15 @@ func (r *CreateDDoSGeoIPBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSGeoIPBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDDoSGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDDoSGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateDDoSGeoIPBlockConfigResponse) ToJsonString() string {
@@ -1281,9 +1541,18 @@ func (r *CreateDDoSGeoIPBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSSpeedLimitConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 访问限速配置，填写参数时配置ID请为空
+	DDoSSpeedLimitConfig *DDoSSpeedLimitConfig `json:"DDoSSpeedLimitConfig,omitempty" name:"DDoSSpeedLimitConfig"`
+}
+
 type CreateDDoSSpeedLimitConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1311,13 +1580,15 @@ func (r *CreateDDoSSpeedLimitConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDDoSSpeedLimitConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDDoSSpeedLimitConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDDoSSpeedLimitConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateDDoSSpeedLimitConfigResponse) ToJsonString() string {
@@ -1331,9 +1602,21 @@ func (r *CreateDDoSSpeedLimitConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDefaultAlarmThresholdRequestParams struct {
+	// 默认告警阈值配置
+	DefaultAlarmConfig *DefaultAlarmThreshold `json:"DefaultAlarmConfig,omitempty" name:"DefaultAlarmConfig"`
+
+	// 产品类型，取值[
+	// bgp(表示高防包产品)
+	// bgpip(表示高防IP产品)
+	// ]
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+}
+
 type CreateDefaultAlarmThresholdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 默认告警阈值配置
 	DefaultAlarmConfig *DefaultAlarmThreshold `json:"DefaultAlarmConfig,omitempty" name:"DefaultAlarmConfig"`
 
@@ -1364,13 +1647,15 @@ func (r *CreateDefaultAlarmThresholdRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateDefaultAlarmThresholdResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateDefaultAlarmThresholdResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateDefaultAlarmThresholdResponseParams `json:"Response"`
 }
 
 func (r *CreateDefaultAlarmThresholdResponse) ToJsonString() string {
@@ -1384,9 +1669,15 @@ func (r *CreateDefaultAlarmThresholdResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateIPAlarmThresholdConfigRequestParams struct {
+	// IP告警阈值配置列表
+	IpAlarmThresholdConfigList []*IPAlarmThresholdRelation `json:"IpAlarmThresholdConfigList,omitempty" name:"IpAlarmThresholdConfigList"`
+}
+
 type CreateIPAlarmThresholdConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// IP告警阈值配置列表
 	IpAlarmThresholdConfigList []*IPAlarmThresholdRelation `json:"IpAlarmThresholdConfigList,omitempty" name:"IpAlarmThresholdConfigList"`
 }
@@ -1410,13 +1701,15 @@ func (r *CreateIPAlarmThresholdConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateIPAlarmThresholdConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateIPAlarmThresholdConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateIPAlarmThresholdConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateIPAlarmThresholdConfigResponse) ToJsonString() string {
@@ -1430,9 +1723,18 @@ func (r *CreateIPAlarmThresholdConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateL7RuleCertsRequestParams struct {
+	// SSL证书ID
+	CertId *string `json:"CertId,omitempty" name:"CertId"`
+
+	// L7域名转发规则列表
+	L7Rules []*InsL7Rules `json:"L7Rules,omitempty" name:"L7Rules"`
+}
+
 type CreateL7RuleCertsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// SSL证书ID
 	CertId *string `json:"CertId,omitempty" name:"CertId"`
 
@@ -1460,16 +1762,18 @@ func (r *CreateL7RuleCertsRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateL7RuleCertsResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateL7RuleCertsResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 成功码
-		Success *SuccessCode `json:"Success,omitempty" name:"Success"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateL7RuleCertsResponseParams `json:"Response"`
 }
 
 func (r *CreateL7RuleCertsResponse) ToJsonString() string {
@@ -1483,9 +1787,96 @@ func (r *CreateL7RuleCertsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateNewL7RulesRequestParams struct {
+	// 规则列表
+	Rules []*L7RuleEntry `json:"Rules,omitempty" name:"Rules"`
+
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源ID列表
+	IdList []*string `json:"IdList,omitempty" name:"IdList"`
+
+	// 资源IP列表
+	VipList []*string `json:"VipList,omitempty" name:"VipList"`
+}
+
+type CreateNewL7RulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 规则列表
+	Rules []*L7RuleEntry `json:"Rules,omitempty" name:"Rules"`
+
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源ID列表
+	IdList []*string `json:"IdList,omitempty" name:"IdList"`
+
+	// 资源IP列表
+	VipList []*string `json:"VipList,omitempty" name:"VipList"`
+}
+
+func (r *CreateNewL7RulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateNewL7RulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Rules")
+	delete(f, "Business")
+	delete(f, "IdList")
+	delete(f, "VipList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNewL7RulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateNewL7RulesResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateNewL7RulesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateNewL7RulesResponseParams `json:"Response"`
+}
+
+func (r *CreateNewL7RulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateNewL7RulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePacketFilterConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 特征过滤规则
+	PacketFilterConfig *PacketFilterConfig `json:"PacketFilterConfig,omitempty" name:"PacketFilterConfig"`
+}
+
 type CreatePacketFilterConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1513,13 +1904,15 @@ func (r *CreatePacketFilterConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePacketFilterConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreatePacketFilterConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreatePacketFilterConfigResponseParams `json:"Response"`
 }
 
 func (r *CreatePacketFilterConfigResponse) ToJsonString() string {
@@ -1533,9 +1926,18 @@ func (r *CreatePacketFilterConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePortAclConfigListRequestParams struct {
+	// 资源实例ID列表
+	InstanceIdList []*string `json:"InstanceIdList,omitempty" name:"InstanceIdList"`
+
+	// 端口acl策略
+	AclConfig *AclConfig `json:"AclConfig,omitempty" name:"AclConfig"`
+}
+
 type CreatePortAclConfigListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID列表
 	InstanceIdList []*string `json:"InstanceIdList,omitempty" name:"InstanceIdList"`
 
@@ -1563,13 +1965,15 @@ func (r *CreatePortAclConfigListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePortAclConfigListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreatePortAclConfigListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreatePortAclConfigListResponseParams `json:"Response"`
 }
 
 func (r *CreatePortAclConfigListResponse) ToJsonString() string {
@@ -1583,9 +1987,18 @@ func (r *CreatePortAclConfigListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePortAclConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 端口acl策略
+	AclConfig *AclConfig `json:"AclConfig,omitempty" name:"AclConfig"`
+}
+
 type CreatePortAclConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1613,13 +2026,15 @@ func (r *CreatePortAclConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreatePortAclConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreatePortAclConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreatePortAclConfigResponseParams `json:"Response"`
 }
 
 func (r *CreatePortAclConfigResponse) ToJsonString() string {
@@ -1633,9 +2048,18 @@ func (r *CreatePortAclConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateProtocolBlockConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 协议封禁配置
+	ProtocolBlockConfig *ProtocolBlockConfig `json:"ProtocolBlockConfig,omitempty" name:"ProtocolBlockConfig"`
+}
+
 type CreateProtocolBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1663,13 +2087,15 @@ func (r *CreateProtocolBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateProtocolBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateProtocolBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateProtocolBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateProtocolBlockConfigResponse) ToJsonString() string {
@@ -1683,8 +2109,21 @@ func (r *CreateProtocolBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateSchedulingDomainRequestParams struct {
+	// 代表是否混合云本地化的产品。
+	// hybrid: 宙斯盾本地化
+	// 不填写：其他
+	Product *string `json:"Product,omitempty" name:"Product"`
+}
+
 type CreateSchedulingDomainRequest struct {
 	*tchttp.BaseRequest
+	
+	// 代表是否混合云本地化的产品。
+	// hybrid: 宙斯盾本地化
+	// 不填写：其他
+	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
 func (r *CreateSchedulingDomainRequest) ToJsonString() string {
@@ -1699,22 +2138,25 @@ func (r *CreateSchedulingDomainRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "Product")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSchedulingDomainRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateSchedulingDomainResponseParams struct {
+	// 新创建的域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateSchedulingDomainResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 新创建的域名
-		Domain *string `json:"Domain,omitempty" name:"Domain"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateSchedulingDomainResponseParams `json:"Response"`
 }
 
 func (r *CreateSchedulingDomainResponse) ToJsonString() string {
@@ -1728,9 +2170,18 @@ func (r *CreateSchedulingDomainResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateWaterPrintConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 水印防护配置
+	WaterPrintConfig *WaterPrintConfig `json:"WaterPrintConfig,omitempty" name:"WaterPrintConfig"`
+}
+
 type CreateWaterPrintConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1758,13 +2209,15 @@ func (r *CreateWaterPrintConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateWaterPrintConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateWaterPrintConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateWaterPrintConfigResponseParams `json:"Response"`
 }
 
 func (r *CreateWaterPrintConfigResponse) ToJsonString() string {
@@ -1778,9 +2231,15 @@ func (r *CreateWaterPrintConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateWaterPrintKeyRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type CreateWaterPrintKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
@@ -1804,13 +2263,15 @@ func (r *CreateWaterPrintKeyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateWaterPrintKeyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type CreateWaterPrintKeyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *CreateWaterPrintKeyResponseParams `json:"Response"`
 }
 
 func (r *CreateWaterPrintKeyResponse) ToJsonString() string {
@@ -1825,7 +2286,6 @@ func (r *CreateWaterPrintKeyResponse) FromJsonString(s string) error {
 }
 
 type DDoSAIRelation struct {
-
 	// AI防护开关，取值[
 	// on(开启)
 	// off(关闭)
@@ -1837,9 +2297,8 @@ type DDoSAIRelation struct {
 }
 
 type DDoSGeoIPBlockConfig struct {
-
 	// 区域类型，取值[
-	// oversea(海外)
+	// oversea(境外)
 	// china(国内)
 	// customized(自定义地区)
 	// ]
@@ -1859,7 +2318,6 @@ type DDoSGeoIPBlockConfig struct {
 }
 
 type DDoSGeoIPBlockConfigRelation struct {
-
 	// DDoS区域封禁配置
 	GeoIPBlockConfig *DDoSGeoIPBlockConfig `json:"GeoIPBlockConfig,omitempty" name:"GeoIPBlockConfig"`
 
@@ -1868,7 +2326,6 @@ type DDoSGeoIPBlockConfigRelation struct {
 }
 
 type DDoSSpeedLimitConfig struct {
-
 	// 限速模式，取值[
 	// 1(基于源IP限速)
 	// 2(基于目的端口限速)
@@ -1899,7 +2356,6 @@ type DDoSSpeedLimitConfig struct {
 }
 
 type DDoSSpeedLimitConfigRelation struct {
-
 	// DDoS访问限速配置
 	SpeedLimitConfig *DDoSSpeedLimitConfig `json:"SpeedLimitConfig,omitempty" name:"SpeedLimitConfig"`
 
@@ -1908,7 +2364,6 @@ type DDoSSpeedLimitConfigRelation struct {
 }
 
 type DefaultAlarmThreshold struct {
-
 	// 告警阈值类型，取值[
 	// 1(入流量告警阈值)
 	// 2(攻击清洗流量告警阈值)
@@ -1919,9 +2374,21 @@ type DefaultAlarmThreshold struct {
 	AlarmThreshold *uint64 `json:"AlarmThreshold,omitempty" name:"AlarmThreshold"`
 }
 
+// Predefined struct for user
+type DeleteBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
 type DeleteBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -1953,13 +2420,15 @@ func (r *DeleteBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DeleteBlackWhiteIpListResponse) ToJsonString() string {
@@ -1973,9 +2442,24 @@ func (r *DeleteBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCLevelPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 配置策略的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，可取值http
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
 type DeleteCCLevelPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2011,13 +2495,15 @@ func (r *DeleteCCLevelPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCLevelPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCCLevelPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCCLevelPolicyResponseParams `json:"Response"`
 }
 
 func (r *DeleteCCLevelPolicyResponse) ToJsonString() string {
@@ -2031,9 +2517,18 @@ func (r *DeleteCCLevelPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCPrecisionPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+}
+
 type DeleteCCPrecisionPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2061,13 +2556,15 @@ func (r *DeleteCCPrecisionPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCPrecisionPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCCPrecisionPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCCPrecisionPolicyResponseParams `json:"Response"`
 }
 
 func (r *DeleteCCPrecisionPolicyResponse) ToJsonString() string {
@@ -2081,9 +2578,18 @@ func (r *DeleteCCPrecisionPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCRequestLimitPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+}
+
 type DeleteCCRequestLimitPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2111,13 +2617,15 @@ func (r *DeleteCCRequestLimitPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCRequestLimitPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCCRequestLimitPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCCRequestLimitPolicyResponseParams `json:"Response"`
 }
 
 func (r *DeleteCCRequestLimitPolicyResponse) ToJsonString() string {
@@ -2131,9 +2639,24 @@ func (r *DeleteCCRequestLimitPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCThresholdPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 配置策略的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，可取值http
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
 type DeleteCCThresholdPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2169,13 +2692,15 @@ func (r *DeleteCCThresholdPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCCThresholdPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCCThresholdPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCCThresholdPolicyResponseParams `json:"Response"`
 }
 
 func (r *DeleteCCThresholdPolicyResponse) ToJsonString() string {
@@ -2189,9 +2714,18 @@ func (r *DeleteCCThresholdPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCcBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+}
+
 type DeleteCcBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2219,13 +2753,15 @@ func (r *DeleteCcBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCcBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCcBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCcBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DeleteCcBlackWhiteIpListResponse) ToJsonString() string {
@@ -2239,9 +2775,18 @@ func (r *DeleteCcBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCcGeoIPBlockConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// CC区域封禁配置，填写参数时配置ID不能为空
+	CcGeoIPBlockConfig *CcGeoIPBlockConfig `json:"CcGeoIPBlockConfig,omitempty" name:"CcGeoIPBlockConfig"`
+}
+
 type DeleteCcGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2269,13 +2814,15 @@ func (r *DeleteCcGeoIPBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteCcGeoIPBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteCcGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteCcGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *DeleteCcGeoIPBlockConfigResponse) ToJsonString() string {
@@ -2289,9 +2836,21 @@ func (r *DeleteCcGeoIPBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*IpSegment `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+}
+
 type DeleteDDoSBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2323,13 +2882,15 @@ func (r *DeleteDDoSBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteDDoSBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteDDoSBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DeleteDDoSBlackWhiteIpListResponse) ToJsonString() string {
@@ -2343,9 +2904,18 @@ func (r *DeleteDDoSBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSGeoIPBlockConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// DDoS区域封禁配置，填写参数时配置ID不能为空
+	DDoSGeoIPBlockConfig *DDoSGeoIPBlockConfig `json:"DDoSGeoIPBlockConfig,omitempty" name:"DDoSGeoIPBlockConfig"`
+}
+
 type DeleteDDoSGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2373,13 +2943,15 @@ func (r *DeleteDDoSGeoIPBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSGeoIPBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteDDoSGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteDDoSGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *DeleteDDoSGeoIPBlockConfigResponse) ToJsonString() string {
@@ -2393,9 +2965,18 @@ func (r *DeleteDDoSGeoIPBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSSpeedLimitConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 访问限速配置，填写参数时配置ID不能为空
+	DDoSSpeedLimitConfig *DDoSSpeedLimitConfig `json:"DDoSSpeedLimitConfig,omitempty" name:"DDoSSpeedLimitConfig"`
+}
+
 type DeleteDDoSSpeedLimitConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2423,13 +3004,15 @@ func (r *DeleteDDoSSpeedLimitConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteDDoSSpeedLimitConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteDDoSSpeedLimitConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteDDoSSpeedLimitConfigResponseParams `json:"Response"`
 }
 
 func (r *DeleteDDoSSpeedLimitConfigResponse) ToJsonString() string {
@@ -2443,9 +3026,18 @@ func (r *DeleteDDoSSpeedLimitConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeletePacketFilterConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 特征过滤配置
+	PacketFilterConfig *PacketFilterConfig `json:"PacketFilterConfig,omitempty" name:"PacketFilterConfig"`
+}
+
 type DeletePacketFilterConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2473,13 +3065,15 @@ func (r *DeletePacketFilterConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeletePacketFilterConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeletePacketFilterConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeletePacketFilterConfigResponseParams `json:"Response"`
 }
 
 func (r *DeletePacketFilterConfigResponse) ToJsonString() string {
@@ -2493,9 +3087,18 @@ func (r *DeletePacketFilterConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeletePortAclConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 端口acl策略
+	AclConfig *AclConfig `json:"AclConfig,omitempty" name:"AclConfig"`
+}
+
 type DeletePortAclConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2523,13 +3126,15 @@ func (r *DeletePortAclConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeletePortAclConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeletePortAclConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeletePortAclConfigResponseParams `json:"Response"`
 }
 
 func (r *DeletePortAclConfigResponse) ToJsonString() string {
@@ -2543,9 +3148,15 @@ func (r *DeletePortAclConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteWaterPrintConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type DeleteWaterPrintConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
@@ -2569,13 +3180,15 @@ func (r *DeleteWaterPrintConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteWaterPrintConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteWaterPrintConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteWaterPrintConfigResponseParams `json:"Response"`
 }
 
 func (r *DeleteWaterPrintConfigResponse) ToJsonString() string {
@@ -2589,9 +3202,18 @@ func (r *DeleteWaterPrintConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteWaterPrintKeyRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 水印密钥ID
+	KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+}
+
 type DeleteWaterPrintKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2619,13 +3241,15 @@ func (r *DeleteWaterPrintKeyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DeleteWaterPrintKeyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DeleteWaterPrintKeyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DeleteWaterPrintKeyResponseParams `json:"Response"`
 }
 
 func (r *DeleteWaterPrintKeyResponse) ToJsonString() string {
@@ -2639,9 +3263,15 @@ func (r *DeleteWaterPrintKeyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeBasicDeviceStatusRequestParams struct {
+	// IP 资源列表
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+}
+
 type DescribeBasicDeviceStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// IP 资源列表
 	IpList []*string `json:"IpList,omitempty" name:"IpList"`
 }
@@ -2665,19 +3295,21 @@ func (r *DescribeBasicDeviceStatusRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeBasicDeviceStatusResponse struct {
-	*tchttp.BaseResponse
-	Response *struct {
-
-		// 返回资源及状态，状态码：
+// Predefined struct for user
+type DescribeBasicDeviceStatusResponseParams struct {
+	// 返回资源及状态，状态码：
 	// 1 - 封堵状态
 	// 2 - 正常状态
 	// 3 - 攻击状态
-		Data []*KeyValue `json:"Data,omitempty" name:"Data"`
+	Data []*KeyValue `json:"Data,omitempty" name:"Data"`
 
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeBasicDeviceStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBasicDeviceStatusResponseParams `json:"Response"`
 }
 
 func (r *DescribeBasicDeviceStatusResponse) ToJsonString() string {
@@ -2691,9 +3323,39 @@ func (r *DescribeBasicDeviceStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeBizTrendRequestParams struct {
+	// 统计方式，可取值max, min, avg, sum, 如统计纬度是流量速率或包量速率，仅可取值max
+	Statistics *string `json:"Statistics,omitempty" name:"Statistics"`
+
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 统计周期，可取值300，1800，3600，21600，86400，单位秒
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间。 例：“2020-09-22 00:00:00”
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间。 例：“2020-09-22 00:00:00”
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 统计纬度，可取值connum, new_conn, inactive_conn, intraffic, outtraffic, inpkg, outpkg, qps
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 统计纬度为qps时，可选特定域名查询
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议及端口列表，协议可取值TCP, UDP, HTTP, HTTPS，仅统计纬度为连接数时有效
+	ProtoInfo []*ProtocolPort `json:"ProtoInfo,omitempty" name:"ProtoInfo"`
+}
+
 type DescribeBizTrendRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 统计方式，可取值max, min, avg, sum, 如统计纬度是流量速率或包量速率，仅可取值max
 	Statistics *string `json:"Statistics,omitempty" name:"Statistics"`
 
@@ -2749,19 +3411,21 @@ func (r *DescribeBizTrendRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeBizTrendResponseParams struct {
+	// 曲线图各个时间点的值
+	DataList []*float64 `json:"DataList,omitempty" name:"DataList"`
+
+	// 统计纬度
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeBizTrendResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 曲线图各个时间点的值
-		DataList []*float64 `json:"DataList,omitempty" name:"DataList"`
-
-		// 统计纬度
-		MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeBizTrendResponseParams `json:"Response"`
 }
 
 func (r *DescribeBizTrendResponse) ToJsonString() string {
@@ -2775,9 +3439,15 @@ func (r *DescribeBizTrendResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type DescribeBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
@@ -2801,19 +3471,21 @@ func (r *DescribeBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeBlackWhiteIpListResponseParams struct {
+	// 黑名单IP列表
+	BlackIpList []*string `json:"BlackIpList,omitempty" name:"BlackIpList"`
+
+	// 白名单IP列表
+	WhiteIpList []*string `json:"WhiteIpList,omitempty" name:"WhiteIpList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 黑名单IP列表
-		BlackIpList []*string `json:"BlackIpList,omitempty" name:"BlackIpList"`
-
-		// 白名单IP列表
-		WhiteIpList []*string `json:"WhiteIpList,omitempty" name:"WhiteIpList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DescribeBlackWhiteIpListResponse) ToJsonString() string {
@@ -2827,9 +3499,24 @@ func (r *DescribeBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCLevelListRequestParams struct {
+	// 大禹子产品代号（bgp-multip表示高防包）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 指定实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type DescribeCCLevelListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgp-multip表示高防包）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -2865,19 +3552,21 @@ func (r *DescribeCCLevelListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCLevelListResponseParams struct {
+	// 分级策略列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 分级策略列表总数
+	LevelList []*CCLevelPolicy `json:"LevelList,omitempty" name:"LevelList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCLevelListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 分级策略列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 分级策略列表详情
-		LevelList []*CCLevelPolicy `json:"LevelList,omitempty" name:"LevelList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCLevelListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCLevelListResponse) ToJsonString() string {
@@ -2891,9 +3580,24 @@ func (r *DescribeCCLevelListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCLevelPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP值
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，可取值HTTP，HTTPS
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
 type DescribeCCLevelPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -2929,16 +3633,18 @@ func (r *DescribeCCLevelPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCLevelPolicyResponseParams struct {
+	// CC防护等级，可取值loose表示宽松，strict表示严格，normal表示适中， emergency表示攻击紧急， sup_loose表示超级宽松，default表示默认策略（无频控配置下发），customized表示自定义策略
+	Level *string `json:"Level,omitempty" name:"Level"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCLevelPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// CC防护等级，可取值loose表示宽松，strict表示严格，normal表示适中， emergency表示攻击紧急， sup_loose表示超级宽松，default表示默认策略（无频控配置下发），customized表示自定义策略
-		Level *string `json:"Level,omitempty" name:"Level"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCLevelPolicyResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCLevelPolicyResponse) ToJsonString() string {
@@ -2952,10 +3658,9 @@ func (r *DescribeCCLevelPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeCCPrecisionPlyListRequest struct {
-	*tchttp.BaseRequest
-
-	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防ip）
+// Predefined struct for user
+type DescribeCCPrecisionPlyListRequestParams struct {
+	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防IP）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 页起始偏移，取值为(页码-1)*一页条数
@@ -2967,13 +3672,38 @@ type DescribeCCPrecisionPlyListRequest struct {
 	// 指定特定实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// ip地址，普通高防ip要传该字段
+	// IP地址，普通高防IP要传该字段
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 域名，普通高防ip要传该字段
+	// 域名，普通高防IP要传该字段
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 协议，普通高防ip要传该字段
+	// 协议，普通高防IP要传该字段
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
+type DescribeCCPrecisionPlyListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 指定特定实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP地址，普通高防IP要传该字段
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名，普通高防IP要传该字段
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，普通高防IP要传该字段
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 }
 
@@ -3002,19 +3732,21 @@ func (r *DescribeCCPrecisionPlyListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCPrecisionPlyListResponseParams struct {
+	// 策略列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 策略列表详情
+	PrecisionPolicyList []*CCPrecisionPolicy `json:"PrecisionPolicyList,omitempty" name:"PrecisionPolicyList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCPrecisionPlyListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 策略列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 策略列表详情
-		PrecisionPolicyList []*CCPrecisionPolicy `json:"PrecisionPolicyList,omitempty" name:"PrecisionPolicyList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCPrecisionPlyListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCPrecisionPlyListResponse) ToJsonString() string {
@@ -3028,10 +3760,9 @@ func (r *DescribeCCPrecisionPlyListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeCCReqLimitPolicyListRequest struct {
-	*tchttp.BaseRequest
-
-	// 大禹子产品代号（bgp-multip表示高防包，bgpip表示高防ip）
+// Predefined struct for user
+type DescribeCCReqLimitPolicyListRequestParams struct {
+	// 大禹子产品代号（bgp-multip表示高防包，bgpip表示高防IP）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 页起始偏移，取值为(页码-1)*一页条数
@@ -3043,13 +3774,38 @@ type DescribeCCReqLimitPolicyListRequest struct {
 	// 指定实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// Ip地址，普通高防ip要传该字段
+	// IP地址，普通高防IP要传该字段
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 域名，普通高防ip要传该字段
+	// 域名，普通高防IP要传该字段
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 协议，普通高防ip要传该字段
+	// 协议，普通高防IP要传该字段
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
+type DescribeCCReqLimitPolicyListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgp-multip表示高防包，bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 指定实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP地址，普通高防IP要传该字段
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名，普通高防IP要传该字段
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，普通高防IP要传该字段
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 }
 
@@ -3078,19 +3834,21 @@ func (r *DescribeCCReqLimitPolicyListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCReqLimitPolicyListResponseParams struct {
+	// 频率限制列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 频率限制列表详情
+	RequestLimitPolicyList []*CCReqLimitPolicy `json:"RequestLimitPolicyList,omitempty" name:"RequestLimitPolicyList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCReqLimitPolicyListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 频率限制列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 频率限制列表详情
-		RequestLimitPolicyList []*CCReqLimitPolicy `json:"RequestLimitPolicyList,omitempty" name:"RequestLimitPolicyList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCReqLimitPolicyListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCReqLimitPolicyListResponse) ToJsonString() string {
@@ -3104,9 +3862,24 @@ func (r *DescribeCCReqLimitPolicyListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCThresholdListRequestParams struct {
+	// 大禹子产品代号（bgp-multip表示高防包）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 指定实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type DescribeCCThresholdListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgp-multip表示高防包）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -3142,19 +3915,21 @@ func (r *DescribeCCThresholdListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCThresholdListResponseParams struct {
+	// 清洗阈值策略列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 清洗阈值策略列表详情
+	ThresholdList []*CCThresholdPolicy `json:"ThresholdList,omitempty" name:"ThresholdList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCThresholdListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 清洗阈值策略列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 清洗阈值策略列表详情
-		ThresholdList []*CCThresholdPolicy `json:"ThresholdList,omitempty" name:"ThresholdList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCThresholdListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCThresholdListResponse) ToJsonString() string {
@@ -3168,9 +3943,36 @@ func (r *DescribeCCThresholdListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCTrendRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[inqps(总请求峰值，dropqps(攻击请求峰值))，incount(请求次数), dropcount(攻击次数)]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 域名，可选
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 资源实例ID，当Business为basic时，此字段不用填写（因为基础防护没有资源实例）
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
 type DescribeCCTrendRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -3222,41 +4024,43 @@ func (r *DescribeCCTrendRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCCTrendResponseParams struct {
+	// 值个数
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 值数组
+	Data []*uint64 `json:"Data,omitempty" name:"Data"`
+
+	// 资源ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 指标，取值[inqps(总请求峰值，dropqps(攻击请求峰值))，incount(请求次数), dropcount(攻击次数)]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCCTrendResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 值个数
-		Count *uint64 `json:"Count,omitempty" name:"Count"`
-
-		// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
-		Business *string `json:"Business,omitempty" name:"Business"`
-
-		// 资源的IP
-		Ip *string `json:"Ip,omitempty" name:"Ip"`
-
-		// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
-		Period *int64 `json:"Period,omitempty" name:"Period"`
-
-		// 统计开始时间
-		StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
-
-		// 统计结束时间
-		EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
-
-		// 值数组
-		Data []*uint64 `json:"Data,omitempty" name:"Data"`
-
-		// 资源ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-		Id *string `json:"Id,omitempty" name:"Id"`
-
-		// 指标，取值[inqps(总请求峰值，dropqps(攻击请求峰值))，incount(请求次数), dropcount(攻击次数)]
-		MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCCTrendResponseParams `json:"Response"`
 }
 
 func (r *DescribeCCTrendResponse) ToJsonString() string {
@@ -3270,10 +4074,9 @@ func (r *DescribeCCTrendResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeCcBlackWhiteIpListRequest struct {
-	*tchttp.BaseRequest
-
-	// 大禹子产品代号（bgp-multip：表示高防包；bgpip：表示高防ip）
+// Predefined struct for user
+type DescribeCcBlackWhiteIpListRequestParams struct {
+	// 大禹子产品代号（bgp-multip：表示高防包；bgpip：表示高防IP）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 指定特定实例Id
@@ -3285,16 +4088,47 @@ type DescribeCcBlackWhiteIpListRequest struct {
 	// 一页条数
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// Ip地址，普通高防ip要传该字段
+	// IP地址，普通高防IP要传该字段
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 域名，普通高防ip要传该字段
+	// 域名，普通高防IP要传该字段
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 协议，普通高防ip要传该字段
+	// 协议，普通高防IP要传该字段
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
-	// 筛选ip，需要筛选黑白名单ip时传该字段
+	// 筛选IP，需要筛选黑白名单IP时传该字段
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 黑白名单筛选字段，需要筛选黑白名单列表时传该字段
+	FilterType *string `json:"FilterType,omitempty" name:"FilterType"`
+}
+
+type DescribeCcBlackWhiteIpListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgp-multip：表示高防包；bgpip：表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 指定特定实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// IP地址，普通高防IP要传该字段
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名，普通高防IP要传该字段
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，普通高防IP要传该字段
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 筛选IP，需要筛选黑白名单IP时传该字段
 	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
 
 	// 黑白名单筛选字段，需要筛选黑白名单列表时传该字段
@@ -3328,19 +4162,21 @@ func (r *DescribeCcBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCcBlackWhiteIpListResponseParams struct {
+	// CC四层黑白名单策略列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// CC四层黑白名单策略列表详情
+	CcBlackWhiteIpList []*CcBlackWhiteIpPolicy `json:"CcBlackWhiteIpList,omitempty" name:"CcBlackWhiteIpList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCcBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// CC四层黑白名单策略列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// CC四层黑白名单策略列表详情
-		CcBlackWhiteIpList []*CcBlackWhiteIpPolicy `json:"CcBlackWhiteIpList,omitempty" name:"CcBlackWhiteIpList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCcBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCcBlackWhiteIpListResponse) ToJsonString() string {
@@ -3354,10 +4190,9 @@ func (r *DescribeCcBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeCcGeoIPBlockConfigListRequest struct {
-	*tchttp.BaseRequest
-
-	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防ip）
+// Predefined struct for user
+type DescribeCcGeoIPBlockConfigListRequestParams struct {
+	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防IP）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 页起始偏移，取值为(页码-1)*一页条数
@@ -3366,16 +4201,41 @@ type DescribeCcGeoIPBlockConfigListRequest struct {
 	// 一页条数
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 指定特定实例Id
+	// 指定特定实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// Ip地址，普通高防ip要传该字段
+	// IP地址，普通高防IP要传该字段
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 域名，普通高防ip要传该字段
+	// 域名，普通高防IP要传该字段
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 协议，普通高防ip要传该字段
+	// 协议，普通高防IP要传该字段
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+}
+
+type DescribeCcGeoIPBlockConfigListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgpip-multip：表示高防包；bgpip：表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 指定特定实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP地址，普通高防IP要传该字段
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名，普通高防IP要传该字段
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，普通高防IP要传该字段
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 }
 
@@ -3404,19 +4264,21 @@ func (r *DescribeCcGeoIPBlockConfigListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeCcGeoIPBlockConfigListResponseParams struct {
+	// CC地域封禁策略列表总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// CC地域封禁策略列表详情
+	CcGeoIpPolicyList []*CcGeoIpPolicyNew `json:"CcGeoIpPolicyList,omitempty" name:"CcGeoIpPolicyList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeCcGeoIPBlockConfigListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// CC地域封禁策略列表总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// CC地域封禁策略列表详情
-		CcGeoIpPolicyList []*CcGeoIpPolicyNew `json:"CcGeoIpPolicyList,omitempty" name:"CcGeoIpPolicyList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeCcGeoIPBlockConfigListResponseParams `json:"Response"`
 }
 
 func (r *DescribeCcGeoIPBlockConfigListResponse) ToJsonString() string {
@@ -3430,9 +4292,15 @@ func (r *DescribeCcGeoIPBlockConfigListResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
 type DescribeDDoSBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
@@ -3456,19 +4324,21 @@ func (r *DescribeDDoSBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSBlackWhiteIpListResponseParams struct {
+	// 黑名单IP列表
+	BlackIpList []*IpSegment `json:"BlackIpList,omitempty" name:"BlackIpList"`
+
+	// 白名单IP列表
+	WhiteIpList []*IpSegment `json:"WhiteIpList,omitempty" name:"WhiteIpList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeDDoSBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 黑名单IP列表
-		BlackIpList []*IpSegment `json:"BlackIpList,omitempty" name:"BlackIpList"`
-
-		// 白名单IP列表
-		WhiteIpList []*IpSegment `json:"WhiteIpList,omitempty" name:"WhiteIpList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeDDoSBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DescribeDDoSBlackWhiteIpListResponse) ToJsonString() string {
@@ -3482,9 +4352,24 @@ func (r *DescribeDDoSBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSConnectLimitListRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 可选参数，按照IP进行过滤
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 可选参数，按照实例id进行过滤
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+}
+
 type DescribeDDoSConnectLimitListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -3520,19 +4405,21 @@ func (r *DescribeDDoSConnectLimitListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSConnectLimitListResponseParams struct {
+	// 连接抑制配置总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 连接抑制配置详情信息
+	ConfigList []*ConnectLimitRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeDDoSConnectLimitListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 连接抑制配置总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 连接抑制配置详情信息
-		ConfigList []*ConnectLimitRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeDDoSConnectLimitListResponseParams `json:"Response"`
 }
 
 func (r *DescribeDDoSConnectLimitListResponse) ToJsonString() string {
@@ -3546,9 +4433,33 @@ func (r *DescribeDDoSConnectLimitListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSTrendRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源实例的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[bps(攻击流量带宽，pps(攻击包速率))]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 资源实例ID，当Business为basic时，此字段不用填写（因为基础防护没有资源实例）
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
 type DescribeDDoSTrendRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -3596,41 +4507,43 @@ func (r *DescribeDDoSTrendRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDDoSTrendResponseParams struct {
+	// 值个数
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源的IP
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 值数组，攻击流量带宽单位为Mbps，包速率单位为pps
+	Data []*uint64 `json:"Data,omitempty" name:"Data"`
+
+	// 资源ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 指标，取值[bps(攻击流量带宽，pps(攻击包速率))]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeDDoSTrendResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 值个数
-		Count *uint64 `json:"Count,omitempty" name:"Count"`
-
-		// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版；basic表示DDoS基础防护）
-		Business *string `json:"Business,omitempty" name:"Business"`
-
-		// 资源的IP
-		Ip *string `json:"Ip,omitempty" name:"Ip"`
-
-		// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
-		Period *int64 `json:"Period,omitempty" name:"Period"`
-
-		// 统计开始时间
-		StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
-
-		// 统计结束时间
-		EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
-
-		// 值数组，攻击流量带宽单位为Mbps，包速率单位为pps
-		Data []*uint64 `json:"Data,omitempty" name:"Data"`
-
-		// 资源ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-		Id *string `json:"Id,omitempty" name:"Id"`
-
-		// 指标，取值[bps(攻击流量带宽，pps(攻击包速率))]
-		MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeDDoSTrendResponseParams `json:"Response"`
 }
 
 func (r *DescribeDDoSTrendResponse) ToJsonString() string {
@@ -3644,9 +4557,24 @@ func (r *DescribeDDoSTrendResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDefaultAlarmThresholdRequestParams struct {
+	// 产品类型，取值[
+	// bgp(表示高防包产品)
+	// bgpip(表示高防IP产品)
+	// ]
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 告警阈值类型搜索，取值[
+	// 1(入流量告警阈值)
+	// 2(攻击清洗流量告警阈值)
+	// ]
+	FilterAlarmType *int64 `json:"FilterAlarmType,omitempty" name:"FilterAlarmType"`
+}
+
 type DescribeDefaultAlarmThresholdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 产品类型，取值[
 	// bgp(表示高防包产品)
 	// bgpip(表示高防IP产品)
@@ -3680,16 +4608,18 @@ func (r *DescribeDefaultAlarmThresholdRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeDefaultAlarmThresholdResponseParams struct {
+	// 默认告警阈值配置
+	DefaultAlarmConfigList []*DefaultAlarmThreshold `json:"DefaultAlarmConfigList,omitempty" name:"DefaultAlarmConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeDefaultAlarmThresholdResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 默认告警阈值配置
-		DefaultAlarmConfigList []*DefaultAlarmThreshold `json:"DefaultAlarmConfigList,omitempty" name:"DefaultAlarmConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeDefaultAlarmThresholdResponseParams `json:"Response"`
 }
 
 func (r *DescribeDefaultAlarmThresholdResponse) ToJsonString() string {
@@ -3703,9 +4633,18 @@ func (r *DescribeDefaultAlarmThresholdResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeL7RulesBySSLCertIdRequestParams struct {
+	// 域名状态，可取bindable, binded, opened, closed, all，all表示全部状态
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 证书ID列表
+	CertIds []*string `json:"CertIds,omitempty" name:"CertIds"`
+}
+
 type DescribeL7RulesBySSLCertIdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 域名状态，可取bindable, binded, opened, closed, all，all表示全部状态
 	Status *string `json:"Status,omitempty" name:"Status"`
 
@@ -3733,16 +4672,18 @@ func (r *DescribeL7RulesBySSLCertIdRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeL7RulesBySSLCertIdResponseParams struct {
+	// 证书规则集合
+	CertSet []*CertIdInsL7Rules `json:"CertSet,omitempty" name:"CertSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeL7RulesBySSLCertIdResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 证书规则集合
-		CertSet []*CertIdInsL7Rules `json:"CertSet,omitempty" name:"CertSet"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeL7RulesBySSLCertIdResponseParams `json:"Response"`
 }
 
 func (r *DescribeL7RulesBySSLCertIdResponse) ToJsonString() string {
@@ -3756,9 +4697,8 @@ func (r *DescribeL7RulesBySSLCertIdResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeListBGPIPInstancesRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type DescribeListBGPIPInstancesRequestParams struct {
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -3797,6 +4737,73 @@ type DescribeListBGPIPInstancesRequest struct {
 
 	// 获取特定状态的资源，运行中填idle，攻击中填attacking，封堵中填blocking
 	FilterStatus *string `json:"FilterStatus,omitempty" name:"FilterStatus"`
+
+	// 获取特定的实例Cname
+	FilterCname *string `json:"FilterCname,omitempty" name:"FilterCname"`
+
+	// 批量查询实例ID对应的高防IP实例资源
+	FilterInstanceIdList []*string `json:"FilterInstanceIdList,omitempty" name:"FilterInstanceIdList"`
+
+	// 标签搜索
+	FilterTag *TagFilter `json:"FilterTag,omitempty" name:"FilterTag"`
+
+	// 按照套餐类型进行过滤
+	FilterPackType []*string `json:"FilterPackType,omitempty" name:"FilterPackType"`
+}
+
+type DescribeListBGPIPInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为20;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 资产实例ID搜索，例如，bgpip-00000001
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// 高防IP线路搜索，取值为[
+	// 1：BGP线路
+	// 2：电信
+	// 3：联通
+	// 4：移动
+	// 99：第三方合作线路
+	// ]
+	FilterLine *uint64 `json:"FilterLine,omitempty" name:"FilterLine"`
+
+	// 地域搜索，例如，ap-guangzhou
+	FilterRegion *string `json:"FilterRegion,omitempty" name:"FilterRegion"`
+
+	// 名称搜索
+	FilterName *string `json:"FilterName,omitempty" name:"FilterName"`
+
+	// 是否只获取高防弹性公网IP实例。填写时，只能填写1或者0。当填写1时，表示返回高防弹性公网IP实例。当填写0时，表示返回非高防弹性公网IP实例。
+	FilterEipType *int64 `json:"FilterEipType,omitempty" name:"FilterEipType"`
+
+	// 高防弹性公网IP实例的绑定状态搜索条件，取值范围 [BINDING、 BIND、UNBINDING、UNBIND]。该搜索条件只在FilterEipType=1时才有效。
+	FilterEipEipAddressStatus []*string `json:"FilterEipEipAddressStatus,omitempty" name:"FilterEipEipAddressStatus"`
+
+	// 是否只获取安全加速实例。填写时，只能填写1或者0。当填写1时，表示返回安全加速实例。当填写0时，表示返回非安全加速实例。
+	FilterDamDDoSStatus *int64 `json:"FilterDamDDoSStatus,omitempty" name:"FilterDamDDoSStatus"`
+
+	// 获取特定状态的资源，运行中填idle，攻击中填attacking，封堵中填blocking
+	FilterStatus *string `json:"FilterStatus,omitempty" name:"FilterStatus"`
+
+	// 获取特定的实例Cname
+	FilterCname *string `json:"FilterCname,omitempty" name:"FilterCname"`
+
+	// 批量查询实例ID对应的高防IP实例资源
+	FilterInstanceIdList []*string `json:"FilterInstanceIdList,omitempty" name:"FilterInstanceIdList"`
+
+	// 标签搜索
+	FilterTag *TagFilter `json:"FilterTag,omitempty" name:"FilterTag"`
+
+	// 按照套餐类型进行过滤
+	FilterPackType []*string `json:"FilterPackType,omitempty" name:"FilterPackType"`
 }
 
 func (r *DescribeListBGPIPInstancesRequest) ToJsonString() string {
@@ -3822,25 +4829,31 @@ func (r *DescribeListBGPIPInstancesRequest) FromJsonString(s string) error {
 	delete(f, "FilterEipEipAddressStatus")
 	delete(f, "FilterDamDDoSStatus")
 	delete(f, "FilterStatus")
+	delete(f, "FilterCname")
+	delete(f, "FilterInstanceIdList")
+	delete(f, "FilterTag")
+	delete(f, "FilterPackType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeListBGPIPInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListBGPIPInstancesResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 高防IP资产实例列表
+	InstanceList []*BGPIPInstance `json:"InstanceList,omitempty" name:"InstanceList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListBGPIPInstancesResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 高防IP资产实例列表
-		InstanceList []*BGPIPInstance `json:"InstanceList,omitempty" name:"InstanceList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListBGPIPInstancesResponseParams `json:"Response"`
 }
 
 func (r *DescribeListBGPIPInstancesResponse) ToJsonString() string {
@@ -3854,9 +4867,8 @@ func (r *DescribeListBGPIPInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeListBGPInstancesRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type DescribeListBGPInstancesRequestParams struct {
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -3883,6 +4895,55 @@ type DescribeListBGPInstancesRequest struct {
 
 	// 高防包绑定状态搜索，bounding：绑定中； failed：绑定失败
 	FilterBoundStatus *string `json:"FilterBoundStatus,omitempty" name:"FilterBoundStatus"`
+
+	// 实例id数组
+	FilterInstanceIdList []*string `json:"FilterInstanceIdList,omitempty" name:"FilterInstanceIdList"`
+
+	// 企业版搜索
+	FilterEnterpriseFlag *uint64 `json:"FilterEnterpriseFlag,omitempty" name:"FilterEnterpriseFlag"`
+
+	// 标签搜索
+	FilterTag *TagFilter `json:"FilterTag,omitempty" name:"FilterTag"`
+}
+
+type DescribeListBGPInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为20;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 资产实例ID搜索，例如，bgp-00000001
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// 地域搜索，例如，ap-guangzhou
+	FilterRegion *string `json:"FilterRegion,omitempty" name:"FilterRegion"`
+
+	// 名称搜索
+	FilterName *string `json:"FilterName,omitempty" name:"FilterName"`
+
+	// 按照线路搜索, 1: BGP; 2: 三网
+	FilterLine *uint64 `json:"FilterLine,omitempty" name:"FilterLine"`
+
+	// 状态搜索，idle：运行中；attacking：攻击中；blocking：封堵中
+	FilterStatus *string `json:"FilterStatus,omitempty" name:"FilterStatus"`
+
+	// 高防包绑定状态搜索，bounding：绑定中； failed：绑定失败
+	FilterBoundStatus *string `json:"FilterBoundStatus,omitempty" name:"FilterBoundStatus"`
+
+	// 实例id数组
+	FilterInstanceIdList []*string `json:"FilterInstanceIdList,omitempty" name:"FilterInstanceIdList"`
+
+	// 企业版搜索
+	FilterEnterpriseFlag *uint64 `json:"FilterEnterpriseFlag,omitempty" name:"FilterEnterpriseFlag"`
+
+	// 标签搜索
+	FilterTag *TagFilter `json:"FilterTag,omitempty" name:"FilterTag"`
 }
 
 func (r *DescribeListBGPInstancesRequest) ToJsonString() string {
@@ -3906,25 +4967,30 @@ func (r *DescribeListBGPInstancesRequest) FromJsonString(s string) error {
 	delete(f, "FilterLine")
 	delete(f, "FilterStatus")
 	delete(f, "FilterBoundStatus")
+	delete(f, "FilterInstanceIdList")
+	delete(f, "FilterEnterpriseFlag")
+	delete(f, "FilterTag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeListBGPInstancesRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListBGPInstancesResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 高防包资产实例列表
+	InstanceList []*BGPInstance `json:"InstanceList,omitempty" name:"InstanceList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListBGPInstancesResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 高防包资产实例列表
-		InstanceList []*BGPInstance `json:"InstanceList,omitempty" name:"InstanceList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListBGPInstancesResponseParams `json:"Response"`
 }
 
 func (r *DescribeListBGPInstancesResponse) ToJsonString() string {
@@ -3938,9 +5004,24 @@ func (r *DescribeListBGPInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListBlackWhiteIpListRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -3976,19 +5057,21 @@ func (r *DescribeListBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListBlackWhiteIpListResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 黑白IP列表
+	IpList []*BlackWhiteIpRelation `json:"IpList,omitempty" name:"IpList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// 黑白IP列表
-		IpList []*BlackWhiteIpRelation `json:"IpList,omitempty" name:"IpList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *DescribeListBlackWhiteIpListResponse) ToJsonString() string {
@@ -4002,9 +5085,24 @@ func (r *DescribeListBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSAIRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListDDoSAIRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4040,19 +5138,21 @@ func (r *DescribeListDDoSAIRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSAIResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// AI防护开关列表
+	ConfigList []*DDoSAIRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListDDoSAIResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// AI防护开关列表
-		ConfigList []*DDoSAIRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListDDoSAIResponseParams `json:"Response"`
 }
 
 func (r *DescribeListDDoSAIResponse) ToJsonString() string {
@@ -4066,9 +5166,24 @@ func (r *DescribeListDDoSAIResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSGeoIPBlockConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListDDoSGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4104,19 +5219,21 @@ func (r *DescribeListDDoSGeoIPBlockConfigRequest) FromJsonString(s string) error
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSGeoIPBlockConfigResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// DDoS区域封禁配置列表
+	ConfigList []*DDoSGeoIPBlockConfigRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListDDoSGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// DDoS区域封禁配置列表
-		ConfigList []*DDoSGeoIPBlockConfigRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListDDoSGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListDDoSGeoIPBlockConfigResponse) ToJsonString() string {
@@ -4130,9 +5247,24 @@ func (r *DescribeListDDoSGeoIPBlockConfigResponse) FromJsonString(s string) erro
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSSpeedLimitConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListDDoSSpeedLimitConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4168,19 +5300,21 @@ func (r *DescribeListDDoSSpeedLimitConfigRequest) FromJsonString(s string) error
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListDDoSSpeedLimitConfigResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 访问限速配置列表
+	ConfigList []*DDoSSpeedLimitConfigRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListDDoSSpeedLimitConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 访问限速配置列表
-		ConfigList []*DDoSSpeedLimitConfigRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListDDoSSpeedLimitConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListDDoSSpeedLimitConfigResponse) ToJsonString() string {
@@ -4194,9 +5328,8 @@ func (r *DescribeListDDoSSpeedLimitConfigResponse) FromJsonString(s string) erro
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeListIPAlarmConfigRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type DescribeListIPAlarmConfigRequestParams struct {
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4214,6 +5347,34 @@ type DescribeListIPAlarmConfigRequest struct {
 
 	// IP搜索
 	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 高防IP实例资源的cname
+	FilterCname *string `json:"FilterCname,omitempty" name:"FilterCname"`
+}
+
+type DescribeListIPAlarmConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// 告警阈值类型搜索，取值[
+	// 1(入流量告警阈值)
+	// 2(攻击清洗流量告警阈值)
+	// ]
+	FilterAlarmType *int64 `json:"FilterAlarmType,omitempty" name:"FilterAlarmType"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 高防IP实例资源的cname
+	FilterCname *string `json:"FilterCname,omitempty" name:"FilterCname"`
 }
 
 func (r *DescribeListIPAlarmConfigRequest) ToJsonString() string {
@@ -4233,25 +5394,28 @@ func (r *DescribeListIPAlarmConfigRequest) FromJsonString(s string) error {
 	delete(f, "FilterInstanceId")
 	delete(f, "FilterAlarmType")
 	delete(f, "FilterIp")
+	delete(f, "FilterCname")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeListIPAlarmConfigRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListIPAlarmConfigResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// IP告警阈值配置列表
+	ConfigList []*IPAlarmThresholdRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListIPAlarmConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// IP告警阈值配置列表
-		ConfigList []*IPAlarmThresholdRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListIPAlarmConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListIPAlarmConfigResponse) ToJsonString() string {
@@ -4265,8 +5429,14 @@ func (r *DescribeListIPAlarmConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListListenerRequestParams struct {
+
+}
+
 type DescribeListListenerRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeListListenerRequest) ToJsonString() string {
@@ -4281,25 +5451,28 @@ func (r *DescribeListListenerRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeListListenerRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListListenerResponseParams struct {
+	// 4层转发监听器列表
+	Layer4Listeners []*Layer4Rule `json:"Layer4Listeners,omitempty" name:"Layer4Listeners"`
+
+	// 7层转发监听器列表
+	Layer7Listeners []*Layer7Rule `json:"Layer7Listeners,omitempty" name:"Layer7Listeners"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListListenerResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 4层转发监听器列表
-		Layer4Listeners []*Layer4Rule `json:"Layer4Listeners,omitempty" name:"Layer4Listeners"`
-
-		// 7层转发监听器列表
-		Layer7Listeners []*Layer7Rule `json:"Layer7Listeners,omitempty" name:"Layer7Listeners"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListListenerResponseParams `json:"Response"`
 }
 
 func (r *DescribeListListenerResponse) ToJsonString() string {
@@ -4313,9 +5486,24 @@ func (r *DescribeListListenerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListPacketFilterConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListPacketFilterConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4351,19 +5539,21 @@ func (r *DescribeListPacketFilterConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListPacketFilterConfigResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 特征过滤配置
+	ConfigList []*PacketFilterRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListPacketFilterConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// 特征过滤配置
-		ConfigList []*PacketFilterRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListPacketFilterConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListPacketFilterConfigResponse) ToJsonString() string {
@@ -4377,9 +5567,24 @@ func (r *DescribeListPacketFilterConfigResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListPortAclListRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// ip搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListPortAclListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4415,19 +5620,21 @@ func (r *DescribeListPortAclListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListPortAclListResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 端口acl策略
+	AclList []*AclConfigRelation `json:"AclList,omitempty" name:"AclList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListPortAclListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 端口acl策略
-		AclList []*AclConfigRelation `json:"AclList,omitempty" name:"AclList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListPortAclListResponseParams `json:"Response"`
 }
 
 func (r *DescribeListPortAclListResponse) ToJsonString() string {
@@ -4441,9 +5648,30 @@ func (r *DescribeListPortAclListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListProtectThresholdConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+
+	// 域名搜索(查询域名与协议的CC防护阈值时使用）
+	FilterDomain *string `json:"FilterDomain,omitempty" name:"FilterDomain"`
+
+	// 协议搜索(查询域名与协议的CC防护阈值时使用）
+	FilterProtocol *string `json:"FilterProtocol,omitempty" name:"FilterProtocol"`
+}
+
 type DescribeListProtectThresholdConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4487,19 +5715,21 @@ func (r *DescribeListProtectThresholdConfigRequest) FromJsonString(s string) err
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListProtectThresholdConfigResponseParams struct {
+	// 总记录数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 防护阈值配置列表
+	ConfigList []*ProtectThresholdRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListProtectThresholdConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总记录数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 防护阈值配置列表
-		ConfigList []*ProtectThresholdRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListProtectThresholdConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListProtectThresholdConfigResponse) ToJsonString() string {
@@ -4513,9 +5743,24 @@ func (r *DescribeListProtectThresholdConfigResponse) FromJsonString(s string) er
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListProtocolBlockConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListProtocolBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4551,19 +5796,21 @@ func (r *DescribeListProtocolBlockConfigRequest) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListProtocolBlockConfigResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 协议封禁配置
+	ConfigList []*ProtocolBlockRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListProtocolBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// 协议封禁配置
-		ConfigList []*ProtocolBlockRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListProtocolBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListProtocolBlockConfigResponse) ToJsonString() string {
@@ -4577,9 +5824,21 @@ func (r *DescribeListProtocolBlockConfigResponse) FromJsonString(s string) error
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListSchedulingDomainRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为20;最大取值为100
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 调度域名搜索
+	FilterDomain *string `json:"FilterDomain,omitempty" name:"FilterDomain"`
+}
+
 type DescribeListSchedulingDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4611,19 +5870,21 @@ func (r *DescribeListSchedulingDomainRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListSchedulingDomainResponseParams struct {
+	// 总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 调度域名信息列表
+	DomainList []*SchedulingDomainInfo `json:"DomainList,omitempty" name:"DomainList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListSchedulingDomainResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *uint64 `json:"Total,omitempty" name:"Total"`
-
-		// 调度域名信息列表
-		DomainList []*SchedulingDomainInfo `json:"DomainList,omitempty" name:"DomainList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListSchedulingDomainResponseParams `json:"Response"`
 }
 
 func (r *DescribeListSchedulingDomainResponse) ToJsonString() string {
@@ -4637,9 +5898,24 @@ func (r *DescribeListSchedulingDomainResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListWaterPrintConfigRequestParams struct {
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 一页条数，当Limit=0时，默认一页条数为100;最大取值为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 资源实例ID搜索, 支持资源实例前缀通配搜索，例如bgp-*表示获取高防包类型的资源实例
+	FilterInstanceId *string `json:"FilterInstanceId,omitempty" name:"FilterInstanceId"`
+
+	// IP搜索
+	FilterIp *string `json:"FilterIp,omitempty" name:"FilterIp"`
+}
+
 type DescribeListWaterPrintConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 页起始偏移，取值为(页码-1)*一页条数
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -4675,19 +5951,21 @@ func (r *DescribeListWaterPrintConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeListWaterPrintConfigResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 水印配置列表
+	ConfigList []*WaterPrintRelation `json:"ConfigList,omitempty" name:"ConfigList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DescribeListWaterPrintConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 总数
-		Total *int64 `json:"Total,omitempty" name:"Total"`
-
-		// 水印配置列表
-		ConfigList []*WaterPrintRelation `json:"ConfigList,omitempty" name:"ConfigList"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DescribeListWaterPrintConfigResponseParams `json:"Response"`
 }
 
 func (r *DescribeListWaterPrintConfigResponse) ToJsonString() string {
@@ -4701,9 +5979,613 @@ func (r *DescribeListWaterPrintConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeNewL7RulesRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 状态搜索，选填，取值[0(规则配置成功)，1(规则配置生效中)，2(规则配置失败)，3(规则删除生效中)，5(规则删除失败)，6(规则等待配置)，7(规则等待删除)，8(规则待配置证书)]
+	StatusList []*uint64 `json:"StatusList,omitempty" name:"StatusList"`
+
+	// 域名搜索，选填，当需要搜索域名请填写
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// IP搜索，选填，当需要搜索IP请填写
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 一页条数，填0表示不分页
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 转发协议搜索，选填，取值[http, https, http/https]
+	ProtocolList []*string `json:"ProtocolList,omitempty" name:"ProtocolList"`
+
+	// 高防IP实例的Cname
+	Cname *string `json:"Cname,omitempty" name:"Cname"`
+}
+
+type DescribeNewL7RulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 状态搜索，选填，取值[0(规则配置成功)，1(规则配置生效中)，2(规则配置失败)，3(规则删除生效中)，5(规则删除失败)，6(规则等待配置)，7(规则等待删除)，8(规则待配置证书)]
+	StatusList []*uint64 `json:"StatusList,omitempty" name:"StatusList"`
+
+	// 域名搜索，选填，当需要搜索域名请填写
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// IP搜索，选填，当需要搜索IP请填写
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 一页条数，填0表示不分页
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 页起始偏移，取值为(页码-1)*一页条数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 转发协议搜索，选填，取值[http, https, http/https]
+	ProtocolList []*string `json:"ProtocolList,omitempty" name:"ProtocolList"`
+
+	// 高防IP实例的Cname
+	Cname *string `json:"Cname,omitempty" name:"Cname"`
+}
+
+func (r *DescribeNewL7RulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNewL7RulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Business")
+	delete(f, "StatusList")
+	delete(f, "Domain")
+	delete(f, "Ip")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "ProtocolList")
+	delete(f, "Cname")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNewL7RulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeNewL7RulesResponseParams struct {
+	// 转发规则列表
+	Rules []*NewL7RuleEntry `json:"Rules,omitempty" name:"Rules"`
+
+	// 健康检查配置列表
+	Healths []*L7RuleHealth `json:"Healths,omitempty" name:"Healths"`
+
+	// 总规则数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeNewL7RulesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeNewL7RulesResponseParams `json:"Response"`
+}
+
+func (r *DescribeNewL7RulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNewL7RulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewAttackTrendRequestParams struct {
+	// 攻击类型，取值ddos， cc
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 纬度，当前仅支持attackcount
+	Dimension *string `json:"Dimension,omitempty" name:"Dimension"`
+
+	// 周期，当前仅支持86400
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+type DescribeOverviewAttackTrendRequest struct {
+	*tchttp.BaseRequest
+	
+	// 攻击类型，取值ddos， cc
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 纬度，当前仅支持attackcount
+	Dimension *string `json:"Dimension,omitempty" name:"Dimension"`
+
+	// 周期，当前仅支持86400
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+func (r *DescribeOverviewAttackTrendRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewAttackTrendRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Type")
+	delete(f, "Dimension")
+	delete(f, "Period")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewAttackTrendRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewAttackTrendResponseParams struct {
+	// 攻击类型
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 周期
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 每个周期点的攻击次数
+	Data []*uint64 `json:"Data,omitempty" name:"Data"`
+
+	// 包含的周期点数
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeOverviewAttackTrendResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOverviewAttackTrendResponseParams `json:"Response"`
+}
+
+func (r *DescribeOverviewAttackTrendResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewAttackTrendResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewCCTrendRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP；bgp-multip表示共享包；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[inqps(总请求峰值，dropqps(攻击请求峰值))，incount(请求次数), dropcount(攻击次数)]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 资源的IP
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
+type DescribeOverviewCCTrendRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgpip表示高防IP；bgp-multip表示共享包；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[inqps(总请求峰值，dropqps(攻击请求峰值))，incount(请求次数), dropcount(攻击次数)]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 资源的IP
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
+func (r *DescribeOverviewCCTrendRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewCCTrendRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Business")
+	delete(f, "Period")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MetricName")
+	delete(f, "IpList")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewCCTrendRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewCCTrendResponseParams struct {
+	// 值个数
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 值数组
+	Data []*uint64 `json:"Data,omitempty" name:"Data"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeOverviewCCTrendResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOverviewCCTrendResponseParams `json:"Response"`
+}
+
+func (r *DescribeOverviewCCTrendResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewCCTrendResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewDDoSEventListRequestParams struct {
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 可选按攻击状态过滤，start：攻击中；end：攻击结束
+	AttackStatus *string `json:"AttackStatus,omitempty" name:"AttackStatus"`
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 记录条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeOverviewDDoSEventListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 可选按攻击状态过滤，start：攻击中；end：攻击结束
+	AttackStatus *string `json:"AttackStatus,omitempty" name:"AttackStatus"`
+
+	// 偏移量
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 记录条数
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeOverviewDDoSEventListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewDDoSEventListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "AttackStatus")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewDDoSEventListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewDDoSEventListResponseParams struct {
+	// 记录总数
+	Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+	// 事件列表
+	EventList []*OverviewDDoSEvent `json:"EventList,omitempty" name:"EventList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeOverviewDDoSEventListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOverviewDDoSEventListResponseParams `json:"Response"`
+}
+
+func (r *DescribeOverviewDDoSEventListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewDDoSEventListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewDDoSTrendRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP；bgp-multip表示高防包；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[bps(攻击流量带宽，pps(攻击包速率))]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 资源实例的IP列表
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
+type DescribeOverviewDDoSTrendRequest struct {
+	*tchttp.BaseRequest
+	
+	// 大禹子产品代号（bgpip表示高防IP；bgp-multip表示高防包；basic表示DDoS基础防护）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 统计粒度，取值[300(5分钟)，3600(小时)，86400(天)]
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 统计开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 统计结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指标，取值[bps(攻击流量带宽，pps(攻击包速率))]
+	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
+
+	// 资源实例的IP列表
+	IpList []*string `json:"IpList,omitempty" name:"IpList"`
+
+	// 资源实例ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
+func (r *DescribeOverviewDDoSTrendRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewDDoSTrendRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Business")
+	delete(f, "Period")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MetricName")
+	delete(f, "IpList")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewDDoSTrendRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewDDoSTrendResponseParams struct {
+	// 值个数
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 值数组，攻击流量带宽单位为Mbps，包速率单位为pps
+	Data []*uint64 `json:"Data,omitempty" name:"Data"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeOverviewDDoSTrendResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOverviewDDoSTrendResponseParams `json:"Response"`
+}
+
+func (r *DescribeOverviewDDoSTrendResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewDDoSTrendResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewIndexRequestParams struct {
+	// 拉取指标起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 拉取指标结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+type DescribeOverviewIndexRequest struct {
+	*tchttp.BaseRequest
+	
+	// 拉取指标起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 拉取指标结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+func (r *DescribeOverviewIndexRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewIndexRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewIndexRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOverviewIndexResponseParams struct {
+	// IP总数
+	AllIpCount *uint64 `json:"AllIpCount,omitempty" name:"AllIpCount"`
+
+	// 高防IP总数（包含高防包+高防IP）
+	AntiddosIpCount *uint64 `json:"AntiddosIpCount,omitempty" name:"AntiddosIpCount"`
+
+	// 攻击IP总数
+	AttackIpCount *uint64 `json:"AttackIpCount,omitempty" name:"AttackIpCount"`
+
+	// 封堵IP总数
+	BlockIpCount *uint64 `json:"BlockIpCount,omitempty" name:"BlockIpCount"`
+
+	// 高防域名总数
+	AntiddosDomainCount *uint64 `json:"AntiddosDomainCount,omitempty" name:"AntiddosDomainCount"`
+
+	// 攻击域名总数
+	AttackDomainCount *uint64 `json:"AttackDomainCount,omitempty" name:"AttackDomainCount"`
+
+	// 攻击流量峰值
+	MaxAttackFlow *uint64 `json:"MaxAttackFlow,omitempty" name:"MaxAttackFlow"`
+
+	// 当前最近一条攻击中的起始时间
+	NewAttackTime *string `json:"NewAttackTime,omitempty" name:"NewAttackTime"`
+
+	// 当前最近一条攻击中的IP
+	NewAttackIp *string `json:"NewAttackIp,omitempty" name:"NewAttackIp"`
+
+	// 当前最近一条攻击中的攻击类型
+	NewAttackType *string `json:"NewAttackType,omitempty" name:"NewAttackType"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeOverviewIndexResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOverviewIndexResponseParams `json:"Response"`
+}
+
+func (r *DescribeOverviewIndexResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOverviewIndexResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisassociateDDoSEipAddressRequestParams struct {
+	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 资源实例ID对应的高防弹性公网IP。
+	Eip *string `json:"Eip,omitempty" name:"Eip"`
+}
+
 type DisassociateDDoSEipAddressRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID，实例ID形如：bgpip-0000011x。只能填写高防IP实例。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -4731,13 +6613,15 @@ func (r *DisassociateDDoSEipAddressRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DisassociateDDoSEipAddressResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type DisassociateDDoSEipAddressResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *DisassociateDDoSEipAddressResponseParams `json:"Response"`
 }
 
 func (r *DisassociateDDoSEipAddressResponse) ToJsonString() string {
@@ -4752,7 +6636,6 @@ func (r *DisassociateDDoSEipAddressResponse) FromJsonString(s string) error {
 }
 
 type EipAddressPackRelation struct {
-
 	// 套餐IP数量
 	IpCount *uint64 `json:"IpCount,omitempty" name:"IpCount"`
 
@@ -4764,7 +6647,6 @@ type EipAddressPackRelation struct {
 }
 
 type EipAddressRelation struct {
-
 	// 高防弹性公网IP绑定的实例地区，例如hk代表香港
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EipAddressRegion *string `json:"EipAddressRegion,omitempty" name:"EipAddressRegion"`
@@ -4787,7 +6669,6 @@ type EipAddressRelation struct {
 }
 
 type EipProductInfo struct {
-
 	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
@@ -4812,7 +6693,6 @@ type EipProductInfo struct {
 }
 
 type ForwardListener struct {
-
 	// 转发监听端口下限，取值1~65535
 	FrontendPort *int64 `json:"FrontendPort,omitempty" name:"FrontendPort"`
 
@@ -4827,7 +6707,6 @@ type ForwardListener struct {
 }
 
 type IPAlarmThresholdRelation struct {
-
 	// 告警阈值类型，取值[
 	// 1(入流量告警阈值)
 	// 2(攻击清洗流量告警阈值)
@@ -4842,7 +6721,6 @@ type IPAlarmThresholdRelation struct {
 }
 
 type IPLineInfo struct {
-
 	// IP线路类型，取值[
 	// "bgp"：BGP线路IP
 	// "ctcc"：电信线路IP
@@ -4854,10 +6732,15 @@ type IPLineInfo struct {
 
 	// 线路IP
 	Eip *string `json:"Eip,omitempty" name:"Eip"`
+
+	// 实例对应的cname
+	Cname *string `json:"Cname,omitempty" name:"Cname"`
+
+	// 资源flag，0：高防包资源，1：高防IP资源，2：非高防资源IP
+	ResourceFlag *int64 `json:"ResourceFlag,omitempty" name:"ResourceFlag"`
 }
 
 type InsL7Rules struct {
-
 	// 规则状态，0: 正常运行中, 1: 配置规则中(配置生效中), 2: 配置规则失败（配置生效失败）, 3: 删除规则中(删除生效中), 5: 删除规则失败(删除失败), 6: 等待添加规则, 7: 等待删除规则, 8: 等待上传证书, 9: 规则对应的资源不存在，被隔离, 10:等待修改规则, 11:配置修改中
 	Status *uint64 `json:"Status,omitempty" name:"Status"`
 
@@ -4881,7 +6764,6 @@ type InsL7Rules struct {
 }
 
 type InstanceRelation struct {
-
 	// 资源实例的IP
 	EipList []*string `json:"EipList,omitempty" name:"EipList"`
 
@@ -4890,7 +6772,6 @@ type InstanceRelation struct {
 }
 
 type IpSegment struct {
-
 	// ip地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
@@ -4899,7 +6780,6 @@ type IpSegment struct {
 }
 
 type KeyValue struct {
-
 	// 字段名称
 	Key *string `json:"Key,omitempty" name:"Key"`
 
@@ -4908,7 +6788,6 @@ type KeyValue struct {
 }
 
 type L4RuleSource struct {
-
 	// 回源IP或域名
 	Source *string `json:"Source,omitempty" name:"Source"`
 
@@ -4918,10 +6797,13 @@ type L4RuleSource struct {
 	// 8000
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *uint64 `json:"Port,omitempty" name:"Port"`
+
+	// 备份源站，1: 备份源站，0: 普通源站
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Backup *uint64 `json:"Backup,omitempty" name:"Backup"`
 }
 
 type L7RuleEntry struct {
-
 	// 会话保持时间，单位秒
 	KeepTime *uint64 `json:"KeepTime,omitempty" name:"KeepTime"`
 
@@ -4986,10 +6868,59 @@ type L7RuleEntry struct {
 
 	// 同ruleId
 	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 智能cc开关，取值[0(关闭), 1(开启)]
+	CCAIEnable *uint64 `json:"CCAIEnable,omitempty" name:"CCAIEnable"`
+}
+
+type L7RuleHealth struct {
+	// 配置状态，0： 正常，1：配置中，2：配置失败
+	Status *uint64 `json:"Status,omitempty" name:"Status"`
+
+	// =1表示开启；=0表示关闭
+	Enable *uint64 `json:"Enable,omitempty" name:"Enable"`
+
+	// 规则ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 检查目录的URL，默认为/
+	Url *string `json:"Url,omitempty" name:"Url"`
+
+	// 检测间隔时间，单位秒
+	Interval *uint64 `json:"Interval,omitempty" name:"Interval"`
+
+	// 健康阈值，单位次
+	AliveNum *uint64 `json:"AliveNum,omitempty" name:"AliveNum"`
+
+	// 不健康阈值，单位次
+	KickNum *uint64 `json:"KickNum,omitempty" name:"KickNum"`
+
+	// HTTP请求方式，取值[HEAD,GET]
+	Method *string `json:"Method,omitempty" name:"Method"`
+
+	// 健康检查判定正常状态码，1xx =1, 2xx=2, 3xx=4, 4xx=8,5xx=16，多个状态码值加和
+	StatusCode *uint64 `json:"StatusCode,omitempty" name:"StatusCode"`
+
+	// 是否同时下发http和https规则健康检查配置
+	ProtocolFlag *uint64 `json:"ProtocolFlag,omitempty" name:"ProtocolFlag"`
+
+	// 被动探测开关，=1表示开启；=0表示关闭
+	PassiveEnable *uint64 `json:"PassiveEnable,omitempty" name:"PassiveEnable"`
+
+	// 被动探测不健康屏蔽时间
+	BlockInter *uint64 `json:"BlockInter,omitempty" name:"BlockInter"`
+
+	// 被动探测不健康统计间隔
+	FailedCountInter *uint64 `json:"FailedCountInter,omitempty" name:"FailedCountInter"`
+
+	// 被动探测不健康阈值
+	FailedThreshold *uint64 `json:"FailedThreshold,omitempty" name:"FailedThreshold"`
+
+	// 被动探测判定正常状态码，1xx =1, 2xx=2, 3xx=4, 4xx=8,5xx=16，多个状态码值加和
+	PassiveStatusCode *uint64 `json:"PassiveStatusCode,omitempty" name:"PassiveStatusCode"`
 }
 
 type Layer4Rule struct {
-
 	// 源站端口，取值1~65535
 	BackendPort *uint64 `json:"BackendPort,omitempty" name:"BackendPort"`
 
@@ -5005,12 +6936,14 @@ type Layer4Rule struct {
 	// 源站列表
 	RealServers []*SourceServer `json:"RealServers,omitempty" name:"RealServers"`
 
-	// 规则所属的资源实例
+	// 资源实例
 	InstanceDetails []*InstanceRelation `json:"InstanceDetails,omitempty" name:"InstanceDetails"`
+
+	// 规则所属的资源实例
+	InstanceDetailRule []*RuleInstanceRelation `json:"InstanceDetailRule,omitempty" name:"InstanceDetailRule"`
 }
 
 type Layer7Rule struct {
-
 	// 域名
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
@@ -5020,16 +6953,18 @@ type Layer7Rule struct {
 	// 源站列表
 	RealServers []*SourceServer `json:"RealServers,omitempty" name:"RealServers"`
 
-	// 规则所属的资源实例
+	// 资源实例
 	InstanceDetails []*InstanceRelation `json:"InstanceDetails,omitempty" name:"InstanceDetails"`
+
+	// 规则所属的资源实例
+	InstanceDetailRule []*RuleInstanceRelation `json:"InstanceDetailRule,omitempty" name:"InstanceDetailRule"`
 }
 
 type ListenerCcThreholdConfig struct {
-
 	// 域名
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 协议（可取值htttps）
+	// 协议（可取值https）
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 开关状态（0：关闭，1：开启）
@@ -5039,13 +6974,31 @@ type ListenerCcThreholdConfig struct {
 	CCThreshold *int64 `json:"CCThreshold,omitempty" name:"CCThreshold"`
 }
 
-type ModifyCCLevelPolicyRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type ModifyCCLevelPolicyRequestParams struct {
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// Ip地址
+	// IP地址
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，可取值HTTP，HTTPS
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// CC防护等级，可取值loose表示宽松，strict表示严格，normal表示适中， emergency表示攻击紧急， sup_loose表示超级宽松，default表示默认策略（无频控配置下发），customized表示自定义策略
+	Level *string `json:"Level,omitempty" name:"Level"`
+}
+
+type ModifyCCLevelPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
 	// 域名
@@ -5081,13 +7034,15 @@ func (r *ModifyCCLevelPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCCLevelPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyCCLevelPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyCCLevelPolicyResponseParams `json:"Response"`
 }
 
 func (r *ModifyCCLevelPolicyResponse) ToJsonString() string {
@@ -5101,16 +7056,31 @@ func (r *ModifyCCLevelPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type ModifyCCPrecisionPolicyRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type ModifyCCPrecisionPolicyRequestParams struct {
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 策略Id
 	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 策略方式，可取值alg表示验证码，drop表示丢弃
+	// 策略方式。可取值：alg、drop。alg指返回验证码方式验证，drop表示该访问丢弃。
+	PolicyAction *string `json:"PolicyAction,omitempty" name:"PolicyAction"`
+
+	// 策略记录
+	PolicyList []*CCPrecisionPlyRecord `json:"PolicyList,omitempty" name:"PolicyList"`
+}
+
+type ModifyCCPrecisionPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 策略方式。可取值：alg、drop。alg指返回验证码方式验证，drop表示该访问丢弃。
 	PolicyAction *string `json:"PolicyAction,omitempty" name:"PolicyAction"`
 
 	// 策略记录
@@ -5139,13 +7109,15 @@ func (r *ModifyCCPrecisionPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCCPrecisionPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyCCPrecisionPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyCCPrecisionPolicyResponseParams `json:"Response"`
 }
 
 func (r *ModifyCCPrecisionPolicyResponse) ToJsonString() string {
@@ -5159,9 +7131,21 @@ func (r *ModifyCCPrecisionPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCCReqLimitPolicyRequestParams struct {
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+
+	// 策略项
+	Policy *CCReqLimitPolicyRecord `json:"Policy,omitempty" name:"Policy"`
+}
+
 type ModifyCCReqLimitPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5193,13 +7177,15 @@ func (r *ModifyCCReqLimitPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCCReqLimitPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyCCReqLimitPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyCCReqLimitPolicyResponseParams `json:"Response"`
 }
 
 func (r *ModifyCCReqLimitPolicyResponse) ToJsonString() string {
@@ -5213,13 +7199,31 @@ func (r *ModifyCCReqLimitPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type ModifyCCThresholdPolicyRequest struct {
-	*tchttp.BaseRequest
-
+// Predefined struct for user
+type ModifyCCThresholdPolicyRequestParams struct {
 	// 实例Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// Ip地址
+	// IP地址
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议，可取值HTTP，HTTPS
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 清洗阈值，-1表示开启“默认”模式
+	Threshold *int64 `json:"Threshold,omitempty" name:"Threshold"`
+}
+
+type ModifyCCThresholdPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
 	// 域名
@@ -5255,13 +7259,15 @@ func (r *ModifyCCThresholdPolicyRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCCThresholdPolicyResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyCCThresholdPolicyResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyCCThresholdPolicyResponseParams `json:"Response"`
 }
 
 func (r *ModifyCCThresholdPolicyResponse) ToJsonString() string {
@@ -5275,9 +7281,24 @@ func (r *ModifyCCThresholdPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCcBlackWhiteIpListRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// IP列表
+	IpList []*IpSegment `json:"IpList,omitempty" name:"IpList"`
+
+	// IP类型，取值[black(黑名单IP), white(白名单IP)]
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 策略Id
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
+}
+
 type ModifyCcBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5313,13 +7334,15 @@ func (r *ModifyCcBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyCcBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyCcBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyCcBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *ModifyCcBlackWhiteIpListResponse) ToJsonString() string {
@@ -5333,9 +7356,27 @@ func (r *ModifyCcBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSBlackWhiteIpListRequestParams struct {
+	// 资源Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 当前黑名单类型，取值black时黑名单；取值white时白名单
+	OldIpType *string `json:"OldIpType,omitempty" name:"OldIpType"`
+
+	// 当前配置的Ip段，包含ip与掩码
+	OldIp *IpSegment `json:"OldIp,omitempty" name:"OldIp"`
+
+	// 修改后黑白名单类型，取值black时黑名单，取值white时白名单
+	NewIpType *string `json:"NewIpType,omitempty" name:"NewIpType"`
+
+	// 当前配置的Ip段，包含ip与掩码
+	NewIp *IpSegment `json:"NewIp,omitempty" name:"NewIp"`
+}
+
 type ModifyDDoSBlackWhiteIpListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源Id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5375,13 +7416,15 @@ func (r *ModifyDDoSBlackWhiteIpListRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSBlackWhiteIpListResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDDoSBlackWhiteIpListResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDDoSBlackWhiteIpListResponseParams `json:"Response"`
 }
 
 func (r *ModifyDDoSBlackWhiteIpListResponse) ToJsonString() string {
@@ -5395,9 +7438,18 @@ func (r *ModifyDDoSBlackWhiteIpListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSGeoIPBlockConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// DDoS区域封禁配置，填写参数时配置ID不能为空
+	DDoSGeoIPBlockConfig *DDoSGeoIPBlockConfig `json:"DDoSGeoIPBlockConfig,omitempty" name:"DDoSGeoIPBlockConfig"`
+}
+
 type ModifyDDoSGeoIPBlockConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5425,13 +7477,15 @@ func (r *ModifyDDoSGeoIPBlockConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSGeoIPBlockConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDDoSGeoIPBlockConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDDoSGeoIPBlockConfigResponseParams `json:"Response"`
 }
 
 func (r *ModifyDDoSGeoIPBlockConfigResponse) ToJsonString() string {
@@ -5445,9 +7499,24 @@ func (r *ModifyDDoSGeoIPBlockConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSLevelRequestParams struct {
+	// 资源ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// =get表示读取防护等级；=set表示修改防护等级
+	Method *string `json:"Method,omitempty" name:"Method"`
+
+	// 防护等级，取值[low,middle,high]；当Method=set时必填
+	DDoSLevel *string `json:"DDoSLevel,omitempty" name:"DDoSLevel"`
+}
+
 type ModifyDDoSLevelRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源ID
 	Id *string `json:"Id,omitempty" name:"Id"`
 
@@ -5483,19 +7552,21 @@ func (r *ModifyDDoSLevelRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSLevelResponseParams struct {
+	// 防护等级，取值[low,middle,high]
+	DDoSLevel *string `json:"DDoSLevel,omitempty" name:"DDoSLevel"`
+
+	// 资源ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDDoSLevelResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 防护等级，取值[low,middle,high]
-		DDoSLevel *string `json:"DDoSLevel,omitempty" name:"DDoSLevel"`
-
-		// 资源ID
-		Id *string `json:"Id,omitempty" name:"Id"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDDoSLevelResponseParams `json:"Response"`
 }
 
 func (r *ModifyDDoSLevelResponse) ToJsonString() string {
@@ -5509,9 +7580,18 @@ func (r *ModifyDDoSLevelResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSSpeedLimitConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 访问限速配置，填写参数时配置ID不能为空
+	DDoSSpeedLimitConfig *DDoSSpeedLimitConfig `json:"DDoSSpeedLimitConfig,omitempty" name:"DDoSSpeedLimitConfig"`
+}
+
 type ModifyDDoSSpeedLimitConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5539,13 +7619,15 @@ func (r *ModifyDDoSSpeedLimitConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSSpeedLimitConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDDoSSpeedLimitConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDDoSSpeedLimitConfigResponseParams `json:"Response"`
 }
 
 func (r *ModifyDDoSSpeedLimitConfigResponse) ToJsonString() string {
@@ -5559,9 +7641,22 @@ func (r *ModifyDDoSSpeedLimitConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSThresholdRequestParams struct {
+	// DDoS清洗阈值，取值[0, 60, 80, 100, 150, 200, 250, 300, 400, 500, 700, 1000];
+	// 当设置值为0时，表示采用默认值；
+	Threshold *uint64 `json:"Threshold,omitempty" name:"Threshold"`
+
+	// 资源ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	Business *string `json:"Business,omitempty" name:"Business"`
+}
+
 type ModifyDDoSThresholdRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// DDoS清洗阈值，取值[0, 60, 80, 100, 150, 200, 250, 300, 400, 500, 700, 1000];
 	// 当设置值为0时，表示采用默认值；
 	Threshold *uint64 `json:"Threshold,omitempty" name:"Threshold"`
@@ -5594,16 +7689,18 @@ func (r *ModifyDDoSThresholdRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDDoSThresholdResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDDoSThresholdResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 成功码
-		Success *SuccessCode `json:"Success,omitempty" name:"Success"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDDoSThresholdResponseParams `json:"Response"`
 }
 
 func (r *ModifyDDoSThresholdResponse) ToJsonString() string {
@@ -5617,9 +7714,18 @@ func (r *ModifyDDoSThresholdResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDomainUsrNameRequestParams struct {
+	// 用户CNAME
+	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
+
+	// 域名名称
+	DomainUserName *string `json:"DomainUserName,omitempty" name:"DomainUserName"`
+}
+
 type ModifyDomainUsrNameRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 用户CNAME
 	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
 
@@ -5647,13 +7753,15 @@ func (r *ModifyDomainUsrNameRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyDomainUsrNameResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyDomainUsrNameResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyDomainUsrNameResponseParams `json:"Response"`
 }
 
 func (r *ModifyDomainUsrNameResponse) ToJsonString() string {
@@ -5667,9 +7775,21 @@ func (r *ModifyDomainUsrNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyL7RulesEdgeRequestParams struct {
+	// 大禹子产品代号（edge表示边界防护产品）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 规则
+	Rule *L7RuleEntry `json:"Rule,omitempty" name:"Rule"`
+}
+
 type ModifyL7RulesEdgeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（edge表示边界防护产品）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -5701,16 +7821,18 @@ func (r *ModifyL7RulesEdgeRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyL7RulesEdgeResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyL7RulesEdgeResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 成功码
-		Success *SuccessCode `json:"Success,omitempty" name:"Success"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyL7RulesEdgeResponseParams `json:"Response"`
 }
 
 func (r *ModifyL7RulesEdgeResponse) ToJsonString() string {
@@ -5724,9 +7846,21 @@ func (r *ModifyL7RulesEdgeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyNewDomainRulesRequestParams struct {
+	// 大禹子产品代号（bgpip表示高防IP）
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 资源ID
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 域名转发规则
+	Rule *NewL7RuleEntry `json:"Rule,omitempty" name:"Rule"`
+}
+
 type ModifyNewDomainRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 大禹子产品代号（bgpip表示高防IP）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
@@ -5758,16 +7892,18 @@ func (r *ModifyNewDomainRulesRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyNewDomainRulesResponseParams struct {
+	// 成功码
+	Success *SuccessCode `json:"Success,omitempty" name:"Success"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyNewDomainRulesResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 成功码
-		Success *SuccessCode `json:"Success,omitempty" name:"Success"`
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyNewDomainRulesResponseParams `json:"Response"`
 }
 
 func (r *ModifyNewDomainRulesResponse) ToJsonString() string {
@@ -5781,9 +7917,18 @@ func (r *ModifyNewDomainRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyPacketFilterConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 特征过滤配置
+	PacketFilterConfig *PacketFilterConfig `json:"PacketFilterConfig,omitempty" name:"PacketFilterConfig"`
+}
+
 type ModifyPacketFilterConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5811,13 +7956,15 @@ func (r *ModifyPacketFilterConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyPacketFilterConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyPacketFilterConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyPacketFilterConfigResponseParams `json:"Response"`
 }
 
 func (r *ModifyPacketFilterConfigResponse) ToJsonString() string {
@@ -5831,9 +7978,21 @@ func (r *ModifyPacketFilterConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyPortAclConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 旧端口acl策略
+	OldAclConfig *AclConfig `json:"OldAclConfig,omitempty" name:"OldAclConfig"`
+
+	// 新端口acl策略
+	NewAclConfig *AclConfig `json:"NewAclConfig,omitempty" name:"NewAclConfig"`
+}
+
 type ModifyPortAclConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5865,13 +8024,15 @@ func (r *ModifyPortAclConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyPortAclConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type ModifyPortAclConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *ModifyPortAclConfigResponseParams `json:"Response"`
 }
 
 func (r *ModifyPortAclConfigResponse) ToJsonString() string {
@@ -5886,36 +8047,59 @@ func (r *ModifyPortAclConfigResponse) FromJsonString(s string) error {
 }
 
 type NewL7RuleEntry struct {
-
-	// 会话保持时间，单位秒
-	KeepTime *uint64 `json:"KeepTime,omitempty" name:"KeepTime"`
-
-	// 负载均衡方式，取值[1(加权轮询)]
-	LbType *uint64 `json:"LbType,omitempty" name:"LbType"`
-
-	// 回源列表
-	SourceList []*L4RuleSource `json:"SourceList,omitempty" name:"SourceList"`
-
-	// 会话保持开关，取值[0(会话保持关闭)，1(会话保持开启)]
-	KeepEnable *uint64 `json:"KeepEnable,omitempty" name:"KeepEnable"`
+	// 转发协议，取值[http, https]
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 转发域名
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 转发协议，取值[http, https]
-	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+	// 负载均衡方式，取值[1(加权轮询)]
+	LbType *uint64 `json:"LbType,omitempty" name:"LbType"`
+
+	// 会话保持开关，取值[0(会话保持关闭)，1(会话保持开启)]
+	KeepEnable *uint64 `json:"KeepEnable,omitempty" name:"KeepEnable"`
+
+	// 会话保持时间，单位秒
+	KeepTime *uint64 `json:"KeepTime,omitempty" name:"KeepTime"`
 
 	// 回源方式，取值[1(域名回源)，2(IP回源)]
 	SourceType *uint64 `json:"SourceType,omitempty" name:"SourceType"`
 
-	// 是否开启Https协议使用Http回源，取值[0(关闭), 1(开启)]，不填写默认是关闭
-	HttpsToHttpEnable *uint64 `json:"HttpsToHttpEnable,omitempty" name:"HttpsToHttpEnable"`
+	// 回源列表
+	SourceList []*L4RuleSource `json:"SourceList,omitempty" name:"SourceList"`
+
+	// 区域码
+	Region *uint64 `json:"Region,omitempty" name:"Region"`
+
+	// 资源Id
+	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 资源Ip
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 规则ID，当添加新规则时可以不用填写此字段；当修改或者删除规则时需要填写此字段；
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 规则描述
+	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
+
+	// 证书来源，当转发协议为https时必须填，取值[2(腾讯云托管证书)]，当转发协议为http时也可以填0
+	CertType *uint64 `json:"CertType,omitempty" name:"CertType"`
+
+	// 当证书来源为腾讯云托管证书时，此字段必须填写托管证书ID
+	SSLId *string `json:"SSLId,omitempty" name:"SSLId"`
+
+	// 当证书来源为自有证书时，此字段必须填写证书内容；(因已不再支持自有证书，此字段已弃用，请不用填写此字段)
+	Cert *string `json:"Cert,omitempty" name:"Cert"`
+
+	// 当证书来源为自有证书时，此字段必须填写证书密钥；(因已不再支持自有证书，此字段已弃用，请不用填写此字段)
+	PrivateKey *string `json:"PrivateKey,omitempty" name:"PrivateKey"`
 
 	// 规则状态，取值[0(规则配置成功)，1(规则配置生效中)，2(规则配置失败)，3(规则删除生效中)，5(规则删除失败)，6(规则等待配置)，7(规则等待删除)，8(规则待配置证书)]
 	Status *uint64 `json:"Status,omitempty" name:"Status"`
 
-	// HTTPS协议的CC防护等级
-	CCLevel *string `json:"CCLevel,omitempty" name:"CCLevel"`
+	// cc防护状态，取值[0(关闭), 1(开启)]
+	CCStatus *uint64 `json:"CCStatus,omitempty" name:"CCStatus"`
 
 	// HTTPS协议的CC防护状态，取值[0(关闭), 1(开启)]
 	CCEnable *uint64 `json:"CCEnable,omitempty" name:"CCEnable"`
@@ -5923,46 +8107,62 @@ type NewL7RuleEntry struct {
 	// HTTPS协议的CC防护阈值
 	CCThreshold *uint64 `json:"CCThreshold,omitempty" name:"CCThreshold"`
 
-	// 区域码
-	Region *uint64 `json:"Region,omitempty" name:"Region"`
-
-	// 规则描述
-	RuleName *string `json:"RuleName,omitempty" name:"RuleName"`
-
-	// 当证书来源为自有证书时，此字段必须填写证书内容；(因已不再支持自有证书，此字段已弃用，请不用填写此字段)
-	Cert *string `json:"Cert,omitempty" name:"Cert"`
+	// HTTPS协议的CC防护等级
+	CCLevel *string `json:"CCLevel,omitempty" name:"CCLevel"`
 
 	// 修改时间
 	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
 
-	// 规则ID，当添加新规则时可以不用填写此字段；当修改或者删除规则时需要填写此字段；
-	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
-
-	// 资源Ip
-	Ip *string `json:"Ip,omitempty" name:"Ip"`
-
-	// 当证书来源为自有证书时，此字段必须填写证书密钥；(因已不再支持自有证书，此字段已弃用，请不用填写此字段)
-	PrivateKey *string `json:"PrivateKey,omitempty" name:"PrivateKey"`
-
-	// 证书来源，当转发协议为https时必须填，取值[2(腾讯云托管证书)]，当转发协议为http时也可以填0
-	CertType *uint64 `json:"CertType,omitempty" name:"CertType"`
+	// 是否开启Https协议使用Http回源，取值[0(关闭), 1(开启)]，不填写默认是关闭
+	HttpsToHttpEnable *uint64 `json:"HttpsToHttpEnable,omitempty" name:"HttpsToHttpEnable"`
 
 	// 接入端口值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VirtualPort *uint64 `json:"VirtualPort,omitempty" name:"VirtualPort"`
 
-	// cc防护状态，取值[0(关闭), 1(开启)]
-	CCStatus *uint64 `json:"CCStatus,omitempty" name:"CCStatus"`
+	// http强制跳转https，1表示打开，0表示关闭
+	RewriteHttps *uint64 `json:"RewriteHttps,omitempty" name:"RewriteHttps"`
 
-	// 当证书来源为腾讯云托管证书时，此字段必须填写托管证书ID
-	SSLId *string `json:"SSLId,omitempty" name:"SSLId"`
+	// 规则配置失败时的详细错误原因(仅当Status=2时有效)，1001证书不存在，1002证书获取失败，1003证书上传失败，1004证书已过期
+	ErrCode *uint64 `json:"ErrCode,omitempty" name:"ErrCode"`
+}
 
-	// 资源Id
+type OverviewDDoSEvent struct {
+	// 事件Id
 	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// ip
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 攻击类型
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 攻击状态，0：攻击中；1：攻击结束
+	AttackStatus *uint64 `json:"AttackStatus,omitempty" name:"AttackStatus"`
+
+	// 攻击流量，单位Mbps
+	Mbps *uint64 `json:"Mbps,omitempty" name:"Mbps"`
+
+	// 攻击包量，单位pps
+	Pps *uint64 `json:"Pps,omitempty" name:"Pps"`
+
+	// 业务类型，bgp-multip：高防包；bgpip：高防ip；basic：基础防护
+	Business *string `json:"Business,omitempty" name:"Business"`
+
+	// 高防实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 高防实例名称
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 }
 
 type PackInfo struct {
-
 	// 套餐包的类型，取值[
 	// staticpack：高防IP三网套餐包
 	// insurance：保险套餐包
@@ -5974,7 +8174,6 @@ type PackInfo struct {
 }
 
 type PacketFilterConfig struct {
-
 	// 协议，取值[tcp udp icmp all]
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
@@ -6079,16 +8278,17 @@ type PacketFilterConfig struct {
 }
 
 type PacketFilterRelation struct {
-
 	// 特征过滤配置
 	PacketFilterConfig *PacketFilterConfig `json:"PacketFilterConfig,omitempty" name:"PacketFilterConfig"`
 
 	// 特征过滤配置所属的实例
 	InstanceDetailList []*InstanceRelation `json:"InstanceDetailList,omitempty" name:"InstanceDetailList"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
 }
 
 type PortSegment struct {
-
 	// 起始端口，取值1~65535
 	BeginPort *uint64 `json:"BeginPort,omitempty" name:"BeginPort"`
 
@@ -6097,7 +8297,6 @@ type PortSegment struct {
 }
 
 type ProtectThresholdRelation struct {
-
 	// DDoS防护等级，取值[
 	// low(宽松)
 	// middle(适中)
@@ -6131,7 +8330,6 @@ type ProtectThresholdRelation struct {
 }
 
 type ProtocolBlockConfig struct {
-
 	// TCP封禁，取值[0(封禁关)，1(封禁开)]
 	DropTcp *int64 `json:"DropTcp,omitempty" name:"DropTcp"`
 
@@ -6149,7 +8347,6 @@ type ProtocolBlockConfig struct {
 }
 
 type ProtocolBlockRelation struct {
-
 	// 协议封禁配置
 	ProtocolBlockConfig *ProtocolBlockConfig `json:"ProtocolBlockConfig,omitempty" name:"ProtocolBlockConfig"`
 
@@ -6158,7 +8355,6 @@ type ProtocolBlockRelation struct {
 }
 
 type ProtocolPort struct {
-
 	// 协议（tcp；udp）
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
@@ -6167,7 +8363,6 @@ type ProtocolPort struct {
 }
 
 type ProxyTypeInfo struct {
-
 	// 转发监听端口列表，端口取值1~65535
 	ProxyPorts []*int64 `json:"ProxyPorts,omitempty" name:"ProxyPorts"`
 
@@ -6179,13 +8374,22 @@ type ProxyTypeInfo struct {
 }
 
 type RegionInfo struct {
-
 	// 地域名称，例如，ap-guangzhou
 	Region *string `json:"Region,omitempty" name:"Region"`
 }
 
-type SchedulingDomainInfo struct {
+type RuleInstanceRelation struct {
+	// 资源实例的IP
+	EipList []*string `json:"EipList,omitempty" name:"EipList"`
 
+	// 资源实例的ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 资源实例的Cname
+	Cname *string `json:"Cname,omitempty" name:"Cname"`
+}
+
+type SchedulingDomainInfo struct {
 	// 调度域名
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
@@ -6217,7 +8421,6 @@ type SchedulingDomainInfo struct {
 }
 
 type SourceServer struct {
-
 	// 源站的地址（IP或者域名）
 	RealServer *string `json:"RealServer,omitempty" name:"RealServer"`
 
@@ -6232,7 +8435,6 @@ type SourceServer struct {
 }
 
 type SpeedValue struct {
-
 	// 限速值类型，取值[
 	// 1(包速率pps)
 	// 2(带宽bps)
@@ -6244,7 +8446,6 @@ type SpeedValue struct {
 }
 
 type StaticPackRelation struct {
-
 	// 保底带宽
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProtectBandwidth *uint64 `json:"ProtectBandwidth,omitempty" name:"ProtectBandwidth"`
@@ -6267,7 +8468,6 @@ type StaticPackRelation struct {
 }
 
 type SuccessCode struct {
-
 	// 描述
 	Message *string `json:"Message,omitempty" name:"Message"`
 
@@ -6275,9 +8475,18 @@ type SuccessCode struct {
 	Code *string `json:"Code,omitempty" name:"Code"`
 }
 
+// Predefined struct for user
+type SwitchWaterPrintConfigRequestParams struct {
+	// 资源实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 水印开启/关闭状态，1表示开启；0表示关闭
+	OpenStatus *int64 `json:"OpenStatus,omitempty" name:"OpenStatus"`
+}
+
 type SwitchWaterPrintConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 资源实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -6305,13 +8514,15 @@ func (r *SwitchWaterPrintConfigRequest) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type SwitchWaterPrintConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
 type SwitchWaterPrintConfigResponse struct {
 	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
+	Response *SwitchWaterPrintConfigResponseParams `json:"Response"`
 }
 
 func (r *SwitchWaterPrintConfigResponse) ToJsonString() string {
@@ -6325,8 +8536,23 @@ func (r *SwitchWaterPrintConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type WaterPrintConfig struct {
+type TagFilter struct {
+	// 标签键
+	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
 
+	// 标签键值列表
+	TagValue []*string `json:"TagValue,omitempty" name:"TagValue"`
+}
+
+type TagInfo struct {
+	// 标签键
+	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
+
+	// 标签值
+	TagValue *string `json:"TagValue,omitempty" name:"TagValue"`
+}
+
+type WaterPrintConfig struct {
 	// 水印偏移量，取值范围[0, 100)
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -6350,7 +8576,6 @@ type WaterPrintConfig struct {
 }
 
 type WaterPrintKey struct {
-
 	// 密钥版本号
 	KeyVersion *string `json:"KeyVersion,omitempty" name:"KeyVersion"`
 
@@ -6368,7 +8593,6 @@ type WaterPrintKey struct {
 }
 
 type WaterPrintRelation struct {
-
 	// 水印配置
 	WaterPrintConfig *WaterPrintConfig `json:"WaterPrintConfig,omitempty" name:"WaterPrintConfig"`
 

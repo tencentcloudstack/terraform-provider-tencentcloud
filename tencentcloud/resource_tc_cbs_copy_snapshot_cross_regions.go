@@ -1,0 +1,179 @@
+/*
+Provides a resource to create a CBS snapshot.Snapshot replication across regions
+
+Example Usage
+
+```hcl
+
+```
+
+*/
+package tencentcloud
+
+import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+)
+
+func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceTencentCloudCbsCopySnapshotCrossRegionsCreate,
+		Read:   resourceTencentCloudCbsCopySnapshotCrossRegionsRead,
+		Update: resourceTencentCloudCbsCopySnapshotCrossRegionsUpdate,
+		Delete: resourceTencentCloudCbsCopySnapshotCrossRegionsDelete,
+
+		Schema: map[string]*schema.Schema{
+			"destination_regions": {
+				Type:        schema.TypeSet,
+				Required:    true,
+				Description: "The target region to which the snapshot needs to be copied. The standard values of each region can be queried through the interface DescribeRegions, and can only be passed to regions that support snapshots.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+
+			"snapshot_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the snapshot.",
+			},
+			"snapshot_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the the CBS which this snapshot created from.",
+			},
+
+			"snapshot_copy_result_set": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Snapshot results of cross-region replication.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"snapshot_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The new snapshot ID copied to the target region.",
+						},
+						"destination_region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Target region for cross-replication.",
+						},
+						"code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Error code, the value is 'Success' when successful.",
+						},
+						"message": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Indicates specific error information, an empty string on success.",
+						},
+					},
+				},
+			},
+
+			//"destination_region": {
+			//	Type:        schema.TypeString,
+			//	Computed:    true,
+			//	Description: "Target region for cross-replication.",
+			//},
+			//"code": {
+			//	Type:        schema.TypeString,
+			//	Computed:    true,
+			//	Description: "Error code, the value is 'Success' when successful.",
+			//},
+			//"message": {
+			//	Type:        schema.TypeString,
+			//	Computed:    true,
+			//	Description: "Indicates specific error information, an empty string on success.",
+			//},
+		},
+	}
+}
+
+func resourceTencentCloudCbsCopySnapshotCrossRegionsCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.create")()
+
+	var (
+		snapshotCopy []interface{}
+	)
+
+	logId := getLogId(contextNil)
+	request := cbs.NewCopySnapshotCrossRegionsRequest()
+
+	if v, ok := d.GetOk("destination_regions"); ok {
+		regions := v.(*schema.Set).List()
+		regionsArr := make([]*string, 0, len(regions))
+		for _, receiver := range regions {
+			regionsArr = append(regionsArr, helper.String(receiver.(string)))
+		}
+		request.DestinationRegions = regionsArr
+	}
+
+	if v, ok := d.GetOk("snapshot_id"); ok {
+		request.SnapshotId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("snapshot_name"); ok {
+		request.SnapshotName = helper.String(v.(string))
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CopySnapshotCrossRegions(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err, InternalError)
+		}
+		snapshotCopyResultSet := response.Response.SnapshotCopyResultSet
+
+		//for _, userNotices := range snapshotCopyResultSet {
+		//	_ = d.Set("snapshot_id", userNotices.SnapshotId)
+		//	_ = d.Set("destination_region", userNotices.DestinationRegion)
+		//	_ = d.Set("code", userNotices.Code)
+		//	_ = d.Set("message", userNotices.Message)
+		//}
+		//if err = d.Set("snapshot_copy_result_set", userNoticesItems); err != nil {
+		//	return err
+		//}
+		d.SetId("123")
+		for _, noticesItem := range snapshotCopyResultSet {
+			resultItemMap := map[string]interface{}{
+				"snapshot_id":        noticesItem.SnapshotId,
+				"destination_region": noticesItem.DestinationRegion,
+				"code":               noticesItem.Code,
+				"message":            noticesItem.Message,
+			}
+			snapshotCopy = append(snapshotCopy, resultItemMap)
+		}
+		if err = d.Set("snapshot_copy_result_set", snapshotCopy); err != nil {
+			return nil
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func resourceTencentCloudCbsCopySnapshotCrossRegionsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.read")()
+
+	return nil
+}
+
+func resourceTencentCloudCbsCopySnapshotCrossRegionsUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.update")()
+
+	return nil
+}
+
+func resourceTencentCloudCbsCopySnapshotCrossRegionsDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.delete")()
+
+	return nil
+}

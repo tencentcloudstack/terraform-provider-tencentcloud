@@ -20,11 +20,17 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 操作未授权。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
 	// 请检查是否有权限。
 	FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+
+	// CAM鉴权出现错误。
+	FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
 
 	// 取消订单失败。
 	FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
@@ -40,6 +46,12 @@ const (
 
 	// 证书已存在。
 	FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
+
+	// 已替换证书，无法进行托管。
+	FAILEDOPERATION_CERTIFICATEHASRENEWED = "FailedOperation.CertificateHasRenewed"
+
+	// 证书资源托管数量超过限制。
+	FAILEDOPERATION_CERTIFICATEHOSTINGTYPENUMBERLIMIT = "FailedOperation.CertificateHostingTypeNumberLimit"
 
 	// 证书不符合标准。
 	FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
@@ -86,6 +98,9 @@ const (
 	// 参数有误。
 	FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 
+	// 该主域（%s）下申请的免费证书数量已达到%s个上限，请购买付费证书。
+	FAILEDOPERATION_MAINDOMAINCERTIFICATECOUNTLIMIT = "FailedOperation.MainDomainCertificateCountLimit"
+
 	// 当前 CA 机构访问繁忙，请稍后重试。
 	FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
 
@@ -101,24 +116,54 @@ const (
 	// 重颁发失败。
 	FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 
+	// 剩余权益点不足。
+	FAILEDOPERATION_PACKAGECOUNTLIMIT = "FailedOperation.PackageCountLimit"
+
+	// 权益包已过期。
+	FAILEDOPERATION_PACKAGEEXPIRED = "FailedOperation.PackageExpired"
+
 	// 证书吊销失败。
 	FAILEDOPERATION_REVOKEFAILED = "FailedOperation.RevokeFailed"
 
 	// 证书已关联云资源，无法吊销。
 	FAILEDOPERATION_REVOKERESOURCEFAILED = "FailedOperation.RevokeResourceFailed"
 
+	// 角色不存在，请前往授权。
+	FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
+
+	// 后端服务响应错误。
+	INTERNALERROR_BACKENDRESPONSEERROR = "InternalError.BackendResponseError"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 查询的证书ID不能超过50个。
+	INVALIDPARAMETER_CERTIFICATEIDNUMBERLIMIT = "InvalidParameter.CertificateIdNumberLimit"
+
+	// 包含无效的证书ID。
+	INVALIDPARAMETER_CONTAINSINVALIDCERTIFICATEID = "InvalidParameter.ContainsInvalidCertificateId"
+
+	// 权益点ID列表无效。
+	INVALIDPARAMETER_PACKAGEIDSINVALID = "InvalidParameter.PackageIdsInvalid"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 单位时间内接口请求频率达到限制。
+	LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
 	// 公司管理人不存在。
 	RESOURCENOTFOUND_MANAGER = "ResourceNotFound.Manager"
+
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
 )
