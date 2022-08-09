@@ -4,13 +4,19 @@ Provides a resource to create a CBS snapshot.Snapshot replication across regions
 Example Usage
 
 ```hcl
-
+resource "tencentcloud_cbs_copy_snapshot_cross_regions" "example" {
+  destination_regions  = ["ap-beijing"]
+  snapshot_id          = ""
+  snapshot_name        = ""
+}
 ```
 
 */
 package tencentcloud
 
 import (
+	"crypto/md5"
+	"fmt"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
@@ -42,7 +48,7 @@ func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 			},
 			"snapshot_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "ID of the the CBS which this snapshot created from.",
 			},
 
@@ -75,22 +81,6 @@ func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 					},
 				},
 			},
-
-			//"destination_region": {
-			//	Type:        schema.TypeString,
-			//	Computed:    true,
-			//	Description: "Target region for cross-replication.",
-			//},
-			//"code": {
-			//	Type:        schema.TypeString,
-			//	Computed:    true,
-			//	Description: "Error code, the value is 'Success' when successful.",
-			//},
-			//"message": {
-			//	Type:        schema.TypeString,
-			//	Computed:    true,
-			//	Description: "Indicates specific error information, an empty string on success.",
-			//},
 		},
 	}
 }
@@ -131,16 +121,10 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionsCreate(d *schema.ResourceDat
 		}
 		snapshotCopyResultSet := response.Response.SnapshotCopyResultSet
 
-		//for _, userNotices := range snapshotCopyResultSet {
-		//	_ = d.Set("snapshot_id", userNotices.SnapshotId)
-		//	_ = d.Set("destination_region", userNotices.DestinationRegion)
-		//	_ = d.Set("code", userNotices.Code)
-		//	_ = d.Set("message", userNotices.Message)
-		//}
-		//if err = d.Set("snapshot_copy_result_set", userNoticesItems); err != nil {
-		//	return err
-		//}
-		d.SetId("123")
+		md := md5.New()
+		id := fmt.Sprintf("%x", md.Sum(nil))
+		d.SetId(id)
+
 		for _, noticesItem := range snapshotCopyResultSet {
 			resultItemMap := map[string]interface{}{
 				"snapshot_id":        noticesItem.SnapshotId,
