@@ -423,7 +423,6 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"multi_zone_subnet_policy": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				ValidateFunc: validateAllowedStringValue([]string{MultiZoneSubnetPolicyPriority,
 					MultiZoneSubnetPolicyEquality}),
 				Description: "Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.",
@@ -572,7 +571,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 	}
 }
 
-//this function composes every single parameter to a as scale parameter with json string format
+//this function composes every single parameter to an as scale parameter with json string format
 func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string, error) {
 	var (
 		result string
@@ -1268,6 +1267,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 	if d.HasChange("scaling_group_name") ||
 		d.HasChange("zones") ||
 		d.HasChange("scaling_group_project_id") ||
+		d.HasChange("multi_zone_subnet_policy") ||
 		d.HasChange("default_cooldown") ||
 		d.HasChange("termination_policies") {
 
@@ -1277,28 +1277,42 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 
 		var (
-			scalingGroupId      = *nodePool.AutoscalingGroupId
-			name                = d.Get("scaling_group_name").(string)
-			projectId           = d.Get("scaling_group_project_id").(int)
-			defaultCooldown     = d.Get("default_cooldown").(int)
-			zones               []*string
-			terminationPolicies []*string
+			request               = as.NewModifyAutoScalingGroupRequest()
+			scalingGroupId        = *nodePool.AutoscalingGroupId
+			name                  = d.Get("scaling_group_name").(string)
+			projectId             = d.Get("scaling_group_project_id").(int)
+			defaultCooldown       = d.Get("default_cooldown").(int)
+			multiZoneSubnetPolicy = d.Get("multi_zone_subnet_policy").(string)
 		)
 
+		request.AutoScalingGroupId = &scalingGroupId
+
+		if name != "" {
+			request.AutoScalingGroupName = &name
+		}
+
+		if multiZoneSubnetPolicy != "" {
+			request.MultiZoneSubnetPolicy = &multiZoneSubnetPolicy
+		}
+
+		if projectId != 0 {
+			request.ProjectId = helper.IntUint64(projectId)
+		}
+
+		if defaultCooldown != 0 {
+			request.DefaultCooldown = helper.IntUint64(defaultCooldown)
+		}
+
 		if v, ok := d.GetOk("zones"); ok {
-			for _, zone := range v.([]interface{}) {
-				zones = append(zones, helper.String(zone.(string)))
-			}
+			request.Zones = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
 
 		if v, ok := d.GetOk("termination_policies"); ok {
-			for _, policy := range v.([]interface{}) {
-				terminationPolicies = append(terminationPolicies, helper.String(policy.(string)))
-			}
+			request.TerminationPolicies = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
 
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := asService.ModifyScalingGroup(ctx, scalingGroupId, name, projectId, defaultCooldown, zones, terminationPolicies)
+			errRet := asService.ModifyAutoScalingGroup(ctx, request)
 			if errRet != nil {
 				return retryError(errRet)
 			}
