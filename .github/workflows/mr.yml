@@ -22,14 +22,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
-            ref: ${{ github.event.pull_request.head.sha }}
+            fetch-depth: 0
 
       # Runs a set of commands using the runners shell
       - name: MR INFO
         run: |
-          git fetch origin master
-          git branch --show-current
-          env
+          export BASE_SHA=${{ github.event.pull_request.base.sha }}
+          export HEAD_SHA=${{ github.event.pull_request.head.sha }}
           export TF_ACC=true
           export TENCENTCLOUD_REGION=ap-guangzhou
           export TENCENTCLOUD_SECRET_KEY=${{ secrets.TENCENTCLOUD_SECRET_KEY }}
