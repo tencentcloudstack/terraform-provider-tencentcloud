@@ -14,6 +14,88 @@ type TemService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *TemService) DescribeTemEnvironmentStatus(ctx context.Context, environmentId string) (environment *tem.NamespaceStatusInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tem.NewDescribeEnvironmentStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.EnvironmentIds = []*string{&environmentId}
+
+	response, err := me.client.UseTemClient().DescribeEnvironmentStatus(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.Result) < 1 {
+		return
+	}
+	environment = response.Response.Result[0]
+	return
+}
+
+func (me *TemService) DescribeTemEnvironment(ctx context.Context, environmentId string) (environment *tem.DescribeEnvironmentResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tem.NewDescribeEnvironmentRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.EnvironmentId = &environmentId
+
+	response, err := me.client.UseTemClient().DescribeEnvironment(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	environment = response.Response
+	return
+}
+
+func (me *TemService) DeleteTemEnvironmentById(ctx context.Context, environmentId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDestroyEnvironmentRequest()
+	request.EnvironmentId = &environmentId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTemClient().DestroyEnvironment(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *TemService) DescribeTemApplication(ctx context.Context, applicationId string) (application *tem.DescribeApplicationsResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)

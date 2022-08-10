@@ -645,6 +645,7 @@ Lighthouse
 
 TEM
   Resource
+	tencentcloud_tem_environment
 	tencentcloud_tem_application
 	tencentcloud_tem_workload
 
@@ -1157,6 +1158,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
 			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
 		},
