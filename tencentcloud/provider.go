@@ -648,6 +648,7 @@ TEM
 	tencentcloud_tem_environment
 	tencentcloud_tem_application
 	tencentcloud_tem_workload
+	tencentcloud_tem_app_config
 
 */
 package tencentcloud
@@ -1161,6 +1162,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
 			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
+			"tencentcloud_tem_app_config":                          resourceTencentCloudTemAppConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,

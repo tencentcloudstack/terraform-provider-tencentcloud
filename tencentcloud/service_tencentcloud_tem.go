@@ -203,3 +203,57 @@ func (me *TemService) DeleteTemWorkloadById(ctx context.Context, environmentId s
 
 	return
 }
+
+func (me *TemService) DescribeTemAppConfig(ctx context.Context, environmentId string, name string) (appConfig *tem.ConfigData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tem.NewDescribeConfigDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.EnvironmentId = &environmentId
+	request.Name = &name
+
+	response, err := me.client.UseTemClient().DescribeConfigData(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	appConfig = response.Response.Result
+	return
+}
+
+func (me *TemService) DeleteTemAppConfigById(ctx context.Context, environmentId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDestroyConfigDataRequest()
+	request.EnvironmentId = &environmentId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTemClient().DestroyConfigData(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

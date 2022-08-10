@@ -122,13 +122,13 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 			},
 
 			"cpu_spec": {
-				Type: schema.TypeFloat,
+				Type:        schema.TypeFloat,
 				Required:    true,
 				Description: "cpu.",
 			},
 
 			"memory_spec": {
-				Type: schema.TypeFloat,
+				Type:        schema.TypeFloat,
 				Required:    true,
 				Description: "mem.",
 			},
