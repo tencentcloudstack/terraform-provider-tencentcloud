@@ -581,18 +581,21 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	d.SetId(instanceId)
 
 	// check creation done
-	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return retryError(err)
-		} else if has && *instance.DBInstanceStatus == "running" {
+		}
+
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("create postgresql instance fail"))
+		}
+
+		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
 			memory = int(*instance.DBInstanceMemory)
 			return nil
-		} else if !has {
-			return resource.NonRetryableError(fmt.Errorf("create postgresql instance fail"))
-		} else {
-			return resource.RetryableError(fmt.Errorf("creating postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 		}
+		return resource.RetryableError(fmt.Errorf("creating postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 	})
 
 	if err != nil {
@@ -757,8 +760,20 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if outErr != nil {
 			return outErr
 		}
+		// Wait for status to processing
+		_ = resource.Retry(time.Second*10, func() *resource.RetryError {
+			instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+			if err != nil {
+				return retryError(err)
+			}
+			if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("waiting for upgrade status change"))
+			}
+			return nil
+		})
+		time.Sleep(time.Second * 5)
 		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
 		if checkErr != nil {
 			return checkErr
 		}
