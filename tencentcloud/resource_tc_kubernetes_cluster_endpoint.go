@@ -215,6 +215,10 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`cluster_intranet_subnet_id` can only set when `cluster_intranet` is true")
 	}
 
+	if err := service.CheckOneOfClusterNodeReady(ctx, id, true); err != nil {
+		return err
+	}
+
 	// Create Intranet(Private) Network
 	if clusterIntranet {
 		err := tencentCloudClusterIntranetSwitch(ctx, &service, id, intranetSubnetId, true)
