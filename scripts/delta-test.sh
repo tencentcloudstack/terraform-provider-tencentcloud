@@ -1,7 +1,8 @@
 #!/bin/bash
 
+range_sha=${BASE_SHA}..${HEAD_SHA}
 #service files
-update_service_functions=`git diff --name-status origin/master| awk '{print $2}' | grep "^tencentcloud/service*" | xargs git diff | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
+update_service_functions=`git diff --name-status ${range_sha} | awk '{print $2}' | grep "^tencentcloud/service*" | xargs git diff ${range_sha} | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
 need_test_files=""
 for update_service_function in $update_service_functions; do
     tmp_files=`grep -r --with-filename $update_service_function ./tencentcloud | awk -F ":" '{print $1}' | grep -v "service_tencent*" | awk -F "/" '{print $3}' | sort | uniq | egrep "^resource_tc_|^data_source_tc" | awk -F "." '{print $1}' | awk '/_test$/{print "tencentcloud/"$0".go"} !/_test$/{print "tencentcloud/"$0"_test.go"}'`
@@ -9,9 +10,9 @@ for update_service_function in $update_service_functions; do
 done
 
 # resource&&data_source files
-update_sources=`git diff --name-status origin/master| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | awk -F "." '{print $1"_test.go"}'`
+update_sources=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | awk -F "." '{print $1"_test.go"}'`
 # test files
-delta_test_files=`git diff --name-status origin/master | egrep "_test\.go$" | awk '{print $2}'`
+delta_test_files=`git diff --name-status ${range_sha} | egrep "_test\.go$" | awk '{print $2}'`
 # all test files
 delta_test_files="$delta_test_files $need_test_files $update_sources"
 delta_test_files=`echo $delta_test_files | xargs -n1 | sort | uniq`
