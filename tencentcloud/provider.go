@@ -178,6 +178,7 @@ Cloud Block Storage(CBS)
     tencentcloud_cbs_storages
 	tencentcloud_cbs_storages_set
     tencentcloud_cbs_snapshot_policies
+    tencentcloud_cbs_copy_snapshot_cross_regions
 
   Resource
     tencentcloud_cbs_storage
@@ -824,6 +825,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
+			"tencentcloud_cbs_copy_snapshot_cross_regions":          dataSourceTencentCloudCbsCopySnapshotCrossRegions(),
 			"tencentcloud_cbs_storages":                             dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_storages_set":                         dataSourceTencentCloudCbsStoragesSet(),
 			"tencentcloud_cbs_snapshots":                            dataSourceTencentCloudCbsSnapshots(),
@@ -940,7 +942,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_reserved_instance":                       resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                resourceTencentCloudKeyPair(),
 			"tencentcloud_placement_group":                         resourceTencentCloudPlacementGroup(),
-			"tencentcloud_cbs_copy_snapshot_cross_regions":         resourceTencentCloudCbsCopySnapshotCrossRegions(),
 			"tencentcloud_cbs_snapshot":                            resourceTencentCloudCbsSnapshot(),
 			"tencentcloud_cbs_snapshot_policy":                     resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                             resourceTencentCloudCbsStorage(),

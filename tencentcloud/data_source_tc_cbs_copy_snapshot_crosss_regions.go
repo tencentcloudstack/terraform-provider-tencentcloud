@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a CBS snapshot.Snapshot replication across regions
+Provides a datasource to copy a CBS snapshot.Snapshot replication across regions
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_cbs_copy_snapshot_cross_regions" "example" {
+data "tencentcloud_cbs_copy_snapshot_cross_regions" "example" {
   destination_regions  = ["ap-beijing"]
   snapshot_id          = ""
   snapshot_name        = ""
@@ -26,12 +26,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
+func dataSourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCbsCopySnapshotCrossRegionsCreate,
-		Read:   resourceTencentCloudCbsCopySnapshotCrossRegionsRead,
-		Update: resourceTencentCloudCbsCopySnapshotCrossRegionsUpdate,
-		Delete: resourceTencentCloudCbsCopySnapshotCrossRegionsDelete,
+		Read: dataSourceTencentCloudCbsCopySnapshotCosssRegionsRead,
 
 		Schema: map[string]*schema.Schema{
 			"destination_regions": {
@@ -40,7 +37,6 @@ func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 				Description: "The target region to which the snapshot needs to be copied. The standard values of each region can be queried through the interface DescribeRegions, and can only be passed to regions that support snapshots.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
-
 			"snapshot_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -51,7 +47,6 @@ func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 				Optional:    true,
 				Description: "ID of the the CBS which this snapshot created from.",
 			},
-
 			"snapshot_copy_result_set": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -85,8 +80,8 @@ func resourceTencentCloudCbsCopySnapshotCrossRegions() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCbsCopySnapshotCrossRegionsCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.create")()
+func dataSourceTencentCloudCbsCopySnapshotCosssRegionsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_cbs_copy_snapshot_cross_regions.read")()
 
 	var (
 		snapshotCopy []interface{}
@@ -141,23 +136,5 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionsCreate(d *schema.ResourceDat
 	}); err != nil {
 		return err
 	}
-	return nil
-}
-
-func resourceTencentCloudCbsCopySnapshotCrossRegionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.read")()
-
-	return nil
-}
-
-func resourceTencentCloudCbsCopySnapshotCrossRegionsUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.update")()
-
-	return nil
-}
-
-func resourceTencentCloudCbsCopySnapshotCrossRegionsDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_regions.delete")()
-
 	return nil
 }
