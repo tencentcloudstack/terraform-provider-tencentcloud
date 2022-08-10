@@ -3,6 +3,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"strings"
 	"testing"
@@ -22,13 +24,20 @@ func init() {
 			cli, _ := sharedClientForRegion(r)
 			client := cli.(*TencentCloudClient).apiV3Conn
 			service := SqlserverService{client}
+			instance, err := service.DescribeSqlserverInstances(ctx, "", defaultPubSQLServerName, -1, "", "", 1)
+			if err != nil {
+				return err
+			}
 			subInstances, err := service.DescribeSqlserverInstances(ctx, "", defaultSubSQLServerName, -1, "", "", 1)
 
 			if err != nil {
 				return err
 			}
 
+			pubInstanceId := *instance[0].InstanceId
 			subInstanceId := *subInstances[0].InstanceId
+
+			testAccUnsubscribePubDB(ctx, &service, pubInstanceId)
 
 			database, err := service.DescribeDBsOfInstance(ctx, subInstanceId)
 			if err != nil {
@@ -57,6 +66,34 @@ func init() {
 			return nil
 		},
 	})
+}
+
+func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, instanceId string) {
+
+	pubsubs, err := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
+		"instanceId": instanceId,
+	})
+
+	if len(pubsubs) == 0 {
+		log.Printf("NO pubsub result")
+		return
+	}
+
+	pubSubId := *pubsubs[0].Id
+
+	pubSub := &sqlserver.PublishSubscribe{
+		Id: &pubSubId,
+	}
+	tuples := []*sqlserver.DatabaseTuple{
+		{
+			helper.String(defaultSQLServerPubSubDB),
+			helper.String(defaultSQLServerPubSubDB),
+		},
+	}
+	err = service.DeletePublishSubscribe(ctx, pubSub, tuples)
+	if err != nil {
+		fmt.Printf("[ERROR] %s", err.Error())
+	}
 }
 
 func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
