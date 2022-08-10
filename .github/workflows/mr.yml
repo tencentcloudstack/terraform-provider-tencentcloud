@@ -29,6 +29,7 @@ jobs:
         run: |
           git fetch origin master
           git branch --show-current
+          env
           export TF_ACC=true
           export TENCENTCLOUD_REGION=ap-guangzhou
           export TENCENTCLOUD_SECRET_KEY=${{ secrets.TENCENTCLOUD_SECRET_KEY }}
