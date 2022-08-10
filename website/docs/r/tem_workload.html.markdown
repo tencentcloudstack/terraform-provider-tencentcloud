@@ -1,0 +1,166 @@
+---
+subcategory: "TEM"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_tem_workload"
+sidebar_current: "docs-tencentcloud-resource-tem_workload"
+description: |-
+  Provides a resource to create a tem workload
+---
+
+# tencentcloud_tem_workload
+
+Provides a resource to create a tem workload
+
+## Example Usage
+
+```hcl
+resource "tencentcloud_tem_workload" "workload" {
+  application_id     = "app-3j29aa2p"
+  environment_id     = "en-853mggjm"
+  deploy_version     = "hello-world"
+  deploy_mode        = "IMAGE"
+  img_repo           = "tem_demo/tem_demo"
+  init_pod_num       = 1
+  cpu_spec           = 1
+  memory_spec        = 1
+  security_group_ids = [""]
+  env_conf {
+    key    = "key"
+    value  = "value"
+    type   = "default"
+    config = "config-name"
+    secret = "secret-name"
+
+  }
+  liveness {
+    type                  = "HttpGet"
+    protocol              = "HTTP"
+    path                  = "/"
+    port                  = 80
+    initial_delay_seconds = 0
+    timeout_seconds       = 1
+    period_seconds        = 10
+
+  }
+  readiness {
+    type                  = "HttpGet"
+    protocol              = "HTTP"
+    path                  = "/"
+    port                  = 80
+    initial_delay_seconds = 0
+    timeout_seconds       = 1
+    period_seconds        = 10
+
+  }
+  startup_probe {
+    type                  = "HttpGet"
+    protocol              = "HTTP"
+    path                  = "/"
+    port                  = 80
+    initial_delay_seconds = 0
+    timeout_seconds       = 1
+    period_seconds        = 10
+
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `application_id` - (Required, String) application ID.
+* `cpu_spec` - (Required, Float64) cpu.
+* `deploy_mode` - (Required, String) deploy mode.
+* `deploy_version` - (Required, String) deploy version.
+* `environment_id` - (Required, String) environment ID.
+* `img_repo` - (Required, String) repository name.
+* `init_pod_num` - (Required, Int) initial pod number.
+* `memory_spec` - (Required, Float64) mem.
+* `deploy_strategy_conf` - (Optional, List) deploy strategy.
+* `env_conf` - (Optional, List) .
+* `liveness` - (Optional, List) liveness config.
+* `post_start` - (Optional, String) mem.
+* `pre_stop` - (Optional, String) mem.
+* `readiness` - (Optional, List) .
+* `security_group_ids` - (Optional, Set: [`String`]) security groups.
+* `startup_probe` - (Optional, List) .
+* `storage_confs` - (Optional, List) storage configuration.
+* `storage_mount_confs` - (Optional, List) storage mount configuration.
+
+The `deploy_strategy_conf` object supports the following:
+
+* `beta_batch_num` - (Required, Int) beta batch number.
+* `deploy_strategy_type` - (Required, Int) deploy strategy type.
+* `total_batch_count` - (Required, Int) total batch number.
+* `batch_interval` - (Optional, Int) interval between batches.
+* `force` - (Optional, Bool) force update.
+* `min_available` - (Optional, Int) minimal availabe instances duration deployment.
+
+The `env_conf` object supports the following:
+
+* `key` - (Required, String) env key.
+* `value` - (Required, String) env value.
+* `config` - (Optional, String) referenced config name.
+* `secret` - (Optional, String) referenced secret name.
+* `type` - (Optional, String) env type.
+
+The `liveness` object supports the following:
+
+* `type` - (Required, String) liveness check type.
+* `exec` - (Optional, String) script.
+* `initial_delay_seconds` - (Optional, Int) initial delay seconds for liveness check.
+* `path` - (Optional, String) path.
+* `period_seconds` - (Optional, Int) period seconds for liveness check.
+* `port` - (Optional, Int) liveness check port.
+* `protocol` - (Optional, String) protocol.
+* `timeout_seconds` - (Optional, Int) timeout seconds for liveness check.
+
+The `readiness` object supports the following:
+
+* `type` - (Required, String) readiness check type.
+* `exec` - (Optional, String) script.
+* `initial_delay_seconds` - (Optional, Int) initial delay seconds for readiness check.
+* `path` - (Optional, String) path.
+* `period_seconds` - (Optional, Int) period seconds for readiness check.
+* `port` - (Optional, Int) readiness check port.
+* `protocol` - (Optional, String) protocol.
+* `timeout_seconds` - (Optional, Int) timeout seconds for readiness check.
+
+The `startup_probe` object supports the following:
+
+* `type` - (Required, String) startup check type.
+* `exec` - (Optional, String) script.
+* `initial_delay_seconds` - (Optional, Int) initial delay seconds for startup check.
+* `path` - (Optional, String) path.
+* `period_seconds` - (Optional, Int) period seconds for startup check.
+* `port` - (Optional, Int) startup check port.
+* `protocol` - (Optional, String) protocol.
+* `timeout_seconds` - (Optional, Int) timeout seconds for startup check.
+
+The `storage_confs` object supports the following:
+
+* `storage_vol_ip` - (Required, String) volume ip.
+* `storage_vol_name` - (Required, String) volume name.
+* `storage_vol_path` - (Required, String) volume path.
+
+The `storage_mount_confs` object supports the following:
+
+* `mount_path` - (Required, String) mount path.
+* `volume_name` - (Required, String) volume name.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
+
+## Import
+
+tem workload can be imported using the id, e.g.
+```
+$ terraform import tencentcloud_tem_workload.workload envirnomentId#applicationId
+```
+
