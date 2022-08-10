@@ -168,6 +168,10 @@ func TestAccTencentCloudCbsStorage_upgrade(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					fmt.Printf("Step1 should skip because Prepaid Disks refund has quota every period\n")
+					return true, nil
+				},
 				Config: testAccCbsStorage_upgradeupdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_upgrade"),
