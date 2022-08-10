@@ -27,7 +27,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: MR INFO
         run: |
-          git fetch origin master
+          git pull --rebase origin master
           
           export TF_ACC=true
           export TENCENTCLOUD_REGION=ap-guangzhou
