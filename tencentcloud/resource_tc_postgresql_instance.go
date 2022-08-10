@@ -1015,12 +1015,12 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 		if inErr != nil {
 			ee, ok := inErr.(*sdkErrors.TencentCloudSDKError)
-			if ok && ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+			if ok && (ee.GetCode() == "ResourceNotFound.InstanceNotFoundError" || ee.GetCode() == "InvalidParameter") {
 				return nil
 			}
 			return retryError(inErr)
 		}
-		if IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
+		if instance != nil && IsContains(POSTGRESQL_RETRYABLE_STATUS, *instance.DBInstanceStatus) {
 			return resource.RetryableError(fmt.Errorf("instance %s is %s, retrying", *instance.DBInstanceId, *instance.DBInstanceStatus))
 		}
 		return nil

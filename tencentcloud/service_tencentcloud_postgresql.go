@@ -360,18 +360,10 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
 	if err != nil {
-		ee, ok := err.(*sdkErrors.TencentCloudSDKError)
-		if !ok {
-			errRet = err
-			return
-		}
-		if ee.Code == "InvalidParameter" || ee.Code == "ResourceNotFound.InstanceNotFoundError" {
-			errRet = nil
-		} else {
-			errRet = err
-		}
+		errRet = err
 		return
 	}
+
 	if response == nil || response.Response == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		return
