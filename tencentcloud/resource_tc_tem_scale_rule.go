@@ -581,6 +581,10 @@ func resourceTencentCloudTemScaleRuleDelete(d *schema.ResourceData, meta interfa
 	applicationId := idSplit[1]
 	scaleRuleId := idSplit[2]
 
+	if err := service.DisableTemScaleRuleById(ctx, environmentId, applicationId, scaleRuleId); err != nil {
+		return err
+	}
+
 	if err := service.DeleteTemScaleRuleById(ctx, environmentId, applicationId, scaleRuleId); err != nil {
 		return err
 	}

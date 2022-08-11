@@ -269,7 +269,7 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
-	applicationId := idSplit[0]
+	applicationId := idSplit[1]
 	name := idSplit[2]
 
 	request.EnvironmentId = &environmentId
@@ -288,32 +288,37 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("`name` do not support change now.")
 	}
 
-	if d.HasChange("logset_id") {
-		return fmt.Errorf("`logset_id` do not support change now.")
-	}
+	if d.HasChange("logset_id") || d.HasChange("topic_id") || d.HasChange("input_type") || d.HasChange("log_type") ||
+		d.HasChange("beginning_regex") || d.HasChange("log_path") || d.HasChange("file_pattern") {
+		data := tem.LogConfig{}
+		if v, ok := d.GetOk("logset_id"); ok {
+			data.LogsetId = helper.String(v.(string))
+		}
 
-	if d.HasChange("topic_id") {
-		return fmt.Errorf("`topic_id` do not support change now.")
-	}
+		if v, ok := d.GetOk("topic_id"); ok {
+			data.TopicId = helper.String(v.(string))
+		}
 
-	if d.HasChange("input_type") {
-		return fmt.Errorf("`input_type` do not support change now.")
-	}
+		if v, ok := d.GetOk("input_type"); ok {
+			data.InputType = helper.String(v.(string))
+		}
 
-	if d.HasChange("log_type") {
-		return fmt.Errorf("`log_type` do not support change now.")
-	}
+		if v, ok := d.GetOk("log_type"); ok {
+			data.LogType = helper.String(v.(string))
+		}
 
-	if d.HasChange("beginning_regex") {
-		return fmt.Errorf("`beginning_regex` do not support change now.")
-	}
+		if v, ok := d.GetOk("beginning_regex"); ok {
+			data.BeginningRegex = helper.String(v.(string))
+		}
 
-	if d.HasChange("log_path") {
-		return fmt.Errorf("`log_path` do not support change now.")
-	}
+		if v, ok := d.GetOk("log_path"); ok {
+			data.LogPath = helper.String(v.(string))
+		}
 
-	if d.HasChange("file_pattern") {
-		return fmt.Errorf("`file_pattern` do not support change now.")
+		if v, ok := d.GetOk("file_pattern"); ok {
+			data.FilePattern = helper.String(v.(string))
+		}
+		request.Data = &data
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

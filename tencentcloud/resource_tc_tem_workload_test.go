@@ -39,20 +39,11 @@ resource "tencentcloud_tem_workload" "workload" {
   init_pod_num       = 1
   cpu_spec           = 1
   memory_spec        = 1
-  security_group_ids = [""]
-  env_conf {
-    key    = "key"
-    value  = "value"
-    type   = "default"
-    config = "config-name"
-    secret = "secret-name"
-
-  }
   liveness {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 80
+    port                  = 8080
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -62,7 +53,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 80
+    port                  = 8000
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -72,7 +63,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 80
+    port                  = 36000
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10

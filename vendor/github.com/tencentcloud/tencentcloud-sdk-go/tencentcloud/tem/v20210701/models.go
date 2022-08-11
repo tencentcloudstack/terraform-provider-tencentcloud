@@ -2987,6 +2987,85 @@ func (r *DestroyLogConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DisableApplicationAutoscalerRequestParams struct {
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 弹性伸缩策略ID
+	AutoscalerId *string `json:"AutoscalerId,omitempty" name:"AutoscalerId"`
+}
+
+type DisableApplicationAutoscalerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 弹性伸缩策略ID
+	AutoscalerId *string `json:"AutoscalerId,omitempty" name:"AutoscalerId"`
+}
+
+func (r *DisableApplicationAutoscalerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableApplicationAutoscalerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApplicationId")
+	delete(f, "EnvironmentId")
+	delete(f, "SourceChannel")
+	delete(f, "AutoscalerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableApplicationAutoscalerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisableApplicationAutoscalerResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DisableApplicationAutoscalerResponse struct {
+	*tchttp.BaseResponse
+	Response *DisableApplicationAutoscalerResponseParams `json:"Response"`
+}
+
+func (r *DisableApplicationAutoscalerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableApplicationAutoscalerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type EksService struct {
 	// service name
 	Name *string `json:"Name,omitempty" name:"Name"`
@@ -3051,6 +3130,85 @@ type EksService struct {
 	// 所有服务IP是否已经ready
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AllIpDone *bool `json:"AllIpDone,omitempty" name:"AllIpDone"`
+}
+
+// Predefined struct for user
+type EnableApplicationAutoscalerRequestParams struct {
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 弹性伸缩策略ID
+	AutoscalerId *string `json:"AutoscalerId,omitempty" name:"AutoscalerId"`
+}
+
+type EnableApplicationAutoscalerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 弹性伸缩策略ID
+	AutoscalerId *string `json:"AutoscalerId,omitempty" name:"AutoscalerId"`
+}
+
+func (r *EnableApplicationAutoscalerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableApplicationAutoscalerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApplicationId")
+	delete(f, "EnvironmentId")
+	delete(f, "SourceChannel")
+	delete(f, "AutoscalerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableApplicationAutoscalerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableApplicationAutoscalerResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type EnableApplicationAutoscalerResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableApplicationAutoscalerResponseParams `json:"Response"`
+}
+
+func (r *EnableApplicationAutoscalerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableApplicationAutoscalerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type EnablePrometheusConf struct {
@@ -4932,7 +5090,7 @@ type TemServiceVersionInfo struct {
 	VersionId *string `json:"VersionId,omitempty" name:"VersionId"`
 
 	// 服务id
-	ApplicationId *bool `json:"ApplicationId,omitempty" name:"ApplicationId"`
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
 
 	// 部署方式
 	DeployMode *string `json:"DeployMode,omitempty" name:"DeployMode"`
@@ -4971,6 +5129,7 @@ type TemServiceVersionInfo struct {
 	ImgVersion *string `json:"ImgVersion,omitempty" name:"ImgVersion"`
 
 	// 弹性配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	EsInfo *EsInfo `json:"EsInfo,omitempty" name:"EsInfo"`
 
 	// 环境配置
@@ -5064,7 +5223,7 @@ type TemServiceVersionInfo struct {
 
 	// 最小实例数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	MinAliveInstances *int64 `json:"MinAliveInstances,omitempty" name:"MinAliveInstances"`
+	MinAliveInstances *string `json:"MinAliveInstances,omitempty" name:"MinAliveInstances"`
 
 	// 安全组
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -5142,7 +5301,7 @@ type TemServiceVersionInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableTracing *uint64 `json:"EnableTracing,omitempty" name:"EnableTracing"`
 
-	// 是否开启调用链上报，只有 EnableTracing=1 时生效
+	// 是否开启调用链上报，只有 EnableTracing=1 时生效（参数已弃用）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableTracingReport *uint64 `json:"EnableTracingReport,omitempty" name:"EnableTracingReport"`
 
@@ -5184,7 +5343,7 @@ type TemServiceVersionInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnderDeploying *bool `json:"UnderDeploying,omitempty" name:"UnderDeploying"`
 
-	// 是否开启prometheus业务指标监控
+	// 监控业务指标监控
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnablePrometheusConf *EnablePrometheusConf `json:"EnablePrometheusConf,omitempty" name:"EnablePrometheusConf"`
 
@@ -5195,6 +5354,11 @@ type TemServiceVersionInfo struct {
 	// tcr实例ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TcrInstanceId *string `json:"TcrInstanceId,omitempty" name:"TcrInstanceId"`
+
+	// 1：开始自动metrics采集（open-telemetry）；
+	// 0：关闭metrics采集；
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableMetrics *int64 `json:"EnableMetrics,omitempty" name:"EnableMetrics"`
 }
 
 type UseDefaultRepoParameters struct {
