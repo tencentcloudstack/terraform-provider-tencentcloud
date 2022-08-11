@@ -1,14 +1,25 @@
 /*
 Provide a resource to configure kubernetes cluster app addons.
 
+~> **NOTE:** Avoid to use default legacy version 1.0.0 for some of the charts, please check the following examples.
+
 Example Usage
 
 ```hcl
 
+data "tencentcloud_kubernetes_charts" "charts" {
+  update_locked_versions = true
+}
+
+locals {
+  cbs_version = data.tencentcloud_kubernetes_charts.charts.locked_versions.cbs
+  tcr_version = data.tencentcloud_kubernetes_charts.charts.locked_versions.tcr
+}
+
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
   cluster_id = "cls-xxxxxxxx"
   name = "cbs"
-  version = "1.0.0"
+  version = local.cbs_version
   values = [
     "rootdir=/var/lib/kubelet"
   ]
@@ -17,7 +28,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
   cluster_id = "cls-xxxxxxxx"
   name = "tcr"
-  version = "1.0.0"
+  version = local.tcr_version
   values = [
     # imagePullSecretsCrs is an array which can configure image pull
     "global.imagePullSecretsCrs[0].name=unique-sample-vpc",
@@ -52,7 +63,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
     "spec":{
         "chart":{
             "chartName":"cbs",
-            "chartVersion":"1.0.0"
+            "chartVersion":"1.0.5"
         },
         "values":{
             "rawValuesType":"yaml",
@@ -103,7 +114,7 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 			"version": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				Description:   "Addon version, default latest version. Conflict with `request_body`.",
+				Description:   "Addon version, default latest version. Conflict with `request_body`. NOTE: recommend using `data.tencentcloud_kubernetes_charts` to specify version, instead of using legacy `1.0.0`.",
 				ConflictsWith: []string{"request_body"},
 			},
 			"values": {

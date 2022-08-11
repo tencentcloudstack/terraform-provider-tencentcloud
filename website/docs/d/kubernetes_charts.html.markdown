@@ -14,7 +14,7 @@ Use this data source to query detailed information of kubernetes cluster addons.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_kubernetes_charts" "name" {}
+data "tencentcloud_kubernetes_charts" "charts" {}
 ```
 
 ## Argument Reference
@@ -24,7 +24,9 @@ The following arguments are supported:
 * `arch` - (Optional, String) Operation system app supported. Available values: `arm32`, `arm64`, `amd64`.
 * `cluster_type` - (Optional, String) Cluster type. Available values: `tke`, `eks`.
 * `kind` - (Optional, String) Kind of app chart. Available values: `log`, `scheduler`, `network`, `storage`, `monitor`, `dns`, `image`, `other`, `invisible`.
+* `locked_versions` - (Optional, Map) List of versions while first query, NOTE: versions will not be changed once set, unless `update_locked_version` is true.
 * `result_output_file` - (Optional, String) Used to save results.
+* `update_locked_versions` - (Optional, Bool) Specify whether to refresh `locked_versions` every time.
 
 ## Attributes Reference
 

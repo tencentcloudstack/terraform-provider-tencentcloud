@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -52,7 +53,7 @@ func TestAccTencentCloudTkeAddonAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.0"),
+					resource.TestMatchResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", regexp.MustCompile(`^\d+\.\d+\.\d+$`)),
 				),
 			},
 		},
@@ -63,10 +64,22 @@ func testAccTkeAddonAttachment() string {
 	return fmt.Sprintf(`
 %s
 
+variable "ChartName" {
+  default = "%s"
+}
+
+data "tencentcloud_kubernetes_charts" "charts" {
+  update_locked_versions = true
+}
+
+locals {
+  chart_version = data.tencentcloud_kubernetes_charts.charts.locked_versions[var.ChartName]
+}
+
 resource "tencentcloud_kubernetes_addon_attachment" "cos" {
   cluster_id = local.cluster_id
-  name = "%s"
-  version = "1.0.0"
+  name = var.ChartName
+  version = local.chart_version
 }
 `, TkeDataSource, defaultAddonName)
 }

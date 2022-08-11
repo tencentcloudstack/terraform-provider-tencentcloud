@@ -4,7 +4,7 @@ Use this data source to query detailed information of kubernetes cluster addons.
 Example Usage
 
 ```hcl
-data "tencentcloud_kubernetes_charts" "name" {}
+data "tencentcloud_kubernetes_charts" "charts" {}
 ```
 */
 package tencentcloud
@@ -36,6 +36,17 @@ func dataSourceTencentCloudKubernetesCharts() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Cluster type. Available values: `tke`, `eks`.",
+			},
+			"update_locked_versions": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Specify whether to refresh `locked_versions` every time.",
+			},
+			"locked_versions": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "List of versions while first query, NOTE: versions will not be changed once set, unless `update_locked_version` is true.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -103,6 +114,8 @@ func dataSourceTencentCloudKubernetesChartsRead(d *schema.ResourceData, meta int
 	}
 
 	chartList := make([]interface{}, 0)
+	lockedVersions := d.Get("locked_versions").(map[string]interface{})
+	updateLocked := d.Get("update_locked_versions").(bool)
 
 	for i := range response {
 		item := response[i]
@@ -119,12 +132,18 @@ func dataSourceTencentCloudKubernetesChartsRead(d *schema.ResourceData, meta int
 
 		chart["label"] = label
 
+		if v, ok := lockedVersions[*item.Name]; !ok || v.(string) == "" || updateLocked {
+			lockedVersions[*item.Name] = *item.LatestVersion
+		}
+
 		chartList = append(chartList, chart)
 	}
 
-	err = d.Set("chart_list", chartList)
+	if err := d.Set("chart_list", chartList); err != nil {
+		return err
+	}
 
-	if err != nil {
+	if err := d.Set("locked_versions", lockedVersions); err != nil {
 		return err
 	}
 
