@@ -643,6 +643,16 @@ Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
 
+TEM
+  Resource
+	tencentcloud_tem_environment
+	tencentcloud_tem_application
+	tencentcloud_tem_workload
+	tencentcloud_tem_app_config
+	tencentcloud_tem_log_config
+	tencentcloud_tem_scale_rule
+	tencentcloud_tem_gateway
+
 */
 package tencentcloud
 
@@ -1152,6 +1162,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
+			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
+			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
+			"tencentcloud_tem_app_config":                          resourceTencentCloudTemAppConfig(),
+			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
+			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
+			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
 		},
 
 		ConfigureFunc: providerConfigure,
