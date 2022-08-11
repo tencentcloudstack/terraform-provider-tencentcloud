@@ -230,7 +230,6 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 
 	var (
 		request          = tem.NewModifyIngressRequest()
-		response         *tem.ModifyIngressResponse
 		environmentId    string
 		ingressName      string
 		clusterNamespace string
@@ -327,7 +326,6 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

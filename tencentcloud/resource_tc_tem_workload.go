@@ -430,7 +430,6 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request       = tem.NewDeployApplicationRequest()
-		response      *tem.DeployApplicationResponse
 		applicationId string
 		environmentId string
 	)
@@ -660,7 +659,6 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 
