@@ -313,3 +313,64 @@ func (me *TemService) DeleteTemLogConfigById(ctx context.Context, environmentId 
 
 	return
 }
+
+func (me *TemService) DescribeTemScaleRule(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (scaleRule *tem.Autoscaler, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tem.NewDescribeApplicationAutoscalerListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.EnvironmentId = &environmentId
+	request.ApplicationId = &applicationId
+
+	response, err := me.client.UseTemClient().DescribeApplicationAutoscalerList(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	scaleRuleList := response.Response.Result
+	for _, rule := range scaleRuleList {
+		if *rule.AutoscalerId == scaleRuleId {
+			scaleRule = rule
+			return
+		}
+	}
+	return
+}
+
+func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId string, applicationId string, scaleRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDeleteApplicationAutoscalerRequest()
+	request.EnvironmentId = &environmentId
+	request.ApplicationId = &applicationId
+	request.AutoscalerId = &scaleRuleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTemClient().DeleteApplicationAutoscaler(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
