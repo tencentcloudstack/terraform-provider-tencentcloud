@@ -117,7 +117,6 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request       = tem.NewCreateLogConfigRequest()
-		response      *tem.CreateLogConfigResponse
 		environmentId string
 		applicationId string
 		name          string
@@ -174,7 +173,6 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 
