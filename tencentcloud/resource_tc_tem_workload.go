@@ -513,7 +513,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["secret"]; ok {
 				pair.Secret = helper.String(v.(string))
 			}
-
+			request.EnvConf = append(request.EnvConf, &pair)
 		}
 	}
 
@@ -530,6 +530,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["storage_vol_path"]; ok {
 				storageConf.StorageVolPath = helper.String(v.(string))
 			}
+			request.StorageConfs = append(request.StorageConfs, &storageConf)
 
 		}
 	}
@@ -544,7 +545,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["mount_path"]; ok {
 				storageMountConf.MountPath = helper.String(v.(string))
 			}
-
+			request.StorageMountConfs = append(request.StorageMountConfs, &storageMountConf)
 		}
 	}
 
@@ -574,7 +575,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		if v, ok := dMap["period_seconds"]; ok {
 			healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
 		}
-
+		request.Liveness = &healthCheckConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "readiness"); ok {
@@ -603,7 +604,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		if v, ok := dMap["period_seconds"]; ok {
 			healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
 		}
-
+		request.Readiness = &healthCheckConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "startup_probe"); ok {
@@ -632,6 +633,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		if v, ok := dMap["period_seconds"]; ok {
 			healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
 		}
+		request.StartupProbe = &healthCheckConfig
 
 	}
 
@@ -655,6 +657,7 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		if v, ok := dMap["force"]; ok {
 			deployStrategyConf.Force = helper.Bool(v.(bool))
 		}
+		request.DeployStrategyConf = &deployStrategyConf
 
 	}
 
