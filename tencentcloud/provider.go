@@ -651,6 +651,7 @@ TEM
 	tencentcloud_tem_app_config
 	tencentcloud_tem_log_config
 	tencentcloud_tem_scale_rule
+	tencentcloud_tem_gateway
 
 */
 package tencentcloud
@@ -1167,6 +1168,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_app_config":                          resourceTencentCloudTemAppConfig(),
 			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
+			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
 		},
 
 		ConfigureFunc: providerConfigure,

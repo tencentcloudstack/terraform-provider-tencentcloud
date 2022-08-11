@@ -374,3 +374,59 @@ func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId 
 
 	return
 }
+
+func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (gateway *tem.IngressInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tem.NewDescribeIngressRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.EnvironmentId = &environmentId
+	request.IngressName = &ingressName
+	request.ClusterNamespace = &clusterNamespace
+
+	response, err := me.client.UseTemClient().DescribeIngress(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	gateway = response.Response.Result
+	return
+}
+
+func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDeleteIngressRequest()
+	request.EnvironmentId = &environmentId
+	request.IngressName = &ingressName
+	request.ClusterNamespace = &clusterNamespace
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTemClient().DeleteIngress(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
