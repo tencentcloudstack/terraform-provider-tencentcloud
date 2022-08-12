@@ -70,6 +70,7 @@ The following arguments are supported:
 * `cidr_ip` - (Optional, String, ForceNew) An IP address network or segment, and conflict with `source_sgid` and `address_template`.
 * `description` - (Optional, String, ForceNew) Description of the security group rule.
 * `ip_protocol` - (Optional, String, ForceNew) Type of IP protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `protocol_template`.
+* `policy_index` - (Optional, Int) The security group rule index number, the value of which dynamically changes as the security group rule changes.
 * `port_range` - (Optional, String, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and confilicts with `protocol_template`.
 * `protocol_template` - (Optional, List, ForceNew) ID of the address template, and conflict with `ip_protocol`, `port_range`.
 * `source_sgid` - (Optional, String, ForceNew) ID of the nested security group, and conflicts with `cidr_ip` and `address_template`.
