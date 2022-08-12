@@ -60,11 +60,11 @@ resource "tencentcloud_tem_workload" "workload" {
 
 The following arguments are supported:
 
-* `application_id` - (Required, String) application ID.
+* `application_id` - (Required, String, ForceNew) application ID.
 * `cpu_spec` - (Required, Float64) cpu.
-* `deploy_mode` - (Required, String) deploy mode.
+* `deploy_mode` - (Required, String) deploy mode, support IMAGE.
 * `deploy_version` - (Required, String) deploy version.
-* `environment_id` - (Required, String) environment ID.
+* `environment_id` - (Required, String, ForceNew) environment ID.
 * `img_repo` - (Required, String) repository name.
 * `init_pod_num` - (Required, Int) initial pod number.
 * `memory_spec` - (Required, Float64) mem.
@@ -81,10 +81,10 @@ The following arguments are supported:
 
 The `deploy_strategy_conf` object supports the following:
 
-* `beta_batch_num` - (Required, Int) beta batch number.
-* `deploy_strategy_type` - (Required, Int) deploy strategy type.
+* `deploy_strategy_type` - (Required, Int) strategy type, 0 means auto, 1 means manual, 2 means manual with beta batch.
 * `total_batch_count` - (Required, Int) total batch number.
 * `batch_interval` - (Optional, Int) interval between batches.
+* `beta_batch_num` - (Optional, Int) beta batch number.
 * `force` - (Optional, Bool) force update.
 * `min_available` - (Optional, Int) minimal availabe instances duration deployment.
 
@@ -92,13 +92,13 @@ The `env_conf` object supports the following:
 
 * `key` - (Required, String) env key.
 * `value` - (Required, String) env value.
-* `config` - (Optional, String) referenced config name.
-* `secret` - (Optional, String) referenced secret name.
-* `type` - (Optional, String) env type.
+* `config` - (Optional, String) referenced config name when type=referenced.
+* `secret` - (Optional, String) referenced secret name when type=referenced.
+* `type` - (Optional, String) env type, support default, referenced.
 
 The `liveness` object supports the following:
 
-* `type` - (Required, String) liveness check type.
+* `type` - (Required, String) check type, support HttpGet, TcpSocket and Exec.
 * `exec` - (Optional, String) script.
 * `initial_delay_seconds` - (Optional, Int) initial delay seconds for liveness check.
 * `path` - (Optional, String) path.
@@ -109,7 +109,7 @@ The `liveness` object supports the following:
 
 The `readiness` object supports the following:
 
-* `type` - (Required, String) readiness check type.
+* `type` - (Required, String) check type, support HttpGet, TcpSocket and Exec.
 * `exec` - (Optional, String) script.
 * `initial_delay_seconds` - (Optional, Int) initial delay seconds for readiness check.
 * `path` - (Optional, String) path.
@@ -120,7 +120,7 @@ The `readiness` object supports the following:
 
 The `startup_probe` object supports the following:
 
-* `type` - (Required, String) startup check type.
+* `type` - (Required, String) check type, support HttpGet, TcpSocket and Exec.
 * `exec` - (Optional, String) script.
 * `initial_delay_seconds` - (Optional, Int) initial delay seconds for startup check.
 * `path` - (Optional, String) path.

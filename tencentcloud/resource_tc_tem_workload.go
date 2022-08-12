@@ -79,12 +79,14 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 			"application_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "application ID.",
 			},
 
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "environment ID.",
 			},
 
@@ -97,7 +99,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 			"deploy_mode": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "deploy mode.",
+				Description: "deploy mode, support IMAGE.",
 			},
 
 			"img_repo": {
@@ -148,6 +150,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 			"env_conf": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: ".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -164,17 +167,17 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "env type.",
+							Description: "env type, support default, referenced.",
 						},
 						"config": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "referenced config name.",
+							Description: "referenced config name when type=referenced.",
 						},
 						"secret": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "referenced secret name.",
+							Description: "referenced secret name when type=referenced.",
 						},
 					},
 				},
@@ -235,7 +238,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "liveness check type.",
+							Description: "check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -286,7 +289,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "readiness check type.",
+							Description: "check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -337,7 +340,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "startup check type.",
+							Description: "check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -388,11 +391,11 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"deploy_strategy_type": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "deploy strategy type.",
+							Description: "strategy type, 0 means auto, 1 means manual, 2 means manual with beta batch.",
 						},
 						"beta_batch_num": {
 							Type:        schema.TypeInt,
-							Required:    true,
+							Optional:    true,
 							Description: "beta batch number.",
 						},
 						"total_batch_count": {
@@ -901,7 +904,247 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_tem_workload.update")()
 	defer inconsistentCheck(d, meta)()
 
-	return fmt.Errorf("resource `tencentcloud_tem_workload` do not support change now.")
+	logId := getLogId(contextNil)
+
+	var (
+		request = tem.NewDeployApplicationRequest()
+	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	environmentId := idSplit[0]
+	applicationId := idSplit[1]
+
+	request.EnvironmentId = &environmentId
+	request.ApplicationId = &applicationId
+
+	if d.HasChange("deploy_version") || d.HasChange("deploy_mode") || d.HasChange("img_repo") || d.HasChange("init_pod_num") ||
+		d.HasChange("cpu_spec") || d.HasChange("memory_spec") || d.HasChange("post_start") || d.HasChange("pre_stop") || d.HasChange("security_group_ids") ||
+		d.HasChange("env_conf") || d.HasChange("storage_confs") || d.HasChange("storage_mount_confs") || d.HasChange("liveness") ||
+		d.HasChange("readiness") || d.HasChange("startup_probe") || d.HasChange("deploy_strategy_conf") {
+		if v, ok := d.GetOk("deploy_version"); ok {
+			request.DeployVersion = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("deploy_mode"); ok {
+			request.DeployMode = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("img_repo"); ok {
+			request.ImgRepo = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("init_pod_num"); ok {
+			request.InitPodNum = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("cpu_spec"); ok {
+			request.CpuSpec = helper.Float64(v.(float64))
+		}
+
+		if v, ok := d.GetOk("memory_spec"); ok {
+			request.MemorySpec = helper.Float64(v.(float64))
+		}
+
+		if v, ok := d.GetOk("post_start"); ok {
+			request.PostStart = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("pre_stop"); ok {
+			request.PreStop = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("security_group_ids"); ok {
+			securityGroupIdsSet := v.(*schema.Set).List()
+			for i := range securityGroupIdsSet {
+				securityGroupIds := securityGroupIdsSet[i].(string)
+				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupIds)
+			}
+		}
+
+		if v, ok := d.GetOk("env_conf"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				pair := tem.Pair{}
+				if v, ok := dMap["key"]; ok {
+					pair.Key = helper.String(v.(string))
+				}
+				if v, ok := dMap["value"]; ok {
+					pair.Value = helper.String(v.(string))
+				}
+				if v, ok := dMap["type"]; ok {
+					pair.Type = helper.String(v.(string))
+				}
+				if v, ok := dMap["config"]; ok {
+					pair.Config = helper.String(v.(string))
+				}
+				if v, ok := dMap["secret"]; ok {
+					pair.Secret = helper.String(v.(string))
+				}
+				request.EnvConf = append(request.EnvConf, &pair)
+			}
+		}
+
+		if v, ok := d.GetOk("storage_confs"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				storageConf := tem.StorageConf{}
+				if v, ok := dMap["storage_vol_name"]; ok {
+					storageConf.StorageVolName = helper.String(v.(string))
+				}
+				if v, ok := dMap["storage_vol_ip"]; ok {
+					storageConf.StorageVolIp = helper.String(v.(string))
+				}
+				if v, ok := dMap["storage_vol_path"]; ok {
+					storageConf.StorageVolPath = helper.String(v.(string))
+				}
+				request.StorageConfs = append(request.StorageConfs, &storageConf)
+			}
+		}
+
+		if v, ok := d.GetOk("storage_mount_confs"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				storageMountConf := tem.StorageMountConf{}
+				if v, ok := dMap["volume_name"]; ok {
+					storageMountConf.VolumeName = helper.String(v.(string))
+				}
+				if v, ok := dMap["mount_path"]; ok {
+					storageMountConf.MountPath = helper.String(v.(string))
+				}
+				request.StorageMountConfs = append(request.StorageMountConfs, &storageMountConf)
+			}
+		}
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "liveness"); ok {
+			healthCheckConfig := tem.HealthCheckConfig{}
+			if v, ok := dMap["type"]; ok {
+				healthCheckConfig.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["protocol"]; ok {
+				healthCheckConfig.Protocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["path"]; ok {
+				healthCheckConfig.Path = helper.String(v.(string))
+			}
+			if v, ok := dMap["exec"]; ok {
+				healthCheckConfig.Exec = helper.String(v.(string))
+			}
+			if v, ok := dMap["port"]; ok {
+				healthCheckConfig.Port = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["initial_delay_seconds"]; ok {
+				healthCheckConfig.InitialDelaySeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["timeout_seconds"]; ok {
+				healthCheckConfig.TimeoutSeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["period_seconds"]; ok {
+				healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
+			}
+			request.Liveness = &healthCheckConfig
+		}
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "readiness"); ok {
+			healthCheckConfig := tem.HealthCheckConfig{}
+			if v, ok := dMap["type"]; ok {
+				healthCheckConfig.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["protocol"]; ok {
+				healthCheckConfig.Protocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["path"]; ok {
+				healthCheckConfig.Path = helper.String(v.(string))
+			}
+			if v, ok := dMap["exec"]; ok {
+				healthCheckConfig.Exec = helper.String(v.(string))
+			}
+			if v, ok := dMap["port"]; ok {
+				healthCheckConfig.Port = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["initial_delay_seconds"]; ok {
+				healthCheckConfig.InitialDelaySeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["timeout_seconds"]; ok {
+				healthCheckConfig.TimeoutSeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["period_seconds"]; ok {
+				healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
+			}
+			request.Readiness = &healthCheckConfig
+		}
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "startup_probe"); ok {
+			healthCheckConfig := tem.HealthCheckConfig{}
+			if v, ok := dMap["type"]; ok {
+				healthCheckConfig.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["protocol"]; ok {
+				healthCheckConfig.Protocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["path"]; ok {
+				healthCheckConfig.Path = helper.String(v.(string))
+			}
+			if v, ok := dMap["exec"]; ok {
+				healthCheckConfig.Exec = helper.String(v.(string))
+			}
+			if v, ok := dMap["port"]; ok {
+				healthCheckConfig.Port = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["initial_delay_seconds"]; ok {
+				healthCheckConfig.InitialDelaySeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["timeout_seconds"]; ok {
+				healthCheckConfig.TimeoutSeconds = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["period_seconds"]; ok {
+				healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
+			}
+			request.StartupProbe = &healthCheckConfig
+		}
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "deploy_strategy_conf"); ok {
+			deployStrategyConf := tem.DeployStrategyConf{}
+			if v, ok := dMap["deploy_strategy_type"]; ok {
+				deployStrategyConf.DeployStrategyType = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["beta_batch_num"]; ok {
+				deployStrategyConf.BetaBatchNum = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["total_batch_count"]; ok {
+				deployStrategyConf.TotalBatchCount = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["batch_interval"]; ok {
+				deployStrategyConf.BatchInterval = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["min_available"]; ok {
+				deployStrategyConf.MinAvailable = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["force"]; ok {
+				deployStrategyConf.Force = helper.Bool(v.(bool))
+			}
+			request.DeployStrategyConf = &deployStrategyConf
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().DeployApplication(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return resourceTencentCloudTemWorkloadRead(d, meta)
 }
 
 func resourceTencentCloudTemWorkloadDelete(d *schema.ResourceData, meta interface{}) error {

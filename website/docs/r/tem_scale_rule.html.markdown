@@ -59,9 +59,9 @@ resource "tencentcloud_tem_scale_rule" "scaleRule" {
 
 The following arguments are supported:
 
-* `application_id` - (Required, String) application ID.
+* `application_id` - (Required, String, ForceNew) application ID.
 * `autoscaler` - (Required, List) .
-* `environment_id` - (Required, String) environment ID.
+* `environment_id` - (Required, String, ForceNew) environment ID.
 
 The `autoscaler` object supports the following:
 

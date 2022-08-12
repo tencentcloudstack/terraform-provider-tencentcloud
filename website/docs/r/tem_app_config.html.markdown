@@ -33,8 +33,8 @@ resource "tencentcloud_tem_app_config" "appConfig" {
 The following arguments are supported:
 
 * `config_data` - (Required, List) payload.
-* `environment_id` - (Required, String) environment ID.
-* `name` - (Required, String) appConfig name.
+* `environment_id` - (Required, String, ForceNew) environment ID.
+* `name` - (Required, String, ForceNew) appConfig name.
 
 The `config_data` object supports the following:
 
