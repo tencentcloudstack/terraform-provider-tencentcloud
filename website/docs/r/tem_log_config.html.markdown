@@ -29,12 +29,12 @@ resource "tencentcloud_tem_log_config" "logConfig" {
 
 The following arguments are supported:
 
-* `application_id` - (Required, String) application ID.
-* `environment_id` - (Required, String) environment ID.
+* `application_id` - (Required, String, ForceNew) application ID.
+* `environment_id` - (Required, String, ForceNew) environment ID.
 * `input_type` - (Required, String) container_stdout or container_file.
 * `log_type` - (Required, String) minimalist_log or multiline_log.
 * `logset_id` - (Required, String) logset.
-* `name` - (Required, String) appConfig name.
+* `name` - (Required, String, ForceNew) appConfig name.
 * `topic_id` - (Required, String) topic.
 * `beginning_regex` - (Optional, String) regex pattern.
 * `file_pattern` - (Optional, String) file name pattern if container_file.

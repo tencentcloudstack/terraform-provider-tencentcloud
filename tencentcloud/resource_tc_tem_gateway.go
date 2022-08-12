@@ -8,8 +8,7 @@ resource "tencentcloud_tem_gateway" "gateway" {
   ingress {
     ingress_name = "demo"
     environment_id = "en-853mggjm"
-    cluster_namespace = "default"
-    address_i_p_version = "IPV4"
+    address_ip_version = "IPV4"
     rewrite_type = "NONE"
     mixed = false
     rules {
@@ -46,7 +45,7 @@ Import
 
 tem gateway can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_tem_gateway.gateway gateway_id
+$ terraform import tencentcloud_tem_gateway.gateway environmentId#gatewayName
 ```
 */
 package tencentcloud
@@ -83,32 +82,29 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 						"ingress_name": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "gateway name.",
 						},
 						"environment_id": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "environment ID.",
 						},
-						"cluster_namespace": {
+						"address_ip_version": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "inner namespace, default only.",
-						},
-						"address_i_p_version": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "ip version, IPV4 only.",
+							Description: "ip version, support IPV4.",
 						},
 						"rewrite_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "redirect http to https.",
+							Description: "redirect mode, support AUTO and NONE.",
 						},
 						"mixed": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "vpc ID.",
+							Description: "mixing HTTP and HTTPS.",
 						},
 						"tls": {
 							Type:        schema.TypeList,
@@ -229,10 +225,9 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 
 	var (
-		request          = tem.NewModifyIngressRequest()
-		environmentId    string
-		ingressName      string
-		clusterNamespace string
+		request       = tem.NewModifyIngressRequest()
+		environmentId string
+		ingressName   string
 	)
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "ingress"); ok {
@@ -245,11 +240,10 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 			environmentId = v.(string)
 			ingressInfo.EnvironmentId = helper.String(v.(string))
 		}
-		if v, ok := dMap["cluster_namespace"]; ok {
-			clusterNamespace = v.(string)
-			ingressInfo.ClusterNamespace = helper.String(v.(string))
-		}
-		if v, ok := dMap["address_i_p_version"]; ok {
+
+		ingressInfo.ClusterNamespace = helper.String("default")
+
+		if v, ok := dMap["address_ip_version"]; ok {
 			ingressInfo.AddressIPVersion = helper.String(v.(string))
 		}
 		if v, ok := dMap["rewrite_type"]; ok {
@@ -334,7 +328,7 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + ingressName + FILED_SP + clusterNamespace)
+	d.SetId(environmentId + FILED_SP + ingressName)
 
 	return resourceTencentCloudTemGatewayRead(d, meta)
 }
@@ -349,14 +343,13 @@ func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	ingressName := idSplit[1]
-	clusterNamespace := idSplit[2]
 
-	gateway, err := service.DescribeTemGateway(ctx, environmentId, ingressName, clusterNamespace)
+	gateway, err := service.DescribeTemGateway(ctx, environmentId, ingressName)
 
 	if err != nil {
 		return err
@@ -374,11 +367,8 @@ func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}
 	if gateway.EnvironmentId != nil {
 		ingressMap["environment_id"] = gateway.EnvironmentId
 	}
-	if gateway.ClusterNamespace != nil {
-		ingressMap["cluster_namespace"] = gateway.ClusterNamespace
-	}
 	if gateway.AddressIPVersion != nil {
-		ingressMap["address_i_p_version"] = gateway.AddressIPVersion
+		ingressMap["address_ip_version"] = gateway.AddressIPVersion
 	}
 	if gateway.RewriteType != nil {
 		ingressMap["rewrite_type"] = gateway.RewriteType
@@ -473,16 +463,18 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("ingress") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ingress"); ok {
 			ingressInfo := tem.IngressInfo{}
-			if v, ok := dMap["ingress_name"]; ok {
-				ingressInfo.IngressName = helper.String(v.(string))
+
+			idSplit := strings.Split(d.Id(), FILED_SP)
+			if len(idSplit) != 2 {
+				return fmt.Errorf("id is broken,%s", d.Id())
 			}
-			if v, ok := dMap["environment_id"]; ok {
-				ingressInfo.EnvironmentId = helper.String(v.(string))
-			}
-			if v, ok := dMap["cluster_namespace"]; ok {
-				ingressInfo.ClusterNamespace = helper.String(v.(string))
-			}
-			if v, ok := dMap["address_i_p_version"]; ok {
+			environmentId := idSplit[0]
+			ingressName := idSplit[1]
+			ingressInfo.IngressName = helper.String(ingressName)
+			ingressInfo.EnvironmentId = helper.String(environmentId)
+			ingressInfo.ClusterNamespace = helper.String("default")
+
+			if v, ok := dMap["address_ip_version"]; ok {
 				ingressInfo.AddressIPVersion = helper.String(v.(string))
 			}
 			if v, ok := dMap["rewrite_type"]; ok {
@@ -579,14 +571,13 @@ func resourceTencentCloudTemGatewayDelete(d *schema.ResourceData, meta interface
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	ingressName := idSplit[1]
-	clusterNamespace := idSplit[2]
 
-	if err := service.DeleteTemGatewayById(ctx, environmentId, ingressName, clusterNamespace); err != nil {
+	if err := service.DeleteTemGatewayById(ctx, environmentId, ingressName); err != nil {
 		return err
 	}
 

@@ -51,12 +51,14 @@ func resourceTencentCloudTemAppConfig() *schema.Resource {
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "environment ID.",
 			},
 
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "appConfig name.",
 			},
 

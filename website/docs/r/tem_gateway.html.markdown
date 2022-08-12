@@ -16,12 +16,11 @@ Provides a resource to create a tem gateway
 ```hcl
 resource "tencentcloud_tem_gateway" "gateway" {
   ingress {
-    ingress_name        = "demo"
-    environment_id      = "en-853mggjm"
-    cluster_namespace   = "default"
-    address_i_p_version = "IPV4"
-    rewrite_type        = "NONE"
-    mixed               = false
+    ingress_name       = "demo"
+    environment_id     = "en-853mggjm"
+    address_ip_version = "IPV4"
+    rewrite_type       = "NONE"
+    mixed              = false
     rules {
       host     = "test.com"
       protocol = "http"
@@ -69,13 +68,12 @@ The `http` object supports the following:
 
 The `ingress` object supports the following:
 
-* `address_i_p_version` - (Required, String) ip version, IPV4 only.
-* `cluster_namespace` - (Required, String) inner namespace, default only.
-* `environment_id` - (Required, String) environment ID.
-* `ingress_name` - (Required, String) gateway name.
-* `mixed` - (Required, Bool) vpc ID.
+* `address_ip_version` - (Required, String) ip version, support IPV4.
+* `environment_id` - (Required, String, ForceNew) environment ID.
+* `ingress_name` - (Required, String, ForceNew) gateway name.
+* `mixed` - (Required, Bool) mixing HTTP and HTTPS.
 * `rules` - (Required, List) proxy rules.
-* `rewrite_type` - (Optional, String) redirect http to https.
+* `rewrite_type` - (Optional, String) redirect mode, support AUTO and NONE.
 * `tls` - (Optional, List) ingress TLS configurations.
 
 The `paths` object supports the following:
@@ -107,6 +105,6 @@ In addition to all arguments above, the following attributes are exported:
 
 tem gateway can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_tem_gateway.gateway gateway_id
+$ terraform import tencentcloud_tem_gateway.gateway environmentId#gatewayName
 ```
 

@@ -402,7 +402,7 @@ func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId 
 	return
 }
 
-func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (gateway *tem.IngressInfo, errRet error) {
+func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string) (gateway *tem.IngressInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = tem.NewDescribeIngressRequest()
@@ -416,7 +416,7 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 	}()
 	request.EnvironmentId = &environmentId
 	request.IngressName = &ingressName
-	request.ClusterNamespace = &clusterNamespace
+	request.ClusterNamespace = helper.String("default")
 
 	response, err := me.client.UseTemClient().DescribeIngress(request)
 	if err != nil {
@@ -431,13 +431,13 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 	return
 }
 
-func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (errRet error) {
+func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tem.NewDeleteIngressRequest()
 	request.EnvironmentId = &environmentId
 	request.IngressName = &ingressName
-	request.ClusterNamespace = &clusterNamespace
+	request.ClusterNamespace = helper.String("default")
 
 	defer func() {
 		if errRet != nil {
