@@ -1,3 +1,82 @@
+## 1.77.0 (August 11, 2022)
+
+FEATURES:
+* new resource `tencentcloud_tem_environment`
+* new resource `tencentcloud_tem_application`
+* new resource `tencentcloud_tem_workload`
+* new resource `tencentcloud_tem_app_config`
+* new resource `ttencentcloud_tem_log_config`
+* new resource `tencentcloud_tem_scale_rule`
+* new resource `tencentcloud_tem_gateway`
+
+ENHANCEMENTS:
+* resource `tencentcloud_cdn_domain` support `tls_versions`
+* resource `tencentcloud_cbs_storage` skip prepaid upgrade testcase
+* resource `tencentcloud_cos_bucket` make policy header to schema set
+* resource `tencentcloud_cos_bucket_policy` fix testcase
+* resource `tencentcloud_kubernetes_cluster` add node ready checking
+* resource `tencentcloud_kubernetes_cluster_endpoint` add node ready checking
+* resource `tencentcloud_kubernetes_node_pool` support multi_zone_subnet_policy modify
+* resource `tencentcloud_postgresql_instance` increase waiting timeout
+* resource `tencentcloud_sqlserver_publish_subscribe` optimize testcase sweepe
+* service `service_tencentcloud_as` cancel deprecated asg relative api
+
+BUGFIXES:
+* resource `tencentcloud_postgresql_instance` fix npe
+
+## 1.76.4 (August 1, 2022)
+
+ENHANCEMENTS:
+* datasource `tencentcloud_cfs_file_systems` output support `mount_ip`
+
+BUGFIXES:
+* resource`tencentcloud_as_scaling_group` clear as retry capture
+
+## 1.76.3 (July 25, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_clb_listener` support `target_type`
+* datasource `tencentcloud_images ` support `instance_type`
+
+DEPRECATED:
+* resource `tencentcloud_kubernetes_cluster` deprecated `as_enabled`
+
+BUGFIXES:
+* resource `tencentcloud_kubernetes_cluster` fix `cluster_level` desc
+
+
+## 1.76.2 (July 22, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_monitor_tmp_scrape_job`
+* New resource `tencentcloud_monitor_tmp_tke_alert_policy`
+* New resource `tencentcloud_monitor_tmp_exporter_integration`
+
+DEPRECATED:
+
+* resource `tencentcloud_kubernetes_cluster_endpoint`, `tencentcloud_kubernetes_cluster` the argument `managed_cluster_internet_security_policies` was deprecated
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_cluster` and data source `tencentcloud_kubernetes_clusters` support output private kube config
+
+BUGFIXES:
+
+* resource `tencentcloud_kubernetes_cluster` fix cluster intranet subnet modification limit
+* resource `tencentcloud_security_group_lite_rule`, `tencentcloud_monitor_tmp_cvm_agent`, `tencentcloud_monitor_tmp_instance` fix example codes.
+
+COMMON:
+
+* resource `tencentcloud_postgresql_instance` fix testcases.
+
+## 1.76.1 (July 21, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_cluster_endpoint` support `cluster_internet_security_group`
+* resource `tencentcloud_cdn_domain` extend multiple unsupport params.
+
 ## 1.76.0 (July 13, 2022)
 
 ENHANCEMENTS:

@@ -294,6 +294,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_name 	   = "basic_group_test"
   default_cooldown 		   = 350
   termination_policies 	   = ["NEWEST_INSTANCE"]
+  multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
     instance_type      = local.final_type

@@ -273,12 +273,18 @@ func resourceTencentCloudInstance() *schema.Resource {
 			},
 			// network
 			"internet_charge_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ForceNew:     true,
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					stopMode := d.Get("stopped_mode").(string)
+					if stopMode != CVM_STOP_MODE_STOP_CHARGING || !d.HasChange("running_flag") {
+						return old == new
+					}
+					return old == "" || new == ""
+				},
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
-				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.",
+				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.",
 			},
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
@@ -1414,11 +1420,12 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("internet_max_bandwidth_out") {
 		chargeType := d.Get("internet_charge_type").(string)
+		bandWidthOut := int64(d.Get("internet_max_bandwidth_out").(int))
 		if chargeType != "TRAFFIC_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_PACKAGE" {
 			return fmt.Errorf("charge type should be one of `TRAFFIC_POSTPAID_BY_HOUR BANDWIDTH_POSTPAID_BY_HOUR BANDWIDTH_PACKAGE` when adjusting internet_max_bandwidth_out")
 		}
 
-		err := cvmService.ModifyInternetMaxBandwidthOut(ctx, instanceId, chargeType, int64(d.Get("internet_max_bandwidth_out").(int)))
+		err := cvmService.ModifyInternetMaxBandwidthOut(ctx, instanceId, chargeType, bandWidthOut)
 		if err != nil {
 			return err
 		}

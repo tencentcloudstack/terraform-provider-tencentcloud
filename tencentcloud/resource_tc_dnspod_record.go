@@ -38,6 +38,7 @@ func resourceTencentCloudDnspodRecord() *schema.Resource {
 			"domain": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The Domain.",
 			},
 			"record_type": {
@@ -210,32 +211,22 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 	request.Value = &value
 	request.SubDomain = &subDomain
 
-	d.SetPartial("record_type")
-	d.SetPartial("record_line")
-	d.SetPartial("value")
-	d.SetPartial("sub_domain")
-
 	if d.HasChange("status") {
 		status := d.Get("status").(string)
 		request.Status = &status
-		d.SetPartial("status")
 	}
 	if d.HasChange("mx") {
 		if v, ok := d.GetOk("mx"); ok {
 			request.MX = helper.IntUint64(v.(int))
-			d.SetPartial("mx")
 		}
 	}
 	if d.HasChange("ttl") {
 		ttl := d.Get("ttl").(int)
 		request.TTL = helper.IntUint64(ttl)
-		d.SetPartial("ttl")
 	}
 	if d.HasChange("weight") {
 		weight := d.Get("weight").(int)
 		request.TTL = helper.IntUint64(weight)
-		d.SetPartial("weight")
-
 	}
 	d.Partial(true)
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

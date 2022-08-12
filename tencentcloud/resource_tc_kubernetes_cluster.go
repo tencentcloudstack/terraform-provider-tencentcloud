@@ -2180,6 +2180,12 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	err = service.CheckOneOfClusterNodeReady(ctx, d.Id(), clusterInternet || clusterIntranet)
+
+	if err != nil {
+		return err
+	}
+
 	//intranet
 	if clusterIntranet {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
