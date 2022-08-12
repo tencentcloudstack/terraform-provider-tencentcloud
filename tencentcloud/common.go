@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"gopkg.in/yaml.v2"
 )
 
 const FILED_SP = "#"
@@ -338,4 +339,13 @@ func (g *GoRoutineLimit) Run(f func()) {
 		f()
 		<-g.Chan
 	}()
+}
+
+// YamlParser yaml syntax Parser
+func YamlParser(config string) (map[interface{}]interface{}, error) {
+	m := make(map[interface{}]interface{})
+	if err := yaml.Unmarshal([]byte(config), &m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }

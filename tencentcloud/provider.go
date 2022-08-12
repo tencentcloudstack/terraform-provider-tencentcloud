@@ -1173,6 +1173,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
+			"tencentcloud_tke_tmp_record_rule_yaml":                resourceTencentCloudTkeTmpRecordRuleYaml(),
 		},
 
 		ConfigureFunc: providerConfigure,
