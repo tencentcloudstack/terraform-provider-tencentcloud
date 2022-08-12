@@ -218,48 +218,29 @@ func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta
 		return fmt.Errorf("`name` do not support change now.")
 	}
 
-	//if d.HasChange("content") {
-	//	if v, ok := d.GetOk("content"); ok {
-	//		request.Content = helper.String(v.(string))
-	//
-	//		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusRecordRuleYaml(request)
-	//			if e != nil {
-	//				return retryError(e)
-	//			} else {
-	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-	//					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-	//			}
-	//			return nil
-	//		})
-	//
-	//		if err != nil {
-	//			return err
-	//		}
-	//
-	//		return resourceTencentCloudTkeTmpRecordRuleYamlRead(d, meta)
-	//	}
-	//}
+	if d.HasChange("content") {
+		if v, ok := d.GetOk("content"); ok {
+			request.Content = helper.String(v.(string))
 
-	if v, ok := d.GetOk("content"); ok {
-		request.Content = helper.String(v.(string))
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusRecordRuleYaml(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusRecordRuleYaml(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if err != nil {
+				return err
 			}
-			return nil
-		})
 
-		if err != nil {
-			return err
+			return resourceTencentCloudTkeTmpRecordRuleYamlRead(d, meta)
 		}
-
-		return resourceTencentCloudTkeTmpRecordRuleYamlRead(d, meta)
+		//} else {
+		//		return fmt.Errorf("`content` no changes.")
 	}
 
 	return nil
