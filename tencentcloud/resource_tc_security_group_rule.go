@@ -140,6 +140,12 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"ACCEPT", "DROP"}),
 				Description:  "Rule policy of security group. Valid values: `ACCEPT` and `DROP`.",
 			},
+			"policy_index": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "The security group rule index number, the value of which dynamically changes as the security group rule changes.",
+			},
 			"source_sgid": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -304,7 +310,10 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 			return errors.New("when ip_protocol is ICMP, can't set port_range")
 		}
 	}
-
+	var policyIndex int64
+	if v, ok := d.GetOk("policy_index"); ok {
+		policyIndex = v.(int64)
+	}
 	info := securityGroupRuleBasicInfo{
 		SgId:                    sgId,
 		Action:                  action,
@@ -318,6 +327,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		AddressTemplateGroupId:  addressTemplateGroupId,
 		ProtocolTemplateId:      protocolTemplateId,
 		ProtocolTemplateGroupId: protocolTemplateGroupId,
+		PolicyIndex:             policyIndex,
 	}
 
 	ruleId, err := service.CreateSecurityGroupPolicy(ctx, info)
@@ -402,7 +412,9 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 			}
 			_ = d.Set("ip_protocol", inputProtocol)
 		}
-
+		if policy.PolicyIndex != nil {
+			_ = d.Set("policy_index", *policy.PolicyIndex)
+		}
 		if policy.Port != nil && *policy.Port != "" {
 			_ = d.Set("port_range", *policy.Port)
 		}
