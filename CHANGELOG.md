@@ -1,6 +1,14 @@
+## 1.77.1 (August 12, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_tem_workload` support update
+* resource `tencentcloud_security_group_rule` support policy index
+
 ## 1.77.0 (August 11, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_tem_environment`
 * new resource `tencentcloud_tem_application`
 * new resource `tencentcloud_tem_workload`
@@ -10,6 +18,7 @@ FEATURES:
 * new resource `tencentcloud_tem_gateway`
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_cdn_domain` support `tls_versions`
 * resource `tencentcloud_cbs_storage` skip prepaid upgrade testcase
 * resource `tencentcloud_cos_bucket` make policy header to schema set
@@ -22,28 +31,33 @@ ENHANCEMENTS:
 * service `service_tencentcloud_as` cancel deprecated asg relative api
 
 BUGFIXES:
+
 * resource `tencentcloud_postgresql_instance` fix npe
 
 ## 1.76.4 (August 1, 2022)
 
 ENHANCEMENTS:
+
 * datasource `tencentcloud_cfs_file_systems` output support `mount_ip`
 
 BUGFIXES:
+
 * resource`tencentcloud_as_scaling_group` clear as retry capture
 
 ## 1.76.3 (July 25, 2022)
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_clb_listener` support `target_type`
 * datasource `tencentcloud_images ` support `instance_type`
 
 DEPRECATED:
+
 * resource `tencentcloud_kubernetes_cluster` deprecated `as_enabled`
 
 BUGFIXES:
-* resource `tencentcloud_kubernetes_cluster` fix `cluster_level` desc
 
+* resource `tencentcloud_kubernetes_cluster` fix `cluster_level` desc
 
 ## 1.76.2 (July 22, 2022)
 
@@ -55,16 +69,19 @@ FEATURES:
 
 DEPRECATED:
 
-* resource `tencentcloud_kubernetes_cluster_endpoint`, `tencentcloud_kubernetes_cluster` the argument `managed_cluster_internet_security_policies` was deprecated
+* resource `tencentcloud_kubernetes_cluster_endpoint`, `tencentcloud_kubernetes_cluster` the
+  argument `managed_cluster_internet_security_policies` was deprecated
 
 ENHANCEMENTS:
 
-* resource `tencentcloud_kubernetes_cluster` and data source `tencentcloud_kubernetes_clusters` support output private kube config
+* resource `tencentcloud_kubernetes_cluster` and data source `tencentcloud_kubernetes_clusters` support output private
+  kube config
 
 BUGFIXES:
 
 * resource `tencentcloud_kubernetes_cluster` fix cluster intranet subnet modification limit
-* resource `tencentcloud_security_group_lite_rule`, `tencentcloud_monitor_tmp_cvm_agent`, `tencentcloud_monitor_tmp_instance` fix example codes.
+* resource `tencentcloud_security_group_lite_rule`, `tencentcloud_monitor_tmp_cvm_agent`
+  , `tencentcloud_monitor_tmp_instance` fix example codes.
 
 COMMON:
 
@@ -74,7 +91,8 @@ COMMON:
 
 ENHANCEMENTS:
 
-* resource `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_cluster_endpoint` support `cluster_internet_security_group`
+* resource `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_cluster_endpoint`
+  support `cluster_internet_security_group`
 * resource `tencentcloud_cdn_domain` extend multiple unsupport params.
 
 ## 1.76.0 (July 13, 2022)
@@ -96,12 +114,13 @@ COMMON:
 ## 1.75.7 (July 08, 2022)
 
 ENHANCEMENTS:
-* resource `tencentcloud_monitor_tmp_alert_rule` update docs
 
+* resource `tencentcloud_monitor_tmp_alert_rule` update docs
 
 ## 1.75.6 (July 08, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_monitor_tmp_instance`
 * new resource `tencentcloud_monitor_tmp_cvm_agent`
 * new resource `tencentcloud_monitor_tmp_alert_rule`
@@ -110,32 +129,35 @@ FEATURES:
 * new resource `tencentcloud_kubernetes_cluster_endpoint`
 
 ENHANCEMENTS:
-* resource `tencentcloud_ssl_certificate` support tags
 
+* resource `tencentcloud_ssl_certificate` support tags
 
 ## 1.75.5 (July 01, 2022)
 
 ENHANCEMENTS:
-*  datasource `tencentcloud_instances_set`  hard check `instance_count` either equal 
-*  datasource `tencentcloud_cbs_storages_set` hard check `disk_count` either equal
 
+* datasource `tencentcloud_instances_set`  hard check `instance_count` either equal
+* datasource `tencentcloud_cbs_storages_set` hard check `disk_count` either equal
 
 ## 1.75.4 (July 01, 2022)
 
 FEATURES:
+
 * new datasource `tencentcloud_instances_set`
 * new datasource `tencentcloud_cbs_storages_set`
 
 ENHANCEMENTS:
-* resource `tencentcloud_kubernetes_cluster` support encrypt disk
 
+* resource `tencentcloud_kubernetes_cluster` support encrypt disk
 
 ## 1.75.3 (June 30, 2022)
 
 FEATURES:
+
 * new datasource `tencentcloud_ckafka_instances`
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_instance_set` add timeout
 * datasource `tencentcloud_instance` add field `instances_ids`
 * resource `tencentcloud_ckafka_instance` support vips
@@ -143,34 +165,41 @@ ENHANCEMENTS:
 ## 1.75.2 (June 29, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_cbs_storage_set`
 
 ## 1.75.1 (June 28, 2022)
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_instance_set` update docs
 
 ## 1.75.0 (June 28, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_instance_set`
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_monitor_alarm_policy` optimize errors
 
 ## 1.74.3 (June 24, 2022)
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_cls_machine_group` update tags
 * resource `tencentcloud_kubernetes_node_pool` fix node count
 
 ## 1.74.2 (June 23, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_ssl_free_certificate`
 * new resource `tencentcloud_clb_snat_ip`
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_vpn_connection` support healthcheck
 * resource `tencentcloud_postgresql_instance` add plan modify retry
 * resource `tencentcloud_cdn_domain` support follow redirect and authentication
@@ -200,6 +229,7 @@ ENHANCEMENTS:
 * resource `tencentcloud_kubernetes_cluster` optimize cluster_level logic
 
 COMMON:
+
 * fix vod testcases
 
 ## 1.73.3 (June 16, 2022)
@@ -215,16 +245,18 @@ BUGFIXES:
 * resource `resource_tc_kubernetes_cluster` fix cluster_level error
 
 COMMON:
+
 * fix cls, cfs testcases
 
 ## 1.73.2 (June 13, 2022)
 
 BUGFIXES:
+
 * resource `tencentcloud_clb_attachment` disable target diff if using TCP-SSL listener
 * resource `tencentcloud_instance` support prepaid/postpaid charge type dual modify
 
-
 COMMON:
+
 * fix gaap, cvm datasource testcases
 
 ## 1.73.1 (June 09, 2022)
@@ -232,7 +264,6 @@ COMMON:
 ENHANCEMENTS:
 
 * resource `tencentcloud_instance` remove unnecessary retries and optimize state management on launch failed cvm
-
 
 ## 1.73.0 (June 08, 2022)
 
@@ -271,16 +302,20 @@ BUGFIXES:
 ## 1.72.6 (May 31, 2022)
 
 FEATURES:
+
 * new resource `tencentcloud_cam_role_sso`
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_mysql_instance`  support fast upgrade and param template id
 
 BUGFIXES:
+
 * resource `tencentcloud_sqlserver_instance` disable recycle
 * resource `tencentcloud_mysql_instance` / `tencentcloud_mongodb_instance` cancel validate required db pwd.
 
 COMMON:
+
 * testcases fix: dnspod, cvm, kafka, as, tcr, sqlserver, cbs, cos, cfs, mongo, tke
 
 ## 1.72.5 (May 20, 2022)
@@ -304,6 +339,7 @@ BUGFIXES:
 * resource `tencentcloud_private_dns_record` fix delete error
 
 COMMON:
+
 * fix testcases
 
 ## 1.72.3 (May 13, 2022)
@@ -322,6 +358,7 @@ BUGFIXES:
 * resource `tencentcloud_kubernetes_cluster` add cluster level modify retry.
 
 COMMON:
+
 * fix testcases
 
 ## 1.72.1 (May 6, 2022)
@@ -421,6 +458,7 @@ COMMON
 ## 1.67.0 (April 8, 2022)
 
 FEATURES:
+
 * New resource `tencentcloud_cls_logset`
 * New resource `tencentcloud_cls_topic`
 * New resource `tencentcloud_cls_machine_group`
@@ -444,7 +482,8 @@ COMMON:
 BUGFIXES:
 
 * resource `tencentcloud_sqlserver_instance` block name mistake in example block.
-* resource `tencentcloud_kubernetes_node_pool`, `tencentcloud_kubernetes_cluster_attachment` fix `data_disk.disk_partition` usage description.
+* resource `tencentcloud_kubernetes_node_pool`, `tencentcloud_kubernetes_cluster_attachment`
+  fix `data_disk.disk_partition` usage description.
 
 ENHANCEMENTS:
 
@@ -457,7 +496,7 @@ BUGFIXES:
 
 * resource `tencentcloud_instance` optimize charge type modification.
 * resource `tencentcloud_postgresql_instance` fix instance upgrade polling error.
-* resource `tencentcloud_vpn_ssl_client` 
+* resource `tencentcloud_vpn_ssl_client`
 * fix vpc, vpngw, clb and eni testcases.
 
 ENHANCEMENTS:
@@ -477,12 +516,11 @@ ENHANCEMENTS:
 * resource `tencentcloud_eks_cluster` support output kubeconfig
 * resource `tencentcloud_emr_cluster` support `root_size` and `sg_id` params.
 
-
 ## 1.66.0 (March 22, 2022)
 
 FEATURES:
 
-* new datasource `tencentcloud_eks_cluster_credential` 
+* new datasource `tencentcloud_eks_cluster_credential`
 
 ENHANCEMENTS:
 
@@ -495,6 +533,7 @@ BUGFIXES:
 ## 1.65.2 (March 18, 2022)
 
 ENHANCEMENTS:
+
 * resource `tencentcloud_route_entry` extend next type
 * resource `tencentcloud_clb_instance` create with tag params
 * resource `tencentcloud_emr_cluster` support need_master_wan param
@@ -502,6 +541,7 @@ ENHANCEMENTS:
 * resource `tencentcloud_mysql_readonly_instance` support zone param
 
 BUGFIXES:
+
 * testcases: cvm, cynosdb, eks, mysql, vpn
 * resource `tencentcloud_emr_cluster` destroy
 * resource `tencentcloud_mysql_instance` init
@@ -585,8 +625,7 @@ ENHANCEMENTS:
 
 ENHANCEMENTS:
 
-* resource `tencentcloud_instance` fix testcase default image 
-
+* resource `tencentcloud_instance` fix testcase default image
 
 ## 1.61.11 (February 23, 2022)
 
@@ -637,7 +676,6 @@ ENHANCEMENTS:
 
 * resource `tencentcloud_kubernetes_node_pool` support set `multi_zone_subnet_policy`
 
-
 ## 1.61.5 (January 29, 2022)
 
 ENHANCEMENTS:
@@ -665,7 +703,7 @@ ENHANCEMENTS:
 
 COMMON:
 
-* testcase fix `defaultGaapProxyId` 
+* testcase fix `defaultGaapProxyId`
 
 ENHANCEMENTS:
 
@@ -680,14 +718,17 @@ ENHANCEMENTS:
 ## 1.61.0 (January 11, 2022)
 
 COMMON:
+
 * add env variable `TENCENTCLOUD_READ_RETRY_TIMEOUT`  and `TENCENTCLOUD_WRITE_RETRY_TIMEOUT`
 
 BUGFIXES:
+
 * resource `tencentcloud_gaap_proxy` fix destroy error
 
 ## 1.60.27 (January 11, 2022)
 
 COMMON:
+
 * add `terraform {}` block to provider doc example
 * add `pre-commit` status check
 
@@ -701,7 +742,6 @@ ENHANCEMENTS:
 
 * resource `tencentcloud_vpc` add assistant CIDR
 * resource `tencentcloud_cos_bucket` support bucket replication
-
 
 ## 1.60.26 (January 6, 2022)
 
@@ -729,7 +769,7 @@ COMMON:
 
 BUGFIXES:
 
-* fix service mongodb status query 
+* fix service mongodb status query
 
 ## 1.60.23 (December 24, 2021)
 
