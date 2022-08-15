@@ -31,13 +31,14 @@ func resourceTencentCloudMonitorTmpTkeRecordRuleYaml() *schema.Resource {
 		Create: resourceTencentCloudTkeTmpRecordRuleYamlCreate,
 		Update: resourceTencentCloudTkeTmpRecordRuleYamlUpdate,
 		Delete: resourceTencentCloudTkeTmpRecordRuleYamlDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		//Importer: &schema.ResourceImporter{
+		//	State: schema.ImportStatePassthrough,
+		//},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance Id.",
 			},
 
@@ -160,6 +161,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlRead(d *schema.ResourceData, meta i
 	if recordRule == nil {
 		return nil
 	}
+	_ = d.Set("instance_id", instanceId)
 	_ = d.Set("name", recordRule.Name)
 	_ = d.Set("update_time", recordRule.UpdateTime)
 	_ = d.Set("template_id", recordRule.TemplateId)
@@ -184,14 +186,6 @@ func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta
 
 	request.InstanceId = &ids[0]
 	request.Name = &ids[1]
-
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
-
-	if d.HasChange("name") {
-		return fmt.Errorf("`name` do not support change now.")
-	}
 
 	if d.HasChange("content") {
 		if v, ok := d.GetOk("content"); ok {
