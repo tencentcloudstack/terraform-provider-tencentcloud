@@ -5,8 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_monitor_alarm_notices" "notices" {
-  order      = "DESC"
-
+    order = "DESC"
+    owner_uid = 1
+    name = ""
+    receiver_type = ""
+    user_ids = []
+    group_ids = []
+    notice_ids = []
 }
 ```
 
@@ -29,7 +34,8 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"order": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Default:     "ASC",
 				Description: "Sort by update time ASC=forward order DESC=reverse order.",
 			},
 			"owner_uid": {

@@ -16,7 +16,11 @@ func TestAccAlarmNoticesDatasourceBasic(t *testing.T) {
 				Config: testAccDataSourceAlarmNotices(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_monitor_alarm_notices.notices"),
-					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "notices.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "alarm_notice.#", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "order", "DESC"),
+					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "name", ""),
+					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "owner_uid", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_monitor_alarm_notices.notices", "receiver_type", ""),
 				),
 			},
 		},
@@ -25,6 +29,12 @@ func TestAccAlarmNoticesDatasourceBasic(t *testing.T) {
 
 func testAccDataSourceAlarmNotices() string {
 	return `data "tencentcloud_monitor_alarm_notices" "notices" {
-  order      = "DESC"
+    order = "DESC"
+    owner_uid = 1
+    name = ""
+    receiver_type = ""
+    user_ids = []
+    group_ids = []
+    notice_ids = []
 }`
 }

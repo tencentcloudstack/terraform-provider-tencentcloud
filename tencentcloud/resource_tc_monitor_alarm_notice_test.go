@@ -16,6 +16,9 @@ func TestAccTencentCloudMonitorAlarmNoticeResource(t *testing.T) {
 				Config: testAccMonitorAlarmNotice,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_monitor_alarm_notice.example", "name", "test_alarm_notice_123"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_alarm_notice.example", "notice_type", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_alarm_notice.example", "notice_language", "zh-CN"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_alarm_notice.example", "is_preset", "0"),
 				),
 			},
 		},
