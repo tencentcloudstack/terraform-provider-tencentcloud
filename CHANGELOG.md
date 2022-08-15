@@ -1,3 +1,15 @@
+## 1.77.2 (August 15, 2022)
+
+FEATURES:
+
+* new resource `tencentcloud_cdn_domain_verifier`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_tem_workload` discard `reserved` config change
+* resource `tencentcloud_tem_log_config` and `tencentcloud_tem_scale_rule` add param `workload_id`
+* resource `tencentcloud_instances_set` add hint for not support change `instance_count`
+
 ## 1.77.1 (August 12, 2022)
 
 ENHANCEMENTS:
