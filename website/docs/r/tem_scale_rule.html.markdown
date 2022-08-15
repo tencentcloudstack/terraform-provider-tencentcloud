@@ -15,14 +15,15 @@ Provides a resource to create a tem scaleRule
 
 ```hcl
 resource "tencentcloud_tem_scale_rule" "scaleRule" {
-  environment_id = "en-853mggjm"
+  environment_id = "en-o5edaepv"
   application_id = "app-3j29aa2p"
+  workload_id    = resource.tencentcloud_tem_workload.workload.id
   autoscaler {
     autoscaler_name = "test3123"
     description     = "test"
     enabled         = true
     min_replicas    = 1
-    max_replicas    = 3
+    max_replicas    = 4
     cron_horizontal_autoscaler {
       name     = "test"
       period   = "* * *"
@@ -46,7 +47,7 @@ resource "tencentcloud_tem_scale_rule" "scaleRule" {
     horizontal_autoscaler {
       metrics      = "CPU"
       enabled      = true
-      max_replicas = 3
+      max_replicas = 4
       min_replicas = 1
       threshold    = 60
     }
@@ -62,6 +63,7 @@ The following arguments are supported:
 * `application_id` - (Required, String, ForceNew) application ID.
 * `autoscaler` - (Required, List) .
 * `environment_id` - (Required, String, ForceNew) environment ID.
+* `workload_id` - (Required, String, ForceNew) application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.
 
 The `autoscaler` object supports the following:
 

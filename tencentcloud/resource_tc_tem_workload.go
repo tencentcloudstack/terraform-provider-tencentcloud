@@ -17,7 +17,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 8080
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -27,7 +27,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 8000
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -37,7 +37,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 36000
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -751,23 +751,25 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 		envConfList := []interface{}{}
 		for _, envConf := range workload.EnvConf {
 			envConfMap := map[string]interface{}{}
-			if envConf.Key != nil {
-				envConfMap["key"] = envConf.Key
-			}
-			if envConf.Value != nil {
-				envConfMap["value"] = envConf.Value
-			}
 			if envConf.Type != nil {
-				envConfMap["type"] = envConf.Type
-			}
-			if envConf.Config != nil {
-				envConfMap["config"] = envConf.Config
-			}
-			if envConf.Secret != nil {
-				envConfMap["secret"] = envConf.Secret
+				if *envConf.Type != "reserved" {
+					envConfMap["type"] = envConf.Type
+					if envConf.Key != nil {
+						envConfMap["key"] = envConf.Key
+					}
+					if envConf.Value != nil {
+						envConfMap["value"] = envConf.Value
+					}
+					if envConf.Config != nil {
+						envConfMap["config"] = envConf.Config
+					}
+					if envConf.Secret != nil {
+						envConfMap["secret"] = envConf.Secret
+					}
+					envConfList = append(envConfList, envConfMap)
+				}
 			}
 
-			envConfList = append(envConfList, envConfMap)
 		}
 		_ = d.Set("env_conf", envConfList)
 	}

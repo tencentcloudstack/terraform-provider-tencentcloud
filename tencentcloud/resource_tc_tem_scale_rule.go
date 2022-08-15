@@ -5,14 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_scale_rule" "scaleRule" {
-  environment_id = "en-853mggjm"
+  environment_id = "en-o5edaepv"
   application_id = "app-3j29aa2p"
+  workload_id = resource.tencentcloud_tem_workload.workload.id
   autoscaler {
     autoscaler_name = "test3123"
     description     = "test"
     enabled         = true
     min_replicas    = 1
-    max_replicas    = 3
+    max_replicas    = 4
     cron_horizontal_autoscaler {
       name     = "test"
       period   = "* * *"
@@ -36,7 +37,7 @@ resource "tencentcloud_tem_scale_rule" "scaleRule" {
     horizontal_autoscaler {
       metrics      = "CPU"
       enabled      = true
-      max_replicas = 3
+      max_replicas = 4
       min_replicas = 1
       threshold    = 60
     }
@@ -88,6 +89,13 @@ func resourceTencentCloudTemScaleRule() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "application ID.",
+			},
+
+			"workload_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.",
 			},
 
 			"autoscaler": {
@@ -234,6 +242,13 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 		request.ApplicationId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("workload_id"); ok {
+		workloadId := v.(string)
+		if workloadId != environmentId+FILED_SP+applicationId {
+			return fmt.Errorf("workloadId is error, it should be %s", environmentId+FILED_SP+applicationId)
+		}
+	}
+
 	if dMap, ok := helper.InterfacesHeadMap(d, "autoscaler"); ok {
 		autoscaler := tem.Autoscaler{}
 		if v, ok := dMap["autoscaler_name"]; ok {
@@ -361,6 +376,7 @@ func resourceTencentCloudTemScaleRuleRead(d *schema.ResourceData, meta interface
 
 	_ = d.Set("environment_id", environmentId)
 	_ = d.Set("application_id", applicationId)
+	_ = d.Set("workload_id", environmentId+FILED_SP+applicationId)
 
 	autoscalerMap := map[string]interface{}{}
 	if scaleRule.AutoscalerName != nil {
