@@ -27,7 +27,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 8080
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -37,7 +37,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 8000
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10
@@ -47,7 +47,7 @@ resource "tencentcloud_tem_workload" "workload" {
     type                  = "HttpGet"
     protocol              = "HTTP"
     path                  = "/"
-    port                  = 36000
+    port                  = 8201
     initial_delay_seconds = 0
     timeout_seconds       = 1
     period_seconds        = 10

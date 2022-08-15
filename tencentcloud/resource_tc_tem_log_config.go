@@ -5,13 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_log_config" "logConfig" {
-  environment_id = "en-853mggjm"
+  environment_id = "en-o5edaepv"
   application_id = "app-3j29aa2p"
-  name = "terraform"
-  logset_id = "b5824781-8d5b-4029-a2f7-d03c37f72bdf"
-  topic_id = "a21a488d-d28f-4ac3-8044-bdf8c91b49f2"
-  input_type = "container_stdout"
-  log_type = "minimalist_log"
+  workload_id = resource.tencentcloud_tem_workload.workload.id
+  name           = "terraform"
+  logset_id      = "b5824781-8d5b-4029-a2f7-d03c37f72bdf"
+  topic_id       = "5a85bb6d-8e41-4e04-b7bd-c05e04782f94"
+  input_type     = "container_stdout"
+  log_type       = "minimalist_log"
 }
 
 ```
@@ -58,6 +59,13 @@ func resourceTencentCloudTemLogConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "application ID.",
+			},
+
+			"workload_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.",
 			},
 
 			"name": {
@@ -133,6 +141,13 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("application_id"); ok {
 		applicationId = v.(string)
 		request.ApplicationId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("workload_id"); ok {
+		workloadId := v.(string)
+		if workloadId != environmentId+FILED_SP+applicationId {
+			return fmt.Errorf("workloadId is error, it should be %s", environmentId+FILED_SP+applicationId)
+		}
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -217,10 +232,8 @@ func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface
 	}
 
 	_ = d.Set("environment_id", environmentId)
-
-	if logConfig.ApplicationId != nil {
-		_ = d.Set("application_id", logConfig.ApplicationId)
-	}
+	_ = d.Set("application_id", logConfig.ApplicationId)
+	_ = d.Set("workload_id", environmentId+FILED_SP+applicationId)
 
 	if logConfig.Name != nil {
 		_ = d.Set("name", logConfig.Name)
@@ -276,18 +289,6 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
 	request.Name = &name
-
-	if d.HasChange("environment_id") {
-		return fmt.Errorf("`environment_id` do not support change now.")
-	}
-
-	if d.HasChange("application_id") {
-		return fmt.Errorf("`application_id` do not support change now.")
-	}
-
-	if d.HasChange("name") {
-		return fmt.Errorf("`name` do not support change now.")
-	}
 
 	if d.HasChange("logset_id") || d.HasChange("topic_id") || d.HasChange("input_type") || d.HasChange("log_type") ||
 		d.HasChange("beginning_regex") || d.HasChange("log_path") || d.HasChange("file_pattern") {
