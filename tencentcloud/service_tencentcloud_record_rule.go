@@ -54,11 +54,13 @@ func (rrs *RecordRuleService) DescribePrometheusRecordRuleByName(ctx context.Con
 	}()
 
 	request.InstanceId = &id
-	request.Filters = []*tke.Filter{
-		{
-			Name:   helper.String("name"),
-			Values: []*string{&name},
-		},
+	if name != "" {
+		request.Filters = []*tke.Filter{
+			{
+				Name:   helper.String("Name"),
+				Values: []*string{&name},
+			},
+		}
 	}
 
 	response, err := rrs.client.UseTkeClient().DescribePrometheusRecordRules(request)

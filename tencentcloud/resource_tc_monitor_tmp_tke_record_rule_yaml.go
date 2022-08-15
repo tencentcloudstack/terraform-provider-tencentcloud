@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 
-resource "tencentcloud_tke_tmp_record_rule_yaml" "foo" {
+resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
   instance_id       = ""
   content           = ""   # yaml format
 }
@@ -25,7 +25,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTkeTmpRecordRuleYaml() *schema.Resource {
+func resourceTencentCloudMonitorTmpTkeRecordRuleYaml() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudTkeTmpRecordRuleYamlRead,
 		Create: resourceTencentCloudTkeTmpRecordRuleYamlCreate,
@@ -42,57 +42,41 @@ func resourceTencentCloudTkeTmpRecordRuleYaml() *schema.Resource {
 			},
 
 			"content": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Contents of record rules in yaml format.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateYaml,
+				Description:  "Contents of record rules in yaml format.",
 			},
 
-			"total": {
+			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "count of returned lists.",
+				Description: "Name of the instance.",
 			},
 
-			"record_rule_list": {
-				Type:        schema.TypeList,
+			"update_time": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "A list of record rules.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Name of the instance.",
-						},
-						"update_time": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Last modified time of record rule.",
-						},
-						"template_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Used for the argument, if the configuration comes to the template, the template id.",
-						},
-						"content": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Contents of record rules in yaml format.",
-						},
-						"cluster_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "An ID identify the cluster, like cls-xxxxxx.",
-						},
-					},
-				},
+				Description: "Last modified time of record rule.",
+			},
+
+			"template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Used for the argument, if the configuration comes to the template, the template id.",
+			},
+
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "An ID identify the cluster, like cls-xxxxxx.",
 			},
 		},
 	}
 }
 
 func resourceTencentCloudTkeTmpRecordRuleYamlCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tke_tmp_record_rule_yaml.create")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_record_rule_yaml.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -105,18 +89,13 @@ func resourceTencentCloudTkeTmpRecordRuleYamlCreate(d *schema.ResourceData, meta
 
 	tmpRecordRuleName := ""
 	if v, ok := d.GetOk("content"); ok {
-		if m, err := YamlParser(v.(string)); err != nil {
-			log.Printf("[CRITAL]%s check yaml syntax failed, error:%+v", logId, err)
-			return err
-		} else {
-			metadata := m["metadata"]
-			if metadata != nil {
-				if metadata.(map[interface{}]interface{})["name"] != nil {
-					tmpRecordRuleName = metadata.(map[interface{}]interface{})["name"].(string)
-				}
+		m, _ := YamlParser(v.(string))
+		metadata := m["metadata"]
+		if metadata != nil {
+			if metadata.(map[interface{}]interface{})["name"] != nil {
+				tmpRecordRuleName = metadata.(map[interface{}]interface{})["name"].(string)
 			}
 		}
-
 		request.Content = helper.String(v.(string))
 	}
 
@@ -142,7 +121,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudTkeTmpRecordRuleYamlRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tke_tmp_record_rule_yaml.read")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_record_rule_yaml.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -177,25 +156,21 @@ func resourceTencentCloudTkeTmpRecordRuleYamlRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	records := make([]map[string]interface{}, 0, len(recordRules))
-	for _, recordRule := range recordRules {
-		var infoMap = map[string]interface{}{}
-		infoMap["name"] = *recordRule.Name
-		infoMap["update_time"] = *recordRule.UpdateTime
-		infoMap["template_id"] = *recordRule.TemplateId
-		infoMap["content"] = *recordRule.Content
-		infoMap["cluster_id"] = *recordRule.ClusterId
-		records = append(records, infoMap)
+	recordRule := recordRules[0]
+	if recordRule == nil {
+		return nil
 	}
-
-	_ = d.Set("prometheus_record_rule_yaml_items", records)
-	_ = d.Set("total", request.Response.Total)
+	_ = d.Set("name", recordRule.Name)
+	_ = d.Set("update_time", recordRule.UpdateTime)
+	_ = d.Set("template_id", recordRule.TemplateId)
+	_ = d.Set("content", recordRule.Content)
+	_ = d.Set("cluster_id", recordRule.ClusterId)
 
 	return nil
 }
 
 func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tke_tmp_record_rule_yaml.update")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_record_rule_yaml.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -239,15 +214,13 @@ func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta
 
 			return resourceTencentCloudTkeTmpRecordRuleYamlRead(d, meta)
 		}
-		//} else {
-		//		return fmt.Errorf("`content` no changes.")
 	}
 
 	return nil
 }
 
 func resourceTencentCloudTkeTmpRecordRuleYamlDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tke_tmp_record_rule_yaml.delete")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_record_rule_yaml.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
