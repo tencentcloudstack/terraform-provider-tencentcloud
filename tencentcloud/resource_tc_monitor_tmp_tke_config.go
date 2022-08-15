@@ -1,3 +1,31 @@
+/*
+Provides a resource to create a tke tmpPrometheusConfig
+
+Example Usage
+
+```hcl
+
+resource "tencentcloud_monitor_tmp_tke_config" "foo" {
+  instance_id  = "xxx"
+  cluster_type = "xxx"
+  cluster_id   = "xxx"
+
+  raw_jobs {
+    name   = "rawjob_001"
+    config = "your_config_for_raw_jobs\n"
+  }
+
+  service_monitors {
+    name   = "servicemonitors_001"
+    config = "your_config_for_service_monitors\n"
+  }
+
+  pod_monitors {
+    name   = "pod_monitors_001"
+    config = "your_config_for_pod_monitors\n"
+  }
+}
+*/
 package tencentcloud
 
 import (
@@ -5,10 +33,13 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTkeTmpConfig() *schema.Resource {
+func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTkeTmpConfigCreate,
 		Read:   resourceTencentCloudTkeTmpConfigRead,
@@ -111,7 +142,6 @@ func resourceTencentCloudTkeTmpConfig() *schema.Resource {
 				},
 			},
 		},
-		//compare to console, miss cam_role and running_version and lock_initial_node and security_proof
 	}
 }
 
@@ -159,15 +189,47 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tke_tmp_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	var (
+		logId   = getLogId(contextNil)
+		request = tke.NewCreatePrometheusConfigRequest()
+		client  = meta.(*TencentCloudClient).apiV3Conn.UseTkeClient()
+	)
 
-	ret, err := service.CreateTkeTmpConfig(d)
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.InstanceId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("cluster_type"); ok {
+		request.ClusterType = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("service_monitors"); ok {
+		request.ServiceMonitors = serializePromConfigItems(v)
+	}
+	if v, ok := d.GetOk("pod_monitors"); ok {
+		request.PodMonitors = serializePromConfigItems(v)
+	}
+	if v, ok := d.GetOk("raw_jobs"); ok {
+		request.RawJobs = serializePromConfigItems(v)
+	}
+	ids := strings.Join([]string{*request.InstanceId, *request.ClusterType, *request.ClusterId}, FILED_SP)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, e := client.CreatePrometheusConfig(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
+				logId, request.GetAction(), ids, request.ToJsonString(), response.ToJsonString())
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err
 	}
 
-	ids := strings.Join([]string{ret.InstanceId, ret.ClusterType, ret.ClusterId}, FILED_SP)
 	d.SetId(ids)
 
 	return resourceTencentCloudTkeTmpConfigRead(d, meta)
@@ -176,6 +238,12 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tke_tmp_config.update, Id: %s", d.Id())()
 	defer inconsistentCheck(d, meta)()
+
+	var (
+		logId   = getLogId(contextNil)
+		request = tke.NewModifyPrometheusConfigRequest()
+		client  = meta.(*TencentCloudClient).apiV3Conn.UseTkeClient()
+	)
 
 	if d.HasChange("instance_id") {
 		return fmt.Errorf("`instance_id` do not support change now.")
@@ -187,9 +255,44 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("`cluster_type` do not support change now.")
 	}
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ids, err := parseId(d.Id())
+	if err != nil {
+		return err
+	}
+	request.ClusterId = &ids.ClusterId
+	request.ClusterType = &ids.ClusterType
+	request.InstanceId = &ids.InstanceId
 
-	if err := service.UpdateTkeTmpConfig(d); err != nil {
+	if d.HasChange("service_monitors") {
+		if v, ok := d.GetOk("service_monitors"); ok {
+			request.ServiceMonitors = serializePromConfigItems(v)
+		}
+	}
+
+	if d.HasChange("pod_monitors") {
+		if v, ok := d.GetOk("pod_monitors"); ok {
+			request.PodMonitors = serializePromConfigItems(v)
+		}
+	}
+
+	if d.HasChange("raw_jobs") {
+		if v, ok := d.GetOk("raw_jobs"); ok {
+			request.RawJobs = serializePromConfigItems(v)
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, e := client.ModifyPrometheusConfig(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
+				logId, request.GetAction(), d.Id(), request.ToJsonString(), response.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
@@ -202,9 +305,25 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if err := service.DeleteTkeTmpConfig(d); err != nil {
+	if err := service.DeleteTkeTmpConfigById(d); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func flattenPrometheusConfigItems(objList []*tke.PrometheusConfigItem) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, len(objList))
+	for i := range objList {
+		v := objList[i]
+		item := map[string]interface{}{
+			"config": v.Config,
+			"name":   v.Name,
+		}
+		if v.TemplateId != nil {
+			item["template_id"] = v.TemplateId
+		}
+		result = append(result, item)
+	}
+	return result
 }

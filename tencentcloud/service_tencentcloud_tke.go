@@ -1907,92 +1907,7 @@ func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (r
 	return
 }
 
-func (me *TkeService) CreateTkeTmpConfig(d *schema.ResourceData) (idsRet *PrometheusConfigIds, errRet error) {
-	var (
-		logId   = getLogId(contextNil)
-		request = tke.NewCreatePrometheusConfigRequest()
-	)
-
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("cluster_id"); ok {
-		request.ClusterId = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("cluster_type"); ok {
-		request.ClusterType = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("service_monitors"); ok {
-		request.ServiceMonitors = serializePromConfigItems(v)
-	}
-	if v, ok := d.GetOk("pod_monitors"); ok {
-		request.PodMonitors = serializePromConfigItems(v)
-	}
-	if v, ok := d.GetOk("raw_jobs"); ok {
-		request.RawJobs = serializePromConfigItems(v)
-	}
-
-	idsRet = &PrometheusConfigIds{*request.InstanceId, *request.ClusterType, *request.ClusterId}
-
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := me.client.UseTkeClient().CreatePrometheusConfig(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
-				logId, request.GetAction(), idsRet, request.ToJsonString(), response.ToJsonString())
-		}
-		return nil
-	})
-	return
-}
-
-func (me *TkeService) UpdateTkeTmpConfig(d *schema.ResourceData) (errRet error) {
-	var (
-		logId   = getLogId(contextNil)
-		request = tke.NewModifyPrometheusConfigRequest()
-	)
-
-	ids, err := parseId(d.Id())
-	if err != nil {
-		return err
-	}
-	request.ClusterId = &ids.ClusterId
-	request.ClusterType = &ids.ClusterType
-	request.InstanceId = &ids.InstanceId
-
-	if d.HasChange("service_monitors") {
-		if v, ok := d.GetOk("service_monitors"); ok {
-			request.ServiceMonitors = serializePromConfigItems(v)
-		}
-	}
-
-	if d.HasChange("pod_monitors") {
-		if v, ok := d.GetOk("pod_monitors"); ok {
-			request.PodMonitors = serializePromConfigItems(v)
-		}
-	}
-
-	if d.HasChange("raw_jobs") {
-		if v, ok := d.GetOk("raw_jobs"); ok {
-			request.RawJobs = serializePromConfigItems(v)
-		}
-	}
-
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := me.client.UseTkeClient().ModifyPrometheusConfig(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
-				logId, request.GetAction(), d.Id(), request.ToJsonString(), response.ToJsonString())
-		}
-		return nil
-	})
-	return
-}
-
-func (me *TkeService) DeleteTkeTmpConfig(d *schema.ResourceData) (errRet error) {
+func (me *TkeService) DeleteTkeTmpConfigById(d *schema.ResourceData) (errRet error) {
 	logId := getLogId(contextNil)
 	request := tke.NewDeletePrometheusConfigRequest()
 
@@ -2052,22 +1967,6 @@ func parseId(configId string) (ret *PrometheusConfigIds, err error) {
 
 	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
 	return
-}
-
-func flattenPrometheusConfigItems(objList []*tke.PrometheusConfigItem) []map[string]interface{} {
-	result := make([]map[string]interface{}, 0, len(objList))
-	for i := range objList {
-		v := objList[i]
-		item := map[string]interface{}{
-			"config": v.Config,
-			"name":   v.Name,
-		}
-		if v.TemplateId != nil {
-			item["template_id"] = v.TemplateId
-		}
-		result = append(result, item)
-	}
-	return result
 }
 
 func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {
