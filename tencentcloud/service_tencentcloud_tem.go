@@ -2,7 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -418,16 +421,24 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 	request.IngressName = &ingressName
 	request.ClusterNamespace = helper.String("default")
 
-	response, err := me.client.UseTemClient().DescribeIngress(request)
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		response, errRet := me.client.UseTemClient().DescribeIngress(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		gateway = response.Response.Result
+		if *gateway.ClbId != "" && *gateway.Vip != "" {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("gateway clb is not ready..."))
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	gateway = response.Response.Result
 	return
 }
 
