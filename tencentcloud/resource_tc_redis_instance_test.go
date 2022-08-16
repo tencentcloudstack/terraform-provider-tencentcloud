@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -38,25 +39,18 @@ func init() {
 				}
 				// Collect infos before deleting action
 				var chargeType string
-				errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-					has, online, info, err := service.CheckRedisOnlineOk(ctx, id)
-					if err != nil {
-						log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
-						return resource.NonRetryableError(err)
-					}
-					if !has {
-						return nil
-					}
-					if online {
-						chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
-						return nil
-					} else {
-						return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
-					}
-				})
-				if errQuery != nil {
-					log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errQuery.Error())
-					return errQuery
+				has, online, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout*20)
+				if !has {
+					return nil
+				}
+				if online {
+					chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
+				} else {
+					return fmt.Errorf("Deleting ERROR: Creating redis task is processing.")
+				}
+				if err != nil {
+					log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, err.Error())
+					return err
 				}
 
 				var wait = func(action string, taskInfo interface{}) (errRet error) {
@@ -248,20 +242,6 @@ func TestAccTencentCloudRedisInstance_Maz(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "4"),
 				),
 			},
-			{
-				Destroy:           false,
-				ResourceName:      "tencentcloud_redis_instance.redis_maz",
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"password",
-					"type",
-					"redis_shard_num",
-					"force_delete",
-					"replica_zone_ids.2", // sequence of ids proceeded
-					"replica_zone_ids.3", // sequence of ids proceeded
-				},
-			},
 		},
 	})
 }
@@ -334,7 +314,7 @@ func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 		}
 
 		service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		has, _, _, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID)
+		has, _, _, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID, time.Second)
 		if has {
 			return nil
 		}
@@ -356,7 +336,7 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		has, _, info, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID)
+		has, _, info, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID, time.Second)
 
 		if !has {
 			return nil
@@ -461,14 +441,20 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }`
 }
 
+var randMazInstanceName = fmt.Sprintf(`
+variable "redis_maz_name" {
+  default = "terraform_maz_%d"
+}
+`, rand.Intn(1000))
+
 func testAccRedisInstanceMaz() string {
-	return defaultVpcVariable + `
+	return defaultVpcVariable + randMazInstanceName + `
 resource "tencentcloud_redis_instance" "redis_maz" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 6 #7
   password           = "AAA123456BBB"
-  mem_size           = 4096
-  name               = "terraform_maz"
+  mem_size           = 2048
+  name               = var.redis_maz_name
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 2
@@ -479,34 +465,50 @@ resource "tencentcloud_redis_instance" "redis_maz" {
 }
 
 func testAccRedisInstanceMazUpdate() string {
-	return defaultVpcVariable + `
+	return defaultVpcVariable + randMazInstanceName + `
 resource "tencentcloud_redis_instance" "redis_maz" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 6 #7
   password           = "AAA123456BBB"
-  mem_size           = 8192
-  name               = "terraform_maz"
+  mem_size           = 4096
+  name               = var.redis_maz_name
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 3
-  replica_zone_ids   = [100003, 100004, 100003]
+  replica_zone_ids   = [100003, 100003, 10004]
   vpc_id 			 = var.vpc_id
   subnet_id			 = var.subnet_id
 }`
 }
 
 func testAccRedisInstanceMazUpdate2() string {
-	return defaultVpcVariable + `
+	return defaultVpcVariable + randMazInstanceName + `
+data "tencentcloud_redis_instances" "maz" {
+  search_key = var.redis_maz_name
+}
+
+variable "removing_node_zone" {
+  default = 100003
+}
+
+locals {
+  node_info = data.tencentcloud_redis_instances.maz.instance_list.0.node_info
+  replicas = [for node in local.node_info: node.id if !node.master && node.zone_id != var.removing_node_zone]
+  reservedReplicaId = [for node in local.node_info: node.id if !node.master && node.zone_id == var.removing_node_zone][0]
+  reservedReplicaIds = concat(local.replicas, tolist([local.reservedReplicaId]))
+}
+
 resource "tencentcloud_redis_instance" "redis_maz" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 6 #7
-  password           = "AAA123456BBB"
-  mem_size           = 8192
-  name               = "terraform_maz"
+  password           = "AAA123456BBBC"
+  mem_size           = 2048
+  name               = var.redis_maz_name
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 4
-  replica_zone_ids   = [100003, 100004, 100006, 100003]
+  replica_zone_ids   = [100003, 100004, 100006, 100007]
+  replica_node_ids   = local.reservedReplicaIds
   vpc_id 			 = var.vpc_id
   subnet_id 		 = var.subnet_id
 }`
