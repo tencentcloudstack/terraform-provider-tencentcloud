@@ -19,54 +19,79 @@ func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_publish_subscribe
 	resource.AddTestSweepers("tencentcloud_sqlserver_publish_subscribe", &resource.Sweeper{
 		Name: "tencentcloud_sqlserver_publish_subscribe",
-		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
-			service := SqlserverService{client}
-			instance, err := service.DescribeSqlserverInstances(ctx, "", defaultPubSQLServerName, -1, "", "", 1)
-			if err != nil {
-				return err
-			}
-			subInstances, err := service.DescribeSqlserverInstances(ctx, "", defaultSubSQLServerName, -1, "", "", 1)
-
-			if err != nil {
-				return err
-			}
-
-			pubInstanceId := *instance[0].InstanceId
-			subInstanceId := *subInstances[0].InstanceId
-
-			testAccUnsubscribePubDB(ctx, &service, pubInstanceId)
-
-			database, err := service.DescribeDBsOfInstance(ctx, subInstanceId)
-			if err != nil {
-				return err
-			}
-
-			if len(database) == 0 {
-				log.Printf("no DBs in %s", subInstanceId)
-				return nil
-			}
-
-			for i := range database {
-				item := database[i]
-				created := time.Time{}
-				name := *item.Name
-				if item.CreateTime != nil {
-					created = stringTotime(*item.CreateTime)
-				}
-				if name != defaultSQLServerPubSubDB || isResourcePersist("", &created) {
-					continue
-				}
-				if err := service.DeleteSqlserverDB(ctx, subInstanceId, []*string{item.Name}); err != nil {
-					log.Printf("err: %s", err.Error())
-				}
-			}
-			return nil
-		},
+		F:    testAccTencentCloudSQLServerPubSubSweeper,
 	})
+}
+
+func testAccTencentCloudSQLServerPubSubSweeper(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := SqlserverService{client}
+	instance, err := service.DescribeSqlserverInstances(ctx, "", defaultPubSQLServerName, -1, "", "", 1)
+	if err != nil {
+		return err
+	}
+	subInstances, err := service.DescribeSqlserverInstances(ctx, "", defaultSubSQLServerName, -1, "", "", 1)
+
+	if err != nil {
+		return err
+	}
+
+	pubInstanceId := *instance[0].InstanceId
+	subInstanceId := *subInstances[0].InstanceId
+
+	testAccUnsubscribePubDB(ctx, &service, pubInstanceId)
+
+	database, err := service.DescribeDBsOfInstance(ctx, subInstanceId)
+	if err != nil {
+		return err
+	}
+
+	if len(database) == 0 {
+		log.Printf("no DBs in %s", subInstanceId)
+		return nil
+	}
+
+	for i := range database {
+		item := database[i]
+		created := time.Time{}
+		name := *item.Name
+		if item.CreateTime != nil {
+			created = stringTotime(*item.CreateTime)
+		}
+		if name != defaultSQLServerPubSubDB || isResourcePersist("", &created) {
+			continue
+		}
+		if err = service.DeleteSqlserverDB(ctx, subInstanceId, []*string{item.Name}); err != nil {
+			log.Printf("err: %s", err.Error())
+		}
+	}
+	return err
+}
+
+func testAccCheckPubSubsExists() error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(defaultRegion)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := SqlserverService{client}
+	instance, err := service.DescribeSqlserverInstances(ctx, "", defaultPubSQLServerName, -1, "", "", 1)
+	if err != nil {
+		return err
+	}
+
+	pubInstanceId := *instance[0].InstanceId
+
+	pubsubs, err := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
+		"instanceId": pubInstanceId,
+	})
+
+	if len(pubsubs) > 0 {
+		return fmt.Errorf("pubsub of %s still exists", defaultPubSQLServerName)
+	}
+	return nil
 }
 
 func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, instanceId string) {
@@ -99,7 +124,12 @@ func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, ins
 
 func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			if err := testAccCheckPubSubsExists(); err != nil {
+				t.Errorf("Precheck failed: %s", err.Error())
+			}
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSqlserverPublishSubscribeDestroy,
 		Steps: []resource.TestStep{
