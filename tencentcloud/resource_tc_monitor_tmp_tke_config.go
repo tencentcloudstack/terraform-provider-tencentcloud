@@ -45,9 +45,6 @@ func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 		Read:   resourceTencentCloudTkeTmpConfigRead,
 		Update: resourceTencentCloudTkeTmpConfigUpdate,
 		Delete: resourceTencentCloudTkeTmpConfigDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -173,18 +170,7 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s provider set config fail, reason:%s\n", logId, e.Error())
 		return e
 	}
-	// if e := d.Set("service_monitors", flattenPrometheusConfigItems(params.ServiceMonitors)); e != nil {
-	// 	log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
-	// 	return e
-	// }
-	// if e := d.Set("pod_monitors", flattenPrometheusConfigItems(params.PodMonitors)); e != nil {
-	// 	log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
-	// 	return e
-	// }
-	// if e := d.Set("raw_jobs", flattenPrometheusConfigItems(params.RawJobs)); e != nil {
-	// 	log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
-	// 	return e
-	// }
+
 	return nil
 }
 
@@ -235,19 +221,6 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	}
 
 	d.SetId(ids)
-
-	if e := d.Set("service_monitors", flattenPrometheusConfigItems(request.ServiceMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("pod_monitors", flattenPrometheusConfigItems(request.PodMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("raw_jobs", flattenPrometheusConfigItems(request.RawJobs)); e != nil {
-		log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
-		return e
-	}
 
 	return resourceTencentCloudTkeTmpConfigRead(d, meta)
 }
@@ -304,19 +277,6 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if e := d.Set("service_monitors", flattenPrometheusConfigItems(request.ServiceMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("pod_monitors", flattenPrometheusConfigItems(request.PodMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("raw_jobs", flattenPrometheusConfigItems(request.RawJobs)); e != nil {
-		log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-
 	return resourceTencentCloudTkeTmpConfigRead(d, meta)
 }
 
@@ -349,22 +309,6 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	}
 
 	return nil
-}
-
-func flattenPrometheusConfigItems(objList []*tke.PrometheusConfigItem) []map[string]interface{} {
-	result := make([]map[string]interface{}, 0, len(objList))
-	for i := range objList {
-		v := objList[i]
-		item := map[string]interface{}{
-			"config": v.Config,
-			"name":   v.Name,
-		}
-		if v.TemplateId != nil {
-			item["template_id"] = v.TemplateId
-		}
-		result = append(result, item)
-	}
-	return result
 }
 
 func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {

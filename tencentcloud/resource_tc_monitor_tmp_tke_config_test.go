@@ -55,25 +55,26 @@ func TestAccTencentCloudTmpTkeConfig_basic(t *testing.T) {
 			{
 				Config: testAccTmpTkeConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "instance_id", defaultPrometheusId),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "cluster_type", defaultTkeClusterType),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "cluster_id", defaultTkeClusterId),
+					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.basic", id),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "instance_id", defaultPrometheusId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "cluster_type", defaultTkeClusterType),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "raw_jobs.name", "rawjob-test-001"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "service_monitors.name", "service-monitor-001"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "pod_monitors.name", "pod-monitor-001"),
 				),
 			},
 			{
-				Config: testAccTmpTkeConfig_basic,
+				Config: testAccTmpTkeConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "instance_id", defaultPrometheusId),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "cluster_type", defaultTkeClusterType),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.foo", "cluster_id", defaultTkeClusterId),
+					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.update", id),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "instance_id", defaultPrometheusId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "cluster_type", defaultTkeClusterType),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "raw_jobs.name", "rawjob-test-001-config-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "service_monitors.name", "service-monitor-001-config-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "pod_monitors.name", "pod-monitor-001-config-updated"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_monitor_tmp_tke_config.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -84,16 +85,6 @@ func testAccCheckTmpTkeConfigDestroy(configId *string) resource.TestCheckFunc {
 		logId := getLogId(contextNil)
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := TkeService{client}
-
-		// rs, ok := s.RootModule().Resources[n]
-		// if !ok {
-		// 	return fmt.Errorf("not found: %s", n)
-		// }
-
-		// configId := rs.Primary.ID
-		// if configId == "" {
-		// 	return errors.New("no prometheus config ID is set")
-		// }
 
 		promConfigs, err := service.DescribeTkeTmpConfigById(logId, *configId)
 
@@ -159,12 +150,39 @@ func transObj2StrNames(resList []*tke.PrometheusConfigItem) []*string {
 }
 
 const testAccTmpTkeConfig_basic = `
-resource "tencentcloud_monitor_tmp_tke_config" "foo" {
+resource "tencentcloud_monitor_tmp_tke_config" "basic" {
   instance_id  = "` + defaultPrometheusId + `"
   cluster_type = "` + defaultTkeClusterType + `"
   cluster_id   = "` + defaultTkeClusterId + `"
   raw_jobs {
-    name   = "rawjob_test_001"
-    config = "scrape_configs:\n- job_name: rawjob_test_001\n  honor_labels: true\n  honor_timestamps: false\n  scrape_interval: 20s\n  metrics_path: /metrics\n  scheme: http\n"
+    name   = "rawjob-test-001"
+    config = "rawjob-test-001-config"
+  }
+  service_monitors {
+    name   = "service-monitor-001"
+    config = "service-monitor-001-config"
+  }
+  pod_monitors {
+    name   = "pod-monitor-001"
+    config = "pod-monitor-001-config"
+  }
+}`
+
+const testAccTmpTkeConfig_update = `
+resource "tencentcloud_monitor_tmp_tke_config" "update" {
+  instance_id  = "` + defaultPrometheusId + `"
+  cluster_type = "` + defaultTkeClusterType + `"
+  cluster_id   = "` + defaultTkeClusterId + `"
+  raw_jobs {
+    name   = "rawjob-test-001"
+    config = "rawjob-test-001-config-updated"
+  }
+  service_monitors {
+    name   = "service-monitor-001"
+    config = "service-monitor-001-config-updated"
+  }
+  pod_monitors {
+    name   = "pod-monitor-001"
+    config = "pod-monitor-001-config-updated"
   }
 }`

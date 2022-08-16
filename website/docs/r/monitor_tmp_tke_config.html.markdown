@@ -19,9 +19,9 @@ Provides a resource to create a tke tmpPrometheusConfig
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) ID of cluster.
-* `cluster_type` - (Required, String) Type of cluster.
-* `instance_id` - (Required, String) ID of instance.
+* `cluster_id` - (Required, String, ForceNew) ID of cluster.
+* `cluster_type` - (Required, String, ForceNew) Type of cluster.
+* `instance_id` - (Required, String, ForceNew) ID of instance.
 * `pod_monitors` - (Optional, List) Configuration of the pod monitors.
 * `raw_jobs` - (Optional, List) Configuration of the native prometheus job.
 * `service_monitors` - (Optional, List) Configuration of the service monitors.
