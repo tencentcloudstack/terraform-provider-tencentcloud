@@ -377,6 +377,9 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 			return resource.NonRetryableError(fmt.Errorf("instance %s not exist", redisId))
 		}
 
+		info = response.Response.InstanceSet[0]
+		has = true
+
 		if *info.Status == REDIS_STATUS_ONLINE {
 			online = true
 			return nil
@@ -395,10 +398,6 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 		return
 	}
 
-	has = true
-	info = response.Response.InstanceSet[0]
-
-	errRet = fmt.Errorf("redis instance delivery failure, status is %d", *info.Status)
 	return
 }
 
