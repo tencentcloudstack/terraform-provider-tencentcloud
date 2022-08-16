@@ -1,3 +1,13 @@
+## 1.77.3 (August 16, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_tem_gateway` output `vip` and `clb_id`
+
+DEPRECATED:
+
+* resource `tencentcloud_clb_target_group` deprecated `target_group_instances`
+
 ## 1.77.2 (August 15, 2022)
 
 FEATURES:
