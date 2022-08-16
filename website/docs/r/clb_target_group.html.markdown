@@ -20,25 +20,12 @@ resource "tencentcloud_clb_target_group" "test" {
 }
 ```
 
-Create target group
-
-```hcl
-resource "tencentcloud_clb_target_group" "test" {
-  target_group_name = "hello1"
-  port              = 18082
-  target_group_instances {
-    bind_ip = "10.0.0.4"
-    port    = 18080
-  }
-}
-```
-
 ## Argument Reference
 
 The following arguments are supported:
 
 * `port` - (Optional, Int) The default port of target group, add server after can use it.
-* `target_group_instances` - (Optional, List) The backend server of target group bind.
+* `target_group_instances` - (Optional, List, **Deprecated**) It has been deprecated from version 1.77.3. please use `tencentcloud_clb_target_group_instance_attachment` instead. The backend server of target group bind.
 * `target_group_name` - (Optional, String) Target group name.
 * `vpc_id` - (Optional, String, ForceNew) VPC ID, default is based on the network.
 
