@@ -1878,7 +1878,7 @@ func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (r
 		}
 	}()
 
-	ids, err := parseId(configId)
+	ids, err := me.parseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1907,18 +1907,17 @@ func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (r
 	return
 }
 
-func (me *TkeService) DeleteTkeTmpConfigById(d *schema.ResourceData) (errRet error) {
-	logId := getLogId(contextNil)
+func (me *TkeService) DeleteTkeTmpConfigByName(logId string, configId string, ServiceMonitors []*string, PodMonitors []*string, RawJobs []*string) (errRet error) {
 	request := tke.NewDeletePrometheusConfigRequest()
 
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,ids [%s], request body [%s], reason[%s]\n",
-				logId, "delete object", d.Id(), request.ToJsonString(), errRet.Error())
+				logId, "delete object", configId, request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ids, err := parseId(d.Id())
+	ids, err := me.parseConfigId(configId)
 	if err != nil {
 		errRet = err
 		return
@@ -1928,16 +1927,16 @@ func (me *TkeService) DeleteTkeTmpConfigById(d *schema.ResourceData) (errRet err
 	request.ClusterType = &ids.ClusterType
 	request.InstanceId = &ids.InstanceId
 
-	if v, ok := d.GetOk("service_monitors"); ok {
-		request.ServiceMonitors = serializePromConfigItemNames(v)
+	if len(ServiceMonitors) > 0 {
+		request.ServiceMonitors = ServiceMonitors
 	}
 
-	if v, ok := d.GetOk("pod_monitors"); ok {
-		request.PodMonitors = serializePromConfigItemNames(v)
+	if len(PodMonitors) > 0 {
+		request.PodMonitors = PodMonitors
 	}
 
-	if v, ok := d.GetOk("raw_jobs"); ok {
-		request.RawJobs = serializePromConfigItemNames(v)
+	if len(RawJobs) > 0 {
+		request.RawJobs = RawJobs
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -1947,12 +1946,12 @@ func (me *TkeService) DeleteTkeTmpConfigById(d *schema.ResourceData) (errRet err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
-		logId, request.GetAction(), d.Id(), request.ToJsonString(), response.ToJsonString())
+		logId, request.GetAction(), configId, request.ToJsonString(), response.ToJsonString())
 
 	return
 }
 
-func parseId(configId string) (ret *PrometheusConfigIds, err error) {
+func (me *TkeService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
 	idSplit := strings.Split(configId, FILED_SP)
 	if len(idSplit) != 3 {
 		return nil, fmt.Errorf("id is broken,%s", configId)
@@ -1967,36 +1966,4 @@ func parseId(configId string) (ret *PrometheusConfigIds, err error) {
 
 	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
 	return
-}
-
-func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {
-	resList := v.([]interface{})
-	items := make([]*tke.PrometheusConfigItem, 0, len(resList))
-	for _, res := range resList {
-		vv := res.(map[string]interface{})
-		var item tke.PrometheusConfigItem
-		if v, ok := vv["name"]; ok {
-			item.Name = helper.String(v.(string))
-		}
-		if v, ok := vv["config"]; ok {
-			item.Config = helper.String(v.(string))
-		}
-		if v, ok := vv["template_id"]; ok {
-			item.TemplateId = helper.String(v.(string))
-		}
-		items = append(items, &item)
-	}
-	return items
-}
-
-func serializePromConfigItemNames(v interface{}) []*string {
-	resList := v.([]interface{})
-	names := make([]*string, 0, len(resList))
-	for _, res := range resList {
-		vv := res.(map[string]interface{})
-		if v, ok := vv["name"]; ok {
-			names = append(names, helper.String(v.(string)))
-		}
-	}
-	return names
 }

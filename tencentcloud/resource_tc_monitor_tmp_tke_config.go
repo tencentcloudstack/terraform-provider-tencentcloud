@@ -52,16 +52,19 @@ func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of instance.",
 			},
 			"cluster_type": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Type of cluster.",
 			},
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of cluster.",
 			},
 			"config": {
@@ -170,18 +173,18 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s provider set config fail, reason:%s\n", logId, e.Error())
 		return e
 	}
-	if e := d.Set("service_monitors", flattenPrometheusConfigItems(params.ServiceMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("pod_monitors", flattenPrometheusConfigItems(params.PodMonitors)); e != nil {
-		log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
-		return e
-	}
-	if e := d.Set("raw_jobs", flattenPrometheusConfigItems(params.RawJobs)); e != nil {
-		log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
-		return e
-	}
+	// if e := d.Set("service_monitors", flattenPrometheusConfigItems(params.ServiceMonitors)); e != nil {
+	// 	log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
+	// 	return e
+	// }
+	// if e := d.Set("pod_monitors", flattenPrometheusConfigItems(params.PodMonitors)); e != nil {
+	// 	log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
+	// 	return e
+	// }
+	// if e := d.Set("raw_jobs", flattenPrometheusConfigItems(params.RawJobs)); e != nil {
+	// 	log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
+	// 	return e
+	// }
 	return nil
 }
 
@@ -213,6 +216,7 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("raw_jobs"); ok {
 		request.RawJobs = serializePromConfigItems(v)
 	}
+
 	ids := strings.Join([]string{*request.InstanceId, *request.ClusterType, *request.ClusterId}, FILED_SP)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -232,6 +236,19 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(ids)
 
+	if e := d.Set("service_monitors", flattenPrometheusConfigItems(request.ServiceMonitors)); e != nil {
+		log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+	if e := d.Set("pod_monitors", flattenPrometheusConfigItems(request.PodMonitors)); e != nil {
+		log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+	if e := d.Set("raw_jobs", flattenPrometheusConfigItems(request.RawJobs)); e != nil {
+		log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+
 	return resourceTencentCloudTkeTmpConfigRead(d, meta)
 }
 
@@ -242,20 +259,11 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 	var (
 		logId   = getLogId(contextNil)
 		request = tke.NewModifyPrometheusConfigRequest()
-		client  = meta.(*TencentCloudClient).apiV3Conn.UseTkeClient()
+		client  = meta.(*TencentCloudClient).apiV3Conn
+		service = TkeService{client: client}
 	)
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
-	if d.HasChange("cluster_id") {
-		return fmt.Errorf("`cluster_id` do not support change now.")
-	}
-	if d.HasChange("cluster_type") {
-		return fmt.Errorf("`cluster_type` do not support change now.")
-	}
-
-	ids, err := parseId(d.Id())
+	ids, err := service.parseConfigId(d.Id())
 	if err != nil {
 		return err
 	}
@@ -282,7 +290,7 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := client.ModifyPrometheusConfig(request)
+		response, e := client.UseTkeClient().ModifyPrometheusConfig(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -296,6 +304,19 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	if e := d.Set("service_monitors", flattenPrometheusConfigItems(request.ServiceMonitors)); e != nil {
+		log.Printf("[CRITAL]%s provider set service_monitors fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+	if e := d.Set("pod_monitors", flattenPrometheusConfigItems(request.PodMonitors)); e != nil {
+		log.Printf("[CRITAL]%s provider set pod_monitors fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+	if e := d.Set("raw_jobs", flattenPrometheusConfigItems(request.RawJobs)); e != nil {
+		log.Printf("[CRITAL]%s provider set raw_jobs fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+
 	return resourceTencentCloudTkeTmpConfigRead(d, meta)
 }
 
@@ -303,9 +324,27 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tke_tmp_config.delete, Id: %s", d.Id())()
 	defer inconsistentCheck(d, meta)()
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	var (
+		logId           = getLogId(contextNil)
+		service         = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ServiceMonitors = []*string{}
+		PodMonitors     = []*string{}
+		RawJobs         = []*string{}
+	)
 
-	if err := service.DeleteTkeTmpConfigById(d); err != nil {
+	if v, ok := d.GetOk("service_monitors"); ok {
+		ServiceMonitors = serializePromConfigItemNames(v)
+	}
+
+	if v, ok := d.GetOk("pod_monitors"); ok {
+		PodMonitors = serializePromConfigItemNames(v)
+	}
+
+	if v, ok := d.GetOk("raw_jobs"); ok {
+		RawJobs = serializePromConfigItemNames(v)
+	}
+
+	if err := service.DeleteTkeTmpConfigByName(logId, d.Id(), ServiceMonitors, PodMonitors, RawJobs); err != nil {
 		return err
 	}
 
@@ -326,4 +365,36 @@ func flattenPrometheusConfigItems(objList []*tke.PrometheusConfigItem) []map[str
 		result = append(result, item)
 	}
 	return result
+}
+
+func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {
+	resList := v.([]interface{})
+	items := make([]*tke.PrometheusConfigItem, 0, len(resList))
+	for _, res := range resList {
+		vv := res.(map[string]interface{})
+		var item tke.PrometheusConfigItem
+		if v, ok := vv["name"]; ok {
+			item.Name = helper.String(v.(string))
+		}
+		if v, ok := vv["config"]; ok {
+			item.Config = helper.String(v.(string))
+		}
+		if v, ok := vv["template_id"]; ok {
+			item.TemplateId = helper.String(v.(string))
+		}
+		items = append(items, &item)
+	}
+	return items
+}
+
+func serializePromConfigItemNames(v interface{}) []*string {
+	resList := v.([]interface{})
+	names := make([]*string, 0, len(resList))
+	for _, res := range resList {
+		vv := res.(map[string]interface{})
+		if v, ok := vv["name"]; ok {
+			names = append(names, helper.String(v.(string)))
+		}
+	}
+	return names
 }
