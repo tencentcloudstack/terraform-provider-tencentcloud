@@ -65,66 +65,6 @@ resource "tencentcloud_redis_instance" "red1" {
 }
 ```
 
-Delete some of the replicas
-Assume you have these three replicas, and expect to delete 100003 (the second) and 100005:
-
-```hcl
-resource "tencentcloud_redis_instance" "red1" {
-  replica_zone_ids   = [100003, 100003, 100005]
-  redis_replicas_num = 3
-}
-```
-
-:
-
-```hcl
-resource "tencentcloud_redis_instance" "red1" {
-  // ...
-  node_info = [
-    {
-      node_type = 0, # primary node cannot be modified.
-      node_id   = 99,
-      zone_id   = 100002
-    },
-    {
-      node_type = 1,
-      node_id   = 100,
-      zone_id   = 100003
-    },
-    {
-      node_type = 1,
-      node_id   = 101,
-      zone_id   = 100003
-    },
-    {
-      node_type = 1,
-      node_id   = 102,
-      zone_id   = 100005
-    },
-  ]
-}
-```
-
-To delete some of the replicas, both reserved zone ids and node ids must specify:
-
-```hcl
-resource "tencentcloud_redis_instance" "red1" {
-  redis_replicas_num = 1
-  replica_zone_ids   = [100003] # Reserve one of the replica which zone is 100003, drop another 100003(101) and 100005(102)
-  replica_node_ids   = [100]    # Indicates reserve the node which zone id is 100003 and the node id is 100
-}
-```
-
-to empty, this operation does No Effect to any replications.
-
-```hcl
-resource "tencentcloud_redis_instance" "red1" {
-  redis_replicas_num = 1
-  replica_zone_ids   = [100003] #
-  replica_node_ids   = []       #
-}
-```
-
 ## Argument Reference
 
 The following arguments are supported:
@@ -140,10 +80,9 @@ The following arguments are supported:
 * `port` - (Optional, Int, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `project_id` - (Optional, Int) Specifies which project the instance should belong to.
-* `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions.
+* `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.
 * `redis_shard_num` - (Optional, Int) The number of instance shard, default is 1. This is not required for standalone and master slave versions.
-* `replica_node_ids` - (Optional, List: [`Int`]) ID of replica nodes, used for specify reserved nodes while delete. NOTE: You must specify which nodes to be reserved if you want to reduce your replicas.
-* `replica_zone_ids` - (Optional, List: [`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions.
+* `replica_zone_ids` - (Optional, List: [`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.
 * `replicas_read_only` - (Optional, Bool) Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.
 * `security_groups` - (Optional, Set: [`String`], ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, String, ForceNew) Specifies which subnet the instance should belong to.

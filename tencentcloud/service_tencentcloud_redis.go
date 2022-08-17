@@ -387,7 +387,7 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 
 		if *info.Status == REDIS_STATUS_INIT || *info.Status == REDIS_STATUS_PROCESSING {
 			online = false
-			return resource.RetryableError(fmt.Errorf("istance %s status is %s, retrying", redisId, *info.Status))
+			return resource.RetryableError(fmt.Errorf("istance %s status is %d, retrying", redisId, *info.Status))
 		}
 
 		return nil
@@ -401,13 +401,27 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 	return
 }
 
-func (me *RedisService) CheckRedisUpdateOk(ctx context.Context, redisId string) error {
+func (me *RedisService) CheckRedisUpdateOk(ctx context.Context, redisId string) (errRet error) {
 	var startUpdate bool
-	return resource.Retry(readRetryTimeout*20, func() *resource.RetryError {
-		_, _, info, err := me.CheckRedisOnlineOk(ctx, redisId, time.Second)
+	logId := getLogId(ctx)
+	request := redis.NewDescribeInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &redisId
+	errRet = resource.Retry(readRetryTimeout*20, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseRedisClient().DescribeInstances(request)
 		if err != nil {
 			return retryError(err)
 		}
+		if len(result.Response.InstanceSet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("redis %s not exist", redisId))
+		}
+		info := result.Response.InstanceSet[0]
 		if !startUpdate && *info.Status == REDIS_STATUS_ONLINE {
 			return resource.RetryableError(fmt.Errorf("waiting for upgrade start"))
 		}
@@ -417,6 +431,8 @@ func (me *RedisService) CheckRedisUpdateOk(ctx context.Context, redisId string) 
 		}
 		return nil
 	})
+
+	return
 }
 
 func (me *RedisService) CheckRedisDestroyOk(ctx context.Context, redisId string) (has bool,

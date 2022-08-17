@@ -162,6 +162,11 @@ func TestGetListDiffs(t *testing.T) {
 	assert.Contains(t, expectLacks4, lacks4[2])
 	assert.Contains(t, expectLacks4, lacks4[3])
 
+	adds5, lacks5 := GetListDiffs([]int{100003, 100004}, []int{100003, 100003, 100004})
+	assert.Equalf(t, 1, len(adds5), "")
+	assert.Equalf(t, 0, len(lacks5), "")
+	assert.Contains(t, []int{100003, 100003, 100004}, adds5[0])
+
 }
 
 func TestIsExpectError(t *testing.T) {
