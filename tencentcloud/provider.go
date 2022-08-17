@@ -432,6 +432,7 @@ Monitor
     tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
 	tencentcloud_monitor_tmp_tke_alert_policy
+	tencentcloud_monitor_tmp_tke_global_notification
 
 PostgreSQL
   Data Source
@@ -1082,6 +1083,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_recording_rule":              resourceTencentCloudMonitorTmpRecordingRule(),
 			"tencentcloud_monitor_tmp_tke_template":                resourceTencentCloudMonitorTmpTkeTemplate(),
 			"tencentcloud_monitor_tmp_tke_alert_policy":            resourceTencentCloudMonitorTmpTkeAlertPolicy(),
+			"tencentcloud_monitor_tmp_tke_global_notification":     resourceTencentCloudMonitorTmpTkeGlobalNotification(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),
