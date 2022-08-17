@@ -59,15 +59,15 @@ func TestAccTencentCloudRecordRule_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "Name", "example-record-test"),
-					//resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "content", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'"),
 				),
 			},
 			{
 				Config: testRecordRuleYaml_basic_update_remark,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "name", "example-record-test_update"),
-					//resource.TestCheckResourceAttr("tencentcloud_tke_tmp_record_rule_yaml.foo", "content", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "name", "example-record-test"),
+					resource.TestCheckResourceAttr("tencentcloud_tke_tmp_record_rule_yaml.foo", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'\n    - name: kube-apiserver.rules2\n      rules:\n        - expr: sum(metrics_test2)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d2'"),
 				),
 			},
 			{

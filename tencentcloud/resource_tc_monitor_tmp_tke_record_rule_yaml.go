@@ -7,7 +7,20 @@ Example Usage
 
 resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
   instance_id       = ""
-  content           = ""   # yaml format
+  content           = <<-EOT
+        apiVersion: monitoring.coreos.com/v1
+        kind: PrometheusRule
+        metadata:
+          name: example-record
+        spec:
+          groups:
+            - name: kube-apiserver.rules
+              rules:
+                - expr: sum(metrics_test)
+                  labels:
+                    verb: read
+                  record: 'apiserver_request:burnrate1d'
+    EOT
 }
 
 */
@@ -164,7 +177,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlRead(d *schema.ResourceData, meta i
 	_ = d.Set("name", recordRule.Name)
 	_ = d.Set("update_time", recordRule.UpdateTime)
 	_ = d.Set("template_id", recordRule.TemplateId)
-	_ = d.Set("content", recordRule.Content)
+	//_ = d.Set("content", recordRule.Content)
 	_ = d.Set("cluster_id", recordRule.ClusterId)
 
 	return nil
