@@ -484,6 +484,26 @@ func (me *MonitorService) DeleteMonitorTmpScrapeJobById(ctx context.Context, tmp
 	return
 }
 
+func (me *MonitorService) DeleteMonitorAlarmNoticeById(ctx context.Context, Id string) (errRet error) {
+	request := monitor.NewDeleteAlarmNoticesRequest()
+	request.Module = helper.String("monitor")
+	noticeId := Id
+	var n = []*string{&noticeId}
+	request.NoticeIds = n
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseMonitorClient().DeleteAlarmNotices(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	return
+}
+
 func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Context, tmpExporterIntegrationId string) (tmpExporterIntegration *monitor.IntegrationConfiguration, errRet error) {
 	var (
 		logId   = getLogId(ctx)
