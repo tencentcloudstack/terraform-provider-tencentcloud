@@ -44,7 +44,7 @@ resource "tencentcloud_tcr_instance" "foo" {
 
 The following arguments are supported:
 
-* `instance_type` - (Required, String, ForceNew) TCR types. Valid values are: `standard`, `basic`, `premium`.
+* `instance_type` - (Required, String) TCR types. Valid values are: `standard`, `basic`, `premium`.
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional, Bool) Control public network access.
