@@ -3,7 +3,11 @@
 range_sha=${BASE_SHA}
 echo $(git diff --name-status ${range_sha} | awk '{print $2}')
 #service files
-update_service_functions=`git diff --name-status ${range_sha} | awk '{print $2}' | grep "^tencentcloud/service*" | xargs git diff ${range_sha} | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
+update_service_functions=""
+service_files=`git diff --name-status ${range_sha} | awk '{print $2}' | grep "^tencentcloud/service*"`
+if [ $service_files ] ; then
+    update_service_functions=`echo $service_files | xargs git diff ${range_sha} | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
+fi
 echo "update_service_functions: $update_service_functions"
 need_test_files=""
 for update_service_function in $update_service_functions; do
