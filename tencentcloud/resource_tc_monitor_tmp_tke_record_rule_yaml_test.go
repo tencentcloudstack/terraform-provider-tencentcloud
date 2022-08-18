@@ -50,31 +50,31 @@ func testSweepRecordRule(region string) error {
 func TestAccTencentCloudRecordRule_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRecordRuleDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testRecordRuleYaml_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "Name", "example-record-test"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'"),
+					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.basic", "name", "example-record-test"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.basic", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'"),
 				),
 			},
 			{
-				Config: testRecordRuleYaml_basic_update_remark,
+				Config: testRecordRuleYaml_basic_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.foo", "name", "example-record-test"),
-					resource.TestCheckResourceAttr("tencentcloud_tke_tmp_record_rule_yaml.foo", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'\n    - name: kube-apiserver.rules2\n      rules:\n        - expr: sum(metrics_test2)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d2'"),
+					testAccCheckRecordRuleExists("tencentcloud_monitor_tmp_tke_record_rule_yaml.update"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.update", "name", "example-record-test"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_record_rule_yaml.update", "content", "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'\n    - name: kube-apiserver.rules2\n      rules:\n        - expr: sum(metrics_test2)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d2'"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_monitor_tmp_tke_record_rule_yaml.foo",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			//{
+			//	ResourceName:      "tencentcloud_monitor_tmp_tke_record_rule_yaml.foo",
+			//	ImportState:       true,
+			//	ImportStateVerify: true,
+			//},
 		},
 	})
 }
@@ -95,8 +95,8 @@ func testAccCheckRecordRuleDestroy(s *terraform.State) error {
 		instanceId := items[0]
 		RecordRuleName := items[1]
 		response, err := recordService.DescribePrometheusRecordRuleByName(ctx, instanceId, RecordRuleName)
-		if response.Response.Records != nil {
-			return fmt.Errorf("record rule still exists")
+		if len(response.Response.Records) > 0 {
+			return fmt.Errorf("record rule %s still exists", rs.Primary.ID)
 		}
 		if err != nil {
 			return err
@@ -126,7 +126,7 @@ func testAccCheckRecordRuleExists(r string) resource.TestCheckFunc {
 		recordRuleName := items[1]
 		recordRuleService := RecordRuleService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		response, err := recordRuleService.DescribePrometheusRecordRuleByName(ctx, instanceId, recordRuleName)
-		if response.Response.Records != nil {
+		if response.Response.Records == nil {
 			return fmt.Errorf("record rule %s is not found", rs.Primary.ID)
 		}
 		if err != nil {
@@ -137,14 +137,19 @@ func testAccCheckRecordRuleExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testRecordRuleYaml_basic = `
-resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
- instance_id       = ` + defaultPrometheusId + `
+const testRecordRuleYamlVar = `
+variable "prometheus_id" {
+  default = "` + defaultPrometheusId + `"
+}`
+
+const testRecordRuleYaml_basic = testRecordRuleYamlVar + `
+resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "basic" {
+ instance_id       = var.prometheus_id
  content           = "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'"
 }`
 
-const testRecordRuleYaml_basic_update_remark = `
-resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
- instance_id       = ` + defaultPrometheusId + `
+const testRecordRuleYaml_basic_update = testRecordRuleYamlVar + `
+resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "update" {
+ instance_id       = var.prometheus_id
  content           = "apiVersion: monitoring.coreos.com/v1\nkind: PrometheusRule\nmetadata:\n  name: example-record-test\nspec:\n  groups:\n    - name: kube-apiserver.rules\n      rules:\n        - expr: sum(metrics_test)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d'\n    - name: kube-apiserver.rules2\n      rules:\n        - expr: sum(metrics_test2)\n          labels:\n            verb: read\n          record: 'apiserver_request:burnrate1d2'"
 }`
