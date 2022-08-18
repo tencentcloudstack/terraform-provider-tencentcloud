@@ -1,6 +1,7 @@
 #!/bin/bash
 
-range_sha=${BASE_SHA}...${HEAD_SHA}
+range_sha=${BASE_SHA}
+echo $(git diff --name-status ${range_sha} | awk '{print $2}')
 #service files
 update_service_functions=`git diff --name-status ${range_sha} | awk '{print $2}' | grep "^tencentcloud/service*" | xargs git diff ${range_sha} | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
 need_test_files=""
