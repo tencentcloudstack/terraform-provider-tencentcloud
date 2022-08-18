@@ -81,9 +81,8 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotification() *schema.Resource {
 							Description: "Web hook, if Type is `webhook`, this field is required.",
 						},
 						"alert_manager": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeMap,
 							Optional:    true,
-							MaxItems:    1,
 							Description: "Alert manager, if Type is `alertmanager`, this field is required.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -303,16 +302,45 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceD
 
 	instanceId := d.Id()
 
-	template, err := service.DescribeTkeTmpGlobalNotification(ctx, instanceId)
+	globalNotification, err := service.DescribeTkeTmpGlobalNotification(ctx, instanceId)
 
 	if err != nil {
 		return err
 	}
 
-	if template == nil {
+	if globalNotification == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `global_notification` %s does not exist", instanceId)
 	}
+
+	_ = d.Set("instance_id", instanceId)
+	alertManager := make(map[string]interface{})
+	if globalNotification.AlertManager != nil {
+		alertManager = map[string]interface{}{
+			"url":          globalNotification.AlertManager.Url,
+			"cluster_type": globalNotification.AlertManager.ClusterType,
+			"cluster_id":   globalNotification.AlertManager.ClusterId,
+		}
+	}
+
+	var notifications []map[string]interface{}
+	notification := make(map[string]interface{})
+	notification["enabled"] = globalNotification.Enabled
+	notification["type"] = globalNotification.Type
+	notification["web_hook"] = globalNotification.WebHook
+	notification["alert_manager"] = alertManager
+	notification["repeat_interval"] = globalNotification.RepeatInterval
+	notification["time_range_start"] = globalNotification.TimeRangeStart
+	notification["time_range_end"] = globalNotification.TimeRangeEnd
+	notification["notify_way"] = globalNotification.NotifyWay
+	notification["receiver_groups"] = globalNotification.ReceiverGroups
+	notification["phone_notify_order"] = globalNotification.PhoneNotifyOrder
+	notification["phone_circle_times"] = globalNotification.PhoneCircleTimes
+	notification["phone_inner_interval"] = globalNotification.PhoneInnerInterval
+	notification["phone_circle_interval"] = globalNotification.PhoneCircleInterval
+	notification["phone_arrive_notice"] = globalNotification.PhoneArriveNotice
+	notifications = append(notifications, notification)
+	_ = d.Set("notification", notifications)
 
 	return nil
 }
