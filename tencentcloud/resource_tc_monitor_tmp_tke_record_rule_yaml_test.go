@@ -126,7 +126,7 @@ func testAccCheckRecordRuleExists(r string) resource.TestCheckFunc {
 		recordRuleName := items[1]
 		recordRuleService := RecordRuleService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		response, err := recordRuleService.DescribePrometheusRecordRuleByName(ctx, instanceId, recordRuleName)
-		if response.Response.Records == nil {
+		if len(response.Response.Records) < 1 {
 			return fmt.Errorf("record rule %s is not found", rs.Primary.ID)
 		}
 		if err != nil {
