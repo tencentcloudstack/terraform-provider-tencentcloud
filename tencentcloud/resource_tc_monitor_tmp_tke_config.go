@@ -11,18 +11,18 @@ resource "tencentcloud_monitor_tmp_tke_config" "foo" {
   cluster_id   = "xxx"
 
   raw_jobs {
-    name   = "rawjob_001"
-    config = "your_config_for_raw_jobs\n"
+    name   = "raw_jobs_001"
+    config = "your config for raw_jobs_001\n"
   }
 
   service_monitors {
-    name   = "servicemonitors_001"
-    config = "your_config_for_service_monitors\n"
+    name   = "kube-system/service-monitor-001" # name with default namespace kube-system
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: service-monitor-001\n  namespace: kube-system\n"
   }
 
   pod_monitors {
-    name   = "pod_monitors_001"
-    config = "your_config_for_pod_monitors\n"
+    name   = "mynamespace/pod-monitor-001" # name with the specified namespace
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: mynamespace\n"
   }
 }
 */
@@ -78,7 +78,7 @@ func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Name.",
+							Description: "Name. The naming rule is: namespace/name. If you don't have any namespace, use the default namespace: kube-system, otherwise use the specified one.",
 						},
 						"config": {
 							Type:        schema.TypeString,
@@ -102,7 +102,7 @@ func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Name.",
+							Description: "Name. The naming rule is: namespace/name. If you don't have any namespace, use the default namespace: kube-system, otherwise use the specified one.",
 						},
 						"config": {
 							Type:        schema.TypeString,

@@ -29,7 +29,7 @@ The following arguments are supported:
 The `pod_monitors` object supports the following:
 
 * `config` - (Required, String) Config.
-* `name` - (Required, String) Name.
+* `name` - (Required, String) Name. The naming rule is: namespace/name. If you don't have any namespace, use the default namespace: kube-system, otherwise use the specified one.
 * `template_id` - (Optional, String) Used for output parameters, if the configuration comes from a template, it is the template id.
 
 The `raw_jobs` object supports the following:
@@ -41,7 +41,7 @@ The `raw_jobs` object supports the following:
 The `service_monitors` object supports the following:
 
 * `config` - (Required, String) Config.
-* `name` - (Required, String) Name.
+* `name` - (Required, String) Name. The naming rule is: namespace/name. If you don't have any namespace, use the default namespace: kube-system, otherwise use the specified one.
 * `template_id` - (Optional, String) Used for output parameters, if the configuration comes from a template, it is the template id.
 
 ## Attributes Reference
