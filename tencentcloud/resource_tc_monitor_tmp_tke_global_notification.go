@@ -135,7 +135,7 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotification() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "Alarm receiving group（user group）.",
+							Description: "Alarm receiving group(user group).",
 						},
 						"phone_notify_order": {
 							Type: schema.TypeSet,
