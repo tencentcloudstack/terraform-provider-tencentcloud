@@ -32,7 +32,7 @@ The `notification` object supports the following:
 
 * `enabled` - (Required, Bool) Alarm notification switch.
 * `type` - (Required, String) Alarm notification type, Valid values: `amp`, `webhook`, `alertmanager`.
-* `alert_manager` - (Optional, List) Alert manager, if Type is `alertmanager`, this field is required.
+* `alert_manager` - (Optional, Map) Alert manager, if Type is `alertmanager`, this field is required.
 * `notify_way` - (Optional, Set) Alarm notification method, Valid values: `SMS`, `EMAIL`, `CALL`, `WECHAT`.
 * `phone_arrive_notice` - (Optional, Bool) Phone Alarm Reach Notification, NotifyWay is `CALL`, and this parameter is used.
 * `phone_circle_interval` - (Optional, Int) Telephone alarm off-wheel interval, NotifyWay is `CALL`, and this parameter is used.
