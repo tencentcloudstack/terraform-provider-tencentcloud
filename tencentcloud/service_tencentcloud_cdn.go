@@ -172,7 +172,6 @@ func (me *CdnService) VerifyDomainRecord(ctx context.Context, domain string) (re
 	response, err := me.client.UseCdnClient().VerifyDomainRecord(request)
 
 	if err != nil {
-		errRet = err
 		return
 	}
 
@@ -186,7 +185,7 @@ func (me *CdnService) VerifyDomainRecord(ctx context.Context, domain string) (re
 	return
 }
 
-func (me *CdnService) CreateVerifyRecord(ctx context.Context, domain string) (resp *CdnVerifyRecordResponse, errRet error) {
+func (me *CdnService) CreateVerifyRecord(ctx context.Context, domain string) (resp *cdn.CreateVerifyRecordResponseParams, errRet error) {
 	logId := getLogId(ctx)
 	request := cdn.NewCreateVerifyRecordRequest()
 	defer func() {
@@ -206,14 +205,7 @@ func (me *CdnService) CreateVerifyRecord(ctx context.Context, domain string) (re
 		return
 	}
 
-	if r := response.Response; r != nil {
-		resp = &CdnVerifyRecordResponse{
-			Record:     r.Record,
-			RecordType: r.RecordType,
-			SubDomain:  r.SubDomain,
-			RequestId:  r.RequestId,
-		}
-	}
+	resp = response.Response
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())

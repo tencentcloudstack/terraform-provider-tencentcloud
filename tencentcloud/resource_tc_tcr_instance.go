@@ -70,7 +70,6 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 			"instance_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "TCR types. Valid values are: `standard`, `basic`, `premium`.",
 			},
 			"tags": {
@@ -459,6 +458,28 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		d.SetPartial("tags")
 	}
+
+	if d.HasChange("instance_type") {
+		instanceType := d.Get("instance_type").(string)
+		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType); err != nil {
+			return err
+		}
+		err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, has, err := tcrService.DescribeTCRInstanceById(ctx, instanceId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+
+			if has && *instance.RegistryType != instanceType {
+				return resource.RetryableError(fmt.Errorf("instance_type still changing!"))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTcrInstanceRead(d, meta)
 }
 

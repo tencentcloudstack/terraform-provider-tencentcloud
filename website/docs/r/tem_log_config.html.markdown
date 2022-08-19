@@ -15,11 +15,12 @@ Provides a resource to create a tem logConfig
 
 ```hcl
 resource "tencentcloud_tem_log_config" "logConfig" {
-  environment_id = "en-853mggjm"
+  environment_id = "en-o5edaepv"
   application_id = "app-3j29aa2p"
+  workload_id    = resource.tencentcloud_tem_workload.workload.id
   name           = "terraform"
   logset_id      = "b5824781-8d5b-4029-a2f7-d03c37f72bdf"
-  topic_id       = "a21a488d-d28f-4ac3-8044-bdf8c91b49f2"
+  topic_id       = "5a85bb6d-8e41-4e04-b7bd-c05e04782f94"
   input_type     = "container_stdout"
   log_type       = "minimalist_log"
 }
@@ -29,13 +30,14 @@ resource "tencentcloud_tem_log_config" "logConfig" {
 
 The following arguments are supported:
 
-* `application_id` - (Required, String) application ID.
-* `environment_id` - (Required, String) environment ID.
+* `application_id` - (Required, String, ForceNew) application ID.
+* `environment_id` - (Required, String, ForceNew) environment ID.
 * `input_type` - (Required, String) container_stdout or container_file.
 * `log_type` - (Required, String) minimalist_log or multiline_log.
 * `logset_id` - (Required, String) logset.
-* `name` - (Required, String) appConfig name.
+* `name` - (Required, String, ForceNew) appConfig name.
 * `topic_id` - (Required, String) topic.
+* `workload_id` - (Required, String, ForceNew) application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.
 * `beginning_regex` - (Optional, String) regex pattern.
 * `file_pattern` - (Optional, String) file name pattern if container_file.
 * `log_path` - (Optional, String) directory if container_file.

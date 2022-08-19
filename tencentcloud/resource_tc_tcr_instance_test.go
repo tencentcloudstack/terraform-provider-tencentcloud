@@ -99,6 +99,13 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
 				),
 			},
+			{
+				Config: testAccTCRInstance_basic_update_instance_type,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "premium"),
+				),
+			},
 		},
 	})
 }
@@ -181,6 +188,23 @@ const testAccTCRInstance_basic_update_security = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "testacctcrinstance1"
   instance_type = "basic"
+  delete_bucket = true
+  open_public_operation = true
+
+  security_policy {
+    cidr_block = "192.168.1.1/24"
+  }
+
+  tags ={
+	test = "test"
+  }
+}
+`
+
+const testAccTCRInstance_basic_update_instance_type = `
+resource "tencentcloud_tcr_instance" "mytcr_instance" {
+  name        = "testacctcrinstance1"
+  instance_type = "premium"
   delete_bucket = true
   open_public_operation = true
 

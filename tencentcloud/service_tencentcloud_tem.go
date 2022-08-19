@@ -2,7 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -402,7 +405,7 @@ func (me *TemService) DeleteTemScaleRuleById(ctx context.Context, environmentId 
 	return
 }
 
-func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (gateway *tem.IngressInfo, errRet error) {
+func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId string, ingressName string) (gateway *tem.IngressInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = tem.NewDescribeIngressRequest()
@@ -416,28 +419,36 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 	}()
 	request.EnvironmentId = &environmentId
 	request.IngressName = &ingressName
-	request.ClusterNamespace = &clusterNamespace
+	request.ClusterNamespace = helper.String("default")
 
-	response, err := me.client.UseTemClient().DescribeIngress(request)
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		response, errRet := me.client.UseTemClient().DescribeIngress(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		gateway = response.Response.Result
+		if *gateway.ClbId != "" && *gateway.Vip != "" {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("gateway clb is not ready..."))
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	gateway = response.Response.Result
 	return
 }
 
-func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string, clusterNamespace string) (errRet error) {
+func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId string, ingressName string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tem.NewDeleteIngressRequest()
 	request.EnvironmentId = &environmentId
 	request.IngressName = &ingressName
-	request.ClusterNamespace = &clusterNamespace
+	request.ClusterNamespace = helper.String("default")
 
 	defer func() {
 		if errRet != nil {

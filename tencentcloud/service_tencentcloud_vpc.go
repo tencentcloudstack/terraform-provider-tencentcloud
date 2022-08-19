@@ -1285,7 +1285,9 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 	if info.Protocol != nil {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
-
+	if policy.PolicyIndex != nil {
+		policy.PolicyIndex = helper.Int64(info.PolicyIndex)
+	}
 	policy.Port = info.PortRange
 	policy.PolicyDescription = info.Description
 	policy.Action = common.StringPtr(strings.ToUpper(info.Action))
@@ -1751,6 +1753,7 @@ type securityGroupRuleBasicInfo struct {
 	AddressTemplateGroupId  *string `json:"address_template_group_id,omitempty"`
 	ProtocolTemplateId      *string `json:"protocol_template_id,omitempty"`
 	ProtocolTemplateGroupId *string `json:"protocol_template_group_id,omitempty"`
+	PolicyIndex             int64   `json:"policy_index"`
 }
 
 // Build an ID for a Security Group Rule (new version)

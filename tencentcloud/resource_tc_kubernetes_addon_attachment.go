@@ -1,6 +1,8 @@
 /*
 Provide a resource to configure kubernetes cluster app addons.
 
+~> **NOTE**: Avoid to using legacy "1.0.0" version, leave the versions empty so we can fetch the latest while creating.
+
 Example Usage
 
 ```hcl
@@ -8,7 +10,7 @@ Example Usage
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
   cluster_id = "cls-xxxxxxxx"
   name = "cbs"
-  version = "1.0.0"
+  # version = "1.0.5"
   values = [
     "rootdir=/var/lib/kubelet"
   ]
@@ -17,7 +19,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
   cluster_id = "cls-xxxxxxxx"
   name = "tcr"
-  version = "1.0.0"
+  # version = "1.0.0"
   values = [
     # imagePullSecretsCrs is an array which can configure image pull
     "global.imagePullSecretsCrs[0].name=unique-sample-vpc",
@@ -52,7 +54,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
     "spec":{
         "chart":{
             "chartName":"cbs",
-            "chartVersion":"1.0.0"
+            "chartVersion":"1.0.5"
         },
         "values":{
             "rawValuesType":"yaml",
@@ -78,6 +80,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"log"
 	"strings"
 
@@ -103,6 +106,7 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 			"version": {
 				Type:          schema.TypeString,
 				Optional:      true,
+				Computed:      true,
 				Description:   "Addon version, default latest version. Conflict with `request_body`.",
 				ConflictsWith: []string{"request_body"},
 			},
@@ -155,6 +159,21 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 		values    = d.Get("values").([]interface{})
 		reqBody   = d.Get("request_body").(string)
 	)
+
+	if version == "" {
+		request := tke.NewGetTkeAppChartListRequest()
+		chartList, err := service.GetTkeAppChartList(ctx, request)
+		if err != nil {
+			return fmt.Errorf("error while fetching latest chart versions, %s", err.Error())
+		}
+		for i := range chartList {
+			chart := chartList[i]
+			if *chart.Name == addonName {
+				version = *chart.LatestVersion
+				break
+			}
+		}
+	}
 
 	if reqBody == "" {
 		var reqErr error

@@ -52,7 +52,7 @@ func TestAccTencentCloudTkeAddonAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "response_body"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "name", "cos"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_addon_attachment.cos", "version", "1.0.0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_addon_attachment.cos", "version"),
 				),
 			},
 		},
@@ -66,7 +66,6 @@ func testAccTkeAddonAttachment() string {
 resource "tencentcloud_kubernetes_addon_attachment" "cos" {
   cluster_id = local.cluster_id
   name = "%s"
-  version = "1.0.0"
 }
 `, TkeDataSource, defaultAddonName)
 }
