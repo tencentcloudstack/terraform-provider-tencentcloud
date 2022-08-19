@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"reflect"
 	"testing"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -126,4 +127,19 @@ func TestIsExpectError(t *testing.T) {
 	unExpectedShort := []string{"SystemError"}
 	assert.Equalf(t, isExpectError(err, unExpectedMatchHead), false, "")
 	assert.Equalf(t, isExpectError(err, unExpectedShort), false, "")
+}
+
+func TestYamlParser(t *testing.T) {
+	yamlStr := `test`
+	yaml, err := YamlParser(yamlStr)
+	assert.Equalf(t, err != nil, true, "")
+	assert.Equalf(t, yaml == nil, true, "")
+
+	yamlStr1 := `version: v1
+name: test-name
+desc: this is a description`
+	yaml1, err1 := YamlParser(yamlStr1)
+	assert.Equalf(t, err1, nil, "")
+	assert.Equalf(t, reflect.TypeOf(yaml1).String(), "map[interface {}]interface {}", "")
+	assert.Equalf(t, yaml1["name"], "test-name", "")
 }
