@@ -173,6 +173,8 @@ const (
 	tkeExclusiveVpcName   = "keep_tke_exclusive_vpc"
 	defaultTkeClusterId   = "cls-ely08ic4"
 	defaultTkeClusterName = "keep-tke-cluster"
+	defaultTkeClusterType = "tke"
+	defaultPrometheusId   = "prom-1lspn8sw"
 )
 
 /*
