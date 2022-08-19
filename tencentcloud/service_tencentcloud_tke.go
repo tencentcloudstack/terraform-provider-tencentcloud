@@ -2030,7 +2030,6 @@ func (me *TkeService) DescribePrometheusRecordRuleByName(ctx context.Context, id
 	return response, nil
 }
 
-
 func (me *TkeService) DescribeTkeTmpGlobalNotification(ctx context.Context, instanceId string) (tmpNotification *tke.PrometheusNotificationItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
