@@ -112,7 +112,7 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 						"user_notices": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Alarm notification template list.(At most five)",
+							Description: "Alarm notification template list.(At most five).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"receiver_type": {
@@ -191,7 +191,7 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 						"url_notices": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Alarm notification template list.(At most five)",
+							Description: "The maximum number of callback notifications is 3.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"url": {
@@ -221,7 +221,7 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 						"cls_notices": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Alarm notification template list.(At most five)",
+							Description: "A maximum of one alarm notification can be pushed to the CLS service.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"region": {
