@@ -50,6 +50,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -57,6 +58,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -579,19 +581,29 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		return err
 	}
 
+	var instanceId string
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+
+		e, ok := err.(*sdkErrors.TencentCloudSDKError)
+		if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+			errStr := err.Error()
+			re := regexp.MustCompile("dealNames:\\[\"(.*)\"\\]\\],")
+			dealId := re.FindStringSubmatch(errStr)[1]
+			billingService := BillingService{client: meta.(*TencentCloudClient).apiV3Conn}
+			deal, _ := billingService.DescribeDeals(ctx, dealId)
+			instanceId = *deal.ResourceId[0]
+		} else {
+			return err
+		}
 	} else {
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		instanceId = *response.Response.InstanceIds[0]
 	}
-	if len(response.Response.InstanceIds) != 1 {
-		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
-	}
-	d.SetId(*response.Response.InstanceIds[0])
+	d.SetId(instanceId)
 	return nil
 }
 
@@ -653,6 +665,17 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	}
 
 	mysqlID := d.Id()
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	time.Sleep(3 * time.Second)
 
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
@@ -763,15 +786,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 		if err != nil {
 			log.Printf("[CRITAL]%s open internet service   fail, reason:%s\n ", logId, err.Error())
-			return err
-		}
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}

@@ -24,6 +24,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.363
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.479
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409
@@ -33,7 +34,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.472
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.479
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.359
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -68,5 +69,5 @@ require (
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
-	gopkg.in/yaml.v2 v2.2.8 // indirect
+	gopkg.in/yaml.v2 v2.2.8
 )
