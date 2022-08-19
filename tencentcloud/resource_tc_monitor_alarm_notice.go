@@ -33,7 +33,14 @@ resource "tencentcloud_monitor_alarm_notice" "example" {
   }
 
 }
+```
 
+Import
+
+Monitor Alarm Notice can be imported, e.g.
+
+```
+$ terraform import tencentcloud_monitor_alarm_notice.import-test noticeId
 ```
 
 */
