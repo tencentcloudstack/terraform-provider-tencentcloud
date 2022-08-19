@@ -5,12 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_tmp_tke_global_notification" "tmpGlobalNotification" {
-  instance_id   = `+ defaultPrometheusId +`
+  instance_id   = xxx
   notification{
     enabled     = true
     type        = "webhook"
     web_hook    = ""
-    alert_manager{
+    alert_manager         = {
       url           = ""
       cluster_type  = ""
       cluster_id    = ""
@@ -21,9 +21,9 @@ resource "tencentcloud_monitor_tmp_tke_global_notification" "tmpGlobalNotificati
     notify_way            = ["SMS", "EMAIL"]
     receiver_groups       = [""]
     phone_notify_order    = []
-    phone_circle_times    = 5
-    phone_inner_interval  = 1
-    phone_circle_interval = 1
+    phone_circle_times    = xxx
+    phone_inner_interval  = xxx
+    phone_circle_interval = xxx
     phone_arrive_notice   = false
   }
 }
@@ -34,11 +34,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotification() *schema.Resource {
@@ -172,7 +172,6 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotification() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotificationCreate(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG]-- create")
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -252,37 +251,12 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationCreate(d *schema.Resourc
 	// When an instance is created, the alarm monitoring empty data will be created by default
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	read, e := service.DescribeTkeTmpGlobalNotification(ctx, instanceId)
+	result, e := service.ModifyTkeTmpGlobalNotification(ctx, instanceId, notification)
 	if e != nil {
 		return e
-	}
-
-	log.Printf("[DEBUG]-- create -> Modify, %v", read)
-	if read != nil {
-		result, e := service.ModifyTkeTmpGlobalNotification(ctx, instanceId, notification)
-		if e != nil {
-			return e
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
 	} else {
-		log.Printf("[DEBUG]-- create, %v", read)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().CreatePrometheusGlobalNotification(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s create tke global notification failed, reason:%+v", logId, err)
-			return err
-		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 	}
 
 	d.SetId(instanceId)
@@ -291,7 +265,6 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationCreate(d *schema.Resourc
 }
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG]-- read")
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -313,40 +286,41 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceD
 		return fmt.Errorf("resource `global_notification` %s does not exist", instanceId)
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	alertManager := make(map[string]interface{})
-	if globalNotification.AlertManager != nil {
-		alertManager = map[string]interface{}{
-			"url":          globalNotification.AlertManager.Url,
-			"cluster_type": globalNotification.AlertManager.ClusterType,
-			"cluster_id":   globalNotification.AlertManager.ClusterId,
+	if *globalNotification.Enabled {
+		_ = d.Set("instance_id", instanceId)
+		alertManager := make(map[string]interface{})
+		if globalNotification.AlertManager != nil {
+			alertManager = map[string]interface{}{
+				"url":          globalNotification.AlertManager.Url,
+				"cluster_type": globalNotification.AlertManager.ClusterType,
+				"cluster_id":   globalNotification.AlertManager.ClusterId,
+			}
 		}
-	}
 
-	var notifications []map[string]interface{}
-	notification := make(map[string]interface{})
-	notification["enabled"] = globalNotification.Enabled
-	notification["type"] = globalNotification.Type
-	notification["web_hook"] = globalNotification.WebHook
-	notification["alert_manager"] = alertManager
-	notification["repeat_interval"] = globalNotification.RepeatInterval
-	notification["time_range_start"] = globalNotification.TimeRangeStart
-	notification["time_range_end"] = globalNotification.TimeRangeEnd
-	notification["notify_way"] = globalNotification.NotifyWay
-	notification["receiver_groups"] = globalNotification.ReceiverGroups
-	notification["phone_notify_order"] = globalNotification.PhoneNotifyOrder
-	notification["phone_circle_times"] = globalNotification.PhoneCircleTimes
-	notification["phone_inner_interval"] = globalNotification.PhoneInnerInterval
-	notification["phone_circle_interval"] = globalNotification.PhoneCircleInterval
-	notification["phone_arrive_notice"] = globalNotification.PhoneArriveNotice
-	notifications = append(notifications, notification)
-	_ = d.Set("notification", notifications)
+		var notifications []map[string]interface{}
+		notification := make(map[string]interface{})
+		notification["enabled"] = globalNotification.Enabled
+		notification["type"] = globalNotification.Type
+		notification["web_hook"] = globalNotification.WebHook
+		notification["alert_manager"] = alertManager
+		notification["repeat_interval"] = globalNotification.RepeatInterval
+		notification["time_range_start"] = globalNotification.TimeRangeStart
+		notification["time_range_end"] = globalNotification.TimeRangeEnd
+		notification["notify_way"] = globalNotification.NotifyWay
+		notification["receiver_groups"] = globalNotification.ReceiverGroups
+		notification["phone_notify_order"] = globalNotification.PhoneNotifyOrder
+		notification["phone_circle_times"] = globalNotification.PhoneCircleTimes
+		notification["phone_inner_interval"] = globalNotification.PhoneInnerInterval
+		notification["phone_circle_interval"] = globalNotification.PhoneCircleInterval
+		notification["phone_arrive_notice"] = globalNotification.PhoneArriveNotice
+		notifications = append(notifications, notification)
+		_ = d.Set("notification", notifications)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG]-- Update")
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.update")()
 	defer inconsistentCheck(d, meta)()
 
@@ -429,7 +403,6 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d *schema.Resourc
 }
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotificationDelete(d *schema.ResourceData, meta interface{}) error {
-	log.Printf("[DEBUG]-- Delete")
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.delete")()
 	defer inconsistentCheck(d, meta)()
 
