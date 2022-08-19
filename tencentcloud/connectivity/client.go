@@ -55,6 +55,7 @@ import (
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -117,6 +118,7 @@ type TencentCloudClient struct {
 	antiddosConn       *antiddos.Client
 	domainConn         *domain.Client
 	lighthouseConn     *lighthouse.Client
+	temConn            *tem.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -729,6 +731,19 @@ func (me *TencentCloudClient) UseAntiddosClient() *antiddos.Client {
 	me.antiddosConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.antiddosConn
+}
+
+// UseTemClient returns tem client for service
+func (me *TencentCloudClient) UseTemClient() *tem.Client {
+	if me.temConn != nil {
+		return me.temConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.temConn, _ = tem.NewClient(me.Credential, me.Region, cpf)
+	me.temConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.temConn
 }
 
 func getEnvDefault(key string, defVal int) int {

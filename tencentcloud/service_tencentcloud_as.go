@@ -440,40 +440,27 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 	return
 }
 
-func (me *AsService) ModifyScalingGroup(ctx context.Context, id string, name string, projectId int, cooldown int, zones []*string, terminationPolicies []*string) error {
+func (me *AsService) ModifyAutoScalingGroup(ctx context.Context, request *as.ModifyAutoScalingGroupRequest) (errRet error) {
 	logId := getLogId(ctx)
-	request := as.NewModifyAutoScalingGroupRequest()
-
-	request.AutoScalingGroupId = helper.String(id)
-
-	if name != "" {
-		request.AutoScalingGroupName = helper.String(name)
-	}
-
-	if projectId != 0 {
-		request.ProjectId = helper.IntUint64(projectId)
-	}
-
-	if cooldown != 0 {
-		request.DefaultCooldown = helper.IntUint64(cooldown)
-	}
-
-	if len(zones) != 0 {
-		request.Zones = zones
-	}
-
-	if len(terminationPolicies) != 0 {
-		request.TerminationPolicies = terminationPolicies
-	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
 
 	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
+	response, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		errRet = err
+		return
 	}
-	return nil
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
 
 func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId string) error {

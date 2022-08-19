@@ -27,7 +27,7 @@ resource "tencentcloud_dnspod_record" "demo" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String) The Domain.
+* `domain` - (Required, String, ForceNew) The Domain.
 * `record_line` - (Required, String) The record line.
 * `record_type` - (Required, String) The record type.
 * `value` - (Required, String) The record value.

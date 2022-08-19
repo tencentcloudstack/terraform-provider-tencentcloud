@@ -654,6 +654,9 @@ func doResourceTencentCloudInstanceSetUpdate(d *schema.ResourceData, meta interf
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	if d.HasChange("instance_count") {
+		return fmt.Errorf("`instance_count` do not support change now, please use `resource_tc_instace` instead.")
+	}
 
 	if d.HasChange("exclude_instance_ids") {
 		old, new := d.GetChange("exclude_instance_ids")

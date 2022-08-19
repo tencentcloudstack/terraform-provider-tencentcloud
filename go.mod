@@ -27,13 +27,13 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.425
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.466
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.445
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.472
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.359
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -59,6 +59,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.267
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.438
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.398

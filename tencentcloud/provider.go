@@ -127,6 +127,7 @@ Auto Scaling(AS)
 Content Delivery Network(CDN)
   Data Source
     tencentcloud_cdn_domains
+    tencentcloud_cdn_domain_verifier
 
   Resource
 	tencentcloud_cdn_domain
@@ -432,6 +433,7 @@ Monitor
     tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
 	tencentcloud_monitor_tmp_tke_alert_policy
+	tencentcloud_monitor_tmp_tke_config
 	tencentcloud_monitor_tmp_tke_global_notification
 
 PostgreSQL
@@ -643,6 +645,16 @@ CLS
 Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
+
+TEM
+  Resource
+	tencentcloud_tem_environment
+	tencentcloud_tem_application
+	tencentcloud_tem_workload
+	tencentcloud_tem_app_config
+	tencentcloud_tem_log_config
+	tencentcloud_tem_scale_rule
+	tencentcloud_tem_gateway
 
 */
 package tencentcloud
@@ -866,6 +878,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_saml_providers":                       dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_user_info":                                datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                              dataSourceTencentCloudCdnDomains(),
+			"tencentcloud_cdn_domain_verifier":                      dataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                            dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                           dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                                 dataSourceTencentCloudScfLogs(),
@@ -1083,6 +1096,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_recording_rule":              resourceTencentCloudMonitorTmpRecordingRule(),
 			"tencentcloud_monitor_tmp_tke_template":                resourceTencentCloudMonitorTmpTkeTemplate(),
 			"tencentcloud_monitor_tmp_tke_alert_policy":            resourceTencentCloudMonitorTmpTkeAlertPolicy(),
+			"tencentcloud_monitor_tmp_tke_config":                  resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_global_notification":     resourceTencentCloudMonitorTmpTkeGlobalNotification(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
@@ -1154,6 +1168,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cls_cos_shipper":                         resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                               resourceTencentCloudClsIndex(),
 			"tencentcloud_lighthouse_instance":                     resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_tem_environment":                         resourceTencentCloudTemEnvironment(),
+			"tencentcloud_tem_application":                         resourceTencentCloudTemApplication(),
+			"tencentcloud_tem_workload":                            resourceTencentCloudTemWorkload(),
+			"tencentcloud_tem_app_config":                          resourceTencentCloudTemAppConfig(),
+			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
+			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
+			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
 		},
 
 		ConfigureFunc: providerConfigure,

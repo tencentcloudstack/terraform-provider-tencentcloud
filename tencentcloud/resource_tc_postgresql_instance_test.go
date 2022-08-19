@@ -128,7 +128,19 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
 			},
-
+			{
+				Config: testAccPostgresqlInstanceOpenPublic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "true"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_host"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_port"),
+					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
+				),
+			},
 			{
 				Config: testAccPostgresqlInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
@@ -142,13 +154,9 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "250"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "project_id", "0"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "true"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "root_password", "t1qaA2k1wgvfa3?ZZZ"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
-					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
-					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
-					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_host"),
-					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_port"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.min_backup_start_time", "01:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "02:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "3"),
@@ -280,7 +288,7 @@ resource "tencentcloud_postgresql_instance" "test" {
 }
 `
 
-const testAccPostgresqlInstanceUpdate string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+const testAccPostgresqlInstanceOpenPublic string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance_update"
   availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
@@ -292,6 +300,33 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = true
+  memory 			= 4
+  storage 			= 250
+  backup_plan {
+	min_backup_start_time 		 = "01:10:11"
+	max_backup_start_time		 = "02:10:11"
+	base_backup_retention_period = 5
+	backup_period 			     = ["monday", "thursday", "sunday"]
+  }
+
+  tags = {
+	tf = "teest"
+  }
+}
+`
+
+const testAccPostgresqlInstanceUpdate string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_instance_update"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type	    = "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "10.4"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  charset 			= "LATIN1"
+  project_id 		= 0
+  public_access_switch = false
   memory 			= 4
   storage 			= 250
   backup_plan {

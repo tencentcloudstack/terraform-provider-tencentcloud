@@ -250,6 +250,21 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 	return
 }
 
+func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryType string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tcr.NewModifyInstanceRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = helper.String(registryId)
+	request.RegistryType = helper.String(registryType)
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTCRClient().ModifyInstance(request)
+	return err
+
+}
 func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewModifyNamespaceRequest()

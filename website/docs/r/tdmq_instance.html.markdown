@@ -17,6 +17,9 @@ Provide a resource to create a TDMQ instance.
 resource "tencentcloud_tdmq_instance" "foo" {
   cluster_name = "example"
   remark       = "this is description."
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -27,6 +30,7 @@ The following arguments are supported:
 * `cluster_name` - (Required, String) The name of tdmq cluster to be created.
 * `bind_cluster_id` - (Optional, Int) The Dedicated Cluster Id.
 * `remark` - (Optional, String) Description of the tdmq cluster.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 

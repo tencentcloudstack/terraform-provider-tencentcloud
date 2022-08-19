@@ -100,6 +100,12 @@ type InstanceInfo struct {
 	LanIp                        string
 }
 
+type PrometheusConfigIds struct {
+	InstanceId  string
+	ClusterType string
+	ClusterId   string
+}
+
 type TkeService struct {
 	client *connectivity.TencentCloudClient
 }
@@ -658,6 +664,29 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 		instanceIds = append(instanceIds, *v)
 	}
 	return
+}
+
+func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId string, mustHaveWorkers bool) error {
+	return resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		_, workers, err := me.DescribeClusterInstances(ctx, clusterId)
+		if err != nil {
+			return retryError(err)
+		}
+		if len(workers) == 0 {
+			if mustHaveWorkers {
+				return resource.RetryableError(fmt.Errorf("waiting for workers created"))
+			}
+			return nil
+		}
+
+		for i := range workers {
+			worker := workers[i]
+			if worker.InstanceState == "running" {
+				return nil
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("cluster %s waiting for one of the workers ready", clusterId))
+	})
 }
 
 /*
@@ -1836,6 +1865,106 @@ func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, tmpAlertP
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (respParams *tke.DescribePrometheusConfigResponseParams, errRet error) {
+	request := tke.NewDescribePrometheusConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, ids [%s], request body [%s], reason[%s]\n",
+				logId, "query object", configId, request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids, err := me.parseConfigId(configId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	request.ClusterId = &ids.ClusterId
+	request.ClusterType = &ids.ClusterType
+	request.InstanceId = &ids.InstanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribePrometheusConfig(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail,ids [%s], request body [%s], reason[%s]\n",
+			logId, request.GetAction(), configId, request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success,ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), configId, request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.RequestId == nil {
+		return nil, fmt.Errorf("response is invalid,%s", response.ToJsonString())
+	}
+
+	respParams = response.Response
+	return
+}
+
+func (me *TkeService) DeleteTkeTmpConfigByName(logId string, configId string, ServiceMonitors []*string, PodMonitors []*string, RawJobs []*string) (errRet error) {
+	request := tke.NewDeletePrometheusConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,ids [%s], request body [%s], reason[%s]\n",
+				logId, "delete object", configId, request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids, err := me.parseConfigId(configId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	request.ClusterId = &ids.ClusterId
+	request.ClusterType = &ids.ClusterType
+	request.InstanceId = &ids.InstanceId
+
+	if len(ServiceMonitors) > 0 {
+		request.ServiceMonitors = ServiceMonitors
+	}
+
+	if len(PodMonitors) > 0 {
+		request.PodMonitors = PodMonitors
+	}
+
+	if len(RawJobs) > 0 {
+		request.RawJobs = RawJobs
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeletePrometheusConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), configId, request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+	idSplit := strings.Split(configId, FILED_SP)
+	if len(idSplit) != 3 {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	instanceId := idSplit[0]
+	clusterType := idSplit[1]
+	clusterId := idSplit[2]
+	if instanceId == "" || clusterType == "" || clusterId == "" {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
 	return
 }
 
