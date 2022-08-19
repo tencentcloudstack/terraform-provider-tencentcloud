@@ -1967,3 +1967,65 @@ func (me *TkeService) parseConfigId(configId string) (ret *PrometheusConfigIds, 
 	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
 	return
 }
+
+func (me *TkeService) DeletePrometheusRecordRuleYaml(ctx context.Context, id, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeletePrometheusRecordRuleYamlRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &id
+	request.Names = []*string{&name}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeletePrometheusRecordRuleYaml(request)
+	if err != nil {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return err
+	}
+
+	return
+}
+
+func (me *TkeService) DescribePrometheusRecordRuleByName(ctx context.Context, id, name string) (
+	ret *tke.DescribePrometheusRecordRulesResponse, errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDescribePrometheusRecordRulesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &id
+	if name != "" {
+		request.Filters = []*tke.Filter{
+			{
+				Name:   helper.String("Name"),
+				Values: []*string{&name},
+			},
+		}
+	}
+
+	response, err := me.client.UseTkeClient().DescribePrometheusRecordRules(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	return response, nil
+}

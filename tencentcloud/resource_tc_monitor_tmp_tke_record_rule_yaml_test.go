@@ -22,7 +22,7 @@ func testSweepRecordRule(region string) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cli, _ := sharedClientForRegion(region)
 	client := cli.(*TencentCloudClient).apiV3Conn
-	service := RecordRuleService{client}
+	service := TkeService{client}
 
 	instanceId := defaultPrometheusId
 
@@ -47,7 +47,7 @@ func testSweepRecordRule(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudRecordRule_basic(t *testing.T) {
+func TestAccTencentCloudMonitorRecordRule_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
@@ -82,7 +82,7 @@ func TestAccTencentCloudRecordRule_basic(t *testing.T) {
 func testAccCheckRecordRuleDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	recordService := RecordRuleService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	recordService := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_record_rule_yaml" {
 			continue
@@ -124,7 +124,7 @@ func testAccCheckRecordRuleExists(r string) resource.TestCheckFunc {
 
 		instanceId := items[0]
 		recordRuleName := items[1]
-		recordRuleService := RecordRuleService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		recordRuleService := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		response, err := recordRuleService.DescribePrometheusRecordRuleByName(ctx, instanceId, recordRuleName)
 		if len(response.Response.Records) < 1 {
 			return fmt.Errorf("record rule %s is not found", rs.Primary.ID)
