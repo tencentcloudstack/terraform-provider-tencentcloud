@@ -34,8 +34,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -175,93 +173,14 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationCreate(d *schema.Resourc
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	request := tke.NewCreatePrometheusGlobalNotificationRequest()
-
 	instanceId := ""
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
-		request.InstanceId = helper.String(v.(string))
-	}
-
-	notification := tke.PrometheusNotificationItem{}
-	if dMap, ok := helper.InterfacesHeadMap(d, "notification"); ok {
-		if v, ok := dMap["enabled"]; ok {
-			notification.Enabled = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["type"]; ok {
-			notification.Type = helper.String(v.(string))
-		}
-		if v, ok := dMap["web_hook"]; ok {
-			notification.WebHook = helper.String(v.(string))
-		}
-		if v, ok := helper.InterfacesHeadMap(d, "alert_manager"); ok {
-			alertManager := tke.PrometheusAlertManagerConfig{}
-			if vv, ok := v["url"]; ok {
-				alertManager.Url = helper.String(vv.(string))
-			}
-			if vv, ok := v["cluster_type"]; ok {
-				alertManager.ClusterType = helper.String(vv.(string))
-			}
-			if vv, ok := v["cluster_id"]; ok {
-				alertManager.ClusterId = helper.String(vv.(string))
-			}
-			notification.AlertManager = &alertManager
-		}
-
-		if v, ok := dMap["repeat_interval"]; ok {
-			notification.RepeatInterval = helper.String(v.(string))
-		}
-		if v, ok := dMap["time_range_start"]; ok {
-			notification.TimeRangeStart = helper.String(v.(string))
-		}
-		if v, ok := dMap["time_range_end"]; ok {
-			notification.TimeRangeEnd = helper.String(v.(string))
-		}
-		if v, ok := dMap["notify_way"]; ok && v != nil {
-			for _, vv := range v.(*schema.Set).List() {
-				if vv == "CALL" {
-					if v, ok := dMap["receiver_groups"]; ok {
-						notification.ReceiverGroups = helper.Strings(v.([]string))
-					}
-					if v, ok := dMap["phone_notify_order"]; ok {
-						notification.PhoneNotifyOrder = helper.InterfacesUint64Point(v.([]interface{}))
-					}
-					if v, ok := dMap["phone_circle_times"]; ok {
-						notification.PhoneCircleTimes = helper.Int64(v.(int64))
-					}
-					if v, ok := dMap["phone_inner_interval"]; ok {
-						notification.PhoneInnerInterval = helper.Int64(v.(int64))
-					}
-					if v, ok := dMap["phone_circle_interval"]; ok {
-						notification.PhoneCircleInterval = helper.Int64(v.(int64))
-					}
-					if v, ok := dMap["phone_arrive_notice"]; ok {
-						notification.PhoneArriveNotice = helper.Bool(v.(bool))
-					}
-				}
-				notification.NotifyWay = append(notification.NotifyWay, helper.String(vv.(string)))
-			}
-		}
-		request.Notification = &notification
-
-	}
-
-	// When an instance is created, the alarm monitoring empty data will be created by default
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	result, e := service.ModifyTkeTmpGlobalNotification(ctx, instanceId, notification)
-	if e != nil {
-		return e
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 	}
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d, meta)
+	return resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceData, meta interface{}) error {
@@ -327,10 +246,6 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d *schema.Resourc
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
 
 	if d.HasChange("notification") {
 		notification := tke.PrometheusNotificationItem{}
