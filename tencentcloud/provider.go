@@ -418,6 +418,7 @@ Monitor
 	tencentcloud_monitor_binding_objects
 	tencentcloud_monitor_policy_groups
 	tencentcloud_monitor_product_namespace
+	tencentcloud_monitor_alarm_notices
 
   Resource
     tencentcloud_monitor_policy_group
@@ -434,6 +435,7 @@ Monitor
 	tencentcloud_monitor_tmp_tke_template
 	tencentcloud_monitor_tmp_tke_alert_policy
 	tencentcloud_monitor_tmp_tke_config
+	tencentcloud_monitor_alarm_notice
 
 PostgreSQL
   Data Source
@@ -891,6 +893,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_objects":                  dataSourceTencentMonitorBindingObjects(),
 			"tencentcloud_monitor_policy_groups":                    dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":                dataSourceTencentMonitorProductNamespace(),
+			"tencentcloud_monitor_alarm_notices":                    dataSourceTencentMonitorAlarmNotices(),
 			"tencentcloud_elasticsearch_instances":                  dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                     dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                     dataSourceTencentCloudPostgresqlSpecinfos(),
@@ -1087,6 +1090,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_binding_object":           resourceTencentCloudMonitorPolicyBindingObject(),
 			"tencentcloud_monitor_binding_receiver":                resourceTencentCloudMonitorBindingAlarmReceiver(),
 			"tencentcloud_monitor_alarm_policy":                    resourceTencentCloudMonitorAlarmPolicy(),
+			"tencentcloud_monitor_alarm_notice":                    resourceTencentCloudMonitorAlarmNotice(),
 			"tencentcloud_monitor_tmp_instance":                    resourceTencentCloudMonitorTmpInstance(),
 			"tencentcloud_monitor_tmp_cvm_agent":                   resourceTencentCloudMonitorTmpCvmAgent(),
 			"tencentcloud_monitor_tmp_scrape_job":                  resourceTencentCloudMonitorTmpScrapeJob(),

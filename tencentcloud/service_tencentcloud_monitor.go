@@ -138,6 +138,49 @@ func (me *MonitorService) DescribeAlarmPolicyById(ctx context.Context, policyId 
 	return
 }
 
+func (me *MonitorService) DescribeAlarmNoticeById(ctx context.Context, alarmmap map[string]interface{}) (noticeIds []*monitor.AlarmNotice, errRet error) {
+	var (
+		request  = monitor.NewDescribeAlarmNoticesRequest()
+		response *monitor.DescribeAlarmNoticesResponse
+		err      error
+	)
+	request.Module = helper.String("monitor")
+	request.PageNumber = helper.IntInt64(1)
+	request.PageSize = helper.IntInt64(200)
+	request.Order = alarmmap["order"].(*string)
+	if v, ok := alarmmap["ownerUid"]; ok {
+		request.OwnerUid = v.(*int64)
+	}
+	if v, ok := alarmmap["name"]; ok {
+		request.Name = v.(*string)
+	}
+	if v, ok := alarmmap["receiver_type"]; ok {
+		request.ReceiverType = v.(*string)
+	}
+
+	if v, ok := alarmmap["userIdArr"]; ok {
+		request.UserIds = v.([]*int64)
+	}
+	if v, ok := alarmmap["groupArr"]; ok {
+		request.GroupIds = v.([]*int64)
+	}
+	if v, ok := alarmmap["noticeArr"]; ok {
+		request.NoticeIds = v.([]*string)
+	}
+
+	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		if response, err = me.client.UseMonitorClient().DescribeAlarmNotices(request); err != nil {
+			return retryError(err, InternalError)
+		}
+		noticeIds = response.Response.Notices
+		return nil
+	}); err != nil {
+		return
+	}
+	return
+}
+
 func (me *MonitorService) DescribePolicyGroup(ctx context.Context, groupId int64) (info *monitor.DescribePolicyGroupListGroup, errRet error) {
 
 	var (
@@ -438,6 +481,26 @@ func (me *MonitorService) DeleteMonitorTmpScrapeJobById(ctx context.Context, tmp
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *MonitorService) DeleteMonitorAlarmNoticeById(ctx context.Context, Id string) (errRet error) {
+	request := monitor.NewDeleteAlarmNoticesRequest()
+	request.Module = helper.String("monitor")
+	noticeId := Id
+	var n = []*string{&noticeId}
+	request.NoticeIds = n
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseMonitorClient().DeleteAlarmNotices(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
 	return
 }
 
