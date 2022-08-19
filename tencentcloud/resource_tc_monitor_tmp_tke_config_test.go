@@ -43,7 +43,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTmpTkeConfig_basic(t *testing.T) {
+func TestAccTencentCloudMonitorTmpTkeConfig_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
