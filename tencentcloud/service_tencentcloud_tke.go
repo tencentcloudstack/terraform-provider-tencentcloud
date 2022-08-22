@@ -2029,3 +2029,61 @@ func (me *TkeService) DescribePrometheusRecordRuleByName(ctx context.Context, id
 
 	return response, nil
 }
+
+func (me *TkeService) DescribeTkeTmpGlobalNotification(ctx context.Context, instanceId string) (tmpNotification *tke.PrometheusNotificationItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribePrometheusGlobalNotificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseTkeClient().DescribePrometheusGlobalNotification(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Notification != nil && response.Response.RequestId != nil {
+		tmpNotification = response.Response.Notification
+		return
+	}
+
+	return
+}
+
+func (me *TkeService) ModifyTkeTmpGlobalNotification(ctx context.Context, instanceId string, notification tke.PrometheusNotificationItem) (response *tke.ModifyPrometheusGlobalNotificationResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewModifyPrometheusGlobalNotificationRequest()
+	request.InstanceId = &instanceId
+	request.Notification = &notification
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().ModifyPrometheusGlobalNotification(request)
+	if err != nil {
+		errRet = err
+		return nil, err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
