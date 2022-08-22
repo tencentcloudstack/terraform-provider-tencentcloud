@@ -433,6 +433,7 @@ Monitor
 	tencentcloud_monitor_tmp_alert_rule
     tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
+	tencentcloud_monitor_tmp_tke_template_attachment
 	tencentcloud_monitor_tmp_tke_alert_policy
 	tencentcloud_monitor_tmp_tke_config
 	tencentcloud_monitor_alarm_notice
@@ -1100,6 +1101,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_alert_rule":                  resourceTencentCloudMonitorTmpAlertRule(),
 			"tencentcloud_monitor_tmp_recording_rule":              resourceTencentCloudMonitorTmpRecordingRule(),
 			"tencentcloud_monitor_tmp_tke_template":                resourceTencentCloudMonitorTmpTkeTemplate(),
+			"tencentcloud_monitor_tmp_tke_template_attachment":     resourceTencentCloudMonitorTmpTkeTemplateAttachment(),
 			"tencentcloud_monitor_tmp_tke_alert_policy":            resourceTencentCloudMonitorTmpTkeAlertPolicy(),
 			"tencentcloud_monitor_tmp_tke_config":                  resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":        resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),

@@ -175,6 +175,7 @@ const (
 	defaultTkeClusterName = "keep-tke-cluster"
 	defaultTkeClusterType = "tke"
 	defaultPrometheusId   = "prom-1lspn8sw"
+	defaultTemplateId     = "temp-gqunlvo1"
 )
 
 /*
