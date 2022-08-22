@@ -22,7 +22,7 @@ func TestAccTencentCloudMonitorTempAttachment_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTempAttachmentExists("tencentcloud_monitor_tmp_tke_template_attachment.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "template_id", "temp-gqunlvo1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.instance_id", "prom-86azj3lg"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.instance_id", "prom-1lspn8sw"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.region", "ap-guangzhou"),
 				),
 			},
@@ -106,14 +106,11 @@ func testAccCheckTempAttachmentExists(r string) resource.TestCheckFunc {
 }
 
 const testTempAttachmentVar = `
-#variable "prometheus_id" {
-#  default = "` + defaultPrometheusId + `"
-#}
 variable "prometheus_id" {
-  default = "prom-86azj3lg"
+  default = "` + defaultPrometheusId + `"
 }
 variable "template_id" {
-  default = "temp-gqunlvo1"
+  default = "` + defaultTemplateId + `"
 }
 variable "region" {
   default = "ap-guangzhou"
