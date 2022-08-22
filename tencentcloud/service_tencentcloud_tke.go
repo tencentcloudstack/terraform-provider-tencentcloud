@@ -2090,6 +2090,46 @@ func (me *TkeService) ModifyTkeTmpGlobalNotification(ctx context.Context, instan
 	return
 }
 
+func (me *TkeService) DescribePrometheusTempSync(ctx context.Context, templateId string) (targets []*tke.PrometheusTemplateSyncTarget, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribePrometheusTempSyncRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.TemplateId = &templateId
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribePrometheusTempSync(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success,ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), templateId, request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.RequestId == nil {
+		return nil, fmt.Errorf("response is invalid, %s", response.ToJsonString())
+	}
+
+	if len(response.Response.Targets) < 1 {
+		return
+	}
+
+	targets = response.Response.Targets
+
+	return
+}
+
 func (me *TkeService) DescribeTmpTkeClusterAgentsById(ctx context.Context, instanceId, clusterId, clusterType string) (agents *tke.PrometheusAgentOverview, errRet error) {
 	var (
 		logId   = getLogId(ctx)
