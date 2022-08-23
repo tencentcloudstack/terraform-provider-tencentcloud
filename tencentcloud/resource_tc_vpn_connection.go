@@ -49,6 +49,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -249,6 +250,27 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:    true,
 				Description: "A list of tags used to associate different resources.",
 			},
+			"dpd_enable": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateIntegerInRange(0, 1),
+				Description:  "Specifies whether to enable DPD. Valid values: 0 (disable) and 1 (enable).",
+			},
+			"dpd_timeout": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateIntegerInRange(30, 60),
+				Description:  "DPD timeout period.Valid value ranges: [30~60], Default: 30; unit: second. If the request is not responded within this period, the peer end is considered not exists. This parameter is valid when the value of DpdEnable is 1.",
+			},
+			"dpd_action": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(DPD_ACTIONS),
+				Description:  "The action after DPD timeout. Valid values: clear (disconnect) and restart (try again). It is valid when DpdEnable is 1.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -336,7 +358,16 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
 	request.CustomerGatewayId = helper.String(d.Get("customer_gateway_id").(string))
 	request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
-
+	if v, ok := d.GetOk("dpd_enable"); ok {
+		dpdEnable := v.(int)
+		request.DpdEnable = helper.IntInt64(dpdEnable)
+	}
+	if v, ok := d.GetOk("dpd_action"); ok {
+		request.DpdAction = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("dpd_timeout"); ok {
+		request.DpdTimeout = helper.String(strconv.Itoa(v.(int)))
+	}
 	//set up  SecurityPolicyDatabases
 
 	sgps := d.Get("security_group_policy").(*schema.Set).List()
@@ -638,6 +669,15 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("enable_health_check", *connection.EnableHealthCheck)
 	_ = d.Set("health_check_local_ip", *connection.HealthCheckLocalIp)
 	_ = d.Set("health_check_remote_ip", *connection.HealthCheckRemoteIp)
+	// dpd
+	_ = d.Set("dpd_enable", *connection.DpdEnable)
+	dpdTimeoutInt, err := strconv.Atoi(*connection.DpdTimeout)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("dpd_timeout", dpdTimeoutInt)
+	_ = d.Set("dpd_action", *connection.DpdAction)
+
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -705,6 +745,24 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		}
 		changeFlag = true
 	}
+
+	if d.HasChange("dpd_enable") {
+		request.DpdEnable = helper.IntInt64(d.Get("dpd_enable").(int))
+		changeFlag = true
+	}
+	if d.HasChange("dpd_timeout") {
+		if v, ok := d.GetOk("dpd_timeout"); ok {
+			request.DpdTimeout = helper.String(strconv.Itoa(v.(int)))
+			changeFlag = true
+		}
+	}
+	if d.HasChange("dpd_action") {
+		if v, ok := d.GetOk("dpd_action"); ok {
+			request.DpdAction = helper.String(v.(string))
+			changeFlag = true
+		}
+	}
+
 	ikeChangeKeySet := map[string]bool{
 		"ike_proto_encry_algorithm":  false,
 		"ike_proto_authen_algorithm": false,
@@ -842,6 +900,17 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 			d.SetPartial(key)
 		}
 	}
+
+	if d.HasChange("dpd_enable") {
+		d.SetPartial("dpd_enable")
+	}
+	if d.HasChange("dpd_timeout") {
+		d.SetPartial("dpd_timeout")
+	}
+	if d.HasChange("dpd_action") {
+		d.SetPartial("dpd_action")
+	}
+
 	//tag
 	if d.HasChange("tags") {
 		oldInterface, newInterface := d.GetChange("tags")

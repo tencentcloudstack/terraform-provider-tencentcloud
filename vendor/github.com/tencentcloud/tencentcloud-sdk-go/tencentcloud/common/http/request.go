@@ -40,6 +40,7 @@ type Request interface {
 	GetContentType() string
 	GetContext() context.Context
 	GetHeader() map[string]string
+	GetSkipSign() bool
 	SetScheme(string)
 	SetRootDomain(string)
 	SetDomain(string)
@@ -49,6 +50,7 @@ type Request interface {
 	SetBody([]byte)
 	SetContext(context.Context)
 	SetHeader(header map[string]string)
+	SetSkipSign(skip bool)
 }
 
 type BaseRequest struct {
@@ -58,6 +60,7 @@ type BaseRequest struct {
 	rootDomain string
 	domain     string
 	path       string
+	skipSign   bool
 	params     map[string]string
 	formParams map[string]string
 	header     map[string]string
@@ -200,6 +203,14 @@ func (r *BaseRequest) SetHeader(header map[string]string) {
 		return
 	}
 	r.header = header
+}
+
+func (r *BaseRequest) GetSkipSign() bool {
+	return r.skipSign
+}
+
+func (r *BaseRequest) SetSkipSign(skip bool) {
+	r.skipSign = skip
 }
 
 func GetUrlQueriesEncoded(params map[string]string) string {

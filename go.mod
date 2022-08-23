@@ -62,7 +62,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.438
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.398
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.479
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.33
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
