@@ -523,6 +523,7 @@ func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Cont
 	kubeType, _ := strconv.Atoi(ids[2])
 	request.KubeType = helper.IntInt64(kubeType)
 	request.ClusterId = &ids[3]
+	request.Kind = &ids[4]
 
 	response, err := me.client.UseMonitorClient().DescribeExporterIntegrations(request)
 	if err != nil {
@@ -551,6 +552,7 @@ func (me *MonitorService) DeleteMonitorTmpExporterIntegrationById(ctx context.Co
 	kubeType, _ := strconv.Atoi(ids[2])
 	request.KubeType = helper.IntInt64(kubeType)
 	request.ClusterId = &ids[3]
+	request.Kind = &ids[4]
 
 	defer func() {
 		if errRet != nil {
