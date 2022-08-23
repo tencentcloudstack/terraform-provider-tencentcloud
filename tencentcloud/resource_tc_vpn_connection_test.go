@@ -79,6 +79,7 @@ func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_enable", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_timeout", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_action", "clear"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "false"),
 				),
 			},
 			{
@@ -313,6 +314,7 @@ resource "tencentcloud_vpn_connection" "connection" {
   tags = {
     test = "testt"
   }
+  enable_health_check = false
 }
 `
 
