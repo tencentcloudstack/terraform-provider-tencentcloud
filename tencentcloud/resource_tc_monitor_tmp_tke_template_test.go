@@ -3,11 +3,9 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"testing"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"testing"
 )
 
 func TestAccTencentCloudMonitorTemplate_basic(t *testing.T) {
@@ -53,14 +51,14 @@ func testAccCheckTemplateDestroy(s *terraform.State) error {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("resource id is not set")
 		}
-		time.Sleep(10000)
-		template1, err := service.DescribeTmpTkeTemplateById(ctx, rs.Primary.ID)
+
+		template, err := service.DescribeTmpTkeTemplateById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
 
-		if template1 != nil {
-			return fmt.Errorf("template %s still exists, : %v", rs.Primary.ID, *template1.TemplateId)
+		if template != nil {
+			return fmt.Errorf("template %s still exists", rs.Primary.ID)
 		}
 	}
 
