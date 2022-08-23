@@ -19,7 +19,7 @@ Provides a resource to create a tmp tke cluster agent
 
 The following arguments are supported:
 
-* `agents` - (Required, List, ForceNew) agent list.
+* `agents` - (Required, List) agent list.
 * `instance_id` - (Required, String, ForceNew) Instance Id.
 
 The `agents` object supports the following:

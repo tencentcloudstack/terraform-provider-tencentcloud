@@ -2191,14 +2191,11 @@ func (me *TkeService) DeletePrometheusClusterAgent(ctx context.Context, instance
 		}
 	}()
 
-	//request.InstanceId = &instanceId
-	//request.Agents = append(
-	//	request.Agents,
-	//	&tke.PrometheusClusterAgentBasic{
-	//		ClusterId: &clusterId,
-	//		ClusterType: &clusterType,
-	//	},
-	//)
+	request.InstanceId = &instanceId
+	request.Agents = append(request.Agents, &tke.PrometheusAgentInfo{
+		ClusterId:   &clusterId,
+		ClusterType: &clusterType,
+	})
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().DeletePrometheusClusterAgent(request)

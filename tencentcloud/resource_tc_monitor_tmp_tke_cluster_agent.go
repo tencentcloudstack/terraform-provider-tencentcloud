@@ -35,6 +35,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgent() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudMonitorTmpTkeClusterAgentRead,
 		Create: resourceTencentCloudMonitorTmpTkeClusterAgentCreate,
+		Update: resourceTencentCloudMonitorTmpTkeClusterAgentUpdate,
 		Delete: resourceTencentCloudMonitorTmpTkeClusterAgentDelete,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -48,7 +49,6 @@ func resourceTencentCloudMonitorTmpTkeClusterAgent() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Required:    true,
-				ForceNew:    true,
 				Description: "agent list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -158,6 +158,16 @@ func resourceTencentCloudMonitorTmpTkeClusterAgent() *schema.Resource {
 							Optional:    true,
 							Description: "Whether to collect indicators, true means drop all indicators, false means collect default indicators.",
 						},
+						"cluster_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "the name of the cluster.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "agent state, `normal`, `abnormal`.",
+						},
 					},
 				},
 			},
@@ -166,7 +176,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgent() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.create")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_cluster_agent.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -269,13 +279,33 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 		return err
 	}
 
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		clusterAgent, errRet := service.DescribeTmpTkeClusterAgentsById(ctx, instanceId, clusterId, clusterType)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *clusterAgent.Status == "normal" {
+			return nil
+		}
+		if *clusterAgent.Status == "abnormal" {
+			return resource.NonRetryableError(fmt.Errorf("cluster agent status is %v, operate failed.", *clusterAgent.Status))
+		}
+		return resource.RetryableError(fmt.Errorf("cluster agent status is %v, retry...", *clusterAgent.Status))
+	})
+	if err != nil {
+		return err
+	}
+
 	d.SetId(strings.Join([]string{instanceId, clusterId, clusterType}, FILED_SP))
 
 	return resourceTencentCloudMonitorTmpTkeClusterAgentRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.read")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_cluster_agent.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -323,8 +353,75 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, m
 	return nil
 }
 
+func resourceTencentCloudMonitorTmpTkeClusterAgentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_cluster_agent.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	var (
+		request  = tke.NewModifyPrometheusAgentExternalLabelsRequest()
+		response *tke.ModifyPrometheusAgentExternalLabelsResponse
+	)
+
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 3 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	instanceId := ids[0]
+	clusterId := ids[1]
+	request.InstanceId = &instanceId
+	request.ClusterId = &clusterId
+
+	if d.HasChange("instance_id") {
+		return fmt.Errorf("`instance_id` do not support change now.")
+	}
+
+	if d.HasChange("cluster_id") {
+		return fmt.Errorf("`cluster_id` do not support change now.")
+	}
+
+	if d.HasChange("agents") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "agents"); ok {
+			if v, ok := dMap["external_labels"]; ok {
+				labelsList := v.([]interface{})
+				externalKV := make([]*tke.Label, 0, len(labelsList))
+				for _, labels := range labelsList {
+					label := labels.(map[string]interface{})
+					var kv tke.Label
+					kv.Name = helper.String(label["name"].(string))
+					kv.Value = helper.String(label["value"].(string))
+					externalKV = append(externalKV, &kv)
+				}
+				request.ExternalLabels = externalKV
+			}
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusAgentExternalLabels(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err != nil {
+		return err
+	}
+
+	return resourceTencentCloudTkeTmpAlertPolicyRead(d, meta)
+}
+
 func resourceTencentCloudMonitorTmpTkeClusterAgentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_global_notification.delete")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_cluster_agent.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -341,6 +438,20 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentDelete(d *schema.ResourceData,
 	clusterType := ids[2]
 
 	if err := service.DeletePrometheusClusterAgent(ctx, instanceId, clusterId, clusterType); err != nil {
+		return err
+	}
+
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		clusterAgent, errRet := service.DescribeTmpTkeClusterAgentsById(ctx, instanceId, clusterId, clusterType)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if clusterAgent == nil {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cluster agent status is %v, retry...", *clusterAgent.Status))
+	})
+	if err != nil {
 		return err
 	}
 
