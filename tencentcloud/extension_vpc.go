@@ -307,3 +307,13 @@ const (
 	VPCNotFound             = "ResourceNotFound"
 	VPCUnsupportedOperation = "UnsupportedOperation"
 )
+
+const (
+	DPD_ACTION_CLEAR   = "clear"
+	DPD_ACTION_RESTART = "restart"
+)
+
+var DPD_ACTIONS = []string{
+	DPD_ACTION_CLEAR,
+	DPD_ACTION_RESTART,
+}
