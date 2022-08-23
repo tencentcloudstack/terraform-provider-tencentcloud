@@ -142,6 +142,7 @@ func resourceTencentCloudMonitorTmpScrapeJobRead(d *schema.ResourceData, meta in
 		return fmt.Errorf("resource `tmpScrapeJob` %s does not exist", tmpScrapeJobId)
 	}
 
+	_ = d.Set("instance_id", strings.Split(tmpScrapeJobId, FILED_SP)[1])
 	if tmpScrapeJob.AgentId != nil {
 		_ = d.Set("agent_id", tmpScrapeJob.AgentId)
 	}
