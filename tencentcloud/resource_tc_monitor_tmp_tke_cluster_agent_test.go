@@ -57,7 +57,7 @@ func TestAccTencentCloudMonitorClusterAgent_basic(t *testing.T) {
 				Config: testClusterAgentYaml_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClusterAgentExists("tencentcloud_monitor_tmp_tke_cluster_agent.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_id", "cls-0yx5nabi"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_id", "cls-87o4klby"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_cluster_agent.basic", "agents.0.cluster_type", "eks"),
 				),
 			},
@@ -128,15 +128,24 @@ func testAccCheckClusterAgentExists(r string) resource.TestCheckFunc {
 const testClusterAgentYamlVar = `
 variable "prometheus_id" {
   default = "` + defaultPrometheusId + `"
+}
+variable "default_region" {
+  default = "` + defaultRegion + `"
+}
+variable "agent_cluster_id" {
+  default = "` + tkeClusterIdAgent + `"
+}
+variable "agent_cluster_type" {
+  default = "` + tkeClusterTypeAgent + `"
 }`
 
 const testClusterAgentYaml_basic = testClusterAgentYamlVar + `
 resource "tencentcloud_monitor_tmp_tke_cluster_agent" "basic" {
-  instance_id = "prom-3lit2q4y"
+  instance_id = var.prometheus_id
   agents {
-    region          = "ap-guangzhou"
-    cluster_type    = "eks"
-    cluster_id      = "cls-0yx5nabi"
+    region          = var.default_region
+    cluster_type    = var.agent_cluster_type
+    cluster_id      = var.agent_cluster_id
     enable_external = false
   }
 }`
