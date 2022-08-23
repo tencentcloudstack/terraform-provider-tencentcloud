@@ -1745,7 +1745,7 @@ func (me *TkeService) DescribeTmpTkeTemplateById(ctx context.Context, templateId
 	request.Filters = append(
 		request.Filters,
 		&tke.Filter{
-			Name:   helper.String("templateId"),
+			Name:   helper.String("ID"),
 			Values: []*string{&templateId},
 		},
 	)
