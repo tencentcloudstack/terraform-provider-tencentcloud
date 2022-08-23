@@ -1989,6 +1989,8 @@ func (me *TkeService) DeletePrometheusRecordRuleYaml(ctx context.Context, id, na
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		return err
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -2124,6 +2126,86 @@ func (me *TkeService) DescribePrometheusTempSync(ctx context.Context, templateId
 	}
 
 	targets = response.Response.Targets
+
+	return
+}
+
+func (me *TkeService) DescribeTmpTkeClusterAgentsById(ctx context.Context, instanceId, clusterId, clusterType string) (agents *tke.PrometheusAgentOverview, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribePrometheusClusterAgentsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTkeClient().DescribePrometheusClusterAgents(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Agents) < 1 {
+			break
+		}
+		for _, v := range response.Response.Agents {
+			if *v.ClusterId == clusterId && *v.ClusterType == clusterType {
+				return v, nil
+			}
+		}
+		if len(response.Response.Agents) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *TkeService) DeletePrometheusClusterAgent(ctx context.Context, instanceId, clusterId, clusterType string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeletePrometheusClusterAgentRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.Agents = append(request.Agents, &tke.PrometheusAgentInfo{
+		ClusterId:   &clusterId,
+		ClusterType: &clusterType,
+	})
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeletePrometheusClusterAgent(request)
+	if err != nil {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
