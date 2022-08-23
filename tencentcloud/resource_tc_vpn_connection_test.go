@@ -43,6 +43,9 @@ func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "encrypt_proto"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "route_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "vpn_proto"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_enable", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_timeout", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_action", "clear"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_local_ip", "192.168.0.2"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "health_check_remote_ip", "3.3.3.2"),
@@ -73,6 +76,40 @@ func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "encrypt_proto"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "route_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "vpn_proto"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_enable", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_timeout", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_action", "clear"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "false"),
+				),
+			},
+			{
+				Config: testAccVpnConnectionConfigUpdate2,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpnConnectionExists("tencentcloud_vpn_connection.connection"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "name", "vpn_connection_test2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "pre_share_key", "testt"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "tags.test", "testt"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_proto_encry_algorithm", "3DES-CBC"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_proto_authen_algorithm", "SHA"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_local_identity", "ADDRESS"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_remote_identity", "ADDRESS"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_dh_group_name", "GROUP2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_exchange_mode", "AGGRESSIVE"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_sa_lifetime_seconds", "86401"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_encrypt_algorithm", "3DES-CBC"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_integrity_algorithm", "SHA1"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_pfs_dh_group", "NULL"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_sa_lifetime_seconds", "7200"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_sa_lifetime_traffic", "2570"),
+					//resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "security_group_policy.0.remote_cidr_block.0", "3.3.3.0/26"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "net_status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "state"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "encrypt_proto"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "route_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection.connection", "vpn_proto"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_enable", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_timeout", "40"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "dpd_action", "restart"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "enable_health_check", "false"),
 				),
 			},
@@ -209,7 +246,9 @@ resource "tencentcloud_vpn_connection" "connection" {
   ipsec_sa_lifetime_seconds  = 3600
   ipsec_pfs_dh_group         = "DH-GROUP1"
   ipsec_sa_lifetime_traffic  = 2560
-
+  dpd_enable = 1
+  dpd_timeout = "30"
+  dpd_action = "clear"
   security_group_policy {
     local_cidr_block  = "172.16.0.0/16"
     remote_cidr_block = ["3.3.3.0/32", ]
@@ -264,6 +303,65 @@ resource "tencentcloud_vpn_connection" "connection" {
   ipsec_sa_lifetime_seconds  = 7200
   ipsec_pfs_dh_group         = "NULL"
   ipsec_sa_lifetime_traffic  = 2570
+  dpd_enable = 0
+  dpd_timeout = "30"
+  dpd_action = "clear"
+
+  security_group_policy {
+    local_cidr_block  = "172.16.0.0/16"
+    remote_cidr_block = ["3.3.3.0/26", ]
+  }
+  tags = {
+    test = "testt"
+  }
+  enable_health_check = false
+}
+`
+
+const testAccVpnConnectionConfigUpdate2 = `
+resource "tencentcloud_vpn_customer_gateway" "cgw" {
+  name              = "terraform_test"
+  public_ip_address = "1.3.3.3"
+}
+
+# Create VPC and Subnet
+data "tencentcloud_vpc_instances" "foo" {
+  name = "Default-VPC"
+}
+
+resource "tencentcloud_vpn_gateway" "vpn" {
+  name      = "terraform_update"
+  vpc_id    = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+
+  tags = {
+    test = "test"
+  }
+}
+resource "tencentcloud_vpn_connection" "connection" {
+  name                       = "vpn_connection_test2"
+  vpc_id                     = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
+  vpn_gateway_id             = tencentcloud_vpn_gateway.vpn.id
+  customer_gateway_id        = tencentcloud_vpn_customer_gateway.cgw.id
+  pre_share_key              = "testt"
+  ike_proto_encry_algorithm  = "3DES-CBC"
+  ike_proto_authen_algorithm = "SHA"
+  ike_local_identity         = "ADDRESS"
+  ike_exchange_mode          = "AGGRESSIVE"
+  ike_local_address          = tencentcloud_vpn_gateway.vpn.public_ip_address
+  ike_remote_identity        = "ADDRESS"
+  ike_remote_address         = tencentcloud_vpn_customer_gateway.cgw.public_ip_address
+  ike_dh_group_name          = "GROUP2"
+  ike_sa_lifetime_seconds    = 86401
+  ipsec_encrypt_algorithm    = "3DES-CBC"
+  ipsec_integrity_algorithm  = "SHA1"
+  ipsec_sa_lifetime_seconds  = 7200
+  ipsec_pfs_dh_group         = "NULL"
+  ipsec_sa_lifetime_traffic  = 2570
+  dpd_enable = 1
+  dpd_timeout = "40"
+  dpd_action = "restart"
 
   security_group_policy {
     local_cidr_block  = "172.16.0.0/16"

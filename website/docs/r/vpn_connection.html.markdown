@@ -54,6 +54,9 @@ The following arguments are supported:
 * `pre_share_key` - (Required, String) Pre-shared key of the VPN connection.
 * `security_group_policy` - (Required, Set) Security group policy of the VPN connection.
 * `vpn_gateway_id` - (Required, String, ForceNew) ID of the VPN gateway.
+* `dpd_action` - (Optional, String) The action after DPD timeout. Valid values: clear (disconnect) and restart (try again). It is valid when DpdEnable is 1.
+* `dpd_enable` - (Optional, Int) Specifies whether to enable DPD. Valid values: 0 (disable) and 1 (enable).
+* `dpd_timeout` - (Optional, Int) DPD timeout period.Valid value ranges: [30~60], Default: 30; unit: second. If the request is not responded within this period, the peer end is considered not exists. This parameter is valid when the value of DpdEnable is 1.
 * `enable_health_check` - (Optional, Bool) Whether intra-tunnel health checks are supported.
 * `health_check_local_ip` - (Optional, String) Health check the address of this terminal.
 * `health_check_remote_ip` - (Optional, String) Health check peer address.

@@ -29,17 +29,29 @@ const (
 	// 地址没有弹性网卡信息。
 	FAILEDOPERATION_ADDRESSENIINFONOTFOUND = "FailedOperation.AddressEniInfoNotFound"
 
+	// 账户余额不足。
+	FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+
 	// 不支持的地域。
 	FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
 
+	// 未找到实例的主网卡。
+	FAILEDOPERATION_MASTERENINOTFOUND = "FailedOperation.MasterEniNotFound"
+
 	// 网络探测超时，请稍后重试。
 	FAILEDOPERATION_NETDETECTTIMEOUT = "FailedOperation.NetDetectTimeOut"
+
+	// 任务执行失败。
+	FAILEDOPERATION_TASKFAILED = "FailedOperation.TaskFailed"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
 	// 创建Ckafka路由失败，请稍后重试。
 	INTERNALERROR_CREATECKAFKAROUTEERROR = "InternalError.CreateCkafkaRouteError"
+
+	// 内部模块错误。
+	INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
 
 	// 操作内部错误。
 	INTERNALSERVERERROR = "InternalServerError"
@@ -161,6 +173,9 @@ const (
 	// 目的网段不在对端VPC的CIDR范围内。
 	INVALIDPARAMETERVALUE_CIDRNOTINPEERVPC = "InvalidParameterValue.CidrNotInPeerVpc"
 
+	// 指定CIDR不在SSL-VPN所属私有网络CIDR内。
+	INVALIDPARAMETERVALUE_CIDRNOTINSSLVPNVPC = "InvalidParameterValue.CidrNotInSslVpnVpc"
+
 	// 非法入参组合。
 	INVALIDPARAMETERVALUE_COMBINATION = "InvalidParameterValue.Combination"
 
@@ -184,6 +199,9 @@ const (
 
 	// 该实例不支持AnycastEIP。
 	INVALIDPARAMETERVALUE_INSTANCEDOESNOTSUPPORTANYCAST = "InvalidParameterValue.InstanceDoesNotSupportAnycast"
+
+	// 实例不存在公网IP。
+	INVALIDPARAMETERVALUE_INSTANCEHASNOWANIP = "InvalidParameterValue.InstanceHasNoWanIP"
 
 	// 该实例已有WanIP。
 	INVALIDPARAMETERVALUE_INSTANCEHASWANIP = "InvalidParameterValue.InstanceHasWanIP"
@@ -293,14 +311,50 @@ const (
 	// 子网CIDR冲突。
 	INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
 
+	// CIDR与同一个私有网络内的另一个子网发生重叠。
+	INVALIDPARAMETERVALUE_SUBNETOVERLAP = "InvalidParameterValue.SubnetOverlap"
+
 	// 子网与辅助Cidr网段重叠。
 	INVALIDPARAMETERVALUE_SUBNETOVERLAPASSISTCIDR = "InvalidParameterValue.SubnetOverlapAssistCidr"
 
 	// 子网CIDR不合法。
 	INVALIDPARAMETERVALUE_SUBNETRANGE = "InvalidParameterValue.SubnetRange"
 
+	// 标签键重复。
+	INVALIDPARAMETERVALUE_TAGDUPLICATEKEY = "InvalidParameterValue.TagDuplicateKey"
+
+	// 重复的标签资源类型。
+	INVALIDPARAMETERVALUE_TAGDUPLICATERESOURCETYPE = "InvalidParameterValue.TagDuplicateResourceType"
+
+	// 标签键无效。
+	INVALIDPARAMETERVALUE_TAGINVALIDKEY = "InvalidParameterValue.TagInvalidKey"
+
+	// 标签键长度无效。
+	INVALIDPARAMETERVALUE_TAGINVALIDKEYLEN = "InvalidParameterValue.TagInvalidKeyLen"
+
+	// 标签值无效。
+	INVALIDPARAMETERVALUE_TAGINVALIDVAL = "InvalidParameterValue.TagInvalidVal"
+
+	// 标签键不存在。
+	INVALIDPARAMETERVALUE_TAGKEYNOTEXISTS = "InvalidParameterValue.TagKeyNotExists"
+
+	// 标签没有分配配额。
+	INVALIDPARAMETERVALUE_TAGNOTALLOCATEDQUOTA = "InvalidParameterValue.TagNotAllocatedQuota"
+
 	// 该标签和值不存在。
 	INVALIDPARAMETERVALUE_TAGNOTEXISTED = "InvalidParameterValue.TagNotExisted"
+
+	// 不支持的标签。
+	INVALIDPARAMETERVALUE_TAGNOTSUPPORTTAG = "InvalidParameterValue.TagNotSupportTag"
+
+	// '标签资源格式错误。
+	INVALIDPARAMETERVALUE_TAGRESOURCEFORMATERROR = "InvalidParameterValue.TagResourceFormatError"
+
+	// 标签时间戳超配。
+	INVALIDPARAMETERVALUE_TAGTIMESTAMPEXCEEDED = "InvalidParameterValue.TagTimestampExceeded"
+
+	// 标签值不存在。
+	INVALIDPARAMETERVALUE_TAGVALNOTEXISTS = "InvalidParameterValue.TagValNotExists"
 
 	// 无效参数值。参数值太长。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
@@ -368,11 +422,17 @@ const (
 	// 带宽包配额超过限制。
 	LIMITEXCEEDED_BANDWIDTHPACKAGEQUOTA = "LimitExceeded.BandwidthPackageQuota"
 
+	// 超过更换IP配额。
+	LIMITEXCEEDED_CHANGEADDRESSQUOTA = "LimitExceeded.ChangeAddressQuota"
+
 	// VPC分配网段数量达到上限。
 	LIMITEXCEEDED_CIDRBLOCK = "LimitExceeded.CidrBlock"
 
 	// 租户每天申请的弹性IP超过上限。
 	LIMITEXCEEDED_DAILYALLOCATEADDRESSQUOTALIMITEXCEEDED = "LimitExceeded.DailyAllocateAddressQuotaLimitExceeded"
+
+	// 超过每日更换IP配额。
+	LIMITEXCEEDED_DAILYCHANGEADDRESSQUOTA = "LimitExceeded.DailyChangeAddressQuota"
 
 	// 实例绑定的弹性IP超过配额。
 	LIMITEXCEEDED_INSTANCEADDRESSQUOTA = "LimitExceeded.InstanceAddressQuota"
@@ -401,8 +461,32 @@ const (
 	// 子网分配子网段数量达到上限。
 	LIMITEXCEEDED_SUBNETCIDRBLOCK = "LimitExceeded.SubnetCidrBlock"
 
+	// 标签键已达到上限。
+	LIMITEXCEEDED_TAGKEYEXCEEDED = "LimitExceeded.TagKeyExceeded"
+
+	// 每个资源的标签键已达到上限。
+	LIMITEXCEEDED_TAGKEYPERRESOURCEEXCEEDED = "LimitExceeded.TagKeyPerResourceExceeded"
+
+	// 没有足够的标签配额。
+	LIMITEXCEEDED_TAGNOTENOUGHQUOTA = "LimitExceeded.TagNotEnoughQuota"
+
+	// 标签配额已满，无法创建资源。
+	LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
+
+	// 标签配额已达到上限。
+	LIMITEXCEEDED_TAGQUOTAEXCEEDED = "LimitExceeded.TagQuotaExceeded"
+
+	// 标签键的数目已达到上限。
+	LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 指定公网IP处于隔离状态。
+	OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+
+	// 互斥的任务正在执行。
+	OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -430,6 +514,9 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 无权限申请AnycastEip资源。
+	UNAUTHORIZEDOPERATION_ANYCASTEIP = "UnauthorizedOperation.AnycastEip"
 
 	// 绑定关系不存在。
 	UNAUTHORIZEDOPERATION_ATTACHMENTNOTFOUND = "UnauthorizedOperation.AttachmentNotFound"
@@ -521,8 +608,17 @@ const (
 	// 与该VPC下的TKE容器的网段重叠。
 	UNSUPPORTEDOPERATION_CONFLICTWITHDOCKERROUTE = "UnsupportedOperation.ConflictWithDockerRoute"
 
+	// 该专线网关存在关联的NAT规则，不允许删除，请先删调所有的NAT规则。
+	UNSUPPORTEDOPERATION_DCGATEWAYNATRULEEXISTS = "UnsupportedOperation.DCGatewayNatRuleExists"
+
 	// 指定的VPC未发现专线网关。
 	UNSUPPORTEDOPERATION_DCGATEWAYSNOTFOUNDINVPC = "UnsupportedOperation.DcGatewaysNotFoundInVpc"
+
+	// 禁止删除默认路由表。
+	UNSUPPORTEDOPERATION_DELDEFAULTROUTE = "UnsupportedOperation.DelDefaultRoute"
+
+	// 禁止删除已关联子网的路由表。
+	UNSUPPORTEDOPERATION_DELROUTEWITHSUBNET = "UnsupportedOperation.DelRouteWithSubnet"
 
 	// 专线网关正在更新BGP Community属性。
 	UNSUPPORTEDOPERATION_DIRECTCONNECTGATEWAYISUPDATINGCOMMUNITY = "UnsupportedOperation.DirectConnectGatewayIsUpdatingCommunity"
@@ -556,6 +652,9 @@ const (
 
 	// 用户配置的实例和路由表不匹配。
 	UNSUPPORTEDOPERATION_INSTANCEANDRTBNOTMATCH = "UnsupportedOperation.InstanceAndRtbNotMatch"
+
+	// 指定实例资源不匹配。
+	UNSUPPORTEDOPERATION_INSTANCEMISMATCH = "UnsupportedOperation.InstanceMismatch"
 
 	// 跨账号场景下不支持普通账号实例关联自驾云账号云联网。
 	UNSUPPORTEDOPERATION_INSTANCEORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.InstanceOrdinaryAccountRefuseAttach"
@@ -599,11 +698,17 @@ const (
 	// 指定的CDC已存在本地网关。
 	UNSUPPORTEDOPERATION_LOCALGATEWAYALREADYEXISTS = "UnsupportedOperation.LocalGatewayAlreadyExists"
 
+	// 账户不支持修改公网IP的该属性。
+	UNSUPPORTEDOPERATION_MODIFYADDRESSATTRIBUTE = "UnsupportedOperation.ModifyAddressAttribute"
+
 	// 资源互斥操作任务正在执行。
 	UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
 
 	// SNAT/DNAT转换规则所指定的内网IP已绑定了其他的规则，无法重复绑定。
 	UNSUPPORTEDOPERATION_NATGATEWAYRULEPIPEXISTS = "UnsupportedOperation.NatGatewayRulePipExists"
+
+	// SNAT转换规则的内网IP需为虚拟机上网卡所用的IP。
+	UNSUPPORTEDOPERATION_NATGATEWAYSNATPIPNEEDVM = "UnsupportedOperation.NatGatewaySnatPipNeedVm"
 
 	// NAT网关类型不支持SNAT规则。
 	UNSUPPORTEDOPERATION_NATGATEWAYTYPENOTSUPPORTSNAT = "UnsupportedOperation.NatGatewayTypeNotSupportSNAT"
@@ -623,8 +728,17 @@ const (
 	// 当前云联网为非后付费类型，无法进行此操作。
 	UNSUPPORTEDOPERATION_NOTPOSTPAIDCCNOPERATION = "UnsupportedOperation.NotPostpaidCcnOperation"
 
+	// 不支持删除默认路由表。
+	UNSUPPORTEDOPERATION_NOTSUPPORTDELETEDEFAULTROUTETABLE = "UnsupportedOperation.NotSupportDeleteDefaultRouteTable"
+
+	// 当前云联网不支持更新路由发布。
+	UNSUPPORTEDOPERATION_NOTSUPPORTEDUPDATECCNROUTEPUBLISH = "UnsupportedOperation.NotSupportedUpdateCcnRoutePublish"
+
 	// 指定的路由策略不支持发布或撤销至云联网。
 	UNSUPPORTEDOPERATION_NOTIFYCCN = "UnsupportedOperation.NotifyCcn"
+
+	// 此产品计费方式已下线，请尝试其他计费方式。
+	UNSUPPORTEDOPERATION_OFFLINECHARGETYPE = "UnsupportedOperation.OfflineChargeType"
 
 	// 仅支持专业版Ckafka。
 	UNSUPPORTEDOPERATION_ONLYSUPPORTPROFESSIONKAFKA = "UnsupportedOperation.OnlySupportProfessionKafka"
@@ -650,14 +764,44 @@ const (
 	// 当前账号不能在该地域使用产品。
 	UNSUPPORTEDOPERATION_PURCHASELIMIT = "UnsupportedOperation.PurchaseLimit"
 
+	// 记录已存在。
+	UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
+
+	// 记录不存在。
+	UNSUPPORTEDOPERATION_RECORDNOTEXISTS = "UnsupportedOperation.RecordNotExists"
+
 	// 输入的资源ID与IP绑定的资源不匹配，请检查。
 	UNSUPPORTEDOPERATION_RESOURCEMISMATCH = "UnsupportedOperation.ResourceMismatch"
+
+	// 未找到相关角色，请确认角色是否授权。
+	UNSUPPORTEDOPERATION_ROLENOTFOUND = "UnsupportedOperation.RoleNotFound"
+
+	// 路由表绑定了子网。
+	UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
 
 	// 指定的终端节点服务所创建的终端节点不支持绑定安全组。
 	UNSUPPORTEDOPERATION_SPECIALENDPOINTSERVICE = "UnsupportedOperation.SpecialEndPointService"
 
+	// SslVpnClientId 不存在。
+	UNSUPPORTEDOPERATION_SSLVPNCLIENTIDNOTFOUND = "UnsupportedOperation.SslVpnClientIdNotFound"
+
+	// 中继网卡不支持该操作。
+	UNSUPPORTEDOPERATION_SUBENINOTSUPPORTTRUNKING = "UnsupportedOperation.SubEniNotSupportTrunking"
+
 	// 系统路由，禁止操作。
 	UNSUPPORTEDOPERATION_SYSTEMROUTE = "UnsupportedOperation.SystemRoute"
+
+	// 标签正在分配中。
+	UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
+
+	// 标签正在释放中。
+	UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
+
+	// 标签没有权限。
+	UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
+
+	// 不支持使用系统预留的标签键。
+	UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 
 	// 账号ID不存在。
 	UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
@@ -676,6 +820,9 @@ const (
 
 	// 账户还有未支付订单，请先完成付款。
 	UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
+
+	// 不支持绑定LocalZone弹性公网IP。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDBINDLOCALZONEEIP = "UnsupportedOperation.UnsupportedBindLocalZoneEIP"
 
 	// 指定机型不支持弹性网卡。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDINSTANCEFAMILY = "UnsupportedOperation.UnsupportedInstanceFamily"
