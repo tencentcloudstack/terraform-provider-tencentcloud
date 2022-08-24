@@ -95,6 +95,8 @@ type InstanceInfo struct {
 	InstanceRole                 string
 	InstanceState                string
 	FailedReason                 string
+	NodePoolId                   string
+	CreatedTime                  string
 	InstanceAdvancedSettings     *tke.InstanceAdvancedSettings
 	InstanceDataDiskMountSetting *tke.InstanceDataDiskMountSetting
 	LanIp                        string
@@ -164,6 +166,12 @@ getMoreData:
 			InstanceState:            *item.InstanceState,
 			FailedReason:             *item.FailedReason,
 			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+		}
+		if item.CreatedTime != nil {
+			instanceInfo.CreatedTime = *item.CreatedTime
+		}
+		if item.NodePoolId != nil {
+			instanceInfo.NodePoolId = *item.NodePoolId
 		}
 		if item.LanIP != nil {
 			instanceInfo.LanIp = *item.LanIP
