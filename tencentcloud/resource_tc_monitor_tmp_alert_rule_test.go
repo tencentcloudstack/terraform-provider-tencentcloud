@@ -21,7 +21,6 @@ func TestAccTencentCloudMonitorAlertRule_basic(t *testing.T) {
 				Config: testAlertRule_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAlertRuleExists("tencentcloud_monitor_tmp_alert_rule.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "instance_id", "prom-86azj3lg"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "rule_name", "test-rule_name"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "receivers.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "expr", "increase(mysql_global_status_slow_queries[1m]) > 0"),
@@ -32,7 +31,6 @@ func TestAccTencentCloudMonitorAlertRule_basic(t *testing.T) {
 				Config: testAlertRule_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAlertRuleExists("tencentcloud_monitor_tmp_alert_rule.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "instance_id", "prom-86azj3lg"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "rule_name", "test-rule_name_update"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "receivers.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "expr", "increase(mysql_global_status_slow_queries[1m]) > 1"),
