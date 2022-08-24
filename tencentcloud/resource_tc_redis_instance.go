@@ -949,38 +949,14 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 	adds, lacks := GetListDiffs(oz, nz)
 
 	var redisNodeInfos []*redis.RedisNodeInfo
-	_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
-	if err != nil {
-		return err
-	}
-	redisNodeInfos = info.NodeSet
-	redisReplicaCount := len(redisNodeInfos) - 1
-
-	if len(lacks) > 0 {
-		log.Printf("%v will be delete", lacks)
-		removeNodes := tencentCloudRedisGetRemoveNodesByIds(lacks[:], redisNodeInfos)
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, redisReplicaCount-len(lacks), removeNodes)
-			if err != nil {
-				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-		err = service.CheckRedisUpdateOk(ctx, id)
-		if err != nil {
-			return err
-		}
-	}
 
 	if len(adds) > 0 {
-		_, _, info, err = service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
 		if err != nil {
 			return err
 		}
-		redisReplicaCount = len(redisNodeInfos) - 1
+		redisNodeInfos = info.NodeSet
+		redisReplicaCount := len(redisNodeInfos) - 1
 
 		log.Printf("%v will be add", adds)
 		var addNodes []*redis.RedisNodeInfo
@@ -990,7 +966,7 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 				ZoneId:   helper.IntUint64(zoneId),
 			})
 		}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			_, err := service.UpgradeInstance(ctx, d.Id(), memSize, shardNum, redisReplicaCount+len(adds), addNodes)
 			if err != nil {
 				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
@@ -1005,6 +981,35 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 			return err
 		}
 	}
+
+	if len(lacks) > 0 {
+		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+		if err != nil {
+			return err
+		}
+		redisNodeInfos = info.NodeSet
+		redisReplicaCount := len(redisNodeInfos) - 1
+		removeNodes := tencentCloudRedisGetRemoveNodesByIds(lacks[:], redisNodeInfos)
+		replicasParam := redisReplicaCount - len(lacks)
+		if replicasParam <= 0 {
+			return fmt.Errorf("cannot delete replica %d which is your only replica on instance %s", removeNodes[0].NodeId, id)
+		}
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, replicasParam, removeNodes)
+			if err != nil {
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
