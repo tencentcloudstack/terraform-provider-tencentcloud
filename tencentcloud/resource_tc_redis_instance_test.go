@@ -246,8 +246,8 @@ func TestAccTencentCloudRedisInstance_Maz(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_maz"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "mem_size", "2048"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "redis_replicas_num", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "redis_replicas_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_maz", "replica_zone_ids.#", "3"),
 				),
 			},
 		},
@@ -311,7 +311,7 @@ func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 	})
 }
 
-func TestAcctencentCloudRedisGetRemoveNodesByIds(t *testing.T) {
+func TestAccTencentCloudRedisGetRemoveNodesByIds(t *testing.T) {
 	mockNodes1 := []*redis.RedisNodeInfo{
 		{
 			helper.IntInt64(0),
