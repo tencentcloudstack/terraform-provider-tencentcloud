@@ -110,7 +110,7 @@ variable "prometheus_id" {
 const testRecordingRule_basic = testRecordingRuleVar + `
 resource "tencentcloud_monitor_tmp_recording_rule" "basic" {
   name			= "recording_rule-test"
-  instance_id	= "prom-86azj3lg"
+  instance_id	= var.prometheus_id
   rule_state	= 2
   group			= <<EOF
 ---
@@ -124,7 +124,7 @@ EOF
 const testRecordingRule_update = testRecordingRuleVar + `
 resource "tencentcloud_monitor_tmp_recording_rule" "update" {
   name			= "recording_rule-update"
-  instance_id	= "prom-86azj3lg"
+  instance_id	= var.prometheus_id
   rule_state	= 3
   group			= <<EOF
 ---
