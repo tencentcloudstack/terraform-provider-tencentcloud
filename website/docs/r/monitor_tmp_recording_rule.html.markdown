@@ -16,7 +16,13 @@ Provides a resource to create a monitor tmp recordingRule
 ```hcl
 resource "tencentcloud_monitor_tmp_recording_rule" "recordingRule" {
   name        = "dasdasdsadasd"
-  group       = "LS0tDQpuYW1lOiBleGFtcGxlDQpydWxlczoNCiAgLSByZWNvcmQ6IGpvYjpodHRwX2lucHJvZ3Jlc3NfcmVxdWVzdHM6c3VtDQogICAgZXhwcjogc3VtIGJ5IChqb2IpIChodHRwX2lucHJvZ3Jlc3NfcmVxdWVzdHMp"
+  group       = <<EOF
+---
+name: example-test
+rules:
+  - record: job:http_inprogress_requests:sum
+    expr: sum by (job) (http_inprogress_requests)
+EOF
   instance_id = "prom-c89b3b3u"
   rule_state  = 2
 }

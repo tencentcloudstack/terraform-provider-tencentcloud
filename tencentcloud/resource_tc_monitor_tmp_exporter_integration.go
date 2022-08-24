@@ -78,6 +78,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		instanceId string
 		kubeType   int
 		clusterId  string
+		kind       string
 	)
 
 	var (
@@ -91,6 +92,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 	}
 
 	if v, ok := d.GetOk("kind"); ok {
+		kind = v.(string)
 		request.Kind = helper.String(v.(string))
 	}
 
@@ -127,7 +129,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 
 	tmpExporterIntegrationId := *response.Response.Names[0]
 
-	d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId}, FILED_SP))
+	d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId, kind}, FILED_SP))
 
 	return resourceTencentCloudMonitorTmpExporterIntegrationRead(d, meta)
 }
@@ -222,6 +224,20 @@ func resourceTencentCloudMonitorTmpExporterIntegrationDelete(d *schema.ResourceD
 	tmpExporterIntegrationId := d.Id()
 
 	if err := service.DeleteMonitorTmpExporterIntegrationById(ctx, tmpExporterIntegrationId); err != nil {
+		return err
+	}
+
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		tmpExporterIntegration, errRet := service.DescribeMonitorTmpExporterIntegration(ctx, tmpExporterIntegrationId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if tmpExporterIntegration == nil {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("exporter integration status is %v, retry...", *tmpExporterIntegration.Status))
+	})
+	if err != nil {
 		return err
 	}
 

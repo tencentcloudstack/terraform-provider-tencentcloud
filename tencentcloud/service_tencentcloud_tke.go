@@ -1745,7 +1745,7 @@ func (me *TkeService) DescribeTmpTkeTemplateById(ctx context.Context, templateId
 	request.Filters = append(
 		request.Filters,
 		&tke.Filter{
-			Name:   helper.String("templateId"),
+			Name:   helper.String("ID"),
 			Values: []*string{&templateId},
 		},
 	)
@@ -1812,7 +1812,7 @@ func (me *TkeService) DeleteTmpTkeTemplate(ctx context.Context, tempId string) (
 	return
 }
 
-func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, tmpAlertPolicyId string) (tmpAlertPolicy *tke.PrometheusAlertPolicyItem, errRet error) {
+func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, instanceId, tmpAlertPolicyId string) (tmpAlertPolicy *tke.PrometheusAlertPolicyItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = tke.NewDescribePrometheusAlertPolicyRequest()
@@ -1824,7 +1824,11 @@ func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, tmpAlertPol
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.InstanceId = &tmpAlertPolicyId
+	request.InstanceId = &instanceId
+	request.Filters = append(request.Filters, &tke.Filter{
+		Name:   helper.String("ID"),
+		Values: []*string{&tmpAlertPolicyId},
+	})
 
 	response, err := me.client.UseTkeClient().DescribePrometheusAlertPolicy(request)
 	if err != nil {
@@ -1843,11 +1847,12 @@ func (me *TkeService) DescribeTkeTmpAlertPolicy(ctx context.Context, tmpAlertPol
 	return
 }
 
-func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, tmpAlertPolicyId string) (errRet error) {
+func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, instanceId, tmpAlertPolicyId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tke.NewDeletePrometheusAlertPolicyRequest()
-	request.InstanceId = &tmpAlertPolicyId
+	request.InstanceId = &instanceId
+	request.AlertIds = []*string{&tmpAlertPolicyId}
 
 	defer func() {
 		if errRet != nil {

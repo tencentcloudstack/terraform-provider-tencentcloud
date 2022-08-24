@@ -42,6 +42,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -329,6 +330,19 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 				if v, ok := RulesMap["describe"]; ok {
 					prometheusAlertRule.Describe = helper.String(v.(string))
 				}
+				if v, ok := RulesMap["labels"]; ok {
+					for _, item := range v.([]interface{}) {
+						labelsMap := item.(map[string]interface{})
+						label := tke.Label{}
+						if v, ok := labelsMap["name"]; ok {
+							label.Name = helper.String(v.(string))
+						}
+						if v, ok := labelsMap["value"]; ok {
+							label.Value = helper.String(v.(string))
+						}
+						prometheusAlertRule.Labels = append(prometheusAlertRule.Labels, &label)
+					}
+				}
 				if v, ok := RulesMap["annotations"]; ok {
 					for _, item := range v.([]interface{}) {
 						AnnotationsMap := item.(map[string]interface{})
@@ -428,7 +442,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 		if v, ok := dMap["cluster_id"]; ok {
 			prometheusAlertPolicyItem.ClusterId = helper.String(v.(string))
 		}
-
+		request.AlertRule = &prometheusAlertPolicyItem
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -449,14 +463,127 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	tmpAlertPolicyId := *response.Response.Id
+	instanceId := *request.InstanceId
 
-	d.SetId(tmpAlertPolicyId)
+	d.SetId(strings.Join([]string{instanceId, tmpAlertPolicyId}, FILED_SP))
 	return resourceTencentCloudTkeTmpAlertPolicyRead(d, meta)
 }
 
 func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tke_tmpAlertPolicy.read")()
+	defer logElapsed("resource.tencentcloud_tke_tmp_alert_policy.read")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	instanceId := ids[0]
+	tmpAlertPolicyId := ids[1]
+
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tmpAlertPolicy, err := service.DescribeTkeTmpAlertPolicy(ctx, instanceId, tmpAlertPolicyId)
+	if err != nil {
+		return err
+	}
+	log.Printf("[DEBUG] tmpAlertPolicy[%v]\n", *tmpAlertPolicy)
+	if tmpAlertPolicy == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `AlertPolicy` %s does not exist", tmpAlertPolicyId)
+	}
+
+	rules := make([]map[string]interface{}, 0, len(tmpAlertPolicy.Rules))
+	for _, v := range tmpAlertPolicy.Rules {
+		labelList := make([]map[string]interface{}, 0, len(v.Labels))
+		annotations := make([]map[string]interface{}, 0, len(v.Annotations))
+		for _, label := range v.Labels {
+			labelList = append(labelList, map[string]interface{}{
+				"name":  label.Name,
+				"value": label.Value,
+			})
+		}
+		for _, annotation := range v.Annotations {
+			annotations = append(annotations, map[string]interface{}{
+				"name":  annotation.Name,
+				"value": annotation.Value,
+			})
+		}
+		rules = append(rules, map[string]interface{}{
+			"name":        v.Name,
+			"rule":        v.Rule,
+			"labels":      labelList,
+			"template":    v.Template,
+			"for":         v.For,
+			"describe":    v.Describe,
+			"annotations": annotations,
+			"rule_state":  v.RuleState,
+		})
+	}
+
+	notify := tmpAlertPolicy.Notification
+	alertManager := map[string]interface{}{
+		"url":          notify.AlertManager.Url,
+		"cluster_type": notify.AlertManager.ClusterType,
+		"cluster_id":   notify.AlertManager.ClusterId,
+	}
+	var alertManagers []map[string]interface{}
+	alertManagers = append(alertManagers, alertManager)
+
+	var notifyWay []string
+	if len(notify.NotifyWay) > 0 {
+		for _, v := range notify.NotifyWay {
+			notifyWay = append(notifyWay, *v)
+		}
+	}
+
+	var receiverGroups []string
+	if len(notify.ReceiverGroups) > 0 {
+		for _, v := range notify.ReceiverGroups {
+			receiverGroups = append(receiverGroups, *v)
+		}
+	}
+
+	var phoneNotifyOrder []uint64
+	if len(notify.PhoneNotifyOrder) > 0 {
+		for _, v := range notify.PhoneNotifyOrder {
+			phoneNotifyOrder = append(phoneNotifyOrder, *v)
+		}
+	}
+
+	notification := map[string]interface{}{
+		"enabled":       notify.Enabled,
+		"type":          notify.Type,
+		"web_hook":      notify.WebHook,
+		"alert_manager": alertManagers,
+		//"repeat_interval":       notify.RepeatInterval,
+		//"time_range_start":      notify.TimeRangeStart,
+		//"time_range_end":        notify.TimeRangeEnd,
+		"notify_way":            notifyWay,
+		"receiver_groups":       receiverGroups,
+		"phone_notify_order":    phoneNotifyOrder,
+		"phone_circle_times":    notify.PhoneCircleTimes,
+		"phone_inner_interval":  notify.PhoneInnerInterval,
+		"phone_circle_interval": notify.PhoneCircleInterval,
+		"phone_arrive_notice":   notify.PhoneArriveNotice,
+	}
+	var notifications []map[string]interface{}
+	notifications = append(notifications, notification)
+
+	var alertRules []map[string]interface{}
+	alertRule := make(map[string]interface{})
+	alertRule["name"] = tmpAlertPolicy.Name
+	alertRule["rules"] = rules
+	alertRule["template_id"] = tmpAlertPolicy.TemplateId
+	alertRule["notification"] = notifications
+	alertRule["updated_at"] = tmpAlertPolicy.UpdatedAt
+	alertRule["cluster_id"] = tmpAlertPolicy.ClusterId
+	alertRules = append(alertRules, alertRule)
+
+	_ = d.Set("alert_rule", alertRules)
+	_ = d.Set("instance_id", instanceId)
 
 	return nil
 }
@@ -469,7 +596,14 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 
 	request := tke.NewModifyPrometheusAlertPolicyRequest()
 
-	request.InstanceId = helper.String(d.Id())
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	instanceId := ids[0]
+
+	request.InstanceId = &instanceId
 
 	if d.HasChange("instance_id") {
 		return fmt.Errorf("`instance_id` do not support change now.")
@@ -477,6 +611,131 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("alert_rule") {
 		return fmt.Errorf("`alert_rule` do not support change now.")
+	}
+	if dMap, ok := helper.InterfacesHeadMap(d, "alert_rule"); ok {
+		prometheusAlertPolicyItem := tke.PrometheusAlertPolicyItem{}
+		if v, ok := dMap["name"]; ok {
+			prometheusAlertPolicyItem.Name = helper.String(v.(string))
+		}
+		if v, ok := dMap["rules"]; ok {
+			for _, item := range v.([]interface{}) {
+				RulesMap := item.(map[string]interface{})
+				prometheusAlertRule := tke.PrometheusAlertRule{}
+				if v, ok := RulesMap["name"]; ok {
+					prometheusAlertRule.Name = helper.String(v.(string))
+				}
+				if v, ok := RulesMap["rule"]; ok {
+					prometheusAlertRule.Rule = helper.String(v.(string))
+				}
+				if v, ok := RulesMap["template"]; ok {
+					prometheusAlertRule.Template = helper.String(v.(string))
+				}
+				if v, ok := RulesMap["for"]; ok {
+					prometheusAlertRule.For = helper.String(v.(string))
+				}
+				if v, ok := RulesMap["describe"]; ok {
+					prometheusAlertRule.Describe = helper.String(v.(string))
+				}
+				if v, ok := RulesMap["annotations"]; ok {
+					for _, item := range v.([]interface{}) {
+						AnnotationsMap := item.(map[string]interface{})
+						label := tke.Label{}
+						if v, ok := AnnotationsMap["name"]; ok {
+							label.Name = helper.String(v.(string))
+						}
+						if v, ok := AnnotationsMap["value"]; ok {
+							label.Value = helper.String(v.(string))
+						}
+						prometheusAlertRule.Annotations = append(prometheusAlertRule.Annotations, &label)
+					}
+				}
+				if v, ok := RulesMap["rule_state"]; ok {
+					prometheusAlertRule.RuleState = helper.IntInt64(v.(int))
+				}
+				prometheusAlertPolicyItem.Rules = append(prometheusAlertPolicyItem.Rules, &prometheusAlertRule)
+			}
+		}
+		if v, ok := dMap["id"]; ok {
+			prometheusAlertPolicyItem.Id = helper.String(v.(string))
+		}
+		if v, ok := dMap["template_id"]; ok {
+			prometheusAlertPolicyItem.TemplateId = helper.String(v.(string))
+		}
+		if NotificationMap, ok := helper.InterfaceToMap(dMap, "notification"); ok {
+			prometheusNotificationItem := tke.PrometheusNotificationItem{}
+			if v, ok := NotificationMap["enabled"]; ok {
+				prometheusNotificationItem.Enabled = helper.Bool(v.(bool))
+			}
+			if v, ok := NotificationMap["type"]; ok {
+				prometheusNotificationItem.Type = helper.String(v.(string))
+			}
+			if v, ok := NotificationMap["web_hook"]; ok {
+				prometheusNotificationItem.WebHook = helper.String(v.(string))
+			}
+			if AlertManagerMap, ok := helper.InterfaceToMap(NotificationMap, "alert_manager"); ok {
+				prometheusAlertManagerConfig := tke.PrometheusAlertManagerConfig{}
+				if v, ok := AlertManagerMap["url"]; ok {
+					prometheusAlertManagerConfig.Url = helper.String(v.(string))
+				}
+				if v, ok := AlertManagerMap["cluster_type"]; ok {
+					prometheusAlertManagerConfig.ClusterType = helper.String(v.(string))
+				}
+				if v, ok := AlertManagerMap["cluster_id"]; ok {
+					prometheusAlertManagerConfig.ClusterId = helper.String(v.(string))
+				}
+				prometheusNotificationItem.AlertManager = &prometheusAlertManagerConfig
+			}
+			if v, ok := NotificationMap["repeat_interval"]; ok {
+				prometheusNotificationItem.RepeatInterval = helper.String(v.(string))
+			}
+			if v, ok := NotificationMap["time_range_start"]; ok {
+				prometheusNotificationItem.TimeRangeStart = helper.String(v.(string))
+			}
+			if v, ok := NotificationMap["time_range_end"]; ok {
+				prometheusNotificationItem.TimeRangeEnd = helper.String(v.(string))
+			}
+			if v, ok := NotificationMap["notify_way"]; ok {
+				notifyWaySet := v.(*schema.Set).List()
+				for i := range notifyWaySet {
+					notifyWay := notifyWaySet[i].(string)
+					prometheusNotificationItem.NotifyWay = append(prometheusNotificationItem.NotifyWay, &notifyWay)
+				}
+			}
+			if v, ok := NotificationMap["receiver_groups"]; ok {
+				receiverGroupsSet := v.(*schema.Set).List()
+				for i := range receiverGroupsSet {
+					receiverGroups := receiverGroupsSet[i].(string)
+					prometheusNotificationItem.ReceiverGroups = append(prometheusNotificationItem.ReceiverGroups, &receiverGroups)
+				}
+			}
+			if v, ok := NotificationMap["phone_notify_order"]; ok {
+				phoneNotifyOrderSet := v.(*schema.Set).List()
+				for i := range phoneNotifyOrderSet {
+					phoneNotifyOrder := phoneNotifyOrderSet[i].(int)
+					prometheusNotificationItem.PhoneNotifyOrder = append(prometheusNotificationItem.PhoneNotifyOrder, helper.IntUint64(phoneNotifyOrder))
+				}
+			}
+			if v, ok := NotificationMap["phone_circle_times"]; ok {
+				prometheusNotificationItem.PhoneCircleTimes = helper.IntInt64(v.(int))
+			}
+			if v, ok := NotificationMap["phone_inner_interval"]; ok {
+				prometheusNotificationItem.PhoneInnerInterval = helper.IntInt64(v.(int))
+			}
+			if v, ok := NotificationMap["phone_circle_interval"]; ok {
+				prometheusNotificationItem.PhoneCircleInterval = helper.IntInt64(v.(int))
+			}
+			if v, ok := NotificationMap["phone_arrive_notice"]; ok {
+				prometheusNotificationItem.PhoneArriveNotice = helper.Bool(v.(bool))
+			}
+			prometheusAlertPolicyItem.Notification = &prometheusNotificationItem
+		}
+		if v, ok := dMap["updated_at"]; ok {
+			prometheusAlertPolicyItem.UpdatedAt = helper.String(v.(string))
+		}
+		if v, ok := dMap["cluster_id"]; ok {
+			prometheusAlertPolicyItem.ClusterId = helper.String(v.(string))
+		}
+		request.AlertRule = &prometheusAlertPolicyItem
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -505,9 +764,15 @@ func resourceTencentCloudTkeTmpAlertPolicyDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	tmpAlertPolicyId := d.Id()
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
 
-	if err := service.DeleteTkeTmpAlertPolicyById(ctx, tmpAlertPolicyId); err != nil {
+	instanceId := ids[0]
+	tmpAlertPolicyId := ids[1]
+
+	if err := service.DeleteTkeTmpAlertPolicyById(ctx, instanceId, tmpAlertPolicyId); err != nil {
 		return err
 	}
 
