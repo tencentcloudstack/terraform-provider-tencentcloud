@@ -19,6 +19,7 @@ var testTkeClusterNodePoolName = "tencentcloud_kubernetes_node_pool"
 var testTkeClusterNodePoolResourceKey = testTkeClusterNodePoolName + ".np_test"
 
 func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_node_pool
 	resource.AddTestSweepers("tencentcloud_node_pool", &resource.Sweeper{
 		Name: "tencentcloud_node_pool",
 		F:    testNodePoolSweep,
@@ -35,10 +36,6 @@ func testNodePoolSweep(region string) error {
 	}
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TkeService{client: client}
-
-	if err != nil {
-		return err
-	}
 
 	request := tke.NewDescribeClusterNodePoolsRequest()
 	request.ClusterId = helper.String(defaultTkeClusterId)
