@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -348,4 +349,18 @@ func YamlParser(config string) (map[interface{}]interface{}, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func YamlToBase64(config string) string {
+	m := []byte(config)
+	encodedStr := base64.StdEncoding.EncodeToString(m)
+	return encodedStr
+}
+
+func Base64ToYaml(config string) (string, error) {
+	yamlConfig, err := base64.StdEncoding.DecodeString(config)
+	if err != nil {
+		return "", err
+	}
+	return string(yamlConfig), nil
 }
