@@ -827,7 +827,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 
 	// Collect infos before deleting action
 	var chargeType string
-	has, online, info, err := service.CheckRedisOnlineOk(ctx, d.Id(), 20*readRetryTimeout)
+	has, _, info, err := service.CheckRedisOnlineOk(ctx, d.Id(), 20*readRetryTimeout)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, err.Error())
@@ -838,10 +838,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	if online {
-		chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
-		return nil
-	}
+	chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
 
 	var wait = func(action string, taskInfo interface{}) (errRet error) {
 
@@ -863,9 +860,8 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			}
 			if ok {
 				return nil
-			} else {
-				return resource.RetryableError(fmt.Errorf("%s timeout.", action))
 			}
+			return resource.RetryableError(fmt.Errorf("%s timeout.", action))
 		})
 
 		if errRet != nil {
@@ -917,9 +913,8 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		}
 
 		return wait("CleanUpInstance", taskId)
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func checkIdsEqual(o []int, n []int) bool {
