@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -18,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"gopkg.in/yaml.v2"
 )
 
 const FILED_SP = "#"
@@ -338,4 +340,27 @@ func (g *GoRoutineLimit) Run(f func()) {
 		f()
 		<-g.Chan
 	}()
+}
+
+// YamlParser yaml syntax Parser
+func YamlParser(config string) (map[interface{}]interface{}, error) {
+	m := make(map[interface{}]interface{})
+	if err := yaml.Unmarshal([]byte(config), &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func YamlToBase64(config string) string {
+	m := []byte(config)
+	encodedStr := base64.StdEncoding.EncodeToString(m)
+	return encodedStr
+}
+
+func Base64ToYaml(config string) (string, error) {
+	yamlConfig, err := base64.StdEncoding.DecodeString(config)
+	if err != nil {
+		return "", err
+	}
+	return string(yamlConfig), nil
 }

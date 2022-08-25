@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 )
 
 func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
@@ -366,4 +367,13 @@ func validateTime(layout string) schema.SchemaValidateFunc {
 
 		return
 	}
+}
+
+func validateYaml(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if err := yaml.Unmarshal([]byte(value), make(map[interface{}]interface{})); err != nil {
+		errors = append(errors, fmt.Errorf(
+			"%s cannot be parsed as yaml Format, value: %s", k, value))
+	}
+	return
 }

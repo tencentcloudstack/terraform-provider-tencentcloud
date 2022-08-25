@@ -345,6 +345,14 @@ func resourceTencentCloudMonitorTmpTkeTemplateRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("resource `template` %s does not exist", templateId)
 	}
 
+	templates := make([]map[string]interface{}, 0)
+	templates = append(templates, map[string]interface{}{
+		"name":       template.Name,
+		"level":      template.Level,
+		"describe":   template.Describe,
+		"is_default": template.IsDefault,
+	})
+	_ = d.Set("template", templates)
 	return nil
 }
 

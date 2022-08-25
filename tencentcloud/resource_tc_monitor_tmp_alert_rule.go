@@ -245,15 +245,21 @@ func resourceTencentCloudMonitorTmpAlertRuleRead(d *schema.ResourceData, meta in
 		return fmt.Errorf("resource `tmpAlertRule` %s does not exist", ids[1])
 	}
 
+	_ = d.Set("instance_id", ids[0])
 	if tmpAlertRule.RuleName != nil {
 		_ = d.Set("rule_name", tmpAlertRule.RuleName)
 	}
 	if tmpAlertRule.Expr != nil {
 		_ = d.Set("expr", tmpAlertRule.Expr)
 	}
-	//if tmpAlertRule.Receivers != nil {
-	//	_ = d.Set("receivers", tmpAlertRule.Receivers)
-	//}
+	if tmpAlertRule.Receivers != nil {
+		list := tmpAlertRule.Receivers
+		result := make([]string, 0, len(list))
+		for _, v := range list {
+			result = append(result, *v)
+		}
+		_ = d.Set("receivers", result)
+	}
 	if tmpAlertRule.RuleState != nil {
 		_ = d.Set("rule_state", tmpAlertRule.RuleState)
 	}

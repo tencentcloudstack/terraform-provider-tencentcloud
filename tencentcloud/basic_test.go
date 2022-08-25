@@ -175,6 +175,10 @@ const (
 	defaultTkeClusterName = "keep-tke-cluster"
 	defaultTkeClusterType = "tke"
 	defaultPrometheusId   = "prom-1lspn8sw"
+	defaultTemplateId     = "temp-gqunlvo1"
+	tkeClusterIdAgent     = "cls-87o4klby"
+	tkeClusterTypeAgent   = "eks"
+	defaultAgentId        = "agent-q3zy8gt8"
 )
 
 /*

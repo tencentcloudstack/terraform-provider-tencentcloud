@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -13,6 +14,67 @@ import (
 
 var testTkeScaleWorkerResourceName = "tencentcloud_kubernetes_scale_worker"
 var testTkeScaleWorkerResourceKey = testTkeScaleWorkerResourceName + ".test_scale"
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_kubernetes_scale_worker
+	resource.AddTestSweepers("tencentcloud_kubernetes_scale_worker", &resource.Sweeper{
+		Name: "tencentcloud_kubernetes_scale_worker",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := TkeService{client}
+
+			clusters, err := service.DescribeClusters(ctx, "", defaultTkeClusterName)
+
+			if err != nil {
+				return err
+			}
+
+			if len(clusters) == 0 {
+				return fmt.Errorf("no cluster names %s", defaultTkeClusterName)
+			}
+
+			clusterId := clusters[0].ClusterId
+
+			_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
+
+			if err != nil {
+				return err
+			}
+
+			cvmService := CvmService{client}
+			instanceIds := make([]string, 0)
+			for i := range workers {
+				worker := workers[i]
+				if worker.NodePoolId != "" {
+					continue
+				}
+				instance, err := cvmService.DescribeInstanceById(ctx, worker.InstanceId)
+				if err != nil {
+					continue
+				}
+
+				created, err := time.Parse(TENCENTCLOUD_COMMON_TIME_LAYOUT, worker.CreatedTime)
+				if err != nil {
+					created = time.Time{}
+				}
+				if isResourcePersist(*instance.InstanceName, &created) {
+					continue
+				}
+				instanceIds = append(instanceIds, worker.InstanceId)
+			}
+
+			err = service.DeleteClusterInstances(ctx, clusterId, instanceIds)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 	t.Parallel()

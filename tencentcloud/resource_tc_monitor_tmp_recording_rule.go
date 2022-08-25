@@ -6,7 +6,13 @@ Example Usage
 ```hcl
 resource "tencentcloud_monitor_tmp_recording_rule" "recordingRule" {
   name = "dasdasdsadasd"
-  group = "LS0tDQpuYW1lOiBleGFtcGxlDQpydWxlczoNCiAgLSByZWNvcmQ6IGpvYjpodHRwX2lucHJvZ3Jlc3NfcmVxdWVzdHM6c3VtDQogICAgZXhwcjogc3VtIGJ5IChqb2IpIChodHRwX2lucHJvZ3Jlc3NfcmVxdWVzdHMp"
+  group = <<EOF
+---
+name: example-test
+rules:
+  - record: job:http_inprogress_requests:sum
+    expr: sum by (job) (http_inprogress_requests)
+EOF
   instance_id = "prom-c89b3b3u"
   rule_state = 2
 }
@@ -83,7 +89,7 @@ func resourceTencentCloudMonitorTmpRecordingRuleCreate(d *schema.ResourceData, m
 		request.Name = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("group"); ok {
-		request.Group = helper.String(v.(string))
+		request.Group = helper.String(YamlToBase64(v.(string)))
 	}
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -141,11 +147,16 @@ func resourceTencentCloudMonitorTmpRecordingRuleRead(d *schema.ResourceData, met
 		return fmt.Errorf("resource `recordingRule` %s does not exist", ids[1])
 	}
 
+	_ = d.Set("instance_id", ids[0])
 	if recordingRule.Name != nil {
 		_ = d.Set("name", recordingRule.Name)
 	}
 	if recordingRule.Group != nil {
-		_ = d.Set("group", recordingRule.Group)
+		group, err := Base64ToYaml(*recordingRule.Group)
+		if err != nil {
+			return fmt.Errorf("`recordingRule.Group` %s does not be decoded to yaml", *recordingRule.Group)
+		}
+		_ = d.Set("group", &group)
 	}
 
 	if recordingRule.RuleState != nil {

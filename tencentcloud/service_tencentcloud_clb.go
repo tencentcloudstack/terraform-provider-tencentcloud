@@ -1264,6 +1264,10 @@ func (me *ClbService) DescribeTargetGroupInstances(ctx context.Context, filters 
 }
 
 func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clbId, targetGroupId, locationId string) (errRet error) {
+
+	var (
+		logId = getLogId(ctx)
+	)
 	request := clb.NewAssociateTargetGroupsRequest()
 	association := clb.TargetGroupAssociation{
 		LoadBalancerId: &clbId,
@@ -1277,9 +1281,17 @@ func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clb
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err := me.client.UseClbClient().AssociateTargetGroups(request)
+		response, err := me.client.UseClbClient().AssociateTargetGroups(request)
 		if err != nil {
 			return retryError(err, InternalError)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			requestId := *response.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(errors.WithStack(retryErr))
+			}
 		}
 		return nil
 	})
@@ -1298,9 +1310,6 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 		targetInfos, err = me.DescribeTargetGroups(ctx, ids[0], nil)
 		if err != nil {
 			return retryError(err, InternalError)
-		}
-		if targetInfos == nil || len(targetInfos[0].AssociatedRule) == 0 {
-			return resource.RetryableError(fmt.Errorf("response is nil"))
 		}
 		return nil
 	})
