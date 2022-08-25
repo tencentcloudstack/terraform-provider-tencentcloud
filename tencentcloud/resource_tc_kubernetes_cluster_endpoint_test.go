@@ -54,7 +54,7 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + TkeInstanceType + defaultImages + defaultSecurityGroupData + `
+const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + TkeDefaultNodeInstanceVar + defaultImages + defaultSecurityGroupData + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
