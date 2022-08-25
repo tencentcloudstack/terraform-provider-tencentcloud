@@ -11,7 +11,7 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
   kube_type = 1
   cluster_id = "cls-bmuaukfu"
 }
-
+```
 */
 package tencentcloud
 

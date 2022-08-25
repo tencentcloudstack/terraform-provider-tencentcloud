@@ -13,7 +13,37 @@ Provides a resource to create a tke tmpAlertPolicy
 
 ## Example Usage
 
-
+```hcl
+resource "tencentcloud_monitor_tmp_tke_alert_policy" "tmpAlertPolicy" {
+  instance_id = "xxxxx"
+  alert_rule {
+    name = "xxx"
+    rules {
+      name     = "xx"
+      rule     = "xx"
+      template = "xx"
+      for      = "xx"
+      labels {
+        name  = "xx"
+        value = "xx"
+      }
+      annotations {
+        name  = "xx"
+        value = "xx"
+      }
+    }
+    notification {
+      type    = "xx"
+      enabled = true
+      alert_manager {
+        url          = "xx"
+        cluster_id   = "xx"
+        cluster_type = "xx"
+      }
+    }
+  }
+}
+```
 
 ## Argument Reference
 

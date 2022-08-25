@@ -13,7 +13,16 @@ Provides a resource to create a tmp tke template attachment
 
 ## Example Usage
 
+```hcl
+resource "tencentcloud_monitor_tmp_tke_template_attachment" "temp_attachment" {
+  template_id = "temp-xxx"
 
+  targets {
+    region      = "ap-xxx"
+    instance_id = "prom-xxx"
+  }
+}
+```
 
 ## Argument Reference
 

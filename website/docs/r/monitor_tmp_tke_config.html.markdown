@@ -13,7 +13,28 @@ Provides a resource to create a tke tmpPrometheusConfig
 
 ## Example Usage
 
+```hcl
+resource "tencentcloud_monitor_tmp_tke_config" "foo" {
+  instance_id  = "xxx"
+  cluster_type = "xxx"
+  cluster_id   = "xxx"
 
+  raw_jobs {
+    name   = "raw_jobs_001"
+    config = "your config for raw_jobs_001\n"
+  }
+
+  service_monitors {
+    name   = "kube-system/service-monitor-001" # name with default namespace kube-system
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: service-monitor-001\n  namespace: kube-system\n"
+  }
+
+  pod_monitors {
+    name   = "mynamespace/pod-monitor-001" # name with the specified namespace
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: mynamespace\n"
+  }
+}
+```
 
 ## Argument Reference
 
