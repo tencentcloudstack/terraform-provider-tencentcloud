@@ -651,7 +651,6 @@ Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
 
-<<<<<<< HEAD
 TEM
   Resource
 	tencentcloud_tem_environment
@@ -661,8 +660,7 @@ TEM
 	tencentcloud_tem_log_config
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
-=======
->>>>>>> f10ed3ebb98bbd66bb8c210527181fc83a893e66
+
 Teo
   Resource
 	tencentcloud_teo_zone
