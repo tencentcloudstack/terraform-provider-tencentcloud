@@ -759,7 +759,6 @@ func (me *TencentCloudClient) UseTeoClient() *teo.Client {
 	me.teoConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.teoConn
-
 }
 
 func getEnvDefault(key string, defVal int) int {
