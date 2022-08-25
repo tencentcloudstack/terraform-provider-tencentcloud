@@ -5,12 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_origin_group" "originGroup" {
+  origin_name = "test"
+  type        = "weight"
   record {
-		private_parameter {}
+    record  = "20160527-10003318.cos.ap-shanghai.myqcloud.com"
+    area    = []
+    weight  = 100
+    port    = 0
+    private = false
+
   }
-  tags = {
-    "createdBy" = "terraform"
-  }
+  zone_id     = "zone-27mypfc1vr7d"
+  origin_type = "cos"
 }
 
 ```
@@ -18,7 +24,7 @@ Import
 
 teo originGroup can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_origin_group.originGroup originGroup_id
+$ terraform import tencentcloud_teo_origin_group.originGroup zoneId#originId
 ```
 */
 package tencentcloud
@@ -45,39 +51,28 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"origin_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: ".",
-			},
-
 			"origin_name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: ".",
+				Description: "OriginGroup Name.",
 			},
 
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "area, weight.",
+				Description: "Type of the origin group, this field is required only when `OriginType` is `self`. Valid values:- area: select an origin by using Geo info of the client IP and `Area` field in Records.- weight: weighted select an origin by using `Weight` field in Records.",
 			},
 
 			"record": {
 				Type:        schema.TypeList,
 				Required:    true,
-				Description: ".",
+				Description: "Origin website records.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"record_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: ".",
-						},
 						"record": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: ".",
+							Description: "Record Value.",
 						},
 						"area": {
 							Type: schema.TypeSet,
@@ -85,92 +80,73 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: ".",
+							Description: "Indicating origin website&#39;s area when `Type` field is `area`. An empty List indicate the default area.",
 						},
 						"weight": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "1-100.",
+							Description: "Indicating origin website&#39;s weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: ".",
+							Description: "Port of the origin website.",
 						},
 						"private": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: ".",
+							Description: "Whether origin website is using private authentication. Only valid when `OriginType` is `third_party`.",
 						},
 						"private_parameter": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: ".",
+							Description: "Parameters for private authentication. Only valid when `Private` is `true`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: ".",
+										Description: "Parameter Name. Valid values:- AccessKeyId: Access Key ID.- SecretAccessKey: Secret Access Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: ".",
+										Description: "Parameter value.",
 									},
 								},
 							},
+						},
+						"record_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record Id.",
 						},
 					},
 				},
 			},
 
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: ".",
-			},
-
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: ".",
-			},
-
-			"zone_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: ".",
+				Description: "Site ID.",
 			},
 
 			"origin_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: ".",
+				Description: "Type of the origin website. Valid values:- self: self-build website.- cos: tencent cos.- third_party: third party cos.",
 			},
 
-			"application_proxy_used": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: ".",
-			},
-
-			"load_balancing_used": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: ".",
-			},
-
-			"load_balancing_used_type": {
+			"zone_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "none, dns_only, proxied, both.",
+				Description: "Site Name.",
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
+			"update_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last modification date.",
 			},
 		},
 	}
@@ -186,6 +162,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		request  = teo.NewCreateOriginGroupRequest()
 		response *teo.CreateOriginGroupResponse
 		zoneId   string
+		originId string
 	)
 
 	if v, ok := d.GetOk("origin_name"); ok {
@@ -233,6 +210,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 				}
 			}
 
+			request.Record = append(request.Record, &originRecord)
 		}
 	}
 
@@ -262,23 +240,14 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	originGroupId := *response.Response.OriginId
+	originId = *response.Response.OriginId
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, originGroupId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-	d.SetId(zoneId + "#" + originGroupId)
+	d.SetId(zoneId + FILED_SP + originId)
 	return resourceTencentCloudTeoOriginGroupRead(d, meta)
 }
 
 func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_originGroup.read")()
+	defer logElapsed("resource.tencentcloud_teo_origin_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -291,9 +260,9 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
-	originGroupId := idSplit[1]
+	originId := idSplit[1]
 
-	originGroup, err := service.DescribeTeoOriginGroup(ctx, zoneId, originGroupId)
+	originGroup, err := service.DescribeTeoOriginGroup(ctx, zoneId, originId)
 
 	if err != nil {
 		return err
@@ -301,11 +270,7 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 
 	if originGroup == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `originGroup` %s does not exist", originGroupId)
-	}
-
-	if originGroup.OriginId != nil {
-		_ = d.Set("origin_id", originGroup.OriginId)
+		return fmt.Errorf("resource `originGroup` %s does not exist", originId)
 	}
 
 	if originGroup.OriginName != nil {
@@ -320,9 +285,6 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 		recordList := []interface{}{}
 		for _, record := range originGroup.Record {
 			recordMap := map[string]interface{}{}
-			if record.RecordId != nil {
-				recordMap["record_id"] = record.RecordId
-			}
 			if record.Record != nil {
 				recordMap["record"] = record.Record
 			}
@@ -353,47 +315,30 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 				}
 				recordMap["private_parameter"] = privateParameterList
 			}
+			if record.RecordId != nil {
+				recordMap["record_id"] = record.RecordId
+			}
 
 			recordList = append(recordList, recordMap)
 		}
 		_ = d.Set("record", recordList)
 	}
 
-	if originGroup.UpdateTime != nil {
-		_ = d.Set("update_time", originGroup.UpdateTime)
-	}
-
 	if originGroup.ZoneId != nil {
 		_ = d.Set("zone_id", originGroup.ZoneId)
-	}
-
-	if originGroup.ZoneName != nil {
-		_ = d.Set("zone_name", originGroup.ZoneName)
 	}
 
 	if originGroup.OriginType != nil {
 		_ = d.Set("origin_type", originGroup.OriginType)
 	}
 
-	if originGroup.ApplicationProxyUsed != nil {
-		_ = d.Set("application_proxy_used", originGroup.ApplicationProxyUsed)
+	if originGroup.ZoneName != nil {
+		_ = d.Set("zone_name", originGroup.ZoneName)
 	}
 
-	if originGroup.LoadBalancingUsed != nil {
-		_ = d.Set("load_balancing_used", originGroup.LoadBalancingUsed)
+	if originGroup.UpdateTime != nil {
+		_ = d.Set("update_time", originGroup.UpdateTime)
 	}
-
-	if originGroup.LoadBalancingUsedType != nil {
-		_ = d.Set("load_balancing_used_type", originGroup.LoadBalancingUsedType)
-	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -403,15 +348,18 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifyOriginGroupRequest()
 
-	request.ZoneId = helper.String(d.Id())
-
-	if d.HasChange("origin_id") {
-		return fmt.Errorf("`origin_id` do not support change now.")
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	zoneId := idSplit[0]
+	originId := idSplit[1]
+
+	request.ZoneId = &zoneId
+	request.OriginId = &originId
 
 	if d.HasChange("origin_name") {
 		if v, ok := d.GetOk("origin_name"); ok {
@@ -463,6 +411,7 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 					}
 				}
 
+				request.Record = append(request.Record, &originRecord)
 			}
 		}
 	}
@@ -494,17 +443,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoOriginGroupRead(d, meta)
 }
 
@@ -516,14 +454,15 @@ func resourceTencentCloudTeoOriginGroupDelete(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
-	originGroupId := idSplit[1]
+	originId := idSplit[1]
 
-	if err := service.DeleteTeoOriginGroupById(ctx, zoneId, originGroupId); err != nil {
+	if err := service.DeleteTeoOriginGroupById(ctx, zoneId, originId); err != nil {
 		return err
 	}
 

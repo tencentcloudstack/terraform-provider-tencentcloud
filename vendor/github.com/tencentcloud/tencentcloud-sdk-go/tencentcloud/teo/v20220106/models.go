@@ -99,123 +99,132 @@ type AiRule struct {
 }
 
 type ApplicationProxy struct {
-	// 代理ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 代理ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 调度模式：
-	// ip表示Anycast IP
-	// domain表示CNAME
+	// 调度模式，取值有：
+	// <li>ip：表示Anycast IP调度；</li>
+	// <li>domain：表示CNAME调度。</li>
 	PlatType *string `json:"PlatType,omitempty" name:"PlatType"`
 
-	// 0关闭安全，1开启安全
+	// 是否开启安全，取值有：
+	// <li>0：关闭安全；</li>
+	// <li>1：开启安全。</li>
 	SecurityType *int64 `json:"SecurityType,omitempty" name:"SecurityType"`
 
-	// 0关闭加速，1开启加速
+	// 是否开启加速，取值有：
+	// <li>0：关闭加速；</li>
+	// <li>1：开启加速。</li>
 	AccelerateType *int64 `json:"AccelerateType,omitempty" name:"AccelerateType"`
 
-	// 字段已经移至Rule.ForwardClientIp
+	// 字段已经废弃。
 	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
 
-	// 字段已经移至Rule.SessionPersist
+	// 字段已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 规则列表
+	// 规则列表。
 	Rule []*ApplicationProxyRule `json:"Rule,omitempty" name:"Rule"`
 
-	// 状态：
-	// online：启用
-	// offline：停用
-	// progress：部署中
-	// stopping：停用中
-	// fail：部署失败/停用失败
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 状态，取值有：
+	// <li>online：启用；</li>
+	// <li>offline：停用；</li>
+	// <li>progress：部署中；</li>
+	// <li>stopping：停用中；</li>
+	// <li>fail：部署失败/停用失败。</li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 调度信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 调度信息。
 	ScheduleValue []*string `json:"ScheduleValue,omitempty" name:"ScheduleValue"`
 
-	// 更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 更新时间。
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 
-	// 站点ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 站点名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 站点名称。
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
 
-	// 会话保持时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 会话保持时间。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>
 	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
 
 	// 当ProxyType=hostname时：
-	// ProxyName为域名，如：test.123.com
-	// HostId表示该域名，即test.123.com对应的代理加速唯一标识
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 表示代理加速唯一标识。
 	HostId *string `json:"HostId,omitempty" name:"HostId"`
+
+	// Ipv6访问配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	// 默认值：overseas
+	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 封禁状态，取值有：
+	// <li>banned：已封禁;</li>
+	// <li>banning：封禁中；</li>
+	// <li>recover：已解封；</li>
+	// <li>recovering：解封禁中。</li>
+	BanStatus *string `json:"BanStatus,omitempty" name:"BanStatus"`
 }
 
 type ApplicationProxyRule struct {
-	// 协议，取值为TCP或者UDP
+	// 协议，取值有：
+	// <li>TCP：TCP协议；</li>
+	// <li>UDP：UDP协议。</li>
 	Proto *string `json:"Proto,omitempty" name:"Proto"`
 
 	// 端口，支持格式：
-	// 80：80端口
-	// 81-90：81至90端口
+	// 单个端口，如：80。
+	// 端口段，如：81-82。表示81，82两个端口。
+	// 注意：一条规则最多可填写20个端口。
 	Port []*string `json:"Port,omitempty" name:"Port"`
 
-	// 源站类型，取值：
-	// custom：手动添加
-	// origins：源站组
+	// 源站类型，取值有：
+	// <li>custom：手动添加；</li>
+	// <li>origins：源站组。</li>
 	OriginType *string `json:"OriginType,omitempty" name:"OriginType"`
 
 	// 源站信息：
 	// 当OriginType=custom时，表示一个或多个源站，如：
 	// OriginValue=["8.8.8.8:80","9.9.9.9:80"]
-	// OriginValue=["test.com:80"]
-	// 
-	// 当OriginType=origins时，包含一个元素，表示源站组ID，如：
-	// OriginValue=["origin-xxx"]
+	// OriginValue=["test.com:80"]；
+	// 当OriginType=origins时，要求有且仅有一个元素，表示源站组ID，如：
+	// OriginValue=["origin-537f5b41-162a-11ed-abaa-525400c5da15"]。
 	OriginValue []*string `json:"OriginValue,omitempty" name:"OriginValue"`
 
-	// 规则ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 规则ID。
 	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
 
-	// 状态：
-	// online：启用
-	// offline：停用
-	// progress：部署中
-	// stopping：停用中
-	// fail：部署失败/停用失败
+	// 状态，取值有：
+	// <li>online：启用；</li>
+	// <li>offline：停用；</li>
+	// <li>progress：部署中；</li>
+	// <li>stopping：停用中；</li>
+	// <li>fail：部署失败/停用失败。</li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 传递客户端IP，当Proto=TCP时，取值：
-	// TOA：TOA
-	// PPV1: Proxy Protocol传递，协议版本V1
-	// PPV2: Proxy Protocol传递，协议版本V2
-	// OFF：不传递
-	// 当Proto=UDP时，取值：
-	// PPV2: Proxy Protocol传递，协议版本V2
-	// OFF：不传递
+	// 传递客户端IP，取值有：
+	// <li>TOA：TOA（仅Proto=TCP时可选）；</li>
+	// <li>PPV1：Proxy Protocol传递，协议版本V1（仅Proto=TCP时可选）；</li>
+	// <li>PPV2：Proxy Protocol传递，协议版本V2；</li>
+	// <li>OFF：不传递。</li>
 	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
 
-	// 是否开启会话保持
+	// 是否开启会话保持，取值有：
+	// <li>true：开启；</li>
+	// <li>false：关闭。</li>
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 }
 
@@ -241,93 +250,92 @@ type BotConfig struct {
 }
 
 type BotLog struct {
-	// 攻击时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击时间，采用unix秒级时间戳。
 	AttackTime *uint64 `json:"AttackTime,omitempty" name:"AttackTime"`
 
-	// 攻击ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击源（客户端）ip。
 	AttackIp *string `json:"AttackIp,omitempty" name:"AttackIp"`
 
-	// 域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 受攻击域名。
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 请求uri
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// URI。
 	RequestUri *string `json:"RequestUri,omitempty" name:"RequestUri"`
 
-	// 攻击类型
+	// 当前该字段无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 请求方法
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 请求方法。
 	RequestMethod *string `json:"RequestMethod,omitempty" name:"RequestMethod"`
 
-	// 攻击内容
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击内容。
 	AttackContent *string `json:"AttackContent,omitempty" name:"AttackContent"`
 
-	// 风险等级
+	// 当前该字段无效 。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RiskLevel *string `json:"RiskLevel,omitempty" name:"RiskLevel"`
 
-	// 规则编号
+	// 当前该字段无效 。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleId *uint64 `json:"RuleId,omitempty" name:"RuleId"`
 
-	// IP所在国家
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// IP所在国家iso-3166中alpha-2编码，编码信息请参考[ISO-3166](https://git.woa.com/edgeone/iso-3166/blob/master/all/all.json)。
 	SipCountryCode *string `json:"SipCountryCode,omitempty" name:"SipCountryCode"`
 
-	// 事件id
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 请求（事件）ID。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
 
-	// 处置方式
+	// 该字段当前无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DisposalMethod *string `json:"DisposalMethod,omitempty" name:"DisposalMethod"`
 
-	// http_log
+	// 该字段当前无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpLog *string `json:"HttpLog,omitempty" name:"HttpLog"`
 
-	// user agent
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// user agent。
 	Ua *string `json:"Ua,omitempty" name:"Ua"`
 
-	// 检出方法
+	// 该字段当前无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DetectionMethod *string `json:"DetectionMethod,omitempty" name:"DetectionMethod"`
 
-	// 置信度
+	// 该字段当前无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Confidence *string `json:"Confidence,omitempty" name:"Confidence"`
 
-	// 恶意度
+	// 该字段当前无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Maliciousness *string `json:"Maliciousness,omitempty" name:"Maliciousness"`
+
+	// 规则相关信息列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleDetailList []*SecRuleRelatedInfo `json:"RuleDetailList,omitempty" name:"RuleDetailList"`
+
+	// Bot标签。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Label *string `json:"Label,omitempty" name:"Label"`
 }
 
 type BotLogData struct {
-	// Bot攻击日志数据集合
+	// Bot攻击日志数据集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*BotLog `json:"List,omitempty" name:"List"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
+	// 总页数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
+	// 总条数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
@@ -464,143 +472,145 @@ type CCInterceptEventData struct {
 }
 
 type CCLog struct {
-	// 攻击时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击请求时间，采用unix秒级时间戳。
 	AttackTime *uint64 `json:"AttackTime,omitempty" name:"AttackTime"`
 
-	// 攻击源ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 客户端ip。
 	AttackSip *string `json:"AttackSip,omitempty" name:"AttackSip"`
 
-	// 攻击域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 受攻击域名。
 	AttackDomain *string `json:"AttackDomain,omitempty" name:"AttackDomain"`
 
-	// 请求uri
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// URI。
 	RequestUri *string `json:"RequestUri,omitempty" name:"RequestUri"`
 
-	// 命中次数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 命中次数。
 	HitCount *uint64 `json:"HitCount,omitempty" name:"HitCount"`
 
-	// IP所在国家
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// IP所在国家iso-3166中alpha-2编码，编码信息请参考[ISO-3166](https://git.woa.com/edgeone/iso-3166/blob/master/all/all.json)。
 	SipCountryCode *string `json:"SipCountryCode,omitempty" name:"SipCountryCode"`
 
-	// 事件id
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 请求（事件）ID。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
 
-	// 处置方式
+	// 当前该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DisposalMethod *string `json:"DisposalMethod,omitempty" name:"DisposalMethod"`
 
-	// http_log
+	// 当前该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpLog *string `json:"HttpLog,omitempty" name:"HttpLog"`
 
-	// 规则编号
+	// 当前该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleId *uint64 `json:"RuleId,omitempty" name:"RuleId"`
 
-	// 风险等级
+	// 当前该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RiskLevel *string `json:"RiskLevel,omitempty" name:"RiskLevel"`
+
+	// User Agent，仅自定义规则日志中存在。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ua *string `json:"Ua,omitempty" name:"Ua"`
+
+	// 请求方法，仅自定义规则日志中存在。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RequestMethod *string `json:"RequestMethod,omitempty" name:"RequestMethod"`
+
+	// 规则信息列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleDetailList []*SecRuleRelatedInfo `json:"RuleDetailList,omitempty" name:"RuleDetailList"`
 }
 
 type CCLogData struct {
-	// CC拦截日志数据集合
+	// CC拦截日志数据集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*CCLog `json:"List,omitempty" name:"List"`
 
-	// 当前页
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 总页数。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 总条数。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
 
 type CacheConfig struct {
-	// 缓存配置
+	// 缓存配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cache *CacheConfigCache `json:"Cache,omitempty" name:"Cache"`
 
-	// 不缓存配置
+	// 不缓存配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoCache *CacheConfigNoCache `json:"NoCache,omitempty" name:"NoCache"`
 
-	// 遵循源站配置
+	// 遵循源站配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FollowOrigin *CacheConfigFollowOrigin `json:"FollowOrigin,omitempty" name:"FollowOrigin"`
 }
 
 type CacheConfigCache struct {
-	// 缓存配置开关
-	// on：开启
-	// off：关闭
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 缓存配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 缓存过期时间设置
-	// 单位为秒，最大可设置为 365 天
+	// 缓存过期时间设置。
+	// 单位为秒，最大可设置为 365 天。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheTime *int64 `json:"CacheTime,omitempty" name:"CacheTime"`
 
-	// 是否开启强制缓存
-	// 开启：on
-	// 关闭：off
+	// 是否开启强制缓存，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCacheControl *string `json:"IgnoreCacheControl,omitempty" name:"IgnoreCacheControl"`
 }
 
 type CacheConfigFollowOrigin struct {
-	// 遵循源站配置开关
-	// on：开启
-	// off：关闭
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 遵循源站配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type CacheConfigNoCache struct {
-	// 不缓存配置开关
-	// on：开启
-	// off：关闭
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 不缓存配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type CacheKey struct {
-	// 是否开启全路径缓存
-	// on：开启全路径缓存（即关闭参数忽略）
-	// off：关闭全路径缓存（即开启参数忽略）
+	// 是否开启全路径缓存，取值有：
+	// <li>on：开启全路径缓存（即关闭参数忽略）；</li>
+	// <li>off：关闭全路径缓存（即开启参数忽略）。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FullUrlCache *string `json:"FullUrlCache,omitempty" name:"FullUrlCache"`
 
-	// 是否忽略大小写缓存
+	// 是否忽略大小写缓存，取值有：
+	// <li>on：忽略；</li>
+	// <li>off：不忽略。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCase *string `json:"IgnoreCase,omitempty" name:"IgnoreCase"`
 
-	// CacheKey中包含请求参数
+	// CacheKey中包含请求参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QueryString *QueryString `json:"QueryString,omitempty" name:"QueryString"`
 }
 
 type CachePrefresh struct {
-	// 缓存预刷新配置开关
+	// 缓存预刷新配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 缓存预刷新百分比：1-99
+	// 缓存预刷新百分比，取值范围：1-99。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Percent *int64 `json:"Percent,omitempty" name:"Percent"`
 }
@@ -694,11 +704,13 @@ func (r *CheckCertificateResponse) FromJsonString(s string) error {
 }
 
 type ClientIp struct {
-	// 客户端IP头部配置开关
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 回源客户端IP请求头名称
+	// 回源时，存放客户端IP的请求头名称。
+	// 为空则使用默认值：X-Forwarded-IP。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HeaderName *string `json:"HeaderName,omitempty" name:"HeaderName"`
 }
@@ -719,95 +731,117 @@ type CnameStatus struct {
 }
 
 type Compression struct {
-	// 智能压缩配置开关
-	// on：开启
-	// off：关闭
+	// 智能压缩配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 支持的压缩算法列表，取值有：
+	// <li>brotli：brotli算法；</li>
+	// <li>gzip：gzip算法。</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Algorithms []*string `json:"Algorithms,omitempty" name:"Algorithms"`
 }
 
 // Predefined struct for user
 type CreateApplicationProxyRequestParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 站点名称
+	// 站点名称。
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 调度模式：
-	// ip表示Anycast IP
-	// domain表示CNAME
+	// 调度模式，取值有：
+	// <li>ip：表示Anycast IP调度；</li>
+	// <li>domain：表示CNAME调度。</li>
 	PlatType *string `json:"PlatType,omitempty" name:"PlatType"`
 
-	// 0关闭安全，1开启安全
+	// 是否开启安全，取值有：
+	// <li>0：关闭安全；</li>
+	// <li>1：开启安全。</li>
 	SecurityType *int64 `json:"SecurityType,omitempty" name:"SecurityType"`
 
-	// 0关闭加速，1开启加速
+	// 是否开启加速，取值有：
+	// <li>0：关闭加速；</li>
+	// <li>1：开启加速。</li>
 	AccelerateType *int64 `json:"AccelerateType,omitempty" name:"AccelerateType"`
 
-	// 字段已经移至Rule.ForwardClientIp
-	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
-
-	// 字段已经移至Rule.SessionPersist
+	// 字段已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 规则详细信息
+	// 字段已经废弃。
+	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
+
+	// 规则详细信息。
 	Rule []*ApplicationProxyRule `json:"Rule,omitempty" name:"Rule"`
 
-	// 会话保持时间，取值范围：30-3600，单位：秒
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>不填写使用默认值instance。
+	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+
+	// 会话保持时间，取值范围：30-3600，单位：秒。
+	// 不填写使用默认值600。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
-	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+	// Ipv6访问配置。
+	// 不填写表示关闭Ipv6访问。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 type CreateApplicationProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 站点名称
+	// 站点名称。
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 调度模式：
-	// ip表示Anycast IP
-	// domain表示CNAME
+	// 调度模式，取值有：
+	// <li>ip：表示Anycast IP调度；</li>
+	// <li>domain：表示CNAME调度。</li>
 	PlatType *string `json:"PlatType,omitempty" name:"PlatType"`
 
-	// 0关闭安全，1开启安全
+	// 是否开启安全，取值有：
+	// <li>0：关闭安全；</li>
+	// <li>1：开启安全。</li>
 	SecurityType *int64 `json:"SecurityType,omitempty" name:"SecurityType"`
 
-	// 0关闭加速，1开启加速
+	// 是否开启加速，取值有：
+	// <li>0：关闭加速；</li>
+	// <li>1：开启加速。</li>
 	AccelerateType *int64 `json:"AccelerateType,omitempty" name:"AccelerateType"`
 
-	// 字段已经移至Rule.ForwardClientIp
-	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
-
-	// 字段已经移至Rule.SessionPersist
+	// 字段已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 规则详细信息
+	// 字段已经废弃。
+	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
+
+	// 规则详细信息。
 	Rule []*ApplicationProxyRule `json:"Rule,omitempty" name:"Rule"`
 
-	// 会话保持时间，取值范围：30-3600，单位：秒
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>不填写使用默认值instance。
+	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+
+	// 会话保持时间，取值范围：30-3600，单位：秒。
+	// 不填写使用默认值600。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
-	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+	// Ipv6访问配置。
+	// 不填写表示关闭Ipv6访问。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 func (r *CreateApplicationProxyRequest) ToJsonString() string {
@@ -828,11 +862,12 @@ func (r *CreateApplicationProxyRequest) FromJsonString(s string) error {
 	delete(f, "PlatType")
 	delete(f, "SecurityType")
 	delete(f, "AccelerateType")
-	delete(f, "ForwardClientIp")
 	delete(f, "SessionPersist")
+	delete(f, "ForwardClientIp")
 	delete(f, "Rule")
-	delete(f, "SessionPersistTime")
 	delete(f, "ProxyType")
+	delete(f, "SessionPersistTime")
+	delete(f, "Ipv6")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateApplicationProxyRequest has unknown keys!", "")
 	}
@@ -841,7 +876,7 @@ func (r *CreateApplicationProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateApplicationProxyResponseParams struct {
-	// 新增的四层代理应用ID
+	// 新增的四层代理应用ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1777,70 +1812,89 @@ func (r *CreateZoneResponse) FromJsonString(s string) error {
 }
 
 type DDoSAcl struct {
-	// 目的端口end
+	// 目的端口结束，取值范围0-65535。
 	DportEnd *int64 `json:"DportEnd,omitempty" name:"DportEnd"`
 
-	// 目的端口start
+	// 目的端口开始，取值范围0-65535。
 	DportStart *int64 `json:"DportStart,omitempty" name:"DportStart"`
 
-	// 源端口end
+	// 源端口结束，取值范围0-65535。
 	SportEnd *int64 `json:"SportEnd,omitempty" name:"SportEnd"`
 
-	// 源端口start
+	// 源端口开始，取值范围0-65535。
 	SportStart *int64 `json:"SportStart,omitempty" name:"SportStart"`
 
-	// 协议 'tcp', 'udp', 'all'
+	// 协议，取值有：
+	// <li>tcp ：tcp协议 ；</li>
+	// <li>udp ：udp协议 ；</li>
+	// <li>all ：全部协议 。</li>
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
-	// 动作  drop-丢弃,；transmit-放行； forward-继续防护
+	// 执行动作，取值为：
+	// <li>drop ：丢弃 ；</li>
+	// <li>transmit ：放行 ；</li>
+	// <li>forward ：继续防护 。</li>
 	Action *string `json:"Action,omitempty" name:"Action"`
 
-	// 是否为系统配置 0-人工配置；1-系统配置
+	// 是否为系统配置，取值为：
+	// <li>0 ：修改配置 ；</li>
+	// <li>1 ：系统默认配置 。</li>
 	Default *int64 `json:"Default,omitempty" name:"Default"`
 }
 
 type DDoSAntiPly struct {
-	// tcp协议封禁 on-开；off-关
+	// tcp协议封禁，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	DropTcp *string `json:"DropTcp,omitempty" name:"DropTcp"`
 
-	// udp协议封禁 on-开；off-关
+	// udp协议封禁，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	DropUdp *string `json:"DropUdp,omitempty" name:"DropUdp"`
 
-	// icmp协议封禁 on-开；off-关
+	// icmp协议封禁，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	DropIcmp *string `json:"DropIcmp,omitempty" name:"DropIcmp"`
 
-	// 其他协议封禁 on-开；off-关
+	// 其他协议封禁，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	DropOther *string `json:"DropOther,omitempty" name:"DropOther"`
 
-	// 源每秒新建数限制  0-4294967295
+	// 源站每秒新连接限速，取值范围0-4294967295。
 	SourceCreateLimit *int64 `json:"SourceCreateLimit,omitempty" name:"SourceCreateLimit"`
 
-	// 源并发连接控制 0-4294967295
+	// 源站并发连接控制，取值范围0-4294967295。
 	SourceConnectLimit *int64 `json:"SourceConnectLimit,omitempty" name:"SourceConnectLimit"`
 
-	// 目的每秒新建数限制 0-4294967295
+	// 目的端口每秒新连接限速，取值范围0-4294967295。
 	DestinationCreateLimit *int64 `json:"DestinationCreateLimit,omitempty" name:"DestinationCreateLimit"`
 
-	// 目的端口的并发连接控制 0-4294967295
+	// 目的端口并发连接控制，取值范围0-4294967295。
 	DestinationConnectLimit *int64 `json:"DestinationConnectLimit,omitempty" name:"DestinationConnectLimit"`
 
-	// 异常连接数阈值  0-4294967295
+	// 每秒异常连接数阈值，取值范围0-4294967295。
 	AbnormalConnectNum *int64 `json:"AbnormalConnectNum,omitempty" name:"AbnormalConnectNum"`
 
-	// syn占比异常阈值 0-100
+	// 异常syn报文百分比阈值，取值范围0-100。
 	AbnormalSynRatio *int64 `json:"AbnormalSynRatio,omitempty" name:"AbnormalSynRatio"`
 
-	// syn个数异常阈值 0-65535
+	// 异常syn报文阈值，取值范围0-65535。
 	AbnormalSynNum *int64 `json:"AbnormalSynNum,omitempty" name:"AbnormalSynNum"`
 
-	// 连接超时检测 0-65535
+	// 每秒连接超时检测，取值范围0-65535。
 	ConnectTimeout *int64 `json:"ConnectTimeout,omitempty" name:"ConnectTimeout"`
 
-	// 空连接防护开启 0-1
+	// 空连接防护开启，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	EmptyConnectProtect *string `json:"EmptyConnectProtect,omitempty" name:"EmptyConnectProtect"`
 
-	// UDP分片开关；off-关闭，on-开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// UDP分片开关，取值有：
+	// <li>off ：关闭 ；</li>
+	// <li>on ：开启 。</li>
 	UdpShard *string `json:"UdpShard,omitempty" name:"UdpShard"`
 }
 
@@ -1872,114 +1926,135 @@ type DDoSConfig struct {
 }
 
 type DDoSFeaturesFilter struct {
-	// 动作 drop-丢弃；transmit-放行；drop_block-丢弃并拉黑；forward-继续防护
+	// 执行动作，取值有：
+	// <li>drop ：丢弃 ；</li>
+	// <li>transmit ：放行 ；</li>
+	// <li>drop_block ：丢弃并拉黑 ；</li>
+	// <li>forward ：继续防护 。</li>
 	Action *string `json:"Action,omitempty" name:"Action"`
 
-	// 深度值1
-	Depth *int64 `json:"Depth,omitempty" name:"Depth"`
-
-	// 深度值2
-	Depth2 *int64 `json:"Depth2,omitempty" name:"Depth2"`
-
-	// 目标端口结束
-	DportEnd *int64 `json:"DportEnd,omitempty" name:"DportEnd"`
-
-	// 目标端口开始
-	DportStart *int64 `json:"DportStart,omitempty" name:"DportStart"`
-
-	// 取非判断1
-	IsNot *int64 `json:"IsNot,omitempty" name:"IsNot"`
-
-	// 取非判断2
-	IsNot2 *int64 `json:"IsNot2,omitempty" name:"IsNot2"`
-
-	// 多特征关系（单特征时(none)，第二特征相关配置可不填） none；and；or
-	MatchLogic *string `json:"MatchLogic,omitempty" name:"MatchLogic"`
-
-	// 匹配方式1 pcre-正则匹配, sunday-字符串匹配
-	MatchType *string `json:"MatchType,omitempty" name:"MatchType"`
-
-	// 匹配方式2 pcre-正则匹配, sunday-字符串匹配
-	MatchType2 *string `json:"MatchType2,omitempty" name:"MatchType2"`
-
-	// 偏移量1
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 偏移量2
-	Offset2 *int64 `json:"Offset2,omitempty" name:"Offset2"`
-
-	// 最大包长
-	PacketMax *int64 `json:"PacketMax,omitempty" name:"PacketMax"`
-
-	// 最小包长
-	PacketMin *int64 `json:"PacketMin,omitempty" name:"PacketMin"`
-
-	// 协议 tcp；udp；icmp；all
+	// 协议，取值有：
+	// <li>tcp ：tcp协议 ；</li>
+	// <li>udp ：udp协议 ；</li>
+	// <li>icmp ：icmp协议 ；</li>
+	// <li>all ：全部协议 。</li>
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
-	// 源端口结束
-	SportEnd *int64 `json:"SportEnd,omitempty" name:"SportEnd"`
+	// 目标端口开始，取值范围0-65535。
+	DportStart *int64 `json:"DportStart,omitempty" name:"DportStart"`
 
-	// 源端口开始
+	// 目标端口结束，取值范围0-65535。
+	DportEnd *int64 `json:"DportEnd,omitempty" name:"DportEnd"`
+
+	// 最小包长，取值范围0-1500。
+	PacketMin *int64 `json:"PacketMin,omitempty" name:"PacketMin"`
+
+	// 最大包长，取值范围0-1500。
+	PacketMax *int64 `json:"PacketMax,omitempty" name:"PacketMax"`
+
+	// 源端口开始，取值范围0-65535。
 	SportStart *int64 `json:"SportStart,omitempty" name:"SportStart"`
 
-	// 匹配字符串1
-	Str *string `json:"Str,omitempty" name:"Str"`
+	// 源端口结束，取值范围0-65535。
+	SportEnd *int64 `json:"SportEnd,omitempty" name:"SportEnd"`
 
-	// 匹配字符串2
-	Str2 *string `json:"Str2,omitempty" name:"Str2"`
+	// 匹配方式1，【特征1】，取值有：
+	// <li>pcre ：正则匹配 ；</li>
+	// <li>sunday ：字符串匹配 。</li>默认为空字符串。
+	MatchType *string `json:"MatchType,omitempty" name:"MatchType"`
 
-	// 匹配开始层级，层级参考计算机网络结构 begin_l5, no_match, begin_l3, begin_l4
+	// 取非判断，该参数对MatchType配合使用，【特征1】，取值有：
+	// <li>0 ：匹配 ；</li>
+	// <li>1 ：不匹配 。</li>
+	IsNot *int64 `json:"IsNot,omitempty" name:"IsNot"`
+
+	// 偏移量1，【特征1】，取值范围0-1500。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 检测包字符深度，【特征1】，取值范围1-1500。
+	Depth *int64 `json:"Depth,omitempty" name:"Depth"`
+
+	// 匹配开始层级，层级参考计算机网络结构，取值有：
+	// <li>begin_l5 ：载荷开始检测 ；</li>
+	// <li>begin_l4 ：tcp/udp首部开始检测 ；</li>
+	// <li>begin_l3 ：ip首部开始检测 。</li>
 	MatchBegin *string `json:"MatchBegin,omitempty" name:"MatchBegin"`
 
-	// 匹配开始层级，层级参考计算机网络结构 begin_l5, no_match, begin_l3, begin_l4
+	// 正则或字符串匹配的内容，【特征1】。
+	Str *string `json:"Str,omitempty" name:"Str"`
+
+	// 匹配方式2，【特征2】，取值有：
+	// <li>pcre ：正则匹配 ；</li>
+	// <li>sunday ：字符串匹配 。</li>默认为空字符串。
+	MatchType2 *string `json:"MatchType2,omitempty" name:"MatchType2"`
+
+	// 取非判断2，该参数对MatchType2配合使用，【特征2】，取值有：
+	// <li>0 ：匹配 ；</li>
+	// <li>1 ：不匹配 。</li>
+	IsNot2 *int64 `json:"IsNot2,omitempty" name:"IsNot2"`
+
+	// 偏移量2，【特征2】，取值范围0-1500。
+	Offset2 *int64 `json:"Offset2,omitempty" name:"Offset2"`
+
+	// 检测包字符深度，【特征2】，取值范围1-1500。
+	Depth2 *int64 `json:"Depth2,omitempty" name:"Depth2"`
+
+	// 匹配开始层级，层级参考计算机网络结构，取值有：
+	// <li>begin_l5 ：载荷开始检测 ；</li>
+	// <li>begin_l4 ：tcp/udp首部开始检测；</li>
+	// <li>begin_l3 ：ip首部开始检测 。</li>
 	MatchBegin2 *string `json:"MatchBegin2,omitempty" name:"MatchBegin2"`
+
+	// 正则或字符串匹配的内容，【特征2】。
+	Str2 *string `json:"Str2,omitempty" name:"Str2"`
+
+	// 多特征关系，仅配置【特征1】时填 none，存在【特征2】配置可不填。
+	MatchLogic *string `json:"MatchLogic,omitempty" name:"MatchLogic"`
 }
 
 type DDoSGeoIp struct {
-	// 地域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RegionId []*int64 `json:"RegionId,omitempty" name:"RegionId"`
-
-	// 区域封禁清空标识
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 区域封禁清空标识，取值有：
+	// <li>off ：清空地域封禁列表 ；</li>
+	// <li>on ：不做处理 。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 地域信息，ID参考[DescribeSecurityPolicyRegions](https://tcloud4api.woa.com/document/product/1657/76031?!preview&!document=1)。
+	RegionId []*int64 `json:"RegionId,omitempty" name:"RegionId"`
 }
 
 type DDoSStatusInfo struct {
-	// 不支持，填off
+	// 暂不支持，默认值off。
 	AiStatus *string `json:"AiStatus,omitempty" name:"AiStatus"`
 
-	// 用户appid
+	// 废弃字段。
 	Appid *string `json:"Appid,omitempty" name:"Appid"`
 
-	// 策略等级 low, middle, high
+	// 策略等级，取值有:
+	// <li>low ：宽松 ；</li>
+	// <li>middle ：适中 ；</li>
+	// <li>high : 严格。 </li>
 	PlyLevel *string `json:"PlyLevel,omitempty" name:"PlyLevel"`
 }
 
 type DDoSUserAllowBlockIP struct {
-	// 用户ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 客户端IP。
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 掩码
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 掩码。
 	Mask *int64 `json:"Mask,omitempty" name:"Mask"`
 
-	// 类型 block-丢弃；allow-允许
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 类型，取值有：
+	// <li>block ：丢弃 ；</li>
+	// <li>allow ：允许。</li>
 	Type *string `json:"Type,omitempty" name:"Type"`
 
-	// 时间戳
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 10位时间戳，例如1199116800。
 	UpdateTime *int64 `json:"UpdateTime,omitempty" name:"UpdateTime"`
 
-	// 用户ip范围截止
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 客户端IP2，设置IP范围时使用，例如 1.1.1.1-1.1.1.2。
 	Ip2 *string `json:"Ip2,omitempty" name:"Ip2"`
 
-	// 掩码截止范围
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 掩码2，设置IP网段范围时使用，例如 1.1.1.0/24-1.1.2.0/24。
 	Mask2 *int64 `json:"Mask2,omitempty" name:"Mask2"`
 }
 
@@ -2022,122 +2097,125 @@ type DDosAttackEvent struct {
 }
 
 type DDosAttackEventData struct {
-	// 攻击事件数据集合
+	// 攻击事件数据集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*DDosAttackEvent `json:"List,omitempty" name:"List"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
+	// 总页数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
+	// 总条数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
 
 type DDosAttackEventDetailData struct {
-	// 攻击状态
+	// 攻击状态，取值有：
+	// <li>1 ：观察中 ；</li>
+	// <li>2 ：攻击开始 ；</li>
+	// <li>3 ：攻击结束 。</li>
 	AttackStatus *int64 `json:"AttackStatus,omitempty" name:"AttackStatus"`
 
-	// 攻击类型
+	// 攻击类型。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *int64 `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 开始时间
+	// 开始时间。
 	StartTime *int64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 最大带宽
+	// 最大带宽。
 	MaxBandWidth *int64 `json:"MaxBandWidth,omitempty" name:"MaxBandWidth"`
 
-	// 最大包速率
+	// 最大包速率。
 	PacketMaxRate *int64 `json:"PacketMaxRate,omitempty" name:"PacketMaxRate"`
 
-	// 事件Id
+	// 事件Id。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
 
-	// ddos 策略组id
+	// ddos 策略组id。
 	PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
 type DDosAttackSourceEvent struct {
-	// 攻击源ip
+	// 攻击源ip。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackSourceIp *string `json:"AttackSourceIp,omitempty" name:"AttackSourceIp"`
 
-	// 地区(国家)
+	// 地区（国家）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackRegion *string `json:"AttackRegion,omitempty" name:"AttackRegion"`
 
-	// 累计攻击流量
+	// 累计攻击流量。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackFlow *uint64 `json:"AttackFlow,omitempty" name:"AttackFlow"`
 
-	// 累计攻击包量
+	// 累计攻击包量。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackPacketNum *uint64 `json:"AttackPacketNum,omitempty" name:"AttackPacketNum"`
 }
 
 type DDosAttackSourceEventData struct {
-	// DDos攻击源数据集合
+	// DDos攻击源数据集合。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*DDosAttackSourceEvent `json:"List,omitempty" name:"List"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
+	// 总页数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
+	// 总条数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
 
 type DDosMajorAttackEvent struct {
-	// ddos 策略组id
+	// ddos 策略组id。
 	PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 攻击最大带宽
+	// 攻击最大带宽。
 	AttackMaxBandWidth *int64 `json:"AttackMaxBandWidth,omitempty" name:"AttackMaxBandWidth"`
 
-	// 攻击时间 单位为s
+	// 攻击请求时间，采用unix秒级时间戳。
 	AttackTime *int64 `json:"AttackTime,omitempty" name:"AttackTime"`
 }
 
 type DDosMajorAttackEventData struct {
-	// DDosMajorAttackEvent ddos 攻击事件
+	// DDosMajorAttackEvent ddos 攻击事件。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*DDosMajorAttackEvent `json:"List,omitempty" name:"List"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
+	// 总页数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
+	// 总条数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
@@ -2152,61 +2230,81 @@ type DataItem struct {
 }
 
 type DdosAcls struct {
-	// 开关 off清空规则标识
-	Switch *string `json:"Switch,omitempty" name:"Switch"`
-
-	// 端口过了详细参数
+	// 端口过滤规则数组。
 	Acl []*DDoSAcl `json:"Acl,omitempty" name:"Acl"`
+
+	// 清空规则标识，取值有：
+	// <li>off ：清空端口过滤规则列表，Acl无需填写。 ；</li>
+	// <li>on ：配置端口过滤规则，需填写Acl参数。</li>默认值为on。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type DdosAllowBlock struct {
-	// 开关标识防护是否清空
-	Switch *string `json:"Switch,omitempty" name:"Switch"`
-
-	// 黑白名单数组
+	// 黑白名单数组。
 	UserAllowBlockIp []*DDoSUserAllowBlockIP `json:"UserAllowBlockIp,omitempty" name:"UserAllowBlockIp"`
+
+	// 开关标识防护是否清空，取值有：
+	// <li>off ：清空黑白名单列表，UserAllowBlockIp无需填写。 ；</li>
+	// <li>on ：配置黑白名单，需填写UserAllowBlockIp参数。</li>默认值为on。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type DdosPacketFilter struct {
-	// 特征过滤清空标识，off清空处理
-	Switch *string `json:"Switch,omitempty" name:"Switch"`
-
-	// 特征过滤数组
+	// 特征过滤规则数组。
 	PacketFilter []*DDoSFeaturesFilter `json:"PacketFilter,omitempty" name:"PacketFilter"`
+
+	// 特征过滤清空标识，取值有：
+	// <li>off ：清空特征过滤规则，无需填写 PacketFilter 参数 ；</li>
+	// <li>on ：配置特征过滤规则，需填写 PacketFilter 参数。</li>默认值为on。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type DdosRule struct {
-	// DDoS防护等级
+	// DDoS防护等级。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosStatusInfo *DDoSStatusInfo `json:"DdosStatusInfo,omitempty" name:"DdosStatusInfo"`
 
-	// DDoS地域封禁
+	// DDoS地域封禁。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosGeoIp *DDoSGeoIp `json:"DdosGeoIp,omitempty" name:"DdosGeoIp"`
 
-	// DDoS黑白名单
+	// DDoS黑白名单。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosAllowBlock *DdosAllowBlock `json:"DdosAllowBlock,omitempty" name:"DdosAllowBlock"`
 
-	// DDoS 协议封禁+连接防护
+	// DDoS 协议封禁+连接防护。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosAntiPly *DDoSAntiPly `json:"DdosAntiPly,omitempty" name:"DdosAntiPly"`
 
-	// DDoS特征过滤
+	// DDoS特征过滤。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosPacketFilter *DdosPacketFilter `json:"DdosPacketFilter,omitempty" name:"DdosPacketFilter"`
 
-	// DDoS端口过滤
+	// DDoS端口过滤。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdosAcl *DdosAcls `json:"DdosAcl,omitempty" name:"DdosAcl"`
 
-	// DDoS开关 on-开启；off-关闭
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// DDoS开关，取值有:
+	// <li>on ：开启 ；</li>
+	// <li>off ：关闭 。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// UDP分片功能是否支持，off-不支持，on-支持
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// UDP分片功能是否支持，取值有:
+	// <li>on ：支持 ；</li>
+	// <li>off ：不支持 。</li>
 	UdpShardOpen *string `json:"UdpShardOpen,omitempty" name:"UdpShardOpen"`
+
+	// DDoS源站访问速率限制。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DdosSpeedLimit *DdosSpeedLimit `json:"DdosSpeedLimit,omitempty" name:"DdosSpeedLimit"`
+}
+
+type DdosSpeedLimit struct {
+	// 源站包量限制，支持单位有pps、Kpps、Mpps、Gpps。支持范围1 pps-10000 Gpps。"0 pps"或其他单位数值为0，即不限包。""为不更新。
+	PackageLimit *string `json:"PackageLimit,omitempty" name:"PackageLimit"`
+
+	// 源站流量限制，支持单位有bps、Kbps、Mbps、Gbps，支持范围1 bps-10000 Gbps。"0 bps"或其他单位数值为0，即不限流。""为不更新。
+	FluxLimit *string `json:"FluxLimit,omitempty" name:"FluxLimit"`
 }
 
 type DefaultServerCertInfo struct {
@@ -2641,20 +2739,20 @@ func (r *DeleteZoneResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeApplicationProxyDetailRequestParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 实例ID
+	// 实例ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 }
 
 type DescribeApplicationProxyDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 实例ID
+	// 实例ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 }
 
@@ -2680,64 +2778,74 @@ func (r *DescribeApplicationProxyDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeApplicationProxyDetailResponseParams struct {
-	// 实例ID
+	// 实例ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 调度模式：
-	// ip表示Anycast IP
-	// domain表示CNAME
+	// 调度模式，取值有：
+	// <li>ip：表示Anycast IP调度；</li>
+	// <li>domain：表示CNAME调度。</li>
 	PlatType *string `json:"PlatType,omitempty" name:"PlatType"`
 
-	// 0关闭安全，1开启安全
+	// 是否开启安全，取值有：
+	// <li>0：关闭安全；</li>
+	// <li>1：开启安全。</li>
 	SecurityType *int64 `json:"SecurityType,omitempty" name:"SecurityType"`
 
-	// 0关闭加速，1开启加速
+	// 是否开启加速，取值有：
+	// <li>0：关闭加速；</li>
+	// <li>1：开启加速。</li>
 	AccelerateType *int64 `json:"AccelerateType,omitempty" name:"AccelerateType"`
 
-	// 字段已经移至Rule.ForwardClientIp
+	// 字段已经废弃。
 	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
 
-	// 字段已经移至Rule.SessionPersist
+	// 字段已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 规则列表
+	// 规则列表。
 	Rule []*ApplicationProxyRule `json:"Rule,omitempty" name:"Rule"`
 
-	// 状态：
-	// online：启用
-	// offline：停用
-	// progress：部署中
+	// 状态，取值有：
+	// <li>online：启用；</li>
+	// <li>offline：停用；</li>
+	// <li>progress：部署中。</li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 调度信息
+	// 调度信息。
 	ScheduleValue []*string `json:"ScheduleValue,omitempty" name:"ScheduleValue"`
 
-	// 更新时间
+	// 更新时间。
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 站点名称
+	// 站点名称。
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
 
-	// 会话保持时间
+	// 会话保持时间。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>
 	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
 
 	// 当ProxyType=hostname时：
-	// ProxyName为域名，如：test.123.com
-	// HostId表示该域名，即test.123.com对应的代理加速唯一标识
+	// 表示代理加速唯一标识。
 	HostId *string `json:"HostId,omitempty" name:"HostId"`
+
+	// IPv6访问配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -2761,27 +2869,35 @@ func (r *DescribeApplicationProxyDetailResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeApplicationProxyRequestParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 分页参数Offset
+	// 分页查询偏移量，默认为0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 分页参数Limit
+	// 分页查询限制数目，默认为10，最大可设置为1000。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 代理ID。
+	// 当ProxyId为空时，表示查询站点下所有应用代理的列表。
+	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 }
 
 type DescribeApplicationProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 分页参数Offset
+	// 分页查询偏移量，默认为0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 分页参数Limit
+	// 分页查询限制数目，默认为10，最大可设置为1000。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 代理ID。
+	// 当ProxyId为空时，表示查询站点下所有应用代理的列表。
+	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 }
 
 func (r *DescribeApplicationProxyRequest) ToJsonString() string {
@@ -2799,6 +2915,7 @@ func (r *DescribeApplicationProxyRequest) FromJsonString(s string) error {
 	delete(f, "ZoneId")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "ProxyId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApplicationProxyRequest has unknown keys!", "")
 	}
@@ -2807,24 +2924,19 @@ func (r *DescribeApplicationProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeApplicationProxyResponseParams struct {
-	// 数据列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 应用代理列表。
 	Data []*ApplicationProxy `json:"Data,omitempty" name:"Data"`
 
-	// 记录总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 记录总数。
 	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 字段已废弃
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 字段已废弃。
 	Quota *int64 `json:"Quota,omitempty" name:"Quota"`
 
-	// 表示套餐内PlatType为ip的Anycast IP实例数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 当ProxyId为空时，表示套餐内PlatType为ip的Anycast IP的实例数量。
 	IpCount *uint64 `json:"IpCount,omitempty" name:"IpCount"`
 
-	// 表示套餐内PlatType为domain的CNAME实例数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 当ProxyId为空时，表示套餐内PlatType为domain的CNAME的实例数量。
 	DomainCount *uint64 `json:"DomainCount,omitempty" name:"DomainCount"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2849,51 +2961,77 @@ func (r *DescribeApplicationProxyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBotLogRequestParams struct {
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认查询所有站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认查询所有子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件，取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>sipCountryCode ：ip所在国家 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeBotLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认查询所有站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认查询所有子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件，取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>sipCountryCode ：ip所在国家 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeBotLogRequest) ToJsonString() string {
@@ -2915,6 +3053,7 @@ func (r *DescribeBotLogRequest) FromJsonString(s string) error {
 	delete(f, "ZoneIds")
 	delete(f, "Domains")
 	delete(f, "QueryCondition")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBotLogRequest has unknown keys!", "")
 	}
@@ -2923,13 +3062,15 @@ func (r *DescribeBotLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBotLogResponseParams struct {
-	// Bot攻击Data
+	// Bot攻击数据内容。
 	Data *BotLogData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1：失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3170,63 +3311,101 @@ func (r *DescribeDDoSPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackDataRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>ddos_attackMaxBandwidth ：攻击带宽峰值 ；</li>
+	// <li>ddos_attackMaxPackageRate：攻击包速率峰值  ；</li>
+	// <li>ddos_attackBandwidth ：攻击带宽曲线 ；</li>
+	// <li>ddos_attackPackageRate ：攻击包速率曲线 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id列表
+	// ddos策略组id列表，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 端口号。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 攻击类型，取值有：
+	// <li>flood ；</li>
+	// <li>icmpFlood ；</li>
+	// <li>all 。</li>
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosAttackDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>ddos_attackMaxBandwidth ：攻击带宽峰值 ；</li>
+	// <li>ddos_attackMaxPackageRate：攻击包速率峰值  ；</li>
+	// <li>ddos_attackBandwidth ：攻击带宽曲线 ；</li>
+	// <li>ddos_attackPackageRate ：攻击包速率曲线 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id列表
+	// ddos策略组id列表，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 端口号。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 攻击类型，取值有：
+	// <li>flood ；</li>
+	// <li>icmpFlood ；</li>
+	// <li>all 。</li>
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosAttackDataRequest) ToJsonString() string {
@@ -3250,6 +3429,7 @@ func (r *DescribeDDosAttackDataRequest) FromJsonString(s string) error {
 	delete(f, "ProtocolType")
 	delete(f, "AttackType")
 	delete(f, "Interval")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosAttackDataRequest has unknown keys!", "")
 	}
@@ -3258,17 +3438,23 @@ func (r *DescribeDDosAttackDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackDataResponseParams struct {
-	// DDos攻击数据
+	// DDos攻击数据内容。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Data []*SecEntry `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回数据
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3293,15 +3479,25 @@ func (r *DescribeDDosAttackDataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackEventDetailRequestParams struct {
-	// 事件id
+	// 事件id。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosAttackEventDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 事件id
+	// 事件id。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosAttackEventDetailRequest) ToJsonString() string {
@@ -3317,6 +3513,7 @@ func (r *DescribeDDosAttackEventDetailRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "EventId")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosAttackEventDetailRequest has unknown keys!", "")
 	}
@@ -3325,13 +3522,15 @@ func (r *DescribeDDosAttackEventDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackEventDetailResponseParams struct {
-	// DDos攻击事件详情
+	// DDos攻击事件详情。
 	Data *DDosAttackEventDetailData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3356,57 +3555,77 @@ func (r *DescribeDDosAttackEventDetailResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackEventRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos策略组id 集合
+	// ddos策略组id列表，不填默认选择全部策略Id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 协议类型,{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 选填{Y、N},默认为Y；Y：展示，N：不展示
+	// 是否展示详情，取值有：
+	// <li>Y ：展示 ；</li>
+	// <li>N ：不展示 。</li>默认为Y。
 	IsShowDetail *string `json:"IsShowDetail,omitempty" name:"IsShowDetail"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosAttackEventRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos策略组id 集合
+	// ddos策略组id列表，不填默认选择全部策略Id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 协议类型,{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 选填{Y、N},默认为Y；Y：展示，N：不展示
+	// 是否展示详情，取值有：
+	// <li>Y ：展示 ；</li>
+	// <li>N ：不展示 。</li>默认为Y。
 	IsShowDetail *string `json:"IsShowDetail,omitempty" name:"IsShowDetail"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosAttackEventRequest) ToJsonString() string {
@@ -3429,6 +3648,7 @@ func (r *DescribeDDosAttackEventRequest) FromJsonString(s string) error {
 	delete(f, "ZoneIds")
 	delete(f, "ProtocolType")
 	delete(f, "IsShowDetail")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosAttackEventRequest has unknown keys!", "")
 	}
@@ -3437,13 +3657,15 @@ func (r *DescribeDDosAttackEventRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackEventResponseParams struct {
-	// DDos攻击事件数据
+	// DDos攻击事件数据。
 	Data *DDosAttackEventData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3468,51 +3690,67 @@ func (r *DescribeDDosAttackEventResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackSourceEventRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos策略组id 集合
+	// ddos策略组id 集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 站点集合
+	// 站点集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 协议类型,{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosAttackSourceEventRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos策略组id 集合
+	// ddos策略组id 集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 站点集合
+	// 站点集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 协议类型,{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosAttackSourceEventRequest) ToJsonString() string {
@@ -3534,6 +3772,7 @@ func (r *DescribeDDosAttackSourceEventRequest) FromJsonString(s string) error {
 	delete(f, "PolicyIds")
 	delete(f, "ZoneIds")
 	delete(f, "ProtocolType")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosAttackSourceEventRequest has unknown keys!", "")
 	}
@@ -3542,13 +3781,15 @@ func (r *DescribeDDosAttackSourceEventRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackSourceEventResponseParams struct {
-	// DDos攻击源数据
+	// DDos攻击源数据。
 	Data *DDosAttackSourceEventData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3573,63 +3814,97 @@ func (r *DescribeDDosAttackSourceEventResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackTopDataRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 过滤指标
+	// 统计指标列表，取值有：
+	// <li>ddos_attackFlux_protocol ：攻击总流量协议类型分布排行 ；</li>
+	// <li>ddos_attackPackageNum_protocol ：攻击总包量协议类型分布排行 ；</li>
+	// <li>ddos_attackNum_attackType ：攻击总次数攻击类型分布排行 ；</li>
+	// <li>ddos_attackNum_sregion ：攻击总次数攻击源地区分布排行 ；</li>
+	// <li>ddos_attackFlux_sip ：攻击总流量攻击源ip分布排行 ；</li>
+	// <li>ddos_attackFlux_sregion ：攻击总流量攻击源地区分布排行 。</li>
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 查询前多少名,传值为0 全量
+	// 查询前多少个，传值为0返回全量。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 站点集合
+	// 站点id集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id 集合
+	// ddos策略组id 集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 端口号。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 攻击类型，取值有：
+	// <li>flood ；</li>
+	// <li>icmpFlood ；</li>
+	// <li>all 。</li>
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosAttackTopDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 过滤指标
+	// 统计指标列表，取值有：
+	// <li>ddos_attackFlux_protocol ：攻击总流量协议类型分布排行 ；</li>
+	// <li>ddos_attackPackageNum_protocol ：攻击总包量协议类型分布排行 ；</li>
+	// <li>ddos_attackNum_attackType ：攻击总次数攻击类型分布排行 ；</li>
+	// <li>ddos_attackNum_sregion ：攻击总次数攻击源地区分布排行 ；</li>
+	// <li>ddos_attackFlux_sip ：攻击总流量攻击源ip分布排行 ；</li>
+	// <li>ddos_attackFlux_sregion ：攻击总流量攻击源地区分布排行 。</li>
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 查询前多少名,传值为0 全量
+	// 查询前多少个，传值为0返回全量。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 站点集合
+	// 站点id集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id 集合
+	// ddos策略组id 集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 端口号。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 攻击类型，取值有：
+	// <li>flood ；</li>
+	// <li>icmpFlood ；</li>
+	// <li>all 。</li>
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosAttackTopDataRequest) ToJsonString() string {
@@ -3653,6 +3928,7 @@ func (r *DescribeDDosAttackTopDataRequest) FromJsonString(s string) error {
 	delete(f, "Port")
 	delete(f, "ProtocolType")
 	delete(f, "AttackType")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosAttackTopDataRequest has unknown keys!", "")
 	}
@@ -3661,13 +3937,15 @@ func (r *DescribeDDosAttackTopDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosAttackTopDataResponseParams struct {
-	// topn数据
+	// top数据内容
 	Data []*TopNEntry `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回消息
+	// 请求响应消息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3692,51 +3970,67 @@ func (r *DescribeDDosAttackTopDataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosMajorAttackEventRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos 策略组id集合
+	// ddos 策略组id集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 协议类型，{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeDDosMajorAttackEventRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// ddos 策略组id集合
+	// ddos 策略组id集合，不填默认选择全部策略id。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 协议类型，{tcp,udp,all}
+	// 协议类型，取值有：
+	// <li>tcp ；</li>
+	// <li>udp ；</li>
+	// <li>all 。</li>
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeDDosMajorAttackEventRequest) ToJsonString() string {
@@ -3758,6 +4052,7 @@ func (r *DescribeDDosMajorAttackEventRequest) FromJsonString(s string) error {
 	delete(f, "PolicyIds")
 	delete(f, "ProtocolType")
 	delete(f, "ZoneIds")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDDosMajorAttackEventRequest has unknown keys!", "")
 	}
@@ -3766,13 +4061,15 @@ func (r *DescribeDDosMajorAttackEventRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDDosMajorAttackEventResponseParams struct {
-	// DDos查询主攻击事件
+	// DDos查询主攻击事件。
 	Data *DDosMajorAttackEventData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回消息
+	// 请求响应消息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -4749,6 +5046,7 @@ type DescribeOverviewL7DataRequestParams struct {
 	// l7Flow_outFlux: 访问流量
 	// l7Flow_request: 访问请求数
 	// l7Flow_outBandwidth: 访问带宽
+	//  l7Flow_hit_outFlux: 缓存命中流量
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
 	// 时间间隔，选填{min, 5min, hour, day, week}
@@ -4762,6 +5060,11 @@ type DescribeOverviewL7DataRequestParams struct {
 
 	// 协议类型， 选填{http,http2,https,all}
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeOverviewL7DataRequest struct {
@@ -4777,6 +5080,7 @@ type DescribeOverviewL7DataRequest struct {
 	// l7Flow_outFlux: 访问流量
 	// l7Flow_request: 访问请求数
 	// l7Flow_outBandwidth: 访问带宽
+	//  l7Flow_hit_outFlux: 缓存命中流量
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
 	// 时间间隔，选填{min, 5min, hour, day, week}
@@ -4790,6 +5094,11 @@ type DescribeOverviewL7DataRequest struct {
 
 	// 协议类型， 选填{http,http2,https,all}
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeOverviewL7DataRequest) ToJsonString() string {
@@ -4811,6 +5120,7 @@ func (r *DescribeOverviewL7DataRequest) FromJsonString(s string) error {
 	delete(f, "ZoneIds")
 	delete(f, "Domains")
 	delete(f, "Protocol")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOverviewL7DataRequest has unknown keys!", "")
 	}
@@ -5531,6 +5841,11 @@ type DescribeTimingL4DataRequestParams struct {
 
 	// 四层实例列表
 	ProxyIds []*string `json:"ProxyIds,omitempty" name:"ProxyIds"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeTimingL4DataRequest struct {
@@ -5569,6 +5884,11 @@ type DescribeTimingL4DataRequest struct {
 
 	// 四层实例列表
 	ProxyIds []*string `json:"ProxyIds,omitempty" name:"ProxyIds"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeTimingL4DataRequest) ToJsonString() string {
@@ -5593,6 +5913,7 @@ func (r *DescribeTimingL4DataRequest) FromJsonString(s string) error {
 	delete(f, "RuleId")
 	delete(f, "Filters")
 	delete(f, "ProxyIds")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTimingL4DataRequest has unknown keys!", "")
 	}
@@ -5653,6 +5974,11 @@ type DescribeTimingL7AnalysisDataRequestParams struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeTimingL7AnalysisDataRequest struct {
@@ -5678,6 +6004,11 @@ type DescribeTimingL7AnalysisDataRequest struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeTimingL7AnalysisDataRequest) ToJsonString() string {
@@ -5698,6 +6029,7 @@ func (r *DescribeTimingL7AnalysisDataRequest) FromJsonString(s string) error {
 	delete(f, "Interval")
 	delete(f, "ZoneIds")
 	delete(f, "Filters")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTimingL7AnalysisDataRequest has unknown keys!", "")
 	}
@@ -5759,6 +6091,11 @@ type DescribeTimingL7CacheDataRequestParams struct {
 	// EO响应：{Key: "cacheType", Value: ["hit"], Operator: "equals"}；
 	// 源站响应：{Key: "cacheType", Value: ["miss", "dynamic"], Operator: "equals"}
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeTimingL7CacheDataRequest struct {
@@ -5785,6 +6122,11 @@ type DescribeTimingL7CacheDataRequest struct {
 	// EO响应：{Key: "cacheType", Value: ["hit"], Operator: "equals"}；
 	// 源站响应：{Key: "cacheType", Value: ["miss", "dynamic"], Operator: "equals"}
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeTimingL7CacheDataRequest) ToJsonString() string {
@@ -5805,6 +6147,7 @@ func (r *DescribeTimingL7CacheDataRequest) FromJsonString(s string) error {
 	delete(f, "Interval")
 	delete(f, "ZoneIds")
 	delete(f, "Filters")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTimingL7CacheDataRequest has unknown keys!", "")
 	}
@@ -5865,6 +6208,11 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeTopL7AnalysisDataRequest struct {
@@ -5890,6 +6238,11 @@ type DescribeTopL7AnalysisDataRequest struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeTopL7AnalysisDataRequest) ToJsonString() string {
@@ -5911,6 +6264,7 @@ func (r *DescribeTopL7AnalysisDataRequest) FromJsonString(s string) error {
 	delete(f, "Interval")
 	delete(f, "ZoneIds")
 	delete(f, "Filters")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopL7AnalysisDataRequest has unknown keys!", "")
 	}
@@ -5971,6 +6325,11 @@ type DescribeTopL7CacheDataRequestParams struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeTopL7CacheDataRequest struct {
@@ -5996,6 +6355,11 @@ type DescribeTopL7CacheDataRequest struct {
 
 	// 筛选条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeTopL7CacheDataRequest) ToJsonString() string {
@@ -6017,6 +6381,7 @@ func (r *DescribeTopL7CacheDataRequest) FromJsonString(s string) error {
 	delete(f, "Interval")
 	delete(f, "ZoneIds")
 	delete(f, "Filters")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopL7CacheDataRequest has unknown keys!", "")
 	}
@@ -6169,85 +6534,85 @@ func (r *DescribeWebManagedRulesAttackEventsResponse) FromJsonString(s string) e
 
 // Predefined struct for user
 type DescribeWebManagedRulesDataRequestParams struct {
-	// 开始时间
+	// 开始时间，RFC3339格式。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间，RFC3339格式。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>waf_interceptNum ：waf拦截次数 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 子域名列表
+	// 子域名列表，不填默认选择子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 协议类型
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// "webshell" : Webshell检测防护
-	// "oa" : 常见OA漏洞防护
-	// "xss" : XSS跨站脚本攻击防护
-	// "xxe" : XXE攻击防护
-	// "webscan" : 扫描器攻击漏洞防护
-	// "cms" : 常见CMS漏洞防护
-	// "upload" : 恶意文件上传攻击防护
-	// "sql" : SQL注入攻击防护
-	// "cmd_inject": 命令/代码注入攻击防护
-	// "osc" : 开源组件漏洞防护
-	// "file_read" : 任意文件读取
-	// "ldap" : LDAP注入攻击防护
-	// "other" : 其它漏洞防护
-	// 
-	// "all":"所有"
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeWebManagedRulesDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间，RFC3339格式。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间，RFC3339格式。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>waf_interceptNum ：waf拦截次数 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 子域名列表
+	// 子域名列表，不填默认选择子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 协议类型
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// "webshell" : Webshell检测防护
-	// "oa" : 常见OA漏洞防护
-	// "xss" : XSS跨站脚本攻击防护
-	// "xxe" : XXE攻击防护
-	// "webscan" : 扫描器攻击漏洞防护
-	// "cms" : 常见CMS漏洞防护
-	// "upload" : 恶意文件上传攻击防护
-	// "sql" : SQL注入攻击防护
-	// "cmd_inject": 命令/代码注入攻击防护
-	// "osc" : 开源组件漏洞防护
-	// "file_read" : 任意文件读取
-	// "ldap" : LDAP注入攻击防护
-	// "other" : 其它漏洞防护
-	// 
-	// "all":"所有"
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeWebManagedRulesDataRequest) ToJsonString() string {
@@ -6270,6 +6635,8 @@ func (r *DescribeWebManagedRulesDataRequest) FromJsonString(s string) error {
 	delete(f, "ProtocolType")
 	delete(f, "AttackType")
 	delete(f, "Interval")
+	delete(f, "QueryCondition")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWebManagedRulesDataRequest has unknown keys!", "")
 	}
@@ -6278,17 +6645,23 @@ func (r *DescribeWebManagedRulesDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebManagedRulesDataResponseParams struct {
-	// Web攻击日志实体
+	// Web攻击日志实体。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Data []*SecEntry `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回消息
+	// 请求响应消息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6313,51 +6686,83 @@ func (r *DescribeWebManagedRulesDataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebManagedRulesLogRequestParams struct {
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件，取值有：
+	// <li>attackType ：攻击类型 ；</li>
+	// <li>riskLevel ：风险等级 ；</li>
+	// <li>action ：执行动作（处置方式） ；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>sipCountryCode ：ip所在国家 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeWebManagedRulesLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件，取值有：
+	// <li>attackType ：攻击类型 ；</li>
+	// <li>riskLevel ：风险等级 ；</li>
+	// <li>action ：执行动作（处置方式） ；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>sipCountryCode ：ip所在国家 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeWebManagedRulesLogRequest) ToJsonString() string {
@@ -6379,6 +6784,7 @@ func (r *DescribeWebManagedRulesLogRequest) FromJsonString(s string) error {
 	delete(f, "ZoneIds")
 	delete(f, "Domains")
 	delete(f, "QueryCondition")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWebManagedRulesLogRequest has unknown keys!", "")
 	}
@@ -6387,13 +6793,15 @@ func (r *DescribeWebManagedRulesLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebManagedRulesLogResponseParams struct {
-	// web攻击日志data
+	// web攻击日志数据内容。
 	Data *WebLogData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:失败
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6418,69 +6826,107 @@ func (r *DescribeWebManagedRulesLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebManagedRulesTopDataRequestParams struct {
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 过滤指标
+	// 统计指标列表，取值有：
+	// <li>waf_requestNum_url ：url请求数排行 ；</li>
+	// <li>waf_requestNum_cip：客户端ip请求数排行 ；</li>
+	// <li>waf_cipRequestNum_region ：客户端区域请求数排行 。</li>
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 查询前多少名,传值为0 全量
+	// 查询前多少个，传值为0返回全量。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id 集合
+	// 该字段已废弃，请勿传。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 该字段已废弃，请勿传。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 域名集合
+	// 域名列表，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
+
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
+	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeWebManagedRulesTopDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 过滤指标
+	// 统计指标列表，取值有：
+	// <li>waf_requestNum_url ：url请求数排行 ；</li>
+	// <li>waf_requestNum_cip：客户端ip请求数排行 ；</li>
+	// <li>waf_cipRequestNum_region ：客户端区域请求数排行 。</li>
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 
-	// 查询前多少名,传值为0 全量
+	// 查询前多少个，传值为0返回全量。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 站点集合
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// ddos策略组id 集合
+	// 该字段已废弃，请勿传。
 	PolicyIds []*int64 `json:"PolicyIds,omitempty" name:"PolicyIds"`
 
-	// 端口号
+	// 该字段已废弃，请勿传。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 协议类型,tcp,udp,all
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// 攻击类型,flood,icmpFlood......,all
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 域名集合
+	// 域名列表，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
+
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
+	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeWebManagedRulesTopDataRequest) ToJsonString() string {
@@ -6505,6 +6951,9 @@ func (r *DescribeWebManagedRulesTopDataRequest) FromJsonString(s string) error {
 	delete(f, "ProtocolType")
 	delete(f, "AttackType")
 	delete(f, "Domains")
+	delete(f, "Interval")
+	delete(f, "QueryCondition")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWebManagedRulesTopDataRequest has unknown keys!", "")
 	}
@@ -6513,13 +6962,15 @@ func (r *DescribeWebManagedRulesTopDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebManagedRulesTopDataResponseParams struct {
-	// topn数据
+	// top数据内容。
 	Data []*TopNEntry `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回消息
+	// 请求响应消息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6642,85 +7093,87 @@ func (r *DescribeWebProtectionAttackEventsResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type DescribeWebProtectionDataRequestParams struct {
-	// 开始时间
+	// 开始时间，RFC3339格式。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间，RFC3339格式。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>ccRate_interceptNum ：速率限制规则限制次数 ；</li>
+	// <li>ccAcl_interceptNum ：自定义规则拦截次数 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 子域名列表
+	// 子域名列表，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 协议类型
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// "webshell" : Webshell检测防护
-	// "oa" : 常见OA漏洞防护
-	// "xss" : XSS跨站脚本攻击防护
-	// "xxe" : XXE攻击防护
-	// "webscan" : 扫描器攻击漏洞防护
-	// "cms" : 常见CMS漏洞防护
-	// "upload" : 恶意文件上传攻击防护
-	// "sql" : SQL注入攻击防护
-	// "cmd_inject": 命令/代码注入攻击防护
-	// "osc" : 开源组件漏洞防护
-	// "file_read" : 任意文件读取
-	// "ldap" : LDAP注入攻击防护
-	// "other" : 其它漏洞防护
-	// 
-	// "all":"所有"
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeWebProtectionDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间
+	// 开始时间，RFC3339格式。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间，RFC3339格式。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 统计指标列表
+	// 统计指标列表，取值有：
+	// <li>ccRate_interceptNum ：速率限制规则限制次数 ；</li>
+	// <li>ccAcl_interceptNum ：自定义规则拦截次数 。</li>
 	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames"`
 
-	// 站点id列表
+	// 站点id列表，不填默认选择全部站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 子域名列表
+	// 子域名列表，不填默认选择全部子域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 协议类型
+	// 该字段已废弃，请勿传。
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
 
-	// "webshell" : Webshell检测防护
-	// "oa" : 常见OA漏洞防护
-	// "xss" : XSS跨站脚本攻击防护
-	// "xxe" : XXE攻击防护
-	// "webscan" : 扫描器攻击漏洞防护
-	// "cms" : 常见CMS漏洞防护
-	// "upload" : 恶意文件上传攻击防护
-	// "sql" : SQL注入攻击防护
-	// "cmd_inject": 命令/代码注入攻击防护
-	// "osc" : 开源组件漏洞防护
-	// "file_read" : 任意文件读取
-	// "ldap" : LDAP注入攻击防护
-	// "other" : 其它漏洞防护
-	// 
-	// "all":"所有"
+	// 该字段已废弃，请勿传。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
+
+	// 筛选条件，取值有：
+	// <li>action ：执行动作 。</li>
+	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeWebProtectionDataRequest) ToJsonString() string {
@@ -6743,6 +7196,8 @@ func (r *DescribeWebProtectionDataRequest) FromJsonString(s string) error {
 	delete(f, "ProtocolType")
 	delete(f, "AttackType")
 	delete(f, "Interval")
+	delete(f, "QueryCondition")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWebProtectionDataRequest has unknown keys!", "")
 	}
@@ -6751,17 +7206,23 @@ func (r *DescribeWebProtectionDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebProtectionDataResponseParams struct {
-	// 数据详情
+	// 数据详情。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Data []*SecEntry `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1:失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 消息
+	// 请求响应消息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
-	// 查询时间粒度，可选{min,5min,hour,day}
+	// 查询时间粒度，取值有：
+	// <li>min ：1分钟 ；</li>
+	// <li>5min ：5分钟 ；</li>
+	// <li>hour ：1小时 ；</li>
+	// <li>day ：1天 。</li>
 	Interval *string `json:"Interval,omitempty" name:"Interval"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6786,51 +7247,99 @@ func (r *DescribeWebProtectionDataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebProtectionLogRequestParams struct {
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认查询所有站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认查询所有域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件。
+	// 限速规则日志中取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>attackIp ：攻击ip 。</li>
+	// 自定义规则日志中取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 日志类型，取值有：
+	// <li>rate ：限速日志 ；</li>
+	// <li>acl ：自定义规则日志 。</li>不填默认为rate。
+	EntityType *string `json:"EntityType,omitempty" name:"EntityType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type DescribeWebProtectionLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 起始时间
+	// 起始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 每页条数
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 当前页
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 站点集合
+	// 站点集合，不填默认查询所有站点。
 	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
 
-	// 域名集合
+	// 域名集合，不填默认查询所有域名。
 	Domains []*string `json:"Domains,omitempty" name:"Domains"`
 
-	// 查询条件
+	// 筛选条件。
+	// 限速规则日志中取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>attackIp ：攻击ip 。</li>
+	// 自定义规则日志中取值有：
+	// <li>action ：执行动作（处置方式）；</li>
+	// <li>ruleId ：规则id ；</li>
+	// <li>oriDomain ：被攻击的子域名 ；</li>
+	// <li>attackIp ：攻击ip ；</li>
+	// <li>eventId ：事件id ；</li>
+	// <li>ua ：用户代理 ；</li>
+	// <li>requestMethod ：请求方法 ；</li>
+	// <li>uri ：统一资源标识符 。</li>
 	QueryCondition []*QueryCondition `json:"QueryCondition,omitempty" name:"QueryCondition"`
+
+	// 日志类型，取值有：
+	// <li>rate ：限速日志 ；</li>
+	// <li>acl ：自定义规则日志 。</li>不填默认为rate。
+	EntityType *string `json:"EntityType,omitempty" name:"EntityType"`
+
+	// 数据归属地区，取值有：
+	// <li>overseas ：全球（除中国大陆地区）数据 ；</li>
+	// <li>mainland ：中国大陆地区数据 。</li>不填默认查询overseas。
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeWebProtectionLogRequest) ToJsonString() string {
@@ -6852,6 +7361,8 @@ func (r *DescribeWebProtectionLogRequest) FromJsonString(s string) error {
 	delete(f, "ZoneIds")
 	delete(f, "Domains")
 	delete(f, "QueryCondition")
+	delete(f, "EntityType")
+	delete(f, "Area")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWebProtectionLogRequest has unknown keys!", "")
 	}
@@ -6860,13 +7371,15 @@ func (r *DescribeWebProtectionLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWebProtectionLogResponseParams struct {
-	// 限速拦截Data
+	// 限速拦截数据内容。
 	Data *CCLogData `json:"Data,omitempty" name:"Data"`
 
-	// 状态，1：失败，0:成功
+	// 请求响应状态，取值有：
+	// <li>1 ：失败 ；</li>
+	// <li>0 ：成功 。</li>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 返回信息
+	// 请求响应信息。
 	Msg *string `json:"Msg,omitempty" name:"Msg"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6994,11 +7507,9 @@ type DescribeZoneDetailsResponseParams struct {
 	Name *string `json:"Name,omitempty" name:"Name"`
 
 	// 用户当前使用的 NS 列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginalNameServers []*string `json:"OriginalNameServers,omitempty" name:"OriginalNameServers"`
 
 	// 腾讯云分配给用户的 NS 列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NameServers []*string `json:"NameServers,omitempty" name:"NameServers"`
 
 	// 站点状态
@@ -7016,20 +7527,6 @@ type DescribeZoneDetailsResponseParams struct {
 	// 站点是否关闭
 	Paused *bool `json:"Paused,omitempty" name:"Paused"`
 
-	// 站点创建时间
-	CreatedOn *string `json:"CreatedOn,omitempty" name:"CreatedOn"`
-
-	// 站点修改时间
-	ModifiedOn *string `json:"ModifiedOn,omitempty" name:"ModifiedOn"`
-
-	// 用户自定义 NS 信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VanityNameServers *VanityNameServers `json:"VanityNameServers,omitempty" name:"VanityNameServers"`
-
-	// 用户自定义 NS IP 信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VanityNameServersIps []*VanityNameServersIps `json:"VanityNameServersIps,omitempty" name:"VanityNameServersIps"`
-
 	// 是否开启 CNAME 加速
 	// - enabled：开启
 	// - disabled：关闭
@@ -7038,16 +7535,35 @@ type DescribeZoneDetailsResponseParams struct {
 	// cname切换验证状态
 	// - finished 切换完成
 	// - pending 切换验证中
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	CnameStatus *string `json:"CnameStatus,omitempty" name:"CnameStatus"`
 
 	// 资源标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 
+	// 站点接入地域，取值为：
+	// <li> global：全球；</li>
+	// <li> mainland：中国大陆；</li>
+	// <li> overseas：境外区域。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
+
 	// 计费资源
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Resources []*Resource `json:"Resources,omitempty" name:"Resources"`
+
+	// 站点修改时间
+	ModifiedOn *string `json:"ModifiedOn,omitempty" name:"ModifiedOn"`
+
+	// 站点创建时间
+	CreatedOn *string `json:"CreatedOn,omitempty" name:"CreatedOn"`
+
+	// 用户自定义 NS 信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VanityNameServers *VanityNameServers `json:"VanityNameServers,omitempty" name:"VanityNameServers"`
+
+	// 用户自定义 NS IP 信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VanityNameServersIps []*VanityNameServersIps `json:"VanityNameServersIps,omitempty" name:"VanityNameServersIps"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -7071,14 +7587,14 @@ func (r *DescribeZoneDetailsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeZoneSettingRequestParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 }
 
 type DescribeZoneSettingRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 }
 
@@ -7103,71 +7619,80 @@ func (r *DescribeZoneSettingRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeZoneSettingResponseParams struct {
-	// 缓存过期时间配置
+	// 站点ID。
+	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 站点名称。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 缓存过期时间配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cache *CacheConfig `json:"Cache,omitempty" name:"Cache"`
 
-	// 节点缓存键配置
+	// 节点缓存键配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheKey *CacheKey `json:"CacheKey,omitempty" name:"CacheKey"`
 
-	// 浏览器缓存配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxAge *MaxAge `json:"MaxAge,omitempty" name:"MaxAge"`
-
-	// 离线缓存
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
-
-	// Quic访问
+	// Quic访问配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 
-	// POST请求传输配置
+	// POST请求传输配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PostMaxSize *PostMaxSize `json:"PostMaxSize,omitempty" name:"PostMaxSize"`
 
-	// 智能压缩配置
+	// 智能压缩配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Compression *Compression `json:"Compression,omitempty" name:"Compression"`
 
-	// http2回源配置
+	// Http2回源配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpstreamHttp2 *UpstreamHttp2 `json:"UpstreamHttp2,omitempty" name:"UpstreamHttp2"`
 
-	// 访问协议强制https跳转配置
+	// 访问协议强制Https跳转配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ForceRedirect *ForceRedirect `json:"ForceRedirect,omitempty" name:"ForceRedirect"`
 
-	// Https 加速配置
+	// Https 加速配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Https *Https `json:"Https,omitempty" name:"Https"`
 
-	// 源站配置
+	// 源站配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Origin *Origin `json:"Origin,omitempty" name:"Origin"`
 
-	// 动态加速配置
+	// 智能加速配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SmartRouting *SmartRouting `json:"SmartRouting,omitempty" name:"SmartRouting"`
 
-	// 站点ID
-	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+	// 浏览器缓存配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxAge *MaxAge `json:"MaxAge,omitempty" name:"MaxAge"`
 
-	// 站点域名
-	Zone *string `json:"Zone,omitempty" name:"Zone"`
+	// 离线缓存配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
 
-	// WebSocket配置
+	// WebSocket配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	WebSocket *WebSocket `json:"WebSocket,omitempty" name:"WebSocket"`
 
-	// 客户端IP回源请求头配置
+	// 客户端IP回源请求头配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientIpHeader *ClientIp `json:"ClientIpHeader,omitempty" name:"ClientIpHeader"`
 
-	// 缓存预刷新配置
+	// 缓存预刷新配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CachePrefresh *CachePrefresh `json:"CachePrefresh,omitempty" name:"CachePrefresh"`
+
+	// Ipv6访问配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
+
+	// 站点加速区域信息，取值有：
+	// <li>mainland：中国境内加速；</li>
+	// <li>overseas：中国境外加速。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -7191,26 +7716,26 @@ func (r *DescribeZoneSettingResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeZonesRequestParams struct {
-	// 分页参数，页偏移
+	// 分页查询偏移量。默认值：0，最小值：0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 分页参数，每页返回的站点个数
+	// 分页查询限制数目。默认值：1000，最大值：1000。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 查询条件过滤器，复杂类型
+	// 查询条件过滤器，复杂类型。
 	Filters []*ZoneFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
 type DescribeZonesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 分页参数，页偏移
+	// 分页查询偏移量。默认值：0，最小值：0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 分页参数，每页返回的站点个数
+	// 分页查询限制数目。默认值：1000，最大值：1000。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 查询条件过滤器，复杂类型
+	// 查询条件过滤器，复杂类型。
 	Filters []*ZoneFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
@@ -7237,11 +7762,10 @@ func (r *DescribeZonesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeZonesResponseParams struct {
-	// 符合条件的站点数
+	// 符合条件的站点个数。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 站点详细信息列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 站点详细信息列表。
 	Zones []*Zone `json:"Zones,omitempty" name:"Zones"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -7548,14 +8072,14 @@ type Filter struct {
 }
 
 type ForceRedirect struct {
-	// 访问强制跳转配置开关
-	// on：开启
-	// off：关闭
+	// 访问强制跳转配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 重定向状态码
-	// 301
-	// 302
+	// 重定向状态码，取值有：
+	// <li>301：301跳转；</li>
+	// <li>302：302跳转。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitempty" name:"RedirectStatusCode"`
 }
@@ -7596,37 +8120,46 @@ type HostCertSetting struct {
 }
 
 type Hsts struct {
-	// 是否开启，on或off。
+	// 是否开启，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// MaxAge数值。
+	// MaxAge数值。单位为秒，最大值为1天。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxAge *int64 `json:"MaxAge,omitempty" name:"MaxAge"`
 
-	// 是否包含子域名，on或off。
+	// 是否包含子域名，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IncludeSubDomains *string `json:"IncludeSubDomains,omitempty" name:"IncludeSubDomains"`
 
-	// 是否预加载，on或off。
+	// 是否开启预加载，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Preload *string `json:"Preload,omitempty" name:"Preload"`
 }
 
 type Https struct {
-	// http2 配置开关
-	// on：开启
-	// off：关闭
+	// http2 配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Http2 *string `json:"Http2,omitempty" name:"Http2"`
 
-	// OCSP 配置开关
-	// on：开启
-	// off：关闭
-	// 默认为关闭状态
+	// OCSP 配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OcspStapling *string `json:"OcspStapling,omitempty" name:"OcspStapling"`
 
-	// Tls版本设置，支持设置 TLSv1, TLSV1.1, TLSV1.2, TLSv1.3，修改时必须开启连续的版本
+	// Tls版本设置，取值有：
+	// <li>TLSv1：TLSv1版本；</li>
+	// <li>TLSV1.1：TLSv1.1版本；</li>
+	// <li>TLSV1.2：TLSv1.2版本；</li>
+	// <li>TLSv1.3：TLSv1.3版本。</li>修改时必须开启连续的版本。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TlsVersion []*string `json:"TlsVersion,omitempty" name:"TlsVersion"`
 
@@ -7817,6 +8350,13 @@ type IpTableRule struct {
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
+type Ipv6Access struct {
+	// Ipv6访问功能配置，取值有：
+	// <li>on：开启Ipv6访问功能；</li>
+	// <li>off：关闭Ipv6访问功能。</li>
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
 type L7OfflineLog struct {
 	// 日志打包开始时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -7837,6 +8377,11 @@ type L7OfflineLog struct {
 	// 日志数据包名
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogPacketName *string `json:"LogPacketName,omitempty" name:"LogPacketName"`
+
+	// 加速区域，取值有：
+	// <li>mainland：中国大陆境内;</li>
+	// <li>overseas：全球（不含中国大陆）。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type LoadBalancing struct {
@@ -7907,71 +8452,75 @@ type ManagedRule struct {
 }
 
 type MaxAge struct {
-	// MaxAge 时间设置，单位秒，最大365天
-	// 注意：时间为0，即不缓存。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxAgeTime *int64 `json:"MaxAgeTime,omitempty" name:"MaxAgeTime"`
-
-	// 是否遵循源站，on或off，开启时忽略时间设置。
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 是否遵循源站，取值有：
+	// <li>on：遵循源站，忽略MaxAge 时间设置；</li>
+	// <li>off：不遵循源站，使用MaxAge 时间设置。</li>
 	FollowOrigin *string `json:"FollowOrigin,omitempty" name:"FollowOrigin"`
+
+	// MaxAge 时间设置，单位秒，最大365天。
+	// 注意：时间为0，即不缓存。
+	MaxAgeTime *int64 `json:"MaxAgeTime,omitempty" name:"MaxAgeTime"`
 }
 
 // Predefined struct for user
 type ModifyApplicationProxyRequestParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 代理ID
+	// 代理ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 参数已经废弃
+	// 参数已经废弃。
 	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
 
-	// 参数已经废弃
+	// 参数已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 会话保持时间，取值范围：30-3600，单位：秒
+	// 会话保持时间，不填写保持原有配置。取值范围：30-3600，单位：秒。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>不填写保持原有配置。
 	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+
+	// Ipv6访问配置，不填写保持原有配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 type ModifyApplicationProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 代理ID
+	// 代理ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
-	// 代理名称
-	// 当ProxyType=hostname时，表示域名或者子域名
-	// 当ProxyType=instance时，表示实例名称
+	// 当ProxyType=hostname时，表示域名或子域名；
+	// 当ProxyType=instance时，表示代理名称。
 	ProxyName *string `json:"ProxyName,omitempty" name:"ProxyName"`
 
-	// 参数已经废弃
+	// 参数已经废弃。
 	ForwardClientIp *string `json:"ForwardClientIp,omitempty" name:"ForwardClientIp"`
 
-	// 参数已经废弃
+	// 参数已经废弃。
 	SessionPersist *bool `json:"SessionPersist,omitempty" name:"SessionPersist"`
 
-	// 会话保持时间，取值范围：30-3600，单位：秒
+	// 会话保持时间，不填写保持原有配置。取值范围：30-3600，单位：秒。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitempty" name:"SessionPersistTime"`
 
-	// 服务类型
-	// hostname：子域名模式
-	// instance：实例模式
+	// 四层代理模式，取值有：
+	// <li>hostname：表示子域名模式；</li>
+	// <li>instance：表示实例模式。</li>不填写保持原有配置。
 	ProxyType *string `json:"ProxyType,omitempty" name:"ProxyType"`
+
+	// Ipv6访问配置，不填写保持原有配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 func (r *ModifyApplicationProxyRequest) ToJsonString() string {
@@ -7993,6 +8542,7 @@ func (r *ModifyApplicationProxyRequest) FromJsonString(s string) error {
 	delete(f, "SessionPersist")
 	delete(f, "SessionPersistTime")
 	delete(f, "ProxyType")
+	delete(f, "Ipv6")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApplicationProxyRequest has unknown keys!", "")
 	}
@@ -8001,7 +8551,7 @@ func (r *ModifyApplicationProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyApplicationProxyResponseParams struct {
-	// 代理ID
+	// 代理ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -8415,26 +8965,26 @@ func (r *ModifyDDoSPolicyHostResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDDoSPolicyRequestParams struct {
-	// 策略组ID
+	// 策略id。
 	PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 一级域名
+	// 站点id。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// DDoS具体防护配置
+	// DDoS防护配置详情。
 	DdosRule *DdosRule `json:"DdosRule,omitempty" name:"DdosRule"`
 }
 
 type ModifyDDoSPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 策略组ID
+	// 策略id。
 	PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
-	// 一级域名
+	// 站点id。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// DDoS具体防护配置
+	// DDoS防护配置详情。
 	DdosRule *DdosRule `json:"DdosRule,omitempty" name:"DdosRule"`
 }
 
@@ -8461,7 +9011,7 @@ func (r *ModifyDDoSPolicyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDDoSPolicyResponseParams struct {
-	// 策略组ID
+	// 策略id。
 	PolicyId *int64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -9379,105 +9929,143 @@ func (r *ModifyZoneResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyZoneSettingRequestParams struct {
-	// 待变更的站点ID
+	// 待变更的站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 缓存过期时间配置
+	// 缓存过期时间配置。
+	// 不填写表示保持原有配置。
 	Cache *CacheConfig `json:"Cache,omitempty" name:"Cache"`
 
-	// 节点缓存键配置
+	// 节点缓存键配置。
+	// 不填写表示保持原有配置。
 	CacheKey *CacheKey `json:"CacheKey,omitempty" name:"CacheKey"`
 
-	// 浏览器缓存配置
+	// 浏览器缓存配置。
+	// 不填写表示保持原有配置。
 	MaxAge *MaxAge `json:"MaxAge,omitempty" name:"MaxAge"`
 
-	// 离线缓存
+	// 离线缓存配置。
+	// 不填写表示保持原有配置。
 	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
 
-	// Quic访问
+	// Quic访问配置。
+	// 不填写表示保持原有配置。
 	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 
-	// POST请求传输配置
+	// Post请求传输配置。
+	// 不填写表示保持原有配置。
 	PostMaxSize *PostMaxSize `json:"PostMaxSize,omitempty" name:"PostMaxSize"`
 
-	// 智能压缩配置
+	// 智能压缩配置。
+	// 不填写表示保持原有配置。
 	Compression *Compression `json:"Compression,omitempty" name:"Compression"`
 
-	// http2回源配置
+	// Http2回源配置。
+	// 不填写表示保持原有配置。
 	UpstreamHttp2 *UpstreamHttp2 `json:"UpstreamHttp2,omitempty" name:"UpstreamHttp2"`
 
-	// 访问协议强制https跳转配置
+	// 访问协议强制Https跳转配置。
+	// 不填写表示保持原有配置。
 	ForceRedirect *ForceRedirect `json:"ForceRedirect,omitempty" name:"ForceRedirect"`
 
-	// Https 加速配置
+	// Https加速配置。
+	// 不填写表示保持原有配置。
 	Https *Https `json:"Https,omitempty" name:"Https"`
 
-	// 源站配置
+	// 源站配置。
+	// 不填写表示保持原有配置。
 	Origin *Origin `json:"Origin,omitempty" name:"Origin"`
 
-	// 智能加速配置
+	// 智能加速配置。
+	// 不填写表示保持原有配置。
 	SmartRouting *SmartRouting `json:"SmartRouting,omitempty" name:"SmartRouting"`
 
-	// WebSocket配置
+	// WebSocket配置。
+	// 不填写表示保持原有配置。
 	WebSocket *WebSocket `json:"WebSocket,omitempty" name:"WebSocket"`
 
-	// 客户端IP回源请求头配置
+	// 客户端IP回源请求头配置。
+	// 不填写表示保持原有配置。
 	ClientIpHeader *ClientIp `json:"ClientIpHeader,omitempty" name:"ClientIpHeader"`
 
-	// 缓存预刷新配置
+	// 缓存预刷新配置。
+	// 不填写表示保持原有配置。
 	CachePrefresh *CachePrefresh `json:"CachePrefresh,omitempty" name:"CachePrefresh"`
+
+	// Ipv6访问配置。
+	// 不填写表示保持原有配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 type ModifyZoneSettingRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待变更的站点ID
+	// 待变更的站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 缓存过期时间配置
+	// 缓存过期时间配置。
+	// 不填写表示保持原有配置。
 	Cache *CacheConfig `json:"Cache,omitempty" name:"Cache"`
 
-	// 节点缓存键配置
+	// 节点缓存键配置。
+	// 不填写表示保持原有配置。
 	CacheKey *CacheKey `json:"CacheKey,omitempty" name:"CacheKey"`
 
-	// 浏览器缓存配置
+	// 浏览器缓存配置。
+	// 不填写表示保持原有配置。
 	MaxAge *MaxAge `json:"MaxAge,omitempty" name:"MaxAge"`
 
-	// 离线缓存
+	// 离线缓存配置。
+	// 不填写表示保持原有配置。
 	OfflineCache *OfflineCache `json:"OfflineCache,omitempty" name:"OfflineCache"`
 
-	// Quic访问
+	// Quic访问配置。
+	// 不填写表示保持原有配置。
 	Quic *Quic `json:"Quic,omitempty" name:"Quic"`
 
-	// POST请求传输配置
+	// Post请求传输配置。
+	// 不填写表示保持原有配置。
 	PostMaxSize *PostMaxSize `json:"PostMaxSize,omitempty" name:"PostMaxSize"`
 
-	// 智能压缩配置
+	// 智能压缩配置。
+	// 不填写表示保持原有配置。
 	Compression *Compression `json:"Compression,omitempty" name:"Compression"`
 
-	// http2回源配置
+	// Http2回源配置。
+	// 不填写表示保持原有配置。
 	UpstreamHttp2 *UpstreamHttp2 `json:"UpstreamHttp2,omitempty" name:"UpstreamHttp2"`
 
-	// 访问协议强制https跳转配置
+	// 访问协议强制Https跳转配置。
+	// 不填写表示保持原有配置。
 	ForceRedirect *ForceRedirect `json:"ForceRedirect,omitempty" name:"ForceRedirect"`
 
-	// Https 加速配置
+	// Https加速配置。
+	// 不填写表示保持原有配置。
 	Https *Https `json:"Https,omitempty" name:"Https"`
 
-	// 源站配置
+	// 源站配置。
+	// 不填写表示保持原有配置。
 	Origin *Origin `json:"Origin,omitempty" name:"Origin"`
 
-	// 智能加速配置
+	// 智能加速配置。
+	// 不填写表示保持原有配置。
 	SmartRouting *SmartRouting `json:"SmartRouting,omitempty" name:"SmartRouting"`
 
-	// WebSocket配置
+	// WebSocket配置。
+	// 不填写表示保持原有配置。
 	WebSocket *WebSocket `json:"WebSocket,omitempty" name:"WebSocket"`
 
-	// 客户端IP回源请求头配置
+	// 客户端IP回源请求头配置。
+	// 不填写表示保持原有配置。
 	ClientIpHeader *ClientIp `json:"ClientIpHeader,omitempty" name:"ClientIpHeader"`
 
-	// 缓存预刷新配置
+	// 缓存预刷新配置。
+	// 不填写表示保持原有配置。
 	CachePrefresh *CachePrefresh `json:"CachePrefresh,omitempty" name:"CachePrefresh"`
+
+	// Ipv6访问配置。
+	// 不填写表示保持原有配置。
+	Ipv6 *Ipv6Access `json:"Ipv6,omitempty" name:"Ipv6"`
 }
 
 func (r *ModifyZoneSettingRequest) ToJsonString() string {
@@ -9508,6 +10096,7 @@ func (r *ModifyZoneSettingRequest) FromJsonString(s string) error {
 	delete(f, "WebSocket")
 	delete(f, "ClientIpHeader")
 	delete(f, "CachePrefresh")
+	delete(f, "Ipv6")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyZoneSettingRequest has unknown keys!", "")
 	}
@@ -9516,7 +10105,7 @@ func (r *ModifyZoneSettingRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyZoneSettingResponseParams struct {
-	// 站点ID
+	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -9619,18 +10208,31 @@ func (r *ModifyZoneStatusResponse) FromJsonString(s string) error {
 }
 
 type OfflineCache struct {
-	// on | off, 离线缓存是否开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 离线缓存是否开启，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type Origin struct {
-	// 回源协议配置
-	// http：强制 http 回源
-	// follow：协议跟随回源
-	// https：强制 https 回源，https 回源时仅支持源站 443 端口
+	// 主源站列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Origins []*string `json:"Origins,omitempty" name:"Origins"`
+
+	// 备源站列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BackupOrigins []*string `json:"BackupOrigins,omitempty" name:"BackupOrigins"`
+
+	// 回源协议配置，取值有：
+	// <li>http：强制 http 回源；</li>
+	// <li>follow：协议跟随回源；</li>
+	// <li>https：强制 https 回源，https 回源时仅支持源站 443 端口。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginPullProtocol *string `json:"OriginPullProtocol,omitempty" name:"OriginPullProtocol"`
+
+	// OriginType 为对象存储（COS）时，可以指定是否允许访问私有 bucket。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CosPrivateAccess *string `json:"CosPrivateAccess,omitempty" name:"CosPrivateAccess"`
 }
 
 type OriginCheckOriginStatus struct {
@@ -9709,7 +10311,10 @@ type OriginRecord struct {
 
 	// 当源站配置类型Type=weight时，表示权重
 	// 取值范围为[1-100]
-	// 源站组内多个源站权重总和应为100
+	// 源站组内多个源站权重总和应为100。
+	// 当源站配置类型Type=proto，表示权重
+	// 取值范围为[1-100]
+	// 源站组内Proto相同的多个源站权重总和应为100。
 	Weight *uint64 `json:"Weight,omitempty" name:"Weight"`
 
 	// 端口
@@ -9727,6 +10332,10 @@ type OriginRecord struct {
 	// 当源站类型Private=true时有效
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PrivateParameter []*OriginRecordPrivateParameter `json:"PrivateParameter,omitempty" name:"PrivateParameter"`
+
+	// 当源站配置类型Type=proto时，表示客户端请求协议，取值：http/https
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Proto *string `json:"Proto,omitempty" name:"Proto"`
 }
 
 type OriginRecordPrivateParameter struct {
@@ -9762,12 +10371,12 @@ type PortraitManagedRuleDetail struct {
 }
 
 type PostMaxSize struct {
-	// 是调整POST请求限制，平台默认为32MB。
-	// 关闭：off，
-	// 开启：on。
+	// 是否开启POST请求上传文件限制，平台默认为限制为32MB，取值有：
+	// <li>on：开启限制；</li>
+	// <li>off：关闭限制。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 最大限制，取值在1MB和500MB之间。单位字节
+	// 最大限制，取值在1MB和500MB之间。单位字节。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxSize *int64 `json:"MaxSize,omitempty" name:"MaxSize"`
 }
@@ -9784,22 +10393,26 @@ type QueryCondition struct {
 }
 
 type QueryString struct {
-	// on | off CacheKey是否由QueryString组成
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// CacheKey是否由QueryString组成，取值有：
+	// <li>on：是；</li>
+	// <li>off：否。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// includeCustom:使用部分url参数
-	// excludeCustom:排除部分url参数
+	// CacheKey使用QueryString的方式，取值有：
+	// <li>includeCustom：使用部分url参数；</li>
+	// <li>excludeCustom：排除部分url参数。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitempty" name:"Action"`
 
-	// 使用/排除的url参数数组
+	// 使用/排除的url参数数组。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value []*string `json:"Value,omitempty" name:"Value"`
 }
 
 type Quic struct {
-	// 是否启动Quic配置
+	// 是否开启Quic配置，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
@@ -9964,37 +10577,44 @@ func (r *ReclaimZoneResponse) FromJsonString(s string) error {
 }
 
 type Resource struct {
-	// 资源 ID
+	// 资源 ID。
 	Id *string `json:"Id,omitempty" name:"Id"`
 
-	// 付费模式
-	// 0 为后付费
-	// 1 为预付费
+	// 付费模式，取值有：
+	// <li>0：后付费。</li>
 	PayMode *int64 `json:"PayMode,omitempty" name:"PayMode"`
 
-	// 创建时间
+	// 创建时间。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 
-	// 生效时间
+	// 生效时间。
 	EnableTime *string `json:"EnableTime,omitempty" name:"EnableTime"`
 
-	// 失效时间
+	// 失效时间。
 	ExpireTime *string `json:"ExpireTime,omitempty" name:"ExpireTime"`
 
-	// 套餐状态
+	// 套餐状态，取值有：
+	// <li>normal：正常；</li>
+	// <li>isolated：隔离；</li>
+	// <li>destroyed：销毁。</li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 询价参数
+	// 询价参数。
 	Sv []*Sv `json:"Sv,omitempty" name:"Sv"`
 
-	// 是否自动续费
-	// 0 表示默认状态
-	// 1 表示自动续费
-	// 2 表示不自动续费
+	// 是否自动续费，取值有：
+	// <li>0：默认状态；</li>
+	// <li>1：自动续费；</li>
+	// <li>2：不自动续费。</li>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
-	// 套餐关联资源ID
+	// 套餐关联资源 ID。
 	PlanId *string `json:"PlanId,omitempty" name:"PlanId"`
+
+	// 地域，取值有：
+	// <li>mainland：国内；</li>
+	// <li>overseas：海外。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 // Predefined struct for user
@@ -10060,35 +10680,67 @@ func (r *ScanDnsRecordsResponse) FromJsonString(s string) error {
 }
 
 type SecEntry struct {
-	// Entry的Key
+	// 查询维度值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Key *string `json:"Key,omitempty" name:"Key"`
 
-	// Entry的Value
+	// 查询维度下详细数据。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value []*SecEntryValue `json:"Value,omitempty" name:"Value"`
 }
 
 type SecEntryValue struct {
-	// 指标名称
+	// 指标名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Metric *string `json:"Metric,omitempty" name:"Metric"`
 
-	// 指标数据明细
+	// 时序数据详情。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Detail []*TimingDataItem `json:"Detail,omitempty" name:"Detail"`
 
-	// 最大值
+	// 最大值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Max *int64 `json:"Max,omitempty" name:"Max"`
 
-	// 平均值
+	// 平均值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Avg *float64 `json:"Avg,omitempty" name:"Avg"`
 
-	// 数据总和
+	// 数据总和。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Sum *float64 `json:"Sum,omitempty" name:"Sum"`
+}
+
+type SecRuleRelatedInfo struct {
+	// 规则ID列表（99999为无效id）。
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+
+	// 执行动作（处置方式），取值有：
+	// <li>trans ：通过 ；</li>
+	// <li>alg ：算法挑战 ；</li>
+	// <li>drop ：丢弃 ；</li>
+	// <li>ban ：封禁源ip ；</li>
+	// <li>redirect ：重定向 ；</li>
+	// <li>page ：返回指定页面 ；</li>
+	// <li>monitor ：观察 。</li>
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 风险等级（waf日志中独有），取值有：
+	// <li>high risk ：高危 ；</li>
+	// <li>middle risk ：中危 ；</li>
+	// <li>low risk ：低危 ；</li>
+	// <li>unkonw ：未知 。</li>
+	RiskLevel *string `json:"RiskLevel,omitempty" name:"RiskLevel"`
+
+	// 规则等级，取值有：
+	// <li>normal  ：正常 。</li>
+	RuleLevel *string `json:"RuleLevel,omitempty" name:"RuleLevel"`
+
+	// 规则描述。
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 规则类型名称。
+	RuleTypeName *string `json:"RuleTypeName,omitempty" name:"RuleTypeName"`
 }
 
 type SecurityConfig struct {
@@ -10202,17 +10854,17 @@ type ShieldArea struct {
 }
 
 type SmartRouting struct {
-	// 智能加速配置开关
-	// on：开启
-	// off：关闭
+	// 智能加速配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type Sv struct {
-	// 询价参数 key
+	// 询价参数键。
 	Key *string `json:"Key,omitempty" name:"Key"`
 
-	// 询价参数 value
+	// 询价参数值。
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
@@ -10252,11 +10904,11 @@ type Task struct {
 }
 
 type TimingDataItem struct {
-	// 秒级时间戳
+	// 返回数据对应时间点，采用unix秒级时间戳
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Timestamp *int64 `json:"Timestamp,omitempty" name:"Timestamp"`
 
-	// 数值
+	// 具体数值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *int64 `json:"Value,omitempty" name:"Value"`
 }
@@ -10313,25 +10965,25 @@ type TopDetailData struct {
 }
 
 type TopNEntry struct {
-	// Entry key
+	// top查询维度值。
 	Key *string `json:"Key,omitempty" name:"Key"`
 
-	// TopN数据
+	// 查询具体数据。
 	Value []*TopNEntryValue `json:"Value,omitempty" name:"Value"`
 }
 
 type TopNEntryValue struct {
-	// Entry的name
+	// 排序实体名。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 数量
+	// 排序实体数量。
 	Count *int64 `json:"Count,omitempty" name:"Count"`
 }
 
 type UpstreamHttp2 struct {
-	// http2回源配置开关
-	// on：开启
-	// off：关闭
+	// http2回源配置开关，取值有：
+	// <li>on：开启；</li>
+	// <li>off：关闭。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
@@ -10363,7 +11015,7 @@ type WafConfig struct {
 	// 模式 block-阻断；observe-观察模式；close-关闭
 	Mode *string `json:"Mode,omitempty" name:"Mode"`
 
-	// 门神黑白名单
+	// 托管规则黑白名单
 	WafRules *WafRule `json:"WafRules,omitempty" name:"WafRules"`
 
 	// AI规则引擎防护
@@ -10372,13 +11024,13 @@ type WafConfig struct {
 }
 
 type WafRule struct {
-	// 黑名单
+	// 黑名单，ID参考接口 DescribeSecurityPolicyManagedRules
 	BlockRuleIDs []*int64 `json:"BlockRuleIDs,omitempty" name:"BlockRuleIDs"`
 
-	// id的开关
+	// 托管规则 开关
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 观察模式
+	// 观察模式，ID参考接口 DescribeSecurityPolicyManagedRules
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ObserveRuleIDs []*int64 `json:"ObserveRuleIDs,omitempty" name:"ObserveRuleIDs"`
 }
@@ -10420,163 +11072,160 @@ type WebEventData struct {
 }
 
 type WebLogData struct {
-	// 数据
+	// 分组数据。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	List []*WebLogs `json:"List,omitempty" name:"List"`
 
-	// 当前页
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 分页拉取的起始页号。最小值：1。
 	PageNo *int64 `json:"PageNo,omitempty" name:"PageNo"`
 
-	// 每页展示条数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 分页拉取的最大返回结果数。最大值：1000。
 	PageSize *int64 `json:"PageSize,omitempty" name:"PageSize"`
 
-	// 总页数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 总页数。
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
 
-	// 总条数
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 总条数。
 	TotalSize *int64 `json:"TotalSize,omitempty" name:"TotalSize"`
 }
 
 type WebLogs struct {
-	// 攻击内容
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackContent *string `json:"AttackContent,omitempty" name:"AttackContent"`
 
-	// 攻击IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击源（客户端）Ip。
 	AttackIp *string `json:"AttackIp,omitempty" name:"AttackIp"`
 
-	// 攻击类型
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
-	// 域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 受攻击子域名。
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// uuid
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Msuuid *string `json:"Msuuid,omitempty" name:"Msuuid"`
 
-	// 请求方法
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RequestMethod *string `json:"RequestMethod,omitempty" name:"RequestMethod"`
 
-	// 请求URI
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// URI
 	RequestUri *string `json:"RequestUri,omitempty" name:"RequestUri"`
 
-	// 风险等级
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RiskLevel *string `json:"RiskLevel,omitempty" name:"RiskLevel"`
 
-	// 规则ID
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuleId *uint64 `json:"RuleId,omitempty" name:"RuleId"`
 
-	// IP所在国家
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// IP所在国家iso-3166中alpha-2编码，编码信息请参考[ISO-3166](https://git.woa.com/edgeone/iso-3166/blob/master/all/all.json)
 	SipCountryCode *string `json:"SipCountryCode,omitempty" name:"SipCountryCode"`
 
-	// 事件id
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 请求（事件）ID。
 	EventId *string `json:"EventId,omitempty" name:"EventId"`
 
-	// 处置方式
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DisposalMethod *string `json:"DisposalMethod,omitempty" name:"DisposalMethod"`
 
-	// http_log
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// http log。
 	HttpLog *string `json:"HttpLog,omitempty" name:"HttpLog"`
 
-	// user agent
+	// 该字段已废弃。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ua *string `json:"Ua,omitempty" name:"Ua"`
 
-	// 攻击时间，为保持统一，原参数time更名为AttackTime
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 攻击时间，采用unix秒级时间戳。
 	AttackTime *uint64 `json:"AttackTime,omitempty" name:"AttackTime"`
+
+	// 规则相关信息列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleDetailList []*SecRuleRelatedInfo `json:"RuleDetailList,omitempty" name:"RuleDetailList"`
 }
 
 type WebSocket struct {
-	// WebSocket 超时配置开关, 开关为off时，平台仍支持WebSocket连接，此时超时时间默认为15秒，若需要调整超时时间，将开关置为on.
+	// WebSocket 超时时间配置开关，取值有：
+	// <li>on：使用Timeout作为WebSocket超时时间；</li>
+	// <li>off：平台仍支持WebSocket连接，此时使用系统默认的15秒为超时时间。</li>
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 设置超时时间，单位为秒，最大超时时间120秒。
+	// 超时时间，单位为秒，最大超时时间120秒。
 	Timeout *int64 `json:"Timeout,omitempty" name:"Timeout"`
 }
 
 type Zone struct {
-	// 站点ID
+	// 站点ID。
 	Id *string `json:"Id,omitempty" name:"Id"`
 
-	// 站点名称
+	// 站点名称。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 站点当前使用的 NS 列表
+	// 站点当前使用的 NS 列表。
 	OriginalNameServers []*string `json:"OriginalNameServers,omitempty" name:"OriginalNameServers"`
 
-	// 腾讯云分配的 NS 列表
+	// 腾讯云分配的 NS 列表。
 	NameServers []*string `json:"NameServers,omitempty" name:"NameServers"`
 
-	// 站点状态
-	// - active：NS 已切换
-	// - pending：NS 未切换
-	// - moved：NS 已切走
-	// - deactivated：被封禁
+	// 站点状态，取值有：
+	// <li> active：NS 已切换； </li>
+	// <li> pending：NS 未切换；</li>
+	// <li> moved：NS 已切走；</li>
+	// <li> deactivated：被封禁。 </li>
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 站点接入方式
-	// - full：NS 接入
-	// - partial：CNAME 接入
+	// 站点接入方式，取值有
+	// <li> full：NS 接入； </li>
+	// <li> partial：CNAME 接入。</li>
 	Type *string `json:"Type,omitempty" name:"Type"`
 
-	// 站点是否关闭
+	// 站点是否关闭。
 	Paused *bool `json:"Paused,omitempty" name:"Paused"`
 
-	// 站点创建时间
-	CreatedOn *string `json:"CreatedOn,omitempty" name:"CreatedOn"`
+	// 是否开启cname加速，取值有：
+	// <li> enabled：开启；</li>
+	// <li> disabled：关闭。</li>
+	CnameSpeedUp *string `json:"CnameSpeedUp,omitempty" name:"CnameSpeedUp"`
 
-	// 站点修改时间
-	ModifiedOn *string `json:"ModifiedOn,omitempty" name:"ModifiedOn"`
-
-	// cname 接入状态
-	// - finished 站点已验证
-	// - pending 站点验证中
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// cname 接入状态，取值有：
+	// <li> finished：站点已验证；</li>
+	// <li> pending：站点验证中。</li>
 	CnameStatus *string `json:"CnameStatus,omitempty" name:"CnameStatus"`
 
-	// 资源标签
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 资源标签列表。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 
-	// 计费资源
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// 计费资源列表。
 	Resources []*Resource `json:"Resources,omitempty" name:"Resources"`
 
-	// 是否开启cname加速
-	// - enabled 开启
-	// - disabled 关闭
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CnameSpeedUp *string `json:"CnameSpeedUp,omitempty" name:"CnameSpeedUp"`
+	// 站点创建时间。
+	CreatedOn *string `json:"CreatedOn,omitempty" name:"CreatedOn"`
+
+	// 站点修改时间。
+	ModifiedOn *string `json:"ModifiedOn,omitempty" name:"ModifiedOn"`
+
+	// 站点接入地域，取值为：
+	// <li> global：全球；</li>
+	// <li> mainland：中国大陆；</li>
+	// <li> overseas：境外区域。</li>
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 type ZoneFilter struct {
 	// 过滤字段名，支持的列表如下：
-	// - name: 站点名。
-	// - status: 站点状态
-	// - tagKey: 标签键
-	// - tagValue: 标签值
+	// <li> name：站点名；</li>
+	// <li> status：站点状态；</li>
+	// <li> tagKey：标签键；</li>
+	// <li> tagValue: 标签值。</li>
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 过滤字段值
+	// 过滤字段值。
 	Values []*string `json:"Values,omitempty" name:"Values"`
 
-	// 是否启用模糊查询，仅支持过滤字段名为name。模糊查询时，Values长度最大为1
+	// 是否启用模糊查询，仅支持过滤字段名为name。模糊查询时，Values长度最大为1。默认为false。
 	Fuzzy *bool `json:"Fuzzy,omitempty" name:"Fuzzy"`
 }

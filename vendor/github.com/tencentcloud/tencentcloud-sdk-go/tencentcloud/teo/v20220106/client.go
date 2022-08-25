@@ -49,6 +49,7 @@ func NewCheckCertificateRequest() (request *CheckCertificateRequest) {
     request = &CheckCertificateRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CheckCertificate")
     
     
@@ -98,6 +99,7 @@ func NewCreateApplicationProxyRequest() (request *CreateApplicationProxyRequest)
     request = &CreateApplicationProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateApplicationProxy")
     
     
@@ -119,6 +121,7 @@ func NewCreateApplicationProxyResponse() (response *CreateApplicationProxyRespon
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxy(request *CreateApplicationProxyRequest) (response *CreateApplicationProxyResponse, err error) {
     return c.CreateApplicationProxyWithContext(context.Background(), request)
 }
@@ -131,6 +134,7 @@ func (c *Client) CreateApplicationProxy(request *CreateApplicationProxyRequest) 
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxyWithContext(ctx context.Context, request *CreateApplicationProxyRequest) (response *CreateApplicationProxyResponse, err error) {
     if request == nil {
         request = NewCreateApplicationProxyRequest()
@@ -151,6 +155,7 @@ func NewCreateApplicationProxyRuleRequest() (request *CreateApplicationProxyRule
     request = &CreateApplicationProxyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateApplicationProxyRule")
     
     
@@ -198,6 +203,7 @@ func NewCreateApplicationProxyRulesRequest() (request *CreateApplicationProxyRul
     request = &CreateApplicationProxyRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateApplicationProxyRules")
     
     
@@ -245,6 +251,7 @@ func NewCreateCustomErrorPageRequest() (request *CreateCustomErrorPageRequest) {
     request = &CreateCustomErrorPageRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateCustomErrorPage")
     
     
@@ -292,6 +299,7 @@ func NewCreateDnsRecordRequest() (request *CreateDnsRecordRequest) {
     request = &CreateDnsRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateDnsRecord")
     
     
@@ -320,7 +328,9 @@ func NewCreateDnsRecordResponse() (response *CreateDnsRecordResponse) {
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateDnsRecord(request *CreateDnsRecordRequest) (response *CreateDnsRecordResponse, err error) {
     return c.CreateDnsRecordWithContext(context.Background(), request)
 }
@@ -340,7 +350,9 @@ func (c *Client) CreateDnsRecord(request *CreateDnsRecordRequest) (response *Cre
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateDnsRecordWithContext(ctx context.Context, request *CreateDnsRecordRequest) (response *CreateDnsRecordResponse, err error) {
     if request == nil {
         request = NewCreateDnsRecordRequest()
@@ -361,6 +373,7 @@ func NewCreateLoadBalancingRequest() (request *CreateLoadBalancingRequest) {
     request = &CreateLoadBalancingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateLoadBalancing")
     
     
@@ -408,6 +421,7 @@ func NewCreateOriginGroupRequest() (request *CreateOriginGroupRequest) {
     request = &CreateOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateOriginGroup")
     
     
@@ -457,6 +471,7 @@ func NewCreatePrefetchTaskRequest() (request *CreatePrefetchTaskRequest) {
     request = &CreatePrefetchTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreatePrefetchTask")
     
     
@@ -524,6 +539,7 @@ func NewCreatePurgeTaskRequest() (request *CreatePurgeTaskRequest) {
     request = &CreatePurgeTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreatePurgeTask")
     
     
@@ -551,6 +567,7 @@ func NewCreatePurgeTaskResponse() (response *CreatePurgeTaskResponse) {
 //  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
 //  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreatePurgeTask(request *CreatePurgeTaskRequest) (response *CreatePurgeTaskResponse, err error) {
     return c.CreatePurgeTaskWithContext(context.Background(), request)
 }
@@ -569,6 +586,7 @@ func (c *Client) CreatePurgeTask(request *CreatePurgeTaskRequest) (response *Cre
 //  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
 //  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreatePurgeTaskWithContext(ctx context.Context, request *CreatePurgeTaskRequest) (response *CreatePurgeTaskResponse, err error) {
     if request == nil {
         request = NewCreatePurgeTaskRequest()
@@ -589,6 +607,7 @@ func NewCreateZoneRequest() (request *CreateZoneRequest) {
     request = &CreateZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "CreateZone")
     
     
@@ -644,6 +663,7 @@ func NewDeleteApplicationProxyRequest() (request *DeleteApplicationProxyRequest)
     request = &DeleteApplicationProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteApplicationProxy")
     
     
@@ -699,6 +719,7 @@ func NewDeleteApplicationProxyRuleRequest() (request *DeleteApplicationProxyRule
     request = &DeleteApplicationProxyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteApplicationProxyRule")
     
     
@@ -754,6 +775,7 @@ func NewDeleteDnsRecordsRequest() (request *DeleteDnsRecordsRequest) {
     request = &DeleteDnsRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteDnsRecords")
     
     
@@ -805,6 +827,7 @@ func NewDeleteLoadBalancingRequest() (request *DeleteLoadBalancingRequest) {
     request = &DeleteLoadBalancingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteLoadBalancing")
     
     
@@ -856,6 +879,7 @@ func NewDeleteOriginGroupRequest() (request *DeleteOriginGroupRequest) {
     request = &DeleteOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteOriginGroup")
     
     
@@ -907,6 +931,7 @@ func NewDeleteZoneRequest() (request *DeleteZoneRequest) {
     request = &DeleteZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DeleteZone")
     
     
@@ -958,6 +983,7 @@ func NewDescribeApplicationProxyRequest() (request *DescribeApplicationProxyRequ
     request = &DescribeApplicationProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeApplicationProxy")
     
     
@@ -1009,6 +1035,7 @@ func NewDescribeApplicationProxyDetailRequest() (request *DescribeApplicationPro
     request = &DescribeApplicationProxyDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeApplicationProxyDetail")
     
     
@@ -1058,6 +1085,7 @@ func NewDescribeBotLogRequest() (request *DescribeBotLogRequest) {
     request = &DescribeBotLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeBotLog")
     
     
@@ -1107,6 +1135,7 @@ func NewDescribeBotManagedRulesRequest() (request *DescribeBotManagedRulesReques
     request = &DescribeBotManagedRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeBotManagedRules")
     
     
@@ -1154,6 +1183,7 @@ func NewDescribeCnameStatusRequest() (request *DescribeCnameStatusRequest) {
     request = &DescribeCnameStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeCnameStatus")
     
     
@@ -1203,6 +1233,7 @@ func NewDescribeDDoSPolicyRequest() (request *DescribeDDoSPolicyRequest) {
     request = &DescribeDDoSPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSPolicy")
     
     
@@ -1252,6 +1283,7 @@ func NewDescribeDDosAttackDataRequest() (request *DescribeDDosAttackDataRequest)
     request = &DescribeDDosAttackDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackData")
     
     
@@ -1266,20 +1298,18 @@ func NewDescribeDDosAttackDataResponse() (response *DescribeDDosAttackDataRespon
 }
 
 // DescribeDDosAttackData
-// 查询DDos攻击数据
+// 查询DDos攻击时序数据
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosAttackData(request *DescribeDDosAttackDataRequest) (response *DescribeDDosAttackDataResponse, err error) {
     return c.DescribeDDosAttackDataWithContext(context.Background(), request)
 }
 
 // DescribeDDosAttackData
-// 查询DDos攻击数据
+// 查询DDos攻击时序数据
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosAttackDataWithContext(ctx context.Context, request *DescribeDDosAttackDataRequest) (response *DescribeDDosAttackDataResponse, err error) {
     if request == nil {
@@ -1301,6 +1331,7 @@ func NewDescribeDDosAttackEventRequest() (request *DescribeDDosAttackEventReques
     request = &DescribeDDosAttackEventRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackEvent")
     
     
@@ -1318,7 +1349,8 @@ func NewDescribeDDosAttackEventResponse() (response *DescribeDDosAttackEventResp
 // 查询DDos攻击事件
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosAttackEvent(request *DescribeDDosAttackEventRequest) (response *DescribeDDosAttackEventResponse, err error) {
     return c.DescribeDDosAttackEventWithContext(context.Background(), request)
@@ -1328,7 +1360,8 @@ func (c *Client) DescribeDDosAttackEvent(request *DescribeDDosAttackEventRequest
 // 查询DDos攻击事件
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosAttackEventWithContext(ctx context.Context, request *DescribeDDosAttackEventRequest) (response *DescribeDDosAttackEventResponse, err error) {
     if request == nil {
@@ -1350,6 +1383,7 @@ func NewDescribeDDosAttackEventDetailRequest() (request *DescribeDDosAttackEvent
     request = &DescribeDDosAttackEventDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackEventDetail")
     
     
@@ -1397,6 +1431,7 @@ func NewDescribeDDosAttackSourceEventRequest() (request *DescribeDDosAttackSourc
     request = &DescribeDDosAttackSourceEventRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackSourceEvent")
     
     
@@ -1411,7 +1446,7 @@ func NewDescribeDDosAttackSourceEventResponse() (response *DescribeDDosAttackSou
 }
 
 // DescribeDDosAttackSourceEvent
-// 查询DDos攻击源
+// 查询DDos攻击源信息
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1420,7 +1455,7 @@ func (c *Client) DescribeDDosAttackSourceEvent(request *DescribeDDosAttackSource
 }
 
 // DescribeDDosAttackSourceEvent
-// 查询DDos攻击源
+// 查询DDos攻击源信息
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1444,6 +1479,7 @@ func NewDescribeDDosAttackTopDataRequest() (request *DescribeDDosAttackTopDataRe
     request = &DescribeDDosAttackTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackTopData")
     
     
@@ -1491,6 +1527,7 @@ func NewDescribeDDosMajorAttackEventRequest() (request *DescribeDDosMajorAttackE
     request = &DescribeDDosMajorAttackEventRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosMajorAttackEvent")
     
     
@@ -1508,6 +1545,9 @@ func NewDescribeDDosMajorAttackEventResponse() (response *DescribeDDosMajorAttac
 // 查询DDos主攻击事件
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosMajorAttackEvent(request *DescribeDDosMajorAttackEventRequest) (response *DescribeDDosMajorAttackEventResponse, err error) {
     return c.DescribeDDosMajorAttackEventWithContext(context.Background(), request)
@@ -1517,6 +1557,9 @@ func (c *Client) DescribeDDosMajorAttackEvent(request *DescribeDDosMajorAttackEv
 // 查询DDos主攻击事件
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDosMajorAttackEventWithContext(ctx context.Context, request *DescribeDDosMajorAttackEventRequest) (response *DescribeDDosMajorAttackEventResponse, err error) {
     if request == nil {
@@ -1538,6 +1581,7 @@ func NewDescribeDefaultCertificatesRequest() (request *DescribeDefaultCertificat
     request = &DescribeDefaultCertificatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDefaultCertificates")
     
     
@@ -1555,6 +1599,7 @@ func NewDescribeDefaultCertificatesResponse() (response *DescribeDefaultCertific
 // 查询默认证书列表
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_ZONENOTFOUND = "ResourceUnavailable.ZoneNotFound"
@@ -1568,6 +1613,7 @@ func (c *Client) DescribeDefaultCertificates(request *DescribeDefaultCertificate
 // 查询默认证书列表
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_ZONENOTFOUND = "ResourceUnavailable.ZoneNotFound"
@@ -1593,6 +1639,7 @@ func NewDescribeDnsDataRequest() (request *DescribeDnsDataRequest) {
     request = &DescribeDnsDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDnsData")
     
     
@@ -1611,6 +1658,7 @@ func NewDescribeDnsDataResponse() (response *DescribeDnsDataResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDnsData(request *DescribeDnsDataRequest) (response *DescribeDnsDataResponse, err error) {
     return c.DescribeDnsDataWithContext(context.Background(), request)
 }
@@ -1620,6 +1668,7 @@ func (c *Client) DescribeDnsData(request *DescribeDnsDataRequest) (response *Des
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDnsDataWithContext(ctx context.Context, request *DescribeDnsDataRequest) (response *DescribeDnsDataResponse, err error) {
     if request == nil {
         request = NewDescribeDnsDataRequest()
@@ -1640,6 +1689,7 @@ func NewDescribeDnsRecordsRequest() (request *DescribeDnsRecordsRequest) {
     request = &DescribeDnsRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDnsRecords")
     
     
@@ -1689,6 +1739,7 @@ func NewDescribeDnssecRequest() (request *DescribeDnssecRequest) {
     request = &DescribeDnssecRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeDnssec")
     
     
@@ -1738,6 +1789,7 @@ func NewDescribeHostsCertificateRequest() (request *DescribeHostsCertificateRequ
     request = &DescribeHostsCertificateRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeHostsCertificate")
     
     
@@ -1793,6 +1845,7 @@ func NewDescribeHostsSettingRequest() (request *DescribeHostsSettingRequest) {
     request = &DescribeHostsSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeHostsSetting")
     
     
@@ -1846,6 +1899,7 @@ func NewDescribeIdentificationRequest() (request *DescribeIdentificationRequest)
     request = &DescribeIdentificationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeIdentification")
     
     
@@ -1893,6 +1947,7 @@ func NewDescribeLoadBalancingRequest() (request *DescribeLoadBalancingRequest) {
     request = &DescribeLoadBalancingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeLoadBalancing")
     
     
@@ -1942,6 +1997,7 @@ func NewDescribeLoadBalancingDetailRequest() (request *DescribeLoadBalancingDeta
     request = &DescribeLoadBalancingDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeLoadBalancingDetail")
     
     
@@ -1989,6 +2045,7 @@ func NewDescribeOriginGroupRequest() (request *DescribeOriginGroupRequest) {
     request = &DescribeOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeOriginGroup")
     
     
@@ -2036,6 +2093,7 @@ func NewDescribeOriginGroupDetailRequest() (request *DescribeOriginGroupDetailRe
     request = &DescribeOriginGroupDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeOriginGroupDetail")
     
     
@@ -2083,6 +2141,7 @@ func NewDescribeOverviewL7DataRequest() (request *DescribeOverviewL7DataRequest)
     request = &DescribeOverviewL7DataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeOverviewL7Data")
     
     
@@ -2134,6 +2193,7 @@ func NewDescribePrefetchTasksRequest() (request *DescribePrefetchTasksRequest) {
     request = &DescribePrefetchTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribePrefetchTasks")
     
     
@@ -2187,6 +2247,7 @@ func NewDescribePurgeTasksRequest() (request *DescribePurgeTasksRequest) {
     request = &DescribePurgeTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribePurgeTasks")
     
     
@@ -2238,6 +2299,7 @@ func NewDescribeSecurityPolicyRequest() (request *DescribeSecurityPolicyRequest)
     request = &DescribeSecurityPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicy")
     
     
@@ -2289,6 +2351,7 @@ func NewDescribeSecurityPolicyListRequest() (request *DescribeSecurityPolicyList
     request = &DescribeSecurityPolicyListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyList")
     
     
@@ -2336,6 +2399,7 @@ func NewDescribeSecurityPolicyManagedRulesRequest() (request *DescribeSecurityPo
     request = &DescribeSecurityPolicyManagedRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyManagedRules")
     
     
@@ -2383,6 +2447,7 @@ func NewDescribeSecurityPolicyManagedRulesIdRequest() (request *DescribeSecurity
     request = &DescribeSecurityPolicyManagedRulesIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyManagedRulesId")
     
     
@@ -2430,6 +2495,7 @@ func NewDescribeSecurityPolicyRegionsRequest() (request *DescribeSecurityPolicyR
     request = &DescribeSecurityPolicyRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyRegions")
     
     
@@ -2477,6 +2543,7 @@ func NewDescribeSecurityPortraitRulesRequest() (request *DescribeSecurityPortrai
     request = &DescribeSecurityPortraitRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPortraitRules")
     
     
@@ -2526,6 +2593,7 @@ func NewDescribeTimingL4DataRequest() (request *DescribeTimingL4DataRequest) {
     request = &DescribeTimingL4DataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeTimingL4Data")
     
     
@@ -2543,6 +2611,7 @@ func NewDescribeTimingL4DataResponse() (response *DescribeTimingL4DataResponse) 
 // 四层时序流量数据查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2554,6 +2623,7 @@ func (c *Client) DescribeTimingL4Data(request *DescribeTimingL4DataRequest) (res
 // 四层时序流量数据查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2577,6 +2647,7 @@ func NewDescribeTimingL7AnalysisDataRequest() (request *DescribeTimingL7Analysis
     request = &DescribeTimingL7AnalysisDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeTimingL7AnalysisData")
     
     
@@ -2597,6 +2668,7 @@ func NewDescribeTimingL7AnalysisDataResponse() (response *DescribeTimingL7Analys
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTimingL7AnalysisData(request *DescribeTimingL7AnalysisDataRequest) (response *DescribeTimingL7AnalysisDataResponse, err error) {
     return c.DescribeTimingL7AnalysisDataWithContext(context.Background(), request)
@@ -2609,6 +2681,7 @@ func (c *Client) DescribeTimingL7AnalysisData(request *DescribeTimingL7AnalysisD
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTimingL7AnalysisDataWithContext(ctx context.Context, request *DescribeTimingL7AnalysisDataRequest) (response *DescribeTimingL7AnalysisDataResponse, err error) {
     if request == nil {
@@ -2630,6 +2703,7 @@ func NewDescribeTimingL7CacheDataRequest() (request *DescribeTimingL7CacheDataRe
     request = &DescribeTimingL7CacheDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeTimingL7CacheData")
     
     
@@ -2679,6 +2753,7 @@ func NewDescribeTopL7AnalysisDataRequest() (request *DescribeTopL7AnalysisDataRe
     request = &DescribeTopL7AnalysisDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeTopL7AnalysisData")
     
     
@@ -2734,6 +2809,7 @@ func NewDescribeTopL7CacheDataRequest() (request *DescribeTopL7CacheDataRequest)
     request = &DescribeTopL7CacheDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeTopL7CacheData")
     
     
@@ -2783,6 +2859,7 @@ func NewDescribeWebManagedRulesAttackEventsRequest() (request *DescribeWebManage
     request = &DescribeWebManagedRulesAttackEventsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesAttackEvents")
     
     
@@ -2800,8 +2877,7 @@ func NewDescribeWebManagedRulesAttackEventsResponse() (response *DescribeWebMana
 // 查询Web托管攻击事件
 //
 // 可能返回的错误码:
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesAttackEvents(request *DescribeWebManagedRulesAttackEventsRequest) (response *DescribeWebManagedRulesAttackEventsResponse, err error) {
     return c.DescribeWebManagedRulesAttackEventsWithContext(context.Background(), request)
 }
@@ -2810,8 +2886,7 @@ func (c *Client) DescribeWebManagedRulesAttackEvents(request *DescribeWebManaged
 // 查询Web托管攻击事件
 //
 // 可能返回的错误码:
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesAttackEventsWithContext(ctx context.Context, request *DescribeWebManagedRulesAttackEventsRequest) (response *DescribeWebManagedRulesAttackEventsResponse, err error) {
     if request == nil {
         request = NewDescribeWebManagedRulesAttackEventsRequest()
@@ -2832,6 +2907,7 @@ func NewDescribeWebManagedRulesDataRequest() (request *DescribeWebManagedRulesDa
     request = &DescribeWebManagedRulesDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesData")
     
     
@@ -2846,18 +2922,20 @@ func NewDescribeWebManagedRulesDataResponse() (response *DescribeWebManagedRules
 }
 
 // DescribeWebManagedRulesData
-// 查询Web托管规则数据
+// 查询waf攻击时序数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesData(request *DescribeWebManagedRulesDataRequest) (response *DescribeWebManagedRulesDataResponse, err error) {
     return c.DescribeWebManagedRulesDataWithContext(context.Background(), request)
 }
 
 // DescribeWebManagedRulesData
-// 查询Web托管规则数据
+// 查询waf攻击时序数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesDataWithContext(ctx context.Context, request *DescribeWebManagedRulesDataRequest) (response *DescribeWebManagedRulesDataResponse, err error) {
     if request == nil {
@@ -2879,6 +2957,7 @@ func NewDescribeWebManagedRulesLogRequest() (request *DescribeWebManagedRulesLog
     request = &DescribeWebManagedRulesLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesLog")
     
     
@@ -2893,7 +2972,7 @@ func NewDescribeWebManagedRulesLogResponse() (response *DescribeWebManagedRulesL
 }
 
 // DescribeWebManagedRulesLog
-// 查询Web托管日志
+// 查询waf攻击日志
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2902,7 +2981,7 @@ func (c *Client) DescribeWebManagedRulesLog(request *DescribeWebManagedRulesLogR
 }
 
 // DescribeWebManagedRulesLog
-// 查询Web托管日志
+// 查询waf攻击日志
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2926,6 +3005,7 @@ func NewDescribeWebManagedRulesTopDataRequest() (request *DescribeWebManagedRule
     request = &DescribeWebManagedRulesTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesTopData")
     
     
@@ -2940,18 +3020,24 @@ func NewDescribeWebManagedRulesTopDataResponse() (response *DescribeWebManagedRu
 }
 
 // DescribeWebManagedRulesTopData
-// 查询Web托管规则Top数据
+// 查询waf攻击top数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeWebManagedRulesTopData(request *DescribeWebManagedRulesTopDataRequest) (response *DescribeWebManagedRulesTopDataResponse, err error) {
     return c.DescribeWebManagedRulesTopDataWithContext(context.Background(), request)
 }
 
 // DescribeWebManagedRulesTopData
-// 查询Web托管规则Top数据
+// 查询waf攻击top数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeWebManagedRulesTopDataWithContext(ctx context.Context, request *DescribeWebManagedRulesTopDataRequest) (response *DescribeWebManagedRulesTopDataResponse, err error) {
     if request == nil {
@@ -2973,6 +3059,7 @@ func NewDescribeWebProtectionAttackEventsRequest() (request *DescribeWebProtecti
     request = &DescribeWebProtectionAttackEventsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionAttackEvents")
     
     
@@ -2990,7 +3077,7 @@ func NewDescribeWebProtectionAttackEventsResponse() (response *DescribeWebProtec
 // 查询web防护攻击事件
 //
 // 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionAttackEvents(request *DescribeWebProtectionAttackEventsRequest) (response *DescribeWebProtectionAttackEventsResponse, err error) {
     return c.DescribeWebProtectionAttackEventsWithContext(context.Background(), request)
 }
@@ -2999,7 +3086,7 @@ func (c *Client) DescribeWebProtectionAttackEvents(request *DescribeWebProtectio
 // 查询web防护攻击事件
 //
 // 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionAttackEventsWithContext(ctx context.Context, request *DescribeWebProtectionAttackEventsRequest) (response *DescribeWebProtectionAttackEventsResponse, err error) {
     if request == nil {
         request = NewDescribeWebProtectionAttackEventsRequest()
@@ -3020,6 +3107,7 @@ func NewDescribeWebProtectionDataRequest() (request *DescribeWebProtectionDataRe
     request = &DescribeWebProtectionDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionData")
     
     
@@ -3034,18 +3122,20 @@ func NewDescribeWebProtectionDataResponse() (response *DescribeWebProtectionData
 }
 
 // DescribeWebProtectionData
-// 查询web防护数据
+// 查询CC防护时序数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionData(request *DescribeWebProtectionDataRequest) (response *DescribeWebProtectionDataResponse, err error) {
     return c.DescribeWebProtectionDataWithContext(context.Background(), request)
 }
 
 // DescribeWebProtectionData
-// 查询web防护数据
+// 查询CC防护时序数据
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionDataWithContext(ctx context.Context, request *DescribeWebProtectionDataRequest) (response *DescribeWebProtectionDataResponse, err error) {
     if request == nil {
@@ -3067,6 +3157,7 @@ func NewDescribeWebProtectionLogRequest() (request *DescribeWebProtectionLogRequ
     request = &DescribeWebProtectionLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionLog")
     
     
@@ -3081,18 +3172,20 @@ func NewDescribeWebProtectionLogResponse() (response *DescribeWebProtectionLogRe
 }
 
 // DescribeWebProtectionLog
-// 查询web防护日志
+// 查询CC防护日志
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeWebProtectionLog(request *DescribeWebProtectionLogRequest) (response *DescribeWebProtectionLogResponse, err error) {
     return c.DescribeWebProtectionLogWithContext(context.Background(), request)
 }
 
 // DescribeWebProtectionLog
-// 查询web防护日志
+// 查询CC防护日志
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeWebProtectionLogWithContext(ctx context.Context, request *DescribeWebProtectionLogRequest) (response *DescribeWebProtectionLogResponse, err error) {
     if request == nil {
@@ -3114,6 +3207,7 @@ func NewDescribeZoneDDoSPolicyRequest() (request *DescribeZoneDDoSPolicyRequest)
     request = &DescribeZoneDDoSPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeZoneDDoSPolicy")
     
     
@@ -3165,6 +3259,7 @@ func NewDescribeZoneDetailsRequest() (request *DescribeZoneDetailsRequest) {
     request = &DescribeZoneDetailsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeZoneDetails")
     
     
@@ -3216,6 +3311,7 @@ func NewDescribeZoneSettingRequest() (request *DescribeZoneSettingRequest) {
     request = &DescribeZoneSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeZoneSetting")
     
     
@@ -3271,6 +3367,7 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
     request = &DescribeZonesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DescribeZones")
     
     
@@ -3322,6 +3419,7 @@ func NewDownloadL7LogsRequest() (request *DownloadL7LogsRequest) {
     request = &DownloadL7LogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "DownloadL7Logs")
     
     
@@ -3341,6 +3439,7 @@ func NewDownloadL7LogsResponse() (response *DownloadL7LogsResponse) {
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DownloadL7Logs(request *DownloadL7LogsRequest) (response *DownloadL7LogsResponse, err error) {
     return c.DownloadL7LogsWithContext(context.Background(), request)
 }
@@ -3351,6 +3450,7 @@ func (c *Client) DownloadL7Logs(request *DownloadL7LogsRequest) (response *Downl
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DownloadL7LogsWithContext(ctx context.Context, request *DownloadL7LogsRequest) (response *DownloadL7LogsResponse, err error) {
     if request == nil {
         request = NewDownloadL7LogsRequest()
@@ -3371,6 +3471,7 @@ func NewIdentifyZoneRequest() (request *IdentifyZoneRequest) {
     request = &IdentifyZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "IdentifyZone")
     
     
@@ -3420,6 +3521,7 @@ func NewImportDnsRecordsRequest() (request *ImportDnsRecordsRequest) {
     request = &ImportDnsRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ImportDnsRecords")
     
     
@@ -3469,6 +3571,7 @@ func NewModifyApplicationProxyRequest() (request *ModifyApplicationProxyRequest)
     request = &ModifyApplicationProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyApplicationProxy")
     
     
@@ -3518,6 +3621,7 @@ func NewModifyApplicationProxyRuleRequest() (request *ModifyApplicationProxyRule
     request = &ModifyApplicationProxyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyApplicationProxyRule")
     
     
@@ -3565,6 +3669,7 @@ func NewModifyApplicationProxyRuleStatusRequest() (request *ModifyApplicationPro
     request = &ModifyApplicationProxyRuleStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyApplicationProxyRuleStatus")
     
     
@@ -3612,6 +3717,7 @@ func NewModifyApplicationProxyStatusRequest() (request *ModifyApplicationProxySt
     request = &ModifyApplicationProxyStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyApplicationProxyStatus")
     
     
@@ -3659,6 +3765,7 @@ func NewModifyDDoSPolicyRequest() (request *ModifyDDoSPolicyRequest) {
     request = &ModifyDDoSPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyDDoSPolicy")
     
     
@@ -3706,6 +3813,7 @@ func NewModifyDDoSPolicyHostRequest() (request *ModifyDDoSPolicyHostRequest) {
     request = &ModifyDDoSPolicyHostRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyDDoSPolicyHost")
     
     
@@ -3753,6 +3861,7 @@ func NewModifyDefaultCertificateRequest() (request *ModifyDefaultCertificateRequ
     request = &ModifyDefaultCertificateRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyDefaultCertificate")
     
     
@@ -3804,6 +3913,7 @@ func NewModifyDnsRecordRequest() (request *ModifyDnsRecordRequest) {
     request = &ModifyDnsRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyDnsRecord")
     
     
@@ -3822,11 +3932,13 @@ func NewModifyDnsRecordResponse() (response *ModifyDnsRecordResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDNSCONTENT = "InvalidParameterValue.InvalidDNSContent"
+//  INVALIDPARAMETERVALUE_INVALIDDNSNAME = "InvalidParameterValue.InvalidDNSName"
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) ModifyDnsRecord(request *ModifyDnsRecordRequest) (response *ModifyDnsRecordResponse, err error) {
     return c.ModifyDnsRecordWithContext(context.Background(), request)
 }
@@ -3836,11 +3948,13 @@ func (c *Client) ModifyDnsRecord(request *ModifyDnsRecordRequest) (response *Mod
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDNSCONTENT = "InvalidParameterValue.InvalidDNSContent"
+//  INVALIDPARAMETERVALUE_INVALIDDNSNAME = "InvalidParameterValue.InvalidDNSName"
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) ModifyDnsRecordWithContext(ctx context.Context, request *ModifyDnsRecordRequest) (response *ModifyDnsRecordResponse, err error) {
     if request == nil {
         request = NewModifyDnsRecordRequest()
@@ -3861,6 +3975,7 @@ func NewModifyDnssecRequest() (request *ModifyDnssecRequest) {
     request = &ModifyDnssecRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyDnssec")
     
     
@@ -3908,6 +4023,7 @@ func NewModifyHostsCertificateRequest() (request *ModifyHostsCertificateRequest)
     request = &ModifyHostsCertificateRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyHostsCertificate")
     
     
@@ -3965,6 +4081,7 @@ func NewModifyLoadBalancingRequest() (request *ModifyLoadBalancingRequest) {
     request = &ModifyLoadBalancingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyLoadBalancing")
     
     
@@ -4012,6 +4129,7 @@ func NewModifyLoadBalancingStatusRequest() (request *ModifyLoadBalancingStatusRe
     request = &ModifyLoadBalancingStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyLoadBalancingStatus")
     
     
@@ -4059,6 +4177,7 @@ func NewModifyOriginGroupRequest() (request *ModifyOriginGroupRequest) {
     request = &ModifyOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyOriginGroup")
     
     
@@ -4106,6 +4225,7 @@ func NewModifySecurityPolicyRequest() (request *ModifySecurityPolicyRequest) {
     request = &ModifySecurityPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifySecurityPolicy")
     
     
@@ -4157,6 +4277,7 @@ func NewModifyZoneRequest() (request *ModifyZoneRequest) {
     request = &ModifyZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyZone")
     
     
@@ -4206,6 +4327,7 @@ func NewModifyZoneCnameSpeedUpRequest() (request *ModifyZoneCnameSpeedUpRequest)
     request = &ModifyZoneCnameSpeedUpRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyZoneCnameSpeedUp")
     
     
@@ -4255,6 +4377,7 @@ func NewModifyZoneSettingRequest() (request *ModifyZoneSettingRequest) {
     request = &ModifyZoneSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyZoneSetting")
     
     
@@ -4324,6 +4447,7 @@ func NewModifyZoneStatusRequest() (request *ModifyZoneStatusRequest) {
     request = &ModifyZoneStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ModifyZoneStatus")
     
     
@@ -4373,6 +4497,7 @@ func NewReclaimZoneRequest() (request *ReclaimZoneRequest) {
     request = &ReclaimZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ReclaimZone")
     
     
@@ -4422,6 +4547,7 @@ func NewScanDnsRecordsRequest() (request *ScanDnsRecordsRequest) {
     request = &ScanDnsRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("teo", APIVersion, "ScanDnsRecords")
     
     
