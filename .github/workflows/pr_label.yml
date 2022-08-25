@@ -1,0 +1,16 @@
+name: Pull Request Labeler
+
+on:
+  # Triggers the workflow on pull request context
+  pull_request:
+    types: [ opened, edited, reopened, synchronize ]
+jobs:
+  Labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Apply Labels
+        uses: actions/labeler@v4
+        with:
+          configuration-path: .github/labeler-pr-triage.yml
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
