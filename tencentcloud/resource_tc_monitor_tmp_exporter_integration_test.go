@@ -41,7 +41,8 @@ func testSweepExporterIntegration(region string) error {
 			return nil
 		}
 
-		err = service.DeleteMonitorTmpExporterIntegrationById(ctx, ids)
+		id := strings.Join([]string{*instances.Name, instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
+		err = service.DeleteMonitorTmpExporterIntegrationById(ctx, id)
 		if err != nil {
 			return err
 		}
