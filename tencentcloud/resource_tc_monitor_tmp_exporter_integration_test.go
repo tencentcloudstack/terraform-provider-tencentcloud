@@ -31,18 +31,20 @@ func testSweepExporterIntegration(region string) error {
 	clusterId := tkeClusterIdAgent
 	ids := strings.Join([]string{"", instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
 
-	instances, err := service.DescribeMonitorTmpExporterIntegration(ctx, ids)
-	if err != nil {
-		return err
-	}
+	for {
+		instances, err := service.DescribeMonitorTmpExporterIntegration(ctx, ids)
+		if err != nil {
+			return err
+		}
 
-	if instances == nil {
-		return nil
-	}
+		if instances == nil {
+			return nil
+		}
 
-	err = service.DeleteMonitorTmpExporterIntegrationById(ctx, ids)
-	if err != nil {
-		return err
+		err = service.DeleteMonitorTmpExporterIntegrationById(ctx, ids)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
