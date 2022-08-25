@@ -482,7 +482,7 @@ func (me *RedisService) CheckRedisDestroyOk(ctx context.Context, redisId string)
 	has = true
 
 	info := response.Response.InstanceSet[0]
-	if *info.Status == REDIS_STATUS_ISOLATE {
+	if *info.Status <= REDIS_STATUS_ISOLATE {
 		isolated = true
 		return
 	} else {
