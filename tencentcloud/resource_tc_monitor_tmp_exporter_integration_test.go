@@ -3,11 +3,50 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+const defaultKind = ""
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_monitor_tmp_exporter_integration
+	resource.AddTestSweepers("tencentcloud_monitor_tmp_exporter_integration", &resource.Sweeper{
+		Name: "tencentcloud_monitor_tmp_exporter_integration",
+		F:    testSweepExporterIntegration,
+	})
+}
+func testSweepExporterIntegration(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(region)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := MonitorService{client}
+
+	instanceId := defaultPrometheusId
+	clusterId := tkeClusterIdAgent
+	ids := strings.Join([]string{"", instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
+
+	instances, err := service.DescribeMonitorTmpExporterIntegration(ctx, ids)
+	if err != nil {
+		return err
+	}
+
+	if instances == nil {
+		return nil
+	}
+
+	err = service.DeleteMonitorTmpExporterIntegrationById(ctx, ids)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
 	t.Parallel()
