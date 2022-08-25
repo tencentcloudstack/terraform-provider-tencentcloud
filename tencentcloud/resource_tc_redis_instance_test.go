@@ -356,12 +356,15 @@ func TestAccTencentCloudRedisGetRemoveNodesByIds(t *testing.T) {
 		origin,
 		[]int{
 			100001,
+			// -100001
 			100002,
+			// -100002
 			100003,
-			100004,
+			100004, // +
 		},
 	)
-	assert.Equal(t, []int{100001, 100002}, mockRemoves1)
+	assert.Contains(t, []int{100001, 100002}, mockRemoves1[0])
+	assert.Contains(t, []int{100001, 100002}, mockRemoves1[1])
 	assert.Equal(t, []int{100004}, mockAdds1)
 
 	mockAdds2, mockRemoves2 := GetListDiffs(origin, []int{100001, 100002})
