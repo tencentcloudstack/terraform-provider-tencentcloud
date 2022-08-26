@@ -471,3 +471,23 @@ func (me *CynosdbService) OfflineInstance(ctx context.Context, clusterId, instan
 
 	return
 }
+
+func (me *CynosdbService) DescribeClusterParams(ctx context.Context, clusterId string) (items []*cynosdb.ParamInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeClusterParamsRequest()
+	request.ClusterId = &clusterId
+
+	var response *cynosdb.DescribeClusterParamsResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseCynosdbClient().DescribeClusterParams(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	items = response.Response.Items
+
+	return
+}
