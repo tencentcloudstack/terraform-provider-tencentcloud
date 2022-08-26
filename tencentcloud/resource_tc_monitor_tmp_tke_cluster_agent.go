@@ -15,7 +15,7 @@ resource "tencentcloud_monitor_tmp_tke_cluster_agent" "tmpClusterAgent" {
     enable_external = false
   }
 }
-
+```
 */
 package tencentcloud
 

@@ -13,7 +13,25 @@ Provides a resource to create a tke tmpRecordRule
 
 ## Example Usage
 
-
+```hcl
+resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
+  instance_id = ""
+  content     = <<-EOT
+        apiVersion: monitoring.coreos.com/v1
+        kind: PrometheusRule
+        metadata:
+          name: example-record
+        spec:
+          groups:
+            - name: kube-apiserver.rules
+              rules:
+                - expr: sum(metrics_test)
+                  labels:
+                    verb: read
+                  record: 'apiserver_request:burnrate1d'
+    EOT
+}
+```
 
 ## Argument Reference
 

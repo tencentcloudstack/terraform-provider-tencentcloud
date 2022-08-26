@@ -13,7 +13,18 @@ Provides a resource to create a tmp tke cluster agent
 
 ## Example Usage
 
+```hcl
+resource "tencentcloud_monitor_tmp_tke_cluster_agent" "tmpClusterAgent" {
+  instance_id = "prom-xxx"
 
+  agents {
+    region          = "ap-xxx"
+    cluster_type    = "eks"
+    cluster_id      = "cls-xxx"
+    enable_external = false
+  }
+}
+```
 
 ## Argument Reference
 

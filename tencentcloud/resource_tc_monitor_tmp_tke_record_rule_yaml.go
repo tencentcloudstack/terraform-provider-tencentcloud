@@ -22,7 +22,7 @@ resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
                   record: 'apiserver_request:burnrate1d'
     EOT
 }
-
+```
 */
 package tencentcloud
 

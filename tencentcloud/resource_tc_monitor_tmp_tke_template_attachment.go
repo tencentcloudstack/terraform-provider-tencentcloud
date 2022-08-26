@@ -13,7 +13,7 @@ resource "tencentcloud_monitor_tmp_tke_template_attachment" "temp_attachment" {
     instance_id = "prom-xxx"
   }
 }
-
+```
 */
 package tencentcloud
 
