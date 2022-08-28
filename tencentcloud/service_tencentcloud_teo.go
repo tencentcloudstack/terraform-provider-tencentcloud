@@ -450,3 +450,30 @@ func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zon
 
 	return
 }
+
+func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.DescribeZoneSettingResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeZoneSettingRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ZoneId = &zoneId
+
+	response, err := me.client.UseTeoClient().DescribeZoneSetting(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	zoneSetting = response.Response
+	return
+}
