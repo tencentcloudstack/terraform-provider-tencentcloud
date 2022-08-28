@@ -565,3 +565,30 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 
 	return
 }
+
+func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeDnssecRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.Id = &zoneId
+
+	response, err := me.client.UseTeoClient().DescribeDnssec(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	dnsSec = response.Response
+	return
+}

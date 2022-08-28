@@ -666,6 +666,7 @@ Teo
 	tencentcloud_teo_zone
 	tencentcloud_teo_zone_setting
 	tencentcloud_teo_dns_record
+	tencentcloud_teo_dns_sec
 	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
@@ -1200,6 +1201,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_zone":                                resourceTencentCloudTeoZone(),
 			"tencentcloud_teo_zone_setting":                        resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_dns_record":                          resourceTencentCloudTeoDnsRecord(),
+			"tencentcloud_teo_dns_sec":                             resourceTencentCloudTeoDnsSec(),
 			"tencentcloud_teo_load_balancing":                      resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                        resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                         resourceTencentCloudTeoRuleEngine(),
