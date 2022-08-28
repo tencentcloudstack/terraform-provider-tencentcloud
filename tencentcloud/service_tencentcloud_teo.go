@@ -505,3 +505,63 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 	securityPolicy = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate *teo.HostCertSetting, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeHostsCertificateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+
+	request.Filters = append(
+		request.Filters,
+		&teo.CertFilter{
+			Name:   helper.String("Host"),
+			Values: []*string{&host},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances := make([]*teo.HostCertSetting, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeHostsCertificate(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Hosts) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Hosts...)
+		if len(response.Response.Hosts) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	hostCertificate = instances[0]
+
+	return
+}

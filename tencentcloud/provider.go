@@ -672,6 +672,7 @@ Teo
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
 	tencentcloud_teo_security_policy
+	tencentcloud_teo_host_certificate
 */
 package tencentcloud
 
@@ -1205,6 +1206,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_application_proxy":                   resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":              resourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_teo_security_policy":                     resourceTencentCloudTeoSecurityPolicy(),
+			"tencentcloud_teo_host_certificate":                    resourceTencentCloudTeoHostCertificate(),
 		},
 
 		ConfigureFunc: providerConfigure,
