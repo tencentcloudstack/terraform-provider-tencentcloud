@@ -261,3 +261,74 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId strin
 
 	return
 }
+
+func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleSettingDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = &zoneId
+	request.Filters = append(
+		request.Filters,
+		&teo.RuleFilter{
+			Name:   helper.String("RULE_ID"),
+			Values: []*string{&ruleId},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoClient().DescribeRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances := response.Response.RuleList
+
+	if len(instances) < 1 {
+		return
+	}
+	ruleEngine = instances[0]
+
+	return
+
+}
+
+func (me *TeoService) DeleteTeoRuleEngineById(ctx context.Context, zoneId, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := teo.NewDeleteRulesRequest()
+
+	request.ZoneId = &zoneId
+	request.RuleIds = []*string{&ruleId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().DeleteRules(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

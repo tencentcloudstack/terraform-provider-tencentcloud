@@ -667,6 +667,7 @@ Teo
 	tencentcloud_teo_dns_record
 	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
+	tencentcloud_teo_rule_engine
 
 */
 package tencentcloud
@@ -1196,6 +1197,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_dns_record":                          resourceTencentCloudTeoDnsRecord(),
 			"tencentcloud_teo_load_balancing":                      resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                        resourceTencentCloudTeoOriginGroup(),
+			"tencentcloud_teo_rule_engine":                         resourceTencentCloudTeoRuleEngine(),
 		},
 
 		ConfigureFunc: providerConfigure,
