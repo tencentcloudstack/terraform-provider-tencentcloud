@@ -668,6 +668,7 @@ Teo
 	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
+	tencentcloud_teo_application_proxy
 
 */
 package tencentcloud
@@ -1198,6 +1199,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_load_balancing":                      resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                        resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                         resourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_application_proxy":                   resourceTencentCloudTeoApplicationProxy(),
 		},
 
 		ConfigureFunc: providerConfigure,

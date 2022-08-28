@@ -332,3 +332,58 @@ func (me *TeoService) DeleteTeoRuleEngineById(ctx context.Context, zoneId, ruleI
 
 	return
 }
+
+func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context, zoneId, proxyId string) (applicationProxy *teo.DescribeApplicationProxyDetailResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeApplicationProxyDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+
+	response, err := me.client.UseTeoClient().DescribeApplicationProxyDetail(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	applicationProxy = response.Response
+	return
+}
+
+func (me *TeoService) DeleteTeoApplicationProxyById(ctx context.Context, zoneId, proxyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := teo.NewDeleteApplicationProxyRequest()
+
+	request.ZoneId = &zoneId
+	request.ProxyId = &proxyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().DeleteApplicationProxy(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
