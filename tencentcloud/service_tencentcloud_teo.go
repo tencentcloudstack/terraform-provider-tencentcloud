@@ -592,3 +592,38 @@ func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dns
 	dnsSec = response.Response
 	return
 }
+
+func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId, certId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeDefaultCertificatesRequest()
+	)
+
+	defaultCertificates := make([]*teo.DefaultServerCertInfo, 0)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ZoneId = &zoneId
+
+	response, err := me.client.UseTeoClient().DescribeDefaultCertificates(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	defaultCertificates = response.Response.CertInfo
+
+	for _, cert := range defaultCertificates {
+		if *cert.CertId == certId {
+			defaultCertificate = cert
+			return
+		}
+	}
+	return
+}
