@@ -5,17 +5,20 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_zone" "zone" {
-                    vanity_name_servers {
+  name           = ""
+  plan_type      = ""
+  type           = ""
+  paused         = ""
+  vanity_name_servers {
+    switch  = ""
+    servers = ""
 
   }
-  vanity_name_servers_ips {
-
-  }
-      tags = {
+  cname_speed_up = ""
+  tags           = {
     "createdBy" = "terraform"
   }
 }
-
 ```
 Import
 
@@ -51,6 +54,12 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Site name.",
+			},
+
+			"plan_type": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Plan type of the zone. See details in data source `zone_available_plans`.",
 			},
 
 			"original_name_servers": {
@@ -202,7 +211,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 				vanityNameServers.Servers = append(vanityNameServers.Servers, &servers)
 			}
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -223,6 +231,28 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	zoneId := *response.Response.Id
+
+	var planRequest = teo.NewCreatePlanForZoneRequest()
+	planRequest.ZoneId = &zoneId
+	if v, ok := d.GetOk("plan_type"); ok {
+		planRequest.PlanType = helper.String(v.(string))
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, err)
+		return err
+	}
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {

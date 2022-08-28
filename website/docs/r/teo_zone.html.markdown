@@ -15,12 +15,16 @@ Provides a resource to create a teo zone
 
 ```hcl
 resource "tencentcloud_teo_zone" "zone" {
+  name      = ""
+  plan_type = ""
+  type      = ""
+  paused    = ""
   vanity_name_servers {
+    switch  = ""
+    servers = ""
 
   }
-  vanity_name_servers_ips {
-
-  }
+  cname_speed_up = ""
   tags = {
     "createdBy" = "terraform"
   }
@@ -32,6 +36,7 @@ resource "tencentcloud_teo_zone" "zone" {
 The following arguments are supported:
 
 * `name` - (Required, String) Site name.
+* `plan_type` - (Required, String) Plan type of the zone. See details in data source `zone_available_plans`.
 * `cname_speed_up` - (Optional, String) Specifies whether to enable CNAME acceleration.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.
 * `tags` - (Optional, Map) Tag description list.
