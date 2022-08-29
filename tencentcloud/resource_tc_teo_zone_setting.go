@@ -198,11 +198,9 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
-										Type:        schema.TypeList,
-										MaxItems:    1,
-										Optional:    true,
-										Computed:    true,
-										Description: "Specifies whether to follow the origin server configuration.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "According to the configuration switch of the origin site, the values are: on: open; off: off.",
 									},
 								},
 							},
