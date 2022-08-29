@@ -241,6 +241,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("type", eip.AddressType)
 	_ = d.Set("public_ip", eip.AddressIp)
 	_ = d.Set("status", eip.AddressStatus)
+	_ = d.Set("internet_charge_type", eip.InternetChargeType)
 	_ = d.Set("tags", tags)
 	return nil
 }

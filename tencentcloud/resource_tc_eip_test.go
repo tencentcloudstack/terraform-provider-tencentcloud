@@ -187,6 +187,29 @@ func TestAccTencentCloudEip_bandwidth(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudEip_chargetype(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEipChargeType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "TRAFFIC_POSTPAID_BY_HOUR"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_eip.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckEipExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -310,5 +333,12 @@ resource "tencentcloud_eip" "foo" {
 	name = "eip_bandwidth"
 	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
 	internet_max_bandwidth_out = 2
+  }
+`
+
+const testAccEipChargeType = `
+resource "tencentcloud_eip" "foo" {
+	name = "eip_charge_type"
+	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   }
 `
