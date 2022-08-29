@@ -461,9 +461,8 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("paused") {
 		requestPaused := teo.NewModifyZoneStatusRequest()
 		requestPaused.Id = helper.String(d.Id())
-		if v, ok := d.GetOk("paused"); ok {
-			requestPaused.Paused = helper.Bool(v.(bool))
-		}
+		v, _ := d.GetOk("paused")
+		requestPaused.Paused = helper.Bool(v.(bool))
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneStatus(requestPaused)
 			if e != nil {
