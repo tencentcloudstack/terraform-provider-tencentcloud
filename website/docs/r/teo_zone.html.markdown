@@ -37,7 +37,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Site name.
 * `plan_type` - (Required, String) Plan type of the zone. See details in data source `zone_available_plans`.
-* `cname_speed_up` - (Optional, String) Specifies whether to enable CNAME acceleration.
+* `cname_speed_up` - (Optional, String) Specifies whether to enable CNAME acceleration, enabled: Enable; disabled: Disable.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.
 * `tags` - (Optional, Map) Tag description list.
 * `type` - (Optional, String) Specifies how the site is connected to EdgeOne.

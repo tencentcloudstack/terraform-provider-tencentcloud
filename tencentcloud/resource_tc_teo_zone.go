@@ -162,7 +162,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Specifies whether to enable CNAME acceleration.",
+				Description: "Specifies whether to enable CNAME acceleration, enabled: Enable; disabled: Disable.",
 			},
 
 			"cname_status": {
@@ -432,6 +432,50 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("cname_speed_up") {
+		requestCnameSpeedUp := teo.NewModifyZoneCnameSpeedUpRequest()
+		requestCnameSpeedUp.Id = helper.String(d.Id())
+		if v, ok := d.GetOk("cname_speed_up"); ok {
+			requestCnameSpeedUp.Status = helper.String(v.(string))
+		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneCnameSpeedUp(requestCnameSpeedUp)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("paused") {
+		requestPaused := teo.NewModifyZoneStatusRequest()
+		requestPaused.Id = helper.String(d.Id())
+		if v, ok := d.GetOk("paused"); ok {
+			requestPaused.Paused = helper.Bool(v.(bool))
+		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneStatus(requestPaused)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
 			return err
 		}
 	}
