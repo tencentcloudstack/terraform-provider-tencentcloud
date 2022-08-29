@@ -37,6 +37,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Site name.
 * `plan_type` - (Required, String) Plan type of the zone. See details in data source `zone_available_plans`.
+* `area` - (Optional, String) Acceleration area of the zone. Valid values: `mainland`, `overseas`.
 * `cname_speed_up` - (Optional, String) Specifies whether to enable CNAME acceleration, enabled: Enable; disabled: Disable.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.
 * `tags` - (Optional, Map) Tag description list.

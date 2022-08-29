@@ -176,6 +176,11 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+			"area": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`.",
+			},
 		},
 	}
 }
@@ -368,6 +373,10 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 	_ = d.Set("tags", tags)
+
+	if zone.Area != nil {
+		_ = d.Set("area", zone.Area)
+	}
 
 	return nil
 }
