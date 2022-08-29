@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -625,5 +626,75 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId,
 			return
 		}
 	}
+	return
+}
+
+func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId, policyId string) (ddosPolicy *teo.DescribeDDoSPolicyResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeDDoSPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	policyId64, errRet := strconv.ParseInt(policyId, 10, 64)
+	if errRet != nil {
+		log.Printf("[DEBUG]%s api[%s] error, Type conversion failed, [%s] conversion int64 failed\n",
+			logId, request.GetAction(), policyId)
+		return nil, errRet
+	}
+
+	request.ZoneId = &zoneId
+	request.PolicyId = &policyId64
+
+	response, err := me.client.UseTeoClient().DescribeDDoSPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	ddosPolicy = response.Response
+	return
+}
+
+func (me *TeoService) DeleteTeoDdosPolicyById(ctx context.Context, zoneId, policyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := teo.NewModifyDDoSPolicyRequest()
+
+	policyId64, errRet := strconv.ParseInt(policyId, 10, 64)
+	if errRet != nil {
+		log.Printf("[DEBUG]%s api[%s] error, Type conversion failed, [%s] conversion int64 failed\n",
+			logId, request.GetAction(), policyId)
+		return errRet
+	}
+
+	request.ZoneId = &zoneId
+	request.PolicyId = &policyId64
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().ModifyDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }

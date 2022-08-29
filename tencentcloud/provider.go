@@ -675,6 +675,7 @@ Teo
 	tencentcloud_teo_security_policy
 	tencentcloud_teo_host_certificate
 	tencentcloud_teo_default_certificate
+	tencentcloud_teo_ddos_policy
 */
 package tencentcloud
 
@@ -1211,6 +1212,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy":                     resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_host_certificate":                    resourceTencentCloudTeoHostCertificate(),
 			"tencentcloud_teo_default_certificate":                 resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_teo_ddos_policy":                         resourceTencentCloudTeoDdosPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

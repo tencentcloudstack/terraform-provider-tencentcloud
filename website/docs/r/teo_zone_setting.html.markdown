@@ -164,7 +164,7 @@ The `compression` object supports the following:
 
 The `follow_origin` object supports the following:
 
-* `switch` - (Optional, List) Specifies whether to follow the origin server configuration.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Required, String) According to the configuration switch of the origin site, the values are: on: open; off: off.
 
 The `force_redirect` object supports the following:
 
