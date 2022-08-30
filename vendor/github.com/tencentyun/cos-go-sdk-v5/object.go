@@ -187,6 +187,41 @@ func (s *ObjectService) GetPresignedURL(ctx context.Context, httpMethod, name, a
 	return req.URL, nil
 }
 
+func (s *ObjectService) GetSignature(ctx context.Context, httpMethod, name, ak, sk string, expired time.Duration, opt *PresignedURLOptions, signHost ...bool) string {
+	// 兼容 name 以 / 开头的情况
+	if strings.HasPrefix(name, "/") {
+		name = encodeURIComponent("/") + encodeURIComponent(name[1:], []byte{'/'})
+	} else {
+		name = encodeURIComponent(name, []byte{'/'})
+	}
+
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/" + name,
+		method:    httpMethod,
+		optQuery:  opt,
+		optHeader: opt,
+	}
+	if opt != nil && opt.Query != nil {
+		qs := opt.Query.Encode()
+		if qs != "" {
+			sendOpt.uri = fmt.Sprintf("%s?%s", sendOpt.uri, qs)
+		}
+	}
+	req, err := s.client.newRequest(ctx, sendOpt.baseURL, sendOpt.uri, sendOpt.method, sendOpt.body, sendOpt.optQuery, sendOpt.optHeader)
+	if err != nil {
+		return ""
+	}
+
+	authTime := NewAuthTime(expired)
+	signedHost := true
+	if len(signHost) > 0 {
+		signedHost = signHost[0]
+	}
+	authorization := newAuthorization(ak, sk, req, authTime, signedHost)
+	return authorization
+}
+
 // ObjectPutHeaderOptions the options of header of the put object
 type ObjectPutHeaderOptions struct {
 	CacheControl       string `header:"Cache-Control,omitempty" url:"-"`
@@ -371,21 +406,32 @@ func (s *ObjectService) Copy(ctx context.Context, name, sourceURL string, opt *O
 	}
 	copyOpt.XCosCopySource = u
 
+	var bs bytes.Buffer
 	sendOpt := sendOptions{
 		baseURL:   s.client.BaseURL.BucketURL,
 		uri:       "/" + encodeURIComponent(name),
 		method:    http.MethodPut,
 		body:      nil,
 		optHeader: copyOpt,
-		result:    &res,
+		result:    &bs,
 	}
 	resp, err := s.client.doRetry(ctx, &sendOpt)
-	// If the error occurs during the copy operation, the error response is embedded in the 200 OK response. This means that a 200 OK response can contain either a success or an error.
-	if err == nil && resp.StatusCode == 200 {
-		if res.ETag == "" {
-			return &res, resp, errors.New("response 200 OK, but body contains an error")
+
+	if err == nil { // 请求正常
+		err = xml.Unmarshal(bs.Bytes(), &res) // body 正常返回
+		if err == io.EOF {
+			err = nil
+		}
+		// If the error occurs during the copy operation, the error response is embedded in the 200 OK response. This means that a 200 OK response can contain either a success or an error.
+		if resp != nil && resp.StatusCode == 200 {
+			if err != nil {
+				resErr := &ErrorResponse{Response: resp.Response}
+				xml.Unmarshal(bs.Bytes(), resErr)
+				return &res, resp, resErr
+			}
 		}
 	}
+
 	return &res, resp, err
 }
 
@@ -405,7 +451,7 @@ type ObjectDeleteOptions struct {
 func (s *ObjectService) Delete(ctx context.Context, name string, opt ...*ObjectDeleteOptions) (*Response, error) {
 	var optHeader *ObjectDeleteOptions
 	// When use "" string might call the delete bucket interface
-	if len(name) == 0 {
+	if len(name) == 0 || name == "/" {
 		return nil, errors.New("empty object name")
 	}
 	if len(opt) > 0 {
@@ -1148,9 +1194,9 @@ func (s *ObjectService) Upload(ctx context.Context, name string, filepath string
 
 	if resp != nil && s.client.Conf.EnableCRC && !opt.DisableChecksum {
 		scoscrc := resp.Header.Get("x-cos-hash-crc64ecma")
-		icoscrc, _ := strconv.ParseUint(scoscrc, 10, 64)
+		icoscrc, err := strconv.ParseUint(scoscrc, 10, 64)
 		if icoscrc != localcrc {
-			return v, resp, fmt.Errorf("verification failed, want:%v, return:%v", localcrc, icoscrc)
+			return v, resp, fmt.Errorf("verification failed, want:%v, return:%v, x-cos-hash-crc64ecma: %v, err:%v", localcrc, icoscrc, scoscrc, err)
 		}
 	}
 	return v, resp, err
@@ -1241,14 +1287,20 @@ func (s *ObjectService) Download(ctx context.Context, name string, filepath stri
 	if opt.Opt != nil && opt.Opt.Range != "" {
 		return nil, fmt.Errorf("Download doesn't support Range Options")
 	}
-	// 获取文件长度和CRC
-	var coscrc string
-	resp, err := s.Head(ctx, name, nil, id...)
+	headOpt := &ObjectHeadOptions{}
+	if opt.Opt != nil {
+		headOpt.XCosSSECustomerAglo = opt.Opt.XCosSSECustomerAglo
+		headOpt.XCosSSECustomerKey = opt.Opt.XCosSSECustomerKey
+		headOpt.XCosSSECustomerKeyMD5 = opt.Opt.XCosSSECustomerKeyMD5
+		headOpt.XOptionHeader = opt.Opt.XOptionHeader
+	}
+	resp, err := s.Head(ctx, name, headOpt, id...)
 	if err != nil {
 		return resp, err
 	}
+	// 获取文件长度和CRC
 	// 如果对象不存在x-cos-hash-crc64ecma，则跳过不做校验
-	coscrc = resp.Header.Get("x-cos-hash-crc64ecma")
+	coscrc := resp.Header.Get("x-cos-hash-crc64ecma")
 	strTotalBytes := resp.Header.Get("Content-Length")
 	totalBytes, err := strconv.ParseInt(strTotalBytes, 10, 64)
 	if err != nil {
@@ -1404,8 +1456,9 @@ func (s *ObjectService) Download(ctx context.Context, name string, filepath stri
 }
 
 type ObjectPutTaggingOptions struct {
-	XMLName xml.Name           `xml:"Tagging"`
-	TagSet  []ObjectTaggingTag `xml:"TagSet>Tag,omitempty"`
+	XMLName       xml.Name           `xml:"Tagging" header:"-"`
+	TagSet        []ObjectTaggingTag `xml:"TagSet>Tag,omitempty" header:"-"`
+	XOptionHeader *http.Header       `header:"-,omitempty" url:"-" xml:"-"`
 }
 type ObjectTaggingTag BucketTaggingTag
 type ObjectGetTaggingResult ObjectPutTaggingOptions
@@ -1420,50 +1473,70 @@ func (s *ObjectService) PutTagging(ctx context.Context, name string, opt *Object
 		return nil, errors.New("wrong params")
 	}
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     u,
-		method:  http.MethodPut,
-		body:    opt,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       u,
+		method:    http.MethodPut,
+		body:      opt,
+		optHeader: opt,
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
 }
 
-func (s *ObjectService) GetTagging(ctx context.Context, name string, id ...string) (*ObjectGetTaggingResult, *Response, error) {
-	var u string
-	if len(id) == 1 {
-		u = fmt.Sprintf("/%s?tagging&versionId=%s", encodeURIComponent(name), id[0])
-	} else if len(id) == 0 {
-		u = fmt.Sprintf("/%s?tagging", encodeURIComponent(name))
-	} else {
+type ObjectGetTaggingOptions struct {
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+}
+
+func (s *ObjectService) GetTagging(ctx context.Context, name string, opt ...interface{}) (*ObjectGetTaggingResult, *Response, error) {
+	var optHeader *ObjectGetTaggingOptions
+	u := fmt.Sprintf("/%s?tagging", encodeURIComponent(name))
+	if len(opt) > 2 {
 		return nil, nil, errors.New("wrong params")
+	}
+	for _, val := range opt {
+		if v, ok := val.(string); ok {
+			u = fmt.Sprintf("%s&versionId=%s", u, v)
+		}
+		if v, ok := val.(*ObjectGetTaggingOptions); ok {
+			optHeader = v
+		}
 	}
 
 	var res ObjectGetTaggingResult
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     u,
-		method:  http.MethodGet,
-		result:  &res,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       u,
+		method:    http.MethodGet,
+		optHeader: optHeader,
+		result:    &res,
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return &res, resp, err
 }
 
-func (s *ObjectService) DeleteTagging(ctx context.Context, name string, id ...string) (*Response, error) {
-	var u string
-	if len(id) == 1 {
-		u = fmt.Sprintf("/%s?tagging&versionId=%s", encodeURIComponent(name), id[0])
-	} else if len(id) == 0 {
-		u = fmt.Sprintf("/%s?tagging", encodeURIComponent(name))
-	} else {
+func (s *ObjectService) DeleteTagging(ctx context.Context, name string, opt ...interface{}) (*Response, error) {
+	if len(name) == 0 || name == "/" {
+		return nil, errors.New("empty object name")
+	}
+	var optHeader *ObjectGetTaggingOptions
+	u := fmt.Sprintf("/%s?tagging", encodeURIComponent(name))
+	if len(opt) > 2 {
 		return nil, errors.New("wrong params")
+	}
+	for _, val := range opt {
+		if v, ok := val.(string); ok {
+			u = fmt.Sprintf("%s&versionId=%s", u, v)
+		}
+		if v, ok := val.(*ObjectGetTaggingOptions); ok {
+			optHeader = v
+		}
 	}
 
 	sendOpt := &sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     u,
-		method:  http.MethodDelete,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       u,
+		method:    http.MethodDelete,
+		optHeader: optHeader,
 	}
 	resp, err := s.client.doRetry(ctx, sendOpt)
 	return resp, err
