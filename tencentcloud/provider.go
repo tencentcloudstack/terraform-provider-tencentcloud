@@ -963,6 +963,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
+			"tencentcloud_teo_zone_shield_area":					 dataSourceTencentCloudTeoZoneShieldArea(),
+			"tencentcloud_teo_rule_engine_setting":					 dataSourceTencentCloudTeoRuleEngineSetting(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1212,7 +1214,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy":                     resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_host_certificate":                    resourceTencentCloudTeoHostCertificate(),
 			"tencentcloud_teo_default_certificate":                 resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_teo_ddos_policy":                         resourceTencentCloudTeoDdosPolicy(),
+			//"tencentcloud_teo_ddos_policy":                         resourceTencentCloudTeoDdosPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,
