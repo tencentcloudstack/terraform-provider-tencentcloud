@@ -73,7 +73,8 @@ func resourceTencentCloudMonitorTmpTkeClusterAgent() *schema.Resource {
 							Description: "Whether to enable the public network CLB.",
 						},
 						"in_cluster_pod_config": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
+							MaxItems:    1,
 							Optional:    true,
 							Description: "Pod configuration for components deployed in the cluster.",
 							Elem: &schema.Resource{
@@ -208,35 +209,38 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 			prometheusClusterAgent.EnableExternal = helper.Bool(v.(bool))
 		}
 		if v, ok := dMap["in_cluster_pod_config"]; ok {
-			podConfig := v.(map[string]interface{})
 			var clusterAgentPodConfig *tke.PrometheusClusterAgentPodConfig
-			if vv, ok := podConfig["host_net"]; ok {
-				clusterAgentPodConfig.HostNet = helper.Bool(vv.(bool))
-			}
-			if vv, ok := podConfig["node_selector"]; ok {
-				labelsList := vv.([]interface{})
-				nodeSelectorKV := make([]*tke.Label, 0, len(labelsList))
-				for _, labels := range labelsList {
-					label := labels.(map[string]interface{})
-					var kv tke.Label
-					kv.Name = helper.String(label["name"].(string))
-					kv.Value = helper.String(label["value"].(string))
-					nodeSelectorKV = append(nodeSelectorKV, &kv)
+			if len(v.([]interface{})) > 0 {
+				podConfig := v.([]interface{})[0].(map[string]interface{})
+
+				if vv, ok := podConfig["host_net"]; ok {
+					clusterAgentPodConfig.HostNet = helper.Bool(vv.(bool))
 				}
-				clusterAgentPodConfig.NodeSelector = nodeSelectorKV
-			}
-			if vv, ok := podConfig["tolerations"]; ok {
-				tolerationList := vv.([]interface{})
-				tolerations := make([]*tke.Toleration, 0, len(tolerationList))
-				for _, t := range tolerationList {
-					tolerationMap := t.(map[string]interface{})
-					var toleration tke.Toleration
-					toleration.Key = helper.String(tolerationMap["key"].(string))
-					toleration.Operator = helper.String(tolerationMap["operator"].(string))
-					toleration.Effect = helper.String(tolerationMap["effect"].(string))
-					tolerations = append(tolerations, &toleration)
+				if vv, ok := podConfig["node_selector"]; ok {
+					labelsList := vv.([]interface{})
+					nodeSelectorKV := make([]*tke.Label, 0, len(labelsList))
+					for _, labels := range labelsList {
+						label := labels.(map[string]interface{})
+						var kv tke.Label
+						kv.Name = helper.String(label["name"].(string))
+						kv.Value = helper.String(label["value"].(string))
+						nodeSelectorKV = append(nodeSelectorKV, &kv)
+					}
+					clusterAgentPodConfig.NodeSelector = nodeSelectorKV
 				}
-				clusterAgentPodConfig.Tolerations = tolerations
+				if vv, ok := podConfig["tolerations"]; ok {
+					tolerationList := vv.([]interface{})
+					tolerations := make([]*tke.Toleration, 0, len(tolerationList))
+					for _, t := range tolerationList {
+						tolerationMap := t.(map[string]interface{})
+						var toleration tke.Toleration
+						toleration.Key = helper.String(tolerationMap["key"].(string))
+						toleration.Operator = helper.String(tolerationMap["operator"].(string))
+						toleration.Effect = helper.String(tolerationMap["effect"].(string))
+						tolerations = append(tolerations, &toleration)
+					}
+					clusterAgentPodConfig.Tolerations = tolerations
+				}
 			}
 			prometheusClusterAgent.InClusterPodConfig = clusterAgentPodConfig
 		}

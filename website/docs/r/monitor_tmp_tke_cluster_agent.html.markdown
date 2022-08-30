@@ -40,7 +40,7 @@ The `agents` object supports the following:
 * `enable_external` - (Required, Bool) Whether to enable the public network CLB.
 * `region` - (Required, String) Limitation of region.
 * `external_labels` - (Optional, List) All metrics collected by the cluster will carry these labels.
-* `in_cluster_pod_config` - (Optional, Map) Pod configuration for components deployed in the cluster.
+* `in_cluster_pod_config` - (Optional, List) Pod configuration for components deployed in the cluster.
 * `not_install_basic_scrape` - (Optional, Bool) Whether to install the default collection configuration.
 * `not_scrape` - (Optional, Bool) Whether to collect indicators, true means drop all indicators, false means collect default indicators.
 
