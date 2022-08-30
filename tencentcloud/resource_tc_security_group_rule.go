@@ -312,7 +312,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 	}
 	var policyIndex int64
 	if v, ok := d.GetOk("policy_index"); ok {
-		policyIndex = v.(int64)
+		policyIndex = int64(v.(int))
 	}
 	info := securityGroupRuleBasicInfo{
 		SgId:                    sgId,

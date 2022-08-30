@@ -1285,9 +1285,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 	if info.Protocol != nil {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
-	if policy.PolicyIndex != nil {
-		policy.PolicyIndex = helper.Int64(info.PolicyIndex)
-	}
+	policy.PolicyIndex = helper.Int64(info.PolicyIndex)
 	policy.Port = info.PortRange
 	policy.PolicyDescription = info.Description
 	policy.Action = common.StringPtr(strings.ToUpper(info.Action))
