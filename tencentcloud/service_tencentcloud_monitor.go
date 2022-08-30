@@ -518,7 +518,9 @@ func (me *MonitorService) DescribeMonitorTmpExporterIntegration(ctx context.Cont
 	}()
 
 	ids := strings.Split(tmpExporterIntegrationId, FILED_SP)
-	request.Name = &ids[0]
+	if ids[0] != "" {
+		request.Name = &ids[0]
+	}
 	request.InstanceId = &ids[1]
 	kubeType, _ := strconv.Atoi(ids[2])
 	request.KubeType = helper.IntInt64(kubeType)
@@ -547,6 +549,7 @@ func (me *MonitorService) DeleteMonitorTmpExporterIntegrationById(ctx context.Co
 
 	request := monitor.NewDeleteExporterIntegrationRequest()
 	ids := strings.Split(tmpExporterIntegrationId, FILED_SP)
+
 	request.Name = &ids[0]
 	request.InstanceId = &ids[1]
 	kubeType, _ := strconv.Atoi(ids[2])

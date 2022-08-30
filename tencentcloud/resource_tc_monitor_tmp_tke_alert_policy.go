@@ -34,7 +34,7 @@ resource "tencentcloud_monitor_tmp_tke_alert_policy" "tmpAlertPolicy" {
     }
   }
 }
-
+```
 */
 package tencentcloud
 

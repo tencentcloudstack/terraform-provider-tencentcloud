@@ -15,7 +15,7 @@ resource "tencentcloud_monitor_tmp_tke_template" "template" {
     }
   }
 }
-
+```
 */
 package tencentcloud
 

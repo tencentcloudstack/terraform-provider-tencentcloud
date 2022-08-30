@@ -3,11 +3,53 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+const defaultKind = ""
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_monitor_tmp_exporter_integration
+	resource.AddTestSweepers("tencentcloud_monitor_tmp_exporter_integration", &resource.Sweeper{
+		Name: "tencentcloud_monitor_tmp_exporter_integration",
+		F:    testSweepExporterIntegration,
+	})
+}
+func testSweepExporterIntegration(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(region)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := MonitorService{client}
+
+	instanceId := defaultPrometheusId
+	clusterId := tkeClusterIdAgent
+	ids := strings.Join([]string{"", instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
+
+	for {
+		instances, err := service.DescribeMonitorTmpExporterIntegration(ctx, ids)
+		if err != nil {
+			return err
+		}
+
+		if instances == nil {
+			return nil
+		}
+
+		id := strings.Join([]string{*instances.Name, instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
+		err = service.DeleteMonitorTmpExporterIntegrationById(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
 	t.Parallel()
@@ -22,7 +64,7 @@ func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
 					testAccCheckExporterIntegrationExists("tencentcloud_monitor_tmp_exporter_integration.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kind", "cvm-http-sd-exporter"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kube_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-ely08ic4"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-87o4klby"),
 				),
 			},
 			{
@@ -94,9 +136,6 @@ const testExporterIntegrationVar = `
 variable "prometheus_id" {
   default = "` + defaultPrometheusId + `"
 }
-variable "default_cluster" {
-  default = "` + defaultTkeClusterId + `"
-}
 variable "cluster_id" {
   default = "` + tkeClusterIdAgent + `"
 }
@@ -105,16 +144,16 @@ const testExporterIntegration_basic = testExporterIntegrationVar + `
 resource "tencentcloud_monitor_tmp_exporter_integration" "basic" {
   instance_id	= var.prometheus_id	
   kind 			= "cvm-http-sd-exporter"
-  content		= "{\"kind\":\"cvm-http-sd-exporter\",\"spec\":{\"job\":\"job_name: example-job-name\\nmetrics_path: /metrics\\ncvm_sd_configs:\\n- region: ap-guangzhou\\n  ports:\\n  - 9100\\n  filters:         \\n  - name: tag:示例标签键\\n    values: \\n    - 示例标签值\\nrelabel_configs: \\n- source_labels: [__meta_cvm_instance_state]\\n  regex: RUNNING\\n  action: keep\\n- regex: __meta_cvm_tag_(.*)\\n  replacement: $1\\n  action: labelmap\\n- source_labels: [__meta_cvm_region]\\n  target_label: region\\n  action: replace\"}}"
+  content		= "{\"kind\":\"cvm-http-sd-exporter\",\"spec\":{\"job\":\"job_name: example-job-name-test\\nmetrics_path: /metrics\\ncvm_sd_configs:\\n- region: ap-guangzhou\\n  ports:\\n  - 9100\\n  filters:         \\n  - name: tag:示例标签键\\n    values: \\n    - 示例标签值\\nrelabel_configs: \\n- source_labels: [__meta_cvm_instance_state]\\n  regex: RUNNING\\n  action: keep\\n- regex: __meta_cvm_tag_(.*)\\n  replacement: $1\\n  action: labelmap\\n- source_labels: [__meta_cvm_region]\\n  target_label: region\\n  action: replace\"}}"
   kube_type		= 1
-  cluster_id	= var.default_cluster
+  cluster_id	= var.cluster_id
 }`
 
 const testExporterIntegration_update = testExporterIntegrationVar + `
 resource "tencentcloud_monitor_tmp_exporter_integration" "basic" {
   instance_id	= var.prometheus_id	
   kind 			= "cvm-http-sd-exporter"
-  content		= "{\"kind\":\"cvm-http-sd-exporter\",\"spec\":{\"job\":\"job_name: example-job-name\\nmetrics_path: /metrics\\ncvm_sd_configs:\\n- region: ap-guangzhou\\n  ports:\\n  - 9100\\n  filters:         \\n  - name: tag:示例标签键\\n    values: \\n    - 示例标签值\\nrelabel_configs: \\n- source_labels: [__meta_cvm_instance_state]\\n  regex: RUNNING\\n  action: keep\\n- regex: __meta_cvm_tag_(.*)\\n  replacement: $1\\n  action: labelmap\\n- source_labels: [__meta_cvm_region]\\n  target_label: region\\n  action: replace\"}}"
+  content		= "{\"kind\":\"cvm-http-sd-exporter\",\"spec\":{\"job\":\"job_name: example-job-name-test\\nmetrics_path: /metrics\\ncvm_sd_configs:\\n- region: ap-guangzhou\\n  ports:\\n  - 9100\\n  filters:         \\n  - name: tag:示例标签键\\n    values: \\n    - 示例标签值\\nrelabel_configs: \\n- source_labels: [__meta_cvm_instance_state]\\n  regex: RUNNING\\n  action: keep\\n- regex: __meta_cvm_tag_(.*)\\n  replacement: $1\\n  action: labelmap\\n- source_labels: [__meta_cvm_region]\\n  target_label: region\\n  action: replace\"}}"
   kube_type		= 1
   cluster_id	= var.cluster_id
 }`

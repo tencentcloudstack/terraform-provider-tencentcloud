@@ -27,7 +27,7 @@ resource "tencentcloud_monitor_tmp_tke_global_notification" "tmpGlobalNotificati
     phone_arrive_notice   = false
   }
 }
-
+```
 */
 package tencentcloud
 

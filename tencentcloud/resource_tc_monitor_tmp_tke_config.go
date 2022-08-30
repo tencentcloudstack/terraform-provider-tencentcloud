@@ -25,6 +25,8 @@ resource "tencentcloud_monitor_tmp_tke_config" "foo" {
     config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: mynamespace\n"
   }
 }
+
+```
 */
 package tencentcloud
 
