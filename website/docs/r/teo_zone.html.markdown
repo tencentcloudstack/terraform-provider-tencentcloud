@@ -14,20 +14,17 @@ Provides a resource to create a teo zone
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone" "zone" {
-  name      = ""
-  plan_type = ""
-  type      = ""
-  paused    = ""
-  vanity_name_servers {
-    switch  = ""
-    servers = ""
+resource "tencentcloud_teo_zone" "sfurnace_work" {
+  name           = "sfurnace.work"
+  plan_type      = "ent_cm_with_bot"
+  type           = "full"
+  paused         = false
+  cname_speed_up = "enabled"
 
-  }
-  cname_speed_up = ""
-  tags = {
-    "createdBy" = "terraform"
-  }
+  #  vanity_name_servers {
+  #    switch  = "on"
+  #    servers = ["2.2.2.2"]
+  #  }
 }
 ```
 

@@ -4,20 +4,17 @@ Provides a resource to create a teo zone
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone" "zone" {
-  name           = ""
-  plan_type      = ""
-  type           = ""
-  paused         = ""
-  vanity_name_servers {
-    switch  = ""
-    servers = ""
+resource "tencentcloud_teo_zone" "sfurnace_work" {
+  name           = "sfurnace.work"
+  plan_type      = "ent_cm_with_bot"
+  type           = "full"
+  paused         = false
+  cname_speed_up = "enabled"
 
-  }
-  cname_speed_up = ""
-  tags           = {
-    "createdBy" = "terraform"
-  }
+  #  vanity_name_servers {
+  #    switch  = "on"
+  #    servers = ["2.2.2.2"]
+  #  }
 }
 ```
 Import
@@ -218,22 +215,14 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, err)
-		return err
+	result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
+	if e != nil {
+		return e
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 	}
+	response = result
 
 	zoneId := *response.Response.Id
 
@@ -243,7 +232,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		planRequest.PlanType = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
 		if e != nil {
 			return retryError(e)
@@ -415,7 +404,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 					vanityNameServers.Servers = append(vanityNameServers.Servers, &servers)
 				}
 			}
-
+			request.VanityNameServers = &vanityNameServers
 		}
 	}
 

@@ -14,10 +14,15 @@ Provides a resource to create a teo loadBalancing
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_load_balancing" "loadBalancing" {
-  tags = {
-    "createdBy" = "terraform"
-  }
+resource "tencentcloud_teo_load_balancing" "lb0" {
+  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+
+  host = "sfurnace.work"
+  origin_id = [
+    split("#", tencentcloud_teo_origin_group.group0.id)[1]
+  ]
+  ttl  = 600
+  type = "proxied"
 }
 ```
 

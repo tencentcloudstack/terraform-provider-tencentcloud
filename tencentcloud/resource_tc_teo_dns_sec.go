@@ -4,9 +4,9 @@ Provides a resource to create a teo dnsSec
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_sec" "dnsSec" {
-  zone_id = ""
-  status  = ""
+resource "tencentcloud_teo_dns_sec" "sfurnace_work" {
+  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+  status  = "disabled"
 }
 
 ```
@@ -130,9 +130,8 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewModifyDnssecRequest()
-		response *teo.ModifyDnssecResponse
-		zoneId   string
+		request = teo.NewModifyDnssecRequest()
+		zoneId  string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -152,7 +151,6 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

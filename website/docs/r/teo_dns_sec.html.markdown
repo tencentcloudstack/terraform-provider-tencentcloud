@@ -14,9 +14,9 @@ Provides a resource to create a teo dnsSec
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_sec" "dnsSec" {
-  zone_id = ""
-  status  = ""
+resource "tencentcloud_teo_dns_sec" "sfurnace_work" {
+  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+  status  = "disabled"
 }
 ```
 

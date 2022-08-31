@@ -4,19 +4,35 @@ Provides a resource to create a teo originGroup
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_origin_group" "originGroup" {
-  origin_name = "test"
+resource "tencentcloud_teo_origin_group" "group0" {
+  zone_id     = tencentcloud_teo_zone.sfurnace_work.id
+  origin_name = "group0"
+  origin_type = "self"
   type        = "weight"
-  record {
-    record  = "20160527-10003318.cos.ap-shanghai.myqcloud.com"
-    area    = []
-    weight  = 100
-    port    = 0
-    private = false
 
+  dynamic "record" {
+    for_each = local.group0
+    content {
+      record = record.value["record"]
+      port   = record.value["port"]
+      weight = record.value["weight"]
+      area   = []
+    }
   }
-  zone_id     = "zone-27mypfc1vr7d"
-  origin_type = "cos"
+}
+
+locals {
+  group0 = [
+    {
+      "record" = "1.1.1.1"
+      "port"   = 80
+      "weight" = 30
+    }, {
+      "record" = "2.2.2.2"
+      "port"   = 443
+      "weight" = 70
+    }
+  ]
 }
 
 ```

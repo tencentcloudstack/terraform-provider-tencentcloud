@@ -4,15 +4,16 @@ Provides a resource to create a teo applicationProxy
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy" "applicationProxy" {
-  zone_id              = ""
-  zone_name            = ""
-  proxy_name           = ""
-  plat_type            = ""
-  security_type        = ""
-  accelerate_type      = ""
-  session_persist_time = ""
-  proxy_type           = ""
+resource "tencentcloud_teo_application_proxy" "app0" {
+  zone_id   = tencentcloud_teo_zone.sfurnace_work.id
+  zone_name = "sfurnace.work"
+
+  accelerate_type      = 1
+  security_type        = 1
+  plat_type            = "domain"
+  proxy_name           = "www.sfurnace.work"
+  proxy_type           = "hostname"
+  session_persist_time = 2400
 }
 
 ```
@@ -139,6 +140,9 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		zoneId   string
 		proxyId  string
 	)
+
+	request.ForwardClientIp = helper.String("")
+	request.SessionPersist = helper.Bool(true)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
@@ -291,6 +295,12 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 
 	request.ZoneId = &zoneId
 	request.ProxyId = &proxyId
+	request.ForwardClientIp = helper.String("")
+	request.SessionPersist = helper.Bool(true)
+
+	if v, ok := d.GetOk("proxy_name"); ok {
+		request.ProxyName = helper.String(v.(string))
+	}
 
 	if d.HasChange("zone_id") {
 		return fmt.Errorf("`zone_id` do not support change now.")
@@ -298,12 +308,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("zone_name") {
 		return fmt.Errorf("`zone_name` do not support change now.")
-	}
-
-	if d.HasChange("proxy_name") {
-		if v, ok := d.GetOk("proxy_name"); ok {
-			request.ProxyName = helper.String(v.(string))
-		}
 	}
 
 	if d.HasChange("plat_type") {

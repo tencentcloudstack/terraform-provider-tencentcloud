@@ -14,44 +14,40 @@ Provides a resource to create a teo ruleEngine
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine" "ruleEngine" {
-  zone_id   = ""
-  rule_name = ""
-  status    = ""
+resource "tencentcloud_teo_rule_engine" "sfurnace_work" {
+  zone_id   = tencentcloud_teo_zone.sfurnace_work.id
+  rule_name = "规则0"
+  status    = "enable"
+
   rules {
     conditions {
       conditions {
-        operator = ""
-        target   = ""
-        values   = ""
-      }
-    }
-    actions {
-      normal_action {
-        action = ""
-        parameters {
-          name   = ""
-          values = ""
-        }
-      }
-      rewrite_action {
-        action = ""
-        parameters {
-          action = ""
-          name   = ""
-          values = ""
-        }
-      }
-      code_action {
-        action = ""
-        parameters {
-          name        = ""
-          values      = ""
-          status_code = ""
-        }
+        operator = "equal"
+        target   = "host"
+        values = [
+          "www.sfurnace.work",
+        ]
       }
     }
 
+    actions {
+      normal_action {
+        action = "MaxAge"
+
+        parameters {
+          name = "FollowOrigin"
+          values = [
+            "on",
+          ]
+        }
+        parameters {
+          name = "MaxAgeTime"
+          values = [
+            "0",
+          ]
+        }
+      }
+    }
   }
 }
 ```

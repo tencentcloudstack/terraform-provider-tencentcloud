@@ -4,97 +4,97 @@ Provides a resource to create a teo zoneSetting
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone_setting" "zoneSetting" {
-  zone_id = ""
+resource "tencentcloud_teo_zone_setting" "sfurnace_work" {
+  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+
   cache {
-    cache {
-      switch               = ""
-      cache_time           = ""
-      ignore_cache_control = ""
-    }
-    no_cache {
-      switch = ""
-    }
     follow_origin {
-      switch = ""
+      switch = "off"
     }
 
+    no_cache {
+      switch = "off"
+    }
   }
+
   cache_key {
-    full_url_cache = ""
-    ignore_case    = ""
+    full_url_cache = "off"
+    ignore_case    = "on"
+
     query_string {
-      switch = ""
-      action = ""
-      value  = ""
+      action = "excludeCustom"
+      switch = "on"
+      value  = ["test", "apple"]
     }
-
   }
-  max_age {
-    max_age_time  = ""
-    follow_origin = ""
 
-  }
-  offline_cache {
-    switch = ""
-
-  }
-  quic {
-    switch = ""
-
-  }
-  post_max_size {
-    switch   = ""
-    max_size = ""
-
-  }
-  compression {
-    switch = ""
-
-  }
-  upstream_http2 {
-    switch = ""
-
-  }
-  force_redirect {
-    switch               = ""
-    redirect_status_code = ""
-
-  }
-  https {
-    http2         = ""
-    ocsp_stapling = ""
-    tls_version   = ""
-    hsts {
-      switch              = ""
-      max_age             = ""
-      include_sub_domains = ""
-      preload             = ""
-    }
-
-  }
-  origin {
-    origin_pull_protocol = ""
-
-  }
-  smart_routing {
-    switch = ""
-
-  }
-  web_socket {
-    switch  = ""
-    timeout = ""
-
-  }
-  client_ip_header {
-    switch      = ""
-    header_name = ""
-
-  }
   cache_prefresh {
-    switch  = ""
-    percent = ""
+    percent = 90
+    switch  = "off"
+  }
 
+  client_ip_header {
+    switch = "off"
+  }
+
+  compression {
+    switch = "off"
+  }
+
+  force_redirect {
+    redirect_status_code = 302
+    switch               = "on"
+  }
+
+  https {
+    http2         = "on"
+    ocsp_stapling = "off"
+    tls_version   = [
+      "TLSv1.2",
+      "TLSv1.3",
+    ]
+
+    hsts {
+      include_sub_domains = "off"
+      max_age             = 0
+      preload             = "off"
+      switch              = "off"
+    }
+  }
+
+  max_age {
+    follow_origin = "off"
+    max_age_time  = 600
+  }
+
+  offline_cache {
+    switch = "off"
+  }
+
+  origin {
+    origin_pull_protocol = "follow"
+  }
+
+  post_max_size {
+    max_size = 524288000
+    switch   = "on"
+  }
+
+  quic {
+    switch = "on"
+  }
+
+  smart_routing {
+    switch = "on"
+  }
+
+  upstream_http2 {
+    switch = "off"
+  }
+
+  web_socket {
+    switch  = "off"
+    timeout = 30
   }
 }
 
@@ -829,8 +829,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewModifyZoneSettingRequest()
-		response *teo.ModifyZoneSettingResponse
+		request = teo.NewModifyZoneSettingRequest()
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -1068,7 +1067,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

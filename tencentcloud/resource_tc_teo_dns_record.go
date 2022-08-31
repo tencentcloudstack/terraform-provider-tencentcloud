@@ -4,15 +4,13 @@ Provides a resource to create a teo dnsRecord
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "dnsRecord" {
-  zone_id     = ""
-  record_type = ""
-  name        = ""
-  content     = ""
-  mode        = ""
-  tags        = {
-    "createdBy" = "terraform"
-  }
+resource "tencentcloud_teo_dns_record" "sfurnace_work" {
+  zone_id     = tencentcloud_teo_zone.sfurnace_work.id
+  record_type = "A"
+  name        = "sfurnace.work"
+  mode        = "proxied"
+  content     = "2.2.2.2"
+  ttl         = 80
 }
 
 ```
@@ -229,7 +227,7 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
@@ -327,7 +325,7 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 	request := teo.NewModifyDnsRecordRequest()
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
@@ -413,7 +411,7 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 

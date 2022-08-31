@@ -4,15 +4,20 @@ Provides a resource to create a teo applicationProxyRule
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy_rule" "applicationProxyRule" {
-  zone_id           = ""
-  proxy_id          = ""
-  proto             = ""
-  port              = ""
-  origin_type       = ""
-  origin_value      = ""
-  forward_client_ip = ""
-  session_persist   = ""
+resource "tencentcloud_teo_application_proxy_rule" "app0_rule0" {
+  zone_id  = tencentcloud_teo_zone.sfurnace_work.id
+  proxy_id = tencentcloud_teo_application_proxy.app0.proxy_id
+
+  forward_client_ip = "TOA"
+  origin_type       = "custom"
+  origin_value      = [
+    "1.1.1.1:80",
+  ]
+  port = [
+    "80",
+  ]
+  proto           = "TCP"
+  session_persist = false
 }
 
 ```
@@ -280,35 +285,27 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 		return fmt.Errorf("`proxy_id` do not support change now.")
 	}
 
-	if d.HasChange("proto") {
-		if v, ok := d.GetOk("proto"); ok {
-			request.Proto = helper.String(v.(string))
+	if v, ok := d.GetOk("proto"); ok {
+		request.Proto = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("port"); ok {
+		portSet := v.(*schema.Set).List()
+		for i := range portSet {
+			port := portSet[i].(string)
+			request.Port = append(request.Port, &port)
 		}
 	}
 
-	if d.HasChange("port") {
-		if v, ok := d.GetOk("port"); ok {
-			portSet := v.(*schema.Set).List()
-			for i := range portSet {
-				port := portSet[i].(string)
-				request.Port = append(request.Port, &port)
-			}
-		}
+	if v, ok := d.GetOk("origin_type"); ok {
+		request.OriginType = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_type") {
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("origin_value") {
-		if v, ok := d.GetOk("origin_value"); ok {
-			originValueSet := v.(*schema.Set).List()
-			for i := range originValueSet {
-				originValue := originValueSet[i].(string)
-				request.OriginValue = append(request.OriginValue, &originValue)
-			}
+	if v, ok := d.GetOk("origin_value"); ok {
+		originValueSet := v.(*schema.Set).List()
+		for i := range originValueSet {
+			originValue := originValueSet[i].(string)
+			request.OriginValue = append(request.OriginValue, &originValue)
 		}
 	}
 

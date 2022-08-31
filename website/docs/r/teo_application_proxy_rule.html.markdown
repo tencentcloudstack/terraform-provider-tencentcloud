@@ -14,15 +14,20 @@ Provides a resource to create a teo applicationProxyRule
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy_rule" "applicationProxyRule" {
-  zone_id           = ""
-  proxy_id          = ""
-  proto             = ""
-  port              = ""
-  origin_type       = ""
-  origin_value      = ""
-  forward_client_ip = ""
-  session_persist   = ""
+resource "tencentcloud_teo_application_proxy_rule" "app0_rule0" {
+  zone_id  = tencentcloud_teo_zone.sfurnace_work.id
+  proxy_id = tencentcloud_teo_application_proxy.app0.proxy_id
+
+  forward_client_ip = "TOA"
+  origin_type       = "custom"
+  origin_value = [
+    "1.1.1.1:80",
+  ]
+  port = [
+    "80",
+  ]
+  proto           = "TCP"
+  session_persist = false
 }
 ```
 

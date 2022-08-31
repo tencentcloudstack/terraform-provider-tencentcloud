@@ -14,15 +14,13 @@ Provides a resource to create a teo dnsRecord
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "dnsRecord" {
-  zone_id     = ""
-  record_type = ""
-  name        = ""
-  content     = ""
-  mode        = ""
-  tags = {
-    "createdBy" = "terraform"
-  }
+resource "tencentcloud_teo_dns_record" "sfurnace_work" {
+  zone_id     = tencentcloud_teo_zone.sfurnace_work.id
+  record_type = "A"
+  name        = "sfurnace.work"
+  mode        = "proxied"
+  content     = "2.2.2.2"
+  ttl         = 80
 }
 ```
 

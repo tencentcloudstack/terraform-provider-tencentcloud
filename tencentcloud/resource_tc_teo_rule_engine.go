@@ -4,44 +4,40 @@ Provides a resource to create a teo ruleEngine
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine" "ruleEngine" {
-  zone_id   = ""
-  rule_name = ""
-  status    = ""
+resource "tencentcloud_teo_rule_engine" "sfurnace_work" {
+  zone_id   = tencentcloud_teo_zone.sfurnace_work.id
+  rule_name = "规则0"
+  status    = "enable"
+
   rules {
     conditions {
       conditions {
-        operator = ""
-        target   = ""
-        values   = ""
-      }
-    }
-    actions {
-      normal_action {
-        action = ""
-        parameters {
-          name   = ""
-          values = ""
-        }
-      }
-      rewrite_action {
-        action = ""
-        parameters {
-          action = ""
-          name   = ""
-          values = ""
-        }
-      }
-      code_action {
-        action = ""
-        parameters {
-          name        = ""
-          values      = ""
-          status_code = ""
-        }
+        operator = "equal"
+        target   = "host"
+        values   = [
+          "www.sfurnace.work",
+        ]
       }
     }
 
+    actions {
+      normal_action {
+        action = "MaxAge"
+
+        parameters {
+          name   = "FollowOrigin"
+          values = [
+            "on",
+          ]
+        }
+        parameters {
+          name   = "MaxAgeTime"
+          values = [
+            "0",
+          ]
+        }
+      }
+    }
   }
 }
 
@@ -630,143 +626,130 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 
 	request.ZoneId = &zoneId
 	request.RuleId = &ruleId
-
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
+	if v, ok := d.GetOk("rule_name"); ok {
+		request.RuleName = helper.String(v.(string))
 	}
-
-	if d.HasChange("rule_name") {
-		if v, ok := d.GetOk("rule_name"); ok {
-			request.RuleName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
 	}
-
-	if d.HasChange("status") {
-		if v, ok := d.GetOk("status"); ok {
-			request.Status = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("rules") {
-		if v, ok := d.GetOk("rules"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				ruleItem := teo.RuleItem{}
-				if v, ok := dMap["conditions"]; ok {
-					for _, item := range v.([]interface{}) {
-						ConditionsMap := item.(map[string]interface{})
-						ruleAndConditions := teo.RuleAndConditions{}
-						if v, ok := ConditionsMap["conditions"]; ok {
+	if v, ok := d.GetOk("rules"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			ruleItem := teo.RuleItem{}
+			if v, ok := dMap["conditions"]; ok {
+				for _, item := range v.([]interface{}) {
+					ConditionsMap := item.(map[string]interface{})
+					ruleAndConditions := teo.RuleAndConditions{}
+					if v, ok := ConditionsMap["conditions"]; ok {
+						for _, item := range v.([]interface{}) {
+							ConditionsMap := item.(map[string]interface{})
+							ruleCondition := teo.RuleCondition{}
+							if v, ok := ConditionsMap["operator"]; ok {
+								ruleCondition.Operator = helper.String(v.(string))
+							}
+							if v, ok := ConditionsMap["target"]; ok {
+								ruleCondition.Target = helper.String(v.(string))
+							}
+							if v, ok := ConditionsMap["values"]; ok {
+								valuesSet := v.(*schema.Set).List()
+								for i := range valuesSet {
+									values := valuesSet[i].(string)
+									ruleCondition.Values = append(ruleCondition.Values, &values)
+								}
+							}
+							ruleAndConditions.Conditions = append(ruleAndConditions.Conditions, &ruleCondition)
+						}
+					}
+					ruleItem.Conditions = append(ruleItem.Conditions, &ruleAndConditions)
+				}
+			}
+			if v, ok := dMap["actions"]; ok {
+				for _, item := range v.([]interface{}) {
+					ActionsMap := item.(map[string]interface{})
+					ruleAction := teo.RuleAction{}
+					if NormalActionMap, ok := helper.InterfaceToMap(ActionsMap, "normal_action"); ok {
+						ruleNormalAction := teo.RuleNormalAction{}
+						if v, ok := NormalActionMap["action"]; ok {
+							ruleNormalAction.Action = helper.String(v.(string))
+						}
+						if v, ok := NormalActionMap["parameters"]; ok {
 							for _, item := range v.([]interface{}) {
-								ConditionsMap := item.(map[string]interface{})
-								ruleCondition := teo.RuleCondition{}
-								if v, ok := ConditionsMap["operator"]; ok {
-									ruleCondition.Operator = helper.String(v.(string))
+								ParametersMap := item.(map[string]interface{})
+								ruleNormalActionParams := teo.RuleNormalActionParams{}
+								if v, ok := ParametersMap["name"]; ok {
+									ruleNormalActionParams.Name = helper.String(v.(string))
 								}
-								if v, ok := ConditionsMap["target"]; ok {
-									ruleCondition.Target = helper.String(v.(string))
-								}
-								if v, ok := ConditionsMap["values"]; ok {
+								if v, ok := ParametersMap["values"]; ok {
 									valuesSet := v.(*schema.Set).List()
 									for i := range valuesSet {
 										values := valuesSet[i].(string)
-										ruleCondition.Values = append(ruleCondition.Values, &values)
+										ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, &values)
 									}
 								}
-								ruleAndConditions.Conditions = append(ruleAndConditions.Conditions, &ruleCondition)
+								ruleNormalAction.Parameters = append(ruleNormalAction.Parameters, &ruleNormalActionParams)
 							}
 						}
-						ruleItem.Conditions = append(ruleItem.Conditions, &ruleAndConditions)
+						ruleAction.NormalAction = &ruleNormalAction
 					}
-				}
-				if v, ok := dMap["actions"]; ok {
-					for _, item := range v.([]interface{}) {
-						ActionsMap := item.(map[string]interface{})
-						ruleAction := teo.RuleAction{}
-						if NormalActionMap, ok := helper.InterfaceToMap(ActionsMap, "normal_action"); ok {
-							ruleNormalAction := teo.RuleNormalAction{}
-							if v, ok := NormalActionMap["action"]; ok {
-								ruleNormalAction.Action = helper.String(v.(string))
-							}
-							if v, ok := NormalActionMap["parameters"]; ok {
-								for _, item := range v.([]interface{}) {
-									ParametersMap := item.(map[string]interface{})
-									ruleNormalActionParams := teo.RuleNormalActionParams{}
-									if v, ok := ParametersMap["name"]; ok {
-										ruleNormalActionParams.Name = helper.String(v.(string))
-									}
-									if v, ok := ParametersMap["values"]; ok {
-										valuesSet := v.(*schema.Set).List()
-										for i := range valuesSet {
-											values := valuesSet[i].(string)
-											ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, &values)
-										}
-									}
-									ruleNormalAction.Parameters = append(ruleNormalAction.Parameters, &ruleNormalActionParams)
-								}
-							}
-							ruleAction.NormalAction = &ruleNormalAction
+					if RewriteActionMap, ok := helper.InterfaceToMap(ActionsMap, "rewrite_action"); ok {
+						ruleRewriteAction := teo.RuleRewriteAction{}
+						if v, ok := RewriteActionMap["action"]; ok {
+							ruleRewriteAction.Action = helper.String(v.(string))
 						}
-						if RewriteActionMap, ok := helper.InterfaceToMap(ActionsMap, "rewrite_action"); ok {
-							ruleRewriteAction := teo.RuleRewriteAction{}
-							if v, ok := RewriteActionMap["action"]; ok {
-								ruleRewriteAction.Action = helper.String(v.(string))
-							}
-							if v, ok := RewriteActionMap["parameters"]; ok {
-								for _, item := range v.([]interface{}) {
-									ParametersMap := item.(map[string]interface{})
-									ruleRewriteActionParams := teo.RuleRewriteActionParams{}
-									if v, ok := ParametersMap["action"]; ok {
-										ruleRewriteActionParams.Action = helper.String(v.(string))
-									}
-									if v, ok := ParametersMap["name"]; ok {
-										ruleRewriteActionParams.Name = helper.String(v.(string))
-									}
-									if v, ok := ParametersMap["values"]; ok {
-										valuesSet := v.(*schema.Set).List()
-										for i := range valuesSet {
-											values := valuesSet[i].(string)
-											ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, &values)
-										}
-									}
-									ruleRewriteAction.Parameters = append(ruleRewriteAction.Parameters, &ruleRewriteActionParams)
+						if v, ok := RewriteActionMap["parameters"]; ok {
+							for _, item := range v.([]interface{}) {
+								ParametersMap := item.(map[string]interface{})
+								ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+								if v, ok := ParametersMap["action"]; ok {
+									ruleRewriteActionParams.Action = helper.String(v.(string))
 								}
-							}
-							ruleAction.RewriteAction = &ruleRewriteAction
-						}
-						if CodeActionMap, ok := helper.InterfaceToMap(ActionsMap, "code_action"); ok {
-							ruleCodeAction := teo.RuleCodeAction{}
-							if v, ok := CodeActionMap["action"]; ok {
-								ruleCodeAction.Action = helper.String(v.(string))
-							}
-							if v, ok := CodeActionMap["parameters"]; ok {
-								for _, item := range v.([]interface{}) {
-									ParametersMap := item.(map[string]interface{})
-									ruleCodeActionParams := teo.RuleCodeActionParams{}
-									if v, ok := ParametersMap["name"]; ok {
-										ruleCodeActionParams.Name = helper.String(v.(string))
-									}
-									if v, ok := ParametersMap["values"]; ok {
-										valuesSet := v.(*schema.Set).List()
-										for i := range valuesSet {
-											values := valuesSet[i].(string)
-											ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, &values)
-										}
-									}
-									if v, ok := ParametersMap["status_code"]; ok {
-										ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
-									}
-									ruleCodeAction.Parameters = append(ruleCodeAction.Parameters, &ruleCodeActionParams)
+								if v, ok := ParametersMap["name"]; ok {
+									ruleRewriteActionParams.Name = helper.String(v.(string))
 								}
+								if v, ok := ParametersMap["values"]; ok {
+									valuesSet := v.(*schema.Set).List()
+									for i := range valuesSet {
+										values := valuesSet[i].(string)
+										ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, &values)
+									}
+								}
+								ruleRewriteAction.Parameters = append(ruleRewriteAction.Parameters, &ruleRewriteActionParams)
 							}
-							ruleAction.CodeAction = &ruleCodeAction
 						}
-						ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
+						ruleAction.RewriteAction = &ruleRewriteAction
 					}
+					if CodeActionMap, ok := helper.InterfaceToMap(ActionsMap, "code_action"); ok {
+						ruleCodeAction := teo.RuleCodeAction{}
+						if v, ok := CodeActionMap["action"]; ok {
+							ruleCodeAction.Action = helper.String(v.(string))
+						}
+						if v, ok := CodeActionMap["parameters"]; ok {
+							for _, item := range v.([]interface{}) {
+								ParametersMap := item.(map[string]interface{})
+								ruleCodeActionParams := teo.RuleCodeActionParams{}
+								if v, ok := ParametersMap["name"]; ok {
+									ruleCodeActionParams.Name = helper.String(v.(string))
+								}
+								if v, ok := ParametersMap["values"]; ok {
+									valuesSet := v.(*schema.Set).List()
+									for i := range valuesSet {
+										values := valuesSet[i].(string)
+										ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, &values)
+									}
+								}
+								if v, ok := ParametersMap["status_code"]; ok {
+									ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
+								}
+								ruleCodeAction.Parameters = append(ruleCodeAction.Parameters, &ruleCodeActionParams)
+							}
+						}
+						ruleAction.CodeAction = &ruleCodeAction
+					}
+					ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
 				}
-
-				request.Rules = append(request.Rules, &ruleItem)
 			}
+
+			request.Rules = append(request.Rules, &ruleItem)
 		}
 	}
 
