@@ -361,16 +361,16 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	request.ZoneId = &zoneId
 	request.OriginId = &originId
 
-	if d.HasChange("origin_name") {
-		if v, ok := d.GetOk("origin_name"); ok {
-			request.OriginName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("origin_name"); ok {
+		request.OriginName = helper.String(v.(string))
 	}
 
-	if d.HasChange("type") {
-		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("origin_type"); ok {
+		request.OriginType = helper.String(v.(string))
 	}
 
 	if d.HasChange("record") {
@@ -419,12 +419,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("zone_id") {
 		if v, ok := d.GetOk("zone_id"); ok {
 			request.ZoneId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("origin_type") {
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
 		}
 	}
 

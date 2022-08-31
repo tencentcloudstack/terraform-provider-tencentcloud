@@ -69,7 +69,7 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
-func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, dnsRecordId string) (dnsRecord *teo.DnsRecord, errRet error) {
+func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, dnsRecordId string) (dnsRecord *teo.DnsRecord, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnsRecordsRequest()
@@ -82,6 +82,7 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, dnsRecordId stri
 		}
 	}()
 
+	request.ZoneId = &zoneId
 	request.Filters = append(
 		request.Filters,
 		&teo.DnsRecordFilter{
@@ -128,11 +129,12 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, dnsRecordId stri
 
 }
 
-func (me *TeoService) DeleteTeoDnsRecordById(ctx context.Context, dnsRecordId string) (errRet error) {
+func (me *TeoService) DeleteTeoDnsRecordById(ctx context.Context, zoneId, dnsRecordId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteDnsRecordsRequest()
 	request.Ids = []*string{&dnsRecordId}
+	request.ZoneId = &zoneId
 
 	defer func() {
 		if errRet != nil {

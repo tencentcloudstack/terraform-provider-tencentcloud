@@ -66,7 +66,7 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 				Description: "Proxy mode. Valid values: dns_only: Only DNS, proxied: Enable proxy.",
 			},
 
-			"t_t_l": {
+			"ttl": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
@@ -128,7 +128,7 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("t_t_l"); ok {
+	if v, ok := d.GetOk("ttl"); ok {
 		request.TTL = helper.IntUint64(v.(int))
 	}
 
@@ -216,7 +216,7 @@ func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta inter
 	}
 
 	if loadBalancing.TTL != nil {
-		_ = d.Set("t_t_l", loadBalancing.TTL)
+		_ = d.Set("ttl", loadBalancing.TTL)
 	}
 
 	if loadBalancing.OriginId != nil {
@@ -267,8 +267,8 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("t_t_l") {
-		if v, ok := d.GetOk("t_t_l"); ok {
+	if d.HasChange("ttl") {
+		if v, ok := d.GetOk("ttl"); ok {
 			request.TTL = helper.IntUint64(v.(int))
 		}
 	}

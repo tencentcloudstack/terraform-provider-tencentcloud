@@ -178,7 +178,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			},
 			"area": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`.",
 			},
 		},

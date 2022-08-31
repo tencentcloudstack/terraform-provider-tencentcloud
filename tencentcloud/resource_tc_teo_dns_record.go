@@ -4,8 +4,13 @@ Provides a resource to create a teo dnsRecord
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "dnsRecord"
-  tags = {
+resource "tencentcloud_teo_dns_record" "dnsRecord" {
+  zone_id     = ""
+  record_type = ""
+  name        = ""
+  content     = ""
+  mode        = ""
+  tags        = {
     "createdBy" = "terraform"
   }
 }
@@ -15,7 +20,7 @@ Import
 
 teo dnsRecord can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_record.dnsRecord dnsRecord_id
+$ terraform import tencentcloud_teo_dns_record.dnsRecord zone_id#dnsRecord_id#name
 ```
 */
 package tencentcloud
@@ -24,6 +29,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -69,7 +75,7 @@ func resourceTencentCloudTeoDnsRecord() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: ".",
+				Description: "TTL, the range is 1-604800, and the minimum value of different levels of domain names is different.",
 			},
 
 			"priority": {
@@ -206,7 +212,10 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 			return err
 		}
 	}
-	d.SetId(dnsRecordId)
+
+	zoneId := *response.Response.ZoneId
+	name := *response.Response.Name
+	d.SetId(strings.Join([]string{zoneId, dnsRecordId, name}, FILED_SP))
 	return resourceTencentCloudTeoDnsRecordRead(d, meta)
 }
 
@@ -219,9 +228,16 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	dnsRecordId := d.Id()
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
 
-	dnsRecord, err := service.DescribeTeoDnsRecord(ctx, dnsRecordId)
+	zoneId := ids[0]
+	//dnsRecordId := ids[1]
+	name := ids[2]
+
+	dnsRecord, err := service.DescribeTeoDnsRecord(ctx, zoneId, name)
 
 	if err != nil {
 		return err
@@ -229,8 +245,10 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	if dnsRecord == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `dnsRecord` %s does not exist", dnsRecordId)
+		return fmt.Errorf("resource `dnsRecord` %s does not exist", name)
 	}
+
+	_ = d.Set("id", dnsRecord.Id)
 
 	if dnsRecord.Type != nil {
 		_ = d.Set("record_type", dnsRecord.Type)
@@ -308,7 +326,17 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 
 	request := teo.NewModifyDnsRecordRequest()
 
-	request.Id = helper.String(d.Id())
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	zoneId := ids[0]
+	dnsRecordId := ids[1]
+	//name := ids[2]
+
+	request.ZoneId = &zoneId
+	request.Id = &dnsRecordId
 
 	if d.HasChange("record_type") {
 		if v, ok := d.GetOk("record_type"); ok {
@@ -344,10 +372,6 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 		if v, ok := d.GetOk("priority"); ok {
 			request.Priority = helper.IntInt64(v.(int))
 		}
-	}
-
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -387,9 +411,17 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	dnsRecordId := d.Id()
 
-	if err := service.DeleteTeoDnsRecordById(ctx, dnsRecordId); err != nil {
+	ids := strings.Split(d.Id(), FILED_SP)
+	if len(ids) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	zoneId := ids[0]
+	dnsRecordId := ids[1]
+	//name := ids[2]
+
+	if err := service.DeleteTeoDnsRecordById(ctx, zoneId, dnsRecordId); err != nil {
 		return err
 	}
 

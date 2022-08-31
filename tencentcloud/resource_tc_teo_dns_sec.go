@@ -136,6 +136,7 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
 		request.Id = helper.String(v.(string))
 	}
 
