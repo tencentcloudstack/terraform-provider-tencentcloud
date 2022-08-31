@@ -147,7 +147,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the custom name server.",
 						},
-						"i_pv4": {
+						"ipv4": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IPv4 address of the custom name server.",
@@ -337,7 +337,7 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 				vanityNameServersIpsMap["name"] = vanityNameServersIps.Name
 			}
 			if vanityNameServersIps.IPv4 != nil {
-				vanityNameServersIpsMap["i_pv4"] = vanityNameServersIps.IPv4
+				vanityNameServersIpsMap["ipv4"] = vanityNameServersIps.IPv4
 			}
 
 			vanityNameServersIpsList = append(vanityNameServersIpsList, vanityNameServersIpsMap)

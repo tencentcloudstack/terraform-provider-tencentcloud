@@ -58,7 +58,7 @@ In addition to all arguments above, the following attributes are exported:
 * `original_name_servers` - List of name servers used.
 * `status` - Site status.
 * `vanity_name_servers_ips` - User-defined name server IP information.
-  * `i_pv4` - IPv4 address of the custom name server.
+  * `ipv4` - IPv4 address of the custom name server.
   * `name` - Name of the custom name server.
 
 

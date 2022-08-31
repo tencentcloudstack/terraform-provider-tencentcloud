@@ -11,10 +11,11 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
-	"log"
 )
 
 func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
