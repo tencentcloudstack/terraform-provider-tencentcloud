@@ -229,7 +229,7 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
@@ -327,7 +327,7 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 	request := teo.NewModifyDnsRecordRequest()
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
@@ -413,7 +413,7 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
+	if len(ids) != 3 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 

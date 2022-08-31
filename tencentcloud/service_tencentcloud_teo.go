@@ -623,7 +623,7 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId 
 	defaultCertificates = response.Response.CertInfo
 
 	for _, cert := range defaultCertificates {
-		if *cert.CertId != "certId" {
+		if *cert.CertId != "" {
 			defaultCertificate = cert
 			return
 		}

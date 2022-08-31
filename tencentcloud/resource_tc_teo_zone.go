@@ -415,7 +415,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 					vanityNameServers.Servers = append(vanityNameServers.Servers, &servers)
 				}
 			}
-
+			request.VanityNameServers = &vanityNameServers
 		}
 	}
 
