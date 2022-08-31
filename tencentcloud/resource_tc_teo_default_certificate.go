@@ -28,6 +28,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
@@ -219,6 +221,18 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 	zoneId := d.Id()
 
 	request.ZoneId = &zoneId
+	if certInfo, ok := d.GetOk("cert_info"); ok {
+		if defaultCertList := certInfo.([]interface{}); len(defaultCertList) > 0 {
+			if cert := defaultCertList[0].(map[string]interface{}); cert != nil {
+				if v := cert["cert_id"]; v != nil {
+					request.CertId = helper.String(v.(string))
+				}
+				if v := cert["status"]; v != nil {
+					request.Status = helper.String(v.(string))
+				}
+			}
+		}
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDefaultCertificate(request)
