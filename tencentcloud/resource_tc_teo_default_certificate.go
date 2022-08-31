@@ -23,11 +23,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudTeoDefaultCertificate() *schema.Resource {
@@ -46,19 +46,18 @@ func resourceTencentCloudTeoDefaultCertificate() *schema.Resource {
 				Description: "Site ID.",
 			},
 
-			"cert_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Server certificate ID, which is the ID of the default certificate. If you choose to upload an external certificate for SSL certificate management, a certificate ID will be generated.",
-			},
-
 			"cert_info": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Computed:    true,
+				Optional:    true,
 				Description: "List of default certificates. Note: This field may return null, indicating that no valid value can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"cert_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Server certificate ID, which is the ID of the default certificate. If you choose to upload an external certificate for SSL certificate management, a certificate ID will be generated.",
+						},
 						"alias": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -118,22 +117,17 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 
 	var (
 		zoneId string
-		certId string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
 
-	if v, ok := d.GetOk("cert_id"); ok {
-		certId = v.(string)
-	}
-
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	err := resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoDefaultCertificate(ctx, zoneId, certId)
+		instance, errRet := service.DescribeTeoDefaultCertificate(ctx, zoneId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -141,7 +135,8 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 			return nil
 		}
 		if *instance.Status == "disabled" {
-			return resource.NonRetryableError(fmt.Errorf("defaultCertificate status is %v, operate failed.", *instance.Status))
+			return resource.NonRetryableError(fmt.Errorf("defaultCertificate status is %v, operate failed.",
+				*instance.Status))
 		}
 		return resource.RetryableError(fmt.Errorf("defaultCertificate status is %v, retry...", *instance.Status))
 	})
@@ -149,7 +144,7 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + certId)
+	d.SetId(zoneId)
 	return resourceTencentCloudTeoDefaultCertificateUpdate(d, meta)
 }
 
@@ -162,26 +157,22 @@ func resourceTencentCloudTeoDefaultCertificateRead(d *schema.ResourceData, meta 
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	zoneId := idSplit[0]
-	certId := idSplit[1]
-
-	defaultCertificate, err := service.DescribeTeoDefaultCertificate(ctx, zoneId, certId)
-
+	zoneId := d.Id()
+	defaultCertificate, err := service.DescribeTeoDefaultCertificate(ctx, zoneId)
 	if err != nil {
 		return err
 	}
 
 	if defaultCertificate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `defaultCertificate` %s does not exist", certId)
+		return fmt.Errorf("resource `defaultCertificate` does not exist")
 	}
 
 	if defaultCertificate != nil {
 		certInfoMap := map[string]interface{}{}
+		if defaultCertificate.CertId != nil {
+			certInfoMap["cert_id"] = defaultCertificate.CertId
+		}
 		if defaultCertificate.Alias != nil {
 			certInfoMap["alias"] = defaultCertificate.Alias
 		}
@@ -220,16 +211,20 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 
 	request := teo.NewModifyDefaultCertificateRequest()
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	zoneId := idSplit[0]
-	certId := idSplit[1]
-
+	zoneId := d.Id()
 	request.ZoneId = &zoneId
-	request.CertId = &certId
+	if certInfo := d.Get("cert_info"); certInfo != nil {
+		if defaultCertList := certInfo.([]interface{}); len(defaultCertList) > 0 {
+			if cert := defaultCertList[0].(map[string]interface{}); cert != nil {
+				if v := cert["cert_id"]; v != nil {
+					request.CertId = helper.String(v.(string))
+				}
+				if v := cert["status"]; v != nil {
+					request.Status = helper.String(v.(string))
+				}
+			}
+		}
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDefaultCertificate(request)

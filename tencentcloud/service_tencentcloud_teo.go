@@ -596,7 +596,7 @@ func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dns
 	return
 }
 
-func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId, certId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
+func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDefaultCertificatesRequest()
@@ -623,7 +623,7 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId,
 	defaultCertificates = response.Response.CertInfo
 
 	for _, cert := range defaultCertificates {
-		if *cert.CertId == certId {
+		if *cert.CertId != "certId" {
 			defaultCertificate = cert
 			return
 		}

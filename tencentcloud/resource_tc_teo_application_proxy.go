@@ -139,6 +139,8 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		zoneId   string
 		proxyId  string
 	)
+	request.ForwardClientIp = helper.String("")
+	request.SessionPersist = helper.Bool(true)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
@@ -291,6 +293,11 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 
 	request.ZoneId = &zoneId
 	request.ProxyId = &proxyId
+	request.ForwardClientIp = helper.String("")
+	request.SessionPersist = helper.Bool(true)
+	if v := d.Get("proxy_name"); v != nil {
+		request.ProxyName = helper.String(v.(string))
+	}
 
 	if d.HasChange("zone_id") {
 		return fmt.Errorf("`zone_id` do not support change now.")
@@ -298,12 +305,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("zone_name") {
 		return fmt.Errorf("`zone_name` do not support change now.")
-	}
-
-	if d.HasChange("proxy_name") {
-		if v, ok := d.GetOk("proxy_name"); ok {
-			request.ProxyName = helper.String(v.(string))
-		}
 	}
 
 	if d.HasChange("plat_type") {

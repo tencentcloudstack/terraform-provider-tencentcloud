@@ -50,6 +50,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo dnsSec can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_sec.dnsSec dnsSec_id
+$ terraform import tencentcloud_teo_dns_sec.dnsSec zone_id
 ```
 

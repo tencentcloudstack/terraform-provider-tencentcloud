@@ -54,6 +54,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo applicationProxy can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy.applicationProxy applicationProxy_id
+$ terraform import tencentcloud_teo_application_proxy.applicationProxy zone_id#applicationProxy_id
 ```
 

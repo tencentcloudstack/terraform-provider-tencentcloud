@@ -242,6 +242,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo zoneSetting can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zoneSetting zoneSetting_id
+$ terraform import tencentcloud_teo_zone_setting.zoneSetting zone_id
 ```
 

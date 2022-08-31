@@ -51,6 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo applicationProxyRule can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy_rule.applicationProxyRule applicationProxyRule_id
+$ terraform import tencentcloud_teo_application_proxy_rule.applicationProxyRule zone_id#applicationProxy_id#applicationProxyRule_id
 ```
 

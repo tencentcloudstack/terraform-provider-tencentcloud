@@ -829,8 +829,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewModifyZoneSettingRequest()
-		response *teo.ModifyZoneSettingResponse
+		request = teo.NewModifyZoneSettingRequest()
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -1068,7 +1067,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

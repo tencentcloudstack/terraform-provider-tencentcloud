@@ -271,6 +271,26 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 	request.ZoneId = &zoneId
 	request.ProxyId = &proxyId
 	request.RuleId = &ruleId
+	if v := d.Get("origin_type"); v != nil {
+		request.OriginType = helper.String(v.(string))
+	}
+	if v := d.Get("origin_value"); v != nil {
+		originValueSet := v.(*schema.Set).List()
+		for i := range originValueSet {
+			originValue := originValueSet[i].(string)
+			request.OriginValue = append(request.OriginValue, &originValue)
+		}
+	}
+	if v := d.Get("proto"); v != nil {
+		request.Proto = helper.String(v.(string))
+	}
+	if v := d.Get("port"); v != nil {
+		portSet := v.(*schema.Set).List()
+		for i := range portSet {
+			port := portSet[i].(string)
+			request.Port = append(request.Port, &port)
+		}
+	}
 
 	if d.HasChange("zone_id") {
 		return fmt.Errorf("`zone_id` do not support change now.")
@@ -280,46 +300,14 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 		return fmt.Errorf("`proxy_id` do not support change now.")
 	}
 
-	if d.HasChange("proto") {
-		if v, ok := d.GetOk("proto"); ok {
-			request.Proto = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("port") {
-		if v, ok := d.GetOk("port"); ok {
-			portSet := v.(*schema.Set).List()
-			for i := range portSet {
-				port := portSet[i].(string)
-				request.Port = append(request.Port, &port)
-			}
-		}
-	}
-
-	if d.HasChange("origin_type") {
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("origin_value") {
-		if v, ok := d.GetOk("origin_value"); ok {
-			originValueSet := v.(*schema.Set).List()
-			for i := range originValueSet {
-				originValue := originValueSet[i].(string)
-				request.OriginValue = append(request.OriginValue, &originValue)
-			}
-		}
-	}
-
 	if d.HasChange("forward_client_ip") {
-		if v, ok := d.GetOk("forward_client_ip"); ok {
+		if v := d.Get("forward_client_ip"); v != nil {
 			request.ForwardClientIp = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("session_persist") {
-		if v, ok := d.GetOk("session_persist"); ok {
+		if v := d.Get("session_persist"); v != nil {
 			request.SessionPersist = helper.Bool(v.(bool))
 		}
 	}

@@ -12,12 +12,12 @@ resource "tencentcloud_teo_ddos_policy" "example" {
 package tencentcloud
 
 import (
-	"context"
+	"log"
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
-	"log"
-	"strconv"
 )
 
 func dataSourceTencentCloudTeoDdosPolicy() *schema.Resource {
@@ -151,15 +151,15 @@ func dataSourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interf
 
 	var (
 		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		zoneId     = d.Get("zone_id").(string)
+		// ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		// service    = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		// zoneId     = d.Get("zone_id").(string)
 		ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams
 		err        error
 	)
 
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ddosPolicy, err = service.DescribeZoneDDoSPolicy(ctx, zoneId)
+		//ddosPolicy, err = service.DescribeZoneDDoSPolicy(ctx, zoneId)
 		if err != nil {
 			return retryError(err, InternalError)
 		}

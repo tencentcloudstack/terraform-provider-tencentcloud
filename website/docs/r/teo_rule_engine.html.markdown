@@ -115,7 +115,7 @@ The `rewrite_action` object supports the following:
 
 The `rules` object supports the following:
 
-* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+* `actions` - (Required, List) Actions list of the rule. See details by using YunAPI `DescribeRulesSetting`.
 * `conditions` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
 
 ## Attributes Reference
@@ -130,6 +130,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo ruleEngine can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.ruleEngine ruleEngine_id
+$ terraform import tencentcloud_teo_rule_engine.ruleEngine zone_id#ruleEngine_id
 ```
 

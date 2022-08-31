@@ -131,7 +131,6 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 
 	var (
 		request  = teo.NewModifyDnssecRequest()
-		response *teo.ModifyDnssecResponse
 		zoneId   string
 	)
 
@@ -152,7 +151,6 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 
