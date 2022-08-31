@@ -28,6 +28,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -224,6 +225,10 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	}
 	response = result
 
+	if response == nil || response.Response == nil || response.Response.Id == nil {
+		return errors.New("CreateZone create teo zone failed")
+	}
+
 	zoneId := *response.Response.Id
 
 	var planRequest = teo.NewCreatePlanForZoneRequest()
@@ -232,20 +237,13 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		planRequest.PlanType = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, err)
+	resultPlan, err := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
+	if e != nil {
+		log.Printf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, e)
 		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), resultPlan.ToJsonString())
 	}
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
