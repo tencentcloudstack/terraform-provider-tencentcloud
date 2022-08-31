@@ -114,9 +114,9 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 		Create: resourceTencentCloudTeoDdosPolicyCreate,
 		Update: resourceTencentCloudTeoDdosPolicyUpdate,
 		Delete: resourceTencentCloudTeoDdosPolicyDelete,
-		//Importer: &schema.ResourceImporter{
-		//	State: schema.ImportStatePassthrough,
-		//},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -818,236 +818,236 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("zone_id", zoneId)
 	_ = d.Set("policy_id", policyId)
 
-	//if ddosPolicy.DdosRule != nil {
-	//	ddosRuleMap := map[string]interface{}{}
-	//	if ddosPolicy.DdosRule.Switch != nil {
-	//		ddosRuleMap["switch"] = ddosPolicy.DdosRule.Switch
-	//	}
-	//	if ddosPolicy.DdosRule.UdpShardOpen != nil {
-	//		ddosRuleMap["udp_shard_open"] = ddosPolicy.DdosRule.UdpShardOpen
-	//	}
-	//	if ddosPolicy.DdosRule.DdosStatusInfo != nil {
-	//		ddosStatusInfoMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel != nil {
-	//			ddosStatusInfoMap["ply_level"] = ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel
-	//		}
-	//
-	//		ddosRuleMap["ddos_status_info"] = []interface{}{ddosStatusInfoMap}
-	//	}
-	//	if ddosPolicy.DdosRule.DdosGeoIp != nil {
-	//		ddosGeoIpMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosGeoIp.RegionId != nil {
-	//			ddosGeoIpMap["region_id"] = ddosPolicy.DdosRule.DdosGeoIp.RegionId
-	//		}
-	//		if ddosPolicy.DdosRule.DdosGeoIp.Switch != nil {
-	//			ddosGeoIpMap["switch"] = ddosPolicy.DdosRule.DdosGeoIp.Switch
-	//		}
-	//
-	//		ddosRuleMap["ddos_geo_ip"] = []interface{}{ddosGeoIpMap}
-	//	}
-	//	if ddosPolicy.DdosRule.DdosAllowBlock != nil {
-	//		ddosAllowBlockMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosAllowBlock.Switch != nil {
-	//			ddosAllowBlockMap["switch"] = ddosPolicy.DdosRule.DdosAllowBlock.Switch
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp != nil {
-	//			userAllowBlockIpList := []interface{}{}
-	//			for _, userAllowBlockIp := range ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp {
-	//				userAllowBlockIpMap := map[string]interface{}{}
-	//				if userAllowBlockIp.Ip != nil {
-	//					userAllowBlockIpMap["ip"] = userAllowBlockIp.Ip
-	//				}
-	//				if userAllowBlockIp.Mask != nil {
-	//					userAllowBlockIpMap["mask"] = userAllowBlockIp.Mask
-	//				}
-	//				if userAllowBlockIp.Type != nil {
-	//					userAllowBlockIpMap["type"] = userAllowBlockIp.Type
-	//				}
-	//				if userAllowBlockIp.UpdateTime != nil {
-	//					userAllowBlockIpMap["update_time"] = userAllowBlockIp.UpdateTime
-	//				}
-	//				if userAllowBlockIp.Ip2 != nil {
-	//					userAllowBlockIpMap["ip2"] = userAllowBlockIp.Ip2
-	//				}
-	//				if userAllowBlockIp.Mask2 != nil {
-	//					userAllowBlockIpMap["mask2"] = userAllowBlockIp.Mask2
-	//				}
-	//
-	//				userAllowBlockIpList = append(userAllowBlockIpList, userAllowBlockIpMap)
-	//			}
-	//			ddosAllowBlockMap["user_allow_block_ip"] = userAllowBlockIpList
-	//		}
-	//
-	//		ddosRuleMap["ddos_allow_block"] = []interface{}{ddosAllowBlockMap}
-	//	}
-	//	if ddosPolicy.DdosRule.DdosAntiPly != nil {
-	//		ddosAntiPlyMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DropTcp != nil {
-	//			ddosAntiPlyMap["drop_tcp"] = ddosPolicy.DdosRule.DdosAntiPly.DropTcp
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DropUdp != nil {
-	//			ddosAntiPlyMap["drop_udp"] = ddosPolicy.DdosRule.DdosAntiPly.DropUdp
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DropIcmp != nil {
-	//			ddosAntiPlyMap["drop_icmp"] = ddosPolicy.DdosRule.DdosAntiPly.DropIcmp
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DropOther != nil {
-	//			ddosAntiPlyMap["drop_other"] = ddosPolicy.DdosRule.DdosAntiPly.DropOther
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit != nil {
-	//			ddosAntiPlyMap["source_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit != nil {
-	//			ddosAntiPlyMap["source_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit != nil {
-	//			ddosAntiPlyMap["destination_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit != nil {
-	//			ddosAntiPlyMap["destination_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum != nil {
-	//			ddosAntiPlyMap["abnormal_connect_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio != nil {
-	//			ddosAntiPlyMap["abnormal_syn_ratio"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum != nil {
-	//			ddosAntiPlyMap["abnormal_syn_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout != nil {
-	//			ddosAntiPlyMap["connect_timeout"] = ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect != nil {
-	//			ddosAntiPlyMap["empty_connect_protect"] = ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAntiPly.UdpShard != nil {
-	//			ddosAntiPlyMap["udp_shard"] = ddosPolicy.DdosRule.DdosAntiPly.UdpShard
-	//		}
-	//
-	//		ddosRuleMap["ddos_anti_ply"] = []interface{}{ddosAntiPlyMap}
-	//	}
-	//	if ddosPolicy.DdosRule.DdosPacketFilter != nil {
-	//		ddosPacketFilterMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosPacketFilter.Switch != nil {
-	//			ddosPacketFilterMap["switch"] = ddosPolicy.DdosRule.DdosPacketFilter.Switch
-	//		}
-	//		if ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter != nil {
-	//			packetFilterList := []interface{}{}
-	//			for _, packetFilter := range ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter {
-	//				packetFilterMap := map[string]interface{}{}
-	//				if packetFilter.Action != nil {
-	//					packetFilterMap["action"] = packetFilter.Action
-	//				}
-	//				if packetFilter.Protocol != nil {
-	//					packetFilterMap["protocol"] = packetFilter.Protocol
-	//				}
-	//				if packetFilter.DportStart != nil {
-	//					packetFilterMap["dport_start"] = packetFilter.DportStart
-	//				}
-	//				if packetFilter.DportEnd != nil {
-	//					packetFilterMap["dport_end"] = packetFilter.DportEnd
-	//				}
-	//				if packetFilter.PacketMin != nil {
-	//					packetFilterMap["packet_min"] = packetFilter.PacketMin
-	//				}
-	//				if packetFilter.PacketMax != nil {
-	//					packetFilterMap["packet_max"] = packetFilter.PacketMax
-	//				}
-	//				if packetFilter.SportStart != nil {
-	//					packetFilterMap["sport_start"] = packetFilter.SportStart
-	//				}
-	//				if packetFilter.SportEnd != nil {
-	//					packetFilterMap["sport_end"] = packetFilter.SportEnd
-	//				}
-	//				if packetFilter.MatchType != nil {
-	//					packetFilterMap["match_type"] = packetFilter.MatchType
-	//				}
-	//				if packetFilter.IsNot != nil {
-	//					packetFilterMap["is_not"] = packetFilter.IsNot
-	//				}
-	//				if packetFilter.Offset != nil {
-	//					packetFilterMap["offset"] = packetFilter.Offset
-	//				}
-	//				if packetFilter.Depth != nil {
-	//					packetFilterMap["depth"] = packetFilter.Depth
-	//				}
-	//				if packetFilter.MatchBegin != nil {
-	//					packetFilterMap["match_begin"] = packetFilter.MatchBegin
-	//				}
-	//				if packetFilter.Str != nil {
-	//					packetFilterMap["str"] = packetFilter.Str
-	//				}
-	//				if packetFilter.MatchType2 != nil {
-	//					packetFilterMap["match_type2"] = packetFilter.MatchType2
-	//				}
-	//				if packetFilter.IsNot2 != nil {
-	//					packetFilterMap["is_not2"] = packetFilter.IsNot2
-	//				}
-	//				if packetFilter.Offset2 != nil {
-	//					packetFilterMap["offset2"] = packetFilter.Offset2
-	//				}
-	//				if packetFilter.Depth2 != nil {
-	//					packetFilterMap["depth2"] = packetFilter.Depth2
-	//				}
-	//				if packetFilter.MatchBegin2 != nil {
-	//					packetFilterMap["match_begin2"] = packetFilter.MatchBegin2
-	//				}
-	//				if packetFilter.Str2 != nil {
-	//					packetFilterMap["str2"] = packetFilter.Str2
-	//				}
-	//				if packetFilter.MatchLogic != nil {
-	//					packetFilterMap["match_logic"] = packetFilter.MatchLogic
-	//				}
-	//
-	//				packetFilterList = append(packetFilterList, packetFilterMap)
-	//			}
-	//			ddosPacketFilterMap["packet_filter"] = packetFilterList
-	//		}
-	//
-	//		ddosRuleMap["ddos_packet_filter"] = []interface{}{ddosPacketFilterMap}
-	//	}
-	//	if ddosPolicy.DdosRule.DdosAcl != nil {
-	//		ddosAclMap := map[string]interface{}{}
-	//		if ddosPolicy.DdosRule.DdosAcl.Switch != nil {
-	//			ddosAclMap["switch"] = ddosPolicy.DdosRule.DdosAcl.Switch
-	//		}
-	//		if ddosPolicy.DdosRule.DdosAcl.Acl != nil {
-	//			aclList := []interface{}{}
-	//			for _, acl := range ddosPolicy.DdosRule.DdosAcl.Acl {
-	//				aclMap := map[string]interface{}{}
-	//				if acl.DportEnd != nil {
-	//					aclMap["dport_end"] = acl.DportEnd
-	//				}
-	//				if acl.DportStart != nil {
-	//					aclMap["dport_start"] = acl.DportStart
-	//				}
-	//				if acl.SportEnd != nil {
-	//					aclMap["sport_end"] = acl.SportEnd
-	//				}
-	//				if acl.SportStart != nil {
-	//					aclMap["sport_start"] = acl.SportStart
-	//				}
-	//				if acl.Protocol != nil {
-	//					aclMap["protocol"] = acl.Protocol
-	//				}
-	//				if acl.Action != nil {
-	//					aclMap["action"] = acl.Action
-	//				}
-	//				if acl.Default != nil {
-	//					aclMap["default"] = acl.Default
-	//				}
-	//
-	//				aclList = append(aclList, aclMap)
-	//			}
-	//			ddosAclMap["acl"] = aclList
-	//		}
-	//
-	//		ddosRuleMap["ddos_acl"] = []interface{}{ddosAclMap}
-	//	}
-	//
-	//	_ = d.Set("ddos_rule", []interface{}{ddosRuleMap})
-	//}
+	if ddosPolicy.DdosRule != nil {
+		ddosRuleMap := map[string]interface{}{}
+		if ddosPolicy.DdosRule.Switch != nil {
+			ddosRuleMap["switch"] = ddosPolicy.DdosRule.Switch
+		}
+		if ddosPolicy.DdosRule.UdpShardOpen != nil {
+			ddosRuleMap["udp_shard_open"] = ddosPolicy.DdosRule.UdpShardOpen
+		}
+		if ddosPolicy.DdosRule.DdosStatusInfo != nil {
+			ddosStatusInfoMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel != nil {
+				ddosStatusInfoMap["ply_level"] = ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel
+			}
+
+			ddosRuleMap["ddos_status_info"] = []interface{}{ddosStatusInfoMap}
+		}
+		if ddosPolicy.DdosRule.DdosGeoIp != nil {
+			ddosGeoIpMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosGeoIp.RegionId != nil {
+				ddosGeoIpMap["region_id"] = ddosPolicy.DdosRule.DdosGeoIp.RegionId
+			}
+			if ddosPolicy.DdosRule.DdosGeoIp.Switch != nil {
+				ddosGeoIpMap["switch"] = ddosPolicy.DdosRule.DdosGeoIp.Switch
+			}
+
+			ddosRuleMap["ddos_geo_ip"] = []interface{}{ddosGeoIpMap}
+		}
+		if ddosPolicy.DdosRule.DdosAllowBlock != nil {
+			ddosAllowBlockMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosAllowBlock.Switch != nil {
+				ddosAllowBlockMap["switch"] = ddosPolicy.DdosRule.DdosAllowBlock.Switch
+			}
+			if ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp != nil {
+				userAllowBlockIpList := []interface{}{}
+				for _, userAllowBlockIp := range ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp {
+					userAllowBlockIpMap := map[string]interface{}{}
+					if userAllowBlockIp.Ip != nil {
+						userAllowBlockIpMap["ip"] = userAllowBlockIp.Ip
+					}
+					if userAllowBlockIp.Mask != nil {
+						userAllowBlockIpMap["mask"] = userAllowBlockIp.Mask
+					}
+					if userAllowBlockIp.Type != nil {
+						userAllowBlockIpMap["type"] = userAllowBlockIp.Type
+					}
+					if userAllowBlockIp.UpdateTime != nil {
+						userAllowBlockIpMap["update_time"] = userAllowBlockIp.UpdateTime
+					}
+					if userAllowBlockIp.Ip2 != nil {
+						userAllowBlockIpMap["ip2"] = userAllowBlockIp.Ip2
+					}
+					if userAllowBlockIp.Mask2 != nil {
+						userAllowBlockIpMap["mask2"] = userAllowBlockIp.Mask2
+					}
+
+					userAllowBlockIpList = append(userAllowBlockIpList, userAllowBlockIpMap)
+				}
+				ddosAllowBlockMap["user_allow_block_ip"] = userAllowBlockIpList
+			}
+
+			ddosRuleMap["ddos_allow_block"] = []interface{}{ddosAllowBlockMap}
+		}
+		if ddosPolicy.DdosRule.DdosAntiPly != nil {
+			ddosAntiPlyMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosAntiPly.DropTcp != nil {
+				ddosAntiPlyMap["drop_tcp"] = ddosPolicy.DdosRule.DdosAntiPly.DropTcp
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.DropUdp != nil {
+				ddosAntiPlyMap["drop_udp"] = ddosPolicy.DdosRule.DdosAntiPly.DropUdp
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.DropIcmp != nil {
+				ddosAntiPlyMap["drop_icmp"] = ddosPolicy.DdosRule.DdosAntiPly.DropIcmp
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.DropOther != nil {
+				ddosAntiPlyMap["drop_other"] = ddosPolicy.DdosRule.DdosAntiPly.DropOther
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit != nil {
+				ddosAntiPlyMap["source_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit != nil {
+				ddosAntiPlyMap["source_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit != nil {
+				ddosAntiPlyMap["destination_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit != nil {
+				ddosAntiPlyMap["destination_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum != nil {
+				ddosAntiPlyMap["abnormal_connect_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio != nil {
+				ddosAntiPlyMap["abnormal_syn_ratio"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum != nil {
+				ddosAntiPlyMap["abnormal_syn_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout != nil {
+				ddosAntiPlyMap["connect_timeout"] = ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect != nil {
+				ddosAntiPlyMap["empty_connect_protect"] = ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect
+			}
+			if ddosPolicy.DdosRule.DdosAntiPly.UdpShard != nil {
+				ddosAntiPlyMap["udp_shard"] = ddosPolicy.DdosRule.DdosAntiPly.UdpShard
+			}
+
+			ddosRuleMap["ddos_anti_ply"] = []interface{}{ddosAntiPlyMap}
+		}
+		if ddosPolicy.DdosRule.DdosPacketFilter != nil {
+			ddosPacketFilterMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosPacketFilter.Switch != nil {
+				ddosPacketFilterMap["switch"] = ddosPolicy.DdosRule.DdosPacketFilter.Switch
+			}
+			if ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter != nil {
+				packetFilterList := []interface{}{}
+				for _, packetFilter := range ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter {
+					packetFilterMap := map[string]interface{}{}
+					if packetFilter.Action != nil {
+						packetFilterMap["action"] = packetFilter.Action
+					}
+					if packetFilter.Protocol != nil {
+						packetFilterMap["protocol"] = packetFilter.Protocol
+					}
+					if packetFilter.DportStart != nil {
+						packetFilterMap["dport_start"] = packetFilter.DportStart
+					}
+					if packetFilter.DportEnd != nil {
+						packetFilterMap["dport_end"] = packetFilter.DportEnd
+					}
+					if packetFilter.PacketMin != nil {
+						packetFilterMap["packet_min"] = packetFilter.PacketMin
+					}
+					if packetFilter.PacketMax != nil {
+						packetFilterMap["packet_max"] = packetFilter.PacketMax
+					}
+					if packetFilter.SportStart != nil {
+						packetFilterMap["sport_start"] = packetFilter.SportStart
+					}
+					if packetFilter.SportEnd != nil {
+						packetFilterMap["sport_end"] = packetFilter.SportEnd
+					}
+					if packetFilter.MatchType != nil {
+						packetFilterMap["match_type"] = packetFilter.MatchType
+					}
+					if packetFilter.IsNot != nil {
+						packetFilterMap["is_not"] = packetFilter.IsNot
+					}
+					if packetFilter.Offset != nil {
+						packetFilterMap["offset"] = packetFilter.Offset
+					}
+					if packetFilter.Depth != nil {
+						packetFilterMap["depth"] = packetFilter.Depth
+					}
+					if packetFilter.MatchBegin != nil {
+						packetFilterMap["match_begin"] = packetFilter.MatchBegin
+					}
+					if packetFilter.Str != nil {
+						packetFilterMap["str"] = packetFilter.Str
+					}
+					if packetFilter.MatchType2 != nil {
+						packetFilterMap["match_type2"] = packetFilter.MatchType2
+					}
+					if packetFilter.IsNot2 != nil {
+						packetFilterMap["is_not2"] = packetFilter.IsNot2
+					}
+					if packetFilter.Offset2 != nil {
+						packetFilterMap["offset2"] = packetFilter.Offset2
+					}
+					if packetFilter.Depth2 != nil {
+						packetFilterMap["depth2"] = packetFilter.Depth2
+					}
+					if packetFilter.MatchBegin2 != nil {
+						packetFilterMap["match_begin2"] = packetFilter.MatchBegin2
+					}
+					if packetFilter.Str2 != nil {
+						packetFilterMap["str2"] = packetFilter.Str2
+					}
+					if packetFilter.MatchLogic != nil {
+						packetFilterMap["match_logic"] = packetFilter.MatchLogic
+					}
+
+					packetFilterList = append(packetFilterList, packetFilterMap)
+				}
+				ddosPacketFilterMap["packet_filter"] = packetFilterList
+			}
+
+			ddosRuleMap["ddos_packet_filter"] = []interface{}{ddosPacketFilterMap}
+		}
+		if ddosPolicy.DdosRule.DdosAcl != nil {
+			ddosAclMap := map[string]interface{}{}
+			if ddosPolicy.DdosRule.DdosAcl.Switch != nil {
+				ddosAclMap["switch"] = ddosPolicy.DdosRule.DdosAcl.Switch
+			}
+			if ddosPolicy.DdosRule.DdosAcl.Acl != nil {
+				aclList := []interface{}{}
+				for _, acl := range ddosPolicy.DdosRule.DdosAcl.Acl {
+					aclMap := map[string]interface{}{}
+					if acl.DportEnd != nil {
+						aclMap["dport_end"] = acl.DportEnd
+					}
+					if acl.DportStart != nil {
+						aclMap["dport_start"] = acl.DportStart
+					}
+					if acl.SportEnd != nil {
+						aclMap["sport_end"] = acl.SportEnd
+					}
+					if acl.SportStart != nil {
+						aclMap["sport_start"] = acl.SportStart
+					}
+					if acl.Protocol != nil {
+						aclMap["protocol"] = acl.Protocol
+					}
+					if acl.Action != nil {
+						aclMap["action"] = acl.Action
+					}
+					if acl.Default != nil {
+						aclMap["default"] = acl.Default
+					}
+
+					aclList = append(aclList, aclMap)
+				}
+				ddosAclMap["acl"] = aclList
+			}
+
+			ddosRuleMap["ddos_acl"] = []interface{}{ddosAclMap}
+		}
+
+		_ = d.Set("ddos_rule", []interface{}{ddosRuleMap})
+	}
 
 	return nil
 }

@@ -667,6 +667,36 @@ func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId, policyI
 	return
 }
 
+func (me *TeoService) DescribeZoneDDoSPolicy(ctx context.Context, zoneId string) (ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeZoneDDoSPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if zoneId != "" {
+		request.ZoneId = &zoneId
+	}
+
+	response, err := me.client.UseTeoClient().DescribeZoneDDoSPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	ddosPolicy = response.Response
+	return
+}
+
 func (me *TeoService) DeleteTeoDdosPolicyById(ctx context.Context, zoneId, policyId string) (errRet error) {
 	logId := getLogId(ctx)
 

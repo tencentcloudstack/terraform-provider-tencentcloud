@@ -307,6 +307,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo securityPolicy can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_security_policy.securityPolicy securityPolicy_id
+$ terraform import tencentcloud_teo_security_policy.securityPolicy securityPolicy_id#entity
 ```
 

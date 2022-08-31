@@ -14,10 +14,15 @@ Provides a resource to create a teo dnsRecord
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "dnsRecord"
-tags = {
-  "createdBy" = "terraform"
-}
+resource "tencentcloud_teo_dns_record" "dnsRecord" {
+  zone_id     = ""
+  record_type = ""
+  name        = ""
+  content     = ""
+  mode        = ""
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -32,7 +37,7 @@ The following arguments are supported:
 * `zone_id` - (Required, String) Site ID.
 * `priority` - (Optional, Int) Priority.
 * `tags` - (Optional, Map) Tag description list.
-* `ttl` - (Optional, Int) .
+* `ttl` - (Optional, Int) TTL, the range is 1-604800, and the minimum value of different levels of domain names is different.
 
 ## Attributes Reference
 
@@ -52,6 +57,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo dnsRecord can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_record.dnsRecord dnsRecord_id
+$ terraform import tencentcloud_teo_dns_record.dnsRecord zone_id#dnsRecord_id#name
 ```
 
