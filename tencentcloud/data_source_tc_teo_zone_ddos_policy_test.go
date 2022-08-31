@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudTeoZoneShieldArea(t *testing.T) {
+func TestAccDataSourceTencentCloudTeoZoneDdosPolicy(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -15,8 +15,8 @@ func TestAccDataSourceTencentCloudTeoZoneShieldArea(t *testing.T) {
 			{
 				Config: testAccTeoZoneShieldArea,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.tencentcloud_teo_ddos_policy.foo", "app_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_teo_ddos_policy.foo", "shield_areas"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_teo_zone_ddos_policy.foo", "app_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_teo_zone_ddos_policy.foo", "shield_areas"),
 				),
 			},
 		},
@@ -24,6 +24,6 @@ func TestAccDataSourceTencentCloudTeoZoneShieldArea(t *testing.T) {
 }
 
 const testAccTeoZoneShieldArea = `
-data "tencentcloud_teo_ddos_policy" "foo" {
+data "tencentcloud_teo_zone_ddos_policy" "foo" {
 }
 `
