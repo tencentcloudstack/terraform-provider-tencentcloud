@@ -527,7 +527,7 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 	request.Filters = append(
 		request.Filters,
 		&teo.CertFilter{
-			Name:   helper.String("Host"),
+			Name:   helper.String("host"),
 			Values: []*string{&host},
 		},
 	)
@@ -728,5 +728,31 @@ func (me *TeoService) DeleteTeoDdosPolicyById(ctx context.Context, zoneId, polic
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *TeoService) DescribeAvailablePlans(ctx context.Context) (availablePlans *teo.DescribeAvailablePlansResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeAvailablePlansRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseTeoClient().DescribeAvailablePlans(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	availablePlans = response.Response
 	return
 }

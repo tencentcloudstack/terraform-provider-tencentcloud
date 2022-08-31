@@ -675,7 +675,10 @@ Teo
 	tencentcloud_teo_security_policy
 	tencentcloud_teo_host_certificate
 	tencentcloud_teo_default_certificate
-	tencentcloud_teo_ddos_policy
+
+  Data Source
+	tencentcloud_teo_zone_ddos_policy
+	tencentcloud_teo_zone_available_plans
 */
 package tencentcloud
 
@@ -963,8 +966,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
-			//"tencentcloud_teo_ddos_policy":							 dataSourceTencentCloudTeoDdosPolicy(),
-			//"tencentcloud_teo_rule_engine_setting":					 dataSourceTencentCloudTeoRuleEngineSetting(),
+			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDdosPolicy(),
+			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

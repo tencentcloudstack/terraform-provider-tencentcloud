@@ -4,8 +4,8 @@ Use this data source to query zone ddos policy.
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_ddos_policy" "example" {
-	zone_id = ""
+data "tencentcloud_teo_zone_ddos_policy" "example" {
+  zone_id = ""
 }
 ```
 */
@@ -21,9 +21,9 @@ import (
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
 )
 
-func dataSourceTencentCloudTeoDdosPolicy() *schema.Resource {
+func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTeoDdosPolicyRead,
+		Read: dataSourceTencentCloudTeoZoneDdosPolicyRead,
 
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -143,12 +143,17 @@ func dataSourceTencentCloudTeoDdosPolicy() *schema.Resource {
 					},
 				},
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used for save results.",
+			},
 		},
 	}
 }
 
-func dataSourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_teo_ddos_policy.read")()
+func dataSourceTencentCloudTeoZoneDdosPolicyRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_teo_zone_ddos_policy.read")()
 
 	var (
 		logId      = getLogId(contextNil)
