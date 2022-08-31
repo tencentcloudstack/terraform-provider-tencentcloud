@@ -11,11 +11,10 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	"log"
 )
 
 func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
@@ -50,7 +49,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 							Description: "Billing cycle. Valid values: `y`: Billed by the year; `m`: Billed by the month; `h`: Billed by the hour; `M`: Billed by the minute; `s`: Billed by the second.",
 						},
 						"price": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Price of the plan. Unit: cent.",
 						},
