@@ -118,7 +118,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId("")
+	d.SetId("zone_available_plans")
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
