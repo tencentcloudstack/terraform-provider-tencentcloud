@@ -14,8 +14,8 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
       mode   = ""
       waf_rules {
         switch            = ""
-        block_rule_i_ds   = ""
-        observe_rule_i_ds = ""
+        block_rule_ids   = ""
+        observe_rule_ids = ""
       }
       ai_rule {
         mode = ""
@@ -44,7 +44,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         mode = ""
         detail {
           mode        = ""
-          i_d         = ""
+          id         = ""
           action      = ""
           punish_time = ""
           threshold   = ""
@@ -80,7 +80,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
     bot_config {
       switch = ""
       managed_rule {
-        rule_i_d          = ""
+        rule_id          = ""
         action            = ""
         punish_time       = ""
         punish_time_unit  = ""
@@ -95,7 +95,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         drop_managed_ids  = ""
       }
       portrait_rule {
-        rule_i_d         = ""
+        rule_id         = ""
         alg_managed_ids  = ""
         cap_managed_ids  = ""
         mon_managed_ids  = ""
@@ -119,7 +119,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         action        = ""
         match_from    = ""
         match_content = ""
-        rule_i_d      = ""
+        rule_id      = ""
       }
     }
 
@@ -212,7 +212,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 													Required:    true,
 													Description: "Whether to host the rules&#39; configuration.- on: Enable.- off: Disable.",
 												},
-												"block_rule_i_ds": {
+												"block_rule_ids": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeInt,
@@ -220,7 +220,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 													Required:    true,
 													Description: "Block mode rules list. See details in data source `waf_managed_rules`.",
 												},
-												"observe_rule_i_ds": {
+												"observe_rule_ids": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeInt,
@@ -271,7 +271,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Custom configuration.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
 													Description: "Rule ID.",
@@ -385,7 +385,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 																Optional:    true,
 																Description: "Template Name.Note: This field may return null, indicating that no valid value can be obtained.",
 															},
-															"i_d": {
+															"id": {
 																Type:        schema.TypeInt,
 																Optional:    true,
 																Description: "Template ID.Note: This field may return null, indicating that no valid value can be obtained.",
@@ -458,7 +458,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Custom configuration.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
 													Description: "Rule ID.",
@@ -573,7 +573,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Preset rules.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Required:    true,
 													Description: "Rule ID.",
@@ -663,7 +663,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Portrait rule.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Optional:    true,
 													Description: "Rule ID.",
@@ -795,7 +795,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 													Optional:    true,
 													Description: "Matching content.",
 												},
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Optional:    true,
 													Description: "Rule ID.",
@@ -893,10 +893,10 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 					wafRulesMap["switch"] = securityPolicy.Config.WafConfig.WafRules.Switch
 				}
 				if securityPolicy.Config.WafConfig.WafRules.BlockRuleIDs != nil {
-					wafRulesMap["block_rule_i_ds"] = securityPolicy.Config.WafConfig.WafRules.BlockRuleIDs
+					wafRulesMap["block_rule_ids"] = securityPolicy.Config.WafConfig.WafRules.BlockRuleIDs
 				}
 				if securityPolicy.Config.WafConfig.WafRules.ObserveRuleIDs != nil {
-					wafRulesMap["observe_rule_i_ds"] = securityPolicy.Config.WafConfig.WafRules.ObserveRuleIDs
+					wafRulesMap["observe_rule_ids"] = securityPolicy.Config.WafConfig.WafRules.ObserveRuleIDs
 				}
 
 				wafConfigMap["waf_rules"] = []interface{}{wafRulesMap}
@@ -922,7 +922,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				for _, userRules := range securityPolicy.Config.RateLimitConfig.UserRules {
 					userRulesMap := map[string]interface{}{}
 					if userRules.RuleID != nil {
-						userRulesMap["rule_i_d"] = userRules.RuleID
+						userRulesMap["rule_id"] = userRules.RuleID
 					}
 					if userRules.RuleName != nil {
 						userRulesMap["rule_name"] = userRules.RuleName
@@ -991,7 +991,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 						detailMap["mode"] = securityPolicy.Config.RateLimitConfig.Template.Detail.Mode
 					}
 					if securityPolicy.Config.RateLimitConfig.Template.Detail.ID != nil {
-						detailMap["i_d"] = securityPolicy.Config.RateLimitConfig.Template.Detail.ID
+						detailMap["id"] = securityPolicy.Config.RateLimitConfig.Template.Detail.ID
 					}
 					if securityPolicy.Config.RateLimitConfig.Template.Detail.Action != nil {
 						detailMap["action"] = securityPolicy.Config.RateLimitConfig.Template.Detail.Action
@@ -1035,7 +1035,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				for _, userRules := range securityPolicy.Config.AclConfig.UserRules {
 					userRulesMap := map[string]interface{}{}
 					if userRules.RuleID != nil {
-						userRulesMap["rule_i_d"] = userRules.RuleID
+						userRulesMap["rule_id"] = userRules.RuleID
 					}
 					if userRules.RuleName != nil {
 						userRulesMap["rule_name"] = userRules.RuleName
@@ -1107,7 +1107,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 			if securityPolicy.Config.BotConfig.ManagedRule != nil {
 				managedRuleMap := map[string]interface{}{}
 				if securityPolicy.Config.BotConfig.ManagedRule.RuleID != nil {
-					managedRuleMap["rule_i_d"] = securityPolicy.Config.BotConfig.ManagedRule.RuleID
+					managedRuleMap["rule_id"] = securityPolicy.Config.BotConfig.ManagedRule.RuleID
 				}
 				if securityPolicy.Config.BotConfig.ManagedRule.Action != nil {
 					managedRuleMap["action"] = securityPolicy.Config.BotConfig.ManagedRule.Action
@@ -1151,7 +1151,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 			if securityPolicy.Config.BotConfig.PortraitRule != nil {
 				portraitRuleMap := map[string]interface{}{}
 				if securityPolicy.Config.BotConfig.PortraitRule.RuleID != nil {
-					portraitRuleMap["rule_i_d"] = securityPolicy.Config.BotConfig.PortraitRule.RuleID
+					portraitRuleMap["rule_id"] = securityPolicy.Config.BotConfig.PortraitRule.RuleID
 				}
 				if securityPolicy.Config.BotConfig.PortraitRule.AlgManagedIds != nil {
 					portraitRuleMap["alg_managed_ids"] = securityPolicy.Config.BotConfig.PortraitRule.AlgManagedIds
@@ -1224,7 +1224,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 						rulesMap["match_content"] = rules.MatchContent
 					}
 					if rules.RuleID != nil {
-						rulesMap["rule_i_d"] = rules.RuleID
+						rulesMap["rule_id"] = rules.RuleID
 					}
 					if rules.UpdateTime != nil {
 						rulesMap["update_time"] = rules.UpdateTime
@@ -1280,14 +1280,14 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 				if v, ok := WafRulesMap["switch"]; ok {
 					wafRule.Switch = helper.String(v.(string))
 				}
-				if v, ok := WafRulesMap["block_rule_i_ds"]; ok {
+				if v, ok := WafRulesMap["block_rule_ids"]; ok {
 					blockRuleIDsSet := v.(*schema.Set).List()
 					for i := range blockRuleIDsSet {
 						blockRuleIDs := blockRuleIDsSet[i].(int)
 						wafRule.BlockRuleIDs = append(wafRule.BlockRuleIDs, helper.IntInt64(blockRuleIDs))
 					}
 				}
-				if v, ok := WafRulesMap["observe_rule_i_ds"]; ok {
+				if v, ok := WafRulesMap["observe_rule_ids"]; ok {
 					observeRuleIDsSet := v.(*schema.Set).List()
 					for i := range observeRuleIDsSet {
 						observeRuleIDs := observeRuleIDsSet[i].(int)
@@ -1377,7 +1377,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 					if v, ok := DetailMap["mode"]; ok {
 						rateLimitTemplateDetail.Mode = helper.String(v.(string))
 					}
-					if v, ok := DetailMap["i_d"]; ok {
+					if v, ok := DetailMap["id"]; ok {
 						rateLimitTemplateDetail.ID = helper.IntInt64(v.(int))
 					}
 					if v, ok := DetailMap["action"]; ok {
@@ -1478,7 +1478,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 			}
 			if ManagedRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "managed_rule"); ok {
 				botManagedRule := teo.BotManagedRule{}
-				if v, ok := ManagedRuleMap["rule_i_d"]; ok {
+				if v, ok := ManagedRuleMap["rule_id"]; ok {
 					botManagedRule.RuleID = helper.IntInt64(v.(int))
 				}
 				if v, ok := ManagedRuleMap["action"]; ok {
@@ -1541,7 +1541,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 			}
 			if PortraitRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "portrait_rule"); ok {
 				botPortraitRule := teo.BotPortraitRule{}
-				if v, ok := PortraitRuleMap["rule_i_d"]; ok {
+				if v, ok := PortraitRuleMap["rule_id"]; ok {
 					botPortraitRule.RuleID = helper.IntInt64(v.(int))
 				}
 				if v, ok := PortraitRuleMap["alg_managed_ids"]; ok {
@@ -1624,7 +1624,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 					if v, ok := RulesMap["match_content"]; ok {
 						ipTableRule.MatchContent = helper.String(v.(string))
 					}
-					if v, ok := RulesMap["rule_i_d"]; ok {
+					if v, ok := RulesMap["rule_id"]; ok {
 						ipTableRule.RuleID = helper.IntInt64(v.(int))
 					}
 					ipTableConfig.Rules = append(ipTableConfig.Rules, &ipTableRule)

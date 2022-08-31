@@ -23,9 +23,9 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
       level  = ""
       mode   = ""
       waf_rules {
-        switch            = ""
-        block_rule_i_ds   = ""
-        observe_rule_i_ds = ""
+        switch           = ""
+        block_rule_ids   = ""
+        observe_rule_ids = ""
       }
       ai_rule {
         mode = ""
@@ -54,7 +54,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         mode = ""
         detail {
           mode        = ""
-          i_d         = ""
+          id          = ""
           action      = ""
           punish_time = ""
           threshold   = ""
@@ -90,7 +90,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
     bot_config {
       switch = ""
       managed_rule {
-        rule_i_d          = ""
+        rule_id           = ""
         action            = ""
         punish_time       = ""
         punish_time_unit  = ""
@@ -105,7 +105,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         drop_managed_ids  = ""
       }
       portrait_rule {
-        rule_i_d         = ""
+        rule_id          = ""
         alg_managed_ids  = ""
         cap_managed_ids  = ""
         mon_managed_ids  = ""
@@ -129,7 +129,7 @@ resource "tencentcloud_teo_security_policy" "securityPolicy" {
         action        = ""
         match_from    = ""
         match_content = ""
-        rule_i_d      = ""
+        rule_id       = ""
       }
     }
 
@@ -180,7 +180,7 @@ The `config` object supports the following:
 The `detail` object supports the following:
 
 * `action` - (Optional, String) Action to take.
-* `i_d` - (Optional, Int) Template ID.Note: This field may return null, indicating that no valid value can be obtained.
+* `id` - (Optional, Int) Template ID.Note: This field may return null, indicating that no valid value can be obtained.
 * `mode` - (Optional, String) Template Name.Note: This field may return null, indicating that no valid value can be obtained.
 * `period` - (Optional, Int) Period.
 * `punish_time` - (Optional, Int) Punish time.
@@ -208,7 +208,7 @@ The `items` object supports the following:
 
 The `managed_rule` object supports the following:
 
-* `rule_i_d` - (Required, Int) Rule ID.
+* `rule_id` - (Required, Int) Rule ID.
 * `action` - (Optional, String) Action to take. Valid values: `drop`, `trans`, `monitor`, `alg`.
 * `alg_managed_ids` - (Optional, Set) Rules to enable when action is `alg`. See details in data source `bot_managed_rules`.
 * `cap_managed_ids` - (Optional, Set) Rules to enable when action is `captcha`. See details in data source `bot_managed_rules`.
@@ -228,7 +228,7 @@ The `portrait_rule` object supports the following:
 * `cap_managed_ids` - (Optional, Set) Rules to enable when action is `captcha`. See details in data source `bot_portrait_rules`.
 * `drop_managed_ids` - (Optional, Set) Rules to enable when action is `drop`. See details in data source `bot_portrait_rules`.
 * `mon_managed_ids` - (Optional, Set) Rules to enable when action is `monitor`. See details in data source `bot_portrait_rules`.
-* `rule_i_d` - (Optional, Int) Rule ID.
+* `rule_id` - (Optional, Int) Rule ID.
 * `switch` - (Optional, String) - on: Enable.- off: Disable.
 
 The `rate_limit_config` object supports the following:
@@ -243,7 +243,7 @@ The `rules` object supports the following:
 * `action` - (Optional, String) Actions to take. Valid values: `drop`, `trans`, `monitor`.
 * `match_content` - (Optional, String) Matching content.
 * `match_from` - (Optional, String) Matching type. Valid values: `ip`, `area`.
-* `rule_i_d` - (Optional, Int) Rule ID.
+* `rule_id` - (Optional, Int) Rule ID.
 
 The `switch_config` object supports the following:
 
@@ -291,9 +291,9 @@ The `waf_config` object supports the following:
 
 The `waf_rules` object supports the following:
 
-* `block_rule_i_ds` - (Required, Set) Block mode rules list. See details in data source `waf_managed_rules`.
+* `block_rule_ids` - (Required, Set) Block mode rules list. See details in data source `waf_managed_rules`.
 * `switch` - (Required, String) Whether to host the rules&#39; configuration.- on: Enable.- off: Disable.
-* `observe_rule_i_ds` - (Optional, Set) Observe rules list. See details in data source `waf_managed_rules`.
+* `observe_rule_ids` - (Optional, Set) Observe rules list. See details in data source `waf_managed_rules`.
 
 ## Attributes Reference
 
