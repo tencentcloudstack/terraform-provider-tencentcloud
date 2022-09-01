@@ -94,11 +94,6 @@ resource "tencentcloud_monitor_tmp_tke_global_notification" "basic" {
  notification {
 	enabled   	  		 = true
 	type      	  		 = "webhook"
-	alert_manager		   {
-     "cluster_id"   = ""
-     "cluster_type" = ""
-     "url"          = ""
-	}
 	web_hook			  = ""
 	repeat_interval       = "5m"
 	time_range_start      = "00:00:00"
