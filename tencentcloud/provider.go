@@ -441,6 +441,8 @@ Monitor
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
 
+	tencentcloud_monitor_grafana_instance
+
 PostgreSQL
   Data Source
 	tencentcloud_postgresql_instances
@@ -1126,6 +1128,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_tke_config":                  resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":        resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
 			"tencentcloud_monitor_tmp_tke_global_notification":     resourceTencentCloudMonitorTmpTkeGlobalNotification(),
+			"tencentcloud_monitor_grafana_instance":                resourceTencentCloudMonitorGrafanaInstance(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),
