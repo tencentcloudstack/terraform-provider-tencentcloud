@@ -211,15 +211,13 @@ func datasourceTencentCloudEksClusterCredentialRead(d *schema.ResourceData, meta
 	}
 	_ = d.Set("addresses", addresses)
 
-	credentials := make([]map[string]interface{}, 0)
 	credential := make(map[string]interface{})
 	if info.Credential != nil {
 		credential = map[string]interface{}{
 			"token":   info.Credential.Token,
 			"ca_cert": info.Credential.CACert,
 		}
-		credentials = append(credentials, credential)
-		_ = d.Set("credential", credentials)
+		_ = d.Set("credential", credential)
 	}
 
 	internalLB := make([]map[string]interface{}, 0)
@@ -246,7 +244,7 @@ func datasourceTencentCloudEksClusterCredentialRead(d *schema.ResourceData, meta
 	}
 
 	result := map[string]interface{}{
-		"credential":  credentials,
+		"credential":  credential,
 		"addresses":   addresses,
 		"public_lb":   publicLB,
 		"internal_lb": internalLB,
