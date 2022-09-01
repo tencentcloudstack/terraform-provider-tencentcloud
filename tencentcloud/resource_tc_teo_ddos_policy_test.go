@@ -1,32 +1,26 @@
 package tencentcloud
 
-import (
-	"testing"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-)
-
-func TestAccTencentCloudTeoDdosPolicy_basic(t *testing.T) {
-	t.Parallel()
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccTeoDdosPolicy,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_ddos_policy.ddosPolicy", "id"),
-				),
-			},
-			{
-				ResourceName:      "tencentcloud_teo_ddos_policy.ddosPolicy",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
+//func TestAccTencentCloudTeoDdosPolicy_basic(t *testing.T) {
+//	t.Parallel()
+//
+//	resource.Test(t, resource.TestCase{
+//		PreCheck:  func() { testAccPreCheck(t) },
+//		Providers: testAccProviders,
+//		Steps: []resource.TestStep{
+//			{
+//				Config: testAccTeoDdosPolicy,
+//				Check: resource.ComposeTestCheckFunc(
+//					resource.TestCheckResourceAttrSet("tencentcloud_teo_ddos_policy.ddosPolicy", "id"),
+//				),
+//			},
+//			{
+//				ResourceName:      "tencentcloud_teo_ddos_policy.ddosPolicy",
+//				ImportState:       true,
+//				ImportStateVerify: true,
+//			},
+//		},
+//	})
+//}
 
 const testAccTeoDdosPolicy = `
 
