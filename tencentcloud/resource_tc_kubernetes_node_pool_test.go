@@ -202,7 +202,7 @@ func testAccCheckTkeNodePoolExists(s *terraform.State) error {
 
 }
 
-const testAccTkeNodePoolClusterBasic = TkeDataSource + TkeInstanceType + `
+const testAccTkeNodePoolClusterBasic = TkeDataSource + TkeDefaultNodeInstanceVar + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -234,7 +234,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_project_id = "` + defaultProjectId + `"
 
   auto_scaling_config {
-    instance_type      = local.final_type
+    instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
@@ -294,7 +294,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = local.final_type
+    instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
