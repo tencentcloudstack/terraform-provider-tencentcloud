@@ -83,8 +83,7 @@ func datasourceTencentCloudEksClusterCredential() *schema.Resource {
 				},
 			},
 			"credential": {
-				Type:        schema.TypeList,
-				MaxItems:    1,
+				Type:        schema.TypeMap,
 				Computed:    true,
 				Description: "Credential info.",
 				Elem: &schema.Resource{
