@@ -1,5 +1,5 @@
 ---
-subcategory: "Teo"
+subcategory: "TencentCloud EdgeOne(TEO)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_zone_available_plans"
 sidebar_current: "docs-tencentcloud-datasource-teo_zone_available_plans"
