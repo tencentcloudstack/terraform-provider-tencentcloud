@@ -651,7 +651,7 @@ Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
 
-TEM
+TencentCloud Elastic Microservice(TEM)
   Resource
 	tencentcloud_tem_environment
 	tencentcloud_tem_application
@@ -661,7 +661,7 @@ TEM
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
 
-Teo
+TencentCloud EdgeOne(TEO)
   Data Source
 	tencentcloud_teo_zone_available_plans
 
@@ -964,7 +964,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
-			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDdosPolicy(),
 			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
 		},
 
@@ -1212,7 +1211,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_rule_engine":                         resourceTencentCloudTeoRuleEngine(),
 			"tencentcloud_teo_application_proxy":                   resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":              resourceTencentCloudTeoApplicationProxyRule(),
-			"tencentcloud_teo_security_policy":                     resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_host_certificate":                    resourceTencentCloudTeoHostCertificate(),
 			"tencentcloud_teo_default_certificate":                 resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_ddos_policy":                         resourceTencentCloudTeoDdosPolicy(),
