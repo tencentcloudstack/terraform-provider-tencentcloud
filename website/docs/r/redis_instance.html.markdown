@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a Redis instance and set its attributes.
 
+~> **NOTE:** Both adding and removing replications in one change is supported but not recommend.
+
 ## Example Usage
 
 ```hcl
@@ -78,9 +80,9 @@ The following arguments are supported:
 * `port` - (Optional, Int, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `project_id` - (Optional, Int) Specifies which project the instance should belong to.
-* `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions.
+* `redis_replicas_num` - (Optional, Int) The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.
 * `redis_shard_num` - (Optional, Int) The number of instance shard, default is 1. This is not required for standalone and master slave versions.
-* `replica_zone_ids` - (Optional, List: [`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions.
+* `replica_zone_ids` - (Optional, List: [`Int`]) ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.
 * `replicas_read_only` - (Optional, Bool) Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.
 * `security_groups` - (Optional, Set: [`String`], ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, String, ForceNew) Specifies which subnet the instance should belong to.
@@ -96,6 +98,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - The time when the instance was created.
 * `ip` - IP address of an instance.
+* `node_info` - Readonly Primary/Replica nodes.
+  * `id` - ID of the master or replica node.
+  * `master` - Indicates whether the node is master.
+  * `zone_id` - ID of the availability zone of the master or replica node.
 * `status` - Current status of an instance, maybe: init, processing, online, isolate and todelete.
 
 

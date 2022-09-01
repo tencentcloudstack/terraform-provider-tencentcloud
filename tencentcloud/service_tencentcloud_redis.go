@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -343,7 +344,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	return
 }
 
-func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) (has bool,
+func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, retryTimeout time.Duration) (has bool,
 	online bool,
 	info *redis.InstanceSet,
 	errRet error) {
@@ -362,7 +363,7 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) 
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	var response *redis.DescribeInstancesResponse
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(retryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstances(request)
 		if e != nil {
@@ -370,6 +371,25 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) 
 			return retryError(e)
 		}
 		response = result
+
+		if len(response.Response.InstanceSet) == 0 {
+			has = false
+			return resource.NonRetryableError(fmt.Errorf("instance %s not exist", redisId))
+		}
+
+		info = response.Response.InstanceSet[0]
+		has = true
+
+		if *info.Status == REDIS_STATUS_ONLINE {
+			online = true
+			return nil
+		}
+
+		if *info.Status == REDIS_STATUS_INIT || *info.Status == REDIS_STATUS_PROCESSING {
+			online = false
+			return resource.RetryableError(fmt.Errorf("istance %s status is %d, retrying", redisId, *info.Status))
+		}
+
 		return nil
 	})
 
@@ -378,30 +398,40 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) 
 		return
 	}
 
-	if len(response.Response.InstanceSet) == 0 {
-		has = false
-		return
-	}
+	return
+}
 
-	if len(response.Response.InstanceSet) != 1 {
-		errRet = fmt.Errorf("redis DescribeInstances one id get %d redis info", len(response.Response.InstanceSet))
-		return
-	}
+func (me *RedisService) CheckRedisUpdateOk(ctx context.Context, redisId string) (errRet error) {
+	var startUpdate bool
+	logId := getLogId(ctx)
+	request := redis.NewDescribeInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &redisId
+	errRet = resource.Retry(readRetryTimeout*20, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseRedisClient().DescribeInstances(request)
+		if err != nil {
+			return retryError(err)
+		}
+		if len(result.Response.InstanceSet) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("redis %s not exist", redisId))
+		}
+		info := result.Response.InstanceSet[0]
+		if !startUpdate && *info.Status == REDIS_STATUS_ONLINE {
+			return resource.RetryableError(fmt.Errorf("waiting for upgrade start"))
+		}
+		startUpdate = true
+		if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
+			return resource.RetryableError(fmt.Errorf("instance %s status is %d", redisId, *info.Status))
+		}
+		return nil
+	})
 
-	has = true
-	info = response.Response.InstanceSet[0]
-
-	if *info.Status == REDIS_STATUS_ONLINE {
-		online = true
-		return
-	}
-
-	if *info.Status == REDIS_STATUS_INIT || *info.Status == REDIS_STATUS_PROCESSING {
-		online = false
-		return
-	}
-
-	errRet = fmt.Errorf("redis instance delivery failure, status is %d", *info.Status)
 	return
 }
 
@@ -452,7 +482,7 @@ func (me *RedisService) CheckRedisDestroyOk(ctx context.Context, redisId string)
 	has = true
 
 	info := response.Response.InstanceSet[0]
-	if *info.Status == REDIS_STATUS_ISOLATE {
+	if *info.Status <= REDIS_STATUS_ISOLATE {
 		isolated = true
 		return
 	} else {

@@ -321,6 +321,31 @@ func GetListIncrement(o []int, n []int) (result []int, err error) {
 	return
 }
 
+func GetListDiffs(o []int, n []int) (adds []int, lacks []int) {
+	fillArr := func(arr []int, v int, count int) []int {
+		for i := 0; i < count; i++ {
+			arr = append(arr, v)
+		}
+		return arr
+	}
+	diffs := map[int]int{}
+	for _, v := range o {
+		diffs[v] -= 1
+	}
+	for _, v := range n {
+		diffs[v] += 1
+	}
+	log.Printf("DIFFS: %v", diffs)
+	for num, count := range diffs {
+		if count < 0 {
+			lacks = fillArr(lacks, num, -count)
+		} else if count > 0 {
+			adds = fillArr(adds, num, count)
+		}
+	}
+	return
+}
+
 //GoRoutine Limit
 type GoRoutineLimit struct {
 	Count int
