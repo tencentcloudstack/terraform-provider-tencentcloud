@@ -18,6 +18,28 @@ type CynosdbService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *CynosdbService) DescribeRedisZoneConfig(ctx context.Context) (instanceSpecSet []*cynosdb.InstanceSpec, err error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeInstanceSpecsRequest()
+
+	request.DbType = helper.String("MYSQL")
+	request.IncludeZoneStocks = helper.Bool(true)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseCynosdbClient().DescribeInstanceSpecs(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		instanceSpecSet = response.Response.InstanceSpecSet
+		return nil
+	})
+
+	return
+}
+
 func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[string]string) (clusters []*cynosdb.CynosdbCluster, errRet error) {
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeClustersRequest()
