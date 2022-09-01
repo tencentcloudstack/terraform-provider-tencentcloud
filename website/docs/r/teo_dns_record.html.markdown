@@ -14,8 +14,8 @@ Provides a resource to create a teo dnsRecord
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "sfurnace_work" {
-  zone_id     = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_dns_record" "dns_record" {
+  zone_id     = tencentcloud_teo_zone.zone.id
   record_type = "A"
   name        = "sfurnace.work"
   mode        = "proxied"
@@ -53,8 +53,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo dnsRecord can be imported using the id, e.g.
+teo dns_record can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_record.dnsRecord zone_id#dnsRecord_id#name
+$ terraform import tencentcloud_teo_dns_record.dnsRecord zoneId#dnsRecordId#name
 ```
 

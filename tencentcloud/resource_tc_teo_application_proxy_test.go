@@ -16,11 +16,11 @@ func TestAccTencentCloudNeedFixTeoApplicationProxy_basic(t *testing.T) {
 			{
 				Config: testAccTeoApplicationProxy,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_application_proxy.applicationProxy", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_application_proxy.application_proxy", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_application_proxy.applicationProxy",
+				ResourceName:      "tencentcloud_teo_application_proxy.application_proxy",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,15 +30,16 @@ func TestAccTencentCloudNeedFixTeoApplicationProxy_basic(t *testing.T) {
 
 const testAccTeoApplicationProxy = `
 
-resource "tencentcloud_teo_application_proxy" "applicationProxy" {
-  zone_id              = ""
-  zone_name            = ""
-  proxy_name           = ""
-  plat_type            = ""
-  security_type        = ""
-  accelerate_type      = ""
-  session_persist_time = ""
-  proxy_type           = ""
+resource "tencentcloud_teo_application_proxy" "application_proxy" {
+  zone_id   = tencentcloud_teo_zone.zone.id
+  zone_name = "sfurnace.work"
+
+  accelerate_type      = 1
+  security_type        = 1
+  plat_type            = "domain"
+  proxy_name           = "www.sfurnace.work"
+  proxy_type           = "hostname"
+  session_persist_time = 2400
 }
 
 `

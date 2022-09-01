@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTeoSecurityPolicy_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoSecurityPolicy_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

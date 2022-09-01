@@ -14,8 +14,8 @@ Provides a resource to create a teo dnsSec
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_sec" "sfurnace_work" {
-  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_dns_sec" "dns_sec" {
+  zone_id = tencentcloud_teo_zone.zone.id
   status  = "disabled"
 }
 ```
@@ -48,8 +48,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo dnsSec can be imported using the id, e.g.
+teo dns_sec can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_sec.dnsSec dnsSec_id
+$ terraform import tencentcloud_teo_dns_sec.dns_sec zoneId
 ```
 

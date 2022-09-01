@@ -1,11 +1,11 @@
 /*
-Provides a resource to create a teo applicationProxy
+Provides a resource to create a teo application_proxy
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy" "app0" {
-  zone_id   = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_application_proxy" "application_proxy" {
+  zone_id   = tencentcloud_teo_zone.zone.id
   zone_name = "sfurnace.work"
 
   accelerate_type      = 1
@@ -19,9 +19,9 @@ resource "tencentcloud_teo_application_proxy" "app0" {
 ```
 Import
 
-teo applicationProxy can be imported using the id, e.g.
+teo application_proxy can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy.applicationProxy applicationProxy_id
+$ terraform import tencentcloud_teo_application_proxy.application_proxy zoneId#proxyId
 ```
 */
 package tencentcloud

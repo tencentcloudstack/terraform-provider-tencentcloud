@@ -14,7 +14,7 @@ Provides a resource to create a teo zone
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone" "sfurnace_work" {
+resource "tencentcloud_teo_zone" "zone" {
   name           = "sfurnace.work"
   plan_type      = "ent_cm_with_bot"
   type           = "full"

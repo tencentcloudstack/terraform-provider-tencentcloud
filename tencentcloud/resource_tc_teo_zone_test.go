@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTeoZone_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoZone_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -31,19 +31,16 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 const testAccTeoZone = `
 
 resource "tencentcloud_teo_zone" "zone" {
-  name           = ""
-  plan_type      = ""
-  type           = ""
-  paused         = ""
-  vanity_name_servers {
-    switch  = ""
-    servers = ""
+  name           = "sfurnace.work"
+  plan_type      = "ent_cm_with_bot"
+  type           = "full"
+  paused         = false
+  cname_speed_up = "enabled"
 
-  }
-  cname_speed_up = ""
-  tags           = {
-    "createdBy" = "terraform"
-  }
+  #  vanity_name_servers {
+  #    switch  = "on"
+  #    servers = ["2.2.2.2"]
+  #  }
 }
 
 `

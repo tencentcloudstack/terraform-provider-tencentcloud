@@ -16,11 +16,11 @@ func TestAccTencentCloudNeedFixTeoRuleEngine_basic(t *testing.T) {
 			{
 				Config: testAccTeoRuleEngine,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.ruleEngine", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.rule_engine", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_rule_engine.ruleEngine",
+				ResourceName:      "tencentcloud_teo_rule_engine.rule_engine",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,48 +30,42 @@ func TestAccTencentCloudNeedFixTeoRuleEngine_basic(t *testing.T) {
 
 const testAccTeoRuleEngine = `
 
-resource "tencentcloud_teo_rule_engine" "ruleEngine" {
-  zone_id   = ""
-  rule_name = ""
-  status    = ""
+resource "tencentcloud_teo_rule_engine" "rule_engine" {
+  zone_id   = tencentcloud_teo_zone.zone.id
+  rule_name = "rule0"
+  status    = "enable"
+
   rules {
     conditions {
       conditions {
-        operator = ""
-        target   = ""
-        values   = ""
-      }
-    }
-    actions {
-      normal_action {
-        action = ""
-        parameters {
-          name   = ""
-          values = ""
-        }
-      }
-      rewrite_action {
-        action = ""
-        parameters {
-          action = ""
-          name   = ""
-          values = ""
-        }
-      }
-      code_action {
-        action = ""
-        parameters {
-          name        = ""
-          values      = ""
-          status_code = ""
-        }
+        operator = "equal"
+        target   = "host"
+        values   = [
+          "www.sfurnace.work",
+        ]
       }
     }
 
-  }
-  tags      = {
-    "createdBy" = "terraform"
+    actions {
+      normal_action {
+        action = "MaxAge"
+
+        parameters {
+          name   = "FollowOrigin"
+          values = [
+            "on",
+          ]
+        }
+        parameters {
+          name   = "MaxAgeTime"
+          values = [
+            "0",
+          ]
+        }
+      }
+    }
   }
 }
+
 
 `

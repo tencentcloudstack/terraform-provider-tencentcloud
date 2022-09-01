@@ -16,11 +16,11 @@ func TestAccTencentCloudNeedFixTeoHostCertificate_basic(t *testing.T) {
 			{
 				Config: testAccTeoHostCertificate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_host_certificate.hostCertificate", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_host_certificate.host_certificate", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_host_certificate.hostCertificate",
+				ResourceName:      "tencentcloud_teo_host_certificate.host_certificate",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,12 +30,13 @@ func TestAccTencentCloudNeedFixTeoHostCertificate_basic(t *testing.T) {
 
 const testAccTeoHostCertificate = `
 
-resource "tencentcloud_teo_host_certificate" "hostCertificate" {
-  zone_id = ""
-  host    = ""
+resource "tencentcloud_teo_host_certificate" "host_certificate" {
+  zone_id = tencentcloud_teo_zone.zone.id
+  host    = tencentcloud_teo_dns_record.dns_record.name
+
   cert_info {
-    cert_id = ""
-    status  = ""
+    cert_id = "yqWPPbs7"
+    status  = "deployed"
   }
 }
 

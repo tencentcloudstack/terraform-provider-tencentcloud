@@ -4,7 +4,7 @@ Use this data source to query zone available plans.
 Example Usage
 
 ```hcl
-data "tencentcloud_teo_zone_available_plans" "example" {}
+data "tencentcloud_teo_zone_available_plans" "available_plans" {}
 ```
 */
 package tencentcloud

@@ -14,8 +14,8 @@ Provides a resource to create a teo loadBalancing
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_load_balancing" "lb0" {
-  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_load_balancing" "load_balancing" {
+  zone_id = tencentcloud_teo_zone.zone.id
 
   host = "sfurnace.work"
   origin_id = [

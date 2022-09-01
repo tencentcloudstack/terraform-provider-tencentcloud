@@ -14,8 +14,22 @@ Provides a resource to create a teo originGroup
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_origin_group" "group0" {
-  zone_id     = tencentcloud_teo_zone.sfurnace_work.id
+locals {
+  group0 = [
+    {
+      "record" = "1.1.1.1"
+      "port"   = 80
+      "weight" = 30
+      }, {
+      "record" = "2.2.2.2"
+      "port"   = 443
+      "weight" = 70
+    }
+  ]
+}
+
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  zone_id     = tencentcloud_teo_zone.zone.id
   origin_name = "group0"
   origin_type = "self"
   type        = "weight"
@@ -29,20 +43,6 @@ resource "tencentcloud_teo_origin_group" "group0" {
       area   = []
     }
   }
-}
-
-locals {
-  group0 = [
-    {
-      "record" = "1.1.1.1"
-      "port"   = 80
-      "weight" = 30
-      }, {
-      "record" = "2.2.2.2"
-      "port"   = 443
-      "weight" = 70
-    }
-  ]
 }
 ```
 
@@ -81,8 +81,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo originGroup can be imported using the id, e.g.
+teo origin_group can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_origin_group.originGroup zoneId#originId
+$ terraform import tencentcloud_teo_origin_group.origin_group zoneId#originId
 ```
 

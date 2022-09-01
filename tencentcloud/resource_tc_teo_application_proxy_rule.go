@@ -1,12 +1,12 @@
 /*
-Provides a resource to create a teo applicationProxyRule
+Provides a resource to create a teo application_proxy_rule
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy_rule" "app0_rule0" {
-  zone_id  = tencentcloud_teo_zone.sfurnace_work.id
-  proxy_id = tencentcloud_teo_application_proxy.app0.proxy_id
+resource "tencentcloud_teo_application_proxy_rule" "application_proxy_rule" {
+  zone_id  = tencentcloud_teo_zone.zone.id
+  proxy_id = tencentcloud_teo_application_proxy.application_proxy_rule.proxy_id
 
   forward_client_ip = "TOA"
   origin_type       = "custom"
@@ -23,9 +23,9 @@ resource "tencentcloud_teo_application_proxy_rule" "app0_rule0" {
 ```
 Import
 
-teo applicationProxyRule can be imported using the id, e.g.
+teo application_proxy_rule can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy_rule.applicationProxyRule applicationProxyRule_id
+$ terraform import tencentcloud_teo_application_proxy_rule.application_proxy_rule zoneId#proxyId#ruleId
 ```
 */
 package tencentcloud

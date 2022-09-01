@@ -14,9 +14,9 @@ Provides a resource to create a teo ruleEngine
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine" "sfurnace_work" {
-  zone_id   = tencentcloud_teo_zone.sfurnace_work.id
-  rule_name = "规则0"
+resource "tencentcloud_teo_rule_engine" "rule_engine" {
+  zone_id   = tencentcloud_teo_zone.zone.id
+  rule_name = "rule0"
   status    = "enable"
 
   rules {
@@ -126,6 +126,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo ruleEngine can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.ruleEngine ruleEngine_id
+$ terraform import tencentcloud_teo_rule_engine.rule_engine zoneId#ruleId
 ```
 

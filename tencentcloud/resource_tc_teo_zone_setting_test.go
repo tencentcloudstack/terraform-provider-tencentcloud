@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoZoneSetting_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -16,11 +16,11 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 			{
 				Config: testAccTeoZoneSetting,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.zoneSetting", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.zone_setting", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_zone_setting.zoneSetting",
+				ResourceName:      "tencentcloud_teo_zone_setting.zone_setting",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,97 +30,97 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 
 const testAccTeoZoneSetting = `
 
-resource "tencentcloud_teo_zone_setting" "zoneSetting" {
-  zone_id = ""
+resource "tencentcloud_teo_zone_setting" "zone_setting" {
+  zone_id = tencentcloud_teo_zone.zone.id
+
   cache {
-    cache {
-      switch               = ""
-      cache_time           = ""
-      ignore_cache_control = ""
-    }
-    no_cache {
-      switch = ""
-    }
     follow_origin {
-      switch = ""
+      switch = "off"
     }
 
+    no_cache {
+      switch = "off"
+    }
   }
+
   cache_key {
-    full_url_cache = ""
-    ignore_case    = ""
+    full_url_cache = "off"
+    ignore_case    = "on"
+
     query_string {
-      switch = ""
-      action = ""
-      value  = ""
+      action = "excludeCustom"
+      switch = "on"
+      value  = ["test", "apple"]
     }
-
   }
-  max_age {
-    max_age_time  = ""
-    follow_origin = ""
 
-  }
-  offline_cache {
-    switch = ""
-
-  }
-  quic {
-    switch = ""
-
-  }
-  post_max_size {
-    switch   = ""
-    max_size = ""
-
-  }
-  compression {
-    switch = ""
-
-  }
-  upstream_http2 {
-    switch = ""
-
-  }
-  force_redirect {
-    switch               = ""
-    redirect_status_code = ""
-
-  }
-  https {
-    http2         = ""
-    ocsp_stapling = ""
-    tls_version   = ""
-    hsts {
-      switch              = ""
-      max_age             = ""
-      include_sub_domains = ""
-      preload             = ""
-    }
-
-  }
-  origin {
-    origin_pull_protocol = ""
-
-  }
-  smart_routing {
-    switch = ""
-
-  }
-  web_socket {
-    switch  = ""
-    timeout = ""
-
-  }
-  client_ip_header {
-    switch      = ""
-    header_name = ""
-
-  }
   cache_prefresh {
-    switch  = ""
-    percent = ""
+    percent = 90
+    switch  = "off"
+  }
 
+  client_ip_header {
+    switch = "off"
+  }
+
+  compression {
+    switch = "off"
+  }
+
+  force_redirect {
+    redirect_status_code = 302
+    switch               = "on"
+  }
+
+  https {
+    http2         = "on"
+    ocsp_stapling = "off"
+    tls_version   = [
+      "TLSv1.2",
+      "TLSv1.3",
+    ]
+
+    hsts {
+      include_sub_domains = "off"
+      max_age             = 0
+      preload             = "off"
+      switch              = "off"
+    }
+  }
+
+  max_age {
+    follow_origin = "off"
+    max_age_time  = 600
+  }
+
+  offline_cache {
+    switch = "off"
+  }
+
+  origin {
+    origin_pull_protocol = "follow"
+  }
+
+  post_max_size {
+    max_size = 524288000
+    switch   = "on"
+  }
+
+  quic {
+    switch = "on"
+  }
+
+  smart_routing {
+    switch = "on"
+  }
+
+  upstream_http2 {
+    switch = "off"
+  }
+
+  web_socket {
+    switch  = "off"
+    timeout = 30
   }
 }
 

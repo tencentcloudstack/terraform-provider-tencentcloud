@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTeoDnsSec_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoDnsSec_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -16,11 +16,11 @@ func TestAccTencentCloudTeoDnsSec_basic(t *testing.T) {
 			{
 				Config: testAccTeoDnsSec,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_dns_sec.dnsSec", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_dns_sec.dns_sec", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_dns_sec.dnsSec",
+				ResourceName:      "tencentcloud_teo_dns_sec.dns_sec",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,8 +30,8 @@ func TestAccTencentCloudTeoDnsSec_basic(t *testing.T) {
 
 const testAccTeoDnsSec = `
 
-resource "tencentcloud_teo_dns_sec" "dnsSec" {
-  zone_id = ""
-  status  = ""
+resource "tencentcloud_teo_dns_sec" "dns_sec" {
+  zone_id = tencentcloud_teo_zone.zone.id
+  status  = "disabled"
 }
 `

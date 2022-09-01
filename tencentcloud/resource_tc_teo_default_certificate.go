@@ -4,21 +4,21 @@ Provides a resource to create a teo defaultCertificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_default_certificate" "sfurnace_work" {
-  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_default_certificate" "default_certificate" {
+  zone_id = tencentcloud_teo_zone.zone.id
 
   cert_info {
     cert_id = "teo-28i46c1gtmkl"
     status  = "deployed"
   }
-}s
+}
 
 ```
 Import
 
-teo defaultCertificate can be imported using the id, e.g.
+teo default_certificate can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_default_certificate.defaultCertificate defaultCertificate_id
+$ terraform import tencentcloud_teo_default_certificate.default_certificate zoneId
 ```
 */
 package tencentcloud

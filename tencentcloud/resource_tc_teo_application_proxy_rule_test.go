@@ -16,11 +16,11 @@ func TestAccTencentCloudNeedFixTeoApplicationProxyRule_basic(t *testing.T) {
 			{
 				Config: testAccTeoApplicationProxyRule,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_application_proxy_rule.applicationProxyRule", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_application_proxy_rule.application_proxy_rule", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_application_proxy_rule.applicationProxyRule",
+				ResourceName:      "tencentcloud_teo_application_proxy_rule.application_proxy_rule",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,15 +30,20 @@ func TestAccTencentCloudNeedFixTeoApplicationProxyRule_basic(t *testing.T) {
 
 const testAccTeoApplicationProxyRule = `
 
-resource "tencentcloud_teo_application_proxy_rule" "applicationProxyRule" {
-  zone_id           = ""
-  proxy_id          = ""
-  proto             = ""
-  port              = ""
-  origin_type       = ""
-  origin_value      = ""
-  forward_client_ip = ""
-  session_persist   = ""
+resource "tencentcloud_teo_application_proxy_rule" "application_proxy_rule" {
+  zone_id  = tencentcloud_teo_zone.zone.id
+  proxy_id = tencentcloud_teo_application_proxy.application_proxy_rule.proxy_id
+
+  forward_client_ip = "TOA"
+  origin_type       = "custom"
+  origin_value      = [
+    "1.1.1.1:80",
+  ]
+  port = [
+    "80",
+  ]
+  proto           = "TCP"
+  session_persist = false
 }
 
 `

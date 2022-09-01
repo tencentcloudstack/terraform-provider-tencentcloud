@@ -662,6 +662,9 @@ TEM
 	tencentcloud_tem_gateway
 
 Teo
+  Data Source
+	tencentcloud_teo_zone_available_plans
+
   Resource
 	tencentcloud_teo_zone
 	tencentcloud_teo_zone_setting
@@ -672,13 +675,8 @@ Teo
 	tencentcloud_teo_rule_engine
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_security_policy
 	tencentcloud_teo_host_certificate
 	tencentcloud_teo_default_certificate
-
-  Data Source
-	tencentcloud_teo_zone_ddos_policy
-	tencentcloud_teo_zone_available_plans
 */
 package tencentcloud
 

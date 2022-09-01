@@ -1,11 +1,11 @@
 /*
-Provides a resource to create a teo zoneSetting
+Provides a resource to create a teo zone_setting
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone_setting" "sfurnace_work" {
-  zone_id = tencentcloud_teo_zone.sfurnace_work.id
+resource "tencentcloud_teo_zone_setting" "zone_setting" {
+  zone_id = tencentcloud_teo_zone.zone.id
 
   cache {
     follow_origin {
@@ -101,9 +101,9 @@ resource "tencentcloud_teo_zone_setting" "sfurnace_work" {
 ```
 Import
 
-teo zoneSetting can be imported using the id, e.g.
+teo zone_setting can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zoneSetting zoneSetting_id
+$ terraform import tencentcloud_teo_zone_setting.zone_setting zone_id
 ```
 */
 package tencentcloud

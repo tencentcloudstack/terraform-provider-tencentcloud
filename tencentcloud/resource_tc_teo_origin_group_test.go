@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoOriginGroup_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -30,19 +30,35 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 
 const testAccTeoOriginGroup = `
 
-resource "tencentcloud_teo_origin_group" "originGroup" {
-  origin_name = "test"
-  type        = "weight"
-  record {
-    record  = "20160527-10003318.cos.ap-shanghai.myqcloud.com"
-    area    = []
-    weight  = 100
-    port    = 0
-    private = false
+locals {
+  group0 = [
+    {
+      "record" = "1.1.1.1"
+      "port"   = 80
+      "weight" = 30
+    }, {
+      "record" = "2.2.2.2"
+      "port"   = 443
+      "weight" = 70
+    }
+  ]
+}
 
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  zone_id     = tencentcloud_teo_zone.zone.id
+  origin_name = "group0"
+  origin_type = "self"
+  type        = "weight"
+
+  dynamic "record" {
+    for_each = local.group0
+    content {
+      record = record.value["record"]
+      port   = record.value["port"]
+      weight = record.value["weight"]
+      area   = []
+    }
   }
-  zone_id     = "zone-27mypfc1vr7d"
-  origin_type = "cos"
 }
 
 `

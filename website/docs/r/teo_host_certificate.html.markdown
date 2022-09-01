@@ -14,9 +14,9 @@ Provides a resource to create a teo hostCertificate
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_host_certificate" "vstest_sfurnace_work" {
-  zone_id = tencentcloud_teo_zone.sfurnace_work.id
-  host    = tencentcloud_teo_dns_record.vstest_sfurnace_work.name
+resource "tencentcloud_teo_host_certificate" "host_certificate" {
+  zone_id = tencentcloud_teo_zone.zone.id
+  host    = tencentcloud_teo_dns_record.dns_record.name
 
   cert_info {
     cert_id = "yqWPPbs7"
@@ -50,6 +50,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo hostCertificate can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_host_certificate.hostCertificate hostCertificate_id
+$ terraform import tencentcloud_teo_host_certificate.host_certificate zoneId#host
 ```
 
