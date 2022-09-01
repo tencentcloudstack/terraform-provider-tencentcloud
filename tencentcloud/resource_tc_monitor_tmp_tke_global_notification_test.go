@@ -94,7 +94,7 @@ resource "tencentcloud_monitor_tmp_tke_global_notification" "basic" {
  notification {
 	enabled   	  		 = true
 	type      	  		 = "webhook"
-	alert_manager		 = {
+	alert_manager		   {
      "cluster_id"   = ""
      "cluster_type" = ""
      "url"          = ""
