@@ -56,6 +56,7 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Site ID.",
 			},
 
@@ -97,12 +98,6 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Schedules domain names, Note: This field may return null, indicating that no valid value can be obtained.",
-			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
 			},
 		},
 	}
@@ -164,15 +159,6 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 
 	loadBalancingId := *response.Response.LoadBalancingId
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, loadBalancingId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	d.SetId(zoneId + "#" + loadBalancingId)
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)
 }
@@ -236,14 +222,6 @@ func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta inter
 		_ = d.Set("cname", loadBalancing.Cname)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -252,15 +230,10 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifyLoadBalancingRequest()
 
 	request.ZoneId = helper.String(d.Id())
-
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
-	}
 
 	if d.HasChange("host") {
 		return fmt.Errorf("`host` do not support change now.")
@@ -301,17 +274,6 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 
 	if err != nil {
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)

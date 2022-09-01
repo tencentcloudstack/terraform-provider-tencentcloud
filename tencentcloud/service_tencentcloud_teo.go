@@ -69,7 +69,7 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
-func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, dnsRecordId string) (dnsRecord *teo.DnsRecord, errRet error) {
+func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name string) (dnsRecord *teo.DnsRecord, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnsRecordsRequest()
@@ -87,7 +87,7 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, dnsRecor
 		request.Filters,
 		&teo.DnsRecordFilter{
 			Name:   helper.String("name"),
-			Values: []*string{&dnsRecordId},
+			Values: []*string{&name},
 		},
 	)
 	ratelimit.Check(request.GetAction())

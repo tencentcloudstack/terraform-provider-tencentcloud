@@ -33,8 +33,7 @@ The following arguments are supported:
 * `host` - (Required, String) Subdomain name. You can use @ to represent the root domain.
 * `origin_id` - (Required, Set: [`String`]) ID of the origin group used.
 * `type` - (Required, String) Proxy mode. Valid values: dns_only: Only DNS, proxied: Enable proxy.
-* `zone_id` - (Required, String) Site ID.
-* `tags` - (Optional, Map) Tag description list.
+* `zone_id` - (Required, String, ForceNew) Site ID.
 * `ttl` - (Optional, Int) Indicates DNS TTL time when Type=dns_only.
 
 ## Attributes Reference
