@@ -1,0 +1,36 @@
+github_actions:
+  - '.github/*.yml'
+  - '.github/workflows/*.yml'
+
+tests:
+  - any: ['tencentcloud/*_test.go']
+    all: ['!tencentcloud/basic_test.go', '!tencentcloud/commom_test.go']
+  
+depend:
+  - 'go.mod'
+
+datasource:
+  - any: ['tencentcloud/data_source*.go']
+    all: ['!tencentcloud/data_source*_test.go']
+ 
+resource:
+  - any: ['tencentcloud/resource*.go']
+    all: ['!tencentcloud/resource*_test.go']
+ 
+service:
+  - 'tencentcloud/service_*.go'
+  
+extension:
+  - 'tencentcloud/extension_*.go'
+  
+basic:
+  - 'tencentcloud/basic_test.go'
+  - 'tencentcloud/commom_test.go.go'
+  - 'tencentcloud/common.go'
+
+doc:
+  - 'website/**/*'
+  - 'README.md'
+
+trigger_label_event:
+  - '*'
