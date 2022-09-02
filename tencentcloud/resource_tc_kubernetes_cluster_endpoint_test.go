@@ -62,7 +62,31 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + TkeDefaultNodeInstanceVar + defaultImages + defaultSecurityGroupData + `
+const testAccTkeClusterEndpointNewSG = `
+resource "tencentcloud_security_group" "foo" {
+  name = "test-endpoint"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+
+  ingress = [
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
+locals {
+  new_sg = tencentcloud_security_group_lite_rule.foo.id
+}
+
+`
+
+const testAccTkeClusterEndpointBasicDeps = TkeCIDRs +
+	TkeDataSource +
+	TkeDefaultNodeInstanceVar +
+	defaultImages +
+	defaultSecurityGroupData +
+	testAccTkeClusterEndpointNewSG + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -149,25 +173,6 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
 	tencentcloud_kubernetes_node_pool.np_test
   ]
 }
-`
-
-const testAccTkeClusterEndpointNewSG = `
-resource "tencentcloud_security_group" "foo" {
-  name = "test-endpoint"
-}
-
-resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
-
-  ingress = [
-    "DROP#0.0.0.0#ALL#ALL",
-  ]
-}
-
-locals {
-  new_sg = tencentcloud_security_group_lite_rule.foo.id
-}
-
 `
 
 const testAccTkeClusterEndpointBasicUpdate = testAccTkeClusterEndpointBasicDeps + `
