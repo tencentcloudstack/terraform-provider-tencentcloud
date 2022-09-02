@@ -256,14 +256,23 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := TkeService{client}
 	id := d.Id()
+	clusterInternet := d.Get("cluster_internet").(bool)
+	clusterInternetSecurityGroup := d.Get("cluster_internet_security_group").(string)
 
 	var (
 		err error
 	)
 
+	if d.HasChange("cluster_internet_security_group") && !d.HasChange("cluster_internet") {
+		if clusterInternet {
+			err := service.ModifyClusterEndpointSG(ctx, id, clusterInternetSecurityGroup)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if d.HasChange("cluster_internet") {
-		clusterInternet := d.Get("cluster_internet").(bool)
-		clusterInternetSecurityGroup := d.Get("cluster_internet_security_group").(string)
 		err = tencentCloudClusterInternetSwitch(ctx, &service, id, clusterInternet, clusterInternetSecurityGroup)
 		if err != nil {
 			return err
