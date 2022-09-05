@@ -39,6 +39,7 @@ In addition to all arguments above, the following attributes are exported:
   * `domain` - Primary domain of the SSL certificate.
   * `end_time` - Ending time of the SSL certificate.
   * `id` - ID of the SSL certificate.
+  * `key` - Key of the SSL certificate.
   * `name` - Name of the SSL certificate.
   * `product_zh_name` - Certificate authority.
   * `project_id` - Project ID of the SSL certificate.

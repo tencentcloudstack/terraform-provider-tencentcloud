@@ -80,11 +80,11 @@ func dataSourceTencentCloudSslCertificates() *schema.Resource {
 							Computed:    true,
 							Description: "Content of the SSL certificate.",
 						},
-						// "key": {
-						// 	Type:        schema.TypeString,
-						// 	Computed:    true,
-						// 	Description: "Key of the SSL certificate.",
-						// },
+						"key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Key of the SSL certificate.",
+						},
 						"product_zh_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
