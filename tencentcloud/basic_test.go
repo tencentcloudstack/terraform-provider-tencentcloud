@@ -302,9 +302,14 @@ data "tencentcloud_security_groups" "internal" {
   tags = var.fixed_tags
 }
 
+data "tencentcloud_security_groups" "exclusive" {
+  name = "test_preset_sg"
+}
+
 locals {
   # local.sg_id
   sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+  sg_id2 = data.tencentcloud_security_groups.exclusive.security_groups.0.security_group_id
 }
 `
 

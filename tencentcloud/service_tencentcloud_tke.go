@@ -908,6 +908,27 @@ func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, se
 	return
 }
 
+func (me *TkeService) ModifyClusterEndpointSG(ctx context.Context, id string, securityGroup string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterEndpointSPRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.SecurityGroup = &securityGroup
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().ModifyClusterEndpointSP(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
 func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, projectId int64, clusterName, clusterDesc, clusterLevel string, autoUpgradeClusterLevel bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewModifyClusterAttributeRequest()

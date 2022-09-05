@@ -46,6 +46,14 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "true"),
+				),
+			},
+			{
+				Config: testAccTkeClusterEndpointBasicUpdate2,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_intranet", "true"),
 				),
@@ -54,7 +62,31 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + TkeDefaultNodeInstanceVar + defaultImages + defaultSecurityGroupData + `
+const testAccTkeClusterEndpointNewSG = `
+resource "tencentcloud_security_group" "foo" {
+  name = "test-endpoint"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+
+  ingress = [
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
+locals {
+  new_sg = tencentcloud_security_group_lite_rule.foo.id
+}
+
+`
+
+const testAccTkeClusterEndpointBasicDeps = TkeCIDRs +
+	TkeDataSource +
+	TkeDefaultNodeInstanceVar +
+	defaultImages +
+	defaultSecurityGroupData +
+	testAccTkeClusterEndpointNewSG + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -146,9 +178,22 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
 const testAccTkeClusterEndpointBasicUpdate = testAccTkeClusterEndpointBasicDeps + `
 resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = local.new_cluster_id
+  cluster_internet = true
+  cluster_intranet = true
+  cluster_internet_security_group = local.new_sg
+  cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
+  depends_on = [
+	tencentcloud_kubernetes_node_pool.np_test
+  ]
+}
+`
+
+const testAccTkeClusterEndpointBasicUpdate2 = testAccTkeClusterEndpointBasicDeps + `
+resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
+  cluster_id = local.new_cluster_id
   cluster_internet = false
   cluster_intranet = true
-  cluster_internet_security_group = local.sg_id
+  cluster_internet_security_group = local.new_sg
   cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
   depends_on = [
 	tencentcloud_kubernetes_node_pool.np_test
