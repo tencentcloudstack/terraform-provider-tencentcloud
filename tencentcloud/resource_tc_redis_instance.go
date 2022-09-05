@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a Redis instance and set its attributes.
 
+~> **NOTE:** Both adding and removing replications in one change is supported but not recommend.
+
 Example Usage
 
 ```hcl
@@ -124,12 +126,12 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "The number of instance copies. This is not required for standalone and master slave versions.",
+				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions.",
+				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
 			"type": {
@@ -261,6 +263,30 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 				Default:      0,
 				Description:  "Auto-renew flag. 0 - default state (manual renewal); 1 - automatic renewal; 2 - explicit no automatic renewal.",
+			},
+			"node_info": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Readonly Primary/Replica nodes.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"master": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether the node is master.",
+						},
+						"id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the master or replica node.",
+						},
+						"zone_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the availability zone of the master or replica node.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -448,19 +474,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
 	var redisId = *instanceIds[0]
-	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, _, err := redisService.CheckRedisOnlineOk(ctx, redisId)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if !has {
-			return resource.NonRetryableError(fmt.Errorf("redis instance not exists."))
-		}
-		if online {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("create redis task is processing"))
-	})
+	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
@@ -493,7 +507,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		e    error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id())
+		has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id(), readRetryTimeout*20)
 		if info != nil {
 			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
 				d.SetId("")
@@ -581,20 +595,28 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	if info.NodeSet != nil {
 		var zoneIds []int
+		var nodeInfos []interface{}
 		for i := range info.NodeSet {
 			nodeInfo := info.NodeSet[i]
+			nodeInfos = append(nodeInfos, map[string]interface{}{
+				"master":  *nodeInfo.NodeType == 0,
+				"zone_id": *nodeInfo.ZoneId,
+				"id":      *nodeInfo.NodeId,
+			})
 			if *nodeInfo.NodeType == 0 {
 				continue
 			}
 			zoneIds = append(zoneIds, int(*nodeInfo.ZoneId))
 		}
 
+		_ = d.Set("node_info", nodeInfos)
+
 		var zoneIdsEqual = false
 
-		raw, ok := d.GetOk("replica_zone_ids")
-		if ok {
-			oldIds := helper.InterfacesIntegers(raw.([]interface{}))
-			zoneIdsEqual = checkZoneIdsEqual(oldIds, zoneIds)
+		replicaZones, replicaZonesOk := d.GetOk("replica_zone_ids")
+		if replicaZonesOk {
+			oldIds := helper.InterfacesIntegers(replicaZones.([]interface{}))
+			zoneIdsEqual = checkIdsEqual(oldIds, zoneIds)
 		}
 
 		if !zoneIdsEqual {
@@ -667,46 +689,21 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
 		}
 
-		_, err := redisService.UpgradeInstance(ctx, id, newMemSize, redisShardNum, redisReplicasNum, nil)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := redisService.UpgradeInstance(ctx, id, newMemSize, redisShardNum, redisReplicasNum, nil)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
 
 		if err != nil {
 			log.Printf("[CRITAL]%s redis upgrade instance error, reason:%s\n", logId, err.Error())
 			return err
 		}
 
-		startUpdate := false
-
-		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
-			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
-
-			if info != nil {
-				status := REDIS_STATUS[*info.Status]
-				if status == "" {
-					return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is unknown ,status=%d", *info.Status))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE && !startUpdate {
-					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE && startUpdate {
-					return nil
-				}
-				startUpdate = true
-
-				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
-					return resource.RetryableError(fmt.Errorf("redis update processing."))
-				}
-				return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is %s", status))
-			}
-
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-			return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis disappear"))
-		})
+		err = redisService.CheckRedisUpdateOk(ctx, id)
 
 		if err != nil {
 			log.Printf("[CRITAL]%s redis update mem size fail , reason:%s\n", logId, err.Error())
@@ -734,39 +731,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		startUpdate := false
-
-		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
-			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
-
-			if info != nil {
-				status := REDIS_STATUS[*info.Status]
-				if status == "" {
-					return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis status is unknown ,status=%d", *info.Status))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE && !startUpdate {
-					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE && startUpdate {
-					return nil
-				}
-				startUpdate = true
-
-				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
-					return resource.RetryableError(fmt.Errorf("redis update processing."))
-				}
-				return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis status is %s", status))
-			}
-
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-			return resource.NonRetryableError(fmt.Errorf("after update redis shard num, redis disappear"))
-		})
+		err = redisService.CheckRedisUpdateOk(ctx, id)
 
 		if err != nil {
 			log.Printf("[CRITAL]%s redis update shard num fail , reason:%s\n", logId, err.Error())
@@ -774,81 +739,11 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
 	if d.HasChange("redis_replicas_num") || d.HasChange("replica_zone_ids") {
-		//availabilityZone := d.Get("availability_zone").(string)
-		o, n := d.GetChange("replica_zone_ids") // Only pass zone id increments
-		ov := helper.InterfacesIntegers(o.([]interface{}))
-		nv := helper.InterfacesIntegers(n.([]interface{}))
-		zoneIds, err := GetListIncrement(ov, nv)
-
-		if err != nil {
-			return fmt.Errorf("get diff replica error: %s", err.Error())
-		}
-
-		var nodeInfo []*redis.RedisNodeInfo
-
-		for _, id := range zoneIds {
-			nodeInfo = append(nodeInfo, &redis.RedisNodeInfo{
-				NodeType: helper.Int64(1),
-				ZoneId:   helper.IntUint64(id),
-			})
-		}
-		redisReplicasNum := d.Get("redis_replicas_num").(int)
-		memSize := d.Get("mem_size").(int)
-		redisShardNum := d.Get("redis_shard_num").(int)
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			_, err = redisService.UpgradeInstance(ctx, id, memSize, redisShardNum, redisReplicasNum, nodeInfo)
-			if err != nil {
-				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
-				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
-			}
-			return nil
-		})
-
+		err := resourceRedisNodeSetModify(ctx, &redisService, d)
 		if err != nil {
 			return err
 		}
-
-		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
-			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, id)
-
-			if info != nil {
-				status := REDIS_STATUS[*info.Status]
-				if status == "" {
-					return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis status is unknown ,status=%d", *info.Status))
-				}
-				actualNodeCount := len(info.NodeSet)
-				expectedNodeCount := len(nv) + 1
-				// wait until node set as expected or will cause status inconsistent
-				if *info.Status == REDIS_STATUS_ONLINE && actualNodeCount != expectedNodeCount {
-					return resource.RetryableError(fmt.Errorf("waiting for status change to proccessing"))
-				}
-				if *info.Status == REDIS_STATUS_ONLINE && actualNodeCount == expectedNodeCount {
-					return nil
-				}
-				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
-					return resource.RetryableError(fmt.Errorf("redis update processing."))
-				}
-
-				return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis status is %s", status))
-			}
-
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-			return resource.NonRetryableError(fmt.Errorf("after update redis replicas, redis disappear"))
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s redis update replicas fail , reason:%s\n", logId, err.Error())
-			return err
-		}
-
 	}
 
 	if d.HasChange("password") {
@@ -932,26 +827,18 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 
 	// Collect infos before deleting action
 	var chargeType string
-	errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, info, err := service.CheckRedisOnlineOk(ctx, d.Id())
-		if err != nil {
-			log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
-			return resource.NonRetryableError(err)
-		}
-		if !has {
-			return nil
-		}
-		if online {
-			chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
-		}
-	})
-	if errQuery != nil {
-		log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errQuery.Error())
-		return errQuery
+	has, _, info, err := service.CheckRedisOnlineOk(ctx, d.Id(), 20*readRetryTimeout)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, err.Error())
+		return err
 	}
+
+	if !has {
+		return nil
+	}
+
+	chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
 
 	var wait = func(action string, taskInfo interface{}) (errRet error) {
 
@@ -973,9 +860,8 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			}
 			if ok {
 				return nil
-			} else {
-				return resource.RetryableError(fmt.Errorf("%s timeout.", action))
 			}
+			return resource.RetryableError(fmt.Errorf("%s timeout.", action))
 		})
 
 		if errRet != nil {
@@ -1027,12 +913,11 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		}
 
 		return wait("CleanUpInstance", taskId)
-	} else {
-		return nil
 	}
+	return nil
 }
 
-func checkZoneIdsEqual(o []int, n []int) bool {
+func checkIdsEqual(o []int, n []int) bool {
 	if len(o) != len(n) {
 		return false
 	}
@@ -1046,4 +931,95 @@ func checkZoneIdsEqual(o []int, n []int) bool {
 		}
 	}
 	return true
+}
+
+func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *schema.ResourceData) error {
+	id := d.Id()
+	memSize := d.Get("mem_size").(int)
+	shardNum := d.Get("redis_shard_num").(int)
+	o, n := d.GetChange("replica_zone_ids")
+	oz := helper.InterfacesIntegers(o.([]interface{}))
+	nz := helper.InterfacesIntegers(n.([]interface{}))
+	log.Printf("o = %v, n = %v", oz, nz)
+	adds, lacks := GetListDiffs(oz, nz)
+
+	var redisNodeInfos []*redis.RedisNodeInfo
+
+	if len(adds) > 0 {
+		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+		if err != nil {
+			return err
+		}
+		redisNodeInfos = info.NodeSet
+		redisReplicaCount := len(redisNodeInfos) - 1
+
+		log.Printf("%v will be add", adds)
+		var addNodes []*redis.RedisNodeInfo
+		for _, zoneId := range adds {
+			addNodes = append(addNodes, &redis.RedisNodeInfo{
+				NodeType: helper.IntInt64(1),
+				ZoneId:   helper.IntUint64(zoneId),
+			})
+		}
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, d.Id(), memSize, shardNum, redisReplicaCount+len(adds), addNodes)
+			if err != nil {
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(lacks) > 0 {
+		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+		if err != nil {
+			return err
+		}
+		redisNodeInfos = info.NodeSet
+		redisReplicaCount := len(redisNodeInfos) - 1
+		removeNodes := tencentCloudRedisGetRemoveNodesByIds(lacks[:], redisNodeInfos)
+		replicasParam := redisReplicaCount - len(lacks)
+		if replicasParam <= 0 {
+			return fmt.Errorf("cannot delete replica %d which is your only replica on instance %s", removeNodes[0].NodeId, id)
+		}
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, replicasParam, removeNodes)
+			if err != nil {
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func tencentCloudRedisGetRemoveNodesByIds(ids []int, nodes []*redis.RedisNodeInfo) (result []*redis.RedisNodeInfo) {
+	for i := range nodes {
+		node := nodes[i]
+		if *node.NodeType == 0 {
+			continue
+		}
+		index := FindIntListIndex(ids, int(*node.ZoneId))
+		if index == -1 {
+			continue
+		}
+		result = append(result, node)
+		ids = append(ids[:index], ids[index+1:]...)
+	}
+	return
 }

@@ -16,6 +16,7 @@ package v20190107
 
 import (
     "context"
+    "errors"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -48,6 +49,7 @@ func NewActivateInstanceRequest() (request *ActivateInstanceRequest) {
     request = &ActivateInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ActivateInstance")
     
     
@@ -73,17 +75,12 @@ func NewActivateInstanceResponse() (response *ActivateInstanceResponse) {
 //  INVALIDPARAMETERVALUE_PREPAYPAYMODEERROR = "InvalidParameterValue.PrePayPayModeError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ActivateInstance(request *ActivateInstanceRequest) (response *ActivateInstanceResponse, err error) {
-    if request == nil {
-        request = NewActivateInstanceRequest()
-    }
-    
-    response = NewActivateInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.ActivateInstanceWithContext(context.Background(), request)
 }
 
 // ActivateInstance
@@ -98,6 +95,7 @@ func (c *Client) ActivateInstance(request *ActivateInstanceRequest) (response *A
 //  INVALIDPARAMETERVALUE_PREPAYPAYMODEERROR = "InvalidParameterValue.PrePayPayModeError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -105,9 +103,72 @@ func (c *Client) ActivateInstanceWithContext(ctx context.Context, request *Activ
     if request == nil {
         request = NewActivateInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ActivateInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewActivateInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddClusterSlaveZoneRequest() (request *AddClusterSlaveZoneRequest) {
+    request = &AddClusterSlaveZoneRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "AddClusterSlaveZone")
+    
+    
+    return
+}
+
+func NewAddClusterSlaveZoneResponse() (response *AddClusterSlaveZoneResponse) {
+    response = &AddClusterSlaveZoneResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// AddClusterSlaveZone
+// 增加从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) AddClusterSlaveZone(request *AddClusterSlaveZoneRequest) (response *AddClusterSlaveZoneResponse, err error) {
+    return c.AddClusterSlaveZoneWithContext(context.Background(), request)
+}
+
+// AddClusterSlaveZone
+// 增加从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) AddClusterSlaveZoneWithContext(ctx context.Context, request *AddClusterSlaveZoneRequest) (response *AddClusterSlaveZoneResponse, err error) {
+    if request == nil {
+        request = NewAddClusterSlaveZoneRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddClusterSlaveZone require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddClusterSlaveZoneResponse()
     err = c.Send(request, response)
     return
 }
@@ -116,6 +177,7 @@ func NewAddInstancesRequest() (request *AddInstancesRequest) {
     request = &AddInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "AddInstances")
     
     
@@ -139,8 +201,10 @@ func NewAddInstancesResponse() (response *AddInstancesResponse) {
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
@@ -154,13 +218,7 @@ func NewAddInstancesResponse() (response *AddInstancesResponse) {
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) AddInstances(request *AddInstancesRequest) (response *AddInstancesResponse, err error) {
-    if request == nil {
-        request = NewAddInstancesRequest()
-    }
-    
-    response = NewAddInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.AddInstancesWithContext(context.Background(), request)
 }
 
 // AddInstances
@@ -173,8 +231,10 @@ func (c *Client) AddInstances(request *AddInstancesRequest) (response *AddInstan
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
@@ -191,6 +251,11 @@ func (c *Client) AddInstancesWithContext(ctx context.Context, request *AddInstan
     if request == nil {
         request = NewAddInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewAddInstancesResponse()
@@ -202,6 +267,7 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
     request = &AssociateSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "AssociateSecurityGroups")
     
     
@@ -222,16 +288,11 @@ func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResp
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
-    if request == nil {
-        request = NewAssociateSecurityGroupsRequest()
-    }
-    
-    response = NewAssociateSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.AssociateSecurityGroupsWithContext(context.Background(), request)
 }
 
 // AssociateSecurityGroups
@@ -241,15 +302,141 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateSecurityGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewAssociateSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAccountsRequest() (request *CreateAccountsRequest) {
+    request = &CreateAccountsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CreateAccounts")
+    
+    
+    return
+}
+
+func NewCreateAccountsResponse() (response *CreateAccountsResponse) {
+    response = &CreateAccountsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateAccounts
+// 创建账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAccounts(request *CreateAccountsRequest) (response *CreateAccountsResponse, err error) {
+    return c.CreateAccountsWithContext(context.Background(), request)
+}
+
+// CreateAccounts
+// 创建账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAccountsWithContext(ctx context.Context, request *CreateAccountsRequest) (response *CreateAccountsResponse, err error) {
+    if request == nil {
+        request = NewCreateAccountsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAccounts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAccountsResponse()
     err = c.Send(request, response)
     return
 }
@@ -258,6 +445,7 @@ func NewCreateClustersRequest() (request *CreateClustersRequest) {
     request = &CreateClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "CreateClusters")
     
     
@@ -277,6 +465,8 @@ func NewCreateClustersResponse() (response *CreateClustersResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -298,13 +488,7 @@ func NewCreateClustersResponse() (response *CreateClustersResponse) {
 //  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreateClusters(request *CreateClustersRequest) (response *CreateClustersResponse, err error) {
-    if request == nil {
-        request = NewCreateClustersRequest()
-    }
-    
-    response = NewCreateClustersResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateClustersWithContext(context.Background(), request)
 }
 
 // CreateClusters
@@ -313,6 +497,8 @@ func (c *Client) CreateClusters(request *CreateClustersRequest) (response *Creat
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -337,6 +523,11 @@ func (c *Client) CreateClustersWithContext(ctx context.Context, request *CreateC
     if request == nil {
         request = NewCreateClustersRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateClusters require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateClustersResponse()
@@ -348,6 +539,7 @@ func NewDescribeAccountAllGrantPrivilegesRequest() (request *DescribeAccountAllG
     request = &DescribeAccountAllGrantPrivilegesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAccountAllGrantPrivileges")
     
     
@@ -401,13 +593,7 @@ func NewDescribeAccountAllGrantPrivilegesResponse() (response *DescribeAccountAl
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAccountAllGrantPrivileges(request *DescribeAccountAllGrantPrivilegesRequest) (response *DescribeAccountAllGrantPrivilegesResponse, err error) {
-    if request == nil {
-        request = NewDescribeAccountAllGrantPrivilegesRequest()
-    }
-    
-    response = NewDescribeAccountAllGrantPrivilegesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeAccountAllGrantPrivilegesWithContext(context.Background(), request)
 }
 
 // DescribeAccountAllGrantPrivileges
@@ -453,6 +639,11 @@ func (c *Client) DescribeAccountAllGrantPrivilegesWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeAccountAllGrantPrivilegesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAccountAllGrantPrivileges require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeAccountAllGrantPrivilegesResponse()
@@ -464,6 +655,7 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
     request = &DescribeAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAccounts")
     
     
@@ -486,17 +678,12 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *DescribeAccountsResponse, err error) {
-    if request == nil {
-        request = NewDescribeAccountsRequest()
-    }
-    
-    response = NewDescribeAccountsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeAccountsWithContext(context.Background(), request)
 }
 
 // DescribeAccounts
@@ -508,6 +695,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -515,6 +703,11 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeAccountsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAccounts require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeAccountsResponse()
@@ -526,6 +719,7 @@ func NewDescribeBackupConfigRequest() (request *DescribeBackupConfigRequest) {
     request = &DescribeBackupConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBackupConfig")
     
     
@@ -552,13 +746,7 @@ func NewDescribeBackupConfigResponse() (response *DescribeBackupConfigResponse) 
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeBackupConfig(request *DescribeBackupConfigRequest) (response *DescribeBackupConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeBackupConfigRequest()
-    }
-    
-    response = NewDescribeBackupConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeBackupConfigWithContext(context.Background(), request)
 }
 
 // DescribeBackupConfig
@@ -577,9 +765,66 @@ func (c *Client) DescribeBackupConfigWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeBackupConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeBackupConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupDownloadUrlRequest() (request *DescribeBackupDownloadUrlRequest) {
+    request = &DescribeBackupDownloadUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBackupDownloadUrl")
+    
+    
+    return
+}
+
+func NewDescribeBackupDownloadUrlResponse() (response *DescribeBackupDownloadUrlResponse) {
+    response = &DescribeBackupDownloadUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupDownloadUrl
+// 此接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBackupDownloadUrl(request *DescribeBackupDownloadUrlRequest) (response *DescribeBackupDownloadUrlResponse, err error) {
+    return c.DescribeBackupDownloadUrlWithContext(context.Background(), request)
+}
+
+// DescribeBackupDownloadUrl
+// 此接口（DescribeBackupDownloadUrl）用于查询集群备份文件下载地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBackupDownloadUrlWithContext(ctx context.Context, request *DescribeBackupDownloadUrlRequest) (response *DescribeBackupDownloadUrlResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupDownloadUrlRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupDownloadUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupDownloadUrlResponse()
     err = c.Send(request, response)
     return
 }
@@ -588,6 +833,7 @@ func NewDescribeBackupListRequest() (request *DescribeBackupListRequest) {
     request = &DescribeBackupListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBackupList")
     
     
@@ -614,13 +860,7 @@ func NewDescribeBackupListResponse() (response *DescribeBackupListResponse) {
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeBackupList(request *DescribeBackupListRequest) (response *DescribeBackupListResponse, err error) {
-    if request == nil {
-        request = NewDescribeBackupListRequest()
-    }
-    
-    response = NewDescribeBackupListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeBackupListWithContext(context.Background(), request)
 }
 
 // DescribeBackupList
@@ -639,9 +879,176 @@ func (c *Client) DescribeBackupListWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeBackupListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeBackupListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBinlogDownloadUrlRequest() (request *DescribeBinlogDownloadUrlRequest) {
+    request = &DescribeBinlogDownloadUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBinlogDownloadUrl")
+    
+    
+    return
+}
+
+func NewDescribeBinlogDownloadUrlResponse() (response *DescribeBinlogDownloadUrlResponse) {
+    response = &DescribeBinlogDownloadUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBinlogDownloadUrl
+// 此接口（DescribeBinlogDownloadUrl）用于查询Binlog的下载地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogDownloadUrl(request *DescribeBinlogDownloadUrlRequest) (response *DescribeBinlogDownloadUrlResponse, err error) {
+    return c.DescribeBinlogDownloadUrlWithContext(context.Background(), request)
+}
+
+// DescribeBinlogDownloadUrl
+// 此接口（DescribeBinlogDownloadUrl）用于查询Binlog的下载地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogDownloadUrlWithContext(ctx context.Context, request *DescribeBinlogDownloadUrlRequest) (response *DescribeBinlogDownloadUrlResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogDownloadUrlRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBinlogDownloadUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBinlogDownloadUrlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBinlogSaveDaysRequest() (request *DescribeBinlogSaveDaysRequest) {
+    request = &DescribeBinlogSaveDaysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBinlogSaveDays")
+    
+    
+    return
+}
+
+func NewDescribeBinlogSaveDaysResponse() (response *DescribeBinlogSaveDaysResponse) {
+    response = &DescribeBinlogSaveDaysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBinlogSaveDays
+// 此接口（DescribeBinlogSaveDays）用于查询集群的Binlog保留天数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogSaveDays(request *DescribeBinlogSaveDaysRequest) (response *DescribeBinlogSaveDaysResponse, err error) {
+    return c.DescribeBinlogSaveDaysWithContext(context.Background(), request)
+}
+
+// DescribeBinlogSaveDays
+// 此接口（DescribeBinlogSaveDays）用于查询集群的Binlog保留天数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogSaveDaysWithContext(ctx context.Context, request *DescribeBinlogSaveDaysRequest) (response *DescribeBinlogSaveDaysResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogSaveDaysRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBinlogSaveDays require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBinlogSaveDaysResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBinlogsRequest() (request *DescribeBinlogsRequest) {
+    request = &DescribeBinlogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeBinlogs")
+    
+    
+    return
+}
+
+func NewDescribeBinlogsResponse() (response *DescribeBinlogsResponse) {
+    response = &DescribeBinlogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBinlogs
+// 此接口（DescribeBinlogs）用来查询集群Binlog日志列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogs(request *DescribeBinlogsRequest) (response *DescribeBinlogsResponse, err error) {
+    return c.DescribeBinlogsWithContext(context.Background(), request)
+}
+
+// DescribeBinlogs
+// 此接口（DescribeBinlogs）用来查询集群Binlog日志列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogsWithContext(ctx context.Context, request *DescribeBinlogsRequest) (response *DescribeBinlogsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBinlogs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBinlogsResponse()
     err = c.Send(request, response)
     return
 }
@@ -650,6 +1057,7 @@ func NewDescribeClusterDetailRequest() (request *DescribeClusterDetailRequest) {
     request = &DescribeClusterDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterDetail")
     
     
@@ -672,22 +1080,18 @@ func NewDescribeClusterDetailResponse() (response *DescribeClusterDetailResponse
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  OPERATIONDENIED_VERSIONNOTSUPPORTERROR = "OperationDenied.VersionNotSupportError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterDetail(request *DescribeClusterDetailRequest) (response *DescribeClusterDetailResponse, err error) {
-    if request == nil {
-        request = NewDescribeClusterDetailRequest()
-    }
-    
-    response = NewDescribeClusterDetailResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeClusterDetailWithContext(context.Background(), request)
 }
 
 // DescribeClusterDetail
@@ -699,18 +1103,25 @@ func (c *Client) DescribeClusterDetail(request *DescribeClusterDetailRequest) (r
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  OPERATIONDENIED_VERSIONNOTSUPPORTERROR = "OperationDenied.VersionNotSupportError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterDetailWithContext(ctx context.Context, request *DescribeClusterDetailRequest) (response *DescribeClusterDetailResponse, err error) {
     if request == nil {
         request = NewDescribeClusterDetailRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterDetail require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeClusterDetailResponse()
@@ -722,6 +1133,7 @@ func NewDescribeClusterInstanceGrpsRequest() (request *DescribeClusterInstanceGr
     request = &DescribeClusterInstanceGrpsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterInstanceGrps")
     
     
@@ -742,16 +1154,11 @@ func NewDescribeClusterInstanceGrpsResponse() (response *DescribeClusterInstance
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterInstanceGrps(request *DescribeClusterInstanceGrpsRequest) (response *DescribeClusterInstanceGrpsResponse, err error) {
-    if request == nil {
-        request = NewDescribeClusterInstanceGrpsRequest()
-    }
-    
-    response = NewDescribeClusterInstanceGrpsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeClusterInstanceGrpsWithContext(context.Background(), request)
 }
 
 // DescribeClusterInstanceGrps
@@ -761,12 +1168,18 @@ func (c *Client) DescribeClusterInstanceGrps(request *DescribeClusterInstanceGrp
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterInstanceGrpsWithContext(ctx context.Context, request *DescribeClusterInstanceGrpsRequest) (response *DescribeClusterInstanceGrpsResponse, err error) {
     if request == nil {
         request = NewDescribeClusterInstanceGrpsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterInstanceGrps require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeClusterInstanceGrpsResponse()
@@ -778,6 +1191,7 @@ func NewDescribeClusterParamLogsRequest() (request *DescribeClusterParamLogsRequ
     request = &DescribeClusterParamLogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterParamLogs")
     
     
@@ -799,15 +1213,10 @@ func NewDescribeClusterParamLogsResponse() (response *DescribeClusterParamLogsRe
 //  FAILEDOPERATION_FLOWNOTFOUNDERROR = "FailedOperation.FlowNotFoundError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterParamLogs(request *DescribeClusterParamLogsRequest) (response *DescribeClusterParamLogsResponse, err error) {
-    if request == nil {
-        request = NewDescribeClusterParamLogsRequest()
-    }
-    
-    response = NewDescribeClusterParamLogsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeClusterParamLogsWithContext(context.Background(), request)
 }
 
 // DescribeClusterParamLogs
@@ -818,14 +1227,86 @@ func (c *Client) DescribeClusterParamLogs(request *DescribeClusterParamLogsReque
 //  FAILEDOPERATION_FLOWNOTFOUNDERROR = "FailedOperation.FlowNotFoundError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusterParamLogsWithContext(ctx context.Context, request *DescribeClusterParamLogsRequest) (response *DescribeClusterParamLogsResponse, err error) {
     if request == nil {
         request = NewDescribeClusterParamLogsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterParamLogs require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeClusterParamLogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterParamsRequest() (request *DescribeClusterParamsRequest) {
+    request = &DescribeClusterParamsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterParams")
+    
+    
+    return
+}
+
+func NewDescribeClusterParamsResponse() (response *DescribeClusterParamsResponse) {
+    response = &DescribeClusterParamsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClusterParams
+// 本接口（DescribeClusterParams）用于查询集群参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterParams(request *DescribeClusterParamsRequest) (response *DescribeClusterParamsResponse, err error) {
+    return c.DescribeClusterParamsWithContext(context.Background(), request)
+}
+
+// DescribeClusterParams
+// 本接口（DescribeClusterParams）用于查询集群参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterParamsWithContext(ctx context.Context, request *DescribeClusterParamsRequest) (response *DescribeClusterParamsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterParamsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterParams require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterParamsResponse()
     err = c.Send(request, response)
     return
 }
@@ -834,6 +1315,7 @@ func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
     request = &DescribeClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusters")
     
     
@@ -860,13 +1342,7 @@ func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
 //  INVALIDPARAMETERVALUE_PARAMBOTHSETERROR = "InvalidParameterValue.ParamBothSetError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *DescribeClustersResponse, err error) {
-    if request == nil {
-        request = NewDescribeClustersRequest()
-    }
-    
-    response = NewDescribeClustersResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeClustersWithContext(context.Background(), request)
 }
 
 // DescribeClusters
@@ -885,6 +1361,11 @@ func (c *Client) DescribeClustersWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeClustersRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusters require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeClustersResponse()
@@ -896,6 +1377,7 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
     request = &DescribeDBSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeDBSecurityGroups")
     
     
@@ -917,13 +1399,7 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
-    if request == nil {
-        request = NewDescribeDBSecurityGroupsRequest()
-    }
-    
-    response = NewDescribeDBSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDBSecurityGroupsWithContext(context.Background(), request)
 }
 
 // DescribeDBSecurityGroups
@@ -937,6 +1413,11 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBSecurityGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBSecurityGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDBSecurityGroupsResponse()
@@ -948,6 +1429,7 @@ func NewDescribeInstanceDetailRequest() (request *DescribeInstanceDetailRequest)
     request = &DescribeInstanceDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstanceDetail")
     
     
@@ -971,16 +1453,11 @@ func NewDescribeInstanceDetailResponse() (response *DescribeInstanceDetailRespon
 //  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceDetail(request *DescribeInstanceDetailRequest) (response *DescribeInstanceDetailResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceDetailRequest()
-    }
-    
-    response = NewDescribeInstanceDetailResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeInstanceDetailWithContext(context.Background(), request)
 }
 
 // DescribeInstanceDetail
@@ -993,15 +1470,73 @@ func (c *Client) DescribeInstanceDetail(request *DescribeInstanceDetailRequest) 
 //  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceDetailWithContext(ctx context.Context, request *DescribeInstanceDetailRequest) (response *DescribeInstanceDetailResponse, err error) {
     if request == nil {
         request = NewDescribeInstanceDetailRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceDetail require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeInstanceDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceSlowQueriesRequest() (request *DescribeInstanceSlowQueriesRequest) {
+    request = &DescribeInstanceSlowQueriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstanceSlowQueries")
+    
+    
+    return
+}
+
+func NewDescribeInstanceSlowQueriesResponse() (response *DescribeInstanceSlowQueriesResponse) {
+    response = &DescribeInstanceSlowQueriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeInstanceSlowQueries
+// 此接口（DescribeInstanceSlowQueries）用于查询实例慢查询日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceSlowQueries(request *DescribeInstanceSlowQueriesRequest) (response *DescribeInstanceSlowQueriesResponse, err error) {
+    return c.DescribeInstanceSlowQueriesWithContext(context.Background(), request)
+}
+
+// DescribeInstanceSlowQueries
+// 此接口（DescribeInstanceSlowQueries）用于查询实例慢查询日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceSlowQueriesWithContext(ctx context.Context, request *DescribeInstanceSlowQueriesRequest) (response *DescribeInstanceSlowQueriesResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceSlowQueriesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceSlowQueries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceSlowQueriesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1010,6 +1545,7 @@ func NewDescribeInstanceSpecsRequest() (request *DescribeInstanceSpecsRequest) {
     request = &DescribeInstanceSpecsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstanceSpecs")
     
     
@@ -1031,13 +1567,7 @@ func NewDescribeInstanceSpecsResponse() (response *DescribeInstanceSpecsResponse
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstanceSpecs(request *DescribeInstanceSpecsRequest) (response *DescribeInstanceSpecsResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceSpecsRequest()
-    }
-    
-    response = NewDescribeInstanceSpecsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeInstanceSpecsWithContext(context.Background(), request)
 }
 
 // DescribeInstanceSpecs
@@ -1051,6 +1581,11 @@ func (c *Client) DescribeInstanceSpecsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstanceSpecsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceSpecs require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeInstanceSpecsResponse()
@@ -1062,6 +1597,7 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
     request = &DescribeInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeInstances")
     
     
@@ -1092,13 +1628,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstancesRequest()
-    }
-    
-    response = NewDescribeInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeInstancesWithContext(context.Background(), request)
 }
 
 // DescribeInstances
@@ -1121,6 +1651,11 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeInstancesResponse()
@@ -1132,6 +1667,7 @@ func NewDescribeMaintainPeriodRequest() (request *DescribeMaintainPeriodRequest)
     request = &DescribeMaintainPeriodRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeMaintainPeriod")
     
     
@@ -1153,15 +1689,10 @@ func NewDescribeMaintainPeriodResponse() (response *DescribeMaintainPeriodRespon
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeMaintainPeriod(request *DescribeMaintainPeriodRequest) (response *DescribeMaintainPeriodResponse, err error) {
-    if request == nil {
-        request = NewDescribeMaintainPeriodRequest()
-    }
-    
-    response = NewDescribeMaintainPeriodResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeMaintainPeriodWithContext(context.Background(), request)
 }
 
 // DescribeMaintainPeriod
@@ -1172,14 +1703,70 @@ func (c *Client) DescribeMaintainPeriod(request *DescribeMaintainPeriodRequest) 
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeMaintainPeriodWithContext(ctx context.Context, request *DescribeMaintainPeriodRequest) (response *DescribeMaintainPeriodResponse, err error) {
     if request == nil {
         request = NewDescribeMaintainPeriodRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMaintainPeriod require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeMaintainPeriodResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeParamTemplatesRequest() (request *DescribeParamTemplatesRequest) {
+    request = &DescribeParamTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeParamTemplates")
+    
+    
+    return
+}
+
+func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesResponse) {
+    response = &DescribeParamTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeParamTemplates
+// 查询用户指定产品下的所有参数模板信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) (response *DescribeParamTemplatesResponse, err error) {
+    return c.DescribeParamTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeParamTemplates
+// 查询用户指定产品下的所有参数模板信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeParamTemplatesWithContext(ctx context.Context, request *DescribeParamTemplatesRequest) (response *DescribeParamTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeParamTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeParamTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeParamTemplatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1188,6 +1775,7 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
     request = &DescribeProjectSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeProjectSecurityGroups")
     
     
@@ -1210,13 +1798,7 @@ func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecuri
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityGroupsRequest) (response *DescribeProjectSecurityGroupsResponse, err error) {
-    if request == nil {
-        request = NewDescribeProjectSecurityGroupsRequest()
-    }
-    
-    response = NewDescribeProjectSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeProjectSecurityGroupsWithContext(context.Background(), request)
 }
 
 // DescribeProjectSecurityGroups
@@ -1231,6 +1813,11 @@ func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeProjectSecurityGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeProjectSecurityGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeProjectSecurityGroupsResponse()
@@ -1242,6 +1829,7 @@ func NewDescribeResourcesByDealNameRequest() (request *DescribeResourcesByDealNa
     request = &DescribeResourcesByDealNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeResourcesByDealName")
     
     
@@ -1264,15 +1852,10 @@ func NewDescribeResourcesByDealNameResponse() (response *DescribeResourcesByDeal
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_DEALNAMENOTFOUND = "InvalidParameterValue.DealNameNotFound"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_PARAMETEROUTRANGEERROR = "InvalidParameterValue.ParameterOutRangeError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeResourcesByDealName(request *DescribeResourcesByDealNameRequest) (response *DescribeResourcesByDealNameResponse, err error) {
-    if request == nil {
-        request = NewDescribeResourcesByDealNameRequest()
-    }
-    
-    response = NewDescribeResourcesByDealNameResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeResourcesByDealNameWithContext(context.Background(), request)
 }
 
 // DescribeResourcesByDealName
@@ -1284,11 +1867,17 @@ func (c *Client) DescribeResourcesByDealName(request *DescribeResourcesByDealNam
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_DEALNAMENOTFOUND = "InvalidParameterValue.DealNameNotFound"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_PARAMETEROUTRANGEERROR = "InvalidParameterValue.ParameterOutRangeError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeResourcesByDealNameWithContext(ctx context.Context, request *DescribeResourcesByDealNameRequest) (response *DescribeResourcesByDealNameResponse, err error) {
     if request == nil {
         request = NewDescribeResourcesByDealNameRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourcesByDealName require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeResourcesByDealNameResponse()
@@ -1300,6 +1889,7 @@ func NewDescribeRollbackTimeRangeRequest() (request *DescribeRollbackTimeRangeRe
     request = &DescribeRollbackTimeRangeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeRollbackTimeRange")
     
     
@@ -1325,13 +1915,7 @@ func NewDescribeRollbackTimeRangeResponse() (response *DescribeRollbackTimeRange
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeRollbackTimeRange(request *DescribeRollbackTimeRangeRequest) (response *DescribeRollbackTimeRangeResponse, err error) {
-    if request == nil {
-        request = NewDescribeRollbackTimeRangeRequest()
-    }
-    
-    response = NewDescribeRollbackTimeRangeResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeRollbackTimeRangeWithContext(context.Background(), request)
 }
 
 // DescribeRollbackTimeRange
@@ -1349,6 +1933,11 @@ func (c *Client) DescribeRollbackTimeRangeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRollbackTimeRangeRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRollbackTimeRange require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeRollbackTimeRangeResponse()
@@ -1360,6 +1949,7 @@ func NewDescribeRollbackTimeValidityRequest() (request *DescribeRollbackTimeVali
     request = &DescribeRollbackTimeValidityRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeRollbackTimeValidity")
     
     
@@ -1378,17 +1968,12 @@ func NewDescribeRollbackTimeValidityResponse() (response *DescribeRollbackTimeVa
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeRollbackTimeValidity(request *DescribeRollbackTimeValidityRequest) (response *DescribeRollbackTimeValidityResponse, err error) {
-    if request == nil {
-        request = NewDescribeRollbackTimeValidityRequest()
-    }
-    
-    response = NewDescribeRollbackTimeValidityResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeRollbackTimeValidityWithContext(context.Background(), request)
 }
 
 // DescribeRollbackTimeValidity
@@ -1396,6 +1981,7 @@ func (c *Client) DescribeRollbackTimeValidity(request *DescribeRollbackTimeValid
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
 //  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -1403,6 +1989,11 @@ func (c *Client) DescribeRollbackTimeValidityWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeRollbackTimeValidityRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRollbackTimeValidity require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeRollbackTimeValidityResponse()
@@ -1414,6 +2005,7 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
     request = &DisassociateSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "DisassociateSecurityGroups")
     
     
@@ -1434,16 +2026,11 @@ func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGrou
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
-    if request == nil {
-        request = NewDisassociateSecurityGroupsRequest()
-    }
-    
-    response = NewDisassociateSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.DisassociateSecurityGroupsWithContext(context.Background(), request)
 }
 
 // DisassociateSecurityGroups
@@ -1453,15 +2040,71 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateSecurityGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDisassociateSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewExportInstanceSlowQueriesRequest() (request *ExportInstanceSlowQueriesRequest) {
+    request = &ExportInstanceSlowQueriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ExportInstanceSlowQueries")
+    
+    
+    return
+}
+
+func NewExportInstanceSlowQueriesResponse() (response *ExportInstanceSlowQueriesResponse) {
+    response = &ExportInstanceSlowQueriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ExportInstanceSlowQueries
+// 此接口（ExportInstanceSlowQueries）用于导出实例慢日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ExportInstanceSlowQueries(request *ExportInstanceSlowQueriesRequest) (response *ExportInstanceSlowQueriesResponse, err error) {
+    return c.ExportInstanceSlowQueriesWithContext(context.Background(), request)
+}
+
+// ExportInstanceSlowQueries
+// 此接口（ExportInstanceSlowQueries）用于导出实例慢日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ExportInstanceSlowQueriesWithContext(ctx context.Context, request *ExportInstanceSlowQueriesRequest) (response *ExportInstanceSlowQueriesResponse, err error) {
+    if request == nil {
+        request = NewExportInstanceSlowQueriesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ExportInstanceSlowQueries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewExportInstanceSlowQueriesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1470,6 +2113,7 @@ func NewGrantAccountPrivilegesRequest() (request *GrantAccountPrivilegesRequest)
     request = &GrantAccountPrivilegesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "GrantAccountPrivileges")
     
     
@@ -1523,13 +2167,7 @@ func NewGrantAccountPrivilegesResponse() (response *GrantAccountPrivilegesRespon
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) GrantAccountPrivileges(request *GrantAccountPrivilegesRequest) (response *GrantAccountPrivilegesResponse, err error) {
-    if request == nil {
-        request = NewGrantAccountPrivilegesRequest()
-    }
-    
-    response = NewGrantAccountPrivilegesResponse()
-    err = c.Send(request, response)
-    return
+    return c.GrantAccountPrivilegesWithContext(context.Background(), request)
 }
 
 // GrantAccountPrivileges
@@ -1575,9 +2213,132 @@ func (c *Client) GrantAccountPrivilegesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewGrantAccountPrivilegesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GrantAccountPrivileges require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewGrantAccountPrivilegesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquirePriceCreateRequest() (request *InquirePriceCreateRequest) {
+    request = &InquirePriceCreateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "InquirePriceCreate")
+    
+    
+    return
+}
+
+func NewInquirePriceCreateResponse() (response *InquirePriceCreateResponse) {
+    response = &InquirePriceCreateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// InquirePriceCreate
+// 查询新购集群价格
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceCreate(request *InquirePriceCreateRequest) (response *InquirePriceCreateResponse, err error) {
+    return c.InquirePriceCreateWithContext(context.Background(), request)
+}
+
+// InquirePriceCreate
+// 查询新购集群价格
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceCreateWithContext(ctx context.Context, request *InquirePriceCreateRequest) (response *InquirePriceCreateResponse, err error) {
+    if request == nil {
+        request = NewInquirePriceCreateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquirePriceCreate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquirePriceCreateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquirePriceRenewRequest() (request *InquirePriceRenewRequest) {
+    request = &InquirePriceRenewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "InquirePriceRenew")
+    
+    
+    return
+}
+
+func NewInquirePriceRenewResponse() (response *InquirePriceRenewResponse) {
+    response = &InquirePriceRenewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// InquirePriceRenew
+// 查询续费集群价格
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceRenew(request *InquirePriceRenewRequest) (response *InquirePriceRenewResponse, err error) {
+    return c.InquirePriceRenewWithContext(context.Background(), request)
+}
+
+// InquirePriceRenew
+// 查询续费集群价格
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) InquirePriceRenewWithContext(ctx context.Context, request *InquirePriceRenewRequest) (response *InquirePriceRenewResponse, err error) {
+    if request == nil {
+        request = NewInquirePriceRenewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InquirePriceRenew require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInquirePriceRenewResponse()
     err = c.Send(request, response)
     return
 }
@@ -1586,6 +2347,7 @@ func NewIsolateClusterRequest() (request *IsolateClusterRequest) {
     request = &IsolateClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "IsolateCluster")
     
     
@@ -1617,13 +2379,7 @@ func NewIsolateClusterResponse() (response *IsolateClusterResponse) {
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) IsolateCluster(request *IsolateClusterRequest) (response *IsolateClusterResponse, err error) {
-    if request == nil {
-        request = NewIsolateClusterRequest()
-    }
-    
-    response = NewIsolateClusterResponse()
-    err = c.Send(request, response)
-    return
+    return c.IsolateClusterWithContext(context.Background(), request)
 }
 
 // IsolateCluster
@@ -1647,6 +2403,11 @@ func (c *Client) IsolateClusterWithContext(ctx context.Context, request *Isolate
     if request == nil {
         request = NewIsolateClusterRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IsolateCluster require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewIsolateClusterResponse()
@@ -1658,6 +2419,7 @@ func NewIsolateInstanceRequest() (request *IsolateInstanceRequest) {
     request = &IsolateInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "IsolateInstance")
     
     
@@ -1680,19 +2442,15 @@ func NewIsolateInstanceResponse() (response *IsolateInstanceResponse) {
 //  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
 //  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) IsolateInstance(request *IsolateInstanceRequest) (response *IsolateInstanceResponse, err error) {
-    if request == nil {
-        request = NewIsolateInstanceRequest()
-    }
-    
-    response = NewIsolateInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.IsolateInstanceWithContext(context.Background(), request)
 }
 
 // IsolateInstance
@@ -1704,8 +2462,10 @@ func (c *Client) IsolateInstance(request *IsolateInstanceRequest) (response *Iso
 //  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
 //  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -1713,6 +2473,11 @@ func (c *Client) IsolateInstanceWithContext(ctx context.Context, request *Isolat
     if request == nil {
         request = NewIsolateInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IsolateInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewIsolateInstanceResponse()
@@ -1724,6 +2489,7 @@ func NewModifyAccountParamsRequest() (request *ModifyAccountParamsRequest) {
     request = &ModifyAccountParamsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyAccountParams")
     
     
@@ -1777,13 +2543,7 @@ func NewModifyAccountParamsResponse() (response *ModifyAccountParamsResponse) {
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyAccountParams(request *ModifyAccountParamsRequest) (response *ModifyAccountParamsResponse, err error) {
-    if request == nil {
-        request = NewModifyAccountParamsRequest()
-    }
-    
-    response = NewModifyAccountParamsResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyAccountParamsWithContext(context.Background(), request)
 }
 
 // ModifyAccountParams
@@ -1829,6 +2589,11 @@ func (c *Client) ModifyAccountParamsWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyAccountParamsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAccountParams require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyAccountParamsResponse()
@@ -1840,6 +2605,7 @@ func NewModifyBackupConfigRequest() (request *ModifyBackupConfigRequest) {
     request = &ModifyBackupConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyBackupConfig")
     
     
@@ -1864,13 +2630,7 @@ func NewModifyBackupConfigResponse() (response *ModifyBackupConfigResponse) {
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupConfig(request *ModifyBackupConfigRequest) (response *ModifyBackupConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyBackupConfigRequest()
-    }
-    
-    response = NewModifyBackupConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyBackupConfigWithContext(context.Background(), request)
 }
 
 // ModifyBackupConfig
@@ -1887,9 +2647,126 @@ func (c *Client) ModifyBackupConfigWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyBackupConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBackupConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyBackupConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyBackupNameRequest() (request *ModifyBackupNameRequest) {
+    request = &ModifyBackupNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyBackupName")
+    
+    
+    return
+}
+
+func NewModifyBackupNameResponse() (response *ModifyBackupNameResponse) {
+    response = &ModifyBackupNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyBackupName
+// 此接口（ModifyBackupName）用于修改备份文件备注名。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyBackupName(request *ModifyBackupNameRequest) (response *ModifyBackupNameResponse, err error) {
+    return c.ModifyBackupNameWithContext(context.Background(), request)
+}
+
+// ModifyBackupName
+// 此接口（ModifyBackupName）用于修改备份文件备注名。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyBackupNameWithContext(ctx context.Context, request *ModifyBackupNameRequest) (response *ModifyBackupNameResponse, err error) {
+    if request == nil {
+        request = NewModifyBackupNameRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBackupName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBackupNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyClusterNameRequest() (request *ModifyClusterNameRequest) {
+    request = &ModifyClusterNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyClusterName")
+    
+    
+    return
+}
+
+func NewModifyClusterNameResponse() (response *ModifyClusterNameResponse) {
+    response = &ModifyClusterNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyClusterName
+// 修改集群名称
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterName(request *ModifyClusterNameRequest) (response *ModifyClusterNameResponse, err error) {
+    return c.ModifyClusterNameWithContext(context.Background(), request)
+}
+
+// ModifyClusterName
+// 修改集群名称
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterNameWithContext(ctx context.Context, request *ModifyClusterNameRequest) (response *ModifyClusterNameResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterNameRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterNameResponse()
     err = c.Send(request, response)
     return
 }
@@ -1898,6 +2775,7 @@ func NewModifyClusterParamRequest() (request *ModifyClusterParamRequest) {
     request = &ModifyClusterParamRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyClusterParam")
     
     
@@ -1920,17 +2798,13 @@ func NewModifyClusterParamResponse() (response *ModifyClusterParamResponse) {
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  OPERATIONDENIED_TASKCONFLICTERROR = "OperationDenied.TaskConflictError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyClusterParam(request *ModifyClusterParamRequest) (response *ModifyClusterParamResponse, err error) {
-    if request == nil {
-        request = NewModifyClusterParamRequest()
-    }
-    
-    response = NewModifyClusterParamResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyClusterParamWithContext(context.Background(), request)
 }
 
 // ModifyClusterParam
@@ -1942,16 +2816,79 @@ func (c *Client) ModifyClusterParam(request *ModifyClusterParamRequest) (respons
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
+//  OPERATIONDENIED_TASKCONFLICTERROR = "OperationDenied.TaskConflictError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyClusterParamWithContext(ctx context.Context, request *ModifyClusterParamRequest) (response *ModifyClusterParamResponse, err error) {
     if request == nil {
         request = NewModifyClusterParamRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterParam require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyClusterParamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyClusterSlaveZoneRequest() (request *ModifyClusterSlaveZoneRequest) {
+    request = &ModifyClusterSlaveZoneRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyClusterSlaveZone")
+    
+    
+    return
+}
+
+func NewModifyClusterSlaveZoneResponse() (response *ModifyClusterSlaveZoneResponse) {
+    response = &ModifyClusterSlaveZoneResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyClusterSlaveZone
+// 修改从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterSlaveZone(request *ModifyClusterSlaveZoneRequest) (response *ModifyClusterSlaveZoneResponse, err error) {
+    return c.ModifyClusterSlaveZoneWithContext(context.Background(), request)
+}
+
+// ModifyClusterSlaveZone
+// 修改从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterSlaveZoneWithContext(ctx context.Context, request *ModifyClusterSlaveZoneRequest) (response *ModifyClusterSlaveZoneResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterSlaveZoneRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterSlaveZone require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterSlaveZoneResponse()
     err = c.Send(request, response)
     return
 }
@@ -1960,6 +2897,7 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
     request = &ModifyDBInstanceSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyDBInstanceSecurityGroups")
     
     
@@ -1981,15 +2919,10 @@ func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecu
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
-    if request == nil {
-        request = NewModifyDBInstanceSecurityGroupsRequest()
-    }
-    
-    response = NewModifyDBInstanceSecurityGroupsResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDBInstanceSecurityGroupsWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceSecurityGroups
@@ -2000,14 +2933,82 @@ func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurit
 //  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
 //  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
     if request == nil {
         request = NewModifyDBInstanceSecurityGroupsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceSecurityGroups require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceNameRequest() (request *ModifyInstanceNameRequest) {
+    request = &ModifyInstanceNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyInstanceName")
+    
+    
+    return
+}
+
+func NewModifyInstanceNameResponse() (response *ModifyInstanceNameResponse) {
+    response = &ModifyInstanceNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyInstanceName
+// 本接口(ModifyInstanceName)用于修改实例名称。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyInstanceName(request *ModifyInstanceNameRequest) (response *ModifyInstanceNameResponse, err error) {
+    return c.ModifyInstanceNameWithContext(context.Background(), request)
+}
+
+// ModifyInstanceName
+// 本接口(ModifyInstanceName)用于修改实例名称。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyInstanceNameWithContext(ctx context.Context, request *ModifyInstanceNameRequest) (response *ModifyInstanceNameResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceNameRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceNameResponse()
     err = c.Send(request, response)
     return
 }
@@ -2016,6 +3017,7 @@ func NewModifyMaintainPeriodConfigRequest() (request *ModifyMaintainPeriodConfig
     request = &ModifyMaintainPeriodConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyMaintainPeriodConfig")
     
     
@@ -2039,13 +3041,7 @@ func NewModifyMaintainPeriodConfigResponse() (response *ModifyMaintainPeriodConf
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyMaintainPeriodConfig(request *ModifyMaintainPeriodConfigRequest) (response *ModifyMaintainPeriodConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyMaintainPeriodConfigRequest()
-    }
-    
-    response = NewModifyMaintainPeriodConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyMaintainPeriodConfigWithContext(context.Background(), request)
 }
 
 // ModifyMaintainPeriodConfig
@@ -2061,6 +3057,11 @@ func (c *Client) ModifyMaintainPeriodConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyMaintainPeriodConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMaintainPeriodConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyMaintainPeriodConfigResponse()
@@ -2072,6 +3073,7 @@ func NewOfflineClusterRequest() (request *OfflineClusterRequest) {
     request = &OfflineClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "OfflineCluster")
     
     
@@ -2092,19 +3094,14 @@ func NewOfflineClusterResponse() (response *OfflineClusterResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) OfflineCluster(request *OfflineClusterRequest) (response *OfflineClusterResponse, err error) {
-    if request == nil {
-        request = NewOfflineClusterRequest()
-    }
-    
-    response = NewOfflineClusterResponse()
-    err = c.Send(request, response)
-    return
+    return c.OfflineClusterWithContext(context.Background(), request)
 }
 
 // OfflineCluster
@@ -2114,6 +3111,7 @@ func (c *Client) OfflineCluster(request *OfflineClusterRequest) (response *Offli
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
@@ -2123,6 +3121,11 @@ func (c *Client) OfflineClusterWithContext(ctx context.Context, request *Offline
     if request == nil {
         request = NewOfflineClusterRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OfflineCluster require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewOfflineClusterResponse()
@@ -2134,6 +3137,7 @@ func NewOfflineInstanceRequest() (request *OfflineInstanceRequest) {
     request = &OfflineInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "OfflineInstance")
     
     
@@ -2163,13 +3167,7 @@ func NewOfflineInstanceResponse() (response *OfflineInstanceResponse) {
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) OfflineInstance(request *OfflineInstanceRequest) (response *OfflineInstanceResponse, err error) {
-    if request == nil {
-        request = NewOfflineInstanceRequest()
-    }
-    
-    response = NewOfflineInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.OfflineInstanceWithContext(context.Background(), request)
 }
 
 // OfflineInstance
@@ -2191,6 +3189,11 @@ func (c *Client) OfflineInstanceWithContext(ctx context.Context, request *Offlin
     if request == nil {
         request = NewOfflineInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OfflineInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewOfflineInstanceResponse()
@@ -2202,6 +3205,7 @@ func NewPauseServerlessRequest() (request *PauseServerlessRequest) {
     request = &PauseServerlessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "PauseServerless")
     
     
@@ -2227,13 +3231,7 @@ func NewPauseServerlessResponse() (response *PauseServerlessResponse) {
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 func (c *Client) PauseServerless(request *PauseServerlessRequest) (response *PauseServerlessResponse, err error) {
-    if request == nil {
-        request = NewPauseServerlessRequest()
-    }
-    
-    response = NewPauseServerlessResponse()
-    err = c.Send(request, response)
-    return
+    return c.PauseServerlessWithContext(context.Background(), request)
 }
 
 // PauseServerless
@@ -2251,9 +3249,70 @@ func (c *Client) PauseServerlessWithContext(ctx context.Context, request *PauseS
     if request == nil {
         request = NewPauseServerlessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PauseServerless require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewPauseServerlessResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRemoveClusterSlaveZoneRequest() (request *RemoveClusterSlaveZoneRequest) {
+    request = &RemoveClusterSlaveZoneRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "RemoveClusterSlaveZone")
+    
+    
+    return
+}
+
+func NewRemoveClusterSlaveZoneResponse() (response *RemoveClusterSlaveZoneResponse) {
+    response = &RemoveClusterSlaveZoneResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RemoveClusterSlaveZone
+// 删除从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RemoveClusterSlaveZone(request *RemoveClusterSlaveZoneRequest) (response *RemoveClusterSlaveZoneResponse, err error) {
+    return c.RemoveClusterSlaveZoneWithContext(context.Background(), request)
+}
+
+// RemoveClusterSlaveZone
+// 删除从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) RemoveClusterSlaveZoneWithContext(ctx context.Context, request *RemoveClusterSlaveZoneRequest) (response *RemoveClusterSlaveZoneResponse, err error) {
+    if request == nil {
+        request = NewRemoveClusterSlaveZoneRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveClusterSlaveZone require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveClusterSlaveZoneResponse()
     err = c.Send(request, response)
     return
 }
@@ -2262,6 +3321,7 @@ func NewResumeServerlessRequest() (request *ResumeServerlessRequest) {
     request = &ResumeServerlessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "ResumeServerless")
     
     
@@ -2291,13 +3351,7 @@ func NewResumeServerlessResponse() (response *ResumeServerlessResponse) {
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ResumeServerless(request *ResumeServerlessRequest) (response *ResumeServerlessResponse, err error) {
-    if request == nil {
-        request = NewResumeServerlessRequest()
-    }
-    
-    response = NewResumeServerlessResponse()
-    err = c.Send(request, response)
-    return
+    return c.ResumeServerlessWithContext(context.Background(), request)
 }
 
 // ResumeServerless
@@ -2319,6 +3373,11 @@ func (c *Client) ResumeServerlessWithContext(ctx context.Context, request *Resum
     if request == nil {
         request = NewResumeServerlessRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeServerless require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewResumeServerlessResponse()
@@ -2330,6 +3389,7 @@ func NewRevokeAccountPrivilegesRequest() (request *RevokeAccountPrivilegesReques
     request = &RevokeAccountPrivilegesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "RevokeAccountPrivileges")
     
     
@@ -2383,13 +3443,7 @@ func NewRevokeAccountPrivilegesResponse() (response *RevokeAccountPrivilegesResp
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RevokeAccountPrivileges(request *RevokeAccountPrivilegesRequest) (response *RevokeAccountPrivilegesResponse, err error) {
-    if request == nil {
-        request = NewRevokeAccountPrivilegesRequest()
-    }
-    
-    response = NewRevokeAccountPrivilegesResponse()
-    err = c.Send(request, response)
-    return
+    return c.RevokeAccountPrivilegesWithContext(context.Background(), request)
 }
 
 // RevokeAccountPrivileges
@@ -2435,6 +3489,11 @@ func (c *Client) RevokeAccountPrivilegesWithContext(ctx context.Context, request
     if request == nil {
         request = NewRevokeAccountPrivilegesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RevokeAccountPrivileges require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRevokeAccountPrivilegesResponse()
@@ -2446,6 +3505,7 @@ func NewRollBackClusterRequest() (request *RollBackClusterRequest) {
     request = &RollBackClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "RollBackCluster")
     
     
@@ -2472,13 +3532,7 @@ func NewRollBackClusterResponse() (response *RollBackClusterResponse) {
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RollBackCluster(request *RollBackClusterRequest) (response *RollBackClusterResponse, err error) {
-    if request == nil {
-        request = NewRollBackClusterRequest()
-    }
-    
-    response = NewRollBackClusterResponse()
-    err = c.Send(request, response)
-    return
+    return c.RollBackClusterWithContext(context.Background(), request)
 }
 
 // RollBackCluster
@@ -2497,6 +3551,11 @@ func (c *Client) RollBackClusterWithContext(ctx context.Context, request *RollBa
     if request == nil {
         request = NewRollBackClusterRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RollBackCluster require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewRollBackClusterResponse()
@@ -2508,6 +3567,7 @@ func NewSetRenewFlagRequest() (request *SetRenewFlagRequest) {
     request = &SetRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "SetRenewFlag")
     
     
@@ -2540,14 +3600,9 @@ func NewSetRenewFlagResponse() (response *SetRenewFlagResponse) {
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) SetRenewFlag(request *SetRenewFlagRequest) (response *SetRenewFlagResponse, err error) {
-    if request == nil {
-        request = NewSetRenewFlagRequest()
-    }
-    
-    response = NewSetRenewFlagResponse()
-    err = c.Send(request, response)
-    return
+    return c.SetRenewFlagWithContext(context.Background(), request)
 }
 
 // SetRenewFlag
@@ -2569,13 +3624,75 @@ func (c *Client) SetRenewFlag(request *SetRenewFlagRequest) (response *SetRenewF
 //  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) SetRenewFlagWithContext(ctx context.Context, request *SetRenewFlagRequest) (response *SetRenewFlagResponse, err error) {
     if request == nil {
         request = NewSetRenewFlagRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetRenewFlag require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewSetRenewFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSwitchClusterZoneRequest() (request *SwitchClusterZoneRequest) {
+    request = &SwitchClusterZoneRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "SwitchClusterZone")
+    
+    
+    return
+}
+
+func NewSwitchClusterZoneResponse() (response *SwitchClusterZoneResponse) {
+    response = &SwitchClusterZoneResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SwitchClusterZone
+// 切换到从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) SwitchClusterZone(request *SwitchClusterZoneRequest) (response *SwitchClusterZoneResponse, err error) {
+    return c.SwitchClusterZoneWithContext(context.Background(), request)
+}
+
+// SwitchClusterZone
+// 切换到从可用区
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) SwitchClusterZoneWithContext(ctx context.Context, request *SwitchClusterZoneRequest) (response *SwitchClusterZoneResponse, err error) {
+    if request == nil {
+        request = NewSwitchClusterZoneRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SwitchClusterZone require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSwitchClusterZoneResponse()
     err = c.Send(request, response)
     return
 }
@@ -2584,6 +3701,7 @@ func NewUpgradeInstanceRequest() (request *UpgradeInstanceRequest) {
     request = &UpgradeInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "UpgradeInstance")
     
     
@@ -2614,13 +3732,7 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
-    if request == nil {
-        request = NewUpgradeInstanceRequest()
-    }
-    
-    response = NewUpgradeInstanceResponse()
-    err = c.Send(request, response)
-    return
+    return c.UpgradeInstanceWithContext(context.Background(), request)
 }
 
 // UpgradeInstance
@@ -2643,6 +3755,11 @@ func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *Upgrad
     if request == nil {
         request = NewUpgradeInstanceRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeInstance require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewUpgradeInstanceResponse()

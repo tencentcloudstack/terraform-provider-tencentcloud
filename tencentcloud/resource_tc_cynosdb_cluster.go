@@ -33,6 +33,8 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     current_value = "utf8mb4"
   }
 
+  prarm_template_id = "12345"
+
   tags = {
     test = "test"
   }
@@ -133,6 +135,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 
 			request.ClusterParams = append(request.ClusterParams, param)
 		}
+	}
+	if v, ok := d.GetOk("prarm_template_id"); ok {
+		request.ParamTemplateId = helper.IntInt64(v.(int))
 	}
 
 	// instance info
@@ -438,6 +443,32 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 		}
 	}
 
+	currentParamMap := make(map[string]*cynosdb.ParamInfo)
+	params, err := cynosdbService.DescribeClusterParams(ctx, id)
+	if err != nil {
+		return err
+	}
+	for _, param := range params {
+		currentParamMap[*param.ParamName] = param
+	}
+	resultParamItems := make([]map[string]string, 0)
+	if v, ok := d.GetOk("param_items"); ok {
+		paramItems := v.([]interface{})
+		for _, paramItem := range paramItems {
+			item := paramItem.(map[string]interface{})
+			name := item["name"].(string)
+			oldValue := item["old_value"].(string)
+			currentParamItem := make(map[string]string)
+			currentParamItem["name"] = name
+			currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
+			if oldValue != "" {
+				currentParamItem["old_value"] = oldValue
+			}
+			resultParamItems = append(resultParamItems, currentParamItem)
+		}
+	}
+	_ = d.Set("param_items", resultParamItems)
+
 	return nil
 }
 
@@ -573,6 +604,10 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		})
 
 		d.SetPartial("param_items")
+	}
+
+	if d.HasChange("prarm_template_id") {
+		return fmt.Errorf("prarm_template_id not support update!")
 	}
 
 	// update tags

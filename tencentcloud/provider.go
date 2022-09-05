@@ -289,6 +289,7 @@ CynosDB
   Data Source
 	tencentcloud_cynosdb_clusters
 	tencentcloud_cynosdb_instances
+	tencentcloud_cynosdb_zone_config
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -651,7 +652,7 @@ Lighthouse
   Resource
 	tencentcloud_lighthouse_instance
 
-TEM
+TencentCloud Elastic Microservice(TEM)
   Resource
 	tencentcloud_tem_environment
 	tencentcloud_tem_application
@@ -661,6 +662,22 @@ TEM
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
 
+TencentCloud EdgeOne(TEO)
+  Data Source
+	tencentcloud_teo_zone_available_plans
+
+  Resource
+	tencentcloud_teo_zone
+	tencentcloud_teo_zone_setting
+	tencentcloud_teo_dns_record
+	tencentcloud_teo_dns_sec
+	tencentcloud_teo_load_balancing
+	tencentcloud_teo_origin_group
+	tencentcloud_teo_rule_engine
+	tencentcloud_teo_application_proxy
+	tencentcloud_teo_application_proxy_rule
+	tencentcloud_teo_host_certificate
+	tencentcloud_teo_default_certificate
 */
 package tencentcloud
 
@@ -918,6 +935,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_audits":                                   dataSourceTencentCloudAudits(),
 			"tencentcloud_cynosdb_clusters":                         dataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                        dataSourceTencentCloudCynosdbInstances(),
+			"tencentcloud_cynosdb_zone_config":                      dataSourceTencentCynosdbZoneConfig(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_templates": dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
 			"tencentcloud_vod_image_sprite_templates":               dataSourceTencentCloudVodImageSpriteTemplates(),
 			"tencentcloud_vod_procedure_templates":                  dataSourceTencentCloudVodProcedureTemplates(),
@@ -948,6 +966,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ssm_secret_versions":                      dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
+			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1185,6 +1204,18 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                          resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                          resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                             resourceTencentCloudTemGateway(),
+			"tencentcloud_teo_zone":                                resourceTencentCloudTeoZone(),
+			"tencentcloud_teo_zone_setting":                        resourceTencentCloudTeoZoneSetting(),
+			"tencentcloud_teo_dns_record":                          resourceTencentCloudTeoDnsRecord(),
+			"tencentcloud_teo_dns_sec":                             resourceTencentCloudTeoDnsSec(),
+			"tencentcloud_teo_load_balancing":                      resourceTencentCloudTeoLoadBalancing(),
+			"tencentcloud_teo_origin_group":                        resourceTencentCloudTeoOriginGroup(),
+			"tencentcloud_teo_rule_engine":                         resourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_application_proxy":                   resourceTencentCloudTeoApplicationProxy(),
+			"tencentcloud_teo_application_proxy_rule":              resourceTencentCloudTeoApplicationProxyRule(),
+			"tencentcloud_teo_host_certificate":                    resourceTencentCloudTeoHostCertificate(),
+			"tencentcloud_teo_default_certificate":                 resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_teo_ddos_policy":                         resourceTencentCloudTeoDdosPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

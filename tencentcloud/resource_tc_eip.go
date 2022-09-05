@@ -80,6 +80,7 @@ func resourceTencentCloudEip() *schema.Resource {
 			"internet_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
 				Description:  "The charge type of eip. Valid value: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
@@ -241,6 +242,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("type", eip.AddressType)
 	_ = d.Set("public_ip", eip.AddressIp)
 	_ = d.Set("status", eip.AddressStatus)
+	_ = d.Set("internet_charge_type", eip.InternetChargeType)
 	_ = d.Set("tags", tags)
 	return nil
 }

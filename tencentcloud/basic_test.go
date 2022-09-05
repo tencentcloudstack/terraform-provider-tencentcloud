@@ -635,6 +635,13 @@ variable "tke_cidr_c" {
 }
 `
 
+const TkeDefaultNodeInstanceVar = `
+variable "ins_type" {
+  default = "S5.MEDIUM4"
+}
+`
+
+// @deprecated. Avoid using this because it may return diff results
 const TkeInstanceType = `
 data "tencentcloud_instance_types" "ins_type" {
   availability_zone = "` + defaultCvmAZone + `"
