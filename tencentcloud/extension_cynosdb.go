@@ -319,7 +319,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"param_items": {
 			Type:        schema.TypeList,
 			Optional:    true,
-			Description: "Specify parameter list of database. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
+			Description: "Specify parameter list of database. It is valid when prarm_template_id is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"name": {
@@ -339,6 +339,12 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 					},
 				},
 			},
+		},
+		"prarm_template_id": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The ID of the parameter template.",
 		},
 	}
 

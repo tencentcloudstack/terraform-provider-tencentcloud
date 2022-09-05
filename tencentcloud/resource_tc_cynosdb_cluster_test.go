@@ -93,17 +93,18 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_instances.0.instance_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "rw_group_addr.0.port"),
-					//resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "ro_group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.name", "character_set_server"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.1.name", "time_zone"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.1.current_value", "+09:00"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items", "ro_group_sg"},
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit", "param_items", "ro_group_sg", "prarm_template_id"},
 			},
 			{
 				Config: testAccCynosdbCluster_update,
@@ -113,79 +114,20 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_weekdays.#", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_cpu_core", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_memory_size", "4"),
-					//resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "rw_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "ro_group_sg.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.name", "character_set_server"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.old_value", "utf8"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.0.current_value", "utf8mb4"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.1.name", "time_zone"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.1.old_value", "+09:00"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "param_items.1.current_value", "+08:00"),
 				),
 			},
 		},
 	})
 }
-
-/*
-func TestAccTencentCloudCynosdbClusterResourcePrePaid(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCynosdbClusterDestroy,
-		Steps: []resource.TestStep{
-			{
-				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit"},
-			},
-			{
-				Config: testAccCynosdbClusterPrepaid,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.bar"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "available_zone", "ap-guangzhou-4"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "vpc_id", "vpc-4owdpnwr"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "subnet_id", "subnet-qpxez62e"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_type", "MYSQL"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "db_version", "5.7"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "storage_limit", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "cluster_name", "tf-cynosdb-prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "instance_maintain_duration", "3600"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "instance_maintain_start_time", "10800"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "instance_maintain_weekdays.#", "7"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "instance_cpu_core", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "instance_memory_size", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "tags.test", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "force_delete", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "rw_group_sg.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "ro_group_sg.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "port", "5432"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "charge_type", CYNOSDB_CHARGE_TYPE_PREPAID),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.bar", "prepaid_period", "1"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "instance_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "instance_status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "instance_storage_size"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "charset"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "cluster_status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "storage_used"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "rw_group_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "rw_group_instances.0.instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "rw_group_instances.0.instance_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "rw_group_addr.0.ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "rw_group_addr.0.port"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.bar", "ro_group_id"),
-				),
-			},
-		},
-	})
-}
-*/
 
 func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
@@ -249,6 +191,10 @@ variable "my_vpc" {
 variable "my_subnet" {
   default = "subnet-qpxez62e"
 }
+
+variable "my_param_template" {
+	default = "15765"
+}
 `
 
 const testAccCynosdbCluster = testAccCynosdbBasic + `
@@ -279,6 +225,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     name = "character_set_server"
     current_value = "utf8"
   }
+  param_items {
+    name = "time_zone"
+    current_value = "+09:00"
+  }
 
 #  tags = {
 #    test = "test"
@@ -292,6 +242,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   ro_group_sg = [
     "` + defaultSecurityGroup + `",
   ]
+  prarm_template_id = var.my_param_template
 }
 `
 
@@ -323,6 +274,12 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     name = "character_set_server"
     old_value = "utf8"
     current_value = "utf8mb4"
+  }
+
+  param_items {
+    name = "time_zone"
+    old_value = "+09:00"
+    current_value = "+08:00"
   }
 
 #  tags = {

@@ -112,6 +112,63 @@ func TestGetListIncrement(t *testing.T) {
 
 }
 
+func TestGetListDiffs(t *testing.T) {
+	var (
+		o1           = []int{1, 2, 3, 4, 5}
+		n1           = []int{1, 2, 3, 5, 6}
+		expectAdds1  = []int{6}
+		expectLacks1 = []int{4}
+	)
+
+	adds1, lacks1 := GetListDiffs(o1, n1)
+	assert.Contains(t, expectAdds1, adds1[0])
+	assert.Contains(t, expectLacks1, lacks1[0])
+
+	var (
+		o2           = []int{1, 1, 3, 4, 5}
+		n2           = []int{4, 1, 1, 5, 3}
+		expectAdds2  = make([]int, 0)
+		expectLacks2 = make([]int, 0)
+	)
+
+	adds2, lacks2 := GetListDiffs(o2, n2)
+	assert.Equalf(t, len(expectAdds2), len(adds2), "adds2 should be %v, got %v", expectAdds2, adds2)
+	assert.Equalf(t, len(expectLacks2), len(lacks2), "lacks2 should be %v, got %v", expectLacks2, lacks2)
+
+	// TODO
+	var (
+		o3           = []int{1, 3, 3, 4, 4}
+		n3           = []int{4, 3, 1, 7, 3, 6}
+		expectAdds3  = []int{6, 7}
+		expectLacks3 = []int{4}
+	)
+
+	adds3, lacks3 := GetListDiffs(o3, n3)
+	assert.Contains(t, expectAdds3, adds3[0])
+	assert.Contains(t, expectAdds3, adds3[1])
+	assert.Equalf(t, expectLacks3, lacks3, "lacks3 should be %v, got %v", expectLacks3, lacks3)
+
+	var (
+		o4           = []int{1, 2, 3, 4, 5}
+		n4           = []int{4}
+		expectAdds4  = make([]int, 0)
+		expectLacks4 = []int{1, 2, 3, 5}
+	)
+
+	adds4, lacks4 := GetListDiffs(o4, n4)
+	assert.Equalf(t, len(expectAdds4), len(adds4), "adds4 should be %v, got %v", expectAdds4, adds4)
+	assert.Contains(t, expectLacks4, lacks4[0])
+	assert.Contains(t, expectLacks4, lacks4[1])
+	assert.Contains(t, expectLacks4, lacks4[2])
+	assert.Contains(t, expectLacks4, lacks4[3])
+
+	adds5, lacks5 := GetListDiffs([]int{100003, 100004}, []int{100003, 100003, 100004})
+	assert.Equalf(t, 1, len(adds5), "")
+	assert.Equalf(t, 0, len(lacks5), "")
+	assert.Contains(t, []int{100003, 100003, 100004}, adds5[0])
+
+}
+
 func TestIsExpectError(t *testing.T) {
 
 	err := sdkErrors.NewTencentCloudSDKError("ClientError.NetworkError", "", "")

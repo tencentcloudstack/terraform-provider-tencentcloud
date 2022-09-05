@@ -18,6 +18,28 @@ type CynosdbService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func (me *CynosdbService) DescribeRedisZoneConfig(ctx context.Context) (instanceSpecSet []*cynosdb.InstanceSpec, err error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeInstanceSpecsRequest()
+
+	request.DbType = helper.String("MYSQL")
+	request.IncludeZoneStocks = helper.Bool(true)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseCynosdbClient().DescribeInstanceSpecs(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		instanceSpecSet = response.Response.InstanceSpecSet
+		return nil
+	})
+
+	return
+}
+
 func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[string]string) (clusters []*cynosdb.CynosdbCluster, errRet error) {
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeClustersRequest()
@@ -468,6 +490,26 @@ func (me *CynosdbService) OfflineInstance(ctx context.Context, clusterId, instan
 		}
 		return nil
 	})
+
+	return
+}
+
+func (me *CynosdbService) DescribeClusterParams(ctx context.Context, clusterId string) (items []*cynosdb.ParamInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeClusterParamsRequest()
+	request.ClusterId = &clusterId
+
+	var response *cynosdb.DescribeClusterParamsResponse
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseCynosdbClient().DescribeClusterParams(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	items = response.Response.Items
 
 	return
 }

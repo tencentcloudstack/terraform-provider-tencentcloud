@@ -32,6 +32,9 @@ const (
 	// 实例安全组信息清除失败。
 	FAILEDOPERATION_CLEARINSTANCEINFOFAILED = "FailedOperation.ClearInstanceInfoFailed"
 
+	// 提交工作流失败。
+	FAILEDOPERATION_COMMITFLOWERROR = "FailedOperation.CommitFlowError"
+
 	// 解绑安全组失败。
 	FAILEDOPERATION_DISASSOCIATESECURITYGROUPSFAILED = "FailedOperation.DisassociateSecurityGroupsFailed"
 
@@ -68,11 +71,20 @@ const (
 	// 更新安全组失败。
 	FAILEDOPERATION_UPDATESECURITYGROUPSFAILED = "FailedOperation.UpdateSecurityGroupsFailed"
 
+	// 内部错误。
+	INTERNALERROR = "InternalError"
+
+	// cam鉴权错误。
+	INTERNALERROR_CAMAUTHOSSRESPONSERETURNCODEERROR = "InternalError.CamAuthOssResponseReturnCodeError"
+
 	// 统一的 DB 操作错误，可以是 update insert select..。
 	INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 
 	// 执行Http请求失败。
 	INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+
+	// 无操作权限。
+	INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 
 	// 内部错误。
 	INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
@@ -86,14 +98,23 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 没有找到对应接口。
+	INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+
 	// 参数为空。
 	INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
 
 	// 非法参数错误。
 	INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
 
+	// 实例安全组超过限制。
+	INVALIDPARAMETER_INSTANCESGOVERLIMITERROR = "InvalidParameter.InstanceSGOverLimitError"
+
 	// 业务参数错误。
 	INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+
+	// 参数错误，不支持操作。
+	INVALIDPARAMETER_NOTSUPPORTED = "InvalidParameter.NotSupported"
 
 	// 上海金融只提供vpc网络。
 	INVALIDPARAMETER_ONLYVPCONSPECZONEID = "InvalidParameter.OnlyVPCOnSpecZoneId"
@@ -113,6 +134,12 @@ const (
 	// 不是vpc网络下实例。
 	INVALIDPARAMETERVALUE_BASENETWORKACCESSDENY = "InvalidParameterValue.BaseNetWorkAccessDeny"
 
+	// 业务校验不通过。
+	INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+
+	// 重命名，命名规则错误。
+	INVALIDPARAMETERVALUE_INSTANCENAMERULEERROR = "InvalidParameterValue.InstanceNameRuleError"
+
 	// 请求购买的实例类型错误（TypeId 1:集群版；2:主从版,即原主从版)。
 	INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEID = "InvalidParameterValue.InvalidInstanceTypeId"
 
@@ -121,6 +148,9 @@ const (
 
 	// 请求的容量不在售卖容量范围内。
 	INVALIDPARAMETERVALUE_MEMSIZENOTINRANGE = "InvalidParameterValue.MemSizeNotInRange"
+
+	// 实例不能重复绑定。
+	INVALIDPARAMETERVALUE_NOTREPEATBIND = "InvalidParameterValue.NotRepeatBind"
 
 	// 密码为空。
 	INVALIDPARAMETERVALUE_PASSWORDEMPTY = "InvalidParameterValue.PasswordEmpty"
@@ -137,6 +167,9 @@ const (
 	// 请求容量偏小，不支持缩容。
 	INVALIDPARAMETERVALUE_REDUCECAPACITYNOTALLOWED = "InvalidParameterValue.ReduceCapacityNotAllowed"
 
+	// 复制组不存在。
+	INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+
 	// 请求参数错误，安全组id错误。
 	INVALIDPARAMETERVALUE_SECURITYGROUPIDSNOTEXISTS = "InvalidParameterValue.SecurityGroupIdsNotExists"
 
@@ -151,6 +184,15 @@ const (
 
 	// weekday输入无效数据。
 	INVALIDPARAMETERVALUE_WEEKDAYSISINVALID = "InvalidParameterValue.WeekDaysIsInvalid"
+
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
+	// 绑定超过上限。
+	LIMITEXCEEDED_EXCEEDUPPERLIMIT = "LimitExceeded.ExceedUpperLimit"
+
+	// 绑定实例必须为空。
+	LIMITEXCEEDED_INSTANCENOTEMPTY = "LimitExceeded.InstanceNotEmpty"
 
 	// 请求的容量不在售卖规格中（memSize应为1024的整数倍，单位：MB）。
 	LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
@@ -167,8 +209,17 @@ const (
 	// 购买时长非法，时长最少1个月。
 	LIMITEXCEEDED_PERIODLESSTHANMINLIMIT = "LimitExceeded.PeriodLessThanMinLimit"
 
+	// 复制组已锁定。
+	LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
+
 	// 实例被其它流程锁住。
 	RESOURCEINUSE_INSTANCEBEENLOCKED = "ResourceInUse.InstanceBeenLocked"
+
+	// 资源不足。
+	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
 
 	// uin 值为空。
 	RESOURCENOTFOUND_ACCOUNTDOESNOTEXISTS = "ResourceNotFound.AccountDoesNotExists"
@@ -187,6 +238,9 @@ const (
 
 	// 备份状态异常，暂不能执行该操作。备份可能已过期或已被删除。
 	RESOURCEUNAVAILABLE_BACKUPSTATUSABNORMAL = "ResourceUnavailable.BackupStatusAbnormal"
+
+	// 备份状态无效，可能在其他流程中，也可能被删除。
+	RESOURCEUNAVAILABLE_BACKUPSTATUSINVALID = "ResourceUnavailable.BackupStatusInvalid"
 
 	// 调用后端接口失败。
 	RESOURCEUNAVAILABLE_CALLOSSERROR = "ResourceUnavailable.CallOssError"
@@ -209,6 +263,9 @@ const (
 	// 订单不存在。
 	RESOURCEUNAVAILABLE_INSTANCENODEAL = "ResourceUnavailable.InstanceNoDeal"
 
+	// 实例状态不支持操作。
+	RESOURCEUNAVAILABLE_INSTANCENOTSUPPORTOPERATION = "ResourceUnavailable.InstanceNotSupportOperation"
+
 	// 实例状态错误。
 	RESOURCEUNAVAILABLE_INSTANCESTATEERROR = "ResourceUnavailable.InstanceStateError"
 
@@ -218,6 +275,9 @@ const (
 	// 实例状态异常，不能执行对应操作。
 	RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 
+	// 实例已经被其它流程锁定。
+	RESOURCEUNAVAILABLE_INSTANCEUNLOCKEDERROR = "ResourceUnavailable.InstanceUnLockedError"
+
 	// vpc网络IP资源不足。
 	RESOURCEUNAVAILABLE_NOENOUGHVIPINVPC = "ResourceUnavailable.NoEnoughVipInVPC"
 
@@ -226,6 +286,9 @@ const (
 
 	// 请求的区域暂时不提供请求类型的redis服务。
 	RESOURCEUNAVAILABLE_NOTYPEIDREDISSERVICE = "ResourceUnavailable.NoTypeIdRedisService"
+
+	// 地域对应类型已售罄。
+	RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
 
 	// 产品还没有接入安全组。
 	RESOURCEUNAVAILABLE_SECURITYGROUPNOTSUPPORTED = "ResourceUnavailable.SecurityGroupNotSupported"
@@ -239,8 +302,17 @@ const (
 	// 用户不在白名单中。
 	UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
 
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
 	// redis 集群版不允许接入安全组。
 	UNSUPPORTEDOPERATION_CLUSTERINSTANCEACCESSEDDENY = "UnsupportedOperation.ClusterInstanceAccessedDeny"
+
+	// 复制组巡检中。
+	UNSUPPORTEDOPERATION_INSPECTION = "UnsupportedOperation.Inspection"
+
+	// 不支持当前操作。
+	UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
 
 	// 自动续费标识错误。
 	UNSUPPORTEDOPERATION_ISAUTORENEWERROR = "UnsupportedOperation.IsAutoRenewError"

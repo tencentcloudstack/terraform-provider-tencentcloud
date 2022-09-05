@@ -54,7 +54,7 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + ClusterAttachmentInstanceType + defaultImages + defaultSecurityGroupData + `
+const testAccTkeClusterEndpointBasicDeps = TkeCIDRs + TkeDataSource + TkeDefaultNodeInstanceVar + defaultImages + defaultSecurityGroupData + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -102,7 +102,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies	   = ["OLDEST_INSTANCE"]
 
   auto_scaling_config {
-    instance_type      = local.type1
+    instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [local.sg_id]
