@@ -815,6 +815,29 @@ func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, new
 	return
 }
 
+func (me *RedisService) UpgradeVersionToMultiAvailabilityZones(ctx context.Context, request *redis.UpgradeVersionToMultiAvailabilityZonesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().UpgradeVersionToMultiAvailabilityZones(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, taskId int64) (ok bool, errRet error) {
 	logId := getLogId(ctx)
 	var uintTaskId = uint64(taskId)

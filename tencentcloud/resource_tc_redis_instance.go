@@ -56,6 +56,20 @@ resource "tencentcloud_redis_instance" "red1" {
 }
 ```
 
+Adding replica_zone_ids will upgrade the Single-AZ instance to Multiple-AZ:
+
+```
+resource "tencentcloud_redis_instance" "red1" {
+  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
+  redis_replicas_num = 2
+  replica_zone_ids = [
+    availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name,
+    availability_zone  = data.tencentcloud_availability_zones.az.zones[1].name,
+  ]
+  upgrade_proxy_and_redis_server = true # Optionally upgrade proxy if needed.
+}
+```
+
 Import
 
 Redis instance can be imported, e.g.
@@ -171,6 +185,12 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
+			},
+			"upgrade_proxy_and_redis_server": {
+				Type:         schema.TypeBool,
+				Optional:     true,
+				RequiredWith: []string{"replica_zone_ids"},
+				Description:  "Specify whether to upgrade proxy and redis server. This Argument only works while upgrading single-AZ instance to Multi-AZ. NOTE: If set to true and the upgrade finished, the instance will be flash stopped one or multiple times within 3 minutes.",
 			},
 			"mem_size": {
 				Type:        schema.TypeInt,
@@ -961,22 +981,61 @@ func checkIdsEqual(o []int, n []int) bool {
 
 func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *schema.ResourceData) error {
 	id := d.Id()
+	var redisNodeInfos []*redis.RedisNodeInfo
+	var err error
 	memSize := d.Get("mem_size").(int)
 	shardNum := d.Get("redis_shard_num").(int)
 	o, n := d.GetChange("replica_zone_ids")
 	oz := helper.InterfacesIntegers(o.([]interface{}))
 	nz := helper.InterfacesIntegers(n.([]interface{}))
-	log.Printf("o = %v, n = %v", oz, nz)
-	adds, lacks := GetListDiffs(oz, nz)
 
-	var redisNodeInfos []*redis.RedisNodeInfo
+	_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+	redisNodeInfos = info.NodeSet
 
-	if len(adds) > 0 {
-		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+	// If instance is single az, transform to multi az first
+	if len(oz) == 0 && len(redisNodeInfos) == 0 {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			request := redis.NewUpgradeVersionToMultiAvailabilityZonesRequest()
+			request.InstanceId = helper.String(d.Id())
+			if v, ok := d.GetOkExists("upgrade_proxy_and_redis_server"); ok {
+				request.UpgradeProxyAndRedisServer = helper.Bool(v.(bool))
+			}
+			err := service.UpgradeVersionToMultiAvailabilityZones(ctx, request)
+			if err != nil {
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+		_, _, info, err = service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
 		if err != nil {
 			return err
 		}
 		redisNodeInfos = info.NodeSet
+		oz = []int{}
+		for i := range redisNodeInfos {
+			node := redisNodeInfos[i]
+			if *node.NodeType == 0 {
+				continue
+			}
+			oz = append(oz, int(*node.ZoneId))
+		}
+	}
+
+	adds, lacks := GetListDiffs(oz, nz)
+
+	if len(adds) > 0 {
+		_, _, info, err := service.CheckRedisOnlineOk(ctx, id, readRetryTimeout)
+		redisNodeInfos = info.NodeSet
+		if err != nil {
+			return err
+		}
 		redisReplicaCount := len(redisNodeInfos) - 1
 
 		log.Printf("%v will be add", adds)

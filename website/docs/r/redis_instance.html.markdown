@@ -67,6 +67,20 @@ resource "tencentcloud_redis_instance" "red1" {
 }
 ```
 
+Adding replica_zone_ids will upgrade the Single-AZ instance to Multiple-AZ:
+
+```hcl
+resource "tencentcloud_redis_instance" "red1" {
+  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
+  redis_replicas_num = 2
+  replica_zone_ids = [
+    availability_zone = data.tencentcloud_availability_zones.az.zones[0].name,
+    availability_zone = data.tencentcloud_availability_zones.az.zones[1].name,
+  ]
+  upgrade_proxy_and_redis_server = true # Optionally upgrade proxy if needed.
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -92,6 +106,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) Instance tags.
 * `type_id` - (Optional, Int, ForceNew) Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069).
 * `type` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.33.1. Please use 'type_id' instead. Instance type. Available values: `cluster_ckv`,`cluster_redis5.0`,`cluster_redis`,`master_slave_ckv`,`master_slave_redis4.0`,`master_slave_redis5.0`,`master_slave_redis`,`standalone_redis`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
+* `upgrade_proxy_and_redis_server` - (Optional, Bool) Specify whether to upgrade proxy and redis server. This Argument only works while upgrading single-AZ instance to Multi-AZ. NOTE: If set to true and the upgrade finished, the instance will be flash stopped one or multiple times within 3 minutes.
 * `vpc_id` - (Optional, String, ForceNew) ID of the vpc with which the instance is to be associated.
 
 ## Attributes Reference
