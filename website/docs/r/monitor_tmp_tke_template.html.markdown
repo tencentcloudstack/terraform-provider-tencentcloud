@@ -14,15 +14,10 @@ Provides a resource to create a tmp tke template
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_tke_template" "template" {
+resource "tencentcloud_monitor_tmp_tke_template" "basic" {
   template {
-    name     = "test"
-    level    = "cluster"
-    describe = "template"
-    service_monitors {
-      name   = "test"
-      config = "xxxxx"
-    }
+    name  = "test-template"
+    level = "instance"
   }
 }
 ```

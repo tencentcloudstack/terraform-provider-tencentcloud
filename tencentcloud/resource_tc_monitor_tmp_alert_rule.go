@@ -4,21 +4,13 @@ Provides a resource to create a monitor tmpAlertRule
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_alert_rule" "tmpAlertRule" {
-  instance_id = "prom-c89b3b3u"
-  rule_name   = "test123"
-  expr        = "up{service=\"rig-prometheus-agent\"}>0"
-  receivers   = ["notice-l9ziyxw6"]
-  rule_state  = 2
-  duration    = "4m"
-  labels {
-    key   = "hello1"
-    value = "world1"
-  }
-  annotations {
-    key   = "hello2"
-    value = "world2"
-  }
+resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
+  instance_id	= "prom-c89b3b3u"
+  rule_name		= "test-rule_name"
+  receivers 	= ["Consumer-6vkna7pevq"]
+  expr			= "increase(mysql_global_status_slow_queries[1m]) > 0"
+  duration	    = "4m"
+  rule_state	= 2
 }
 
 ```

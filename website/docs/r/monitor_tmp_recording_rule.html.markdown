@@ -14,8 +14,10 @@ Provides a resource to create a monitor tmp recordingRule
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_recording_rule" "recordingRule" {
-  name        = "dasdasdsadasd"
+resource "tencentcloud_monitor_tmp_recording_rule" "basic" {
+  name        = "recording_rule-test"
+  instance_id = "prom-c89b3b3u"
+  rule_state  = 2
   group       = <<EOF
 ---
 name: example-test
@@ -23,8 +25,6 @@ rules:
   - record: job:http_inprogress_requests:sum
     expr: sum by (job) (http_inprogress_requests)
 EOF
-  instance_id = "prom-c89b3b3u"
-  rule_state  = 2
 }
 ```
 
