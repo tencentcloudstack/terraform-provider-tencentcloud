@@ -252,6 +252,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	noAuth bool,
 	autoRenewFlag int,
 	replicasReadonly bool,
+	paramsTemplateId string,
 ) (instanceIds []*string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -332,6 +333,9 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 	if replicasReadonly {
 		request.ReplicasReadonly = &replicasReadonly
+	}
+	if paramsTemplateId != "" {
+		request.TemplateId = &paramsTemplateId
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().CreateInstances(request)
@@ -928,5 +932,129 @@ func (me *RedisService) DescribeAutoBackupConfig(ctx context.Context, redisId st
 			weekDays = append(weekDays, *v)
 		}
 	}
+	return
+}
+
+func (me *RedisService) DescribeParamTemplates(ctx context.Context, request *redis.DescribeParamTemplatesRequest) (params []*redis.ParamTemplateInfo, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeParamTemplates(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	params = response.Response.Items
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RedisService) DescribeParamTemplateById(ctx context.Context, id string) (params *redis.ParamTemplateInfo, errRet error) {
+	request := redis.NewDescribeParamTemplatesRequest()
+
+	request.TemplateIds = []*string{&id}
+
+	result, err := me.DescribeParamTemplates(ctx, request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(result) == 0 {
+		return
+	}
+
+	params = result[0]
+
+	return
+}
+
+func (me *RedisService) ApplyParamsTemplate(ctx context.Context, request *redis.ApplyParamsTemplateRequest) (taskIds []*int64, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().ApplyParamsTemplate(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	taskIds = response.Response.TaskIds
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RedisService) CreateParamTemplate(ctx context.Context, request *redis.CreateParamTemplateRequest) (id string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().CreateParamTemplate(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response.Response == nil {
+		errRet = fmt.Errorf("[%s] returns nil response", request.GetAction())
+		return
+	}
+
+	id = *response.Response.TemplateId
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RedisService) DeleteParamTemplate(ctx context.Context, request *redis.DeleteParamTemplateRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DeleteParamTemplate(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }

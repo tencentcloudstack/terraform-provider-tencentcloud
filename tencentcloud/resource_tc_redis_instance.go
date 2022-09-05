@@ -214,6 +214,11 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Default:     6379,
 				Description: "The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.",
 			},
+			"params_template_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specify params template id. If not set, will use default template.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -322,6 +327,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	port := d.Get("port").(int)
 	chargeType := d.Get("charge_type").(string)
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
+	paramsTemplateId := d.Get("params_template_id").(string)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var replicasReadonly bool
 	if v, ok := d.GetOk("replicas_read_only"); ok {
@@ -464,6 +470,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		noAuth,
 		autoRenewFlag,
 		replicasReadonly,
+		paramsTemplateId,
 	)
 
 	if err != nil {
@@ -788,6 +795,23 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 		d.SetPartial("password")
+	}
+
+	if d.HasChange("params_template_id") {
+		request := redis.NewApplyParamsTemplateRequest()
+		request.InstanceIds = []*string{&id}
+		request.TemplateId = helper.String(d.Get("params_template_id").(string))
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := redisService.ApplyParamsTemplate(ctx, request)
+			if err != nil {
+				return retryError(err, redis.FAILEDOPERATION_SYSTEMERROR, redis.RESOURCEUNAVAILABLE_INSTANCELOCKEDERROR)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("project_id") {
