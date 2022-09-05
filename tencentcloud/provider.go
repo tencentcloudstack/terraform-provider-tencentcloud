@@ -289,6 +289,7 @@ CynosDB
   Data Source
 	tencentcloud_cynosdb_clusters
 	tencentcloud_cynosdb_instances
+	tencentcloud_cynosdb_zone_config
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -934,6 +935,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_audits":                                   dataSourceTencentCloudAudits(),
 			"tencentcloud_cynosdb_clusters":                         dataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                        dataSourceTencentCloudCynosdbInstances(),
+			"tencentcloud_cynosdb_zone_config":                      dataSourceTencentCynosdbZoneConfig(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_templates": dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
 			"tencentcloud_vod_image_sprite_templates":               dataSourceTencentCloudVodImageSpriteTemplates(),
 			"tencentcloud_vod_procedure_templates":                  dataSourceTencentCloudVodProcedureTemplates(),
