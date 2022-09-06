@@ -31,6 +31,11 @@ func TestAccTencentCloudDnspodRecord(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_dnspod_record.demo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
