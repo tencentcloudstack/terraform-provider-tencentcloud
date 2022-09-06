@@ -16,7 +16,11 @@ func TestAccTencentCloudMonitorGrafanaNotificationChannel_basic(t *testing.T) {
 			{
 				Config: testAccMonitorGrafanaNotificationChannel,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "id"),
+					testAccCheckGrafanaInstanceExists("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "channel_name", "create-channel-test"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "org_id", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "receivers.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "receivers.0", "Consumer-6vkna7pevq"),
 				),
 			},
 			{
@@ -31,11 +35,11 @@ func TestAccTencentCloudMonitorGrafanaNotificationChannel_basic(t *testing.T) {
 const testAccMonitorGrafanaNotificationChannel = `
 
 resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
-  instance_id = ""
-    channel_name = ""
-  org_id = 1
-  receivers = ""
-  extra_org_ids = ""
+  instance_id   = "grafana-50nj6v00"
+  channel_name  = "create-channel-test"
+  org_id        = 1
+  receivers     = ["Consumer-6vkna7pevq"]
+  extra_org_ids = []
 }
 
 `

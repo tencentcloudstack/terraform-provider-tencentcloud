@@ -5,25 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_sso_account" "ssoAccount" {
-  instance_id = ""
-  user_id = ""
-  notes = ""
+  instance_id = "grafana-50nj6v00"
+  user_id     = "111"
+  notes       = "desc12222"
   role {
-			organization = ""
-			role = ""
-
+    organization  = "Main Org."
+    role          = "Admin"
   }
 }
 
 ```
 Import
 
-monitor ssoAccount can be imported using the id, e.g.
+monitor ssoAccount can be imported using the instance_id#user_id, e.g.
 ```
-$ terraform import tencentcloud_monitor_sso_account.ssoAccount ssoAccount_id
+$ terraform import tencentcloud_monitor_sso_account.ssoAccount grafana-50nj6v00#111
 ```
 */
-
 package tencentcloud
 
 import (
@@ -68,6 +66,7 @@ func resourceTencentCloudMonitorSsoAccount() *schema.Resource {
 			},
 
 			"role": {
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				Description: "grafana role.",
@@ -116,6 +115,21 @@ func resourceTencentCloudMonitorSsoAccountCreate(d *schema.ResourceData, meta in
 		request.Notes = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("role"); ok {
+		roleList := v.([]interface{})
+		for _, r := range roleList {
+			rr := r.(map[string]interface{})
+			var role monitor.GrafanaAccountRole
+			if vv, ok := rr["role"]; ok {
+				role.Role = helper.String(vv.(string))
+			}
+			if vv, ok := rr["organization"]; ok {
+				role.Organization = helper.String(vv.(string))
+			}
+			request.Role = append(request.Role, &role)
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateSSOAccount(request)
 		if e != nil {
@@ -133,7 +147,7 @@ func resourceTencentCloudMonitorSsoAccountCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	//userId := *response.Response.UserId
+	userId = *response.Response.UserId
 
 	d.SetId(strings.Join([]string{instanceId, userId}, FILED_SP))
 	return resourceTencentCloudMonitorSsoAccountRead(d, meta)
@@ -177,6 +191,14 @@ func resourceTencentCloudMonitorSsoAccountRead(d *schema.ResourceData, meta inte
 	}
 
 	if ssoAccount.Role != nil {
+		roleList := make([]map[string]interface{}, 0, len(ssoAccount.Role))
+		for _, role := range ssoAccount.Role {
+			roleList = append(roleList, map[string]interface{}{
+				"role":         role.Role,
+				"organization": role.Organization,
+			})
+		}
+		_ = d.Set("role", roleList)
 	}
 
 	return nil
@@ -209,11 +231,26 @@ func resourceTencentCloudMonitorSsoAccountUpdate(d *schema.ResourceData, meta in
 	}
 
 	if d.HasChange("notes") {
-		return fmt.Errorf("`notes` do not support change now.")
+		if v, ok := d.GetOk("notes"); ok {
+			request.Notes = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("role") {
-		return fmt.Errorf("`role` do not support change now.")
+		if v, ok := d.GetOk("role"); ok {
+			roleList := v.([]interface{})
+			for _, r := range roleList {
+				rr := r.(map[string]interface{})
+				var role monitor.GrafanaAccountRole
+				if vv, ok := rr["role"]; ok {
+					role.Role = helper.String(vv.(string))
+				}
+				if vv, ok := rr["organization"]; ok {
+					role.Organization = helper.String(vv.(string))
+				}
+				request.Role = append(request.Role, &role)
+			}
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

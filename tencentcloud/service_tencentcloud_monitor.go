@@ -828,6 +828,8 @@ func (me *MonitorService) DescribeMonitorGrafanaNotificationChannel(ctx context.
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
+	request.Offset = helper.IntInt64(0)
+	request.Limit = helper.IntInt64(10)
 	request.ChannelIDs = []*string{&channelId}
 	request.InstanceId = &instanceId
 
@@ -888,6 +890,7 @@ func (me *MonitorService) DescribeMonitorSsoAccount(ctx context.Context, instanc
 		}
 	}()
 	request.InstanceId = &instanceId
+	request.UserId = &userId
 
 	response, err := me.client.UseMonitorClient().DescribeSSOAccount(request)
 	if err != nil {
@@ -938,8 +941,9 @@ func (me *MonitorService) DeleteMonitorSsoAccountById(ctx context.Context, insta
 
 func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, instanceId, pluginId string) (grafanaPlugin *monitor.GrafanaPlugin, errRet error) {
 	var (
-		logId   = getLogId(ctx)
-		request = monitor.NewDescribeInstalledPluginsRequest()
+		logId    = getLogId(ctx)
+		request  = monitor.NewDescribeInstalledPluginsRequest()
+		response *monitor.DescribeInstalledPluginsResponse
 	)
 
 	defer func() {
@@ -949,16 +953,26 @@ func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, inst
 		}
 	}()
 	request.InstanceId = &instanceId
+	request.PluginId = &pluginId
 
-	response, err := me.client.UseMonitorClient().DescribeInstalledPlugins(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		var err error
+		response, err = me.client.UseMonitorClient().DescribeInstalledPlugins(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return nil
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		return nil
+	})
+	if outErr != nil {
+		errRet = outErr
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	for _, v := range response.Response.PluginSet {
 		if *v.PluginId == pluginId {

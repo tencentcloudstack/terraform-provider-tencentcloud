@@ -5,20 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_grafana_plugin" "grafanaPlugin" {
-  instance_id = ""
-  plugin_id = ""
-  version = ""
+  instance_id = "grafana-50nj6v00"
+  plugin_id   = "grafana-piechart-panel"
+  version     = "1.6.2"
 }
 
 ```
 Import
 
-monitor grafanaPlugin can be imported using the id, e.g.
+monitor grafanaPlugin can be imported using the instance_id#plugin_id, e.g.
 ```
-$ terraform import tencentcloud_monitor_grafana_plugin.grafanaPlugin grafanaPlugin_id
+$ terraform import tencentcloud_monitor_grafana_plugin.grafanaPlugin grafana-50nj6v00#grafana-piechart-panel
 ```
 */
-
 package tencentcloud
 
 import (
@@ -72,8 +71,8 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 	logId := getLogId(contextNil)
 
 	var (
-		request    = monitor.NewInstallPluginsRequest()
-		response   *monitor.InstallPluginsResponse
+		request = monitor.NewInstallPluginsRequest()
+		//response   *monitor.InstallPluginsResponse
 		pluginId   string
 		instanceId string
 	)
@@ -85,6 +84,7 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 
 	var plugin monitor.GrafanaPlugin
 	if v, ok := d.GetOk("plugin_id"); ok {
+		pluginId = v.(string)
 		plugin.PluginId = helper.String(v.(string))
 	}
 
@@ -101,7 +101,7 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		//response = result
 		return nil
 	})
 
@@ -160,8 +160,6 @@ func resourceTencentCloudMonitorGrafanaPluginUpdate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_monitor_grafana_plugin.update")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	request := monitor.NewUninstallGrafanaPluginsRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -182,26 +180,12 @@ func resourceTencentCloudMonitorGrafanaPluginUpdate(d *schema.ResourceData, meta
 		return fmt.Errorf("`plugin_id` do not support change now.")
 	}
 
-	if d.HasChange("version") {
-		return fmt.Errorf("`version` do not support change now.")
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UninstallGrafanaPlugins(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-
+	err := resourceTencentCloudMonitorGrafanaPluginDelete(d, meta)
 	if err != nil {
 		return err
 	}
 
-	return resourceTencentCloudMonitorGrafanaPluginRead(d, meta)
+	return resourceTencentCloudMonitorGrafanaPluginCreate(d, meta)
 }
 
 func resourceTencentCloudMonitorGrafanaPluginDelete(d *schema.ResourceData, meta interface{}) error {

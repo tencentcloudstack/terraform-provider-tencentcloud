@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
-  instance_id = ""
-    channel_name = ""
-  org_id = 1
-  receivers = ""
-  extra_org_ids = ""
+  instance_id   = "grafana-50nj6v00"
+  channel_name  = "create-channel"
+  org_id        = 1
+  receivers     = ["Consumer-6vkna7pevq"]
+  extra_org_ids = []
 }
 
 ```
@@ -20,7 +20,6 @@ monitor grafanaNotificationChannel can be imported using the id, e.g.
 $ terraform import tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel grafanaNotificationChannel_id
 ```
 */
-
 package tencentcloud
 
 import (
@@ -152,7 +151,7 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.Resou
 		return err
 	}
 
-	//channelId = *response.Response.ChannelId
+	channelId = *response.Response.ChannelId
 
 	d.SetId(channelId + FILED_SP + instanceId)
 	return resourceTencentCloudMonitorGrafanaNotificationChannelRead(d, meta)
@@ -195,17 +194,21 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 		_ = d.Set("channel_name", grafanaNotificationChannel.ChannelName)
 	}
 
-	//if grafanaNotificationChannel.OrgId != nil {
-	//	_ = d.Set("org_id", grafanaNotificationChannel.OrgId)
+	//var orgIds []string
+	//for _, v := range grafanaNotificationChannel.OrgIds {
+	//	orgIds = append(orgIds, *v)
 	//}
+	//_ = d.Set("org_id", orgIds)
 
 	if grafanaNotificationChannel.Receivers != nil {
 		_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
 	}
 
-	//if grafanaNotificationChannel.ExtraOrgIds != nil {
-	//	_ = d.Set("extra_org_ids", grafanaNotificationChannel.ExtraOrgIds)
-	//}
+	var extraOrgIds []string
+	for _, v := range grafanaNotificationChannel.ExtraOrgIds {
+		extraOrgIds = append(extraOrgIds, *v)
+	}
+	_ = d.Set("extra_org_ids", extraOrgIds)
 
 	return nil
 }

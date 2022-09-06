@@ -85,8 +85,8 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 
 	var (
-		request       = monitor.NewCreateGrafanaIntegrationRequest()
-		response      *monitor.CreateGrafanaIntegrationResponse
+		request = monitor.NewCreateGrafanaIntegrationRequest()
+		//response      *monitor.CreateGrafanaIntegrationResponse
 		integrationId string
 		instanceId    string
 	)
@@ -112,7 +112,7 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		//response = result
 		return nil
 	})
 
