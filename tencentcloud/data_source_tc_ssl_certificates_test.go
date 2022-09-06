@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -36,7 +36,7 @@ func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
 	})
 }
 
-func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_type(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -64,7 +64,7 @@ func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
 	})
 }
 
-func TestAccDataSourceTencentCloudSslCertificates_id(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_id(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
