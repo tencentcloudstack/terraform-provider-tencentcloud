@@ -399,7 +399,7 @@ const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
   availability_zone          = var.availability_cvm_zone
-  image_id                   = data.tencentcloud_images.default.images.1.image_id
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
