@@ -252,14 +252,13 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies	   = ["OLDEST_INSTANCE"]
   scaling_group_project_id = var.default_project
   delete_keep_instance = false
-  node_os="Tencent tlinux release 2.2 (Final)"
+  node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
     instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
-    img_id         = var.default_img_id
     cam_role_name = "TCB_QcsRole"
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -321,7 +320,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
-	img_id         = var.default_img_id
     cam_role_name = "TCB_QcsRole"
 
     data_disk {
@@ -379,7 +377,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies	   = ["OLDEST_INSTANCE"]
   scaling_group_project_id = var.default_project
   delete_keep_instance = false
-  node_os="Tencent tlinux release 2.2 (Final)"
+  node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
     instance_type      = var.ins_type

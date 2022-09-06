@@ -154,7 +154,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 
   }
   unschedulable = 0
-  node_os="Tencent tlinux release 2.2 (Final)"
+  node_os="tlinux2.2(tkernel3)x86_64"
 }
 
 `
