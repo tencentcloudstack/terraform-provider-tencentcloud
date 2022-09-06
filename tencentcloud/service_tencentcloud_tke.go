@@ -1187,6 +1187,7 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	request.LaunchConfigurePara = &configPara
 	request.InstanceAdvancedSettings = &iAdvanced
 	request.EnableAutoscale = &enableAutoScale
+	//request.DeletionProtection = &deletionProtection
 	request.NodePoolOs = &nodeOs
 	request.OsCustomizeType = &nodeOsType
 
@@ -1228,6 +1229,7 @@ func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, node
 	request.Taints = taints
 	request.Labels = labels
 	request.EnableAutoscale = &enableAutoScale
+	//request.DeletionProtection = &deletionProtection
 	request.MaxNodesNum = &maxSize
 	request.MinNodesNum = &minSize
 	request.Name = &name

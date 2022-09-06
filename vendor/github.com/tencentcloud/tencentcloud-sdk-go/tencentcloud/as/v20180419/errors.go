@@ -74,6 +74,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 无效的Action请求。
+	INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+
 	// 参数冲突，指定的多个参数冲突，不能同时存在。
 	INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 
@@ -187,9 +190,6 @@ const (
 
 	// 指定的通知组 ID 不是数值字符串格式。
 	INVALIDPARAMETERVALUE_INVALIDNOTIFICATIONUSERGROUPID = "InvalidParameterValue.InvalidNotificationUserGroupId"
-
-	// 指定的PAI域名类型不支持。
-	INVALIDPARAMETERVALUE_INVALIDPAIDOMAINNAMETYPE = "InvalidParameterValue.InvalidPaiDomainNameType"
 
 	// 定时任务ID无效。
 	INVALIDPARAMETERVALUE_INVALIDSCHEDULEDACTIONID = "InvalidParameterValue.InvalidScheduledActionId"
@@ -404,6 +404,9 @@ const (
 	// 实例和伸缩组Vpc不一致。
 	RESOURCEUNAVAILABLE_CVMVPCINCONSISTENT = "ResourceUnavailable.CvmVpcInconsistent"
 
+	// 实例无法添加至伸缩组。
+	RESOURCEUNAVAILABLE_INSTANCECANNOTATTACH = "ResourceUnavailable.InstanceCannotAttach"
+
 	// 指定的实例正在活动中。
 	RESOURCEUNAVAILABLE_INSTANCEINOPERATION = "ResourceUnavailable.InstanceInOperation"
 
@@ -442,4 +445,7 @@ const (
 
 	// 指定的可用区不可用。
 	RESOURCEUNAVAILABLE_ZONEUNAVAILABLE = "ResourceUnavailable.ZoneUnavailable"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )
