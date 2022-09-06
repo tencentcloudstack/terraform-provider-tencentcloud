@@ -961,12 +961,11 @@ func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, inst
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return nil
+			return retryError(err, InternalError)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
+		if len(response.Response.PluginSet) < 1 {
+			return resource.RetryableError(fmt.Errorf("Installing pluin %v, retry...", pluginId))
+		}
 		return nil
 	})
 	if outErr != nil {
