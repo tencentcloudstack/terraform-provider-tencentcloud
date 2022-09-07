@@ -183,7 +183,8 @@ const (
 	defaultTkeClusterType = "tke"
 	defaultPrometheusId   = "prom-1lspn8sw"
 	defaultTemplateId     = "temp-gqunlvo1"
-	tkeClusterIdAgent     = "cls-87o4klby"
+	clusterPrometheusId   = "prom-g261hacc"
+	tkeClusterIdAgent     = "cls-9ae9qo9k"
 	tkeClusterTypeAgent   = "eks"
 	defaultAgentId        = "agent-q3zy8gt8"
 )

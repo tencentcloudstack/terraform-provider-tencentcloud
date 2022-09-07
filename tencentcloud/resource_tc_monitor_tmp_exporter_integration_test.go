@@ -64,7 +64,7 @@ func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
 					testAccCheckExporterIntegrationExists("tencentcloud_monitor_tmp_exporter_integration.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kind", "cvm-http-sd-exporter"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kube_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-87o4klby"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-9ae9qo9k"),
 				),
 			},
 			{
@@ -73,7 +73,7 @@ func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
 					testAccCheckExporterIntegrationExists("tencentcloud_monitor_tmp_exporter_integration.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kind", "cvm-http-sd-exporter"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "kube_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-87o4klby"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_exporter_integration.basic", "cluster_id", "cls-9ae9qo9k"),
 				),
 			},
 		},
@@ -134,7 +134,7 @@ func testAccCheckExporterIntegrationExists(r string) resource.TestCheckFunc {
 
 const testExporterIntegrationVar = `
 variable "prometheus_id" {
-  default = "` + defaultPrometheusId + `"
+  default = "` + clusterPrometheusId + `"
 }
 variable "cluster_id" {
   default = "` + tkeClusterIdAgent + `"
