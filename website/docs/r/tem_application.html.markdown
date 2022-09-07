@@ -30,11 +30,11 @@ resource "tencentcloud_tem_application" "application" {
 The following arguments are supported:
 
 * `application_name` - (Required, String) application name.
-* `description` - (Required, String) application description.
-* `coding_language` - (Optional, String) program language.
+* `coding_language` - (Required, String) program language, like JAVA.
+* `description` - (Optional, String) application description.
 * `repo_name` - (Optional, String) repository name.
 * `repo_server` - (Optional, String) registry address.
-* `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository.
+* `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 4: demo image.
 * `use_default_image_service` - (Optional, Int) create image repo or not.
 
 ## Attributes Reference
