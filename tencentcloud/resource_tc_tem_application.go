@@ -52,14 +52,14 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "application description.",
 			},
 
 			"coding_language": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "program language.",
+				Required:    true,
+				Description: "program language, like JAVA.",
 			},
 
 			"use_default_image_service": {
@@ -72,7 +72,7 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 			"repo_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository.",
+				Description: "repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 4: demo image.",
 			},
 
 			"repo_server": {
