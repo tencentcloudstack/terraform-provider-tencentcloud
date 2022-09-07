@@ -80,19 +80,24 @@ func testAccCheckTcaplusIdlDestroy(s *terraform.State) error {
 		if err := json.Unmarshal([]byte(rs.Primary.ID), &tcaplusIdlId); err != nil {
 			return fmt.Errorf("idl id is broken,%s", err.Error())
 		}
-		infos, err := service.DescribeIdlFileInfos(ctx, tcaplusIdlId.ClusterId)
-		if err != nil {
-			return err
-		}
-		if len(infos) == 0 {
-			return nil
-		}
-		for _, info := range infos {
-			if *info.FileId == tcaplusIdlId.FileId {
+		outerr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			infos, err := service.DescribeIdlFileInfos(ctx, tcaplusIdlId.ClusterId)
+			if err != nil {
+				return retryError(err)
+			}
+			if len(infos) == 0 {
 				return nil
 			}
+			for _, info := range infos {
+				if *info.FileId == tcaplusIdlId.FileId {
+					return retryError(fmt.Errorf("delete failed!"))
+				}
+			}
+			return nil
+		})
+		if outerr != nil {
+			return fmt.Errorf("delete tcaplus idl %s fail, still on server", rs.Primary.ID)
 		}
-		return fmt.Errorf("delete tcaplus idl %s fail, still on server", rs.Primary.ID)
 	}
 	return nil
 }
