@@ -43,6 +43,29 @@ func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
 		},
 	})
 }
+
+func TestAccTencentCloudTcaplusTdrIdlResource(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTcaplusIdlDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTcaplusIdlTdr,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTcaplusIdlExists("tencentcloud_tcaplus_idl.test_tdr_idl"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcaplus_idl.test_tdr_idl", "cluster_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcaplus_idl.test_tdr_idl", "file_name", "auth_info"),
+					resource.TestCheckResourceAttr("tencentcloud_tcaplus_idl.test_tdr_idl", "file_type", "TDR"),
+					resource.TestCheckResourceAttr("tencentcloud_tcaplus_idl.test_tdr_idl", "file_ext_type", "xml"),
+					resource.TestCheckResourceAttr("tencentcloud_tcaplus_idl.test_tdr_idl", "table_infos.#", "1"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTcaplusIdlDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != testTcaplusIdlResourceName {
@@ -57,17 +80,24 @@ func testAccCheckTcaplusIdlDestroy(s *terraform.State) error {
 		if err := json.Unmarshal([]byte(rs.Primary.ID), &tcaplusIdlId); err != nil {
 			return fmt.Errorf("idl id is broken,%s", err.Error())
 		}
-		parseTableInfos, err := service.DesOldIdlFiles(ctx, tcaplusIdlId)
-		if err != nil {
-			parseTableInfos, err = service.DesOldIdlFiles(ctx, tcaplusIdlId)
-		}
-		if err != nil {
-			return err
-		}
-		if len(parseTableInfos) == 0 {
+		outerr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			infos, err := service.DescribeIdlFileInfos(ctx, tcaplusIdlId.ClusterId)
+			if err != nil {
+				return retryError(err)
+			}
+			if len(infos) == 0 {
+				return nil
+			}
+			for _, info := range infos {
+				if *info.FileId == tcaplusIdlId.FileId {
+					return retryError(fmt.Errorf("delete failed!"))
+				}
+			}
 			return nil
+		})
+		if outerr != nil {
+			return fmt.Errorf("delete tcaplus idl %s fail, still on server", rs.Primary.ID)
 		}
-		return fmt.Errorf("delete tcaplus idl %s fail, still on server", rs.Primary.ID)
 	}
 	return nil
 }
@@ -135,5 +165,27 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
         }
     }
     EOF
+}
+`
+
+const testAccTcaplusIdlTdr = defaultTcaPlusData + `
+resource "tencentcloud_tcaplus_idl" "test_tdr_idl" {
+  cluster_id     = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
+  tablegroup_id  = data.tencentcloud_tcaplus_tablegroups.tdr_group.list.0.tablegroup_id
+  file_name     = "auth_info"
+  file_type     = "TDR"
+  file_ext_type = "xml"
+  file_content  = <<EOF
+<?xml version="1.0" encoding="GBK" standalone="yes" ?>        
+<metalib name="user" tagsetversion="1" version="1">
+ <struct name="user_info" version="1" primarykey="id" splittablekey="id">
+    <entry name="id"       type="string"     size="100" 	desc="id" />
+    <entry name="username" type="string"     size="100" 	desc="username" />
+    <entry name="age"      type="int"    	 desc="age" />
+    <entry name="createat" type="uint64"     desc="创建时间" />
+    <entry name="updateat" type="uint64"     desc="更新时间" />
+ </struct>
+</metalib>
+	EOF
 }
 `

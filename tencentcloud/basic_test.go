@@ -585,6 +585,8 @@ locals {
 
 const defaultTcaPlusClusterName = "keep-tcaplus-cluster"
 const defaultTcaPlusClusterTableGroup = "keep_table_group"
+const defaultTcaPlusTdrClusterName = "keep_tdr_tcaplus_cluster"
+const defaultTcaPlusTdrClusterTableGroup = "keep_tdr_table_group"
 const defaultTcaPlusClusterTable = "keep_players"
 const defaultTcaPlusVar = `
 variable "tcaplus_cluster" {
@@ -598,6 +600,14 @@ variable "tcaplus_table_group" {
 variable "tcaplus_table" {
   default = "` + defaultTcaPlusClusterTable + `"
 }
+
+variable "tcaplus_tcr_cluster" {
+  default = "` + defaultTcaPlusTdrClusterName + `"
+}
+
+variable "tcaplus_tcr_table_group" {
+  default = "` + defaultTcaPlusTdrClusterTableGroup + `"
+}
 `
 const defaultTcaPlusData = defaultTcaPlusVar + `
 data "tencentcloud_tcaplus_clusters" "tcaplus" {
@@ -609,10 +619,21 @@ data "tencentcloud_tcaplus_tablegroups" "group" {
   tablegroup_name = var.tcaplus_table_group
 }
 
+data "tencentcloud_tcaplus_clusters" "tdr_tcaplus" {
+  cluster_name = "keep_tdr_tcaplus_cluster"
+}
+  
+data "tencentcloud_tcaplus_tablegroups" "tdr_group" {
+  cluster_id = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
+  tablegroup_name = "keep_tdr_table_group"
+}
+
 locals {
   tcaplus_id = data.tencentcloud_tcaplus_clusters.tcaplus.list.0.cluster_id
+  tcr_tcaplus_id = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
   tcaplus_table_group = var.tcaplus_table_group
   tcaplus_table_group_id = data.tencentcloud_tcaplus_tablegroups.group.list.0.tablegroup_id
+  tcr_tcaplus_table_group_id = data.tencentcloud_tcaplus_tablegroups.tdr_group.list.0.tablegroup_id
   tcaplus_table = var.tcaplus_table
 }
 `

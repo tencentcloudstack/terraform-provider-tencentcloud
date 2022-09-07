@@ -230,12 +230,12 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 			tableInfos = append(tableInfos, infoMap)
 			continue
 		}
-		infoMap["key_fields"] = *tableInfo.KeyFields
-		infoMap["sum_key_field_size"] = *tableInfo.SumKeyFieldSize
-		infoMap["value_fields"] = *tableInfo.ValueFields
-		infoMap["sum_value_field_size"] = *tableInfo.SumValueFieldSize
-		infoMap["index_key_set"] = *tableInfo.IndexKeySet
-		infoMap["table_name"] = *tableInfo.TableName
+		infoMap["key_fields"] = tableInfo.KeyFields
+		infoMap["sum_key_field_size"] = tableInfo.SumKeyFieldSize
+		infoMap["value_fields"] = tableInfo.ValueFields
+		infoMap["sum_value_field_size"] = tableInfo.SumValueFieldSize
+		infoMap["index_key_set"] = tableInfo.IndexKeySet
+		infoMap["table_name"] = tableInfo.TableName
 		tableInfos = append(tableInfos, infoMap)
 	}
 
@@ -293,12 +293,12 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 			tableInfos = append(tableInfos, infoMap)
 			continue
 		}
-		infoMap["key_fields"] = *tableInfo.KeyFields
-		infoMap["sum_key_field_size"] = *tableInfo.SumKeyFieldSize
-		infoMap["value_fields"] = *tableInfo.ValueFields
-		infoMap["sum_value_field_size"] = *tableInfo.SumValueFieldSize
-		infoMap["index_key_set"] = *tableInfo.IndexKeySet
-		infoMap["table_name"] = *tableInfo.TableName
+		infoMap["key_fields"] = tableInfo.KeyFields
+		infoMap["sum_key_field_size"] = tableInfo.SumKeyFieldSize
+		infoMap["value_fields"] = tableInfo.ValueFields
+		infoMap["sum_value_field_size"] = tableInfo.SumValueFieldSize
+		infoMap["index_key_set"] = tableInfo.IndexKeySet
+		infoMap["table_name"] = tableInfo.TableName
 		tableInfos = append(tableInfos, infoMap)
 	}
 
