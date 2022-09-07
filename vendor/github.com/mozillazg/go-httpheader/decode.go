@@ -73,8 +73,12 @@ func parseValue(header http.Header, val reflect.Value) error {
 		}
 
 		if sv.Kind() == reflect.Ptr {
+			valArr, exist := headerValues(header, name)
+			if !exist {
+				continue
+			}
 			ve := reflect.New(sv.Type().Elem())
-			if err := fillValues(ve, opts, headerValues(header, name)); err != nil {
+			if err := fillValues(ve, opts, valArr); err != nil {
 				return err
 			}
 			sv.Set(ve)
@@ -82,7 +86,11 @@ func parseValue(header http.Header, val reflect.Value) error {
 		}
 
 		if sv.Type() == timeType {
-			if err := fillValues(sv, opts, headerValues(header, name)); err != nil {
+			valArr, exist := headerValues(header, name)
+			if !exist {
+				continue
+			}
+			if err := fillValues(sv, opts, valArr); err != nil {
 				return err
 			}
 			continue
@@ -95,7 +103,11 @@ func parseValue(header http.Header, val reflect.Value) error {
 			continue
 		}
 
-		if err := fillValues(sv, opts, headerValues(header, name)); err != nil {
+		valArr, exist := headerValues(header, name)
+		if !exist {
+			continue
+		}
+		if err := fillValues(sv, opts, valArr); err != nil {
 			return err
 		}
 	}
@@ -249,6 +261,7 @@ func fillValues(sv reflect.Value, opts tagOptions, valArr []string) error {
 	return nil
 }
 
-func headerValues(h http.Header, key string) []string {
-	return textproto.MIMEHeader(h)[textproto.CanonicalMIMEHeaderKey(key)]
+func headerValues(h http.Header, key string) ([]string, bool) {
+	vs, ok := textproto.MIMEHeader(h)[textproto.CanonicalMIMEHeaderKey(key)]
+	return vs, ok
 }

@@ -43,6 +43,12 @@ data "tencentcloud_vpn_connections" "conns" {
 }
 `
 
+//cos
+const (
+	defaultCosCertificateName         = "keep-cos-domain-cert"
+	defaultCosCertificateBucketPrefix = "keep-cert-test"
+)
+
 // clb
 const (
 	defaultSshCertificate  = "vYSQkJ3K"

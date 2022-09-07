@@ -80,6 +80,11 @@ func dataSourceTencentCloudSslCertificates() *schema.Resource {
 							Computed:    true,
 							Description: "Content of the SSL certificate.",
 						},
+						"key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Key of the SSL certificate.",
+						},
 						"product_zh_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -216,6 +221,9 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 
 		if describeResponse != nil && describeResponse.Response != nil {
 			m["cert"] = *describeResponse.Response.CertificatePublicKey
+			if describeResponse.Response.CertificatePrivateKey != nil {
+				m["key"] = *describeResponse.Response.CertificatePrivateKey
+			}
 		}
 
 		certificates = append(certificates, m)

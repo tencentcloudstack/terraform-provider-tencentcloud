@@ -184,6 +184,8 @@ github.com/bgentry/go-netrc/netrc
 github.com/bgentry/speakeasy
 # github.com/bombsimon/wsl/v3 v3.0.0
 github.com/bombsimon/wsl/v3
+# github.com/clbanning/mxj v1.8.4
+github.com/clbanning/mxj
 # github.com/client9/misspell v0.3.4
 github.com/client9/misspell
 github.com/client9/misspell/cmd/misspell
@@ -465,11 +467,11 @@ github.com/mitchellh/go-homedir
 github.com/mitchellh/go-testing-interface
 # github.com/mitchellh/go-wordwrap v1.0.0
 github.com/mitchellh/go-wordwrap
-# github.com/mitchellh/mapstructure v1.1.2
+# github.com/mitchellh/mapstructure v1.5.0
 github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.1
 github.com/mitchellh/reflectwalk
-# github.com/mozillazg/go-httpheader v0.3.0
+# github.com/mozillazg/go-httpheader v0.3.1
 github.com/mozillazg/go-httpheader
 # github.com/nakabonne/nestif v0.3.0
 github.com/nakabonne/nestif
@@ -623,7 +625,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426
-# github.com/tencentyun/cos-go-sdk-v5 v0.7.33
+# github.com/tencentyun/cos-go-sdk-v5 v0.7.38
 github.com/tencentyun/cos-go-sdk-v5
 # github.com/tetafro/godot v0.3.7
 github.com/tetafro/godot

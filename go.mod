@@ -17,7 +17,8 @@ require (
 	github.com/katbyte/terrafmt v0.2.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mozillazg/go-httpheader v0.3.0 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/mozillazg/go-httpheader v0.3.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.5.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.358
@@ -65,7 +66,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.479
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
-	github.com/tencentyun/cos-go-sdk-v5 v0.7.33
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.38
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect

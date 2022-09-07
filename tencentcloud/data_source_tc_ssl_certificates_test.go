@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -20,7 +20,7 @@ func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_certificates.foo"),
 					resource.TestMatchResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.0.name", "ci-test-ssl-ca"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.0.name", "keep-ssl-ca"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.project_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.cert"),
@@ -36,7 +36,7 @@ func TestAccDataSourceTencentCloudSslCertificates_basic(t *testing.T) {
 	})
 }
 
-func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_type(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -64,7 +64,7 @@ func TestAccDataSourceTencentCloudSslCertificates_type(t *testing.T) {
 	})
 }
 
-func TestAccDataSourceTencentCloudSslCertificates_id(t *testing.T) {
+func TestAccTencentCloudSslCertificatesDataSource_id(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -97,7 +97,7 @@ var TestAccDataSourceTencentCloudSslCertificatesBasic = fmt.Sprintf(`
 resource "tencentcloud_ssl_certificate" "foo" {
   type = "CA"
   cert = "%s"
-  name = "ci-test-ssl-ca"
+  name = "keep-ssl-ca"
 }
 
 data "tencentcloud_ssl_certificates" "foo" {
@@ -109,7 +109,7 @@ var TestAccDataSourceTencentCloudSslCertificatesType = fmt.Sprintf(`
 resource "tencentcloud_ssl_certificate" "foo" {
   type = "CA"
   cert = "%s"
-  name = "ci-test-ssl-ca"
+  name = "keep-ssl-ca"
 }
 
 data "tencentcloud_ssl_certificates" "foo" {
@@ -121,7 +121,7 @@ var TestAccDataSourceTencentCloudSslCertificatesId = fmt.Sprintf(`
 resource "tencentcloud_ssl_certificate" "foo" {
   type = "CA"
   cert = "%s"
-  name = "ci-test-ssl-ca"
+  name = "keep-ssl-ca"
 }
 
 data "tencentcloud_ssl_certificates" "foo" {

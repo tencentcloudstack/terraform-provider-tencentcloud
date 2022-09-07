@@ -1,14 +1,18 @@
 package cos
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
 	"hash"
 	"io/ioutil"
+	math_rand "math/rand"
+	"net"
 	"net/http"
 	"net/url"
+	"regexp"
 	"sort"
 	"strings"
 	"sync"
@@ -26,7 +30,51 @@ var (
 	defaultCVMSchema     = "http"
 	defaultCVMMetaHost   = "metadata.tencentyun.com"
 	defaultCVMCredURI    = "latest/meta-data/cam/security-credentials"
+	internalHost         = regexp.MustCompile(`^.*cos-internal\.[a-z-1]+\.tencentcos\.cn$`)
 )
+
+var DNSScatterDialContext = DNSScatterDialContextFunc
+
+var DNSScatterTransport = &http.Transport{
+	Proxy:                 http.ProxyFromEnvironment,
+	DialContext:           DNSScatterDialContext,
+	MaxIdleConns:          100,
+	IdleConnTimeout:       90 * time.Second,
+	TLSHandshakeTimeout:   10 * time.Second,
+	ExpectContinueTimeout: 1 * time.Second,
+}
+
+func DNSScatterDialContextFunc(ctx context.Context, network string, addr string) (conn net.Conn, err error) {
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return nil, err
+	}
+	ips, err := net.DefaultResolver.LookupIPAddr(ctx, host)
+	if err != nil {
+		return nil, err
+	}
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
+		DualStack: true,
+	}
+	// DNS 打散
+	math_rand.Seed(time.Now().UnixNano())
+	start := math_rand.Intn(len(ips))
+	for i := start; i < len(ips); i++ {
+		conn, err = dialer.DialContext(ctx, network, net.JoinHostPort(ips[i].IP.String(), port))
+		if err == nil {
+			return
+		}
+	}
+	for i := 0; i < start; i++ {
+		conn, err = dialer.DialContext(ctx, network, net.JoinHostPort(ips[i].IP.String(), port))
+		if err == nil {
+			break
+		}
+	}
+	return
+}
 
 // 需要校验的 Headers 列表
 var NeedSignHeaders = map[string]bool{
@@ -319,13 +367,17 @@ func (t *AuthorizationTransport) RoundTrip(req *http.Request) (*http.Response, e
 	authTime := NewAuthTime(defaultAuthExpire)
 	AddAuthorizationHeader(ak, sk, token, req, authTime)
 
-	resp, err := t.transport().RoundTrip(req)
+	resp, err := t.transport(req).RoundTrip(req)
 	return resp, err
 }
 
-func (t *AuthorizationTransport) transport() http.RoundTripper {
+func (t *AuthorizationTransport) transport(req *http.Request) http.RoundTripper {
 	if t.Transport != nil {
 		return t.Transport
+	}
+	// 内部域名默认使用DNS打散
+	if rc := internalHost.MatchString(req.URL.Hostname()); rc {
+		return DNSScatterTransport
 	}
 	return http.DefaultTransport
 }
@@ -339,7 +391,7 @@ type CVMSecurityCredentials struct {
 	Code         string `json:",omitempty"`
 }
 
-type CVMCredentialsTransport struct {
+type CVMCredentialTransport struct {
 	RoleName     string
 	Transport    http.RoundTripper
 	secretID     string
@@ -349,7 +401,7 @@ type CVMCredentialsTransport struct {
 	rwLocker     sync.RWMutex
 }
 
-func (t *CVMCredentialsTransport) GetRoles() ([]string, error) {
+func (t *CVMCredentialTransport) GetRoles() ([]string, error) {
 	urlname := fmt.Sprintf("%s://%s/%s", defaultCVMSchema, defaultCVMMetaHost, defaultCVMCredURI)
 	resp, err := http.Get(urlname)
 	if err != nil {
@@ -372,7 +424,7 @@ func (t *CVMCredentialsTransport) GetRoles() ([]string, error) {
 }
 
 // https://cloud.tencent.com/document/product/213/4934
-func (t *CVMCredentialsTransport) UpdateCredential(now int64) (string, string, string, error) {
+func (t *CVMCredentialTransport) UpdateCredential(now int64) (string, string, string, error) {
 	t.rwLocker.Lock()
 	defer t.rwLocker.Unlock()
 	if t.expiredTime > now+defaultCVMAuthExpire {
@@ -408,7 +460,7 @@ func (t *CVMCredentialsTransport) UpdateCredential(now int64) (string, string, s
 	return t.secretID, t.secretKey, t.sessionToken, nil
 }
 
-func (t *CVMCredentialsTransport) GetCredential() (string, string, string, error) {
+func (t *CVMCredentialTransport) GetCredential() (string, string, string, error) {
 	now := time.Now().Unix()
 	t.rwLocker.RLock()
 	// 提前 defaultCVMAuthExpire 获取重新获取临时密钥
@@ -426,7 +478,7 @@ func (t *CVMCredentialsTransport) GetCredential() (string, string, string, error
 	return t.secretID, t.secretKey, t.sessionToken, nil
 }
 
-func (t *CVMCredentialsTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (t *CVMCredentialTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	ak, sk, token, err := t.GetCredential()
 	if err != nil {
 		return nil, err
@@ -440,9 +492,59 @@ func (t *CVMCredentialsTransport) RoundTrip(req *http.Request) (*http.Response, 
 	return resp, err
 }
 
-func (t *CVMCredentialsTransport) transport() http.RoundTripper {
+func (t *CVMCredentialTransport) transport() http.RoundTripper {
 	if t.Transport != nil {
 		return t.Transport
 	}
 	return http.DefaultTransport
+}
+
+type CredentialTransport struct {
+	Transport  http.RoundTripper
+	Credential CredentialIface
+}
+
+func (t *CredentialTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	ak, sk, token := t.Credential.GetSecretId(), t.Credential.GetSecretKey(), t.Credential.GetToken()
+
+	req = cloneRequest(req)
+	// 增加 Authorization header
+	authTime := NewAuthTime(defaultAuthExpire)
+	AddAuthorizationHeader(ak, sk, token, req, authTime)
+
+	resp, err := t.transport().RoundTrip(req)
+	return resp, err
+}
+
+func (t *CredentialTransport) transport() http.RoundTripper {
+	if t.Transport != nil {
+		return t.Transport
+	}
+	return http.DefaultTransport
+}
+
+type CredentialIface interface {
+	GetSecretId() string
+	GetToken() string
+	GetSecretKey() string
+}
+
+func NewTokenCredential(secretId, secretKey, token string) *Credential {
+	return &Credential{
+		SecretID:     secretId,
+		SecretKey:    secretKey,
+		SessionToken: token,
+	}
+}
+
+func (c *Credential) GetSecretKey() string {
+	return c.SecretKey
+}
+
+func (c *Credential) GetSecretId() string {
+	return c.SecretID
+}
+
+func (c *Credential) GetToken() string {
+	return c.SessionToken
 }
