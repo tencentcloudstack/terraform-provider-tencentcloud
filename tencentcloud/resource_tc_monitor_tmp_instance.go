@@ -138,7 +138,7 @@ func resourceTencentCloudMonitorTmpInstanceCreate(d *schema.ResourceData, meta i
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeMonitorTmpInstance(ctx, tmpInstanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)

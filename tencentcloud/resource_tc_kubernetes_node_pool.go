@@ -215,17 +215,17 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"disk_type": {
-						Type:         schema.TypeString,
-						Optional:     true,
-						ForceNew:     true,
+						Type:     schema.TypeString,
+						Optional: true,
+						//ForceNew:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
 						Description:  "Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.",
 					},
 					"disk_size": {
-						Type:        schema.TypeInt,
-						Optional:    true,
-						ForceNew:    true,
+						Type:     schema.TypeInt,
+						Optional: true,
+						//ForceNew:    true,
 						Default:     0,
 						Description: "Volume of disk in GB. Default is `0`.",
 					},
@@ -239,6 +239,16 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 						Type:        schema.TypeBool,
 						Optional:    true,
 						Description: "Indicates whether the disk remove after instance terminated.",
+					},
+					"encrypt": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Specify whether to encrypt data disk, default: false. NOTE: Make sure the instance type is offering and the cam role `QcloudKMSAccessForCVMRole` was provided.",
+					},
+					"throughput_performance": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						Description: "Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD` and `data_size` > 460GB.",
 					},
 				},
 			},
@@ -487,6 +497,11 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Default:     true,
 				Description: "Indicate to keep the CVM instance when delete the node pool. Default is `true`.",
 			},
+			//"deletion_protection": {
+			//	Type:        schema.TypeBool,
+			//	Optional:    true,
+			//	Description: "Indicates whether the node pool deletion protection is enabled.",
+			//},
 			"node_os": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -651,6 +666,8 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
 			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
+			encrypt, eOk := value["encrypt"].(bool)
+			throughputPerformance := value["throughput_performance"].(int)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
 			}
@@ -662,6 +679,12 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 			}
 			if dOk {
 				dataDisk.DeleteWithInstance = &deleteWithInstance
+			}
+			if eOk {
+				dataDisk.Encrypt = &encrypt
+			}
+			if throughputPerformance > 0 {
+				dataDisk.ThroughputPerformance = helper.IntUint64(throughputPerformance)
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
@@ -795,6 +818,8 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 			diskSize := uint64(value["disk_size"].(int))
 			snapshotId := value["snapshot_id"].(string)
 			deleteWithInstance, dOk := value["delete_with_instance"].(bool)
+			encrypt, eOk := value["encrypt"].(bool)
+			throughputPerformance := value["throughput_performance"].(int)
 			dataDisk := as.DataDisk{
 				DiskType: &diskType,
 			}
@@ -806,6 +831,12 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 			}
 			if dOk {
 				dataDisk.DeleteWithInstance = &deleteWithInstance
+			}
+			if eOk {
+				dataDisk.Encrypt = &encrypt
+			}
+			if throughputPerformance > 0 {
+				dataDisk.ThroughputPerformance = helper.IntUint64(throughputPerformance)
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
@@ -869,6 +900,13 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	request.InstanceChargeType = &chargeType
 
 	return request
+}
+
+func desiredCapacityOutRange(d *schema.ResourceData) bool {
+	capacity := d.Get("desired_capacity").(int)
+	minSize := d.Get("min_size").(int)
+	maxSize := d.Get("max_size").(int)
+	return capacity > maxSize || capacity < minSize
 }
 
 func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) error {
@@ -967,6 +1005,10 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("node_os_type", nodePool.OsCustomizeType)
 	}
 
+	//if nodePool.DeletionProtection != nil {
+	//	_ = d.Set("deletion_protection", nodePool.DeletionProtection)
+	//}
+
 	//set composed struct
 	lables := make(map[string]interface{}, len(nodePool.Labels))
 	for _, v := range nodePool.Labels {
@@ -1030,6 +1072,12 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 				}
 				if item.DeleteWithInstance != nil {
 					disk["delete_with_instance"] = *item.DeleteWithInstance
+				}
+				if item.Encrypt != nil {
+					disk["encrypt"] = *item.Encrypt
+				}
+				if item.ThroughputPerformance != nil {
+					disk["throughput_performance"] = *item.ThroughputPerformance
 				}
 				dataDisks = append(dataDisks, disk)
 			}
@@ -1155,6 +1203,8 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 	nodeOs := d.Get("node_os").(string)
 	nodeOsType := d.Get("node_os_type").(string)
 
+	//deletionProtection := d.Get("deletion_protection").(bool)
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced)
@@ -1233,11 +1283,43 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("auto_scaling_config")
 	}
 
+	var capacityHasChanged = false
+	// assuming
+	// min 1 max 6 desired 2
+	// to
+	// min 3 max 6 desired 5
+	// modify min/max first will cause error, this case must upgrade desired first
+	if d.HasChange("desired_capacity") || !desiredCapacityOutRange(d) {
+		desiredCapacity := int64(d.Get("desired_capacity").(int))
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := service.ModifyClusterNodePoolDesiredCapacity(ctx, clusterId, nodePoolId, desiredCapacity)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		capacityHasChanged = true
+	}
+
 	// ModifyClusterNodePool
-	if d.HasChange("min_size") || d.HasChange("max_size") || d.HasChange("name") || d.HasChange("labels") || d.HasChange("taints") || d.HasChange("enable_auto_scale") || d.HasChange("node_os_type") || d.HasChange("node_os") {
+	if d.HasChanges(
+		"min_size",
+		"max_size",
+		"name",
+		"labels",
+		"taints",
+		//"deletion_protection",
+		"enable_auto_scale",
+		"node_os_type",
+		"node_os",
+	) {
 		maxSize := int64(d.Get("max_size").(int))
 		minSize := int64(d.Get("min_size").(int))
 		enableAutoScale := d.Get("enable_auto_scale").(bool)
+		//deletionProtection := d.Get("deletion_protection").(bool)
 		name := d.Get("name").(string)
 		nodeOs := d.Get("node_os").(string)
 		nodeOsType := d.Get("node_os_type").(string)
@@ -1253,14 +1335,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.SetPartial("min_size")
-		d.SetPartial("max_size")
-		d.SetPartial("name")
-		d.SetPartial("enable_auto_scale")
-		d.SetPartial("node_os")
-		d.SetPartial("node_os_type")
-		d.SetPartial("labels")
-		d.SetPartial("taints")
 	}
 
 	// ModifyScalingGroup
@@ -1329,7 +1403,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("termination_policies")
 	}
 
-	if d.HasChange("desired_capacity") {
+	if d.HasChange("desired_capacity") && !capacityHasChanged {
 		desiredCapacity := int64(d.Get("desired_capacity").(int))
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := service.ModifyClusterNodePoolDesiredCapacity(ctx, clusterId, nodePoolId, desiredCapacity)
@@ -1341,7 +1415,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.SetPartial("desired_capacity")
 	}
 
 	if d.HasChange("auto_scaling_config.0.backup_instance_types") {
@@ -1372,12 +1445,17 @@ func resourceKubernetesNodePoolDelete(d *schema.ResourceData, meta interface{}) 
 		service            = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items              = strings.Split(d.Id(), FILED_SP)
 		deleteKeepInstance = d.Get("delete_keep_instance").(bool)
+		//deletionProtection = d.Get("deletion_protection").(bool)
 	)
 	if len(items) != 2 {
 		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
 	}
 	clusterId := items[0]
 	nodePoolId := items[1]
+
+	//if deletionProtection {
+	//	return fmt.Errorf("deletion protection was enabled, please set `deletion_protection` to `false` and apply first")
+	//}
 
 	//delete as group
 	hasDelete := false

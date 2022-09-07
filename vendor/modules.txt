@@ -535,7 +535,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.363
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
@@ -555,7 +555,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.488
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.490
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -591,7 +591,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.490
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
@@ -615,7 +615,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.486
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.480
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.489
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717

@@ -12,6 +12,14 @@ resource "tencentcloud_dnspod_record" "demo" {
   sub_domain="demo"
 }
 ```
+
+Import
+
+DnsPod Domain record can be imported using the Domain#RecordId, e.g.
+
+```
+$ terraform import tencentcloud_dnspod_record.demo arunma.com#1194109872
+```
 */
 package tencentcloud
 
@@ -33,6 +41,9 @@ func resourceTencentCloudDnspodRecord() *schema.Resource {
 		Read:   resourceTencentCloudDnspodRecordRead,
 		Update: resourceTencentCloudDnspodRecordUpdate,
 		Delete: resourceTencentCloudDnspodRecordDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"domain": {
@@ -171,6 +182,10 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("ttl", recordInfo.TTL)
 		_ = d.Set("monitor_status", recordInfo.MonitorStatus)
 		_ = d.Set("weight", recordInfo.Weight)
+		_ = d.Set("domain", items[0])
+		_ = d.Set("record_line", recordInfo.RecordLine)
+		_ = d.Set("record_type", recordInfo.RecordType)
+		_ = d.Set("value", recordInfo.Value)
 		if *recordInfo.Enabled == uint64(0) {
 			_ = d.Set("status", "DISABLE")
 		} else {

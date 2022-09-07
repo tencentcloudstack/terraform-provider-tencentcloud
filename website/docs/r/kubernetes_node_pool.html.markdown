@@ -212,9 +212,11 @@ The `data_disk` object supports the following:
 The `data_disk` object supports the following:
 
 * `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated.
-* `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
-* `disk_type` - (Optional, String, ForceNew) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
+* `disk_type` - (Optional, String) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
+* `encrypt` - (Optional, Bool) Specify whether to encrypt data disk, default: false. NOTE: Make sure the instance type is offering and the cam role `QcloudKMSAccessForCVMRole` was provided.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
+* `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD` and `data_size` > 460GB.
 
 The `node_config` object supports the following:
 

@@ -95,6 +95,13 @@ const (
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
 )
 
+// Project
+const defaultProjectVariable = `
+variable "default_project" {
+  default = ` + defaultProjectId + `
+}
+`
+
 // EMR
 const (
 	defaultEMRVpcId    = defaultVpcId
@@ -176,7 +183,8 @@ const (
 	defaultTkeClusterType = "tke"
 	defaultPrometheusId   = "prom-1lspn8sw"
 	defaultTemplateId     = "temp-gqunlvo1"
-	tkeClusterIdAgent     = "cls-87o4klby"
+	clusterPrometheusId   = "prom-g261hacc"
+	tkeClusterIdAgent     = "cls-9ae9qo9k"
 	tkeClusterTypeAgent   = "eks"
 	defaultAgentId        = "agent-q3zy8gt8"
 )
@@ -302,9 +310,14 @@ data "tencentcloud_security_groups" "internal" {
   tags = var.fixed_tags
 }
 
+data "tencentcloud_security_groups" "exclusive" {
+  name = "test_preset_sg"
+}
+
 locals {
   # local.sg_id
   sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+  sg_id2 = data.tencentcloud_security_groups.exclusive.security_groups.0.security_group_id
 }
 `
 
@@ -394,7 +407,7 @@ const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
   availability_zone          = var.availability_cvm_zone
-  image_id                   = data.tencentcloud_images.default.images.1.image_id
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
@@ -637,7 +650,7 @@ variable "tke_cidr_c" {
 
 const TkeDefaultNodeInstanceVar = `
 variable "ins_type" {
-  default = "S5.MEDIUM4"
+  default = "SA2.LARGE8"
 }
 `
 
