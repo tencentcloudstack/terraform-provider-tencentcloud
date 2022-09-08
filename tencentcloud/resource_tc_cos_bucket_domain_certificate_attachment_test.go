@@ -15,7 +15,7 @@ func TestAccTencentCloudCosBucketDomainCertificate_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCosBucketDoaminCertificateDestroy(id),
 		Steps: []resource.TestStep{
@@ -106,12 +106,6 @@ provider "tencentcloud" {
   region = "ap-singapore"
 }
 
-data "tencentcloud_domains" "domains" {}
-
-locals {
-  domain = data.tencentcloud_domains.domains.list.0.domain_name
-  domainKeep = "keep.${local.domain}"
-}
 `
 
 const testAccCosBucketRes = `
@@ -141,7 +135,7 @@ const testAccCosBucketDomainCertificate_basic = userInfoData + testAccCosDomain 
 resource "tencentcloud_cos_bucket_domain_certificate_attachment" "basic" {
   bucket = "` + defaultCosCertificateBucketPrefix + `-${local.app_id}"
   domain_certificate {
-	domain = "${local.domainKeep}"
+	domain = "` + defaultCosCertDomainName + `"
     certificate {
       cert_type = "CustomCert"
       custom_cert {

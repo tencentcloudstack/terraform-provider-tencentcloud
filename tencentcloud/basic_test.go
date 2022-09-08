@@ -43,10 +43,11 @@ data "tencentcloud_vpn_connections" "conns" {
 }
 `
 
-//cos
+// cos
 const (
 	defaultCosCertificateName         = "keep-cos-domain-cert"
 	defaultCosCertificateBucketPrefix = "keep-cert-test"
+	defaultCosCertDomainName          = "mikatong.com"
 )
 
 // clb
@@ -127,7 +128,7 @@ variable "sg_id" {
 }
 `
 
-//cvm-image
+// cvm-image
 const (
 	defaultCvmId  = "ins-8oqqya08"
 	defaultDiskId = "disk-5jjrs2lm"
@@ -162,7 +163,7 @@ data "tencentcloud_instance_types" "default" {
 }
 `
 
-//ckafka
+// ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"
 	defaultKafkaVpcId      = "vpc-68vi2d3h"
