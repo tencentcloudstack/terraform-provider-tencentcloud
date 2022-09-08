@@ -1111,16 +1111,16 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 		return err
 	}
 	for _, state := range documentJson.Statement {
-		//multi value case in elemant `resource`, `action`: input:""/[""], output: [""]
+		//multi value case in element `resource`, `action`: input:""/[""], output: [""]
 		if state.Resource != nil {
-			if reflect.TypeOf(state.Resource) == reflect.TypeOf("string") {
-				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array")
+			if reflect.TypeOf(state.Resource) == reflect.TypeOf("string") && state.Resource.(string) != "*" {
+				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array or `*`")
 			}
 		}
 
 		if state.Action != nil {
-			if reflect.TypeOf(state.Action) == reflect.TypeOf("string") {
-				return fmt.Errorf("The format of `resource` in policy document is invalid, its type must be array")
+			if reflect.TypeOf(state.Action) == reflect.TypeOf("string") && state.Resource.(string) != "*" {
+				return fmt.Errorf("The format of `action` in policy document is invalid, its type must be array or `*`")
 			}
 
 		}
