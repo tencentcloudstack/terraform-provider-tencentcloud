@@ -14,11 +14,11 @@ Provides a resource to create a monitor tmpScrapeJob
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_scrape_job" "tmpScrapeJob" {
+resource "tencentcloud_monitor_tmp_scrape_job" "basic" {
   instance_id = "prom-dko9d0nu"
   agent_id    = "agent-6a7g40k2"
   config      = <<-EOT
-job_name: demo-config
+job_name: demo-config-test
 honor_timestamps: true
 metrics_path: /metrics
 scheme: https

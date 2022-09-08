@@ -4,15 +4,15 @@ Provides a resource to create a monitor tmpInstance
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_instance" "tmpInstance" {
-  instance_name = "demo"
-  vpc_id = "vpc-2hfyray3"
-  subnet_id = "subnet-rdkj0agk"
-  data_retention_time = 30
-  zone = "ap-guangzhou-3"
-  tags = {
-    "createdBy" = "terraform"
-  }
+resource "tencentcloud_monitor_tmp_instance" "basic" {
+ instance_name 			= "demo-test"
+ vpc_id 				= "vpc-2hfyray3"
+ subnet_id				= "subnet-rdkj0agk"
+ data_retention_time	= 30
+ zone 					= "ap-guangzhou-3"
+ tags = {
+   "createdBy" = "terraform"
+ }
 }
 
 ```

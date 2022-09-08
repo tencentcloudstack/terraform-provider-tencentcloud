@@ -4,25 +4,23 @@ Provides a resource to create a tke tmpPrometheusConfig
 Example Usage
 
 ```hcl
-
-resource "tencentcloud_monitor_tmp_tke_config" "foo" {
-  instance_id  = "xxx"
-  cluster_type = "xxx"
-  cluster_id   = "xxx"
-
-  raw_jobs {
-    name   = "raw_jobs_001"
-    config = "your config for raw_jobs_001\n"
-  }
-
+resource "tencentcloud_monitor_tmp_tke_config" "basic" {
+  instance_id  = "prom-1lspn8sw"
+  cluster_type = "tke"
+  cluster_id   = "cls-ely08ic4"
   service_monitors {
-    name   = "kube-system/service-monitor-001" # name with default namespace kube-system
-    config = "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: service-monitor-001\n  namespace: kube-system\n"
+    name   = "service-monitor-001"
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: service-monitor-001\n  namespace: kube-system\nspec:\n  endpoints:\n    - interval: 115s\n      port: 8080-8080-tcp\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - __meta_kubernetes_pod_label_app\n          targetLabel: application\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      app: test"
   }
 
   pod_monitors {
-    name   = "mynamespace/pod-monitor-001" # name with the specified namespace
-    config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: mynamespace\n"
+    name   = "pod-monitor-001"
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: kube-system\nspec:\n  podMetricsEndpoints:\n    - interval: 15s\n      port: metric-port\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - instance\n          regex: (.*)\n          targetLabel: instance\n          replacement: xxxxxx\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      k8s-app: test"
+  }
+
+  raw_jobs {
+    name   = "raw_jobs_001"
+    config = "scrape_configs:\n- job_name: raw_jobs_001\n  honor_labels: true\n"
   }
 }
 

@@ -5,13 +5,12 @@ Example Usage
 
 ```hcl
 
-resource "tencentcloud_monitor_tmp_tke_cluster_agent" "tmpClusterAgent" {
-  instance_id = "prom-xxx"
-
+resource "tencentcloud_monitor_tmp_tke_cluster_agent" "basic" {
+  instance_id = var.prometheus_id
   agents {
-    region          = "ap-xxx"
+    region          = "ap-guangzhou"
     cluster_type    = "eks"
-    cluster_id      = "cls-xxx"
+    cluster_id      = "agent-q3zy8gt8"
     enable_external = false
   }
 }
