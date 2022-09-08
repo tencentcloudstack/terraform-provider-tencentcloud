@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
   instance_id = "grafana-50nj6v00"
   kind 		  = "tencentcloud-monitor-app"
-  content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"Tic@12345678\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
+  content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"12345678\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
 }
 
 resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" {
