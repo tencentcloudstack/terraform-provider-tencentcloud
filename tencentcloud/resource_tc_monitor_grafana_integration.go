@@ -5,9 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
-  instance_id = ""
-    kind = ""
-  content = ""
+  instance_id = "grafana-50nj6v00"
+  kind 		  = "tencentcloud-monitor-app"
+  content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"Tic@12345678\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
+}
+
+resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" {
+  content     = "{\"id\":\"integration-9st6kqz6\",\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"name\":\"uint-test3\",\"authProvider\":{\"secretId\":\"ROLE\",\"useRole\":true,\"__anyOf\":\"使用服务角色\"}},\"grafanaSpec\":{\"organizationIds\":[]}}}"
+  instance_id = "grafana-50nj6v00"
+  kind        = "tencentcloud-monitor-app"
 }
 
 ```
@@ -38,9 +44,7 @@ func resourceTencentCloudMonitorGrafanaIntegration() *schema.Resource {
 		Create: resourceTencentCloudMonitorGrafanaIntegrationCreate,
 		Update: resourceTencentCloudMonitorGrafanaIntegrationUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaIntegrationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -85,8 +89,8 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 
 	var (
-		request = monitor.NewCreateGrafanaIntegrationRequest()
-		//response      *monitor.CreateGrafanaIntegrationResponse
+		request       = monitor.NewCreateGrafanaIntegrationRequest()
+		response      *monitor.CreateGrafanaIntegrationResponse
 		integrationId string
 		instanceId    string
 	)
@@ -112,7 +116,7 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		//response = result
+		response = result
 		return nil
 	})
 
@@ -121,8 +125,7 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 		return err
 	}
 
-	//integrationId := *response.Response.IntegrationId
-	integrationId = "integration-18yi1w7o"
+	integrationId = *response.Response.IntegrationId
 
 	d.SetId(strings.Join([]string{integrationId, instanceId}, FILED_SP))
 	return resourceTencentCloudMonitorGrafanaIntegrationRead(d, meta)
@@ -165,9 +168,9 @@ func resourceTencentCloudMonitorGrafanaIntegrationRead(d *schema.ResourceData, m
 		_ = d.Set("kind", grafanaIntegration.Kind)
 	}
 
-	if grafanaIntegration.Content != nil {
-		_ = d.Set("content", grafanaIntegration.Content)
-	}
+	//if grafanaIntegration.Content != nil {
+	//	_ = d.Set("content", grafanaIntegration.Content)
+	//}
 
 	return nil
 }
