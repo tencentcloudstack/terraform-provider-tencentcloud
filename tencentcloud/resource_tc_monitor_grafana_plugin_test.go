@@ -24,7 +24,7 @@ func TestAccTencentCloudMonitorGrafanaPlugin_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaPlugin,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaPluginExists("tencentcloud_monitor_grafana_plugin.grafanaPlugin"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "plugin_id", "grafana-piechart-panel"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "plugin_id", defaultGrafanaPlugin),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "version", defaultGrafanaVersion),
 				),
 			},
