@@ -110,7 +110,25 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	//pluginId = *response.Response.PluginId
+	outErr := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().DescribeInstalledPlugins(&monitor.DescribeInstalledPluginsRequest{
+			InstanceId: &instanceId,
+			PluginId:   &pluginId,
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err, InternalError)
+		}
+		if len(response.Response.PluginSet) < 1 {
+			return resource.RetryableError(fmt.Errorf("Installing pluin %v, retry...", pluginId))
+		}
+		return nil
+	})
+	if outErr != nil {
+		log.Printf("[CRITAL]%s Inquire monitor grafanaPlugin failed, reason:%+v", logId, outErr)
+		return outErr
+	}
 
 	d.SetId(strings.Join([]string{instanceId, pluginId}, FILED_SP))
 	return resourceTencentCloudMonitorGrafanaPluginRead(d, meta)

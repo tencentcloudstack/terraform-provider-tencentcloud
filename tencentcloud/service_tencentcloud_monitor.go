@@ -955,21 +955,11 @@ func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, inst
 	request.InstanceId = &instanceId
 	request.PluginId = &pluginId
 
-	outErr := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-		var err error
-		response, err = me.client.UseMonitorClient().DescribeInstalledPlugins(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err, InternalError)
-		}
-		if len(response.Response.PluginSet) < 1 {
-			return resource.RetryableError(fmt.Errorf("Installing pluin %v, retry...", pluginId))
-		}
-		return nil
-	})
-	if outErr != nil {
-		errRet = outErr
+	response, err := me.client.UseMonitorClient().DescribeInstalledPlugins(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
 		return
 	}
 
