@@ -13,12 +13,6 @@ resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificatio
 }
 
 ```
-Import
-
-monitor grafanaNotificationChannel can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel grafanaNotificationChannel_id
-```
 */
 package tencentcloud
 
@@ -40,9 +34,9 @@ func resourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
 		Create: resourceTencentCloudMonitorGrafanaNotificationChannelCreate,
 		Update: resourceTencentCloudMonitorGrafanaNotificationChannelUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaNotificationChannelDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		//Importer: &schema.ResourceImporter{
+		//	State: schema.ImportStatePassthrough,
+		//},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -194,21 +188,11 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 		_ = d.Set("channel_name", grafanaNotificationChannel.ChannelName)
 	}
 
-	//var orgIds []string
-	//for _, v := range grafanaNotificationChannel.OrgIds {
-	//	orgIds = append(orgIds, *v)
-	//}
-	//_ = d.Set("org_id", orgIds)
-
-	if grafanaNotificationChannel.Receivers != nil {
-		_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
+	var receivers []string
+	for _, v := range grafanaNotificationChannel.Receivers {
+		receivers = append(receivers, *v)
 	}
-
-	var extraOrgIds []string
-	for _, v := range grafanaNotificationChannel.ExtraOrgIds {
-		extraOrgIds = append(extraOrgIds, *v)
-	}
-	_ = d.Set("extra_org_ids", extraOrgIds)
+	_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
 
 	return nil
 }

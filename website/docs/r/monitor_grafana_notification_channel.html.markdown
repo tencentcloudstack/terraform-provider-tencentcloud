@@ -41,10 +41,3 @@ In addition to all arguments above, the following attributes are exported:
 * `channel_id` - plugin id.
 
 
-## Import
-
-monitor grafanaNotificationChannel can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel grafanaNotificationChannel_id
-```
-

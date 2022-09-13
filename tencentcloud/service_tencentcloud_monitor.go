@@ -816,10 +816,10 @@ func (me *MonitorService) DeleteMonitorGrafanaIntegrationById(ctx context.Contex
 	return
 }
 
-func (me *MonitorService) DescribeMonitorGrafanaNotificationChannel(ctx context.Context, channelId, instanceId string) (grafanaNotificationChannel *monitor.GrafanaNotificationChannel, errRet error) {
+func (me *MonitorService) DescribeMonitorGrafanaNotificationChannel(ctx context.Context, channelId, instanceId string) (grafanaNotificationChannel *monitor.GrafanaChannel, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = monitor.NewDescribeGrafanaNotificationChannelsRequest()
+		request = monitor.NewDescribeGrafanaChannelsRequest()
 	)
 
 	defer func() {
@@ -830,10 +830,10 @@ func (me *MonitorService) DescribeMonitorGrafanaNotificationChannel(ctx context.
 	}()
 	request.Offset = helper.IntInt64(0)
 	request.Limit = helper.IntInt64(10)
-	request.ChannelIDs = []*string{&channelId}
+	request.ChannelIds = []*string{&channelId}
 	request.InstanceId = &instanceId
 
-	response, err := me.client.UseMonitorClient().DescribeGrafanaNotificationChannels(request)
+	response, err := me.client.UseMonitorClient().DescribeGrafanaChannels(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

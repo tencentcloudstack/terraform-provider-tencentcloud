@@ -29,11 +29,11 @@ func TestAccTencentCloudMonitorGrafanaNotificationChannel_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "receivers.0", "Consumer-6vkna7pevq"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			//{
+			//	ResourceName:      "tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel",
+			//	ImportState:       true,
+			//	ImportStateVerify: true,
+			//},
 		},
 	})
 }
