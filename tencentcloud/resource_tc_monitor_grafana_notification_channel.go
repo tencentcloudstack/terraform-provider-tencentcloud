@@ -34,9 +34,7 @@ func resourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
 		Create: resourceTencentCloudMonitorGrafanaNotificationChannelCreate,
 		Update: resourceTencentCloudMonitorGrafanaNotificationChannelUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaNotificationChannelDelete,
-		//Importer: &schema.ResourceImporter{
-		//	State: schema.ImportStatePassthrough,
-		//},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,

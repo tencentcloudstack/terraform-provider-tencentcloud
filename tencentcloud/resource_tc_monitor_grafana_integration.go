@@ -16,13 +16,6 @@ resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" 
   kind        = "tencentcloud-monitor-app"
 }
 
-```
-Import
-
-monitor grafanaIntegration can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_monitor_grafana_integration.grafanaIntegration grafanaIntegration_id
-```
 */
 package tencentcloud
 

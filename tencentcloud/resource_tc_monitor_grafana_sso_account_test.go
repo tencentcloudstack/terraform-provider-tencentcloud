@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMonitorSsoAccount_basic -v
-func TestAccTencentCloudMonitorSsoAccount_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudMonitorGrafanaSsoAccount_basic -v
+func TestAccTencentCloudMonitorGrafanaSsoAccount_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -21,18 +21,18 @@ func TestAccTencentCloudMonitorSsoAccount_basic(t *testing.T) {
 		CheckDestroy: testAccCheckSsoAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMonitorSsoAccount,
+				Config: testAccMonitorGrafanaSsoAccount,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSsoAccountExists("tencentcloud_monitor_sso_account.ssoAccount"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_sso_account.ssoAccount", "user_id", "202109071220"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_sso_account.ssoAccount", "notes", "desc-202109071220"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_sso_account.ssoAccount", "role.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_sso_account.ssoAccount", "role.0.role", "Admin"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_sso_account.ssoAccount", "role.0.organization", "Main Org."),
+					testAccCheckSsoAccountExists("tencentcloud_monitor_grafana_sso_account.ssoAccount"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "user_id", "202109071220"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "notes", "desc-202109071220"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.0.role", "Admin"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.0.organization", "Main Org."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_monitor_sso_account.ssoAccount",
+				ResourceName:      "tencentcloud_monitor_grafana_sso_account.ssoAccount",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -45,7 +45,7 @@ func testAccCheckSsoAccountDestroy(s *terraform.State) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_monitor_sso_account" {
+		if rs.Type != "tencentcloud_monitor_grafana_sso_account" {
 			continue
 		}
 		if rs.Primary.ID == "" {
@@ -103,10 +103,16 @@ func testAccCheckSsoAccountExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMonitorSsoAccount = `
+const testMonitorGrafanaSsoAccountVar = `
+variable "instance_id" {
+  default = "` + defaultGrafanaInstanceId + `"
+}
+`
 
-resource "tencentcloud_monitor_sso_account" "ssoAccount" {
-  instance_id = "grafana-50nj6v00"
+const testAccMonitorGrafanaSsoAccount = testMonitorGrafanaSsoAccountVar + `
+
+resource "tencentcloud_monitor_grafana_sso_account" "ssoAccount" {
+  instance_id = var.instance_id
   user_id     = "202109071220"
   notes       = "desc-202109071220"
   role {

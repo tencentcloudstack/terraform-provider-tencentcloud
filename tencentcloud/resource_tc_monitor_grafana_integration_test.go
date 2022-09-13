@@ -36,11 +36,6 @@ func TestAccTencentCloudMonitorGrafanaIntegration_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "kind", "tencentcloud-monitor-app"),
 				),
 			},
-			//{
-			//	ResourceName:      "tencentcloud_monitor_grafana_integration.grafanaIntegration",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
 		},
 	})
 }
@@ -108,21 +103,27 @@ func testAccCheckGrafanaIntegrationExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMonitorGrafanaIntegration = `
+const testMonitorGrafanaIntegrationVar = `
+variable "instance_id" {
+  default = "` + defaultGrafanaInstanceId + `"
+}
+`
+
+const testAccMonitorGrafanaIntegration = testMonitorGrafanaIntegrationVar + `
 
 resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
-  instance_id = "grafana-50nj6v00"
+  instance_id = var.instance_id
   kind 		  = "tencentcloud-monitor-app"
   content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"123456789\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
 }
 
 `
 
-const testAccMonitorGrafanaIntegration_update = `
+const testAccMonitorGrafanaIntegration_update = testMonitorGrafanaIntegrationVar + `
 
 resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
   content         = "{\"id\":\"integration-9st6kqz6\",\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"name\":\"uint-test3\",\"authProvider\":{\"secretId\":\"ROLE\",\"useRole\":true,\"__anyOf\":\"使用服务角色\"}},\"grafanaSpec\":{\"organizationIds\":[]}}}"
-  instance_id     = "grafana-50nj6v00"
+  instance_id     = var.instance_id
   kind 		      = "tencentcloud-monitor-app"
 }
 

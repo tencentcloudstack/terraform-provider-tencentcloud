@@ -25,7 +25,7 @@ func TestAccTencentCloudMonitorGrafanaPlugin_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaPluginExists("tencentcloud_monitor_grafana_plugin.grafanaPlugin"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "plugin_id", "grafana-piechart-panel"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "version", "1.6.2"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_plugin.grafanaPlugin", "version", defaultGrafanaVersion),
 				),
 			},
 			{
@@ -100,12 +100,24 @@ func testAccCheckGrafanaPluginExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMonitorGrafanaPlugin = `
+const testMonitorGrafanaPluginVar = `
+variable "instance_id" {
+  default = "` + defaultGrafanaInstanceId + `"
+}
+variable "plugin_id" {
+  default = "` + defaultGrafanaPlugin + `"
+}
+variable "plugin_version" {
+  default = "` + defaultGrafanaVersion + `"
+}
+`
+
+const testAccMonitorGrafanaPlugin = testMonitorGrafanaPluginVar + `
 
 resource "tencentcloud_monitor_grafana_plugin" "grafanaPlugin" {
-  instance_id = "grafana-50nj6v00"
-  plugin_id   = "grafana-piechart-panel"
-  version     = "1.6.2"
+  instance_id = var.instance_id
+  plugin_id   = var.plugin_id
+  version     = var.plugin_version
 }
 
 `

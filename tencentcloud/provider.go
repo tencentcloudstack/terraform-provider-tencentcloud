@@ -445,7 +445,7 @@ Monitor
 	tencentcloud_monitor_grafana_integration
 	tencentcloud_monitor_grafana_notification_channel
 	tencentcloud_monitor_grafana_plugin
-	tencentcloud_monitor_sso_account
+	tencentcloud_monitor_grafana_sso_account
 
 PostgreSQL
   Data Source
@@ -1136,7 +1136,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_grafana_integration":             resourceTencentCloudMonitorGrafanaIntegration(),
 			"tencentcloud_monitor_grafana_notification_channel":    resourceTencentCloudMonitorGrafanaNotificationChannel(),
 			"tencentcloud_monitor_grafana_plugin":                  resourceTencentCloudMonitorGrafanaPlugin(),
-			"tencentcloud_monitor_sso_account":                     resourceTencentCloudMonitorSsoAccount(),
+			"tencentcloud_monitor_grafana_sso_account":             resourceTencentCloudMonitorGrafanaSsoAccount(),
 			"tencentcloud_mongodb_standby_instance":                resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                  resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                     resourceTencentCloudPostgresqlInstance(),

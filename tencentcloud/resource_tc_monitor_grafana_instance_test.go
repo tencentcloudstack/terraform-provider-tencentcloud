@@ -24,7 +24,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaInstanceExists("tencentcloud_monitor_grafana_instance.grafanaInstance"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "instance_name", "test-grafana"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
 				),
@@ -34,7 +34,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaInstanceExists("tencentcloud_monitor_grafana_instance.grafanaInstance"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "instance_name", "test-grafana-update"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
 				),
@@ -108,10 +108,10 @@ func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 
 const testMonitorGrafanaInstanceVar = `
 variable "vpc_id" {
-  default = "` + defaultVpcId + `"
+  default = "` + defaultGrafanaVpcId + `"
 }
 variable "subnet_id" {
-  default = "` + defaultSubnetId + `"
+  default = "` + defaultGrafanaSubnetId + `"
 }
 `
 
@@ -119,8 +119,8 @@ const testAccMonitorGrafanaInstance = testMonitorGrafanaInstanceVar + `
 
 resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   instance_name = "test-grafana"
-  vpc_id = "vpc-2hfyray3"
-  subnet_ids = ["subnet-rdkj0agk"]
+  vpc_id = var.vpc_id
+  subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
 
@@ -133,8 +133,8 @@ const testAccMonitorGrafanaInstance_update = testMonitorGrafanaInstanceVar + `
 
 resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   instance_name = "test-grafana-update"
-  vpc_id = "vpc-2hfyray3"
-  subnet_ids = ["subnet-rdkj0agk"]
+  vpc_id = var.vpc_id
+  subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
 

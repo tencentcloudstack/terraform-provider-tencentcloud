@@ -21,7 +21,7 @@ Import
 
 monitor grafanaInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id#grafana_init_password
+$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id
 ```
 */
 package tencentcloud
@@ -30,7 +30,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -45,12 +44,7 @@ func resourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 		Update: resourceTencentCloudMonitorGrafanaInstanceUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				ids := strings.Split(d.Id(), FILED_SP)
-				d.SetId(ids[0])
-				_ = d.Set("grafana_init_password", ids[1])
-				return []*schema.ResourceData{d}, nil
-			},
+			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_name": {

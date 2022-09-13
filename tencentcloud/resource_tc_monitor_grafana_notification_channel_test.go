@@ -26,14 +26,8 @@ func TestAccTencentCloudMonitorGrafanaNotificationChannel_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "channel_name", "create-channel-test"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "org_id", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "receivers.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel", "receivers.0", "Consumer-6vkna7pevq"),
 				),
 			},
-			//{
-			//	ResourceName:      "tencentcloud_monitor_grafana_notification_channel.grafanaNotificationChannel",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
 		},
 	})
 }
@@ -101,13 +95,22 @@ func testAccCheckGrafanaNotificationChannelExists(r string) resource.TestCheckFu
 	}
 }
 
-const testAccMonitorGrafanaNotificationChannel = `
+const testMonitorGrafanaNotificationChannelVar = `
+variable "instance_id" {
+  default = "` + defaultGrafanaInstanceId + `"
+}
+variable "receivers" {
+  default = "` + defaultGrafanaReceiver + `"
+}
+`
+
+const testAccMonitorGrafanaNotificationChannel = testMonitorGrafanaNotificationChannelVar + `
 
 resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
-  instance_id   = "grafana-50nj6v00"
+  instance_id   = var.instance_id
   channel_name  = "create-channel-test"
   org_id        = 1
-  receivers     = ["Consumer-6vkna7pevq"]
+  receivers     = [var.receivers]
   extra_org_ids = []
 }
 

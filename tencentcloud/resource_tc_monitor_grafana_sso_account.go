@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a monitor ssoAccount
+Provides a resource to create a monitor grafana ssoAccount
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_sso_account" "ssoAccount" {
+resource "tencentcloud_monitor_grafana_sso_account" "ssoAccount" {
   instance_id = "grafana-50nj6v00"
   user_id     = "111"
   notes       = "desc12222"
@@ -17,9 +17,9 @@ resource "tencentcloud_monitor_sso_account" "ssoAccount" {
 ```
 Import
 
-monitor ssoAccount can be imported using the instance_id#user_id, e.g.
+monitor grafana ssoAccount can be imported using the instance_id#user_id, e.g.
 ```
-$ terraform import tencentcloud_monitor_sso_account.ssoAccount grafana-50nj6v00#111
+$ terraform import tencentcloud_monitor_grafana_sso_account.ssoAccount grafana-50nj6v00#111
 ```
 */
 package tencentcloud
@@ -36,12 +36,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorSsoAccount() *schema.Resource {
+func resourceTencentCloudMonitorGrafanaSsoAccount() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorSsoAccountRead,
-		Create: resourceTencentCloudMonitorSsoAccountCreate,
-		Update: resourceTencentCloudMonitorSsoAccountUpdate,
-		Delete: resourceTencentCloudMonitorSsoAccountDelete,
+		Read:   resourceTencentCloudMonitorGrafanaSsoAccountRead,
+		Create: resourceTencentCloudMonitorGrafanaSsoAccountCreate,
+		Update: resourceTencentCloudMonitorGrafanaSsoAccountUpdate,
+		Delete: resourceTencentCloudMonitorGrafanaSsoAccountDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -89,8 +89,8 @@ func resourceTencentCloudMonitorSsoAccount() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudMonitorSsoAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_sso_account.create")()
+func resourceTencentCloudMonitorGrafanaSsoAccountCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -150,11 +150,11 @@ func resourceTencentCloudMonitorSsoAccountCreate(d *schema.ResourceData, meta in
 	userId = *response.Response.UserId
 
 	d.SetId(strings.Join([]string{instanceId, userId}, FILED_SP))
-	return resourceTencentCloudMonitorSsoAccountRead(d, meta)
+	return resourceTencentCloudMonitorGrafanaSsoAccountRead(d, meta)
 }
 
-func resourceTencentCloudMonitorSsoAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_sso_account.read")()
+func resourceTencentCloudMonitorGrafanaSsoAccountRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -204,8 +204,8 @@ func resourceTencentCloudMonitorSsoAccountRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudMonitorSsoAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_sso_account.update")()
+func resourceTencentCloudMonitorGrafanaSsoAccountUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -268,11 +268,11 @@ func resourceTencentCloudMonitorSsoAccountUpdate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	return resourceTencentCloudMonitorSsoAccountRead(d, meta)
+	return resourceTencentCloudMonitorGrafanaSsoAccountRead(d, meta)
 }
 
-func resourceTencentCloudMonitorSsoAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_sso_account.delete")()
+func resourceTencentCloudMonitorGrafanaSsoAccountDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)

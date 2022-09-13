@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 
 monitor grafanaInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id#grafana_init_password
+$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id
 ```
 
