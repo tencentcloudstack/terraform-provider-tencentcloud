@@ -955,7 +955,7 @@ func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, inst
 	request.InstanceId = &instanceId
 	request.PluginId = &pluginId
 
-	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		var err error
 		response, err = me.client.UseMonitorClient().DescribeInstalledPlugins(request)
 		if err != nil {
