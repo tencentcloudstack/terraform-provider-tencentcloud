@@ -11,6 +11,7 @@ import (
 	"hash/crc64"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 )
@@ -39,9 +40,9 @@ func EncodePicOperations(pic *PicOperations) string {
 }
 
 type ImageProcessResult struct {
-	XMLName        xml.Name          `xml:"UploadResult"`
-	OriginalInfo   *PicOriginalInfo  `xml:"OriginalInfo,omitempty"`
-	ProcessResults *PicProcessObject `xml:"ProcessResults>Object,omitempty"`
+	XMLName        xml.Name           `xml:"UploadResult"`
+	OriginalInfo   *PicOriginalInfo   `xml:"OriginalInfo,omitempty"`
+	ProcessResults []PicProcessObject `xml:"ProcessResults>Object,omitempty"`
 }
 type PicOriginalInfo struct {
 	Key       string        `xml:"Key,omitempty"`
@@ -103,26 +104,36 @@ func (s *CIService) ImageProcess(ctx context.Context, name string, opt *ImagePro
 
 // ImageRecognitionOptions is the option of ImageAuditing
 type ImageRecognitionOptions struct {
-	CIProcess  string `url:"ci-process,omitempty"`
-	DetectType string `url:"detect-type,omitempty"`
-	DetectUrl  string `url:"detect-url,omitempty"`
-	Interval   int    `url:"interval,omitempty"`
-	MaxFrames  int    `url:"max-frames,omitempty"`
-	BizType    string `url:"biz-type,omitempty"`
+	CIProcess        string `url:"ci-process,omitempty"`
+	DetectType       string `url:"detect-type,omitempty"`
+	DetectUrl        string `url:"detect-url,omitempty"`
+	Interval         int    `url:"interval,omitempty"`
+	MaxFrames        int    `url:"max-frames,omitempty"`
+	BizType          string `url:"biz-type,omitempty"`
+	LargeImageDetect int    `url:"large-image-detect,omitempty"`
+	DataId           string `url:"dataid,omitempty"`
+	Async            int    `url:"async,omitempty"`
+	Callback         string `url:"callback,omitempty"`
 }
 
 // ImageRecognitionResult is the result of ImageRecognition/ImageAuditing
 type ImageRecognitionResult struct {
-	XMLName       xml.Name         `xml:"RecognitionResult"`
-	Text          string           `xml:"Text,omitempty"`
-	Label         string           `xml:"Label,omitempty"`
-	Result        int              `xml:"Result,omitempty"`
-	Score         int              `xml:"Score,omitempty"`
-	SubLabel      string           `xml:"SubLabel,omitempty"`
-	PornInfo      *RecognitionInfo `xml:"PornInfo,omitempty"`
-	TerroristInfo *RecognitionInfo `xml:"TerroristInfo,omitempty"`
-	PoliticsInfo  *RecognitionInfo `xml:"PoliticsInfo,omitempty"`
-	AdsInfo       *RecognitionInfo `xml:"AdsInfo,omitempty"`
+	XMLName           xml.Name         `xml:"RecognitionResult"`
+	JobId             string           `xml:"JobId,omitempty"`
+	Text              string           `xml:"Text,omitempty"`
+	Label             string           `xml:"Label,omitempty"`
+	Result            int              `xml:"Result,omitempty"`
+	Score             int              `xml:"Score,omitempty"`
+	Category          string           `xml:"Category,omitempty"`
+	SubLabel          string           `xml:"SubLabel,omitempty"`
+	PornInfo          *RecognitionInfo `xml:"PornInfo,omitempty"`
+	TerroristInfo     *RecognitionInfo `xml:"TerroristInfo,omitempty"`
+	PoliticsInfo      *RecognitionInfo `xml:"PoliticsInfo,omitempty"`
+	AdsInfo           *RecognitionInfo `xml:"AdsInfo,omitempty"`
+	TeenagerInfo      *RecognitionInfo `xml:"TeenagerInfo,omitempty"`
+	TerrorismInfo     *RecognitionInfo `xml:"TerrorismInfo,omitempty"`
+	CompressionResult int              `xml:"CompressionResult,omitempty"`
+	DataId            string           `xml:"DataId,omitempty"`
 }
 
 // RecognitionInfo is the result of auditing scene
@@ -133,6 +144,7 @@ type RecognitionInfo struct {
 	Score         int            `xml:"Score,omitempty"`
 	Label         string         `xml:"Label,omitempty"`
 	Count         int            `xml:"Count,omitempty"`
+	Category      string         `xml:"Category,omitempty"`
 	SubLabel      string         `xml:"SubLabel,omitempty"`
 	Keywords      []string       `xml:"Keywords,omitempty"`
 	OcrResults    []OcrResult    `xml:"OcrResults,omitempty"`
@@ -172,19 +184,34 @@ func (s *CIService) ImageAuditing(ctx context.Context, name string, opt *ImageRe
 	return &res, resp, err
 }
 
+// UserExtraInfo is user defined information
+type UserExtraInfo struct {
+	TokenId  string `xml:",omitempty"`
+	Nickname string `xml:",omitempty"`
+	DeviceId string `xml:",omitempty"`
+	AppId    string `xml:",omitempty"`
+	Room     string `xml:",omitempty"`
+	IP       string `xml:",omitempty"`
+	Type     string `xml:",omitempty"`
+}
+
 // ImageAuditingInputOptions is the option of BatchImageAuditingOptions
 type ImageAuditingInputOptions struct {
-	DataId    string `xml:",omitempty"`
-	Object    string `xml:",omitempty"`
-	Url       string `xml:",omitempty"`
-	Interval  int    `xml:",omitempty"`
-	MaxFrames int    `xml:",omitempty"`
+	DataId           string         `xml:",omitempty"`
+	Object           string         `xml:",omitempty"`
+	Url              string         `xml:",omitempty"`
+	Interval         int            `xml:",omitempty"`
+	MaxFrames        int            `xml:",omitempty"`
+	LargeImageDetect int            `xml:",omitempty"`
+	UserInfo         *UserExtraInfo `xml:",omitempty"`
 }
 
 // ImageAuditingJobConf is the config of BatchImageAuditingOptions
 type ImageAuditingJobConf struct {
 	DetectType string `xml:",omitempty"`
 	BizType    string `xml:",omitempty"`
+	Async      int    `xml:",omitempty"`
+	Callback   string `xml:",omitempty"`
 }
 
 // BatchImageAuditingOptions is the option of BatchImageAuditing
@@ -194,22 +221,27 @@ type BatchImageAuditingOptions struct {
 	Conf    *ImageAuditingJobConf       `xml:"Conf"`
 }
 
-// ImageRecognitionResult is the result of BatchImageAuditingJobResult
+// ImageAuditingResult is the result of BatchImageAuditingJobResult
 type ImageAuditingResult struct {
-	Code          string           `xml:",omitempty"`
-	Message       string           `xml:",omitempty"`
-	DataId        string           `xml:",omitempty"`
-	Object        string           `xml:",omitempty"`
-	Url           string           `xml:",omitempty"`
-	Text          string           `xml:",omitempty"`
-	Label         string           `xml:",omitempty"`
-	Result        int              `xml:",omitempty"`
-	Score         int              `xml:",omitempty"`
-	SubLabel      string           `xml:",omitempty"`
-	PornInfo      *RecognitionInfo `xml:",omitempty"`
-	TerrorismInfo *RecognitionInfo `xml:",omitempty"`
-	PoliticsInfo  *RecognitionInfo `xml:",omitempty"`
-	AdsInfo       *RecognitionInfo `xml:",omitempty"`
+	Code              string           `xml:",omitempty"`
+	Message           string           `xml:",omitempty"`
+	JobId             string           `xml:",omitempty"`
+	DataId            string           `xml:",omitempty"`
+	Object            string           `xml:",omitempty"`
+	Url               string           `xml:",omitempty"`
+	Text              string           `xml:",omitempty"`
+	Label             string           `xml:",omitempty"`
+	Result            int              `xml:",omitempty"`
+	Score             int              `xml:",omitempty"`
+	Category          string           `xml:",omitempty"`
+	SubLabel          string           `xml:",omitempty"`
+	PornInfo          *RecognitionInfo `xml:",omitempty"`
+	TerrorismInfo     *RecognitionInfo `xml:",omitempty"`
+	PoliticsInfo      *RecognitionInfo `xml:",omitempty"`
+	AdsInfo           *RecognitionInfo `xml:",omitempty"`
+	TeenagerInfo      *RecognitionInfo `xml:",omitempty"`
+	CompressionResult int              `xml:",omitempty"`
+	UserInfo          *UserExtraInfo   `xml:",omitempty"`
 }
 
 // BatchImageAuditingJobResult is the result of BatchImageAuditing
@@ -233,13 +265,35 @@ func (s *CIService) BatchImageAuditing(ctx context.Context, opt *BatchImageAudit
 	return &res, resp, err
 }
 
+// GetImageAuditingJobResult is the result of GetImageAuditingJob
+type GetImageAuditingJobResult struct {
+	XMLName    xml.Name             `xml:"Response"`
+	JobsDetail *ImageAuditingResult `xml:",omitempty"`
+	RequestId  string               `xml:",omitempty"`
+}
+
+// 图片审核-查询任务
+func (s *CIService) GetImageAuditingJob(ctx context.Context, jobid string) (*GetImageAuditingJobResult, *Response, error) {
+	var res GetImageAuditingJobResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/image/auditing/" + jobid,
+		method:  http.MethodGet,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
 // PutVideoAuditingJobOptions is the option of PutVideoAuditingJob
 type PutVideoAuditingJobOptions struct {
-	XMLName     xml.Name              `xml:"Request"`
-	InputObject string                `xml:"Input>Object,omitempty"`
-	InputUrl    string                `xml:"Input>Url,omitempty"`
-	InputDataId string                `xml:"Input>DataId,omitempty"`
-	Conf        *VideoAuditingJobConf `xml:"Conf"`
+	XMLName       xml.Name              `xml:"Request"`
+	InputObject   string                `xml:"Input>Object,omitempty"`
+	InputUrl      string                `xml:"Input>Url,omitempty"`
+	InputDataId   string                `xml:"Input>DataId,omitempty"`
+	InputUserInfo *UserExtraInfo        `xml:"Input>UserInfo,omitempty"`
+	Conf          *VideoAuditingJobConf `xml:"Conf"`
+	Type          string                `xml:"Type,omitempty"`
 }
 
 // VideoAuditingJobConf is the config of PutVideoAuditingJobOptions
@@ -248,6 +302,7 @@ type VideoAuditingJobConf struct {
 	Snapshot        *PutVideoAuditingJobSnapshot `xml:",omitempty"`
 	Callback        string                       `xml:",omitempty"`
 	CallbackVersion string                       `xml:",omitempty"`
+	CallbackType    int                          `xml:",omitempty"`
 	BizType         string                       `xml:",omitempty"`
 	DetectContent   int                          `xml:",omitempty"`
 }
@@ -310,8 +365,11 @@ type AuditingJobDetail struct {
 	TerrorismInfo *RecognitionInfo              `xml:",omitempty"`
 	PoliticsInfo  *RecognitionInfo              `xml:",omitempty"`
 	AdsInfo       *RecognitionInfo              `xml:",omitempty"`
+	TeenagerInfo  *RecognitionInfo              `xml:",omitempty"`
 	Snapshot      []GetVideoAuditingJobSnapshot `xml:",omitempty"`
 	AudioSection  []AudioSectionResult          `xml:",omitempty"`
+	UserInfo      *UserExtraInfo                `xml:",omitempty"`
+	Type          string                        `xml:",omitempty"`
 }
 
 // GetVideoAuditingJobSnapshot is the snapshot result of AuditingJobDetail
@@ -325,6 +383,7 @@ type GetVideoAuditingJobSnapshot struct {
 	TerrorismInfo *RecognitionInfo `xml:",omitempty"`
 	PoliticsInfo  *RecognitionInfo `xml:",omitempty"`
 	AdsInfo       *RecognitionInfo `xml:",omitempty"`
+	TeenagerInfo  *RecognitionInfo `xml:",omitempty"`
 }
 
 // AudioSectionResult is the audio section result of AuditingJobDetail/AudioAuditingJobDetail
@@ -354,13 +413,27 @@ func (s *CIService) GetVideoAuditingJob(ctx context.Context, jobid string) (*Get
 	return &res, resp, err
 }
 
+// 视频审核-取消直播流审核任务
+func (s *CIService) PostVideoAuditingCancelJob(ctx context.Context, jobid string) (*PutVideoAuditingJobResult, *Response, error) {
+	var res PutVideoAuditingJobResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/video/cancel_auditing" + jobid,
+		method:  http.MethodPost,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
 // PutAudioAuditingJobOptions is the option of PutAudioAuditingJob
 type PutAudioAuditingJobOptions struct {
-	XMLName     xml.Name              `xml:"Request"`
-	InputObject string                `xml:"Input>Object,omitempty"`
-	InputUrl    string                `xml:"Input>Url,omitempty"`
-	InputDataId string                `xml:"Input>DataId,omitempty"`
-	Conf        *AudioAuditingJobConf `xml:"Conf"`
+	XMLName       xml.Name              `xml:"Request"`
+	InputObject   string                `xml:"Input>Object,omitempty"`
+	InputUrl      string                `xml:"Input>Url,omitempty"`
+	InputDataId   string                `xml:"Input>DataId,omitempty"`
+	InputUserInfo *UserExtraInfo        `xml:"Input>UserInfo,omitempty"`
+	Conf          *AudioAuditingJobConf `xml:"Conf"`
 }
 
 // AudioAuditingJobConf is the config of PutAudioAuditingJobOptions
@@ -413,6 +486,7 @@ type AudioAuditingJobDetail struct {
 	PoliticsInfo  *RecognitionInfo     `xml:",omitempty"`
 	AdsInfo       *RecognitionInfo     `xml:",omitempty"`
 	Section       []AudioSectionResult `xml:",omitempty"`
+	UserInfo      *UserExtraInfo       `xml:",omitempty"`
 }
 
 // 音频审核-查询任务 https://cloud.tencent.com/document/product/460/53396
@@ -430,11 +504,13 @@ func (s *CIService) GetAudioAuditingJob(ctx context.Context, jobid string) (*Get
 
 // PutTextAuditingJobOptions is the option of PutTextAuditingJob
 type PutTextAuditingJobOptions struct {
-	XMLName      xml.Name             `xml:"Request"`
-	InputObject  string               `xml:"Input>Object,omitempty"`
-	InputContent string               `xml:"Input>Content,omitempty"`
-	InputDataId  string               `xml:"Input>DataId,omitempty"`
-	Conf         *TextAuditingJobConf `xml:"Conf"`
+	XMLName       xml.Name             `xml:"Request"`
+	InputObject   string               `xml:"Input>Object,omitempty"`
+	InputUrl      string               `xml:"Input>Url,omitempty"`
+	InputContent  string               `xml:"Input>Content,omitempty"`
+	InputDataId   string               `xml:"Input>DataId,omitempty"`
+	InputUserInfo *UserExtraInfo       `xml:"Input>UserInfo,omitempty"`
+	Conf          *TextAuditingJobConf `xml:"Conf"`
 }
 
 // TextAuditingJobConf is the config of PutAudioAuditingJobOptions
@@ -490,15 +566,24 @@ type TextAuditingJobDetail struct {
 	IllegalInfo   *TextRecognitionInfo `xml:",omitempty"`
 	AbuseInfo     *TextRecognitionInfo `xml:",omitempty"`
 	Section       []TextSectionResult  `xml:",omitempty"`
+	UserInfo      *UserExtraInfo       `xml:",omitempty"`
+}
+
+// TextLibResult
+type TextLibResult struct {
+	LibType  int32    `xml:"LibType,omitempty"`
+	LibName  string   `xml:"LibName,omitempty"`
+	Keywords []string `xml:"Keywords,omitempty"`
 }
 
 // TextRecognitionInfo
 type TextRecognitionInfo struct {
-	Code     int    `xml:",omitempty"`
-	HitFlag  int    `xml:",omitempty"`
-	Score    int    `xml:",omitempty"`
-	Count    int    `xml:",omitempty"`
-	Keywords string `xml:",omitempty"`
+	Code       int             `xml:",omitempty"`
+	HitFlag    int             `xml:",omitempty"`
+	Score      int             `xml:",omitempty"`
+	Count      int             `xml:",omitempty"`
+	Keywords   string          `xml:",omitempty"`
+	LibResults []TextLibResult `xml:",omitempty"`
 }
 
 // TextSectionResult is the section result of TextAuditingJobDetail
@@ -529,12 +614,13 @@ func (s *CIService) GetTextAuditingJob(ctx context.Context, jobid string) (*GetT
 
 // PutDocumentAuditingJobOptions is the option of PutDocumentAuditingJob
 type PutDocumentAuditingJobOptions struct {
-	XMLName     xml.Name                 `xml:"Request"`
-	InputObject string                   `xml:"Input>Object,omitempty"`
-	InputUrl    string                   `xml:"Input>Url,omitempty"`
-	InputType   string                   `xml:"Input>Type,omitempty"`
-	InputDataId string                   `xml:"Input>DataId,omitempty"`
-	Conf        *DocumentAuditingJobConf `xml:"Conf"`
+	XMLName       xml.Name                 `xml:"Request"`
+	InputObject   string                   `xml:"Input>Object,omitempty"`
+	InputUrl      string                   `xml:"Input>Url,omitempty"`
+	InputType     string                   `xml:"Input>Type,omitempty"`
+	InputDataId   string                   `xml:"Input>DataId,omitempty"`
+	InputUserInfo *UserExtraInfo           `xml:"Input>UserInfo,omitempty"`
+	Conf          *DocumentAuditingJobConf `xml:"Conf"`
 }
 
 // DocumentAuditingJobConf is the config of PutDocumentAuditingJobOptions
@@ -583,6 +669,7 @@ type DocumentAuditingJobDetail struct {
 	Suggestion   int                      `xml:",omitempty"`
 	Labels       *DocumentResultInfo      `xml:",omitempty"`
 	PageSegment  *DocumentPageSegmentInfo `xml:",omitempty"`
+	UserInfo     *UserExtraInfo           `xml:",omitempty"`
 }
 
 // DocumentResultInfo
@@ -627,8 +714,9 @@ type ObjectResult struct {
 
 // LibResult
 type LibResult struct {
-	ImageId string `xml:"ImageId"`
-	Score   uint32 `xml:"Score"`
+	ImageId string `xml:"ImageId,omitempty"`
+	Score   uint32 `xml:"Score,omitempty"`
+	TextLibResult
 }
 
 // Location
@@ -655,9 +743,11 @@ func (s *CIService) GetDocumentAuditingJob(ctx context.Context, jobid string) (*
 
 // PutWebpageAuditingJobOptions is the option of PutWebpageAuditingJob
 type PutWebpageAuditingJobOptions struct {
-	XMLName  xml.Name                `xml:"Request"`
-	InputUrl string                  `xml:"Input>Url,omitempty"`
-	Conf     *WebpageAuditingJobConf `xml:"Conf"`
+	XMLName       xml.Name                `xml:"Request"`
+	InputUrl      string                  `xml:"Input>Url,omitempty"`
+	InputDataId   string                  `xml:"Input>DataId,omitempty"`
+	InputUserInfo *UserExtraInfo          `xml:"Input>UserInfo,omitempty"`
+	Conf          *WebpageAuditingJobConf `xml:"Conf"`
 }
 
 // WebpageAuditingJobConf is the config of PutWebpageAuditingJobOptions
@@ -704,6 +794,8 @@ type WebpageAuditingJobDetail struct {
 	ImageResults  *WebpageImageResults `xml:",omitempty"`
 	TextResults   *WebpageTextResults  `xml:",omitempty"`
 	HighlightHtml string               `xml:",omitempty"`
+	DataId        string               `xml:",omitempty"`
+	UserInfo      *UserExtraInfo       `xml:",omitempty"`
 }
 
 // WebpageResultInfo
@@ -767,6 +859,113 @@ func (s *CIService) GetWebpageAuditingJob(ctx context.Context, jobid string) (*G
 	return &res, resp, err
 }
 
+// ReportBadcaseOptions
+type ReportBadcaseOptions struct {
+	XMLName        xml.Name `xml:"Request"`
+	ContentType    int      `xml:",omitempty"`
+	Text           string   `xml:",omitempty"`
+	Url            string   `xml:",omitempty"`
+	Label          string   `xml:",omitempty"`
+	SuggestedLabel string   `xml:",omitempty"`
+	JobId          string   `xml:",omitempty"`
+	ModerationTime string   `xml:",omitempty"`
+}
+
+// ReportBadcaseResult
+type ReportBadcaseResult struct {
+	XMLName   xml.Name `xml:"Response"`
+	RequestId string   `xml:",omitempty"`
+}
+
+// 提交Badcase
+func (s *CIService) ReportBadcase(ctx context.Context, opt *ReportBadcaseOptions) (*ReportBadcaseResult, *Response, error) {
+	var res ReportBadcaseResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/report/badcase",
+		method:  http.MethodPost,
+		body:    opt,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
+// PutVirusDetectJobOptions is the option of PutVirusDetectJob
+type PutVirusDetectJobOptions struct {
+	XMLName     xml.Name            `xml:"Request"`
+	InputObject string              `xml:"Input>Object,omitempty"`
+	InputUrl    string              `xml:"Input>Url,omitempty"`
+	Conf        *VirusDetectJobConf `xml:"Conf"`
+}
+
+// VirusDetectJobConf is the config of PutVirusDetectJobOptions
+type VirusDetectJobConf struct {
+	DetectType string `xml:",omitempty"`
+	Callback   string `xml:",omitempty"`
+}
+
+// PutVirusDetectJobResult is the result of PutVirusDetectJob
+type PutVirusDetectJobResult PutVideoAuditingJobResult
+
+// 云查毒接口-提交病毒检测任务 https://cloud.tencent.com/document/product/436/63961
+func (s *CIService) PutVirusDetectJob(ctx context.Context, opt *PutVirusDetectJobOptions) (*PutVirusDetectJobResult, *Response, error) {
+	var res PutVirusDetectJobResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/virus/detect",
+		method:  http.MethodPost,
+		body:    opt,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
+// GetVirusDetectJobResult is the result of GetVirusDetectJob
+type GetVirusDetectJobResult struct {
+	XMLName    xml.Name              `xml:"Response"`
+	JobsDetail *VirusDetectJobDetail `xml:",omitempty"`
+	RequestId  string                `xml:",omitempty"`
+}
+
+// VirusDetectJobDetail is the detail of GetVirusDetectJobResult
+type VirusDetectJobDetail struct {
+	Code         string        `xml:",omitempty"`
+	Message      string        `xml:",omitempty"`
+	JobId        string        `xml:",omitempty"`
+	State        string        `xml:",omitempty"`
+	CreationTime string        `xml:",omitempty"`
+	Object       string        `xml:",omitempty"`
+	Url          string        `xml:",omitempty"`
+	Suggestion   string        `xml:",omitempty"`
+	DetectDetail *VirusResults `xml:",omitempty"`
+}
+
+// VirusResults
+type VirusResults struct {
+	Result []VirusInfo `xml:",omitempty"`
+}
+
+// VirusInfo
+type VirusInfo struct {
+	FileName  string `xml:",omitempty"`
+	VirusName string `xml:",omitempty"`
+}
+
+// 云查毒接口-查询病毒检测任务结果 https://cloud.tencent.com/document/product/436/63962
+func (s *CIService) GetVirusDetectJob(ctx context.Context, jobid string) (*GetVirusDetectJobResult, *Response, error) {
+	var res GetVirusDetectJobResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/virus/detect/" + jobid,
+		method:  http.MethodGet,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
 // 图片持久化处理-上传时处理 https://cloud.tencent.com/document/product/460/18147
 // 盲水印-上传时添加 https://cloud.tencent.com/document/product/460/19017
 // 二维码识别-上传时识别 https://cloud.tencent.com/document/product/460/37513
@@ -787,9 +986,15 @@ func (s *CIService) Put(ctx context.Context, name string, r io.Reader, uopt *Obj
 	}
 	if err == nil {
 		// 与 go http 保持一致, 非bytes.Buffer/bytes.Reader/strings.Reader由用户指定ContentLength, 或使用 Chunk 上传
-		if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
+		// if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
+		// 	opt.ContentLength = totalBytes
+		// }
+		// lilang : 2022-07-04
+		// 图片cgi不设置content-length的话，读不到body。图片处理cgi暂时不支持chunked，后面会修复。
+		if opt != nil && opt.ContentLength == 0 {
 			opt.ContentLength = totalBytes
 		}
+
 	}
 	reader := TeeReader(r, nil, totalBytes, nil)
 	if s.client.Conf.EnableCRC {
@@ -993,5 +1198,649 @@ func (s *CIService) DeleteGuetzli(ctx context.Context) (*Response, error) {
 		method:  http.MethodDelete,
 	}
 	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+type AddStyleOptions struct {
+	XMLName   xml.Name `xml:"AddStyle"`
+	StyleName string   `xml:"StyleName,omitempty"`
+	StyleBody string   `xml:"StyleBody,omitempty"`
+}
+
+type GetStyleOptions struct {
+	XMLName   xml.Name `xml:"GetStyle"`
+	StyleName string   `xml:"StyleName,omitempty"`
+}
+
+type GetStyleResult struct {
+	XMLName   xml.Name    `xml:"StyleList"`
+	StyleRule []StyleRule `xml:"StyleRule,omitempty"`
+}
+
+type StyleRule struct {
+	StyleName string `xml:"StyleName,omitempty"`
+	StyleBody string `xml:"StyleBody,omitempty"`
+}
+
+type DeleteStyleOptions struct {
+	XMLName   xml.Name `xml:"DeleteStyle"`
+	StyleName string   `xml:"StyleName,omitempty"`
+}
+
+func (s *CIService) AddStyle(ctx context.Context, opt *AddStyleOptions) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodPut,
+		uri:     "/?style",
+		body:    opt,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+func (s *CIService) GetStyle(ctx context.Context, opt *GetStyleOptions) (*GetStyleResult, *Response, error) {
+	var res GetStyleResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodGet,
+		uri:     "/?style",
+		body:    opt,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+func (s *CIService) DeleteStyle(ctx context.Context, opt *DeleteStyleOptions) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodDelete,
+		uri:     "/?style",
+		body:    opt,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+type ImageQualityResult struct {
+	XMLName        xml.Name `xml:"Response"`
+	LongImage      bool     `xml:"LongImage,omitempty"`
+	BlackAndWhite  bool     `xml:"BlackAndWhite,omitempty"`
+	SmallImage     bool     `xml:"SmallImage,omitempty"`
+	BigImage       bool     `xml:"BigImage,omitempty"`
+	PureImage      bool     `xml:"PureImage,omitempty"`
+	ClarityScore   int      `xml:"ClarityScore,omitempty"`
+	AestheticScore int      `xml:"AestheticScore,omitempty"`
+	RequestId      string   `xml:"RequestId,omitempty"`
+}
+
+// ImageQuality 图片质量评估
+func (s *CIService) ImageQuality(ctx context.Context, obj string) (*ImageQualityResult, *Response, error) {
+	var res ImageQualityResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.BucketURL,
+		uri:     "/" + encodeURIComponent(obj) + "?ci-process=AssessQuality",
+		method:  http.MethodGet,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type OcrRecognitionOptions struct {
+	Type              string `url:"type,omitempty"`
+	LanguageType      string `url:"language-type,omitempty"`
+	Ispdf             bool   `url:"ispdf,omitempty"`
+	PdfPageNumber     int    `url:"pdf-pagenumber,omitempty"`
+	Isword            bool   `url:"isword,omitempty"`
+	EnableWordPolygon bool   `url:"enable-word-polygon,omitempty"`
+}
+
+type OcrRecognitionResult struct {
+	XMLName        xml.Name         `xml:"Response"`
+	TextDetections []TextDetections `xml:"TextDetections,omitempty"`
+	Language       string           `xml:"Language,omitempty"`
+	Angel          float64          `xml:"Angel,omitempty"`
+	PdfPageSize    int              `xml:"PdfPageSize,omitempty"`
+	RequestId      string           `xml:"RequestId,omitempty"`
+}
+
+type TextDetections struct {
+	DetectedText string        `xml:"DetectedText,omitempty"`
+	Confidence   int           `xml:"Confidence,omitempty"`
+	Polygon      []Polygon     `xml:"Polygon,omitempty"`
+	ItemPolygon  []ItemPolygon `xml:"ItemPolygon,omitempty"`
+	Words        []Words       `xml:"Words,omitempty"`
+	WordPolygon  []WordPolygon `xml:"WordPolygon,omitempty"`
+}
+
+type Polygon struct {
+	X int `xml:"X,omitempty"`
+	Y int `xml:"Y,omitempty"`
+}
+
+// ItemPolygon TODO
+type ItemPolygon struct {
+	X      int `xml:"X,omitempty"`
+	Y      int `xml:"Y,omitempty"`
+	Width  int `xml:"Width,omitempty"`
+	Height int `xml:"Height,omitempty"`
+}
+
+type Words struct {
+	Confidence     int             `xml:"Confidence,omitempty"`
+	Character      string          `xml:"Character,omitempty"`
+	WordCoordPoint *WordCoordPoint `xml:"WordCoordPoint,omitempty"`
+}
+
+type WordCoordPoint struct {
+	WordCoordinate []Polygon `xml:"WordCoordinate,omitempty"`
+}
+
+type WordPolygon struct {
+	LeftTop     *Polygon `xml:"LeftTop,omitempty"`
+	RightTop    *Polygon `xml:"RightTop,omitempty"`
+	RightBottom *Polygon `xml:"RightBottom,omitempty"`
+	LeftBottom  *Polygon `xml:"LeftBottom,omitempty"`
+}
+
+// OcrRecognition OCR通用文字识别
+func (s *CIService) OcrRecognition(ctx context.Context, obj string, opt *OcrRecognitionOptions) (*OcrRecognitionResult, *Response, error) {
+	var res OcrRecognitionResult
+	sendOpt := &sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		uri:      "/" + encodeURIComponent(obj) + "?ci-process=OCR",
+		method:   http.MethodGet,
+		optQuery: opt,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type DetectCarResult struct {
+	XMLName   xml.Name  `xml:"Response"`
+	RequestId string    `xml:"RequestId,omitempty"`
+	CarTags   []CarTags `xml:"CarTags,omitempty"`
+}
+
+type CarTags struct {
+	Serial       string         `xml:"Serial,omitempty"`
+	Brand        string         `xml:"Brand,omitempty"`
+	Type         string         `xml:"Type,omitempty"`
+	Color        string         `xml:"Color,omitempty"`
+	Confidence   int            `xml:"Confidence,omitempty"`
+	Year         int            `xml:"Year,omitempty"`
+	CarLocation  []CarLocation  `xml:"CarLocation,omitempty"`
+	PlateContent []PlateContent `xml:"PlateContent,omitempty"`
+}
+
+type CarLocation struct {
+	X int `xml:"X,omitempty"`
+	Y int `xml:"Y,omitempty"`
+}
+
+type PlateContent struct {
+	Plate         string         `xml:"Plate,omitempty"`
+	Color         string         `xml:"Color,omitempty"`
+	Type          string         `xml:"Type,omitempty"`
+	PlateLocation *PlateLocation `xml:"PlateLocation,omitempty"`
+}
+
+type PlateLocation struct {
+	X int `xml:"X,omitempty"`
+	Y int `xml:"Y,omitempty"`
+}
+
+// DetectCar 车辆车牌检测
+func (s *CIService) DetectCar(ctx context.Context, obj string) (*DetectCarResult, *Response, error) {
+	var res DetectCarResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.BucketURL,
+		uri:     "/" + encodeURIComponent(obj) + "?ci-process=DetectCar",
+		method:  http.MethodGet,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type CIServiceResult struct {
+	XMLName  xml.Name `xml:"CIStatus"`
+	CIStatus string   `xml:",chardata"`
+}
+
+func (s *CIService) OpenCIService(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodPut,
+		uri:     "/",
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+func (s *CIService) GetCIService(ctx context.Context) (*CIServiceResult, *Response, error) {
+	var res CIServiceResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodGet,
+		uri:     "/",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+func (s *CIService) CloseCIService(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodPut,
+		uri:     "/?unbind",
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+type HotLinkOptions struct {
+	XMLName xml.Name `xml:"Hotlink"`
+	Url     []string `xml:"Url,omitempty"`
+	Type    string   `xml:"Type,omitempty"`
+}
+
+type HotLinkResult struct {
+	XMLName xml.Name `xml:"Hotlink"`
+	Status  string   `xml:"Status,omitempty"`
+	Type    string   `xml:"Type,omitempty"`
+	Url     []string `xml:"Url,omitempty"`
+}
+
+func (s *CIService) SetHotLink(ctx context.Context, opt *HotLinkOptions) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodPut,
+		uri:     "/?hotlink",
+		body:    opt,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+func (s *CIService) GetHotLink(ctx context.Context) (*HotLinkResult, *Response, error) {
+	var res HotLinkResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodGet,
+		uri:     "/?hotlink",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type OriginProtectResult struct {
+	XMLName             xml.Name `xml:"OriginProtectStatus"`
+	OriginProtectStatus string   `xml:",chardata"`
+}
+
+func (s *CIService) OpenOriginProtect(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodPut,
+		uri:     "/?origin-protect",
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+func (s *CIService) GetOriginProtect(ctx context.Context) (*OriginProtectResult, *Response, error) {
+	var res OriginProtectResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodGet,
+		uri:     "/?origin-protect",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+func (s *CIService) CloseOriginProtect(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodDelete,
+		uri:     "/?origin-protect",
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+type PicTagResult struct {
+	XMLName xml.Name `xml:"RecognitionResult"`
+	Labels  []PicTag `xml:"Labels,omitempty"`
+}
+
+type PicTag struct {
+	Confidence int    `xml:"Confidence,omitempty"`
+	Name       string `xml:"Name,omitempty"`
+}
+
+func (s *CIService) PicTag(ctx context.Context, obj string) (*PicTagResult, *Response, error) {
+	var res PicTagResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		method:  http.MethodGet,
+		uri:     "/" + encodeURIComponent(obj) + "?ci-process=detect-label",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type DetectFaceOptions struct {
+	MaxFaceNum int `url:"max-face-num,omitempty"`
+}
+
+type DetectFaceResult struct {
+	XMLName          xml.Name    `xml:"Response"`
+	ImageWidth       int         `xml:"ImageWidth,omitempty"`
+	ImageHeight      int         `xml:"ImageHeight,omitempty"`
+	FaceModelVersion string      `xml:"FaceModelVersion,omitempty"`
+	RequestId        string      `xml:"RequestId,omitempty"`
+	FaceInfos        []FaceInfos `xml:"FaceInfos,omitempty"`
+}
+
+type FaceInfos struct {
+	X      int `xml:"X,omitempty"`
+	Y      int `xml:"Y,omitempty"`
+	Width  int `xml:"Width,omitempty"`
+	Height int `xml:"Height,omitempty"`
+}
+
+func (s *CIService) DetectFace(ctx context.Context, obj string, opt *DetectFaceOptions) (*DetectFaceResult, *Response, error) {
+	var res DetectFaceResult
+	sendOpt := &sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		method:   http.MethodGet,
+		uri:      "/" + encodeURIComponent(obj) + "?ci-process=DetectFace",
+		optQuery: opt,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type FaceEffectOptions struct {
+	Type         string `url:"type,omitempty"`
+	Whitening    int    `url:"whitening,omitempty"`
+	Smoothing    int    `url:"smoothing,omitempty"`
+	FaceLifting  int    `url:"faceLifting,omitempty"`
+	EyeEnlarging int    `url:"eyeEnlarging,omitempty"`
+	Gender       int    `url:"gender,omitempty"`
+	Age          int    `url:"age,omitempty"`
+}
+
+type FaceEffectResult struct {
+	XMLName     xml.Name `xml:"Response"`
+	ResultImage string   `xml:"ResultImage,omitempty"`
+	ResultMask  string   `xml:"ResultMask,omitempty"`
+}
+
+func (s *CIService) FaceEffect(ctx context.Context, obj string, opt *FaceEffectOptions) (*FaceEffectResult, *Response, error) {
+	var res FaceEffectResult
+	sendOpt := &sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		method:   http.MethodGet,
+		uri:      "/" + encodeURIComponent(obj) + "?ci-process=face-effect",
+		optQuery: opt,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type IdCardOCROptions struct {
+	CardSide string                  `url:"CardSide,omitempty"`
+	Config   *IdCardOCROptionsConfig `url:"Config,omitempty"`
+}
+
+type IdCardOCROptionsConfig struct {
+	CropIdCard      bool `json:"CropIdCard,omitempty"`
+	CropPortrait    bool `json:"CropPortrait,omitempty"`
+	CopyWarn        bool `json:"CopyWarn,omitempty"`
+	BorderCheckWarn bool `json:"BorderCheckWarn,omitempty"`
+	ReshootWarn     bool `json:"ReshootWarn,omitempty"`
+	DetectPsWarn    bool `json:"DetectPsWarn,omitempty"`
+	TempIdWarn      bool `json:"TempIdWarn,omitempty"`
+	InvalidDateWarn bool `json:"InvalidDateWarn,omitempty"`
+	Quality         bool `json:"Quality,omitempty"`
+	MultiCardDetect bool `json:"MultiCardDetect,omitempty"`
+}
+
+func (c *IdCardOCROptionsConfig) EncodeValues(key string, v *url.Values) error {
+	config, err := json.Marshal(c)
+	if err != nil {
+		return err
+	}
+	v.Add("Config", string(config))
+
+	return nil
+}
+
+type IdCardOCRResult struct {
+	XMLName      xml.Name            `xml:"Response"`
+	IdInfo       *IdCardInfo         `xml:"IdInfo,omitempty"`
+	AdvancedInfo *IdCardAdvancedInfo `xml:"AdvancedInfo,omitempty"`
+}
+
+type IdCardInfo struct {
+	Name      string `xml:"Name,omitempty"`
+	Sex       string `xml:"Sex,omitempty"`
+	Nation    string `xml:"Nation,omitempty"`
+	Birth     string `xml:"Birth,omitempty"`
+	Address   string `xml:"Address,omitempty"`
+	IdNum     string `xml:"IdNum,omitempty"`
+	Authority string `xml:"Authority,omitempty"`
+	ValidDate string `xml:"ValidDate,omitempty"`
+}
+
+type IdCardAdvancedInfo struct {
+	IdCard          string   `xml:"IdCard,omitempty"`
+	Portrait        string   `xml:"Portrait,omitempty"`
+	Quality         string   `xml:"Quality,omitempty"`
+	BorderCodeValue string   `xml:"BorderCodeValue,omitempty"`
+	WarnInfos       []string `xml:"WarnInfos,omitempty"`
+}
+
+func (s *CIService) IdCardOCRWhenCloud(ctx context.Context, obj string, query *IdCardOCROptions) (*IdCardOCRResult, *Response, error) {
+	var res IdCardOCRResult
+	sendOpt := &sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		method:   http.MethodGet,
+		uri:      "/" + encodeURIComponent(obj) + "?ci-process=IDCardOCR",
+		optQuery: query,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+func (s *CIService) IdCardOCRWhenUpload(ctx context.Context, obj, filePath string, query *IdCardOCROptions, header *ObjectPutOptions) (*IdCardOCRResult, *Response, error) {
+	fd, err := os.Open(filePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer fd.Close()
+
+	if err := CheckReaderLen(fd); err != nil {
+		return nil, nil, err
+	}
+	opt := CloneObjectPutOptions(header)
+	totalBytes, err := GetReaderLen(fd)
+	if err != nil && opt != nil && opt.Listener != nil {
+		if opt.ContentLength == 0 {
+			return nil, nil, err
+		}
+		totalBytes = opt.ContentLength
+	}
+	if err == nil {
+		// 与 go http 保持一致, 非bytes.Buffer/bytes.Reader/strings.Reader由用户指定ContentLength, 或使用 Chunk 上传
+		// if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
+		// 	opt.ContentLength = totalBytes
+		// }
+		// lilang : 2022-07-04
+		// 图片cgi不设置content-length的话，读不到body。图片处理cgi暂时不支持chunked，后面会修复。
+		if opt != nil && opt.ContentLength == 0 {
+			opt.ContentLength = totalBytes
+		}
+
+	}
+	reader := TeeReader(fd, nil, totalBytes, nil)
+	if s.client.Conf.EnableCRC {
+		reader.writer = crc64.New(crc64.MakeTable(crc64.ECMA))
+	}
+	if opt != nil && opt.Listener != nil {
+		reader.listener = opt.Listener
+	}
+
+	var res IdCardOCRResult
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/" + encodeURIComponent(obj) + "?ci-process=IDCardOCR",
+		method:    http.MethodPut,
+		optQuery:  query,
+		body:      reader,
+		optHeader: opt,
+		result:    &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+
+	return &res, resp, err
+}
+
+type GetLiveCodeResult struct {
+	XMLName  xml.Name `xml:"Response"`
+	LiveCode string   `xml:"LiveCode,omitempty"`
+}
+
+func (s *CIService) GetLiveCode(ctx context.Context) (*GetLiveCodeResult, *Response, error) {
+	var res GetLiveCodeResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.BucketURL,
+		method:  http.MethodGet,
+		uri:     "/?ci-process=GetLiveCode",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type GetActionSequenceResult struct {
+	XMLName        xml.Name `xml:"Response"`
+	ActionSequence string   `xml:"ActionSequence,omitempty"`
+}
+
+func (s *CIService) GetActionSequence(ctx context.Context) (*GetActionSequenceResult, *Response, error) {
+	var res GetActionSequenceResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.BucketURL,
+		method:  http.MethodGet,
+		uri:     "/?ci-process=GetActionSequence",
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+type LivenessRecognitionOptions struct {
+	IdCard       string `url:"IdCard,omitempty"`
+	Name         string `url:"Name,omitempty"`
+	LivenessType string `url:"LivenessType,omitempty"`
+	ValidateData string `url:"ValidateData,omitempty"`
+	BestFrameNum int    `url:"BestFrameNum,omitempty"`
+}
+
+type LivenessRecognitionResult struct {
+	XMLName         xml.Name `xml:"Response"`
+	BestFrameBase64 string   `xml:"BestFrameBase64,omitempty"`
+	Sim             float64  `xml:"Sim,omitempty"`
+	BestFrameList   []string `xml:"BestFrameList,omitempty"`
+}
+
+func (s *CIService) LivenessRecognitionWhenCloud(ctx context.Context, obj string, query *LivenessRecognitionOptions) (*LivenessRecognitionResult, *Response, error) {
+	var res LivenessRecognitionResult
+	sendOpt := &sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		method:   http.MethodGet,
+		uri:      "/" + encodeURIComponent(obj) + "?ci-process=LivenessRecognition",
+		optQuery: query,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+func (s *CIService) LivenessRecognitionWhenUpload(ctx context.Context, obj, filePath string, query *LivenessRecognitionOptions, header *ObjectPutOptions) (*LivenessRecognitionResult, *Response, error) {
+	fd, err := os.Open(filePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer fd.Close()
+
+	if err := CheckReaderLen(fd); err != nil {
+		return nil, nil, err
+	}
+	opt := CloneObjectPutOptions(header)
+	totalBytes, err := GetReaderLen(fd)
+	if err != nil && opt != nil && opt.Listener != nil {
+		if opt.ContentLength == 0 {
+			return nil, nil, err
+		}
+		totalBytes = opt.ContentLength
+	}
+	if err == nil {
+		// 与 go http 保持一致, 非bytes.Buffer/bytes.Reader/strings.Reader由用户指定ContentLength, 或使用 Chunk 上传
+		// if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
+		// 	opt.ContentLength = totalBytes
+		// }
+		// lilang : 2022-07-04
+		// 图片cgi不设置content-length的话，读不到body。图片处理cgi暂时不支持chunked，后面会修复。
+		if opt != nil && opt.ContentLength == 0 {
+			opt.ContentLength = totalBytes
+		}
+
+	}
+	reader := TeeReader(fd, nil, totalBytes, nil)
+	if s.client.Conf.EnableCRC {
+		reader.writer = crc64.New(crc64.MakeTable(crc64.ECMA))
+	}
+	if opt != nil && opt.Listener != nil {
+		reader.listener = opt.Listener
+	}
+
+	var res LivenessRecognitionResult
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/" + encodeURIComponent(obj) + "?ci-process=LivenessRecognition",
+		method:    http.MethodPut,
+		optQuery:  query,
+		body:      reader,
+		optHeader: opt,
+		result:    &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+
+	return &res, resp, err
+}
+
+// GoodsMatting 商品抠图
+func (s *CIService) GoodsMatting(ctx context.Context, key string) (*Response, error) {
+	sendOpt := sendOptions{
+		baseURL:          s.client.BaseURL.BucketURL,
+		uri:              "/" + encodeURIComponent(key) + "?ci-process=GoodsMatting",
+		method:           http.MethodGet,
+		disableCloseBody: true,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
 	return resp, err
 }

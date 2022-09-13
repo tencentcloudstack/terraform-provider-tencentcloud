@@ -61,7 +61,7 @@ func testNodePoolSweep(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
+func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -123,6 +123,25 @@ func TestAccTencentCloudTkeNodePoolResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudTkeNodePoolResourceDiskEncrypt(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTkeNodePoolDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeNodePoolClusterEncrypt,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeNodePoolExists,
+					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.0.encrypt", "true"),
 				),
 			},
 		},
@@ -202,7 +221,7 @@ func testAccCheckTkeNodePoolExists(s *terraform.State) error {
 
 }
 
-const testAccTkeNodePoolClusterBasic = TkeDataSource + TkeDefaultNodeInstanceVar + `
+const testAccTkeNodePoolClusterBasic = defaultProjectVariable + defaultImages + TkeDataSource + TkeDefaultNodeInstanceVar + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -231,14 +250,15 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_name	   = "basic_group"
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
-  scaling_group_project_id = "` + defaultProjectId + `"
+  scaling_group_project_id = var.default_project
+  delete_keep_instance = false
+  node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
     instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
-
     cam_role_name = "TCB_QcsRole"
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -270,7 +290,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
       "root-dir=/var/lib/kubelet"
     ]
   }
-  node_os="Tencent tlinux release 2.2 (Final)"
 }
 `
 
@@ -285,8 +304,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 2
   enable_auto_scale    = false
-  node_os = "` + defaultTkeOSImageName + `"
-  scaling_group_project_id = "` + defaultProjectId + `"
+  node_os = var.default_img
+  scaling_group_project_id = var.default_project
   delete_keep_instance = false
   scaling_group_name 	   = "basic_group_test"
   default_cooldown 		   = 350
@@ -301,7 +320,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
-
     cam_role_name = "TCB_QcsRole"
 
     data_disk {
@@ -328,11 +346,57 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     "test3" = "test3",
     "test2" = "test2",
   }
+  
+  taints {
+	key = "test_taint"
+    value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
 
   node_config {
     extra_args = [
       "root-dir=/var/lib/kubelet"
     ]
   }
+}
+`
+
+const testAccTkeNodePoolClusterEncrypt = testAccTkeNodePoolClusterBasic + `
+resource "tencentcloud_kubernetes_node_pool" "np_test" {
+  name = "np_with_disk_encrypt"
+  cluster_id = local.cluster_id
+  max_size = 3
+  min_size = 1
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 1
+  enable_auto_scale    = true
+  scaling_group_name	   = "encrypt_asg"
+  default_cooldown		   = 400
+  termination_policies	   = ["OLDEST_INSTANCE"]
+  scaling_group_project_id = var.default_project
+  delete_keep_instance = false
+  node_os="tlinux2.2(tkernel3)x86_64"
+
+  auto_scaling_config {
+    instance_type      = var.ins_type
+    cam_role_name      = "TCB_QcsRole"
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      encrypt   = true
+    }
+    public_ip_assigned         = false
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+
+  }
+  unschedulable = 0
 }
 `

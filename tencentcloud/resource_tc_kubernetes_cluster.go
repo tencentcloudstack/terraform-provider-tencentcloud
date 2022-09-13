@@ -2574,8 +2574,14 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("cluster_intranet_subnet_id") && !d.HasChange("cluster_intranet") {
 		return fmt.Errorf("`cluster_intranet_subnet_id` must modified with `cluster_intranet`")
 	}
+
 	if d.HasChange("cluster_internet_security_group") && !d.HasChange("cluster_internet") {
-		return fmt.Errorf("`cluster_internet_security_group` must modified with `cluster_internet`")
+		if clusterInternet {
+			err := tkeService.ModifyClusterEndpointSG(ctx, id, clusterInternetSecurityGroup)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("cluster_intranet") {

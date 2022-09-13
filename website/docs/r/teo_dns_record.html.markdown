@@ -1,5 +1,5 @@
 ---
-subcategory: "Teo"
+subcategory: "TencentCloud EdgeOne(TEO)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_dns_record"
 sidebar_current: "docs-tencentcloud-resource-teo_dns_record"

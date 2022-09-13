@@ -10,7 +10,7 @@ resource "tencentcloud_monitor_tmp_tke_global_notification" "tmpGlobalNotificati
     enabled     = true
     type        = "webhook"
     web_hook    = ""
-    alert_manager         = {
+    alert_manager {
       url           = ""
       cluster_type  = ""
       cluster_id    = ""
@@ -80,7 +80,7 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotification() *schema.Resource {
 							Description: "Web hook, if Type is `webhook`, this field is required.",
 						},
 						"alert_manager": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Optional:    true,
 							Description: "Alert manager, if Type is `alertmanager`, this field is required.",
 							Elem: &schema.Resource{
@@ -208,13 +208,13 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceD
 
 	if *globalNotification.Enabled {
 		_ = d.Set("instance_id", instanceId)
-		alertManager := make(map[string]interface{})
+		alertManager := make([]map[string]interface{}, 0)
 		if globalNotification.AlertManager != nil {
-			alertManager = map[string]interface{}{
+			alertManager = append(alertManager, map[string]interface{}{
 				"url":          globalNotification.AlertManager.Url,
 				"cluster_type": globalNotification.AlertManager.ClusterType,
 				"cluster_id":   globalNotification.AlertManager.ClusterId,
-			}
+			})
 		}
 
 		var notifications []map[string]interface{}

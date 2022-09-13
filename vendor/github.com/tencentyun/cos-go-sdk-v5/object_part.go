@@ -1,6 +1,7 @@
 package cos
 
 import (
+	"bytes"
 	"context"
 	"encoding/xml"
 	"errors"
@@ -226,6 +227,9 @@ func (s *ObjectService) CompleteMultipartUpload(ctx context.Context, name, uploa
 //
 // https://www.qcloud.com/document/product/436/7740
 func (s *ObjectService) AbortMultipartUpload(ctx context.Context, name, uploadID string) (*Response, error) {
+	if len(name) == 0 || name == "/" {
+		return nil, errors.New("empty object name")
+	}
 	u := fmt.Sprintf("/%s?uploadId=%s", encodeURIComponent(name), uploadID)
 	sendOpt := sendOptions{
 		baseURL: s.client.BaseURL.BucketURL,
@@ -268,20 +272,31 @@ func (s *ObjectService) CopyPart(ctx context.Context, name, uploadID string, par
 	opt.XCosCopySource = sourceURL
 	u := fmt.Sprintf("/%s?partNumber=%d&uploadId=%s", encodeURIComponent(name), partNumber, uploadID)
 	var res CopyPartResult
+	var bs bytes.Buffer
 	sendOpt := sendOptions{
 		baseURL:   s.client.BaseURL.BucketURL,
 		uri:       u,
 		method:    http.MethodPut,
 		optHeader: opt,
-		result:    &res,
+		result:    &bs,
 	}
 	resp, err := s.client.send(ctx, &sendOpt)
-	// If the error occurs during the copy operation, the error response is embedded in the 200 OK response. This means that a 200 OK response can contain either a success or an error.
-	if err == nil && resp != nil && resp.StatusCode == 200 {
-		if res.ETag == "" {
-			return &res, resp, errors.New("response 200 OK, but body contains an error")
+
+	if err == nil { // 请求正常
+		err = xml.Unmarshal(bs.Bytes(), &res) // body 正常返回
+		if err == io.EOF {
+			err = nil
+		}
+		// If the error occurs during the copy operation, the error response is embedded in the 200 OK response. This means that a 200 OK response can contain either a success or an error.
+		if resp != nil && resp.StatusCode == 200 {
+			if err != nil {
+				resErr := &ErrorResponse{Response: resp.Response}
+				xml.Unmarshal(bs.Bytes(), resErr)
+				return &res, resp, resErr
+			}
 		}
 	}
+
 	return &res, resp, err
 }
 
@@ -368,6 +383,10 @@ func copyworker(ctx context.Context, s *ObjectService, jobs <-chan *CopyJobs, re
 			if err != nil {
 				rt--
 				if rt == 0 {
+					results <- &copyres
+					break
+				}
+				if resp != nil && resp.StatusCode < 499 {
 					results <- &copyres
 					break
 				}
@@ -464,6 +483,12 @@ func (s *ObjectService) MultiCopy(ctx context.Context, name string, sourceURL st
 		for _, chunk := range chunks {
 			partOpt := &ObjectCopyPartOptions{
 				XCosCopySource: u,
+			}
+			if opt.OptCopy != nil && opt.OptCopy.ObjectCopyHeaderOptions != nil {
+				partOpt.XCosCopySourceIfModifiedSince = opt.OptCopy.XCosCopySourceIfModifiedSince
+				partOpt.XCosCopySourceIfUnmodifiedSince = opt.OptCopy.XCosCopySourceIfUnmodifiedSince
+				partOpt.XCosCopySourceIfMatch = opt.OptCopy.XCosCopySourceIfMatch
+				partOpt.XCosCopySourceIfNoneMatch = opt.OptCopy.XCosCopySourceIfNoneMatch
 			}
 			job := &CopyJobs{
 				Name:       name,

@@ -26,11 +26,12 @@ type BucketGetResult struct {
 
 // BucketGetOptions is the option of GetBucket
 type BucketGetOptions struct {
-	Prefix       string `url:"prefix,omitempty"`
-	Delimiter    string `url:"delimiter,omitempty"`
-	EncodingType string `url:"encoding-type,omitempty"`
-	Marker       string `url:"marker,omitempty"`
-	MaxKeys      int    `url:"max-keys,omitempty"`
+	Prefix        string       `url:"prefix,omitempty" header:"-" xml:"-"`
+	Delimiter     string       `url:"delimiter,omitempty" header:"-" xml:"-"`
+	EncodingType  string       `url:"encoding-type,omitempty" header:"-" xml:"-"`
+	Marker        string       `url:"marker,omitempty" header:"-" xml:"-"`
+	MaxKeys       int          `url:"max-keys,omitempty" header:"-" xml:"-"`
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
 }
 
 // Get Bucket请求等同于 List Object请求，可以列出该Bucket下部分或者所有Object，发起该请求需要拥有Read权限。
@@ -39,11 +40,12 @@ type BucketGetOptions struct {
 func (s *BucketService) Get(ctx context.Context, opt *BucketGetOptions) (*BucketGetResult, *Response, error) {
 	var res BucketGetResult
 	sendOpt := sendOptions{
-		baseURL:  s.client.BaseURL.BucketURL,
-		uri:      "/",
-		method:   http.MethodGet,
-		optQuery: opt,
-		result:   &res,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/",
+		method:    http.MethodGet,
+		optQuery:  opt,
+		optHeader: opt,
+		result:    &res,
 	}
 	resp, err := s.client.send(ctx, &sendOpt)
 	return &res, resp, err
@@ -60,8 +62,9 @@ type BucketPutOptions struct {
 	CreateBucketConfiguration *CreateBucketConfiguration `header:"-" url:"-" xml:"-"`
 }
 type CreateBucketConfiguration struct {
-	XMLName        xml.Name `xml:"CreateBucketConfiguration"`
-	BucketAZConfig string   `xml:"BucketAZConfig,omitempty"`
+	XMLName          xml.Name `xml:"CreateBucketConfiguration"`
+	BucketAZConfig   string   `xml:"BucketAZConfig,omitempty"`
+	BucketArchConfig string   `xml:"BucketArchConfig,omitempty"`
 }
 
 // Put Bucket请求可以在指定账号下创建一个Bucket。
@@ -94,6 +97,10 @@ func (s *BucketService) Delete(ctx context.Context) (*Response, error) {
 	return resp, err
 }
 
+type BucketHeadOptions struct {
+	XOptionHeader *http.Header `header:"-,omitempty" url:"-" xml:"-"`
+}
+
 // Head Bucket请求可以确认是否存在该Bucket，是否有权限访问，Head的权限与Read一致。
 //
 //   当其存在时，返回 HTTP 状态码200；
@@ -101,11 +108,16 @@ func (s *BucketService) Delete(ctx context.Context) (*Response, error) {
 //   当不存在时，返回 HTTP 状态码404。
 //
 // https://www.qcloud.com/document/product/436/7735
-func (s *BucketService) Head(ctx context.Context) (*Response, error) {
+func (s *BucketService) Head(ctx context.Context, opt ...*BucketHeadOptions) (*Response, error) {
+	var hopt *BucketHeadOptions
+	if len(opt) > 0 {
+		hopt = opt[0]
+	}
 	sendOpt := sendOptions{
-		baseURL: s.client.BaseURL.BucketURL,
-		uri:     "/",
-		method:  http.MethodHead,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/",
+		method:    http.MethodHead,
+		optHeader: hopt,
 	}
 	resp, err := s.client.send(ctx, &sendOpt)
 	return resp, err
@@ -130,12 +142,13 @@ type Bucket struct {
 }
 
 type BucketGetObjectVersionsOptions struct {
-	Prefix          string `url:"prefix,omitempty"`
-	Delimiter       string `url:"delimiter,omitempty"`
-	EncodingType    string `url:"encoding-type,omitempty"`
-	KeyMarker       string `url:"key-marker,omitempty"`
-	VersionIdMarker string `url:"version-id-marker,omitempty"`
-	MaxKeys         int    `url:"max-keys,omitempty"`
+	Prefix          string       `url:"prefix,omitempty" header:"-"`
+	Delimiter       string       `url:"delimiter,omitempty" header:"-"`
+	EncodingType    string       `url:"encoding-type,omitempty" header:"-"`
+	KeyMarker       string       `url:"key-marker,omitempty" header:"-"`
+	VersionIdMarker string       `url:"version-id-marker,omitempty" header:"-"`
+	MaxKeys         int          `url:"max-keys,omitempty" header:"-"`
+	XOptionHeader   *http.Header `url:"-" header:"-,omitempty" xml:"-"`
 }
 
 type BucketGetObjectVersionsResult struct {
@@ -177,11 +190,12 @@ type ListVersionsResultDeleteMarker struct {
 func (s *BucketService) GetObjectVersions(ctx context.Context, opt *BucketGetObjectVersionsOptions) (*BucketGetObjectVersionsResult, *Response, error) {
 	var res BucketGetObjectVersionsResult
 	sendOpt := sendOptions{
-		baseURL:  s.client.BaseURL.BucketURL,
-		uri:      "/?versions",
-		method:   http.MethodGet,
-		optQuery: opt,
-		result:   &res,
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       "/?versions",
+		method:    http.MethodGet,
+		optQuery:  opt,
+		optHeader: opt,
+		result:    &res,
 	}
 	resp, err := s.client.send(ctx, &sendOpt)
 	return &res, resp, err

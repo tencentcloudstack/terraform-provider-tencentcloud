@@ -43,6 +43,13 @@ data "tencentcloud_vpn_connections" "conns" {
 }
 `
 
+// cos
+const (
+	defaultCosCertificateName         = "keep-cos-domain-cert"
+	defaultCosCertificateBucketPrefix = "keep-cert-test"
+	defaultCosCertDomainName          = "mikatong.com"
+)
+
 // clb
 const (
 	defaultSshCertificate  = "vYSQkJ3K"
@@ -95,6 +102,13 @@ const (
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
 )
 
+// Project
+const defaultProjectVariable = `
+variable "default_project" {
+  default = ` + defaultProjectId + `
+}
+`
+
 // EMR
 const (
 	defaultEMRVpcId    = defaultVpcId
@@ -114,7 +128,7 @@ variable "sg_id" {
 }
 `
 
-//cvm-image
+// cvm-image
 const (
 	defaultCvmId  = "ins-8oqqya08"
 	defaultDiskId = "disk-5jjrs2lm"
@@ -149,7 +163,7 @@ data "tencentcloud_instance_types" "default" {
 }
 `
 
-//ckafka
+// ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"
 	defaultKafkaVpcId      = "vpc-68vi2d3h"
@@ -176,7 +190,8 @@ const (
 	defaultTkeClusterType = "tke"
 	defaultPrometheusId   = "prom-1lspn8sw"
 	defaultTemplateId     = "temp-gqunlvo1"
-	tkeClusterIdAgent     = "cls-87o4klby"
+	clusterPrometheusId   = "prom-g261hacc"
+	tkeClusterIdAgent     = "cls-9ae9qo9k"
 	tkeClusterTypeAgent   = "eks"
 	defaultAgentId        = "agent-q3zy8gt8"
 )
@@ -312,9 +327,14 @@ data "tencentcloud_security_groups" "internal" {
   tags = var.fixed_tags
 }
 
+data "tencentcloud_security_groups" "exclusive" {
+  name = "test_preset_sg"
+}
+
 locals {
   # local.sg_id
   sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+  sg_id2 = data.tencentcloud_security_groups.exclusive.security_groups.0.security_group_id
 }
 `
 
@@ -404,7 +424,7 @@ const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
   instance_name              = var.instance_name
   availability_zone          = var.availability_cvm_zone
-  image_id                   = data.tencentcloud_images.default.images.1.image_id
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
@@ -576,6 +596,8 @@ locals {
 
 const defaultTcaPlusClusterName = "keep-tcaplus-cluster"
 const defaultTcaPlusClusterTableGroup = "keep_table_group"
+const defaultTcaPlusTdrClusterName = "keep_tdr_tcaplus_cluster"
+const defaultTcaPlusTdrClusterTableGroup = "keep_tdr_table_group"
 const defaultTcaPlusClusterTable = "keep_players"
 const defaultTcaPlusVar = `
 variable "tcaplus_cluster" {
@@ -589,6 +611,14 @@ variable "tcaplus_table_group" {
 variable "tcaplus_table" {
   default = "` + defaultTcaPlusClusterTable + `"
 }
+
+variable "tcaplus_tcr_cluster" {
+  default = "` + defaultTcaPlusTdrClusterName + `"
+}
+
+variable "tcaplus_tcr_table_group" {
+  default = "` + defaultTcaPlusTdrClusterTableGroup + `"
+}
 `
 const defaultTcaPlusData = defaultTcaPlusVar + `
 data "tencentcloud_tcaplus_clusters" "tcaplus" {
@@ -600,10 +630,21 @@ data "tencentcloud_tcaplus_tablegroups" "group" {
   tablegroup_name = var.tcaplus_table_group
 }
 
+data "tencentcloud_tcaplus_clusters" "tdr_tcaplus" {
+  cluster_name = "keep_tdr_tcaplus_cluster"
+}
+  
+data "tencentcloud_tcaplus_tablegroups" "tdr_group" {
+  cluster_id = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
+  tablegroup_name = "keep_tdr_table_group"
+}
+
 locals {
   tcaplus_id = data.tencentcloud_tcaplus_clusters.tcaplus.list.0.cluster_id
+  tcr_tcaplus_id = data.tencentcloud_tcaplus_clusters.tdr_tcaplus.list.0.cluster_id
   tcaplus_table_group = var.tcaplus_table_group
   tcaplus_table_group_id = data.tencentcloud_tcaplus_tablegroups.group.list.0.tablegroup_id
+  tcr_tcaplus_table_group_id = data.tencentcloud_tcaplus_tablegroups.tdr_group.list.0.tablegroup_id
   tcaplus_table = var.tcaplus_table
 }
 `
@@ -647,7 +688,7 @@ variable "tke_cidr_c" {
 
 const TkeDefaultNodeInstanceVar = `
 variable "ins_type" {
-  default = "S5.MEDIUM4"
+  default = "SA2.LARGE8"
 }
 `
 

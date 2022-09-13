@@ -305,11 +305,12 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_name                               = "test2"
   cluster_desc                               = "test cluster desc 2"
   cluster_max_service_num                    = 32
-  cluster_internet                           = false
+  cluster_internet                           = true
   cluster_intranet                           = false
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
+  cluster_internet_security_group               = local.sg_id2
   auto_upgrade_cluster_level				 = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {

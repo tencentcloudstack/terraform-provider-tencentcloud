@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 
@@ -24,6 +25,16 @@ import (
 type CosService struct {
 	client *connectivity.TencentCloudClient
 }
+
+type CosBucketDomainCertItem struct {
+	bucket     string
+	domainName string
+}
+
+const (
+	CERT_ENABLED  = "Enabled"
+	CERT_DISABLED = "Disabled"
+)
 
 const PUBLIC_GRANTEE = "http://cam.qcloud.com/groups/global/AllUsers"
 
@@ -1280,5 +1291,100 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
 		logId, "DeleteBucketReplication", resp)
 
+	return
+}
+
+func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, certId string) (result *cos.BucketGetDomainCertificateResult, bucket string, errRet error) {
+	logId := getLogId(ctx)
+
+	ids, err := me.parseCertId(certId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	bucket = ids.bucket
+	domainName := ids.domainName
+	option := &cos.BucketGetDomainCertificateOptions{
+		DomainName: domainName,
+	}
+	request, _ := xml.Marshal(option)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request[%s], reason[%s]\n",
+				logId, "GetDomainCertificate", request, errRet.Error())
+		}
+	}()
+
+	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
+	resp, _ := json.Marshal(response)
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+		return
+	}
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n",
+		logId, "GetDomainCertificate", request, resp, result)
+
+	return
+}
+
+func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, certId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	ids, err := me.parseCertId(certId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	bucket := ids.bucket
+	domainName := ids.domainName
+	option := &cos.BucketDeleteDomainCertificateOptions{
+		DomainName: domainName,
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, option [%s], reason[%s]\n",
+				logId, "DeleteDomainCertificate", option, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DeleteDomainCertificate")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
+
+	resp, _ := json.Marshal(response)
+
+	if err != nil {
+		errRet = err
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, option [%s], response body [%s]\n",
+		logId, "DeleteDomainCertificate", option, resp)
+
+	return
+}
+
+func (me *CosService) parseCertId(configId string) (ret *CosBucketDomainCertItem, err error) {
+	idSplit := strings.Split(configId, FILED_SP)
+	if len(idSplit) != 2 {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	bucket := idSplit[0]
+	domain := idSplit[1]
+	if bucket == "" || domain == "" {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	ret = &CosBucketDomainCertItem{bucket, domain}
 	return
 }

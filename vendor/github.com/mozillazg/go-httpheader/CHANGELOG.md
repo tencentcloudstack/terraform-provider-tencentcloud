@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.1] (2022-04-09)
+
+* fix Decode: don't fill value for struct fields that don't exist in header
+
+
 ## [0.3.0] (2021-01-24)
 
 * add `func Decode(header http.Header, v interface{}) error` to support decoding headers into struct

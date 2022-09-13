@@ -217,6 +217,32 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudRedisInstanceParam(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRedisInstanceParamTemplate(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "create_time"),
+				),
+			},
+			{
+				Config: testAccRedisInstanceParamTemplateUpdate(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "create_time"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudRedisInstance_Maz(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -314,34 +340,34 @@ func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 func TestAccTencentCloudRedisGetRemoveNodesByIds(t *testing.T) {
 	mockNodes1 := []*redis.RedisNodeInfo{
 		{
-			helper.IntInt64(0),
-			helper.IntUint64(100001),
-			helper.IntInt64(101),
+			NodeType: helper.IntInt64(0),
+			ZoneId:   helper.IntUint64(100001),
+			NodeId:   helper.IntInt64(101),
 		},
 		{
-			helper.IntInt64(1),
-			helper.IntUint64(100001),
-			helper.IntInt64(102),
+			NodeType: helper.IntInt64(1),
+			ZoneId:   helper.IntUint64(100001),
+			NodeId:   helper.IntInt64(102),
 		},
 		{
-			helper.IntInt64(1),
-			helper.IntUint64(100001),
-			helper.IntInt64(103),
+			NodeType: helper.IntInt64(1),
+			ZoneId:   helper.IntUint64(100001),
+			NodeId:   helper.IntInt64(103),
 		},
 		{
-			helper.IntInt64(1),
-			helper.IntUint64(100002),
-			helper.IntInt64(104),
+			NodeType: helper.IntInt64(1),
+			ZoneId:   helper.IntUint64(100002),
+			NodeId:   helper.IntInt64(104),
 		},
 		{
-			helper.IntInt64(1),
-			helper.IntUint64(100002),
-			helper.IntInt64(105),
+			NodeType: helper.IntInt64(1),
+			ZoneId:   helper.IntUint64(100002),
+			NodeId:   helper.IntInt64(105),
 		},
 		{
-			helper.IntInt64(1),
-			helper.IntUint64(100003),
-			helper.IntInt64(106),
+			NodeType: helper.IntInt64(1),
+			ZoneId:   helper.IntUint64(100003),
+			NodeId:   helper.IntInt64(106),
 		},
 	}
 
@@ -376,12 +402,16 @@ func TestAccTencentCloudRedisGetRemoveNodesByIds(t *testing.T) {
 
 	result1 := tencentCloudRedisGetRemoveNodesByIds(mockRemoves1[:], mockNodes1)
 
-	mockRemoves1Len := len(mockRemoves1)
-	assert.Equal(t, 2, mockRemoves1Len)
+	result1Len := len(result1)
+	if result1Len != 2 {
+		t.Errorf("result1 length expect %d, got %d", 2, result1Len)
+		return
+	}
 	assert.Equal(t, int64(102), *result1[0].NodeId)
 	assert.Equal(t, int64(104), *result1[1].NodeId)
 
 	result2 := tencentCloudRedisGetRemoveNodesByIds(mockRemoves2[:], mockNodes1)
+
 	assert.Equal(t, int64(102), *result2[0].NodeId)
 	assert.Equal(t, int64(104), *result2[1].NodeId)
 	assert.Equal(t, int64(106), *result2[2].NodeId)
@@ -431,6 +461,17 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 	}
 	return nil
 }
+
+// FIXME use datasource instead
+const testAccRedisDefaultTemplate = `
+variable "redis_param_template" {
+  default = "crs-cfg-1q38ngo0"
+}
+
+variable "redis_default_param_template" {
+  default = "default-param-template-6"
+}
+`
 
 func testAccRedisInstanceBasic() string {
 	return `
@@ -624,4 +665,35 @@ resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
   prepaid_period                      = 2
   force_delete                        = true
 }`
+}
+
+func testAccRedisInstanceParamTemplate() string {
+	return testAccRedisDefaultTemplate + `
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone  = "ap-guangzhou-3"
+  type_id            = 6
+  password           = "test12345789"
+  mem_size           = 8192
+  name               = "terraform_test"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 1
+  params_template_id = var.redis_param_template
+}`
+}
+
+func testAccRedisInstanceParamTemplateUpdate() string {
+	return testAccRedisDefaultTemplate + `
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone  = "ap-guangzhou-3"
+  type_id            = 6
+  password           = "test12345789"
+  mem_size           = 8192
+  name               = "terraform_test"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 1
+  params_template_id = var.redis_default_param_template
+}
+`
 }
