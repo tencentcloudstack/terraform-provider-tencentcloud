@@ -24,7 +24,7 @@ func TestAccTencentCloudMonitorGrafanaIntegration_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaIntegration,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaIntegrationExists("tencentcloud_monitor_grafana_integration.grafanaIntegration"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "instance_id", "grafana-50nj6v00"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "instance_id", defaultGrafanaInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "kind", "tencentcloud-monitor-app"),
 				),
 			},
@@ -32,7 +32,7 @@ func TestAccTencentCloudMonitorGrafanaIntegration_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaIntegration_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaIntegrationExists("tencentcloud_monitor_grafana_integration.grafanaIntegration"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "instance_id", "grafana-50nj6v00"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "instance_id", defaultGrafanaInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_integration.grafanaIntegration", "kind", "tencentcloud-monitor-app"),
 				),
 			},
