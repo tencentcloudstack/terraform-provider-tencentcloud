@@ -286,12 +286,12 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request.ZoneName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("plan_type"); ok {
-		request.Type = helper.String(v.(string))
-	}
+	//if v, ok := d.GetOk("plan_type"); ok {
+	//	request.Type = helper.String(v.(string))
+	//}
 
 	if v, _ := d.GetOk("type"); v != nil {
-		request.JumpStart = helper.Bool(v.(bool))
+		request.Type = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("dry_run"); ok {
@@ -301,6 +301,9 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
 		if e != nil {
+			if isExpectError(e, []string{"ResourceInUse", "ResourceInUse.Others"}) {
+				return resource.NonRetryableError(e)
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
