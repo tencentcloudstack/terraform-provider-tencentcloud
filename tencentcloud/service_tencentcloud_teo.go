@@ -365,7 +365,7 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId, orig
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleSettingDetail, errRet error) {
+func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesRequest()
@@ -397,8 +397,8 @@ func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response != nil && response.Response != nil && response.Response.RuleList != nil {
-		for _, v := range response.Response.RuleList {
+	if response != nil && response.Response != nil && response.Response.RuleItems != nil {
+		for _, v := range response.Response.RuleItems {
 			if *v.RuleId == ruleId {
 				ruleEngine = v
 				return
@@ -907,7 +907,7 @@ func (me *TeoService) DescribeAvailablePlans(ctx context.Context) (availablePlan
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context, zoneId string) (ruleEnginePriority []*teo.RuleSettingDetail, errRet error) {
+func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context, zoneId string) (ruleEnginePriority []*teo.RuleItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesRequest()
@@ -930,6 +930,6 @@ func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context, zoneId 
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	ruleEnginePriority = response.Response.RuleList
+	ruleEnginePriority = response.Response.RuleItems
 	return
 }
