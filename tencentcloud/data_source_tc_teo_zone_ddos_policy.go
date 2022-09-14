@@ -18,7 +18,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
 func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
@@ -174,13 +174,13 @@ func dataSourceTencentCloudTeoZoneDdosPolicyRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	appId := strconv.FormatInt(*ddosPolicy.AppId, 10)
+	appId := strconv.FormatInt(*ddosPolicy.ShieldAreas[0].PolicyId, 10)
 
 	shieldAreasList := make([]map[string]interface{}, 0, len(ddosPolicy.ShieldAreas))
 	shieldAreas := ddosPolicy.ShieldAreas
 	for _, v := range shieldAreas {
-		applications := make([]map[string]interface{}, 0, len(v.Application))
-		for _, vv := range v.Application {
+		applications := make([]map[string]interface{}, 0, len(v.DDoSHosts))
+		for _, vv := range v.DDoSHosts {
 			application := map[string]interface{}{
 				"host":            vv.Host,
 				"status":          vv.Status,
@@ -207,8 +207,8 @@ func dataSourceTencentCloudTeoZoneDdosPolicyRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	domainsList := make([]map[string]interface{}, 0, len(ddosPolicy.Domains))
-	for _, v := range ddosPolicy.Domains {
+	domainsList := make([]map[string]interface{}, 0, len(ddosPolicy.DDoSHosts))
+	for _, v := range ddosPolicy.DDoSHosts {
 		application := map[string]interface{}{
 			"host":            v.Host,
 			"status":          v.Status,

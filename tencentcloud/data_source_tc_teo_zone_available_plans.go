@@ -15,7 +15,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
 func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
@@ -99,7 +99,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 		})
 	}
 
-	planInfos := availablePlans.PlanInfoList
+	planInfos := availablePlans.PlanInfo
 	planInfoList := make([]map[string]interface{}, 0, len(planInfos))
 	for _, v := range planInfos {
 		planInfo := map[string]interface{}{
