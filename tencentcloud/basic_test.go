@@ -196,6 +196,16 @@ const (
 	defaultAgentId        = "agent-q3zy8gt8"
 )
 
+// Cloud monitoring grafana visualization
+const (
+	defaultGrafanaVpcId      = "vpc-391sv4w3"
+	defaultGrafanaSubnetId   = "subnet-ljyn7h30"
+	defaultGrafanaInstanceId = "grafana-dp2hnnfa"
+	defaultGrafanaReceiver   = "Consumer-nfyxuzmbmq"
+	defaultGrafanaPlugin     = "grafana-clock-panel"
+	defaultGrafanaVersion    = "1.2.0"
+)
+
 /*
 ---------------------------------------------------
 The following are common test case used as templates.

@@ -443,6 +443,12 @@ Monitor
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
 
+	tencentcloud_monitor_grafana_instance
+	tencentcloud_monitor_grafana_integration
+	tencentcloud_monitor_grafana_notification_channel
+	tencentcloud_monitor_grafana_plugin
+	tencentcloud_monitor_grafana_sso_account
+
 PostgreSQL
   Data Source
 	tencentcloud_postgresql_instances
@@ -1128,6 +1134,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_tke_config":                   resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":         resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
 			"tencentcloud_monitor_tmp_tke_global_notification":      resourceTencentCloudMonitorTmpTkeGlobalNotification(),
+			"tencentcloud_monitor_grafana_instance":                 resourceTencentCloudMonitorGrafanaInstance(),
+			"tencentcloud_monitor_grafana_integration":              resourceTencentCloudMonitorGrafanaIntegration(),
+			"tencentcloud_monitor_grafana_notification_channel":     resourceTencentCloudMonitorGrafanaNotificationChannel(),
+			"tencentcloud_monitor_grafana_plugin":                   resourceTencentCloudMonitorGrafanaPlugin(),
+			"tencentcloud_monitor_grafana_sso_account":              resourceTencentCloudMonitorGrafanaSsoAccount(),
 			"tencentcloud_mongodb_standby_instance":                 resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                   resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                      resourceTencentCloudPostgresqlInstance(),
