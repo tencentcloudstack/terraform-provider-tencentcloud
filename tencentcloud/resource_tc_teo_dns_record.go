@@ -36,7 +36,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -360,13 +360,13 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("type") {
 		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
+			request.DnsRecordType = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
+			request.DnsRecordName = helper.String(v.(string))
 		}
 	}
 

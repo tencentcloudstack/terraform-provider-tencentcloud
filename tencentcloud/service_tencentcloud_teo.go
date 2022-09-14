@@ -6,7 +6,7 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -610,7 +610,7 @@ func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zon
 	return
 }
 
-func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.DescribeZoneSettingResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.ZoneSetting, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeZoneSettingRequest()
@@ -633,7 +633,7 @@ func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	zoneSetting = response.Response
+	zoneSetting = response.Response.ZoneSetting
 	return
 }
 

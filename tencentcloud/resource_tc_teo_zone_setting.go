@@ -126,7 +126,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -689,34 +689,34 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("area", zoneSetting.Area)
 	}
 
-	if zoneSetting.Cache != nil {
+	if zoneSetting.CacheConfig != nil {
 		cacheMap := map[string]interface{}{}
-		if zoneSetting.Cache.Cache != nil {
+		if zoneSetting.CacheConfig.Cache != nil {
 			cacheMap := map[string]interface{}{}
-			if zoneSetting.Cache.Cache.Switch != nil {
-				cacheMap["switch"] = zoneSetting.Cache.Cache.Switch
+			if zoneSetting.CacheConfig.Cache.Switch != nil {
+				cacheMap["switch"] = zoneSetting.CacheConfig.Cache.Switch
 			}
-			if zoneSetting.Cache.Cache.CacheTime != nil {
-				cacheMap["cache_time"] = zoneSetting.Cache.Cache.CacheTime
+			if zoneSetting.CacheConfig.Cache.CacheTime != nil {
+				cacheMap["cache_time"] = zoneSetting.CacheConfig.Cache.CacheTime
 			}
-			if zoneSetting.Cache.Cache.IgnoreCacheControl != nil {
-				cacheMap["ignore_cache_control"] = zoneSetting.Cache.Cache.IgnoreCacheControl
+			if zoneSetting.CacheConfig.Cache.IgnoreCacheControl != nil {
+				cacheMap["ignore_cache_control"] = zoneSetting.CacheConfig.Cache.IgnoreCacheControl
 			}
 
 			cacheMap["cache"] = []interface{}{cacheMap}
 		}
-		if zoneSetting.Cache.NoCache != nil {
+		if zoneSetting.CacheConfig.NoCache != nil {
 			noCacheMap := map[string]interface{}{}
-			if zoneSetting.Cache.NoCache.Switch != nil {
-				noCacheMap["switch"] = zoneSetting.Cache.NoCache.Switch
+			if zoneSetting.CacheConfig.NoCache.Switch != nil {
+				noCacheMap["switch"] = zoneSetting.CacheConfig.NoCache.Switch
 			}
 
 			cacheMap["no_cache"] = []interface{}{noCacheMap}
 		}
-		if zoneSetting.Cache.FollowOrigin != nil {
+		if zoneSetting.CacheConfig.FollowOrigin != nil {
 			followOriginMap := map[string]interface{}{}
-			if zoneSetting.Cache.FollowOrigin.Switch != nil {
-				followOriginMap["switch"] = zoneSetting.Cache.FollowOrigin.Switch
+			if zoneSetting.CacheConfig.FollowOrigin.Switch != nil {
+				followOriginMap["switch"] = zoneSetting.CacheConfig.FollowOrigin.Switch
 			}
 
 			cacheMap["follow_origin"] = []interface{}{followOriginMap}
@@ -987,7 +987,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 				}
 				cacheConfig.FollowOrigin = &cacheConfigFollowOrigin
 			}
-			request.Cache = &cacheConfig
+			request.CacheConfig = &cacheConfig
 		}
 	}
 
@@ -1233,14 +1233,12 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("ipv6") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
-			ipv6Access := teo.Ipv6Access{}
+			ipv6 := teo.Ipv6{}
 			if v, ok := dMap["switch"]; ok {
-				ipv6Access.Switch = helper.String(v.(string))
+				ipv6.Switch = helper.String(v.(string))
 			}
-
-			request.Ipv6 = &ipv6Access
+			request.Ipv6 = &ipv6
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

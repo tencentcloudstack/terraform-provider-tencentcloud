@@ -66,7 +66,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -318,7 +318,7 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("rules"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
-			ruleItem := teo.RuleItem{}
+			ruleItem := teo.Rule{}
 			if v, ok := dMap["conditions"]; ok {
 				for _, item := range v.([]interface{}) {
 					ConditionsMap := item.(map[string]interface{})
@@ -349,9 +349,9 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["actions"]; ok {
 				for _, item := range v.([]interface{}) {
 					ActionsMap := item.(map[string]interface{})
-					ruleAction := teo.RuleAction{}
+					ruleAction := teo.Action{}
 					if NormalActionMap, ok := helper.InterfaceToMap(ActionsMap, "normal_action"); ok {
-						ruleNormalAction := teo.RuleNormalAction{}
+						ruleNormalAction := teo.NormalAction{}
 						if v, ok := NormalActionMap["action"]; ok {
 							ruleNormalAction.Action = helper.String(v.(string))
 						}
@@ -375,7 +375,7 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 						ruleAction.NormalAction = &ruleNormalAction
 					}
 					if RewriteActionMap, ok := helper.InterfaceToMap(ActionsMap, "rewrite_action"); ok {
-						ruleRewriteAction := teo.RuleRewriteAction{}
+						ruleRewriteAction := teo.RewriteAction{}
 						if v, ok := RewriteActionMap["action"]; ok {
 							ruleRewriteAction.Action = helper.String(v.(string))
 						}
@@ -402,7 +402,7 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 						ruleAction.RewriteAction = &ruleRewriteAction
 					}
 					if CodeActionMap, ok := helper.InterfaceToMap(ActionsMap, "code_action"); ok {
-						ruleCodeAction := teo.RuleCodeAction{}
+						ruleCodeAction := teo.CodeAction{}
 						if v, ok := CodeActionMap["action"]; ok {
 							ruleCodeAction.Action = helper.String(v.(string))
 						}
@@ -679,7 +679,7 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 		if v, ok := d.GetOk("rules"); ok {
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
-				ruleItem := teo.RuleItem{}
+				ruleItem := teo.Rule{}
 				if v, ok := dMap["conditions"]; ok {
 					for _, item := range v.([]interface{}) {
 						ConditionsMap := item.(map[string]interface{})
@@ -710,9 +710,9 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 				if v, ok := dMap["actions"]; ok {
 					for _, item := range v.([]interface{}) {
 						ActionsMap := item.(map[string]interface{})
-						ruleAction := teo.RuleAction{}
+						ruleAction := teo.Action{}
 						if NormalActionMap, ok := helper.InterfaceToMap(ActionsMap, "normal_action"); ok {
-							ruleNormalAction := teo.RuleNormalAction{}
+							ruleNormalAction := teo.NormalAction{}
 							if v, ok := NormalActionMap["action"]; ok {
 								ruleNormalAction.Action = helper.String(v.(string))
 							}
@@ -736,7 +736,7 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 							ruleAction.NormalAction = &ruleNormalAction
 						}
 						if RewriteActionMap, ok := helper.InterfaceToMap(ActionsMap, "rewrite_action"); ok {
-							ruleRewriteAction := teo.RuleRewriteAction{}
+							ruleRewriteAction := teo.RewriteAction{}
 							if v, ok := RewriteActionMap["action"]; ok {
 								ruleRewriteAction.Action = helper.String(v.(string))
 							}
@@ -763,7 +763,7 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 							ruleAction.RewriteAction = &ruleRewriteAction
 						}
 						if CodeActionMap, ok := helper.InterfaceToMap(ActionsMap, "code_action"); ok {
-							ruleCodeAction := teo.RuleCodeAction{}
+							ruleCodeAction := teo.CodeAction{}
 							if v, ok := CodeActionMap["action"]; ok {
 								ruleCodeAction.Action = helper.String(v.(string))
 							}
