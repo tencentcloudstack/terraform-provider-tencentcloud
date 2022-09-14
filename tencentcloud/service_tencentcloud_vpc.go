@@ -174,7 +174,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 
 // ////////api
 func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
-	isMulticast bool, dnsServers []string) (vpcId string, isDefault bool, errRet error) {
+	isMulticast bool, dnsServers []string, tags map[string]string) (vpcId string, isDefault bool, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewCreateVpcRequest()
@@ -197,6 +197,17 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 			request.DnsServers = append(request.DnsServers, &dnsServers[index])
 		}
 	}
+
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	var response *vpc.CreateVpcResponse
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

@@ -708,6 +708,22 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		tags := make([]*cvm.Tag, 0)
+		for tagKey, tagValue := range v {
+			tag := cvm.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			tags = append(tags, &tag)
+		}
+		tagSpecification := cvm.TagSpecification{
+			ResourceType: helper.String("instance"),
+			Tags:         tags,
+		}
+		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
+	}
+
 	instanceId := ""
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
