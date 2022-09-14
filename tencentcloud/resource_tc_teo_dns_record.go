@@ -1,16 +1,21 @@
 /*
-Provides a resource to create a teo dnsRecord
+Provides a resource to create a teo dns_record
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_teo_dns_record" "dns_record" {
-  zone_id     = tencentcloud_teo_zone.zone.id
-  record_type = "A"
-  name        = "sfurnace.work"
-  mode        = "proxied"
-  content     = "2.2.2.2"
-  ttl         = 80
+  zone_id = ""
+    type = ""
+  name = ""
+  content = ""
+  mode = ""
+  ttl = ""
+  priority = ""
+        status = ""
+      tags = {
+    "createdBy" = "terraform"
+  }
 }
 
 ```
@@ -18,7 +23,7 @@ Import
 
 teo dns_record can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_record.dnsRecord zoneId#dnsRecordId#name
+$ terraform import tencentcloud_teo_dns_record.dns_record dnsRecord_id
 ```
 */
 package tencentcloud
@@ -45,54 +50,66 @@ func resourceTencentCloudTeoDnsRecord() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"record_type": {
+			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DNS Record Type.",
+				Description: "Site ID.",
+			},
+
+			"dns_record_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DNS record ID.",
+			},
+
+			"type": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "DNS record Type. Valid values: `A`, `AAAA`, `CNAME`, `MX`, `TXT`, `NS`, `CAA`, `SRV`.",
 			},
 
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DNS Record Name.",
+				Description: "DNS record Name.",
 			},
 
 			"content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DNS Record Content.",
+				Description: "DNS record Content.",
 			},
 
 			"mode": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Proxy mode. Valid values: dns_only, cdn_only, and secure_cdn.",
+				Description: "Proxy mode. Valid values:- `dns_only`: only DNS resolution of the subdomain is enabled.- `proxied`: subdomain is proxied and accelerated.",
 			},
 
 			"ttl": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "TTL, the range is 1-604800, and the minimum value of different levels of domain names is different.",
+				Description: "Time to live of the DNS record cache in seconds.",
 			},
 
 			"priority": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Priority.",
+				Description: "Priority of the record. Valid value range: 1-50, the smaller value, the higher priority.",
 			},
 
 			"created_on": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Creation time.",
+				Description: "Creation date.",
 			},
 
 			"modified_on": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Modification time.",
+				Description: "Last modification date.",
 			},
 
 			"locked": {
@@ -101,28 +118,17 @@ func resourceTencentCloudTeoDnsRecord() *schema.Resource {
 				Description: "Whether the DNS record is locked.",
 			},
 
-			"zone_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Site ID.",
-			},
-
-			"zone_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Site Name.",
-			},
-
 			"status": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
-				Description: "Resolution status.",
+				Description: "Resolution status. Valid values: `active`, `pending`.",
 			},
 
 			"cname": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "CNAME address.",
+				Description: "CNAME address. Note: This field may return null, indicating that no valid value can be obtained.",
 			},
 
 			"domain_status": {
@@ -131,7 +137,7 @@ func resourceTencentCloudTeoDnsRecord() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Computed:    true,
-				Description: ".",
+				Description: "Whether this domain enable load balancing, security, or l4 proxy capability. Valid values: `lb`, `security`, `l4`.",
 			},
 
 			"tags": {
@@ -150,11 +156,18 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewCreateDnsRecordRequest()
-		response *teo.CreateDnsRecordResponse
+		request     = teo.NewCreateDnsRecordRequest()
+		response    *teo.CreateDnsRecordResponse
+		zoneId      string
+		dnsRecordId string
 	)
 
-	if v, ok := d.GetOk("record_type"); ok {
+	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
+		request.ZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
 	}
 
@@ -171,15 +184,11 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	}
 
 	if v, ok := d.GetOk("ttl"); ok {
-		request.Ttl = helper.IntInt64(v.(int))
+		request.TTL = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("priority"); ok {
 		request.Priority = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOk("zone_id"); ok {
-		request.ZoneId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -199,9 +208,29 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	dnsRecordId := *response.Response.Id
+	dnsRecordId = *response.Response.DnsRecordId
 
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoDnsRecord(ctx, zoneId, dnsRecordId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "active" {
+			return nil
+		}
+		if *instance.Status == "pending" {
+			return resource.NonRetryableError(fmt.Errorf("dnsRecord status is %v, operate failed.", *instance.Status))
+		}
+		return resource.RetryableError(fmt.Errorf("dnsRecord status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
+	}
+
+	d.SetId(zoneId + FILED_SP + dnsRecordId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -210,15 +239,11 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 			return err
 		}
 	}
-
-	zoneId := *response.Response.ZoneId
-	name := *response.Response.Name
-	d.SetId(strings.Join([]string{zoneId, dnsRecordId, name}, FILED_SP))
 	return resourceTencentCloudTeoDnsRecordRead(d, meta)
 }
 
 func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_dnsRecord.read")()
+	defer logElapsed("resource.tencentcloud_teo_dns_record.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -226,34 +251,37 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	zoneId := idSplit[0]
+	dnsRecordId := idSplit[1]
 
-	zoneId := ids[0]
-	//dnsRecordId := ids[1]
-	name := ids[2]
-
-	dnsRecord, err := service.DescribeTeoDnsRecord(ctx, zoneId, name)
-
+	dnsRecord, err := service.DescribeTeoDnsRecord(ctx, zoneId, dnsRecordId)
 	if err != nil {
 		return err
 	}
 
 	if dnsRecord == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `dnsRecord` %s does not exist", name)
+		return fmt.Errorf("resource `dnsRecord` %s does not exist", dnsRecordId)
 	}
 
-	_ = d.Set("id", dnsRecord.Id)
-
-	if dnsRecord.Type != nil {
-		_ = d.Set("record_type", dnsRecord.Type)
+	if dnsRecord.ZoneId != nil {
+		_ = d.Set("zone_id", dnsRecord.ZoneId)
 	}
 
-	if dnsRecord.Name != nil {
-		_ = d.Set("name", dnsRecord.Name)
+	if dnsRecord.DnsRecordId != nil {
+		_ = d.Set("dns_record_id", dnsRecord.DnsRecordId)
+	}
+
+	if dnsRecord.DnsRecordType != nil {
+		_ = d.Set("type", dnsRecord.DnsRecordType)
+	}
+
+	if dnsRecord.DnsRecordName != nil {
+		_ = d.Set("name", dnsRecord.DnsRecordName)
 	}
 
 	if dnsRecord.Content != nil {
@@ -264,8 +292,8 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("mode", dnsRecord.Mode)
 	}
 
-	if dnsRecord.Ttl != nil {
-		_ = d.Set("ttl", dnsRecord.Ttl)
+	if dnsRecord.TTL != nil {
+		_ = d.Set("ttl", dnsRecord.TTL)
 	}
 
 	if dnsRecord.Priority != nil {
@@ -282,14 +310,6 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 
 	if dnsRecord.Locked != nil {
 		_ = d.Set("locked", dnsRecord.Locked)
-	}
-
-	if dnsRecord.ZoneId != nil {
-		_ = d.Set("zone_id", dnsRecord.ZoneId)
-	}
-
-	if dnsRecord.ZoneName != nil {
-		_ = d.Set("zone_name", dnsRecord.ZoneName)
 	}
 
 	if dnsRecord.Status != nil {
@@ -324,20 +344,22 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 
 	request := teo.NewModifyDnsRecordRequest()
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
-	zoneId := ids[0]
-	dnsRecordId := ids[1]
-	//name := ids[2]
+	zoneId := idSplit[0]
+	dnsRecordId := idSplit[1]
 
 	request.ZoneId = &zoneId
-	request.Id = &dnsRecordId
+	request.DnsRecordId = &dnsRecordId
 
-	if d.HasChange("record_type") {
-		if v, ok := d.GetOk("record_type"); ok {
+	if d.HasChange("zone_id") {
+		return fmt.Errorf("`zone_id` do not support change now.")
+	}
+
+	if d.HasChange("type") {
+		if v, ok := d.GetOk("type"); ok {
 			request.Type = helper.String(v.(string))
 		}
 	}
@@ -362,7 +384,7 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("ttl") {
 		if v, ok := d.GetOk("ttl"); ok {
-			request.Ttl = helper.IntInt64(v.(int))
+			request.TTL = helper.IntInt64(v.(int))
 		}
 	}
 
@@ -384,6 +406,7 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
+		log.Printf("[UPDATE]%s update teo dnsRecord failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -410,14 +433,12 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
-	zoneId := ids[0]
-	dnsRecordId := ids[1]
-	//name := ids[2]
+	zoneId := idSplit[0]
+	dnsRecordId := idSplit[1]
 
 	if err := service.DeleteTeoDnsRecordById(ctx, zoneId, dnsRecordId); err != nil {
 		return err

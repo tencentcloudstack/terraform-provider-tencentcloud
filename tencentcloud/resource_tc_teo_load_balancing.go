@@ -1,26 +1,28 @@
 /*
-Provides a resource to create a teo loadBalancing
+Provides a resource to create a teo load_balancing
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_teo_load_balancing" "load_balancing" {
-  zone_id = tencentcloud_teo_zone.zone.id
-
-  host      = "sfurnace.work"
-  origin_id = [
-    split("#", tencentcloud_teo_origin_group.group0.id)[1]
-  ]
-  ttl  = 600
-  type = "proxied"
+  zone_id = ""
+    host = ""
+  type = ""
+  origin_group_id = ""
+  backup_origin_group_id = ""
+  ttl = ""
+  status = ""
+      tags = {
+    "createdBy" = "terraform"
+  }
 }
 
 ```
 Import
 
-teo loadBalancing can be imported using the id, e.g.
+teo load_balancing can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_load_balancing.loadBalancing loadBalancing_id
+$ terraform import tencentcloud_teo_load_balancing.load_balancing loadBalancing_id
 ```
 */
 package tencentcloud
@@ -47,17 +49,16 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"load_balancing_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "CLB instance ID.",
-			},
-
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Site ID.",
+			},
+
+			"load_balancing_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Load balancer instance ID.",
 			},
 
 			"host": {
@@ -69,35 +70,54 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Proxy mode. Valid values: dns_only: Only DNS, proxied: Enable proxy.",
+				Description: "Proxy mode.- `dns_only`: Only DNS.- `proxied`: Enable proxy.",
+			},
+
+			"origin_group_id": {
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Required:    true,
+				Description: "ID of the origin group to use.",
+			},
+
+			"backup_origin_group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the backup origin group to use.",
 			},
 
 			"ttl": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Indicates DNS TTL time when Type=dns_only.",
+				Description: "Indicates DNS TTL time when `Type` is dns_only.",
 			},
 
-			"origin_id": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Required:    true,
-				Description: "ID of the origin group used.",
-			},
-
-			"update_time": {
+			"status": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
-				Description: "Update time.",
+				Description: "Status of the task. Valid values to set: `online`, `offline`. During status change, the status is `process`.",
 			},
 
 			"cname": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Schedules domain names, Note: This field may return null, indicating that no valid value can be obtained.",
+				Description: "Schedules domain names. Note: This field may return null, indicating that no valid value can be obtained.",
+			},
+
+			"update_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last modification date.",
+			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 		},
 	}
@@ -110,14 +130,15 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewCreateLoadBalancingRequest()
-		response *teo.CreateLoadBalancingResponse
-		zoneId   string
+		request         = teo.NewCreateLoadBalancingRequest()
+		response        *teo.CreateLoadBalancingResponse
+		zoneId          string
+		loadBalancingId string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.ZoneId = helper.String(zoneId)
+		request.ZoneId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("host"); ok {
@@ -128,16 +149,16 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("ttl"); ok {
-		request.TTL = helper.IntUint64(v.(int))
+	if v, ok := d.GetOk("origin_group_id"); ok {
+		request.OriginGroupId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("origin_id"); ok {
-		originIdSet := v.(*schema.Set).List()
-		for i := range originIdSet {
-			originId := originIdSet[i].(string)
-			request.OriginId = append(request.OriginId, &originId)
-		}
+	if v, ok := d.GetOk("backup_origin_group_id"); ok {
+		request.BackupOriginGroupId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("ttl"); ok {
+		request.TTL = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -157,14 +178,42 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	loadBalancingId := *response.Response.LoadBalancingId
+	loadBalancingId = *response.Response.LoadBalancingId
 
-	d.SetId(zoneId + "#" + loadBalancingId)
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoLoadBalancing(ctx, zoneId, loadBalancingId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "online" {
+			return nil
+		}
+		if *instance.Status == "process" {
+			return resource.NonRetryableError(fmt.Errorf("loadBalancing status is %v, operate failed.", *instance.Status))
+		}
+		return resource.RetryableError(fmt.Errorf("loadBalancing status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
+	}
+
+	d.SetId(zoneId + FILED_SP + loadBalancingId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, loadBalancingId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)
 }
 
 func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_loadBalancing.read")()
+	defer logElapsed("resource.tencentcloud_teo_load_balancing.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -190,12 +239,12 @@ func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta inter
 		return fmt.Errorf("resource `loadBalancing` %s does not exist", loadBalancingId)
 	}
 
-	if loadBalancing.LoadBalancingId != nil {
-		_ = d.Set("load_balancing_id", loadBalancing.LoadBalancingId)
-	}
-
 	if loadBalancing.ZoneId != nil {
 		_ = d.Set("zone_id", loadBalancing.ZoneId)
+	}
+
+	if loadBalancing.LoadBalancingId != nil {
+		_ = d.Set("load_balancing_id", loadBalancing.LoadBalancingId)
 	}
 
 	if loadBalancing.Host != nil {
@@ -206,21 +255,37 @@ func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta inter
 		_ = d.Set("type", loadBalancing.Type)
 	}
 
+	if loadBalancing.OriginGroupId != nil {
+		_ = d.Set("origin_group_id", loadBalancing.OriginGroupId)
+	}
+
+	if loadBalancing.BackupOriginGroupId != nil {
+		_ = d.Set("backup_origin_group_id", loadBalancing.BackupOriginGroupId)
+	}
+
 	if loadBalancing.TTL != nil {
 		_ = d.Set("ttl", loadBalancing.TTL)
 	}
 
-	if loadBalancing.OriginId != nil {
-		_ = d.Set("origin_id", loadBalancing.OriginId)
+	if loadBalancing.Status != nil {
+		_ = d.Set("status", loadBalancing.Status)
+	}
+
+	if loadBalancing.Cname != nil {
+		_ = d.Set("cname", loadBalancing.Cname)
 	}
 
 	if loadBalancing.UpdateTime != nil {
 		_ = d.Set("update_time", loadBalancing.UpdateTime)
 	}
 
-	if loadBalancing.Cname != nil {
-		_ = d.Set("cname", loadBalancing.Cname)
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
+	if err != nil {
+		return err
 	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -230,19 +295,49 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifyLoadBalancingRequest()
 
-	request.ZoneId = helper.String(d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	zoneId := idSplit[0]
+	loadBalancingId := idSplit[1]
+
+	request.ZoneId = &zoneId
+	request.LoadBalancingId = &loadBalancingId
+
+	if d.HasChange("zone_id") {
+
+		return fmt.Errorf("`zone_id` do not support change now.")
+
+	}
 
 	if d.HasChange("host") {
+
 		return fmt.Errorf("`host` do not support change now.")
+
 	}
 
 	if d.HasChange("type") {
 		if v, ok := d.GetOk("type"); ok {
 			request.Type = helper.String(v.(string))
 		}
+
+	}
+
+	if d.HasChange("origin_group_id") {
+		if v, ok := d.GetOk("origin_group_id"); ok {
+			request.OriginGroupId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("backup_origin_group_id") {
+
+		return fmt.Errorf("`backup_origin_group_id` do not support change now.")
+
 	}
 
 	if d.HasChange("ttl") {
@@ -251,15 +346,12 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("origin_id") {
-		if v, ok := d.GetOk("origin_id"); ok {
-			originIdSet := v.(*schema.Set).List()
-			for i := range originIdSet {
-				originId := originIdSet[i].(string)
-				request.OriginId = append(request.OriginId, &originId)
-			}
-		}
-	}
+	//if d.HasChange("status") {
+	//	if v, ok := d.GetOk("status"); ok {
+	//		request.Status = helper.String(v.(string))
+	//	}
+	//
+	//}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyLoadBalancing(request)
@@ -273,7 +365,19 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
+		log.Printf("[CRITAL]%s create teo loadBalancing failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)

@@ -1,20 +1,20 @@
 /*
-Provides a resource to create a teo dnsSec
+Provides a resource to create a teo dns_sec
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_teo_dns_sec" "dns_sec" {
-  zone_id = tencentcloud_teo_zone.zone.id
-  status  = "disabled"
-}
+  zone_id = ""
+  status = ""
+    }
 
 ```
 Import
 
 teo dns_sec can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_sec.dns_sec zoneId
+$ terraform import tencentcloud_teo_dns_sec.dns_sec dnsSec_id
 ```
 */
 package tencentcloud
@@ -44,12 +44,6 @@ func resourceTencentCloudTeoDnsSec() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Site ID.",
-			},
-
-			"zone_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Site Name.",
 			},
 
 			"status": {
@@ -129,31 +123,18 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 
-	var (
-		request = teo.NewModifyDnssecRequest()
-		zoneId  string
-	)
-
+	var zoneId string
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.Id = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("status"); ok {
-		request.Status = helper.String(v.(string))
+		if v.(string) != "enabled" {
+			return fmt.Errorf("[CRITAL] create teo dnsSec status error")
+		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDnssec(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-
+	err := resourceTencentCloudTeoDnsSecUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo dnsSec failed, reason:%+v", logId, err)
 		return err
@@ -185,42 +166,40 @@ func resourceTencentCloudTeoDnsSecRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("resource `dnsSec` %s does not exist", zoneId)
 	}
 
-	if dnsSec.Name != nil {
-		_ = d.Set("zone_name", dnsSec.Name)
-	}
+	_ = d.Set("zone_id", zoneId)
 
 	if dnsSec.Status != nil {
 		_ = d.Set("status", dnsSec.Status)
 	}
 
-	if dnsSec.Dnssec != nil {
+	if dnsSec.DnssecInfo != nil {
 		dnssecMap := map[string]interface{}{}
-		if dnsSec.Dnssec.Flags != nil {
-			dnssecMap["flags"] = dnsSec.Dnssec.Flags
+		if dnsSec.DnssecInfo.Flags != nil {
+			dnssecMap["flags"] = dnsSec.DnssecInfo.Flags
 		}
-		if dnsSec.Dnssec.Algorithm != nil {
-			dnssecMap["algorithm"] = dnsSec.Dnssec.Algorithm
+		if dnsSec.DnssecInfo.Algorithm != nil {
+			dnssecMap["algorithm"] = dnsSec.DnssecInfo.Algorithm
 		}
-		if dnsSec.Dnssec.KeyType != nil {
-			dnssecMap["key_type"] = dnsSec.Dnssec.KeyType
+		if dnsSec.DnssecInfo.KeyType != nil {
+			dnssecMap["key_type"] = dnsSec.DnssecInfo.KeyType
 		}
-		if dnsSec.Dnssec.DigestType != nil {
-			dnssecMap["digest_type"] = dnsSec.Dnssec.DigestType
+		if dnsSec.DnssecInfo.DigestType != nil {
+			dnssecMap["digest_type"] = dnsSec.DnssecInfo.DigestType
 		}
-		if dnsSec.Dnssec.DigestAlgorithm != nil {
-			dnssecMap["digest_algorithm"] = dnsSec.Dnssec.DigestAlgorithm
+		if dnsSec.DnssecInfo.DigestAlgorithm != nil {
+			dnssecMap["digest_algorithm"] = dnsSec.DnssecInfo.DigestAlgorithm
 		}
-		if dnsSec.Dnssec.Digest != nil {
-			dnssecMap["digest"] = dnsSec.Dnssec.Digest
+		if dnsSec.DnssecInfo.Digest != nil {
+			dnssecMap["digest"] = dnsSec.DnssecInfo.Digest
 		}
-		if dnsSec.Dnssec.DS != nil {
-			dnssecMap["d_s"] = dnsSec.Dnssec.DS
+		if dnsSec.DnssecInfo.DS != nil {
+			dnssecMap["d_s"] = dnsSec.DnssecInfo.DS
 		}
-		if dnsSec.Dnssec.KeyTag != nil {
-			dnssecMap["key_tag"] = dnsSec.Dnssec.KeyTag
+		if dnsSec.DnssecInfo.KeyTag != nil {
+			dnssecMap["key_tag"] = dnsSec.DnssecInfo.KeyTag
 		}
-		if dnsSec.Dnssec.PublicKey != nil {
-			dnssecMap["public_key"] = dnsSec.Dnssec.PublicKey
+		if dnsSec.DnssecInfo.PublicKey != nil {
+			dnssecMap["public_key"] = dnsSec.DnssecInfo.PublicKey
 		}
 
 		_ = d.Set("dnssec", []interface{}{dnssecMap})
@@ -241,10 +220,16 @@ func resourceTencentCloudTeoDnsSecUpdate(d *schema.ResourceData, meta interface{
 	request := teo.NewModifyDnssecRequest()
 
 	zoneId := d.Id()
-	request.Id = &zoneId
+	request.ZoneId = &zoneId
 
-	if v, ok := d.GetOk("status"); ok {
-		request.Status = helper.String(v.(string))
+	if d.HasChange("zone_id") {
+		return fmt.Errorf("`zone_id` do not support change now.")
+	}
+
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			request.Status = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -269,6 +254,20 @@ func resourceTencentCloudTeoDnsSecUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudTeoDnsSecDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_dns_sec.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	if v, ok := d.GetOk("status"); ok {
+		if v.(string) != "disabled" {
+			return fmt.Errorf("[DELETE] delete teo dnsSec status error")
+		}
+	}
+
+	err := resourceTencentCloudTeoDnsSecUpdate(d, meta)
+	if err != nil {
+		log.Printf("[DELETE]%s delete teo dnsSec failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return nil
 }

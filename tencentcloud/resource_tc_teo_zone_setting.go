@@ -5,96 +5,107 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_zone_setting" "zone_setting" {
-  zone_id = tencentcloud_teo_zone.zone.id
+  zone_id = ""
+    cache {
+		cache {
+				switch = ""
+				cache_time = ""
+				ignore_cache_control = ""
+		}
+		no_cache {
+				switch = ""
+		}
+		follow_origin {
+				switch = ""
+		}
 
-  cache {
-    follow_origin {
-      switch = "off"
-    }
-
-    no_cache {
-      switch = "off"
-    }
   }
-
   cache_key {
-    full_url_cache = "off"
-    ignore_case    = "on"
+			full_url_cache = ""
+			ignore_case = ""
+		query_string {
+				switch = ""
+				action = ""
+				value = ""
+		}
 
-    query_string {
-      action = "excludeCustom"
-      switch = "on"
-      value  = ["test", "apple"]
-    }
   }
-
-  cache_prefresh {
-    percent = 90
-    switch  = "off"
-  }
-
-  client_ip_header {
-    switch = "off"
-  }
-
-  compression {
-    switch = "off"
-  }
-
-  force_redirect {
-    redirect_status_code = 302
-    switch               = "on"
-  }
-
-  https {
-    http2         = "on"
-    ocsp_stapling = "off"
-    tls_version   = [
-      "TLSv1.2",
-      "TLSv1.3",
-    ]
-
-    hsts {
-      include_sub_domains = "off"
-      max_age             = 0
-      preload             = "off"
-      switch              = "off"
-    }
-  }
-
   max_age {
-    follow_origin = "off"
-    max_age_time  = 600
-  }
+			max_age_time = ""
+			follow_origin = ""
 
+  }
   offline_cache {
-    switch = "off"
-  }
+			switch = ""
 
-  origin {
-    origin_pull_protocol = "follow"
   }
-
-  post_max_size {
-    max_size = 524288000
-    switch   = "on"
-  }
-
   quic {
-    switch = "on"
-  }
+			switch = ""
 
-  smart_routing {
-    switch = "on"
   }
+  post_max_size {
+			switch = ""
+			max_size = ""
 
+  }
+  compression {
+			switch = ""
+			algorithms = ""
+
+  }
   upstream_http2 {
-    switch = "off"
-  }
+			switch = ""
 
+  }
+  force_redirect {
+			switch = ""
+			redirect_status_code = ""
+
+  }
+  https {
+			http2 = ""
+			ocsp_stapling = ""
+			tls_version = ""
+		hsts {
+				switch = ""
+				max_age = ""
+				include_sub_domains = ""
+				preload = ""
+		}
+
+  }
+  origin {
+			origins = ""
+			backup_origins = ""
+			origin_pull_protocol = ""
+			cos_private_access = ""
+
+  }
+  smart_routing {
+			switch = ""
+
+  }
   web_socket {
-    switch  = "off"
-    timeout = 30
+			switch = ""
+			timeout = ""
+
+  }
+  client_ip_header {
+			switch = ""
+			header_name = ""
+
+  }
+  cache_prefresh {
+			switch = ""
+			percent = ""
+
+  }
+  ipv6 {
+			switch = ""
+
+  }
+  tags = {
+    "createdBy" = "terraform"
   }
 }
 
@@ -103,7 +114,7 @@ Import
 
 teo zone_setting can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zone_setting zone_id
+$ terraform import tencentcloud_teo_zone_setting.zone_setting zoneSetting_id
 ```
 */
 package tencentcloud
@@ -135,6 +146,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 				Description: "Site ID.",
 			},
 
+			"area": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`.",
+			},
+
 			"cache": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -148,26 +165,26 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
-							Description: "Cache configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cache configuration. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Cache configuration switch.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Cache configuration switch.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"cache_time": {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Computed:    true,
-										Description: "Cache expiration time settings.Unit: second. The maximum value is 365 days.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Cache expiration time settings.Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"ignore_cache_control": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Specifies whether to enable force cache.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Specifies whether to enable force cache.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -177,14 +194,14 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
-							Description: "No-cache configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "No-cache configuration. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Whether to cache the configuration.- on: Do not cache.- off: Cache.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Whether to cache the configuration.- `on`: Do not cache.- `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -194,13 +211,14 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
-							Description: "Follows the origin server configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Follows the origin server configuration. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
-										Required:    true,
-										Description: "According to the configuration switch of the origin site, the values are: on: open; off: off.",
+										Optional:    true,
+										Computed:    true,
+										Description: "Specifies whether to follow the origin server configuration.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -220,29 +238,29 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"full_url_cache": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specifies whether to enable full-path cache.- on: Enable full-path cache (i.e., disable Ignore Query String).- off: Disable full-path cache (i.e., enable Ignore Query String).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies whether to enable full-path cache.- `on`: Enable full-path cache (i.e., disable Ignore Query String).- `off`: Disable full-path cache (i.e., enable Ignore Query String). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ignore_case": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specifies whether the cache key is case-sensitive.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies whether the cache key is case-sensitive. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"query_string": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "Request parameter contained in CacheKey.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Request parameter contained in CacheKey. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Whether to use QueryString as part of CacheKey.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Whether to use QueryString as part of CacheKey.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"action": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "- includeCustom: Include the specified query strings.- excludeCustom: Exclude the specified query strings.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "- `includeCustom`: Include the specified query strings.- `excludeCustom`: Exclude the specified query strings. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"value": {
 										Type: schema.TypeSet,
@@ -250,7 +268,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Description: "Array of query strings used/excluded.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Array of query strings used/excluded. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -270,12 +288,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"max_age_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Specifies the max age of the cache (in seconds). The maximum value is 365 days.Note: the value 0 means not to cache.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies the max age of the cache (in seconds). The maximum value is 365 days. Note: the value 0 means not to cache. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"follow_origin": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specifies whether to follow the max cache age of the origin server.- on: Enable.- off: Disable.If it&#39;s on, MaxAgeTime is ignored.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If it&#39;s on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -292,7 +310,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable offline cache.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Whether to enable offline cache.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -309,7 +327,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable QUIC.- on: Enable.- off: Disable.",
+							Description: "Whether to enable QUIC.- `on`: Enable.- `off`: Disable.",
 						},
 					},
 				},
@@ -326,12 +344,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Specifies whether to enable custom setting of the maximum file size.- on: Enable. You can set a custom max size.- off: Disable. In this case, the max size defaults to 32 MB.",
+							Description: "Specifies whether to enable custom setting of the maximum file size.- `on`: Enable. You can set a custom max size.- `off`: Disable. In this case, the max size defaults to 32 MB.",
 						},
 						"max_size": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Maximum size. Value range: 1-500 MB.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Maximum size. Value range: 1-500 MB. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -348,7 +366,16 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable Smart compression.- on: Enable.- off: Disable.",
+							Description: "Whether to enable Smart compression.- `on`: Enable.- `off`: Disable.",
+						},
+						"algorithms": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							Computed:    true,
+							Description: "Compression algorithms to select. Valid values: `brotli`, `gzip`.",
 						},
 					},
 				},
@@ -365,7 +392,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable HTTP2 origin-pull.- on: Enable.- off: Disable.",
+							Description: "Whether to enable HTTP2 origin-pull.- `on`: Enable.- `off`: Disable.",
 						},
 					},
 				},
@@ -382,12 +409,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable force redirect.- on: Enable.- off: Disable.",
+							Description: "Whether to enable force redirect.- `on`: Enable.- `off`: Disable.",
 						},
 						"redirect_status_code": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Redirection status code.- 301- 302Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Redirection status code.- 301- 302 Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -404,12 +431,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"http2": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "HTTP2 configuration switch.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "HTTP2 configuration switch.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ocsp_stapling": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "OCSP configuration switch.- on: Enable.- off: Disable.It is disabled by default. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "OCSP configuration switch.- `on`: Enable.- `off`: Disable.It is disabled by default. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tls_version": {
 							Type: schema.TypeSet,
@@ -417,34 +444,34 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "TLS version settings. Valid values: `TLSv1`, `TLSV1.1`, `TLSV1.2`, and `TLSv1.3`.Only consecutive versions can be enabled at the same time.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "TLS version settings. Valid values: `TLSv1`, `TLSV1.1`, `TLSV1.2`, and `TLSv1.3`.Only consecutive versions can be enabled at the same time. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"hsts": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "HSTS Configuration.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "HSTS Configuration. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "- on: Enable.- off: Disable.",
+										Description: "- `on`: Enable.- `off`: Disable.",
 									},
 									"max_age": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "MaxAge value.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "MaxAge value in seconds, should be no more than 1 day. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"include_sub_domains": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Specifies whether to include subdomain names. Valid values: `on` and `off`.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Specifies whether to include subdomain names. Valid values: `on` and `off`. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"preload": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Specifies whether to preload. Valid values: `on` and `off`.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Specifies whether to preload. Valid values: `on` and `off`. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -461,11 +488,35 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 				Description: "Origin server configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"origins": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							Computed:    true,
+							Description: "Origin sites list. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"backup_origins": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							Computed:    true,
+							Description: "Backup origin sites list. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
 						"origin_pull_protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Origin-pull protocol.- http: Switch HTTPS requests to HTTP.- follow: Follow the protocol of the request.- https: Switch HTTP requests to HTTPS. This only supports port 443 on the origin server.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Origin-pull protocol.- `http`: Switch HTTPS requests to HTTP.- `follow`: Follow the protocol of the request.- `https`: Switch HTTP requests to HTTPS. This only supports port 443 on the origin server. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"cos_private_access": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether access private cos bucket is allowed when `OriginType` is cos. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -482,7 +533,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable smart acceleration.- on: Enable.- off: Disable.",
+							Description: "Whether to enable smart acceleration.- `on`: Enable.- `off`: Disable.",
 						},
 					},
 				},
@@ -521,12 +572,12 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Specifies whether to enable client IP header.- on: Enable.- off: Disable.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies whether to enable client IP header.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"header_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Name of the origin-pull client IP request header.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Name of the origin-pull client IP request header. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -543,15 +594,38 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Specifies whether to enable cache prefresh.- on: Enable.- off: Disable.",
+							Description: "Specifies whether to enable cache prefresh.- `on`: Enable.- `off`: Disable.",
 						},
 						"percent": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Percentage of cache time before try to prefresh. Value range: 1-99.",
+							Description: "Percentage of cache time before try to prefresh. Valid value range: 1-99.",
 						},
 					},
 				},
+			},
+
+			"ipv6": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Computed:    true,
+				Description: "IPv6 access configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "- `on`: Enable.- `off`: Disable.",
+						},
+					},
+				},
+			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 		},
 	}
@@ -561,16 +635,30 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_teo_zone_setting.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		zoneId string
-	)
+	logId := getLogId(contextNil)
 
+	var zoneId string
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
 
+	err := resourceTencentCloudTeoZoneSettingUpdate(d, meta)
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
+		return err
+	}
+
 	d.SetId(zoneId)
-	return resourceTencentCloudTeoZoneSettingUpdate(d, meta)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, zoneId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+	return resourceTencentCloudTeoZoneSettingRead(d, meta)
 }
 
 func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interface{}) error {
@@ -595,8 +683,10 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("resource `zoneSetting` %s does not exist", zoneId)
 	}
 
-	if zoneSetting.ZoneId != nil {
-		_ = d.Set("zone_id", zoneSetting.ZoneId)
+	_ = d.Set("zone_id", zoneId)
+
+	if zoneSetting.Area != nil {
+		_ = d.Set("area", zoneSetting.Area)
 	}
 
 	if zoneSetting.Cache != nil {
@@ -708,6 +798,9 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 		if zoneSetting.Compression.Switch != nil {
 			compressionMap["switch"] = zoneSetting.Compression.Switch
 		}
+		if zoneSetting.Compression.Algorithms != nil {
+			compressionMap["algorithms"] = zoneSetting.Compression.Algorithms
+		}
 
 		_ = d.Set("compression", []interface{}{compressionMap})
 	}
@@ -767,8 +860,17 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 
 	if zoneSetting.Origin != nil {
 		originMap := map[string]interface{}{}
+		if zoneSetting.Origin.Origins != nil {
+			originMap["origins"] = zoneSetting.Origin.Origins
+		}
+		if zoneSetting.Origin.BackupOrigins != nil {
+			originMap["backup_origins"] = zoneSetting.Origin.BackupOrigins
+		}
 		if zoneSetting.Origin.OriginPullProtocol != nil {
 			originMap["origin_pull_protocol"] = zoneSetting.Origin.OriginPullProtocol
+		}
+		if zoneSetting.Origin.CosPrivateAccess != nil {
+			originMap["cos_private_access"] = zoneSetting.Origin.CosPrivateAccess
 		}
 
 		_ = d.Set("origin", []interface{}{originMap})
@@ -819,6 +921,23 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("cache_prefresh", []interface{}{cachePrefreshMap})
 	}
 
+	if zoneSetting.Ipv6 != nil {
+		ipv6Map := map[string]interface{}{}
+		if zoneSetting.Ipv6.Switch != nil {
+			ipv6Map["switch"] = zoneSetting.Ipv6.Switch
+		}
+
+		_ = d.Set("ipv6", []interface{}{ipv6Map})
+	}
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -827,236 +946,301 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var (
-		request = teo.NewModifyZoneSettingRequest()
-	)
+	request := teo.NewModifyZoneSettingRequest()
 
-	if v, ok := d.GetOk("zone_id"); ok {
-		request.ZoneId = helper.String(v.(string))
+	zoneId := d.Id()
+	request.ZoneId = &zoneId
+
+	if d.HasChange("zone_id") {
+		return fmt.Errorf("`zone_id` do not support change now.")
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "cache"); ok {
-		cacheConfig := teo.CacheConfig{}
-		if CacheMap, ok := helper.InterfaceToMap(dMap, "cache"); ok {
-			cacheConfigCache := teo.CacheConfigCache{}
-			if v, ok := CacheMap["switch"]; ok {
-				cacheConfigCache.Switch = helper.String(v.(string))
+	if d.HasChange("cache") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "cache"); ok {
+			cacheConfig := teo.CacheConfig{}
+			if CacheMap, ok := helper.InterfaceToMap(dMap, "cache"); ok {
+				cacheConfigCache := teo.Cache{}
+				if v, ok := CacheMap["switch"]; ok {
+					cacheConfigCache.Switch = helper.String(v.(string))
+				}
+				if v, ok := CacheMap["cache_time"]; ok {
+					cacheConfigCache.CacheTime = helper.IntInt64(v.(int))
+				}
+				if v, ok := CacheMap["ignore_cache_control"]; ok {
+					cacheConfigCache.IgnoreCacheControl = helper.String(v.(string))
+				}
+				cacheConfig.Cache = &cacheConfigCache
 			}
-			if v, ok := CacheMap["cache_time"]; ok {
-				cacheConfigCache.CacheTime = helper.IntInt64(v.(int))
+			if NoCacheMap, ok := helper.InterfaceToMap(dMap, "no_cache"); ok {
+				cacheConfigNoCache := teo.NoCache{}
+				if v, ok := NoCacheMap["switch"]; ok {
+					cacheConfigNoCache.Switch = helper.String(v.(string))
+				}
+				cacheConfig.NoCache = &cacheConfigNoCache
 			}
-			if v, ok := CacheMap["ignore_cache_control"]; ok {
-				cacheConfigCache.IgnoreCacheControl = helper.String(v.(string))
+			if FollowOriginMap, ok := helper.InterfaceToMap(dMap, "follow_origin"); ok {
+				cacheConfigFollowOrigin := teo.FollowOrigin{}
+				if v, ok := FollowOriginMap["switch"]; ok {
+					cacheConfigFollowOrigin.Switch = helper.String(v.(string))
+				}
+				cacheConfig.FollowOrigin = &cacheConfigFollowOrigin
 			}
-			cacheConfig.Cache = &cacheConfigCache
+			request.Cache = &cacheConfig
 		}
-		if NoCacheMap, ok := helper.InterfaceToMap(dMap, "no_cache"); ok {
-			cacheConfigNoCache := teo.CacheConfigNoCache{}
-			if v, ok := NoCacheMap["switch"]; ok {
-				cacheConfigNoCache.Switch = helper.String(v.(string))
-			}
-			cacheConfig.NoCache = &cacheConfigNoCache
-		}
-		if FollowOriginMap, ok := helper.InterfaceToMap(dMap, "follow_origin"); ok {
-			cacheConfigFollowOrigin := teo.CacheConfigFollowOrigin{}
-			if v, ok := FollowOriginMap["switch"]; ok {
-				cacheConfigFollowOrigin.Switch = helper.String(v.(string))
-			}
-			cacheConfig.FollowOrigin = &cacheConfigFollowOrigin
-		}
-
-		request.Cache = &cacheConfig
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "cache_key"); ok {
-		cacheKey := teo.CacheKey{}
-		if v, ok := dMap["full_url_cache"]; ok {
-			cacheKey.FullUrlCache = helper.String(v.(string))
-		}
-		if v, ok := dMap["ignore_case"]; ok {
-			cacheKey.IgnoreCase = helper.String(v.(string))
-		}
-		if QueryStringMap, ok := helper.InterfaceToMap(dMap, "query_string"); ok {
-			queryString := teo.QueryString{}
-			if v, ok := QueryStringMap["switch"]; ok {
-				queryString.Switch = helper.String(v.(string))
+	if d.HasChange("cache_key") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "cache_key"); ok {
+			cacheKey := teo.CacheKey{}
+			if v, ok := dMap["full_url_cache"]; ok {
+				cacheKey.FullUrlCache = helper.String(v.(string))
 			}
-			if v, ok := QueryStringMap["action"]; ok {
-				queryString.Action = helper.String(v.(string))
+			if v, ok := dMap["ignore_case"]; ok {
+				cacheKey.IgnoreCase = helper.String(v.(string))
 			}
-			if v, ok := QueryStringMap["value"]; ok {
-				valueSet := v.(*schema.Set).List()
-				for i := range valueSet {
-					value := valueSet[i].(string)
-					queryString.Value = append(queryString.Value, &value)
+			if QueryStringMap, ok := helper.InterfaceToMap(dMap, "query_string"); ok {
+				queryString := teo.QueryString{}
+				if v, ok := QueryStringMap["switch"]; ok {
+					queryString.Switch = helper.String(v.(string))
+				}
+				if v, ok := QueryStringMap["action"]; ok {
+					queryString.Action = helper.String(v.(string))
+				}
+				if v, ok := QueryStringMap["value"]; ok {
+					valueSet := v.(*schema.Set).List()
+					for i := range valueSet {
+						value := valueSet[i].(string)
+						queryString.Value = append(queryString.Value, &value)
+					}
+				}
+				cacheKey.QueryString = &queryString
+			}
+			request.CacheKey = &cacheKey
+		}
+	}
+
+	if d.HasChange("max_age") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "max_age"); ok {
+			maxAge := teo.MaxAge{}
+			if v, ok := dMap["max_age_time"]; ok {
+				maxAge.MaxAgeTime = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["follow_origin"]; ok {
+				maxAge.FollowOrigin = helper.String(v.(string))
+			}
+			request.MaxAge = &maxAge
+		}
+	}
+
+	if d.HasChange("offline_cache") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "offline_cache"); ok {
+			offlineCache := teo.OfflineCache{}
+			if v, ok := dMap["switch"]; ok {
+				offlineCache.Switch = helper.String(v.(string))
+			}
+			request.OfflineCache = &offlineCache
+		}
+	}
+
+	if d.HasChange("quic") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "quic"); ok {
+			quic := teo.Quic{}
+			if v, ok := dMap["switch"]; ok {
+				quic.Switch = helper.String(v.(string))
+			}
+			request.Quic = &quic
+		}
+	}
+
+	if d.HasChange("post_max_size") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "post_max_size"); ok {
+			postMaxSize := teo.PostMaxSize{}
+			if v, ok := dMap["switch"]; ok {
+				postMaxSize.Switch = helper.String(v.(string))
+			}
+			if v, ok := dMap["max_size"]; ok {
+				postMaxSize.MaxSize = helper.IntInt64(v.(int))
+			}
+			request.PostMaxSize = &postMaxSize
+		}
+	}
+
+	if d.HasChange("compression") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "compression"); ok {
+			compression := teo.Compression{}
+			if v, ok := dMap["switch"]; ok {
+				compression.Switch = helper.String(v.(string))
+			}
+			if v, ok := dMap["algorithms"]; ok {
+				algorithmsSet := v.(*schema.Set).List()
+				for i := range algorithmsSet {
+					algorithms := algorithmsSet[i].(string)
+					compression.Algorithms = append(compression.Algorithms, &algorithms)
 				}
 			}
-			cacheKey.QueryString = &queryString
+			request.Compression = &compression
 		}
-
-		request.CacheKey = &cacheKey
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "max_age"); ok {
-		maxAge := teo.MaxAge{}
-		if v, ok := dMap["max_age_time"]; ok {
-			maxAge.MaxAgeTime = helper.IntInt64(v.(int))
-		}
-		if v, ok := dMap["follow_origin"]; ok {
-			maxAge.FollowOrigin = helper.String(v.(string))
-		}
-
-		request.MaxAge = &maxAge
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "offline_cache"); ok {
-		offlineCache := teo.OfflineCache{}
-		if v, ok := dMap["switch"]; ok {
-			offlineCache.Switch = helper.String(v.(string))
-		}
-
-		request.OfflineCache = &offlineCache
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "quic"); ok {
-		quic := teo.Quic{}
-		if v, ok := dMap["switch"]; ok {
-			quic.Switch = helper.String(v.(string))
-		}
-
-		request.Quic = &quic
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "post_max_size"); ok {
-		postMaxSize := teo.PostMaxSize{}
-		if v, ok := dMap["switch"]; ok {
-			postMaxSize.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["max_size"]; ok {
-			postMaxSize.MaxSize = helper.IntInt64(v.(int))
-		}
-
-		request.PostMaxSize = &postMaxSize
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "compression"); ok {
-		compression := teo.Compression{}
-		if v, ok := dMap["switch"]; ok {
-			compression.Switch = helper.String(v.(string))
-		}
-
-		request.Compression = &compression
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "upstream_http2"); ok {
-		upstreamHttp2 := teo.UpstreamHttp2{}
-		if v, ok := dMap["switch"]; ok {
-			upstreamHttp2.Switch = helper.String(v.(string))
-		}
-
-		request.UpstreamHttp2 = &upstreamHttp2
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "force_redirect"); ok {
-		forceRedirect := teo.ForceRedirect{}
-		if v, ok := dMap["switch"]; ok {
-			forceRedirect.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["redirect_status_code"]; ok {
-			forceRedirect.RedirectStatusCode = helper.IntInt64(v.(int))
-		}
-
-		request.ForceRedirect = &forceRedirect
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "https"); ok {
-		https := teo.Https{}
-		if v, ok := dMap["http2"]; ok {
-			https.Http2 = helper.String(v.(string))
-		}
-		if v, ok := dMap["ocsp_stapling"]; ok {
-			https.OcspStapling = helper.String(v.(string))
-		}
-		if v, ok := dMap["tls_version"]; ok {
-			tlsVersionSet := v.(*schema.Set).List()
-			for i := range tlsVersionSet {
-				tlsVersion := tlsVersionSet[i].(string)
-				https.TlsVersion = append(https.TlsVersion, &tlsVersion)
+	if d.HasChange("upstream_http2") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "upstream_http2"); ok {
+			upstreamHttp2 := teo.UpstreamHttp2{}
+			if v, ok := dMap["switch"]; ok {
+				upstreamHttp2.Switch = helper.String(v.(string))
 			}
+			request.UpstreamHttp2 = &upstreamHttp2
 		}
-		if HstsMap, ok := helper.InterfaceToMap(dMap, "hsts"); ok {
-			hsts := teo.Hsts{}
-			if v, ok := HstsMap["switch"]; ok {
-				hsts.Switch = helper.String(v.(string))
+	}
+
+	if d.HasChange("force_redirect") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "force_redirect"); ok {
+			forceRedirect := teo.ForceRedirect{}
+			if v, ok := dMap["switch"]; ok {
+				forceRedirect.Switch = helper.String(v.(string))
 			}
-			if v, ok := HstsMap["max_age"]; ok {
-				hsts.MaxAge = helper.IntInt64(v.(int))
+			if v, ok := dMap["redirect_status_code"]; ok {
+				forceRedirect.RedirectStatusCode = helper.IntInt64(v.(int))
 			}
-			if v, ok := HstsMap["include_sub_domains"]; ok {
-				hsts.IncludeSubDomains = helper.String(v.(string))
+			request.ForceRedirect = &forceRedirect
+		}
+	}
+
+	if d.HasChange("https") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "https"); ok {
+			https := teo.Https{}
+			if v, ok := dMap["http2"]; ok {
+				https.Http2 = helper.String(v.(string))
 			}
-			if v, ok := HstsMap["preload"]; ok {
-				hsts.Preload = helper.String(v.(string))
+			if v, ok := dMap["ocsp_stapling"]; ok {
+				https.OcspStapling = helper.String(v.(string))
 			}
-			https.Hsts = &hsts
+			if v, ok := dMap["tls_version"]; ok {
+				tlsVersionSet := v.(*schema.Set).List()
+				for i := range tlsVersionSet {
+					tlsVersion := tlsVersionSet[i].(string)
+					https.TlsVersion = append(https.TlsVersion, &tlsVersion)
+				}
+			}
+			if HstsMap, ok := helper.InterfaceToMap(dMap, "hsts"); ok {
+				hsts := teo.Hsts{}
+				if v, ok := HstsMap["switch"]; ok {
+					hsts.Switch = helper.String(v.(string))
+				}
+				if v, ok := HstsMap["max_age"]; ok {
+					hsts.MaxAge = helper.IntInt64(v.(int))
+				}
+				if v, ok := HstsMap["include_sub_domains"]; ok {
+					hsts.IncludeSubDomains = helper.String(v.(string))
+				}
+				if v, ok := HstsMap["preload"]; ok {
+					hsts.Preload = helper.String(v.(string))
+				}
+				https.Hsts = &hsts
+			}
+
+			request.Https = &https
 		}
 
-		request.Https = &https
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "origin"); ok {
-		origin := teo.Origin{}
-		if v, ok := dMap["origin_pull_protocol"]; ok {
-			origin.OriginPullProtocol = helper.String(v.(string))
+	if d.HasChange("origin") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "origin"); ok {
+			origin := teo.Origin{}
+			if v, ok := dMap["origins"]; ok {
+				originsSet := v.(*schema.Set).List()
+				for i := range originsSet {
+					origins := originsSet[i].(string)
+					origin.Origins = append(origin.Origins, &origins)
+				}
+			}
+			if v, ok := dMap["backup_origins"]; ok {
+				backupOriginsSet := v.(*schema.Set).List()
+				for i := range backupOriginsSet {
+					backupOrigins := backupOriginsSet[i].(string)
+					origin.BackupOrigins = append(origin.BackupOrigins, &backupOrigins)
+				}
+			}
+			if v, ok := dMap["origin_pull_protocol"]; ok {
+				origin.OriginPullProtocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["cos_private_access"]; ok {
+				origin.CosPrivateAccess = helper.String(v.(string))
+			}
+
+			request.Origin = &origin
 		}
 
-		request.Origin = &origin
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "smart_routing"); ok {
-		smartRouting := teo.SmartRouting{}
-		if v, ok := dMap["switch"]; ok {
-			smartRouting.Switch = helper.String(v.(string))
+	if d.HasChange("smart_routing") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "smart_routing"); ok {
+			smartRouting := teo.SmartRouting{}
+			if v, ok := dMap["switch"]; ok {
+				smartRouting.Switch = helper.String(v.(string))
+			}
+
+			request.SmartRouting = &smartRouting
 		}
 
-		request.SmartRouting = &smartRouting
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "web_socket"); ok {
-		webSocket := teo.WebSocket{}
-		if v, ok := dMap["switch"]; ok {
-			webSocket.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["timeout"]; ok {
-			webSocket.Timeout = helper.IntInt64(v.(int))
+	if d.HasChange("web_socket") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "web_socket"); ok {
+			webSocket := teo.WebSocket{}
+			if v, ok := dMap["switch"]; ok {
+				webSocket.Switch = helper.String(v.(string))
+			}
+			if v, ok := dMap["timeout"]; ok {
+				webSocket.Timeout = helper.IntInt64(v.(int))
+			}
+
+			request.WebSocket = &webSocket
 		}
 
-		request.WebSocket = &webSocket
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "client_ip_header"); ok {
-		clientIp := teo.ClientIp{}
-		if v, ok := dMap["switch"]; ok {
-			clientIp.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["header_name"]; ok {
-			clientIp.HeaderName = helper.String(v.(string))
+	if d.HasChange("client_ip_header") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "client_ip_header"); ok {
+			clientIp := teo.ClientIpHeader{}
+			if v, ok := dMap["switch"]; ok {
+				clientIp.Switch = helper.String(v.(string))
+			}
+			if v, ok := dMap["header_name"]; ok {
+				clientIp.HeaderName = helper.String(v.(string))
+			}
+
+			request.ClientIpHeader = &clientIp
 		}
 
-		request.ClientIpHeader = &clientIp
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "cache_prefresh"); ok {
-		cachePrefresh := teo.CachePrefresh{}
-		if v, ok := dMap["switch"]; ok {
-			cachePrefresh.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["percent"]; ok {
-			cachePrefresh.Percent = helper.IntInt64(v.(int))
+	if d.HasChange("cache_prefresh") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "cache_prefresh"); ok {
+			cachePrefresh := teo.CachePrefresh{}
+			if v, ok := dMap["switch"]; ok {
+				cachePrefresh.Switch = helper.String(v.(string))
+			}
+			if v, ok := dMap["percent"]; ok {
+				cachePrefresh.Percent = helper.IntInt64(v.(int))
+			}
+
+			request.CachePrefresh = &cachePrefresh
 		}
 
-		request.CachePrefresh = &cachePrefresh
+	}
+
+	if d.HasChange("ipv6") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
+			ipv6Access := teo.Ipv6Access{}
+			if v, ok := dMap["switch"]; ok {
+				ipv6Access.Switch = helper.String(v.(string))
+			}
+
+			request.Ipv6 = &ipv6Access
+		}
+
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1073,6 +1257,17 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTeoZoneSettingRead(d, meta)
