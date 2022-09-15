@@ -666,6 +666,12 @@ TencentCloud Elastic Microservice(TEM)
 TencentCloud EdgeOne(TEO)
   Data Source
 	tencentcloud_teo_zone_available_plans
+	tencentcloud_teo_bot_managed_rules
+	tencentcloud_teo_bot_portrait_rules
+	tencentcloud_teo_rule_engine_settings
+	tencentcloud_teo_security_policy_regions
+	tencentcloud_teo_waf_managed_rules
+	tencentcloud_teo_zone_ddos_policy
 
   Resource
 	tencentcloud_teo_zone
@@ -968,6 +974,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
+			"tencentcloud_teo_bot_managed_rules":					 dataSourceTencentCloudTeoBotManagedRules(),
+			"tencentcloud_teo_bot_portrait_rules":					 dataSourceTencentCloudTeoBotPortraitRules(),
+			"tencentcloud_teo_rule_engine_settings":				 dataSourceTencentCloudTeoRuleEngineSettings(),
+			"tencentcloud_teo_security_policy_regions":				 dataSourceTencentCloudTeoSecurityPolicyRegions(),
+			"tencentcloud_teo_waf_managed_rules":					 dataSourceTencentCloudTeoWafManagedRules(),
+			"tencentcloud_teo_zone_ddos_policy":         			 dataSourceTencentCloudTeoZoneDDoSPolicy(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
