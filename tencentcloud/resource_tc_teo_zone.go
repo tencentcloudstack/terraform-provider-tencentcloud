@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a teo zone
 
-# Example Usage
+Example Usage
 
 ```hcl
 
@@ -290,17 +290,15 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 
 	if v, ok := d.GetOk("plan_type"); ok {
 		planType = helper.String(v.(string))
-	} else {
-		return fmt.Errorf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, "plan_type is not specificated.")
 	}
 
 	if v, _ := d.GetOk("type"); v != nil {
 		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("dry_run"); ok {
-		request.DryRun = helper.Bool(v.(bool))
-	}
+	//if v, ok := d.GetOk("dry_run"); ok {
+	//	request.DryRun = helper.Bool(v.(bool))
+	//}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
@@ -325,16 +323,24 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	zoneId = *response.Response.ZoneId
 	d.SetId(zoneId)
 
-	var planRequest = teo.NewCreatePlanForZoneRequest()
-	planRequest.ZoneId = &zoneId
-	planRequest.PlanType = planType
-	resultPlan, err := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, err)
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), resultPlan.ToJsonString())
+	if zoneId != "" {
+		var planRequest = teo.NewCreatePlanForZoneRequest()
+		planRequest.ZoneId = &zoneId
+		planRequest.PlanType = planType
+		planErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if planErr != nil {
+			log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, planErr)
+			return planErr
+		}
 	}
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
