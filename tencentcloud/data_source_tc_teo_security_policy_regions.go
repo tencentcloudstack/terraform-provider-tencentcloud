@@ -23,11 +23,11 @@ func dataSourceTencentCloudTeoSecurityPolicyRegions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTeoSecurityPolicyRegionsRead,
 		Schema: map[string]*schema.Schema{
-			//"count": {
-			//	Type:        schema.TypeInt,
-			//	Computed:    true,
-			//	Description: "Total region number.",
-			//},
+			"total": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total region number.",
+			},
 
 			"geo_ip": {
 				Type:        schema.TypeList,
@@ -102,7 +102,7 @@ func dataSourceTencentCloudTeoSecurityPolicyRegionsRead(d *schema.ResourceData, 
 	}
 
 	if geoIps != nil {
-		_ = d.Set("count", len(geoIps))
+		_ = d.Set("total", len(geoIps))
 	}
 
 	ruleList := []interface{}{}
