@@ -46,7 +46,7 @@ func TestAccTencentCloudRedisInstancesDataSource(t *testing.T) {
 }
 
 func testAccTencentCloudRedisInstancesDataSourceConfig() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
   type_id           = 2
@@ -54,6 +54,8 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   mem_size          = 8192
   name              = "terraform_test"
   port              = 6379
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
   tags = {
     "test" = "test"
   }
