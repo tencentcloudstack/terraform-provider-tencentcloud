@@ -906,7 +906,10 @@ func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	planInfos = response.Response.PlanInfo
+
+	if response != nil || len(response.Response.PlanInfo) > 0 {
+		planInfos = response.Response.PlanInfo
+	}
 	return
 }
 

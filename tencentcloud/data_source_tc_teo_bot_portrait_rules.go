@@ -19,7 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudTeoBotPortraitRules() *schema.Resource {
@@ -97,11 +96,11 @@ func dataSourceTencentCloudTeoBotPortraitRulesRead(d *schema.ResourceData, meta 
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("zone_id"); ok {
-		paramMap["zone_id"] = helper.String(v.(string))
+		paramMap["zone_id"] = v
 	}
 
 	if v, ok := d.GetOk("entity"); ok {
-		paramMap["entity"] = helper.String(v.(string))
+		paramMap["entity"] = v
 	}
 
 	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
