@@ -11,7 +11,6 @@ import (
 )
 
 func TestAccTencentCloudCosBucketDomainCertificate_basic(t *testing.T) {
-	t.Parallel()
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
