@@ -31,7 +31,7 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
 		},
 	)

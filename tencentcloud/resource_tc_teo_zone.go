@@ -1,29 +1,30 @@
 /*
 Provides a resource to create a teo zone
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone" "zone" {
-    zone_name = ""
-  plan_type = ""
-          type = ""
-  paused = ""
-      vanity_name_servers {
-			switch = ""
-			servers = ""
 
-  }
-    cname_speed_up = ""
-    tags {
-			tag_key = ""
-			tag_value = ""
+	resource "tencentcloud_teo_zone" "zone" {
+	    zone_name = ""
+	  plan_type = ""
+	          type = ""
+	  paused = ""
+	      vanity_name_servers {
+				switch = ""
+				servers = ""
 
-  }
-      tags = {
-    "createdBy" = "terraform"
-  }
-}
+	  }
+	    cname_speed_up = ""
+	    tags {
+				tag_key = ""
+				tag_value = ""
+
+	  }
+	      tags = {
+	    "createdBy" = "terraform"
+	  }
+	}
 
 ```
 Import
@@ -280,15 +281,18 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request  = teo.NewCreateZoneRequest()
 		response *teo.CreateZoneResponse
 		zoneId   string
+		planType *string
 	)
 
 	if v, ok := d.GetOk("zone_name"); ok {
 		request.ZoneName = helper.String(v.(string))
 	}
 
-	//if v, ok := d.GetOk("plan_type"); ok {
-	//	request.Type = helper.String(v.(string))
-	//}
+	if v, ok := d.GetOk("plan_type"); ok {
+		planType = helper.String(v.(string))
+	} else {
+		return fmt.Errorf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, "plan_type is not specificated.")
+	}
 
 	if v, _ := d.GetOk("type"); v != nil {
 		request.Type = helper.String(v.(string))
@@ -319,8 +323,20 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	zoneId = *response.Response.ZoneId
-
 	d.SetId(zoneId)
+
+	var planRequest = teo.NewCreatePlanForZoneRequest()
+	planRequest.ZoneId = &zoneId
+	planRequest.PlanType = planType
+	resultPlan, err := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo zone plan failed, reason:%+v", logId, err)
+		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), resultPlan.ToJsonString())
+	}
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
