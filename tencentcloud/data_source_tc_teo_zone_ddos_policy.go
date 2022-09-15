@@ -18,7 +18,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudTeoZoneDDoSPolicy() *schema.Resource {
@@ -166,7 +165,7 @@ func dataSourceTencentCloudTeoZoneDDoSPolicyRead(d *schema.ResourceData, meta in
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		paramMap["zone_id"] = helper.String(v.(string))
+		paramMap["zone_id"] = v
 	}
 
 	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}

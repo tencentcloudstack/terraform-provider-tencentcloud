@@ -23,11 +23,11 @@ func dataSourceTencentCloudTeoSecurityPolicyRegions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTeoSecurityPolicyRegionsRead,
 		Schema: map[string]*schema.Schema{
-			"count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total region number.",
-			},
+			//"count": {
+			//	Type:        schema.TypeInt,
+			//	Computed:    true,
+			//	Description: "Total region number.",
+			//},
 
 			"geo_ip": {
 				Type:        schema.TypeList,

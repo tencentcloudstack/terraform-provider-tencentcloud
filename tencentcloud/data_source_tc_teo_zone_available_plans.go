@@ -52,6 +52,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 						},
 						"price": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Description: "Price of the plan. Unit: cent.",
 						},
 						"request": {
