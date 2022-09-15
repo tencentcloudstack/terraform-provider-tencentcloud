@@ -51,7 +51,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 							Description: "Billing cycle. Valid values:- `y`: Billed by the year.- `m`: Billed by the month.- `h`: Billed by the hour.- `M`: Billed by the minute.- `s`: Billed by the second.",
 						},
 						"price": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Price of the plan. Unit: cent.",
 						},
@@ -87,13 +87,13 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 
 	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var planInfo []*teo.PlanInfo
+	var planInfos []*teo.PlanInfo
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := teoService.DescribeTeoZoneAvailablePlansByFilter(ctx)
 		if e != nil {
 			return retryError(e)
 		}
-		planInfo = results
+		planInfos = results
 		return nil
 	})
 	if err != nil {
@@ -101,13 +101,9 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 		return err
 	}
 
-	if planInfo != nil {
-		_ = d.Set("total", len(planInfo))
-	}
-
 	planInfoList := []interface{}{}
-	if planInfo != nil {
-		for _, planInfo := range planInfo {
+	if planInfos != nil {
+		for _, planInfo := range planInfos {
 			planInfoMap := map[string]interface{}{}
 			if planInfo.PlanType != nil {
 				planInfoMap["plan_type"] = planInfo.PlanType
