@@ -143,6 +143,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew: 	 true,
 				Description: "Site ID.",
 			},
 
@@ -642,13 +643,13 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 		zoneId = v.(string)
 	}
 
+	d.SetId(zoneId)
 	err := resourceTencentCloudTeoZoneSettingUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(zoneId)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -952,10 +953,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 
 	zoneId := d.Id()
 	request.ZoneId = &zoneId
-
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
-	}
 
 	if d.HasChange("cache") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "cache"); ok {

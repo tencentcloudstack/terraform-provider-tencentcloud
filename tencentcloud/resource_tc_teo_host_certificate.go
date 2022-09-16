@@ -25,6 +25,7 @@ $ terraform import tencentcloud_teo_host_certificate.host_certificate hostCertif
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -150,64 +151,64 @@ func resourceTencentCloudTeoHostCertificateRead(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_teo_host_certificate.read")()
 	defer inconsistentCheck(d, meta)()
 
-	// TODO
-	//logId := getLogId(contextNil)
-	//ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	//
-	//service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	//
-	//idSplit := strings.Split(d.Id(), FILED_SP)
-	//if len(idSplit) != 3 {
-	//	return fmt.Errorf("id is broken,%s", d.Id())
-	//}
-	//zoneId := idSplit[0]
-	//host := idSplit[1]
-	//cateId := idSplit[2]
-	//
-	//hostCertificate, err := service.DescribeTeoHostCertificate(ctx, zoneId, host)
-	//
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if hostCertificate == nil {
-	//	d.SetId("")
-	//	return fmt.Errorf("resource `hostCertificate` %s does not exist", cateId)
-	//}
-	//
-	//_ = d.Set("zone_id", zoneId)
-	//_ = d.Set("host", host)
-	//
-	//if hostCertificate.ServerCertInfo != nil {
-	//	certInfoList := []interface{}{}
-	//	for _, certInfo := range hostCertificate.ServerCertInfo {
-	//		certInfoMap := map[string]interface{}{}
-	//		if certInfo.CertId != nil {
-	//			certInfoMap["cert_id"] = certInfo.CertId
-	//		}
-	//		if certInfo.Alias != nil {
-	//			certInfoMap["alias"] = certInfo.Alias
-	//		}
-	//		if certInfo.Type != nil {
-	//			certInfoMap["type"] = certInfo.Type
-	//		}
-	//		if certInfo.ExpireTime != nil {
-	//			certInfoMap["expire_time"] = certInfo.ExpireTime
-	//		}
-	//		//if certInfo.EffectiveTime != nil {
-	//		//	certInfoMap["effective_time"] = certInfo.EffectiveTime
-	//		//}
-	//		if certInfo.DeployTime != nil {
-	//			certInfoMap["deploy_time"] = certInfo.DeployTime
-	//		}
-	//		if certInfo.SignAlgo != nil {
-	//			certInfoMap["sign_algo"] = certInfo.SignAlgo
-	//		}
-	//
-	//		certInfoList = append(certInfoList, certInfoMap)
-	//	}
-	//	_ = d.Set("cert_info", certInfoList)
-	//}
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	zoneId := idSplit[0]
+	host := idSplit[1]
+	cateId := idSplit[2]
+
+	hostCertificate, err := service.DescribeTeoHostCertificate(ctx, zoneId, host)
+
+	if err != nil {
+		return err
+	}
+
+	if hostCertificate == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `hostCertificate` %s does not exist", cateId)
+	}
+
+	_ = d.Set("zone_id", zoneId)
+	_ = d.Set("host", host)
+
+	if hostCertificate != nil {
+		certInfoList := []interface{}{}
+		for _, certificate := range hostCertificate {
+			certInfo := certificate.HostCertInfo
+			certInfoMap := map[string]interface{}{}
+			if certInfo.CertId != nil {
+				certInfoMap["cert_id"] = certInfo.CertId
+			}
+			if certInfo.Alias != nil {
+				certInfoMap["alias"] = certInfo.Alias
+			}
+			if certInfo.Type != nil {
+				certInfoMap["type"] = certInfo.Type
+			}
+			if certInfo.ExpireTime != nil {
+				certInfoMap["expire_time"] = certInfo.ExpireTime
+			}
+			//if certInfo.EffectiveTime != nil {
+			//	certInfoMap["effective_time"] = certInfo.EffectiveTime
+			//}
+			if certInfo.DeployTime != nil {
+				certInfoMap["deploy_time"] = certInfo.DeployTime
+			}
+			if certInfo.SignAlgo != nil {
+				certInfoMap["sign_algo"] = certInfo.SignAlgo
+			}
+
+			certInfoList = append(certInfoList, certInfoMap)
+		}
+		_ = d.Set("cert_info", certInfoList)
+	}
 
 	return nil
 }
@@ -277,14 +278,6 @@ func resourceTencentCloudTeoHostCertificateUpdate(d *schema.ResourceData, meta i
 func resourceTencentCloudTeoHostCertificateDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_host_certificate.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	err := resourceTencentCloudTeoHostCertificateUpdate(d, meta)
-	if err != nil {
-		log.Printf("[DELETE]%s delete teo hostCertificate failed, reason:%+v", logId, err)
-		return err
-	}
 
 	return nil
 }

@@ -669,8 +669,7 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 	return
 }
 
-// TODO
-func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate *teo.HostsCertificate, errRet error) {
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate []*teo.HostsCertificate, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeHostCertificatesRequest()
@@ -732,7 +731,7 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 	if len(instances) < 1 {
 		return
 	}
-	hostCertificate = instances[0]
+	hostCertificate = instances
 
 	return
 

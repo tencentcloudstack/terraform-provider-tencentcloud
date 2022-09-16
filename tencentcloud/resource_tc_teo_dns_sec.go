@@ -43,6 +43,7 @@ func resourceTencentCloudTeoDnsSec() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew: 	 true,
 				Description: "Site ID.",
 			},
 
@@ -128,19 +129,13 @@ func resourceTencentCloudTeoDnsSecCreate(d *schema.ResourceData, meta interface{
 		zoneId = v.(string)
 	}
 
-	if v, ok := d.GetOk("status"); ok {
-		if v.(string) != "enabled" {
-			return fmt.Errorf("[CRITAL] create teo dnsSec status error")
-		}
-	}
-
+	d.SetId(zoneId)
 	err := resourceTencentCloudTeoDnsSecUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo dnsSec failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(zoneId)
 	return resourceTencentCloudTeoDnsSecRead(d, meta)
 }
 
@@ -222,10 +217,6 @@ func resourceTencentCloudTeoDnsSecUpdate(d *schema.ResourceData, meta interface{
 	zoneId := d.Id()
 	request.ZoneId = &zoneId
 
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
-	}
-
 	if d.HasChange("status") {
 		if v, ok := d.GetOk("status"); ok {
 			request.Status = helper.String(v.(string))
@@ -254,20 +245,6 @@ func resourceTencentCloudTeoDnsSecUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudTeoDnsSecDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_dns_sec.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	if v, ok := d.GetOk("status"); ok {
-		if v.(string) != "disabled" {
-			return fmt.Errorf("[DELETE] delete teo dnsSec status error")
-		}
-	}
-
-	err := resourceTencentCloudTeoDnsSecUpdate(d, meta)
-	if err != nil {
-		log.Printf("[DELETE]%s delete teo dnsSec failed, reason:%+v", logId, err)
-		return err
-	}
 
 	return nil
 }
