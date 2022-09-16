@@ -115,14 +115,18 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name str
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("name"),
+			Name:   helper.String("record-id"),
 			Values: []*string{&name},
+			Fuzzy:	helper.Bool(false),
 		},
 	)
+	request.Match = helper.String("all")
+	request.Order = helper.String("created_on")
+	request.Direction = helper.String("desc")
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 100
+	var pageSize int64 = 10
 	instances := make([]*teo.DnsRecord, 0)
 
 	for {
@@ -666,71 +670,73 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 }
 
 // TODO
-//func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate *teo.DescribeHostsCertificateResponseParams, errRet error) {
-//	var (
-//		logId   = getLogId(ctx)
-//		request = teo.NewDescribeHostsCertificateRequest()
-//	)
-//
-//	defer func() {
-//		if errRet != nil {
-//			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-//				logId, "query object", request.ToJsonString(), errRet.Error())
-//		}
-//	}()
-//
-//	request.Filters = append(
-//		request.Filters,
-//		&teo.Filter{
-//			Name:    helper.String("ZoneId"),
-//			Values: []*string{&zoneId},
-//		},
-//	)
-//	request.Filters = append(
-//		request.Filters,
-//		&teo.Filter{
-//			Key:    helper.String("Host"),
-//			Values: []*string{&host},
-//		},
-//	)
-//	ratelimit.Check(request.GetAction())
-//
-//	var offset int64 = 0
-//	var pageSize int64 = 100
-//	instances := make([]*teo.hostCertificateInfo, 0)
-//
-//	for {
-//		request.Offset = &offset
-//		request.Limit = &pageSize
-//		ratelimit.Check(request.GetAction())
-//		response, err := me.client.UseTeoClient().DescribeHostsCertificate(request)
-//		if err != nil {
-//			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-//				logId, request.GetAction(), request.ToJsonString(), err.Error())
-//			errRet = err
-//			return
-//		}
-//		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-//			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-//
-//		if response == nil || len(response.Response.hostCertificates) < 1 {
-//			break
-//		}
-//		instances = append(instances, response.Response....)
-//		if len(response.Response.) < int(pageSize) {
-//			break
-//		}
-//		offset += pageSize
-//	}
-//
-//	if len(instances) < 1 {
-//		return
-//	}
-//	hostCertificate = instances[0]
-//
-//	return
-//
-//}
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate *teo.HostsCertificate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeHostCertificatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:    helper.String("zone-id"),
+			Values: []*string{&zoneId},
+			Fuzzy:	helper.Bool(false),
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:    helper.String("Host"),
+			Values: []*string{&host},
+			Fuzzy:	helper.Bool(false),
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances := make([]*teo.HostsCertificate, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeHostCertificates(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.HostCertificates) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.HostCertificates...)
+		if len(response.Response.HostCertificates) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	hostCertificate = instances[0]
+
+	return
+
+}
 
 func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams, errRet error) {
 	var (
@@ -1107,10 +1113,10 @@ func (me *TeoService) DescribeTeoSecurityPolicyRegionsByFilter(ctx context.Conte
 	return
 }
 
-func (me *TeoService) DescribeTeoWafManagedRulesByFilter(ctx context.Context, param map[string]interface{}) (wafManagedRules []*teo.ManagedRule, errRet error) {
+func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context, param map[string]interface{}) (wafGroupDetails []*teo.WafGroupDetail, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeSecurityPolicyManagedRulesRequest()
+		request = teo.NewDescribeSecurityGroupManagedRulesRequest()
 	)
 
 	defer func() {
@@ -1136,10 +1142,10 @@ func (me *TeoService) DescribeTeoWafManagedRulesByFilter(ctx context.Context, pa
 	var pageSize int64 = 20
 
 	for {
-		request.Page = &offset
-		request.PerPage = &pageSize
+		request.Offset = &offset
+		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTeoClient().DescribeSecurityPolicyManagedRules(request)
+		response, err := me.client.UseTeoClient().DescribeSecurityGroupManagedRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -1149,11 +1155,11 @@ func (me *TeoService) DescribeTeoWafManagedRulesByFilter(ctx context.Context, pa
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Rules) < 1 {
+		if response == nil || response.Response.WafGroupInfo == nil ||len(response.Response.WafGroupInfo.WafGroupDetails) < 1 {
 			break
 		}
-		wafManagedRules = append(wafManagedRules, response.Response.Rules...)
-		if len(response.Response.Rules) < int(pageSize) {
+		wafGroupDetails = append(wafGroupDetails, response.Response.WafGroupInfo.WafGroupDetails...)
+		if len(response.Response.WafGroupInfo.WafGroupDetails) < int(pageSize) {
 			break
 		}
 		offset += pageSize

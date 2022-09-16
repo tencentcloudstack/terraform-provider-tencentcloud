@@ -685,6 +685,8 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_application_proxy_rule
 	tencentcloud_teo_host_certificate
 	tencentcloud_teo_default_certificate
+	tencentcloud_teo_ddos_policy
+	tencentcloud_teo_security_policy
 */
 package tencentcloud
 
@@ -978,7 +980,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_bot_portrait_rules":					 dataSourceTencentCloudTeoBotPortraitRules(),
 			"tencentcloud_teo_rule_engine_settings":				 dataSourceTencentCloudTeoRuleEngineSettings(),
 			"tencentcloud_teo_security_policy_regions":				 dataSourceTencentCloudTeoSecurityPolicyRegions(),
-			"tencentcloud_teo_waf_managed_rules":					 dataSourceTencentCloudTeoWafManagedRules(),
+			"tencentcloud_teo_waf_rule_groups":						 dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":         			 dataSourceTencentCloudTeoZoneDDoSPolicy(),
 		},
 
@@ -1230,6 +1232,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			"tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
+			"tencentcloud_teo_security_policy":						 resourceTencentCloudTeoSecurityPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

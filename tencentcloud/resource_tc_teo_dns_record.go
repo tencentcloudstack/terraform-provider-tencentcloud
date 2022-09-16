@@ -213,7 +213,7 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoDnsRecord(ctx, zoneId, dnsRecordId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)

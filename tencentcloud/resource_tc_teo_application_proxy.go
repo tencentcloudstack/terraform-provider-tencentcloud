@@ -212,11 +212,11 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
-		ipv6Access := teo.Ipv6Access{}
+		ipv6Access := teo.Ipv6{}
 		if v, ok := dMap["switch"]; ok {
 			ipv6Access.Switch = helper.String(v.(string))
 		}
-		request.Ipv6Access = &ipv6Access
+		request.Ipv6 = &ipv6Access
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -349,10 +349,10 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("host_id", applicationProxy.HostId)
 	}
 
-	if applicationProxy.Ipv6Access != nil {
+	if applicationProxy.Ipv6 != nil {
 		iPv6Map := map[string]interface{}{}
-		if applicationProxy.Ipv6Access.Switch != nil {
-			iPv6Map["switch"] = applicationProxy.Ipv6Access.Switch
+		if applicationProxy.Ipv6.Switch != nil {
+			iPv6Map["switch"] = applicationProxy.Ipv6.Switch
 		}
 
 		_ = d.Set("ipv6", []interface{}{iPv6Map})
@@ -428,12 +428,12 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("ipv6") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
-			ipv6Access := teo.Ipv6Access{}
+			ipv6Access := teo.Ipv6{}
 			if v, ok := dMap["switch"]; ok {
 				ipv6Access.Switch = helper.String(v.(string))
 			}
 
-			request.Ipv6Access = &ipv6Access
+			request.Ipv6 = &ipv6Access
 		}
 	}
 
