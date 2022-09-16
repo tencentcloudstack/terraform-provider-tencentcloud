@@ -104,9 +104,6 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
 			switch = ""
 
   }
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 
 ```
@@ -622,12 +619,6 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -648,16 +639,6 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
 		return err
-	}
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, zoneId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 	return resourceTencentCloudTeoZoneSettingRead(d, meta)
 }
@@ -930,15 +911,6 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 
 		_ = d.Set("ipv6", []interface{}{ipv6Map})
 	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -947,8 +919,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyZoneSettingRequest()
 
 	zoneId := d.Id()
@@ -959,27 +929,27 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			cacheConfig := teo.CacheConfig{}
 			if CacheMap, ok := helper.InterfaceToMap(dMap, "cache"); ok {
 				cacheConfigCache := teo.Cache{}
-				if v, ok := CacheMap["switch"]; ok {
+				if v, ok := CacheMap["switch"]; ok && v != "" {
 					cacheConfigCache.Switch = helper.String(v.(string))
 				}
 				if v, ok := CacheMap["cache_time"]; ok {
 					cacheConfigCache.CacheTime = helper.IntInt64(v.(int))
 				}
-				if v, ok := CacheMap["ignore_cache_control"]; ok {
+				if v, ok := CacheMap["ignore_cache_control"]; ok && v != "" {
 					cacheConfigCache.IgnoreCacheControl = helper.String(v.(string))
 				}
 				cacheConfig.Cache = &cacheConfigCache
 			}
 			if NoCacheMap, ok := helper.InterfaceToMap(dMap, "no_cache"); ok {
 				cacheConfigNoCache := teo.NoCache{}
-				if v, ok := NoCacheMap["switch"]; ok {
+				if v, ok := NoCacheMap["switch"]; ok && v != "" {
 					cacheConfigNoCache.Switch = helper.String(v.(string))
 				}
 				cacheConfig.NoCache = &cacheConfigNoCache
 			}
 			if FollowOriginMap, ok := helper.InterfaceToMap(dMap, "follow_origin"); ok {
 				cacheConfigFollowOrigin := teo.FollowOrigin{}
-				if v, ok := FollowOriginMap["switch"]; ok {
+				if v, ok := FollowOriginMap["switch"]; ok && v != "" {
 					cacheConfigFollowOrigin.Switch = helper.String(v.(string))
 				}
 				cacheConfig.FollowOrigin = &cacheConfigFollowOrigin
@@ -991,21 +961,21 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("cache_key") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "cache_key"); ok {
 			cacheKey := teo.CacheKey{}
-			if v, ok := dMap["full_url_cache"]; ok {
+			if v, ok := dMap["full_url_cache"]; ok && v != "" {
 				cacheKey.FullUrlCache = helper.String(v.(string))
 			}
-			if v, ok := dMap["ignore_case"]; ok {
+			if v, ok := dMap["ignore_case"]; ok && v != "" {
 				cacheKey.IgnoreCase = helper.String(v.(string))
 			}
 			if QueryStringMap, ok := helper.InterfaceToMap(dMap, "query_string"); ok {
 				queryString := teo.QueryString{}
-				if v, ok := QueryStringMap["switch"]; ok {
+				if v, ok := QueryStringMap["switch"]; ok && v != "" {
 					queryString.Switch = helper.String(v.(string))
 				}
-				if v, ok := QueryStringMap["action"]; ok {
+				if v, ok := QueryStringMap["action"]; ok && v != "" {
 					queryString.Action = helper.String(v.(string))
 				}
-				if v, ok := QueryStringMap["value"]; ok {
+				if v, ok := QueryStringMap["value"]; ok && v != "" {
 					valueSet := v.(*schema.Set).List()
 					for i := range valueSet {
 						value := valueSet[i].(string)
@@ -1024,7 +994,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["max_age_time"]; ok {
 				maxAge.MaxAgeTime = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["follow_origin"]; ok {
+			if v, ok := dMap["follow_origin"]; ok && v != "" {
 				maxAge.FollowOrigin = helper.String(v.(string))
 			}
 			request.MaxAge = &maxAge
@@ -1034,7 +1004,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("offline_cache") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "offline_cache"); ok {
 			offlineCache := teo.OfflineCache{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				offlineCache.Switch = helper.String(v.(string))
 			}
 			request.OfflineCache = &offlineCache
@@ -1044,7 +1014,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("quic") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "quic"); ok {
 			quic := teo.Quic{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				quic.Switch = helper.String(v.(string))
 			}
 			request.Quic = &quic
@@ -1054,7 +1024,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("post_max_size") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "post_max_size"); ok {
 			postMaxSize := teo.PostMaxSize{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				postMaxSize.Switch = helper.String(v.(string))
 			}
 			if v, ok := dMap["max_size"]; ok {
@@ -1067,7 +1037,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("compression") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "compression"); ok {
 			compression := teo.Compression{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				compression.Switch = helper.String(v.(string))
 			}
 			if v, ok := dMap["algorithms"]; ok {
@@ -1084,7 +1054,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("upstream_http2") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "upstream_http2"); ok {
 			upstreamHttp2 := teo.UpstreamHttp2{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				upstreamHttp2.Switch = helper.String(v.(string))
 			}
 			request.UpstreamHttp2 = &upstreamHttp2
@@ -1094,7 +1064,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("force_redirect") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "force_redirect"); ok {
 			forceRedirect := teo.ForceRedirect{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				forceRedirect.Switch = helper.String(v.(string))
 			}
 			if v, ok := dMap["redirect_status_code"]; ok {
@@ -1107,10 +1077,10 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("https") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "https"); ok {
 			https := teo.Https{}
-			if v, ok := dMap["http2"]; ok {
+			if v, ok := dMap["http2"]; ok && v != "" {
 				https.Http2 = helper.String(v.(string))
 			}
-			if v, ok := dMap["ocsp_stapling"]; ok {
+			if v, ok := dMap["ocsp_stapling"]; ok && v != "" {
 				https.OcspStapling = helper.String(v.(string))
 			}
 			if v, ok := dMap["tls_version"]; ok {
@@ -1122,16 +1092,16 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 			}
 			if HstsMap, ok := helper.InterfaceToMap(dMap, "hsts"); ok {
 				hsts := teo.Hsts{}
-				if v, ok := HstsMap["switch"]; ok {
+				if v, ok := HstsMap["switch"]; ok && v != "" {
 					hsts.Switch = helper.String(v.(string))
 				}
 				if v, ok := HstsMap["max_age"]; ok {
 					hsts.MaxAge = helper.IntInt64(v.(int))
 				}
-				if v, ok := HstsMap["include_sub_domains"]; ok {
+				if v, ok := HstsMap["include_sub_domains"]; ok && v != "" {
 					hsts.IncludeSubDomains = helper.String(v.(string))
 				}
-				if v, ok := HstsMap["preload"]; ok {
+				if v, ok := HstsMap["preload"]; ok && v != "" {
 					hsts.Preload = helper.String(v.(string))
 				}
 				https.Hsts = &hsts
@@ -1159,10 +1129,10 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 					origin.BackupOrigins = append(origin.BackupOrigins, &backupOrigins)
 				}
 			}
-			if v, ok := dMap["origin_pull_protocol"]; ok {
+			if v, ok := dMap["origin_pull_protocol"]; ok && v != "" {
 				origin.OriginPullProtocol = helper.String(v.(string))
 			}
-			if v, ok := dMap["cos_private_access"]; ok {
+			if v, ok := dMap["cos_private_access"]; ok && v != "" {
 				origin.CosPrivateAccess = helper.String(v.(string))
 			}
 
@@ -1174,7 +1144,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("smart_routing") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "smart_routing"); ok {
 			smartRouting := teo.SmartRouting{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				smartRouting.Switch = helper.String(v.(string))
 			}
 
@@ -1186,7 +1156,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("web_socket") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "web_socket"); ok {
 			webSocket := teo.WebSocket{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				webSocket.Switch = helper.String(v.(string))
 			}
 			if v, ok := dMap["timeout"]; ok {
@@ -1201,10 +1171,10 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("client_ip_header") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "client_ip_header"); ok {
 			clientIp := teo.ClientIpHeader{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				clientIp.Switch = helper.String(v.(string))
 			}
-			if v, ok := dMap["header_name"]; ok {
+			if v, ok := dMap["header_name"]; ok && v != "" {
 				clientIp.HeaderName = helper.String(v.(string))
 			}
 
@@ -1216,7 +1186,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("cache_prefresh") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "cache_prefresh"); ok {
 			cachePrefresh := teo.CachePrefresh{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				cachePrefresh.Switch = helper.String(v.(string))
 			}
 			if v, ok := dMap["percent"]; ok {
@@ -1231,7 +1201,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("ipv6") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
 			ipv6 := teo.Ipv6{}
-			if v, ok := dMap["switch"]; ok {
+			if v, ok := dMap["switch"]; ok && v != "" {
 				ipv6.Switch = helper.String(v.(string))
 			}
 			request.Ipv6 = &ipv6
@@ -1250,21 +1220,9 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s read teo zoneSetting failed, reason:%+v", logId, err)
 		return err
 	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoZoneSettingRead(d, meta)
 }
 

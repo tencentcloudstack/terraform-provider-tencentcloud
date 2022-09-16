@@ -281,24 +281,28 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request  = teo.NewCreateZoneRequest()
 		response *teo.CreateZoneResponse
 		zoneId   string
-		planType *string
+		zoneName string
+		planType string
 	)
 
 	if v, ok := d.GetOk("zone_name"); ok {
-		request.ZoneName = helper.String(v.(string))
+		zoneName = v.(string)
+		request.ZoneName = &zoneName
 	}
 
 	if v, ok := d.GetOk("plan_type"); ok {
-		planType = helper.String(v.(string))
+		planType = v.(string)
 	}
 
 	if v, _ := d.GetOk("type"); v != nil {
 		request.Type = helper.String(v.(string))
 	}
 
-	//if v, ok := d.GetOk("dry_run"); ok {
-	//	request.DryRun = helper.Bool(v.(bool))
-	//}
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for tagK, tagV := range tags {
+			request.Tags = append(request.Tags, &teo.Tag{TagKey: helper.String(tagK), TagValue: helper.String(tagV)})
+		}
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
@@ -326,7 +330,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	if zoneId != "" {
 		var planRequest = teo.NewCreatePlanForZoneRequest()
 		planRequest.ZoneId = &zoneId
-		planRequest.PlanType = planType
+		planRequest.PlanType = &planType
 		planErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
 			if e != nil {
@@ -346,8 +350,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, zoneId)
+		resourceName := fmt.Sprintf("qcs::teo::uin/:zone/%s", zoneName)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -527,7 +530,7 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", "", *zone.ZoneName)
 	if err != nil {
 		return err
 	}
@@ -600,7 +603,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("teo", "zone", "", d.Get("zone_name").(string))
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
