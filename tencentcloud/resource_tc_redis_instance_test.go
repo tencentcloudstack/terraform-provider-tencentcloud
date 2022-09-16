@@ -137,7 +137,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudRedisInstance(t *testing.T) {
+func TestAccTencentCloudRedisInstanceBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -191,7 +191,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccRedisInstanceUpdateMemsizeAndPassword(),
+				Config: testAccRedisInstanceUpdateMemSizeAndPassword(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "ip"),
@@ -474,7 +474,7 @@ variable "redis_default_param_template" {
 `
 
 func testAccRedisInstanceBasic() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 2
@@ -484,11 +484,13 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 }`
 }
 
 func testAccRedisInstanceTags() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 2
@@ -498,6 +500,8 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 
   tags = {
     test = "test"
@@ -506,7 +510,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }
 
 func testAccRedisInstanceTagsUpdate() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 2
@@ -516,6 +520,8 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 
   tags = {
     abc = "abc"
@@ -524,7 +530,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }
 
 func testAccRedisInstanceUpdateName() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 2
@@ -534,15 +540,17 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
-  
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
+
   tags = {
     abc = "abc"
   }
 }`
 }
 
-func testAccRedisInstanceUpdateMemsizeAndPassword() string {
-	return `
+func testAccRedisInstanceUpdateMemSizeAndPassword() string {
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 2
@@ -552,6 +560,8 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 
   tags = {
     "abc" = "abc"
@@ -651,24 +661,26 @@ resource "tencentcloud_redis_instance" "redis_cluster" {
 }
 
 func testAccRedisInstancePrepaidBasic() string {
-	return `
+	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
-  availability_zone                   = "ap-guangzhou-3"
-  type_id                             = 2
-  password                            = "test12345789"
-  mem_size                            = 8192
-  name                                = "terraform_prepaid_test"
-  port                                = 6379
-  redis_shard_num                     = 1
-  redis_replicas_num                  = 1
-  charge_type                         = "PREPAID"
-  prepaid_period                      = 2
-  force_delete                        = true
+  availability_zone  = "ap-guangzhou-3"
+  type_id            = 2
+  password           = "test12345789"
+  mem_size           = 8192
+  name               = "terraform_prepaid_test"
+  port               = 6379
+  redis_shard_num    = 1
+  redis_replicas_num = 1
+  charge_type        = "PREPAID"
+  prepaid_period     = 2
+  force_delete       = true
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 }`
 }
 
 func testAccRedisInstanceParamTemplate() string {
-	return testAccRedisDefaultTemplate + `
+	return defaultVpcVariable + testAccRedisDefaultTemplate + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 6
@@ -679,11 +691,13 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   redis_shard_num    = 1
   redis_replicas_num = 1
   params_template_id = var.redis_param_template
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 }`
 }
 
 func testAccRedisInstanceParamTemplateUpdate() string {
-	return testAccRedisDefaultTemplate + `
+	return defaultVpcVariable + testAccRedisDefaultTemplate + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 6
@@ -694,6 +708,8 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   redis_shard_num    = 1
   redis_replicas_num = 1
   params_template_id = var.redis_default_param_template
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
 }
 `
 }
