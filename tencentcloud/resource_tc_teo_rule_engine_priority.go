@@ -5,9 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
-  rules_priority = ""
-  tags = {
+  tags    = {
     "createdBy" = "terraform"
+  }
+  zone_id = "zone-294v965lwmn6"
+
+  rules_priority {
+    index = 0
+    value = "rule-m9jlttua"
+  }
+  rules_priority {
+    index = 1
+    value = "rule-m5l9t4k1"
   }
 }
 
@@ -49,13 +58,26 @@ func resourceTencentCloudTeoRuleEnginePriority() *schema.Resource {
 			},
 
 			"rules_priority": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Type: schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				Description: "Priority of rules.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"index": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Priority order of rules.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Priority of rules id.",
+						},
+					},
+				},
 			},
 
 			"tags": {
@@ -78,13 +100,13 @@ func resourceTencentCloudTeoRuleEnginePriorityCreate(d *schema.ResourceData, met
 		zoneId = v.(string)
 	}
 
+	d.SetId(zoneId)
 	err := resourceTencentCloudTeoRuleEnginePriorityUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo ruleEnginePriority failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(zoneId)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -119,12 +141,17 @@ func resourceTencentCloudTeoRuleEnginePriorityRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("resource `ruleEnginePriority` %s does not exist", zoneId)
 	}
 
+	_ = d.Set("zone_id", zoneId)
+
 	if ruleEnginePriority != nil {
-		var ruleIds []string
-		for _, v := range ruleEnginePriority {
-			ruleIds = append(ruleIds, *v.RuleId)
+		ruleEnginePriorityList := []interface{}{}
+		for i, v := range ruleEnginePriority {
+			ruleId := map[string]interface{}{}
+			ruleId["index"] = i
+			ruleId["value"] = v.RuleId
+			ruleEnginePriorityList = append(ruleEnginePriorityList, ruleId)
 		}
-		_ = d.Set("rules_priority", ruleIds)
+		_ = d.Set("rules_priority", ruleEnginePriorityList)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -152,11 +179,28 @@ func resourceTencentCloudTeoRuleEnginePriorityUpdate(d *schema.ResourceData, met
 
 	if d.HasChange("rules_priority") {
 		if v, ok := d.GetOk("rules_priority"); ok {
-			rulesPrioritySet := v.(*schema.Set).List()
-			for i := range rulesPrioritySet {
-				rulesPriority := rulesPrioritySet[i].(string)
-				request.RuleIds = append(request.RuleIds, &rulesPriority)
+			l := len(v.([]interface{}))
+			ruleIds := make([]*string, l)
+			for _, item := range v.([]interface{}) {
+				rule := item.(map[string]interface{})
+				var index int
+				var value string
+				if vv, ok := rule["index"]; ok {
+					index = vv.(int)
+					if index > l {
+						return fmt.Errorf("index is not continuous")
+					}
+				}
+				if vv, ok := rule["value"]; ok {
+					value = vv.(string)
+				}
+				if ruleIds[index] == nil {
+					ruleIds[index] = &value
+				} else {
+					return fmt.Errorf("`index` [%v] is not repeatable", index)
+				}
 			}
+			request.RuleIds = append(request.RuleIds, ruleIds...)
 		}
 	}
 
