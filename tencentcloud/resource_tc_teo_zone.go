@@ -385,10 +385,6 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("zone_name", zone.ZoneName)
 	}
 
-	if zone.Type != nil {
-		_ = d.Set("plan_type", zone.Type)
-	}
-
 	if zone.Area != nil {
 		_ = d.Set("area", zone.Area)
 	}
