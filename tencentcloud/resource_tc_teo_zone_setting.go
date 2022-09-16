@@ -104,9 +104,6 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
 			switch = ""
 
   }
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 
 ```
@@ -622,12 +619,6 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -648,16 +639,6 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
 		return err
-	}
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, zoneId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 	return resourceTencentCloudTeoZoneSettingRead(d, meta)
 }
@@ -930,15 +911,6 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 
 		_ = d.Set("ipv6", []interface{}{ipv6Map})
 	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -947,8 +919,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyZoneSettingRequest()
 
 	zoneId := d.Id()
@@ -1253,18 +1223,6 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 		log.Printf("[CRITAL]%s read teo zoneSetting failed, reason:%+v", logId, err)
 		return err
 	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoZoneSettingRead(d, meta)
 }
 
