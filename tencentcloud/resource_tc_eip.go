@@ -138,6 +138,15 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		request.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
 	}
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 
 	eipId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -161,6 +170,14 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 	d.SetId(eipId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
+			return err
+		}
+	}
 
 	// wait for status
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -187,14 +204,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			return nil
 		})
 		if err != nil {
-			return err
-		}
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
 			return err
 		}
 	}

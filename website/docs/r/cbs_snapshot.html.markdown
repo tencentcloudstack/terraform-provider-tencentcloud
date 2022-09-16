@@ -26,6 +26,7 @@ The following arguments are supported:
 
 * `snapshot_name` - (Required, String) Name of the snapshot.
 * `storage_id` - (Required, String, ForceNew) ID of the the CBS which this snapshot created from.
+* `tags` - (Optional, Map, **Deprecated**) cbs snapshot do not support tag now. The available tags within this CBS Snapshot.
 
 ## Attributes Reference
 

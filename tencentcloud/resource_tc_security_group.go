@@ -87,12 +87,19 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	name := d.Get("name").(string)
 	desc := d.Get("description").(string)
 
-	var projectId *int
+	var (
+		projectId *int
+		tags      map[string]string
+	)
 	if projectIdInterface, exist := d.GetOk("project_id"); exist {
 		projectId = common.IntPtr(projectIdInterface.(int))
 	}
 
-	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectId)
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+
+	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectId, tags)
 	if err != nil {
 		return err
 	}

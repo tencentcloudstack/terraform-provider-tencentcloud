@@ -198,6 +198,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		securityGroups []string
 		ipv4s          []VpcEniIP
 		ipv4Count      *int
+		tags           map[string]string
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
@@ -251,7 +252,9 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		return errors.New("ipv4s or ipv4_count must be set")
 	}
 
-	tags := helper.GetTags(d, "tags")
+	if raw := helper.GetTags(d, "tags"); len(raw) > 0 {
+		tags = raw
+	}
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -265,7 +268,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 
 	switch {
 	case len(ipv4s) > 0 && len(ipv4s) <= 10:
-		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, ipv4s)
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, ipv4s, tags)
 		if err != nil {
 			return err
 		}
@@ -289,7 +292,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		ipv4ss := chunkEniIP(ipv4s)
 		withPrimaryIpv4s := ipv4ss[0]
 
-		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, withPrimaryIpv4s)
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, withPrimaryIpv4s, tags)
 		if err != nil {
 			return err
 		}
@@ -303,7 +306,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		}
 
 	case ipv4Count != nil && *ipv4Count <= 10:
-		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, ipv4Count, nil)
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, ipv4Count, nil, tags)
 		if err != nil {
 			return err
 		}
@@ -313,7 +316,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	case ipv4Count != nil:
 		count := *ipv4Count
 
-		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, common.IntPtr(10), nil)
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, common.IntPtr(10), nil, tags)
 		if err != nil {
 			return err
 		}

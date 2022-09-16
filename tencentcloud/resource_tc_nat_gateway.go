@@ -124,6 +124,16 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	var response *vpc.CreateNatGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateNatGateway(request)
@@ -144,6 +154,18 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("NAT gateway ID is nil")
 	}
 	d.SetId(*response.Response.NatGatewaySet[0].NatGatewayId)
+
+	//cs::vpc:ap-guangzhou:uin/12345:nat/nat-nxxx
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "nat", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	// must wait for finishing creating NAT
 	statRequest := vpc.NewDescribeNatGatewaysRequest()
 	statRequest.NatGatewayIds = []*string{response.Response.NatGatewaySet[0].NatGatewayId}
@@ -171,17 +193,6 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 	if err != nil {
 		log.Printf("[CRITAL]%s create NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
-	}
-
-	//cs::vpc:ap-guangzhou:uin/12345:nat/nat-nxxx
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("vpc", "nat", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 	return resourceTencentCloudNatGatewayRead(d, meta)
 }

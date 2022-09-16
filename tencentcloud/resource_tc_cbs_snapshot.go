@@ -25,6 +25,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -52,6 +54,12 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "ID of the the CBS which this snapshot created from.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Deprecated:  "cbs snapshot do not support tag now.",
+				Description: "The available tags within this CBS Snapshot.",
 			},
 			"storage_size": {
 				Type:        schema.TypeInt,
@@ -91,6 +99,11 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	storageId := d.Get("storage_id").(string)
 	snapshotName := d.Get("snapshot_name").(string)
 
+	var tags map[string]string
+
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -98,7 +111,7 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	snapshotId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		var e error
-		snapshotId, e = cbsService.CreateSnapshot(ctx, storageId, snapshotName)
+		snapshotId, e = cbsService.CreateSnapshot(ctx, storageId, snapshotName, tags)
 		if e != nil {
 			return retryError(e)
 		}
@@ -108,6 +121,15 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
@@ -171,6 +193,15 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("snapshot_name", snapshot.SnapshotName)
 	_ = d.Set("snapshot_status", snapshot.SnapshotState)
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "volume", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -196,6 +227,20 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 		})
 		if err != nil {
 			log.Printf("[CRITAL]%s update cbs snapshot failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
 	}

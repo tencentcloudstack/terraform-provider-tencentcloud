@@ -17,9 +17,6 @@ package v20170312
 const (
 	// 此产品的特有错误码
 
-	// 定期快照策略数量已达到上限。
-	AUTOSNAPSHOTPOLICYOUTOFQUOTA = "AutoSnapshotPolicyOutOfQuota"
-
 	// 云盘退还数量已达上限，不能再退还。
 	INSUFFICIENTREFUNDQUOTA = "InsufficientRefundQuota"
 
@@ -44,9 +41,6 @@ const (
 	// 云盘已绑定定期快照策略。
 	INVALIDDISK_ALREADYBOUND = "InvalidDisk.AlreadyBound"
 
-	// 云硬盘已挂载。
-	INVALIDDISK_ATTACHED = "InvalidDisk.Attached"
-
 	// 云硬盘忙，请稍后重试。
 	INVALIDDISK_BUSY = "InvalidDisk.Busy"
 
@@ -56,17 +50,11 @@ const (
 	// 不支持非弹性云盘。
 	INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 
-	// 云盘不支持退还。
-	INVALIDDISK_NOTSUPPORTREFUND = "InvalidDisk.NotSupportRefund"
-
 	// 云硬盘没有快照能力。
 	INVALIDDISK_NOTSUPPORTSNAPSHOT = "InvalidDisk.NotSupportSnapshot"
 
 	// 云硬盘不支持该操作。
 	INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
-
-	// 云盘已退还过，不能重复退还。
-	INVALIDDISK_REPEATREFUND = "InvalidDisk.RepeatRefund"
 
 	// 云硬盘正在创建快照，请稍后重试。
 	INVALIDDISK_SNAPSHOTCREATING = "InvalidDisk.SnapshotCreating"
@@ -116,6 +104,9 @@ const (
 	// 输入的`SnapshotId`不存在。
 	INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
 
+	// 定期快照策略数量已达到上限。
+	LIMITEXCEEDED_AUTOSNAPSHOTPOLICYOUTOFQUOTA = "LimitExceeded.AutoSnapshotPolicyOutOfQuota"
+
 	// 实例挂载云盘数量超过限制。
 	LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
 
@@ -128,6 +119,12 @@ const (
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
+	// 指定快照正在复制到目标地域。
+	RESOURCEINUSE_COPYSNAPSHOTCONFLICT = "ResourceInUse.CopySnapshotConflict"
+
+	// 云硬盘当前已在迁移中，请稍后重试。
+	RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
+
 	// 云硬盘正在执行快照回滚操作，请稍后重试。
 	RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 
@@ -137,8 +134,17 @@ const (
 	// 配额不足。
 	RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 
+	// 云盘退还数量已达上限，不能再退还。
+	RESOURCEINSUFFICIENT_OVERREFUNDQUOTA = "ResourceInsufficient.OverRefundQuota"
+
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
+
 	// 资源不存在。
 	RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
 	// 云硬盘已挂载至其他云服务器上。
 	RESOURCEUNAVAILABLE_ATTACHED = "ResourceUnavailable.Attached"
@@ -148,6 +154,9 @@ const (
 
 	// 非弹性云硬盘不支持此操作。
 	RESOURCEUNAVAILABLE_NOTPORTABLE = "ResourceUnavailable.NotPortable"
+
+	// 云盘不支持退还。
+	RESOURCEUNAVAILABLE_NOTSUPPORTREFUND = "ResourceUnavailable.NotSupportRefund"
 
 	// 资源不支持此操作。
 	RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
@@ -164,6 +173,9 @@ const (
 	// 云硬盘类型错误，如尝试挂载系统盘至云服务器上。
 	RESOURCEUNAVAILABLE_TYPEERROR = "ResourceUnavailable.TypeError"
 
+	// 云硬盘与实例不在同一可用区。
+	RESOURCEUNAVAILABLE_ZONENOTMATCH = "ResourceUnavailable.ZoneNotMatch"
+
 	// 订单冲突。
 	TRADEDEALCONFLICT = "TradeDealConflict"
 
@@ -179,8 +191,14 @@ const (
 	// 没有支付权限。
 	UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
 
+	// 授权角色不存在。
+	UNAUTHORIZEDOPERATION_ROLENOTEXISTS = "UnauthorizedOperation.RoleNotExists"
+
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 暂不支持从EKS上卸载云硬盘。
+	UNSUPPORTEDOPERATION_DETACHPOD = "UnsupportedOperation.DetachPod"
 
 	// 磁盘已加密。
 	UNSUPPORTEDOPERATION_DISKENCRYPT = "UnsupportedOperation.DiskEncrypt"
@@ -194,9 +212,9 @@ const (
 	// 该快照创建了自定义快照，请先删除对应镜像。
 	UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"
 
+	// 快照不支持跨地域复制。
+	UNSUPPORTEDOPERATION_SNAPSHOTNOTSUPPORTCOPY = "UnsupportedOperation.SnapshotNotSupportCopy"
+
 	// 资源当前状态不支持该操作。
 	UNSUPPORTEDOPERATION_STATEERROR = "UnsupportedOperation.StateError"
-
-	// 云硬盘与实例不在同一可用区。
-	ZONENOTMATCH = "ZoneNotMatch"
 )

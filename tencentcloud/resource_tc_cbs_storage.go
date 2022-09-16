@@ -201,6 +201,16 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cbs.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	storageId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)
@@ -223,6 +233,15 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(storageId)
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	// must wait for finishing creating disk
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
@@ -236,14 +255,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	})
 	if err != nil {
 		return err
-	}
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudCbsStorageRead(d, meta)

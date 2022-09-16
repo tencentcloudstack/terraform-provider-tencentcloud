@@ -106,6 +106,7 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 	var (
 		vpcId string
 		name  string
+		tags  map[string]string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
@@ -117,7 +118,11 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 		name = temp.(string)
 	}
 
-	routeTableId, err := vpcService.CreateRouteTable(ctx, name, vpcId)
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+
+	routeTableId, err := vpcService.CreateRouteTable(ctx, name, vpcId, tags)
 	if err != nil {
 		return err
 	}
