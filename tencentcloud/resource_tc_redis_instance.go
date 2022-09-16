@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a Redis instance and set its attributes.
 
-~> **NOTE:** The argument vpc_id and subnet_id is required if Basic Network Instance is not support for your specified region.
+~> **NOTE:** The argument vpc_id and subnet_id is now required because Basic Network Instance is no longer supported.
 
 ~> **NOTE:** Both adding and removing replications in one change is supported but not recommend.
 
