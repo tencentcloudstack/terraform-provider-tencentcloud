@@ -553,15 +553,11 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	request.ZoneId = &zoneId
 
 	if d.HasChange("zone_name") {
-
 		return fmt.Errorf("`zone_name` do not support change now.")
-
 	}
 
 	if d.HasChange("plan_type") {
-		if v, ok := d.GetOk("plan_type"); ok {
-			request.Type = helper.String(v.(string))
-		}
+		return fmt.Errorf("`plan_type` do not support change now.")
 	}
 
 	if d.HasChange("type") {

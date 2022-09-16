@@ -250,7 +250,8 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 			return nil
 		}
 		if *instance.Status == "fail" {
-			return resource.NonRetryableError(fmt.Errorf("applicationProxy status is %v, operate failed.", *instance.Status))
+			return resource.NonRetryableError(fmt.Errorf("applicationProxy status is %v, operate failed.",
+				*instance.Status))
 		}
 		return resource.RetryableError(fmt.Errorf("applicationProxy status is %v, retry...", *instance.Status))
 	})
@@ -337,9 +338,9 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("status", applicationProxy.Status)
 	}
 
-	//if applicationProxy.BanStatus != nil {
+	// if applicationProxy.BanStatus != nil {
 	//	_ = d.Set("ban_status", applicationProxy.BanStatus)
-	//}
+	// }
 
 	if applicationProxy.ScheduleValue != nil {
 		_ = d.Set("schedule_value", applicationProxy.ScheduleValue)

@@ -81,7 +81,7 @@ func dataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
 									"choice_properties": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "Associative properties of this property. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Associative properties of this property, they are all required. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {

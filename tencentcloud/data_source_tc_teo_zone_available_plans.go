@@ -65,6 +65,11 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 							Computed:    true,
 							Description: "The number of zones this zone plan can bind.",
 						},
+						"area": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Acceleration area of the plan. Valid value: `mainland`, `overseas`.",
+						},
 					},
 				},
 			},
@@ -125,6 +130,9 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 			}
 			if planInfo.SiteNumber != nil {
 				planInfoMap["site_number"] = planInfo.SiteNumber
+			}
+			if planInfo.Area != nil {
+				planInfoMap["area"] = planInfo.Area
 			}
 
 			planInfoList = append(planInfoList, planInfoMap)
