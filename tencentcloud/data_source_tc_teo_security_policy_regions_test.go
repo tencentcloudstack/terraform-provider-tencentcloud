@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoSecurityPolicyRegionsDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoSecurityPolicyRegions,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_security_policy_regions.security_policy_regions"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_security_policy_regions.security_policy_regions"),
 				),
 			},
 		},

@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoBotPortraitRulesDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoBotPortraitRules,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_bot_portrait_rules.bot_portrait_rules"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_bot_portrait_rules.bot_portrait_rules"),
 				),
 			},
 		},

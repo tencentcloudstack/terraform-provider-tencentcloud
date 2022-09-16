@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoZoneAvailablePlansDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoZoneAvailablePlans,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_zone_available_plans.zone_available_plans"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_zone_available_plans.zone_available_plans"),
 				),
 			},
 		},

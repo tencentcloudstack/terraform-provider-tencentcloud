@@ -105,13 +105,12 @@ func dataSourceTencentCloudTeoWafRuleGroupsRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_teo_waf_rule_groups.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var(
-		logId = getLogId(contextNil)
-		ctx = context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId  = getLogId(contextNil)
+		ctx    = context.WithValue(context.TODO(), logIdKey, logId)
 		zoneId string
 		entity string
 	)
-
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("zone_id"); ok {

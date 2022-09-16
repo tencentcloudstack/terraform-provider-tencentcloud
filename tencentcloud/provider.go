@@ -976,12 +976,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
-			"tencentcloud_teo_bot_managed_rules":					 dataSourceTencentCloudTeoBotManagedRules(),
-			"tencentcloud_teo_bot_portrait_rules":					 dataSourceTencentCloudTeoBotPortraitRules(),
-			"tencentcloud_teo_rule_engine_settings":				 dataSourceTencentCloudTeoRuleEngineSettings(),
-			"tencentcloud_teo_security_policy_regions":				 dataSourceTencentCloudTeoSecurityPolicyRegions(),
-			"tencentcloud_teo_waf_rule_groups":						 dataSourceTencentCloudTeoWafRuleGroups(),
-			"tencentcloud_teo_zone_ddos_policy":         			 dataSourceTencentCloudTeoZoneDDoSPolicy(),
+			"tencentcloud_teo_bot_managed_rules":                    dataSourceTencentCloudTeoBotManagedRules(),
+			"tencentcloud_teo_bot_portrait_rules":                   dataSourceTencentCloudTeoBotPortraitRules(),
+			"tencentcloud_teo_rule_engine_settings":                 dataSourceTencentCloudTeoRuleEngineSettings(),
+			"tencentcloud_teo_security_policy_regions":              dataSourceTencentCloudTeoSecurityPolicyRegions(),
+			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
+			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1232,7 +1232,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			"tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
-			"tencentcloud_teo_security_policy":						 resourceTencentCloudTeoSecurityPolicy(),
+			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

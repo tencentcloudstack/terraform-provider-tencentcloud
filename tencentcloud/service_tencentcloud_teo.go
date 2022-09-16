@@ -117,7 +117,7 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name str
 		&teo.AdvancedFilter{
 			Name:   helper.String("record-id"),
 			Values: []*string{&name},
-			Fuzzy:	helper.Bool(false),
+			Fuzzy:  helper.Bool(false),
 		},
 	)
 	request.Match = helper.String("all")
@@ -685,17 +685,17 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:    helper.String("zone-id"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
-			Fuzzy:	helper.Bool(false),
+			Fuzzy:  helper.Bool(false),
 		},
 	)
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:    helper.String("Host"),
+			Name:   helper.String("Host"),
 			Values: []*string{&host},
-			Fuzzy:	helper.Bool(false),
+			Fuzzy:  helper.Bool(false),
 		},
 	)
 	ratelimit.Check(request.GetAction())
@@ -1154,7 +1154,7 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context, para
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response.WafGroupInfo == nil ||len(response.Response.WafGroupInfo.WafGroupDetails) < 1 {
+		if response == nil || response.Response.WafGroupInfo == nil || len(response.Response.WafGroupInfo.WafGroupDetails) < 1 {
 			break
 		}
 		wafGroupDetails = append(wafGroupDetails, response.Response.WafGroupInfo.WafGroupDetails...)

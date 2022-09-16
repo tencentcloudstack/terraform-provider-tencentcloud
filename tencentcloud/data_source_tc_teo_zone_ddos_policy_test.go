@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoZoneDDoSPolicyDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoZoneDDoSPolicy,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_zone_ddos_policy.zone_ddos_policy"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_zone_ddos_policy.zone_ddos_policy"),
 				),
 			},
 		},

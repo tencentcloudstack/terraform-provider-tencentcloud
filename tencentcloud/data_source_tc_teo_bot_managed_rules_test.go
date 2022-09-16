@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoBotManagedRulesDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoBotManagedRules,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_bot_managed_rules.bot_managed_rules"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_bot_managed_rules.bot_managed_rules"),
 				),
 			},
 		},

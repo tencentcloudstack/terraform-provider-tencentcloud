@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoWafRuleGroupsDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoWafRuleGroups,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_waf_rule_groups.waf_rule_groups"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_waf_rule_groups.waf_rule_groups"),
 				),
 			},
 		},

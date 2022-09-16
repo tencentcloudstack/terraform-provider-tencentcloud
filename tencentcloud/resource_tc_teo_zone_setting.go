@@ -143,7 +143,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew: 	 true,
+				ForceNew:    true,
 				Description: "Site ID.",
 			},
 

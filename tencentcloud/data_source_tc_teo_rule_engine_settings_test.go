@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudTeoRuleEngineSettingsDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTeoRuleEngineSettings,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_rule_engine_settings.rule_engine_settings"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_teo_rule_engine_settings.rule_engine_settings"),
 				),
 			},
 		},
