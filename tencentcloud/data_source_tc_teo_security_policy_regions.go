@@ -39,20 +39,10 @@ func dataSourceTencentCloudTeoSecurityPolicyRegions() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the country.",
 						},
-						"country_en": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "English name of the country.",
-						},
 						"continent": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Name of the continent.",
-						},
-						"continent_en": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "English name of the continent.",
 						},
 						"province": {
 							Type:        schema.TypeString,
