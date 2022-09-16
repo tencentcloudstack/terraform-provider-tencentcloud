@@ -93,6 +93,11 @@ func resourceTencentCloudImage() *schema.Resource {
 				},
 				Description: "Cloud disk ID list, When creating a whole machine image based on an instance, specify the data disk ID contained in the image.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the image.",
+			},
 		},
 	}
 }
@@ -150,6 +155,22 @@ func resourceTencentCloudImageCreate(d *schema.ResourceData, meta interface{}) e
 			"snapshot_ids", "data_disk_ids", "data_disk_ids", "instance_id")
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		tags := make([]*cvm.Tag, 0)
+		for tagKey, tagValue := range v {
+			tag := cvm.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			tags = append(tags, &tag)
+		}
+		tagSpecification := cvm.TagSpecification{
+			ResourceType: helper.String("image"),
+			Tags:         tags,
+		}
+		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
+	}
+
 	imageId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -166,6 +187,17 @@ func resourceTencentCloudImageCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 	d.SetId(imageId)
+
+	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "image", tcClient.Region, imageId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+			return err
+		}
+	}
 
 	// wait for status
 	_, has, errRet := cvmService.DescribeImageById(ctx, imageId, false)
@@ -223,6 +255,14 @@ func resourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) err
 		_ = d.Set("snapshot_ids", snapShotSysDisk)
 	}
 
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client}
+
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "image", client.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -242,6 +282,20 @@ func resourceTencentCloudImageUpdate(d *schema.ResourceData, meta interface{}) e
 		imageDesc := d.Get("image_description").(string)
 
 		if err := cvmService.ModifyImage(ctx, instanceId, imageName, imageDesc); nil != err {
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cvm", "image", region, instanceId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
 	}

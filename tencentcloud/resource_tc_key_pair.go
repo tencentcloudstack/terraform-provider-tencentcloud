@@ -73,6 +73,11 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 				ForceNew:    true,
 				Description: "Specifys to which project the key pair belongs.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the key pair.",
+			},
 		},
 	}
 }

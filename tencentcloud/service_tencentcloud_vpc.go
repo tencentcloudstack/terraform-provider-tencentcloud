@@ -579,7 +579,7 @@ func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error
 
 }
 
-func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone string) (subnetId string, errRet error) {
+func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone string, tags map[string]string) (subnetId string, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewCreateSubnetRequest()
 	defer func() {
@@ -597,6 +597,17 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 	request.SubnetName = &name
 	request.CidrBlock = &cidr
 	request.Zone = &zone
+
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	var response *vpc.CreateSubnetResponse
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -838,7 +849,7 @@ getMoreData:
 
 }
 
-func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string) (routeTableId string, errRet error) {
+func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string, tags map[string]string) (routeTableId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewCreateRouteTableRequest()
@@ -855,6 +866,15 @@ func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string) 
 	}
 	request.VpcId = &vpcId
 	request.RouteTableName = &name
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateRouteTable(request)
 	errRet = err
@@ -1123,7 +1143,7 @@ func (me *VpcService) DisableRoutes(ctx context.Context, request *vpc.DisableRou
 
 	return
 }
-func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectId *int) (id string, err error) {
+func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectId *int, tags map[string]string) (id string, err error) {
 	logId := getLogId(ctx)
 
 	request := vpc.NewCreateSecurityGroupRequest()
@@ -1133,6 +1153,16 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 
 	if projectId != nil {
 		request.ProjectId = helper.String(strconv.Itoa(*projectId))
+	}
+
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2334,6 +2364,7 @@ func (me *VpcService) CreateEni(
 	securityGroups []string,
 	ipv4Count *int,
 	ipv4s []VpcEniIP,
+	tags map[string]string,
 ) (id string, err error) {
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
@@ -2346,6 +2377,16 @@ func (me *VpcService) CreateEni(
 
 	if len(securityGroups) > 0 {
 		createRequest.SecurityGroupIds = common.StringPtrs(securityGroups)
+	}
+
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			createRequest.Tags = append(createRequest.Tags, &tag)
+		}
 	}
 
 	if ipv4Count != nil {
@@ -3306,7 +3347,7 @@ func parseACLRule(str string) (liteRule VpcACLRule, err error) {
 	return
 }
 
-func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, name string) (aclID string, errRet error) {
+func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, name string, tags map[string]string) (aclID string, errRet error) {
 	var (
 		logId    = getLogId(ctx)
 		request  = vpc.NewCreateNetworkAclRequest()
@@ -3316,6 +3357,16 @@ func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, nam
 
 	request.VpcId = &vpcID
 	request.NetworkAclName = &name
+
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

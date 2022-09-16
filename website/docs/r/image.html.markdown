@@ -33,6 +33,7 @@ The following arguments are supported:
 * `instance_id` - (Optional, String, ForceNew) Cloud server instance ID.
 * `snapshot_ids` - (Optional, Set: [`String`], ForceNew) Cloud disk snapshot ID list; creating a mirror based on a snapshot must include a system disk snapshot. It cannot be passed in simultaneously with InstanceId.
 * `sysprep` - (Optional, Bool) Sysprep function under Windows. When creating a Windows image, you can select true or false to enable or disable the Syspre function.
+* `tags` - (Optional, Map) Tags of the image.
 
 ## Attributes Reference
 
