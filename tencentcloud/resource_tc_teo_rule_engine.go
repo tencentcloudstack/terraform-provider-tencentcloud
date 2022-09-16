@@ -663,16 +663,12 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 
 	}
 
-	if d.HasChange("rule_name") {
-		if v, ok := d.GetOk("rule_name"); ok {
-			request.RuleName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("rule_name"); ok {
+		request.RuleName = helper.String(v.(string))
 	}
 
-	if d.HasChange("status") {
-		if v, ok := d.GetOk("status"); ok {
-			request.Status = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
 	}
 
 	if d.HasChange("rules") {

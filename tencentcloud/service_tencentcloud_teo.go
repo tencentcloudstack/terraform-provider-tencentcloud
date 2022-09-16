@@ -386,7 +386,7 @@ func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId 
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("RuleId"),
+			Name:   helper.String("rule-id"),
 			Values: []*string{&ruleId},
 		},
 	)
