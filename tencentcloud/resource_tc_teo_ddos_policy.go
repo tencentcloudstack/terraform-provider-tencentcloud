@@ -5,86 +5,57 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_ddos_policy" "ddos_policy" {
-  zone_id = ""
-  policy_id = ""
-  ddos_rule {
-			switch = ""
-			udp_shard_open = ""
-		status_info {
-				ply_level = ""
-		}
-		geo_ip {
-				region_ids = ""
-				switch = ""
-		}
-		allow_block {
-				switch = ""
-			allow_block_ips {
-					ip = ""
-					type = ""
-			}
-		}
-		anti_ply {
-				drop_tcp = ""
-				drop_udp = ""
-				drop_icmp = ""
-				drop_other = ""
-				source_create_limit = ""
-				source_connect_limit = ""
-				destination_create_limit = ""
-				destination_connect_limit = ""
-				abnormal_connect_num = ""
-				abnormal_syn_ratio = ""
-				abnormal_syn_num = ""
-				connect_timeout = ""
-				empty_connect_protect = ""
-				udp_shard = ""
-		}
-		packet_filter {
-				switch = ""
-			packet_filters {
-					action = ""
-					protocol = ""
-					dport_start = ""
-					dport_end = ""
-					packet_min = ""
-					packet_max = ""
-					sport_start = ""
-					sport_end = ""
-					match_type = ""
-					is_not = ""
-					offset = ""
-					depth = ""
-					match_begin = ""
-					str = ""
-					match_type2 = ""
-					is_not2 = ""
-					offset2 = ""
-					depth2 = ""
-					match_begin2 = ""
-					str2 = ""
-					match_logic = ""
-			}
-		}
-		acl {
-				switch = ""
-			acls {
-					dport_end = ""
-					dport_start = ""
-					sport_end = ""
-					sport_start = ""
-					protocol = ""
-					action = ""
-					default = ""
-			}
-		}
-		speed_limit {
-				package_limit = ""
-				flux_limit = ""
-		}
+  policy_id = 1278
+  zone_id   = "zone-2983wizgxqvm"
 
+  ddos_rule {
+    switch = "on"
+
+    acl {
+      switch = "on"
+    }
+
+    allow_block {
+      switch = "on"
+    }
+
+    anti_ply {
+      abnormal_connect_num      = 0
+      abnormal_syn_num          = 0
+      abnormal_syn_ratio        = 0
+      connect_timeout           = 0
+      destination_connect_limit = 0
+      destination_create_limit  = 0
+      drop_icmp                 = "off"
+      drop_other                = "off"
+      drop_tcp                  = "off"
+      drop_udp                  = "off"
+      empty_connect_protect     = "off"
+      source_connect_limit      = 0
+      source_create_limit       = 0
+      udp_shard                 = "off"
+    }
+
+    geo_ip {
+      region_ids = []
+      switch     = "on"
+    }
+
+    packet_filter {
+      switch = "on"
+    }
+
+    speed_limit {
+      flux_limit    = "0 bps"
+      package_limit = "0 pps"
+    }
+
+    status_info {
+      ply_level = "middle"
+    }
   }
 }
+
 
 ```
 Import
@@ -557,6 +528,7 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 		policyId = v.(int64)
 	}
 
+	d.SetId(zoneId + FILED_SP + strconv.Itoa(int(policyId)))
 	err := resourceTencentCloudTeoDdosPolicyUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, err)
@@ -583,7 +555,6 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + strconv.Itoa(int(policyId)))
 	return resourceTencentCloudTeoDdosPolicyRead(d, meta)
 }
 
@@ -620,7 +591,7 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 	}
 
 	_ = d.Set("zone_id", zoneId)
-	_ = d.Set("policy_id", policyId)
+	_ = d.Set("policy_id", policyId64)
 
 	if ddosPolicy.DDoSRule != nil {
 		dDoSRuleMap := map[string]interface{}{}
@@ -1138,26 +1109,6 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudTeoDdosPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_ddos_policy.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	ddosRule := teo.DDoSRule{}
-	ddosRule.Switch = helper.String("off")
-	setErr := d.Set("ddos_rule", ddosRule)
-	if setErr != nil {
-		log.Printf("[DELETE]%s delete teo ddosPolicy set parameter failed, reason:%+v", logId, setErr)
-		return setErr
-	}
-
-	err := resourceTencentCloudTeoDdosPolicyUpdate(d, meta)
-	if err != nil {
-		log.Printf("[DELETE]%s delete teo ddosPolicy failed, reason:%+v", logId, err)
-		return err
-	}
 
 	return nil
 }
