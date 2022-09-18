@@ -5,34 +5,27 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_origin_group" "origin_group" {
-  zone_id = ""
-  origin_group_id = ""
-  origin_group_name = ""
-  origin_type = ""
-  configuration_type = ""
-  origin_records {
-			record = ""
-			port = ""
-			weight = ""
-			area = ""
-			private = ""
-		private_parameter {
-				name = ""
-				value = ""
-		}
+  configuration_type = "weight"
+  origin_group_name  = "test-group"
+  origin_type        = "self"
+  tags               = {}
+  zone_id            = "zone-297z8rf93cfw"
 
-  }
-    tags = {
-    "createdBy" = "terraform"
+  origin_records {
+    area      = []
+    port      = 8080
+    private   = false
+    record    = "150.109.8.1"
+    weight    = 100
   }
 }
 
 ````
 Import
 
-teo origin_group can be imported using the id, e.g.
+teo origin_group can be imported using the zone_id#originGroup_id, e.g.
 ````
-$ terraform import tencentcloud_teo_origin_group.origin_group originGroup_id
+$ terraform import tencentcloud_teo_origin_group.origin_group zone-297z8rf93cfw#origin-4f8a30b2-3720-11ed-b66b-525400dceb86
 ````
 */
 package tencentcloud

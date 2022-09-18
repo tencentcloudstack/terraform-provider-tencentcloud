@@ -5,15 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_dns_record" "dns_record" {
-  zone_id = ""
-    type = ""
-  name = ""
-  content = ""
-  mode = ""
-  ttl = ""
-  priority = ""
-        status = ""
-      tags = {
+  zone_id   = "zone-297z8rf93cfw"
+  type      = "A"
+  name      = "www.toutiao2.com"
+  content   = "150.109.8.2"
+  mode      = "proxied"
+  ttl       = "1"
+  priority  = 1
+#  status    = ""
+  tags = {
     "createdBy" = "terraform"
   }
 }
@@ -21,9 +21,9 @@ resource "tencentcloud_teo_dns_record" "dns_record" {
 ```
 Import
 
-teo dns_record can be imported using the id, e.g.
+teo dns_record can be imported using the zone_id#dns_record_id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_record.dns_record dnsRecord_id
+$ terraform import tencentcloud_teo_dns_record.dns_record zone-297z8rf93cfw#record-297z9ei9b9oc
 ```
 */
 package tencentcloud

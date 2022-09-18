@@ -1228,7 +1228,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_load_balancing":                       resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                         resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                          resourceTencentCloudTeoRuleEngine(),
-			"tencentcloud_teo_rule_engine_priority":				 resourceTencentCloudTeoRuleEnginePriority(),
+			"tencentcloud_teo_rule_engine_priority":                 resourceTencentCloudTeoRuleEnginePriority(),
 			"tencentcloud_teo_application_proxy":                    resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":               resourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),

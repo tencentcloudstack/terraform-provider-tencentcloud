@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_dns_sec" "dns_sec" {
-  zone_id = ""
-  status = ""
-    }
+  zone_id = "zone-297z8rf93cfw"
+  status = "enabled"
+}
 
 ```
 Import
 
-teo dns_sec can be imported using the id, e.g.
+teo dns_sec can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_sec.dns_sec dnsSec_id
+$ terraform import tencentcloud_teo_dns_sec.dns_sec zone-297z8rf93cfw
 ```
 */
 package tencentcloud

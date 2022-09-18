@@ -5,55 +5,63 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_rule_engine" "rule_engine" {
-  zone_id = ""
-    rule_name = ""
-  status = ""
-  rules {
-		conditions {
-			conditions {
-					operator = ""
-					target = ""
-					values = ""
-			}
-		}
-		actions {
-			normal_action {
-					action = ""
-				parameters {
-						name = ""
-						values = ""
-				}
-			}
-			rewrite_action {
-					action = ""
-				parameters {
-						action = ""
-						name = ""
-						values = ""
-				}
-			}
-			code_action {
-					action = ""
-				parameters {
-						name = ""
-						values = ""
-						status_code = ""
-				}
-			}
-		}
+  rule_name = "test-rule3"
+  status    = "enable"
+  tags      = {}
+  zone_id   = "zone-297z8rf93cfw"
 
-  }
-  tags = {
-    "createdBy" = "terraform"
+  rules {
+    actions {
+
+      normal_action {
+        action = "Http2"
+
+        parameters {
+          name   = "Switch"
+          values = [
+            "off",
+          ]
+        }
+      }
+    }
+    actions {
+
+      normal_action {
+        action = "ForceRedirect"
+
+        parameters {
+          name   = "Switch"
+          values = [
+            "on",
+          ]
+        }
+        parameters {
+          name   = "RedirectStatusCode"
+          values = [
+            "302",
+          ]
+        }
+      }
+    }
+
+    conditions {
+      conditions {
+        operator = "equal"
+        target   = "host"
+        values   = [
+          "www.toutiao2.com",
+        ]
+      }
+    }
   }
 }
 
 ```
 Import
 
-teo rule_engine can be imported using the id, e.g.
+teo rule_engine can be imported using the id#rule_id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.rule_engine ruleEngine_id
+$ terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
 ```
 */
 package tencentcloud

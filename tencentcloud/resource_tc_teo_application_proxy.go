@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy" "application_proxy" {
-  zone_id = ""
-    proxy_name = ""
-  proxy_type = ""
-  plat_type = ""
-    security_type = ""
-  accelerate_type = ""
-  session_persist_time = ""
-  status = ""
-        ipv6 {
-			switch = ""
-
+  zone_id              = "zone-297z8rf93cfw"
+  proxy_name           = "www.toutiao2.com"
+  proxy_type           = "hostname"
+  plat_type            = "domain"
+  security_type        = 1
+  accelerate_type      = 1
+  session_persist_time = 2400
+#  status = ""
+  ipv6 {
+    switch = "off"
   }
-    tags = {
+  tags = {
     "createdBy" = "terraform"
   }
 }

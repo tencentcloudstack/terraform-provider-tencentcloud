@@ -23,9 +23,9 @@ resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
 ```
 Import
 
-teo rule_engine_priority can be imported using the id, e.g.
+teo rule_engine_priority can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine_priority.rule_engine_priority ruleEnginePriority_id
+$ terraform import tencentcloud_teo_rule_engine_priority.rule_engine_priority zone-294v965lwmn6
 ```
 */
 package tencentcloud
@@ -58,7 +58,7 @@ func resourceTencentCloudTeoRuleEnginePriority() *schema.Resource {
 			},
 
 			"rules_priority": {
-				Type: schema.TypeList,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
 				Description: "Priority of rules.",

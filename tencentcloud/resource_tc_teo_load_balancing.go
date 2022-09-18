@@ -5,24 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_load_balancing" "load_balancing" {
-  zone_id = ""
-    host = ""
-  type = ""
-  origin_group_id = ""
-  backup_origin_group_id = ""
-  ttl = ""
-  status = ""
-      tags = {
-    "createdBy" = "terraform"
-  }
+#  backup_origin_group_id = "origin-a499ca4b-3721-11ed-b9c1-5254005a52aa"
+  host                   = "www.toutiao2.com"
+  origin_group_id        = "origin-4f8a30b2-3720-11ed-b66b-525400dceb86"
+  status                 = "online"
+  tags                   = {}
+  ttl                    = 600
+  type                   = "proxied"
+  zone_id                = "zone-297z8rf93cfw"
 }
 
 ```
 Import
 
-teo load_balancing can be imported using the id, e.g.
+teo load_balancing can be imported using the zone_id#loadBalancing_id, e.g.
 ```
-$ terraform import tencentcloud_teo_load_balancing.load_balancing loadBalancing_id
+$ terraform import tencentcloud_teo_load_balancing.load_balancing zone-297z8rf93cfw#lb-2a93c649-3719-11ed-b9c1-5254005a52aa
 ```
 */
 package tencentcloud
@@ -74,7 +72,7 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			},
 
 			"origin_group_id": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Required:    true,
 				Description: "ID of the origin group to use.",
 			},
@@ -294,10 +292,10 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_teo_load_balancing.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var(
-		logId = getLogId(contextNil)
-		ctx = context.WithValue(context.TODO(), logIdKey, logId)
-		request = teo.NewModifyLoadBalancingRequest()
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		request       = teo.NewModifyLoadBalancingRequest()
 		statusRequest = teo.NewModifyLoadBalancingStatusRequest()
 	)
 

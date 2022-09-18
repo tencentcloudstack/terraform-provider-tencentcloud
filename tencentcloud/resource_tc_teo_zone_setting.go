@@ -5,113 +5,118 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_zone_setting" "zone_setting" {
-  zone_id = ""
-    cache {
-		cache {
-				switch = ""
-				cache_time = ""
-				ignore_cache_control = ""
-		}
-		no_cache {
-				switch = ""
-		}
-		follow_origin {
-				switch = ""
-		}
+  zone_id = "zone-297z8rf93cfw"
 
+  cache {
+
+    follow_origin {
+      switch = "on"
+    }
+
+    no_cache {
+      switch = "off"
+    }
   }
+
   cache_key {
-			full_url_cache = ""
-			ignore_case = ""
-		query_string {
-				switch = ""
-				action = ""
-				value = ""
-		}
+    full_url_cache = "on"
+    ignore_case    = "off"
 
+    query_string {
+      action = "includeCustom"
+      switch = "off"
+      value  = []
+    }
   }
-  max_age {
-			max_age_time = ""
-			follow_origin = ""
 
-  }
-  offline_cache {
-			switch = ""
-
-  }
-  quic {
-			switch = ""
-
-  }
-  post_max_size {
-			switch = ""
-			max_size = ""
-
-  }
-  compression {
-			switch = ""
-			algorithms = ""
-
-  }
-  upstream_http2 {
-			switch = ""
-
-  }
-  force_redirect {
-			switch = ""
-			redirect_status_code = ""
-
-  }
-  https {
-			http2 = ""
-			ocsp_stapling = ""
-			tls_version = ""
-		hsts {
-				switch = ""
-				max_age = ""
-				include_sub_domains = ""
-				preload = ""
-		}
-
-  }
-  origin {
-			origins = ""
-			backup_origins = ""
-			origin_pull_protocol = ""
-			cos_private_access = ""
-
-  }
-  smart_routing {
-			switch = ""
-
-  }
-  web_socket {
-			switch = ""
-			timeout = ""
-
-  }
-  client_ip_header {
-			switch = ""
-			header_name = ""
-
-  }
   cache_prefresh {
-			switch = ""
-			percent = ""
-
+    percent = 90
+    switch  = "off"
   }
-  ipv6 {
-			switch = ""
 
+  client_ip_header {
+    switch = "off"
+  }
+
+  compression {
+    algorithms = [
+      "brotli",
+      "gzip",
+    ]
+    switch     = "on"
+  }
+
+  force_redirect {
+    redirect_status_code = 302
+    switch               = "off"
+  }
+
+  https {
+    http2         = "on"
+    ocsp_stapling = "off"
+    tls_version   = [
+      "TLSv1",
+      "TLSv1.1",
+      "TLSv1.2",
+      "TLSv1.3",
+    ]
+
+    hsts {
+      include_sub_domains = "off"
+      max_age             = 0
+      preload             = "off"
+      switch              = "off"
+    }
+  }
+
+  ipv6 {
+    switch = "off"
+  }
+
+  max_age {
+    follow_origin = "on"
+    max_age_time  = 0
+  }
+
+  offline_cache {
+    switch = "on"
+  }
+
+  origin {
+    backup_origins       = []
+    origin_pull_protocol = "follow"
+    origins              = []
+  }
+
+  post_max_size {
+    max_size = 524288000
+    switch   = "on"
+  }
+
+  quic {
+    switch = "off"
+  }
+
+  smart_routing {
+    switch = "off"
+  }
+
+  upstream_http2 {
+    switch = "off"
+  }
+
+  web_socket {
+    switch  = "off"
+    timeout = 30
   }
 }
 
 ```
 Import
 
-teo zone_setting can be imported using the id, e.g.
+teo zone_setting can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zone_setting zoneSetting_id
+$ terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
 ```
 */
 package tencentcloud
