@@ -5,28 +5,27 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy" "application_proxy" {
-  zone_id              = "zone-297z8rf93cfw"
-  proxy_name           = "www.toutiao2.com"
-  proxy_type           = "hostname"
-  plat_type            = "domain"
-  security_type        = 1
   accelerate_type      = 1
+  plat_type            = "domain"
+  proxy_name           = "applicationProxies-test-1"
+  proxy_type           = "instance"
+  security_type        = 1
   session_persist_time = 2400
-#  status = ""
+  status               = "online"
+  tags                 = {}
+  zone_id              = "zone-2983wizgxqvm"
+
   ipv6 {
     switch = "off"
-  }
-  tags = {
-    "createdBy" = "terraform"
   }
 }
 
 ```
 Import
 
-teo application_proxy can be imported using the id, e.g.
+teo application_proxy can be imported using the zoneId#proxyId, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy.application_proxy applicationProxy_id
+$ terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
 ```
 */
 package tencentcloud
@@ -240,7 +239,7 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoApplicationProxy(ctx, zoneId, proxyId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -337,9 +336,9 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("status", applicationProxy.Status)
 	}
 
-	// if applicationProxy.BanStatus != nil {
-	//	_ = d.Set("ban_status", applicationProxy.BanStatus)
-	// }
+	if applicationProxy.BanStatus != nil {
+		_ = d.Set("ban_status", applicationProxy.BanStatus)
+	}
 
 	if applicationProxy.ScheduleValue != nil {
 		_ = d.Set("schedule_value", applicationProxy.ScheduleValue)
@@ -396,10 +395,8 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		return fmt.Errorf("`zone_id` do not support change now.")
 	}
 
-	if d.HasChange("proxy_name") {
-		if v, ok := d.GetOk("proxy_name"); ok {
-			request.ProxyName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("proxy_name"); ok {
+		request.ProxyName = helper.String(v.(string))
 	}
 
 	if d.HasChange("proxy_type") {
@@ -453,6 +450,33 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		return err
 	}
 
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			statusRequest := teo.NewModifyApplicationProxyStatusRequest()
+
+			statusRequest.ZoneId = &zoneId
+			statusRequest.ProxyId = &proxyId
+			statusRequest.Status = helper.String(v.(string))
+
+			statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), statusResult.ToJsonString())
+				}
+				return nil
+			})
+
+			if statusErr != nil {
+				log.Printf("[CRITAL]%s create teo applicationProxy failed, reason:%+v", logId, statusErr)
+				return statusErr
+			}
+			_ = d.Set("status", v.(string))
+		}
+	}
+
 	if d.HasChange("tags") {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
@@ -482,6 +506,18 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 	}
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
+
+	err := resourceTencentCloudTeoApplicationProxyRead(d, meta)
+	if err != nil {
+		log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if v, ok := d.GetOk("status"); ok {
+		if v != "offline" {
+			return fmt.Errorf("delete teo applicationProxy failed, the current status is `%v`, please update the status to `offline`", v)
+		}
+	}
 
 	if err := service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
 		return err
