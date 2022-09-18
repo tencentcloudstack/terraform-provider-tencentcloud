@@ -67,7 +67,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 
 			"origin_group_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Computed:    true,
 				Description: "OriginGroup ID.",
 			},
 
@@ -180,6 +180,7 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
 		request.ZoneId = helper.String(v.(string))
 	}
 
@@ -398,22 +399,16 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`origin_group_id` do not support change now.")
 	}
 
-	if d.HasChange("origin_group_name") {
-		if v, ok := d.GetOk("origin_group_name"); ok {
-			request.OriginGroupName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("origin_group_name"); ok {
+		request.OriginGroupName = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_type") {
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("origin_type"); ok {
+		request.OriginType = helper.String(v.(string))
 	}
 
-	if d.HasChange("configuration_type") {
-		if v, ok := d.GetOk("configuration_type"); ok {
-			request.ConfigurationType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("configuration_type"); ok {
+		request.ConfigurationType = helper.String(v.(string))
 	}
 
 	if d.HasChange("origin_records") {
