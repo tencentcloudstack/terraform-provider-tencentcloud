@@ -457,14 +457,14 @@ func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context, zoneId, p
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
 		},
 	)
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("ProxyId"),
+			Name:   helper.String("proxy-id"),
 			Values: []*string{&proxyId},
 		},
 	)
@@ -533,7 +533,7 @@ func (me *TeoService) DeleteTeoApplicationProxyById(ctx context.Context, zoneId,
 	return
 }
 
-func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxy, errRet error) {
+func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxyRule, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeApplicationProxiesRequest()
@@ -542,22 +542,15 @@ func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneI
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
 		},
 	)
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("ProxyId"),
+			Name:   helper.String("proxy-id"),
 			Values: []*string{&proxyId},
-		},
-	)
-	request.Filters = append(
-		request.Filters,
-		&teo.Filter{
-			Name:   helper.String("RuleId"),
-			Values: []*string{&ruleId},
 		},
 	)
 
@@ -582,7 +575,13 @@ func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneI
 	if len(response.Response.ApplicationProxies) < 1 {
 		return
 	}
-	applicationProxyRule = response.Response.ApplicationProxies[0]
+	for _, v := range response.Response.ApplicationProxies[0].ApplicationProxyRules {
+		if *v.RuleId == ruleId {
+			applicationProxyRule = v
+			return
+		}
+	}
+
 	return
 }
 

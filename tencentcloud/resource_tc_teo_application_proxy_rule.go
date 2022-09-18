@@ -5,15 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy_rule" "application_proxy_rule" {
-  zone_id = ""
-  proxy_id = ""
-    proto = ""
-  port = ""
-  origin_type = ""
-  origin_value = ""
-  status = ""
-  forward_client_ip = ""
-  session_persist = ""
+  forward_client_ip = "TOA"
+  origin_type       = "custom"
+  origin_value      = [
+    "127.0.0.1:8081",
+  ]
+  port              = [
+    "8083",
+  ]
+  proto             = "TCP"
+  proxy_id          = "proxy-6972528a-373a-11ed-afca-52540044a456"
+  session_persist   = false
+  status            = "online"
+  zone_id           = "zone-2983wizgxqvm"
 }
 
 ```
@@ -21,7 +25,7 @@ Import
 
 teo application_proxy_rule can be imported using the zoneId#proxyId#ruleId, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy_rule.application_proxy_rule zoneId#proxyId#ruleId
+$ terraform import tencentcloud_teo_application_proxy_rule.application_proxy_rule zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456#rule-90b13bb4-373a-11ed-8794-525400eddfed
 ```
 */
 package tencentcloud
@@ -145,12 +149,16 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 	}
 
 	proxyRules := teo.ApplicationProxyRule{}
-	if v, ok := d.GetOk("proto"); ok {
+	if v, ok := d.GetOk("port"); ok {
 		portSet := v.(*schema.Set).List()
 		for i := range portSet {
 			port := portSet[i].(string)
 			proxyRules.Port = append(proxyRules.Port, &port)
 		}
+	}
+
+	if v, ok := d.GetOk("proto"); ok {
+		proxyRules.Proto = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_type"); ok {
@@ -235,56 +243,47 @@ func resourceTencentCloudTeoApplicationProxyRuleRead(d *schema.ResourceData, met
 	proxyId := idSplit[1]
 	ruleId := idSplit[2]
 
-	applicationProxyRule, err := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
+	proxyRule, err := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
 
 	if err != nil {
 		return err
 	}
 
-	if applicationProxyRule == nil {
+	if proxyRule == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `applicationProxyRule` %s does not exist", ruleId)
 	}
 
-	if applicationProxyRule.ZoneId != nil {
-		_ = d.Set("zone_id", applicationProxyRule.ZoneId)
-	}
-
-	if applicationProxyRule.ProxyId != nil {
-		_ = d.Set("proxy_id", applicationProxyRule.ProxyId)
-	}
-
+	_ = d.Set("zone_id", zoneId)
+	_ = d.Set("proxy_id", proxyId)
 	_ = d.Set("rule_id", ruleId)
 
-	if applicationProxyRule.ApplicationProxyRules != nil || len(applicationProxyRule.ApplicationProxyRules) > 0 {
-		proxyRule := applicationProxyRule.ApplicationProxyRules[0]
-		if proxyRule.Proto != nil {
-			_ = d.Set("proto", proxyRule.Proto)
-		}
+	if proxyRule.Proto != nil {
+		_ = d.Set("proto", proxyRule.Proto)
+	}
 
-		if proxyRule.Port != nil {
-			_ = d.Set("port", proxyRule.Port)
-		}
+	if proxyRule.Port != nil {
+		_ = d.Set("port", proxyRule.Port)
+	}
 
-		if proxyRule.OriginType != nil {
-			_ = d.Set("origin_type", proxyRule.OriginType)
-		}
+	if proxyRule.OriginType != nil {
+		_ = d.Set("origin_type", proxyRule.OriginType)
+	}
 
-		if proxyRule.OriginValue != nil {
-			_ = d.Set("origin_value", proxyRule.OriginValue)
-		}
+	if proxyRule.OriginValue != nil {
+		_ = d.Set("origin_value", proxyRule.OriginValue)
+	}
 
-		if proxyRule.Status != nil {
-			_ = d.Set("status", proxyRule.Status)
-		}
+	if proxyRule.Status != nil {
+		_ = d.Set("status", proxyRule.Status)
+	}
 
-		if proxyRule.ForwardClientIp != nil {
-			_ = d.Set("forward_client_ip", proxyRule.ForwardClientIp)
-		}
+	if proxyRule.ForwardClientIp != nil {
+		_ = d.Set("forward_client_ip", proxyRule.ForwardClientIp)
+	}
 
-		if proxyRule.SessionPersist != nil {
-			_ = d.Set("session_persist", proxyRule.SessionPersist)
-		}
+	if proxyRule.SessionPersist != nil {
+		_ = d.Set("session_persist", proxyRule.SessionPersist)
 	}
 
 	return nil
@@ -328,20 +327,16 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	if d.HasChange("port") {
-		if v, ok := d.GetOk("port"); ok {
-			portSet := v.(*schema.Set).List()
-			for i := range portSet {
-				port := portSet[i].(string)
-				request.Port = append(request.Port, &port)
-			}
+	if v, ok := d.GetOk("port"); ok {
+		portSet := v.(*schema.Set).List()
+		for i := range portSet {
+			port := portSet[i].(string)
+			request.Port = append(request.Port, &port)
 		}
 	}
 
-	if d.HasChange("origin_type") {
-		if v, ok := d.GetOk("origin_type"); ok {
-			request.OriginType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("origin_type"); ok {
+		request.OriginType = helper.String(v.(string))
 	}
 
 	if d.HasChange("origin_value") {
@@ -382,6 +377,34 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 		return err
 	}
 
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			statusRequest := teo.NewModifyApplicationProxyRuleStatusRequest()
+
+			statusRequest.ZoneId = &zoneId
+			statusRequest.ProxyId = &proxyId
+			statusRequest.RuleId = &ruleId
+			statusRequest.Status = helper.String(v.(string))
+
+			statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyRuleStatus(statusRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), statusResult.ToJsonString())
+				}
+				return nil
+			})
+
+			if statusErr != nil {
+				log.Printf("[CRITAL]%s create teo applicationProxy failed, reason:%+v", logId, statusErr)
+				return statusErr
+			}
+			_ = d.Set("status", v.(string))
+		}
+	}
+
 	return resourceTencentCloudTeoApplicationProxyRuleRead(d, meta)
 }
 
@@ -401,6 +424,23 @@ func resourceTencentCloudTeoApplicationProxyRuleDelete(d *schema.ResourceData, m
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 	ruleId := idSplit[2]
+
+	err := resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "offline" {
+			return nil
+		}
+		if *instance.Status == "stopping" {
+			return resource.RetryableError(fmt.Errorf("applicationProxyRule status is %v, operate failed.", *instance.Status))
+		}
+		return resource.NonRetryableError(fmt.Errorf("delete teo applicationProxy rule failed, the current status is `%v`, please update the status to `offline`", *instance.Status))
+	})
+	if err != nil {
+		return err
+	}
 
 	if err := service.DeleteTeoApplicationProxyRuleById(ctx, zoneId, proxyId, ruleId); err != nil {
 		return err
