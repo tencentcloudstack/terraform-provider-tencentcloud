@@ -74,10 +74,7 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			},
 
 			"origin_group_id": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Type: schema.TypeString,
 				Required:    true,
 				Description: "ID of the origin group to use.",
 			},
@@ -85,6 +82,7 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 			"backup_origin_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of the backup origin group to use.",
 			},
 
@@ -155,6 +153,8 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOk("backup_origin_group_id"); ok {
 		request.BackupOriginGroupId = helper.String(v.(string))
+	} else {
+		request.BackupOriginGroupId = helper.String("")
 	}
 
 	if v, ok := d.GetOk("ttl"); ok {
@@ -183,16 +183,16 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoLoadBalancing(ctx, zoneId, loadBalancingId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *instance.Status == "online" {
+		if *instance.Status == "online" || *instance.Status == "init" {
 			return nil
 		}
 		if *instance.Status == "process" {
-			return resource.NonRetryableError(fmt.Errorf("loadBalancing status is %v, operate failed.", *instance.Status))
+			return resource.RetryableError(fmt.Errorf("loadBalancing status is %v, operate failed.", *instance.Status))
 		}
 		return resource.RetryableError(fmt.Errorf("loadBalancing status is %v, retry...", *instance.Status))
 	})
@@ -294,10 +294,12 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_teo_load_balancing.update")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	request := teo.NewModifyLoadBalancingRequest()
+	var(
+		logId = getLogId(contextNil)
+		ctx = context.WithValue(context.TODO(), logIdKey, logId)
+		request = teo.NewModifyLoadBalancingRequest()
+		statusRequest = teo.NewModifyLoadBalancingStatusRequest()
+	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -321,23 +323,20 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 
 	}
 
-	if d.HasChange("type") {
-		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
-		}
-
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_group_id") {
-		if v, ok := d.GetOk("origin_group_id"); ok {
-			request.OriginGroupId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("origin_group_id"); ok {
+		request.OriginGroupId = helper.String(v.(string))
 	}
 
 	if d.HasChange("backup_origin_group_id") {
-
-		return fmt.Errorf("`backup_origin_group_id` do not support change now.")
-
+		if v, ok := d.GetOk("backup_origin_group_id"); ok {
+			request.BackupOriginGroupId = helper.String(v.(string))
+		}
+	} else {
+		request.BackupOriginGroupId = helper.String("")
 	}
 
 	if d.HasChange("ttl") {
@@ -345,13 +344,6 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 			request.TTL = helper.IntUint64(v.(int))
 		}
 	}
-
-	//if d.HasChange("status") {
-	//	if v, ok := d.GetOk("status"); ok {
-	//		request.Status = helper.String(v.(string))
-	//	}
-	//
-	//}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyLoadBalancing(request)
@@ -367,6 +359,30 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo loadBalancing failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("status") {
+		statusRequest.ZoneId = &zoneId
+		statusRequest.LoadBalancingId = &loadBalancingId
+		if v, ok := d.GetOk("status"); ok {
+			statusRequest.Status = helper.String(v.(string))
+		}
+
+		statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyLoadBalancingStatus(statusRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, statusRequest.GetAction(), statusRequest.ToJsonString(), statusResult.ToJsonString())
+			}
+			return nil
+		})
+
+		if statusErr != nil {
+			log.Printf("[CRITAL]%s create teo loadBalancing failed, reason:%+v", logId, statusErr)
+			return statusErr
+		}
 	}
 
 	if d.HasChange("tags") {
