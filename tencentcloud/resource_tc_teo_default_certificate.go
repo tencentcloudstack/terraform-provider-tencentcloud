@@ -145,14 +145,10 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 				certId = v.(string)
 				break
 			}
-			if v, ok := dMap["status"]; ok {
-				if v.(string) != "deployed" {
-					return fmt.Errorf("[CRITAL] create teo defaultCertificate status error")
-				}
-			}
 		}
 	}
 
+	d.SetId(zoneId + FILED_SP + certId)
 	err := resourceTencentCloudTeoDefaultCertificateUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo defaultCertificate failed, reason:%+v", logId, err)
@@ -179,7 +175,6 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + certId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -338,30 +333,6 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 func resourceTencentCloudTeoDefaultCertificateDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_default_certificate.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	if v, ok := d.GetOk("cert_info"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["status"]; ok {
-				if v.(string) != "disabled" {
-					return fmt.Errorf("[DELETE] delete teo defaultCertificate status error")
-				}
-			}
-		}
-	}
-
-	err := resourceTencentCloudTeoDefaultCertificateUpdate(d, meta)
-	if err != nil {
-		log.Printf("[DELETE]%s delete teo defaultCertificate failed, reason:%+v", logId, err)
-		return err
-	}
 
 	return nil
 }

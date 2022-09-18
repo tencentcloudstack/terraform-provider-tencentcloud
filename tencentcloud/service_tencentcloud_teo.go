@@ -779,15 +779,8 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId,
 	request.Filters = append(
 		request.Filters,
 		&teo.Filter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
-		},
-	)
-	request.Filters = append(
-		request.Filters,
-		&teo.Filter{
-			Name:   helper.String("CertId"),
-			Values: []*string{&certId},
 		},
 	)
 
@@ -822,7 +815,12 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId,
 	if len(certificates) < 1 {
 		return
 	}
-	defaultCertificate = certificates[0]
+	for _, v := range certificates {
+		if *v.CertId == certId {
+			defaultCertificate = v
+			return
+		}
+	}
 
 	return
 }
