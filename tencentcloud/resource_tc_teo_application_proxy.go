@@ -157,12 +157,6 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 				Computed:    true,
 				Description: "Last modification date.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -258,14 +252,6 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 	}
 
 	d.SetId(zoneId + FILED_SP + proxyId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, proxyId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
 }
 
@@ -361,14 +347,6 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("update_time", applicationProxy.UpdateTime)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -377,8 +355,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyApplicationProxyRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -474,17 +450,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 				return statusErr
 			}
 			_ = d.Set("status", v.(string))
-		}
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
 		}
 	}
 

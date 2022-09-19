@@ -836,12 +836,6 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -892,14 +886,6 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	d.SetId(zoneId + FILED_SP + entity)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, entity)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
 }
 
@@ -1300,14 +1286,6 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 		_ = d.Set("config", []interface{}{configMap})
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -1316,8 +1294,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifySecurityPolicyRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -1727,17 +1703,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo securityPolicy failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
