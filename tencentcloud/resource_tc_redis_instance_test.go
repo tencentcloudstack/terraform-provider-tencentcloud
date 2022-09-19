@@ -661,7 +661,7 @@ resource "tencentcloud_redis_instance" "redis_cluster" {
 }
 
 func testAccRedisInstancePrepaidBasic() string {
-	return defaultVpcVariable + `
+	return defaultVpcSubnets + `
 resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
   availability_zone  = "ap-guangzhou-3"
   type_id            = 2
@@ -674,8 +674,8 @@ resource "tencentcloud_redis_instance" "redis_prepaid_instance_test" {
   charge_type        = "PREPAID"
   prepaid_period     = 2
   force_delete       = true
-  vpc_id 			 = var.vpc_id
-  subnet_id			 = var.subnet_id
+  vpc_id 			 = local.vpc_id
+  subnet_id			 = local.subnet_id
 }`
 }
 
