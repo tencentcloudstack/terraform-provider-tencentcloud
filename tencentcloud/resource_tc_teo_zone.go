@@ -297,12 +297,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request.Type = helper.String(v.(string))
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		for tagK, tagV := range tags {
-			request.Tags = append(request.Tags, &teo.Tag{TagKey: helper.String(tagK), TagValue: helper.String(tagV)})
-		}
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
 		if e != nil {
@@ -453,22 +447,6 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 
 	if zone.CnameStatus != nil {
 		_ = d.Set("cname_status", zone.CnameStatus)
-	}
-
-	if zone.Tags != nil {
-		tagsList := []interface{}{}
-		for _, tags := range zone.Tags {
-			tagsMap := map[string]interface{}{}
-			if tags.TagKey != nil {
-				tagsMap["tag_key"] = tags.TagKey
-			}
-			if tags.TagValue != nil {
-				tagsMap["tag_value"] = tags.TagValue
-			}
-
-			tagsList = append(tagsList, tagsMap)
-		}
-		_ = d.Set("tags", tagsList)
 	}
 
 	if zone.Resources != nil {
