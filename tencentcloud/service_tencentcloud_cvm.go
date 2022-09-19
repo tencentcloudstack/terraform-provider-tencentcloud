@@ -615,12 +615,28 @@ func (me *CvmService) DescribeKeyPairByFilter(ctx context.Context, id, name stri
 	return
 }
 
-func (me *CvmService) CreateKeyPair(ctx context.Context, keyName, publicKey string, projectId int64) (keyId string, errRet error) {
+func (me *CvmService) CreateKeyPair(ctx context.Context, keyName, publicKey string, projectId int64, tags map[string]string) (keyId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewImportKeyPairRequest()
 	request.KeyName = &keyName
 	request.ProjectId = &projectId
 	request.PublicKey = &publicKey
+
+	if len(tags) > 0 {
+		tagsSpec := make([]*cvm.Tag, 0)
+		for tagKey, tagValue := range tags {
+			tag := cvm.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			tagsSpec = append(tagsSpec, &tag)
+		}
+		tagSpecification := cvm.TagSpecification{
+			ResourceType: helper.String("keypair"),
+			Tags:         tagsSpec,
+		}
+		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ImportKeyPair(request)
