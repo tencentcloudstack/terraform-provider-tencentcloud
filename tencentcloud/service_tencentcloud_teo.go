@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -98,7 +99,8 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
-func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name string) (dnsRecord *teo.DnsRecord, errRet error) {
+func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name string) (dnsRecord *teo.DnsRecord,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnsRecordsRequest()
@@ -189,7 +191,8 @@ func (me *TeoService) DeleteTeoDnsRecordById(ctx context.Context, zoneId, dnsRec
 	return
 }
 
-func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context, zoneId, loadBalancingId string) (loadBalancing *teo.LoadBalancing, errRet error) {
+func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context,
+	zoneId, loadBalancingId string) (loadBalancing *teo.LoadBalancing, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeLoadBalancingRequest()
@@ -205,14 +208,14 @@ func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context, zoneId, load
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
 		},
 	)
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("LoadBalancingId"),
+			Name:   helper.String("load-balancing-id"),
 			Values: []*string{&loadBalancingId},
 		},
 	)
@@ -253,7 +256,8 @@ func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context, zoneId, load
 	return
 }
 
-func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId string, loadBalancingId string) (errRet error) {
+func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId string,
+	loadBalancingId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteLoadBalancingRequest()
@@ -279,7 +283,8 @@ func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId str
 	return
 }
 
-func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context, zoneId, originGroupId string) (originGroup *teo.OriginGroup, errRet error) {
+func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context,
+	zoneId, originGroupId string) (originGroup *teo.OriginGroup, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeOriginGroupRequest()
@@ -295,14 +300,14 @@ func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context, zoneId, origin
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("ZoneId"),
+			Name:   helper.String("zone-id"),
 			Values: []*string{&zoneId},
 		},
 	)
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("OriginGroupId"),
+			Name:   helper.String("origin-group-id"),
 			Values: []*string{&originGroupId},
 		},
 	)
@@ -369,7 +374,8 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId, orig
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleItem, errRet error) {
+func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleItem,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesRequest()
@@ -441,7 +447,8 @@ func (me *TeoService) DeleteTeoRuleEngineById(ctx context.Context, zoneId, ruleI
 	return
 }
 
-func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context, zoneId, proxyId string) (applicationProxy *teo.ApplicationProxy, errRet error) {
+func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context,
+	zoneId, proxyId string) (applicationProxy *teo.ApplicationProxy, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeApplicationProxiesRequest()
@@ -533,7 +540,8 @@ func (me *TeoService) DeleteTeoApplicationProxyById(ctx context.Context, zoneId,
 	return
 }
 
-func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxyRule, errRet error) {
+func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context,
+	zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxyRule, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeApplicationProxiesRequest()
@@ -585,7 +593,8 @@ func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneI
 	return
 }
 
-func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zoneId, proxyId, ruleId string) (errRet error) {
+func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context,
+	zoneId, proxyId, ruleId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteApplicationProxyRuleRequest()
@@ -613,7 +622,8 @@ func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zon
 	return
 }
 
-func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.ZoneSetting, errRet error) {
+func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.ZoneSetting,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeZoneSettingRequest()
@@ -640,7 +650,8 @@ func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string)
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, entity string) (securityPolicy *teo.DescribeSecurityPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context,
+	zoneId, entity string) (securityPolicy *teo.DescribeSecurityPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeSecurityPolicyRequest()
@@ -668,7 +679,8 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 	return
 }
 
-func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host, certId string) (hostCertificate []*teo.HostsCertificate, errRet error) {
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context,
+	zoneId, host, certId string) (hostCertificate []*teo.HostsCertificate, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeHostCertificatesRequest()
@@ -745,7 +757,8 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 
 }
 
-func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnssecRequest()
@@ -772,7 +785,8 @@ func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dns
 	return
 }
 
-func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId, certId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
+func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context,
+	zoneId, certId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDefaultCertificatesRequest()
@@ -834,7 +848,8 @@ func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId,
 	return
 }
 
-func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId string, policyId int64) (ddosPolicy *teo.DescribeDDoSPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId string,
+	policyId int64) (ddosPolicy *teo.DescribeDDoSPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDDoSPolicyRequest()
@@ -862,7 +877,8 @@ func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId string, 
 	return
 }
 
-func (me *TeoService) DescribeTeoZoneDDoSPolicyByFilter(ctx context.Context, param map[string]interface{}) (ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZoneDDoSPolicyByFilter(ctx context.Context,
+	param map[string]interface{}) (ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeZoneDDoSPolicyRequest()
@@ -895,7 +911,8 @@ func (me *TeoService) DescribeTeoZoneDDoSPolicyByFilter(ctx context.Context, par
 	return
 }
 
-func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context) (planInfos []*teo.PlanInfo, errRet error) {
+func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context) (planInfos []*teo.PlanInfo,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeAvailablePlansRequest()
@@ -924,7 +941,8 @@ func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context)
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context, zoneId string) (ruleEnginePriority []*teo.RuleItem, errRet error) {
+func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context,
+	zoneId string) (ruleEnginePriority []*teo.RuleItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesRequest()
@@ -951,7 +969,8 @@ func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context, zoneId 
 	return
 }
 
-func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context, param map[string]interface{}) (botManagedRules []*teo.BotManagedRuleDetail, errRet error) {
+func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context,
+	param map[string]interface{}) (botManagedRules []*teo.BotManagedRuleDetail, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeBotManagedRulesRequest()
@@ -1005,7 +1024,8 @@ func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context, pa
 	return
 }
 
-func (me *TeoService) DescribeTeoBotPortraitRulesByFilter(ctx context.Context, param map[string]interface{}) (portraitManagedRules []*teo.PortraitManagedRuleDetail, errRet error) {
+func (me *TeoService) DescribeTeoBotPortraitRulesByFilter(ctx context.Context,
+	param map[string]interface{}) (portraitManagedRules []*teo.PortraitManagedRuleDetail, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeSecurityPortraitRulesRequest()
@@ -1045,7 +1065,8 @@ func (me *TeoService) DescribeTeoBotPortraitRulesByFilter(ctx context.Context, p
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEngineSettingsByFilter(ctx context.Context) (actions []*teo.RulesSettingAction, errRet error) {
+func (me *TeoService) DescribeTeoRuleEngineSettingsByFilter(ctx context.Context) (actions []*teo.RulesSettingAction,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesSettingRequest()
@@ -1074,7 +1095,8 @@ func (me *TeoService) DescribeTeoRuleEngineSettingsByFilter(ctx context.Context)
 	}
 	return
 }
-func (me *TeoService) DescribeTeoSecurityPolicyRegionsByFilter(ctx context.Context) (geoIps []*teo.GeoIp, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicyRegionsByFilter(ctx context.Context) (geoIps []*teo.GeoIp,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeSecurityPolicyRegionsRequest()
@@ -1118,7 +1140,8 @@ func (me *TeoService) DescribeTeoSecurityPolicyRegionsByFilter(ctx context.Conte
 	return
 }
 
-func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context, param map[string]interface{}) (wafGroupDetails []*teo.WafGroupDetail, errRet error) {
+func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
+	param map[string]interface{}) (wafGroupDetails []*teo.WafGroupDetail, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeSecurityGroupManagedRulesRequest()
@@ -1170,4 +1193,21 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context, para
 		offset += pageSize
 	}
 	return
+}
+
+func (me *TeoService) CheckZoneComplete(ctx context.Context, zoneId string) error {
+	zone, err := me.DescribeTeoZone(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+	if zone == nil || zone.Type == nil || zone.Status == nil || zone.CnameStatus == nil {
+		return fmt.Errorf("get zone[%s] info failed", zoneId)
+	}
+	if *zone.Type == "full" && *zone.Status != "active" {
+		return fmt.Errorf("`zone.Status` is not `active`, please modify NS records from the domain name provider first")
+	}
+	if *zone.Type == "partial" && *zone.CnameStatus != "finished" {
+		return fmt.Errorf("`zone.CnameStatus` is not `finished`, please verify ownership of the site first")
+	}
+	return nil
 }

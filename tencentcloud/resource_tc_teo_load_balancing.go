@@ -109,12 +109,6 @@ func resourceTencentCloudTeoLoadBalancing() *schema.Resource {
 				Computed:    true,
 				Description: "Last modification date.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -199,14 +193,6 @@ func resourceTencentCloudTeoLoadBalancingCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(zoneId + FILED_SP + loadBalancingId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, loadBalancingId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)
 }
 
@@ -277,14 +263,6 @@ func resourceTencentCloudTeoLoadBalancingRead(d *schema.ResourceData, meta inter
 		_ = d.Set("update_time", loadBalancing.UpdateTime)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -294,7 +272,6 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 
 	var (
 		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		request       = teo.NewModifyLoadBalancingRequest()
 		statusRequest = teo.NewModifyLoadBalancingStatusRequest()
 	)
@@ -383,17 +360,6 @@ func resourceTencentCloudTeoLoadBalancingUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoLoadBalancingRead(d, meta)
 }
 
@@ -411,6 +377,25 @@ func resourceTencentCloudTeoLoadBalancingDelete(d *schema.ResourceData, meta int
 	}
 	zoneId := idSplit[0]
 	loadBalancingId := idSplit[1]
+	statusRequest := teo.NewModifyLoadBalancingStatusRequest()
+	statusRequest.ZoneId = &zoneId
+	statusRequest.LoadBalancingId = &loadBalancingId
+	statusRequest.Status = helper.String("offline")
+	statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyLoadBalancingStatus(statusRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, statusRequest.GetAction(), statusRequest.ToJsonString(), statusResult.ToJsonString())
+		}
+		return nil
+	})
+
+	if statusErr != nil {
+		log.Printf("[CRITAL]%s offline teo loadBalancing failed, reason:%+v", logId, statusErr)
+		return statusErr
+	}
 
 	if err := service.DeleteTeoLoadBalancingById(ctx, zoneId, loadBalancingId); err != nil {
 		return err

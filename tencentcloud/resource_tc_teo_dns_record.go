@@ -185,10 +185,19 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 		request.Priority = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err := service.CheckZoneComplete(ctx, zoneId)
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo dnsRecord failed, reason:%+v", logId, err)
+		return err
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateDnsRecord(request)
 		if e != nil {
-			return retryError(e, "OperationDenied")
+			return retryError(e, "OperationDenied", "UnauthorizedOperation")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -203,9 +212,6 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	}
 
 	dnsRecordId = *response.Response.DnsRecordId
-
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoDnsRecord(ctx, zoneId, dnsRecordId)
