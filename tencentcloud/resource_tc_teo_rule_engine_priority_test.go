@@ -32,9 +32,6 @@ const testAccTeoRuleEnginePriority = `
 
 resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
   rules_priority = ""
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 
 `

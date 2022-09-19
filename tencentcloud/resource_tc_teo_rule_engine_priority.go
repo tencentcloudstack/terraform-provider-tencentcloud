@@ -38,7 +38,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudTeoRuleEnginePriority() *schema.Resource {
@@ -79,12 +78,6 @@ func resourceTencentCloudTeoRuleEnginePriority() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -107,15 +100,6 @@ func resourceTencentCloudTeoRuleEnginePriorityCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, zoneId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoRuleEnginePriorityRead(d, meta)
 }
 
@@ -154,14 +138,6 @@ func resourceTencentCloudTeoRuleEnginePriorityRead(d *schema.ResourceData, meta 
 		_ = d.Set("rules_priority", ruleEnginePriorityList)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -170,10 +146,7 @@ func resourceTencentCloudTeoRuleEnginePriorityUpdate(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyRulePriorityRequest()
-
 	zoneId := d.Id()
 	request.ZoneId = &zoneId
 
@@ -218,17 +191,6 @@ func resourceTencentCloudTeoRuleEnginePriorityUpdate(d *schema.ResourceData, met
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo ruleEnginePriority failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoRuleEnginePriorityRead(d, meta)

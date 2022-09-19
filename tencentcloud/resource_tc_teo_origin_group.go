@@ -149,12 +149,6 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 				Computed:    true,
 				Description: "Last modification date.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -253,15 +247,6 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 	originGroupId = *response.Response.OriginGroupId
 
 	d.SetId(zoneId + FILED_SP + originGroupId)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, originGroupId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoOriginGroupRead(d, meta)
 }
 
@@ -354,14 +339,6 @@ func resourceTencentCloudTeoOriginGroupRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("update_time", originGroup.UpdateTime)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -370,8 +347,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyOriginGroupRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -460,17 +435,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo originGroup failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoOriginGroupRead(d, meta)

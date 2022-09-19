@@ -157,12 +157,6 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 				Computed:    true,
 				Description: "Last modification date.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -197,11 +191,11 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		request.PlatType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("security_type"); ok {
+	if v := d.Get("security_type"); v != nil {
 		request.SecurityType = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("accelerate_type"); ok {
+	if v := d.Get("accelerate_type"); v != nil {
 		request.AccelerateType = helper.IntInt64(v.(int))
 	}
 
@@ -258,14 +252,6 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 	}
 
 	d.SetId(zoneId + FILED_SP + proxyId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, proxyId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
 }
 
@@ -361,14 +347,6 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("update_time", applicationProxy.UpdateTime)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -377,8 +355,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyApplicationProxyRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -477,17 +453,6 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
 }
 
@@ -497,7 +462,6 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -507,19 +471,36 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 
-	err := resourceTencentCloudTeoApplicationProxyRead(d, meta)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
+		if  e != nil {
+			log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, e)
+			return resource.RetryableError(e)
+		}
+
+		status, _ := d.Get("status").(string)
+		if status == "offline" {
+			return nil
+		}
+		if status == "stopping" {
+			return resource.RetryableError(fmt.Errorf("applicationProxy stopping"))
+		}
+
+		statusRequest := teo.NewModifyApplicationProxyStatusRequest()
+		statusRequest.ZoneId = &zoneId
+		statusRequest.ProxyId = &proxyId
+		statusRequest.Status = helper.String("offline")
+		_, e = meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
+		if e != nil {
+			return resource.NonRetryableError(fmt.Errorf("setting applicationProxy `status` to offline failed, reason: %v", e))
+		}
+		return resource.RetryableError(fmt.Errorf("setting applicationProxy `status` to offline"))
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if v, ok := d.GetOk("status"); ok {
-		if v != "offline" {
-			return fmt.Errorf("delete teo applicationProxy failed, the current status is `%v`, please update the status to `offline`", v)
-		}
-	}
-
-	if err := service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
+	if err = service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
 		return err
 	}
 

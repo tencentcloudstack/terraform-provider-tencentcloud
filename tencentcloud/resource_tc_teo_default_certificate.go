@@ -113,12 +113,6 @@ func resourceTencentCloudTeoDefaultCertificate() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -173,15 +167,6 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 	})
 	if err != nil {
 		return err
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, certId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 	return resourceTencentCloudTeoDefaultCertificateRead(d, meta)
 }
@@ -249,14 +234,6 @@ func resourceTencentCloudTeoDefaultCertificateRead(d *schema.ResourceData, meta 
 		_ = d.Set("cert_info", certInfoList)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -265,7 +242,6 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifyDefaultCertificateRequest()
 
@@ -314,17 +290,6 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo defaultCertificate failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoDefaultCertificateRead(d, meta)

@@ -425,7 +425,7 @@ func resourceTencentCloudTeoApplicationProxyRuleDelete(d *schema.ResourceData, m
 	proxyId := idSplit[1]
 	ruleId := idSplit[2]
 
-	err := resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -434,15 +434,25 @@ func resourceTencentCloudTeoApplicationProxyRuleDelete(d *schema.ResourceData, m
 			return nil
 		}
 		if *instance.Status == "stopping" {
-			return resource.RetryableError(fmt.Errorf("applicationProxyRule status is %v, operate failed.", *instance.Status))
+			return resource.RetryableError(fmt.Errorf("applicationProxyRule stopping"))
 		}
-		return resource.NonRetryableError(fmt.Errorf("delete teo applicationProxy rule failed, the current status is `%v`, please update the status to `offline`", *instance.Status))
+
+		statusRequest := teo.NewModifyApplicationProxyRuleStatusRequest()
+		statusRequest.ZoneId = &zoneId
+		statusRequest.ProxyId = &proxyId
+		statusRequest.RuleId = &ruleId
+		statusRequest.Status = helper.String("offline")
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyRuleStatus(statusRequest)
+		if e != nil {
+			return resource.NonRetryableError(fmt.Errorf("setting applicationProxyRule `status` to offline failed, reason: %v", e))
+		}
+		return resource.RetryableError(fmt.Errorf("setting applicationProxyRule `status` to offline"))
 	})
 	if err != nil {
 		return err
 	}
 
-	if err := service.DeleteTeoApplicationProxyRuleById(ctx, zoneId, proxyId, ruleId); err != nil {
+	if err = service.DeleteTeoApplicationProxyRuleById(ctx, zoneId, proxyId, ruleId); err != nil {
 		return err
 	}
 
