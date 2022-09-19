@@ -197,11 +197,11 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		request.PlatType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("security_type"); ok {
+	if v := d.Get("security_type"); v != nil {
 		request.SecurityType = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("accelerate_type"); ok {
+	if v := d.Get("accelerate_type"); v != nil {
 		request.AccelerateType = helper.IntInt64(v.(int))
 	}
 
