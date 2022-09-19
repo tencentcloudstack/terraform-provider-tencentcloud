@@ -1236,7 +1236,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
 			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
-			"tencentcloud_teo_custom_error_page":					 resourceTencentCloudTeoCustomErrorPage(),
+			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 		},
 
 		ConfigureFunc: providerConfigure,

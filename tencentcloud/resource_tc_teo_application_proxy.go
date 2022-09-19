@@ -473,7 +473,7 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
-		if  e != nil {
+		if e != nil {
 			log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, e)
 			return resource.RetryableError(e)
 		}
