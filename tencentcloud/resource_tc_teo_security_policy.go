@@ -5,136 +5,157 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_security_policy" "security_policy" {
-  zone_id = ""
-  entity = ""
-  config {
-		waf_config {
-				switch = ""
-				level = ""
-				mode = ""
-			waf_rules {
-					switch = ""
-					block_rule_i_ds = ""
-					observe_rule_ids = ""
-			}
-			ai_rule {
-					mode = ""
-			}
-		}
-		rate_limit_config {
-				switch = ""
-			user_rules {
-					rule_name = ""
-					threshold = ""
-					period = ""
-					action = ""
-					punish_time = ""
-					punish_time_unit = ""
-					rule_status = ""
-					freq_fields = ""
-				conditions {
-						match_from = ""
-						match_param = ""
-						operator = ""
-						match_content = ""
-				}
-					rule_priority = ""
-			}
-			template {
-					mode = ""
-				detail {
-						mode = ""
-						i_d = ""
-						action = ""
-						punish_time = ""
-						threshold = ""
-						period = ""
-				}
-			}
-			intelligence {
-					switch = ""
-					action = ""
-			}
-		}
-		acl_config {
-				switch = ""
-			user_rules {
-					rule_name = ""
-					action = ""
-					rule_status = ""
-				conditions {
-						match_from = ""
-						match_param = ""
-						operator = ""
-						match_content = ""
-				}
-					rule_priority = ""
-					punish_time = ""
-					punish_time_unit = ""
-					name = ""
-					page_id = ""
-					redirect_url = ""
-					response_code = ""
-			}
-		}
-		bot_config {
-				switch = ""
-			managed_rule {
-					rule_i_d = ""
-					action = ""
-					punish_time = ""
-					punish_time_unit = ""
-					name = ""
-					page_id = ""
-					redirect_url = ""
-					response_code = ""
-					trans_managed_ids = ""
-					alg_managed_ids = ""
-					cap_managed_ids = ""
-					mon_managed_ids = ""
-					drop_managed_ids = ""
-			}
-			portrait_rule {
-					rule_i_d = ""
-					alg_managed_ids = ""
-					cap_managed_ids = ""
-					mon_managed_ids = ""
-					drop_managed_ids = ""
-					switch = ""
-			}
-			intelligence_rule {
-					switch = ""
-				items {
-						label = ""
-						action = ""
-				}
-			}
-		}
-		switch_config {
-				web_switch = ""
-		}
-		ip_table_config {
-				switch = ""
-			rules {
-					action = ""
-					match_from = ""
-					match_content = ""
-					rule_i_d = ""
-			}
-		}
+  entity  = "aaa.sfurnace.work"
+  zone_id = "zone-2983wizgxqvm"
 
-  }
-  tags = {
-    "createdBy" = "terraform"
+  config {
+    acl_config {
+      switch = "off"
+    }
+
+    bot_config {
+      switch = "off"
+
+      intelligence_rule {
+        switch = "off"
+
+        items {
+          action = "drop"
+          label  = "evil_bot"
+        }
+        items {
+          action = "alg"
+          label  = "suspect_bot"
+        }
+        items {
+          action = "monitor"
+          label  = "good_bot"
+        }
+        items {
+          action = "trans"
+          label  = "normal"
+        }
+      }
+
+      managed_rule {
+        action            = "monitor"
+        alg_managed_ids   = []
+        cap_managed_ids   = []
+        drop_managed_ids  = []
+        mon_managed_ids   = []
+        page_id           = 0
+        punish_time       = 0
+        response_code     = 0
+        rule_id           = 0
+        trans_managed_ids = []
+      }
+
+      portrait_rule {
+        alg_managed_ids  = []
+        cap_managed_ids  = []
+        drop_managed_ids = []
+        mon_managed_ids  = []
+        rule_id          = -1
+        switch           = "off"
+      }
+    }
+
+    drop_page_config {
+      switch = "on"
+
+      acl_drop_page_detail {
+        name        = "-"
+        page_id     = 0
+        status_code = 569
+        type        = "default"
+      }
+
+      waf_drop_page_detail {
+        name        = "-"
+        page_id     = 0
+        status_code = 566
+        type        = "default"
+      }
+    }
+
+    except_config {
+      switch = "on"
+    }
+
+    ip_table_config {
+      switch = "off"
+    }
+
+    rate_limit_config {
+      switch = "on"
+
+      intelligence {
+        action = "monitor"
+        switch = "off"
+      }
+
+      template {
+        mode = "sup_loose"
+
+        detail {
+          action      = "alg"
+          id          = 831807989
+          mode        = "sup_loose"
+          period      = 1
+          punish_time = 0
+          threshold   = 2000
+        }
+      }
+    }
+
+    switch_config {
+      web_switch = "on"
+    }
+
+    waf_config {
+      level  = "strict"
+      mode   = "block"
+      switch = "on"
+
+      ai_rule {
+        mode = "smart_status_close"
+      }
+
+      waf_rules {
+        block_rule_ids   = [
+          22,
+          84214562,
+          106246133,
+          106246507,
+          106246508,
+          106246523,
+          106246524,
+          106246679,
+          106247029,
+          106247048,
+          106247140,
+          106247356,
+          106247357,
+          106247358,
+          106247378,
+          106247389,
+          106247392,
+          106247394,
+          106247405,
+          106247409,
+          106247413,
+          106247558,
+          106247795,
+          106247819,
+          106248021,
+        ]
+        observe_rule_ids = []
+        switch           = "off"
+      }
+    }
   }
 }
 
-```
-Import
-
-teo security_policy can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_teo_security_policy.security_policy securityPolicy_id
 ```
 */
 package tencentcloud
@@ -216,7 +237,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 													Required:    true,
 													Description: "Whether to host the rules&#39; configuration.- `on`: Enable.- `off`: Disable.",
 												},
-												"block_rule_i_ds": {
+												"block_rule_ids": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeInt,
@@ -277,7 +298,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Custom configuration.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
 													Description: "Rule ID.",
@@ -335,22 +356,22 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 															"match_from": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching field.",
+																Description: "Items to match. Valid values:- `host`: Host of the request.- `sip`: Client IP.- `ua`: User-Agent.- `cookie`: Session cookie.- `cgi`: CGI script.- `xff`: XFF extension header.- `url`: URL of the request.- `accept`: Accept encoding of the request.- `method`: HTTP method of the request.- `header`: HTTP header of the request.- `sip_proto`: Network protocol of the request.",
 															},
 															"match_param": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching string.",
+																Description: "Parameter for match item. For example, when match from header, match parameter can be set to a header key.",
 															},
 															"operator": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching operator.",
+																Description: "Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.",
 															},
 															"match_content": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching content.",
+																Description: "Content to match.",
 															},
 														},
 													},
@@ -396,7 +417,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 																Computed:    true,
 																Description: "Template Name. Note: This field may return null, indicating that no valid value can be obtained.",
 															},
-															"i_d": {
+															"id": {
 																Type:        schema.TypeInt,
 																Optional:    true,
 																Computed:    true,
@@ -470,11 +491,12 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 									},
 									"user_rules": {
 										Type:        schema.TypeList,
-										Required:    true,
+										Optional:    true,
+										Computed:    true,
 										Description: "Custom configuration.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
 													Description: "Rule ID.",
@@ -503,22 +525,22 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 															"match_from": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching field.",
+																Description: "Items to match. Valid values:- `host`: Host of the request.- `sip`: Client IP.- `ua`: User-Agent.- `cookie`: Session cookie.- `cgi`: CGI script.- `xff`: XFF extension header.- `url`: URL of the request.- `accept`: Accept encoding of the request.- `method`: HTTP method of the request.- `header`: HTTP header of the request.- `sip_proto`: Network protocol of the request.",
 															},
 															"match_param": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching string.",
+																Description: "Parameter for match item. For example, when match from header, match parameter can be set to a header key.",
 															},
 															"operator": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching operator.",
+																Description: "Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.",
 															},
 															"match_content": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Matching content.",
+																Description: "Content to match.",
 															},
 														},
 													},
@@ -591,7 +613,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Preset rules.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Required:    true,
 													Description: "Rule ID.",
@@ -682,7 +704,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 										Description: "Portrait rule.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Optional:    true,
 													Description: "Rule ID.",
@@ -817,7 +839,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 													Optional:    true,
 													Description: "Matching content.",
 												},
-												"rule_i_d": {
+												"rule_id": {
 													Type:        schema.TypeInt,
 													Optional:    true,
 													Description: "Rule ID.",
@@ -833,14 +855,209 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 								},
 							},
 						},
+						"except_config": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Computed:    true,
+							Description: "Exception rule configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "- `on`: Enable.- `off`: Disable.",
+									},
+									"except_user_rules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Description: "Exception rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"rule_id": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Rule ID.",
+												},
+												"rule_name": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Rule name.",
+												},
+												"action": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Action to take. Valid values: `skip`.",
+												},
+												"rule_status": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Status of the rule. Valid values:- `on`: Enabled.- `off`: Disabled.",
+												},
+												"update_time": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Last modification date.",
+												},
+												"rule_priority": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Priority of the rule. Valid value range: 0-100.",
+												},
+												"except_user_rule_conditions": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													Description: "Conditions of the rule.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"match_from": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Computed:    true,
+																Description: "Items to match. Valid values:- `host`: Host of the request.- `sip`: Client IP.- `ua`: User-Agent.- `cookie`: Session cookie.- `cgi`: CGI script.- `xff`: XFF extension header.- `url`: URL of the request.- `accept`: Accept encoding of the request.- `method`: HTTP method of the request.- `header`: HTTP header of the request.- `sip_proto`: Network protocol of the request.",
+															},
+															"match_param": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Computed:    true,
+																Description: "Parameter for match item. For example, when match from header, match parameter can be set to a header key.",
+															},
+															"operator": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Computed:    true,
+																Description: "Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.",
+															},
+															"match_content": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Computed:    true,
+																Description: "Content to match.",
+															},
+														},
+													},
+												},
+												"except_user_rule_scope": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Computed:    true,
+													Description: "Scope of the rule in effect.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"modules": {
+																Type: schema.TypeSet,
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+																Optional:    true,
+																Computed:    true,
+																Description: "Modules in which the rule take effect. Valid values: `waf`.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"drop_page_config": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Computed:    true,
+							Description: "Custom drop page configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "- `on`: Enable.- `off`: Disable.",
+									},
+									"waf_drop_page_detail": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Description: "Custom error page of WAF rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"page_id": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "ID of the custom error page. when set to 0, use system default error page.",
+												},
+												"status_code": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "HTTP status code to use. Valid range: 100-600.",
+												},
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "File name or URL.",
+												},
+												"type": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Type of the custom error page. Valid values: `file`, `url`.",
+												},
+											},
+										},
+									},
+									"acl_drop_page_detail": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Computed:    true,
+										Description: "Custom error page of ACL rules.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"page_id": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "ID of the custom error page. when set to 0, use system default error page.",
+												},
+												"status_code": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "HTTP status code to use. Valid range: 100-600.",
+												},
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "File name or URL.",
+												},
+												"type": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Type of the custom error page. Valid values: `file`, `url`.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
-			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
 			},
 		},
 	}
@@ -850,31 +1067,90 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_teo_security_policy.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var (
-		zoneId string
-		entity string
+		logId    = getLogId(contextNil)
+		service  = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
+		request  = teo.NewModifyDDoSPolicyHostRequest()
+		response *teo.ModifyDDoSPolicyHostResponse
+		zoneId   string
+		entity   string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
+		request.ZoneId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("entity"); ok {
 		entity = v.(string)
+		request.Host = helper.String(v.(string))
 	}
 
-	err := resourceTencentCloudTeoSecurityPolicyUpdate(d, meta)
+	var ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := service.DescribeTeoZoneDDoSPolicyByFilter(ctx, map[string]interface{}{
+			"zone_id": zoneId,
+		})
+		if e != nil {
+			return retryError(e)
+		}
+		ddosPolicy = results
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Teo planInfo failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if len(ddosPolicy.ShieldAreas) > 0 {
+		var (
+			policyId       *int64
+			securityType   *string
+			accelerateType *string
+		)
+		for _, areas := range ddosPolicy.ShieldAreas {
+			for _, host := range areas.DDoSHosts {
+				if *host.Host == entity {
+					policyId = areas.PolicyId
+					securityType = host.SecurityType
+					accelerateType = host.AccelerateType
+					break
+				}
+			}
+			// todo
+			if *areas.EntityName == entity {
+				policyId = areas.PolicyId
+				for _, host := range ddosPolicy.DDoSHosts {
+					securityType = host.SecurityType
+					accelerateType = host.AccelerateType
+					break
+				}
+			}
+		}
+		request.PolicyId = policyId
+		request.SecurityType = securityType
+		request.AccelerateType = accelerateType
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDDoSPolicyHost(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo securityPolicy failed, reason:%+v", logId, err)
 		return err
 	}
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoSecurityPolicy(ctx, zoneId, entity)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -892,14 +1168,6 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	d.SetId(zoneId + FILED_SP + entity)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, entity)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
 }
 
@@ -952,7 +1220,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 					wafRulesMap["switch"] = securityPolicy.SecurityConfig.WafConfig.WafRule.Switch
 				}
 				if securityPolicy.SecurityConfig.WafConfig.WafRule.BlockRuleIDs != nil {
-					wafRulesMap["block_rule_i_ds"] = securityPolicy.SecurityConfig.WafConfig.WafRule.BlockRuleIDs
+					wafRulesMap["block_rule_ids"] = securityPolicy.SecurityConfig.WafConfig.WafRule.BlockRuleIDs
 				}
 				if securityPolicy.SecurityConfig.WafConfig.WafRule.ObserveRuleIDs != nil {
 					wafRulesMap["observe_rule_ids"] = securityPolicy.SecurityConfig.WafConfig.WafRule.ObserveRuleIDs
@@ -981,7 +1249,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				for _, userRules := range securityPolicy.SecurityConfig.RateLimitConfig.RateLimitUserRules {
 					userRulesMap := map[string]interface{}{}
 					if userRules.RuleID != nil {
-						userRulesMap["rule_i_d"] = userRules.RuleID
+						userRulesMap["rule_id"] = userRules.RuleID
 					}
 					if userRules.RuleName != nil {
 						userRulesMap["rule_name"] = userRules.RuleName
@@ -1050,7 +1318,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 						detailMap["mode"] = securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.Mode
 					}
 					if securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.ID != nil {
-						detailMap["i_d"] = securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.ID
+						detailMap["id"] = securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.ID
 					}
 					if securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.Action != nil {
 						detailMap["action"] = securityPolicy.SecurityConfig.RateLimitConfig.RateLimitTemplate.RateLimitTemplateDetail.Action
@@ -1094,7 +1362,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				for _, userRules := range securityPolicy.SecurityConfig.AclConfig.AclUserRules {
 					userRulesMap := map[string]interface{}{}
 					if userRules.RuleID != nil {
-						userRulesMap["rule_i_d"] = userRules.RuleID
+						userRulesMap["rule_id"] = userRules.RuleID
 					}
 					if userRules.RuleName != nil {
 						userRulesMap["rule_name"] = userRules.RuleName
@@ -1166,7 +1434,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 			if securityPolicy.SecurityConfig.BotConfig.BotManagedRule != nil {
 				managedRuleMap := map[string]interface{}{}
 				if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.RuleID != nil {
-					managedRuleMap["rule_i_d"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.RuleID
+					managedRuleMap["rule_id"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.RuleID
 				}
 				if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Action != nil {
 					managedRuleMap["action"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Action
@@ -1210,7 +1478,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 			if securityPolicy.SecurityConfig.BotConfig.BotPortraitRule != nil {
 				portraitRuleMap := map[string]interface{}{}
 				if securityPolicy.SecurityConfig.BotConfig.BotPortraitRule.RuleID != nil {
-					portraitRuleMap["rule_i_d"] = securityPolicy.SecurityConfig.BotConfig.BotPortraitRule.RuleID
+					portraitRuleMap["rule_id"] = securityPolicy.SecurityConfig.BotConfig.BotPortraitRule.RuleID
 				}
 				if securityPolicy.SecurityConfig.BotConfig.BotPortraitRule.AlgManagedIds != nil {
 					portraitRuleMap["alg_managed_ids"] = securityPolicy.SecurityConfig.BotConfig.BotPortraitRule.AlgManagedIds
@@ -1283,7 +1551,7 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 						rulesMap["match_content"] = rules.MatchContent
 					}
 					if rules.RuleID != nil {
-						rulesMap["rule_i_d"] = rules.RuleID
+						rulesMap["rule_id"] = rules.RuleID
 					}
 					if rules.UpdateTime != nil {
 						rulesMap["update_time"] = rules.UpdateTime
@@ -1296,17 +1564,115 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 
 			configMap["ip_table_config"] = []interface{}{ipTableConfigMap}
 		}
+		if securityPolicy.SecurityConfig.ExceptConfig != nil {
+			exceptConfigMap := map[string]interface{}{}
+			if securityPolicy.SecurityConfig.ExceptConfig.Switch != nil {
+				exceptConfigMap["switch"] = securityPolicy.SecurityConfig.ExceptConfig.Switch
+			}
+			if securityPolicy.SecurityConfig.ExceptConfig.ExceptUserRules != nil {
+				exceptUserRulesList := []interface{}{}
+				for _, exceptUserRules := range securityPolicy.SecurityConfig.ExceptConfig.ExceptUserRules {
+					exceptUserRulesMap := map[string]interface{}{}
+					if exceptUserRules.RuleID != nil {
+						exceptUserRulesMap["rule_id"] = exceptUserRules.RuleID
+					}
+					if exceptUserRules.RuleName != nil {
+						exceptUserRulesMap["rule_name"] = exceptUserRules.RuleName
+					}
+					if exceptUserRules.Action != nil {
+						exceptUserRulesMap["action"] = exceptUserRules.Action
+					}
+					if exceptUserRules.RuleStatus != nil {
+						exceptUserRulesMap["rule_status"] = exceptUserRules.RuleStatus
+					}
+					if exceptUserRules.UpdateTime != nil {
+						exceptUserRulesMap["update_time"] = exceptUserRules.UpdateTime
+					}
+					if exceptUserRules.RulePriority != nil {
+						exceptUserRulesMap["rule_priority"] = exceptUserRules.RulePriority
+					}
+					if exceptUserRules.ExceptUserRuleConditions != nil {
+						exceptUserRuleConditionsList := []interface{}{}
+						for _, exceptUserRuleConditions := range exceptUserRules.ExceptUserRuleConditions {
+							exceptUserRuleConditionsMap := map[string]interface{}{}
+							if exceptUserRuleConditions.MatchFrom != nil {
+								exceptUserRuleConditionsMap["match_from"] = exceptUserRuleConditions.MatchFrom
+							}
+							if exceptUserRuleConditions.MatchParam != nil {
+								exceptUserRuleConditionsMap["match_param"] = exceptUserRuleConditions.MatchParam
+							}
+							if exceptUserRuleConditions.Operator != nil {
+								exceptUserRuleConditionsMap["operator"] = exceptUserRuleConditions.Operator
+							}
+							if exceptUserRuleConditions.MatchContent != nil {
+								exceptUserRuleConditionsMap["match_content"] = exceptUserRuleConditions.MatchContent
+							}
+
+							exceptUserRuleConditionsList = append(exceptUserRuleConditionsList, exceptUserRuleConditionsMap)
+						}
+						exceptUserRulesMap["except_user_rule_conditions"] = exceptUserRuleConditionsList
+					}
+					if exceptUserRules.ExceptUserRuleScope != nil {
+						exceptUserRuleScopeMap := map[string]interface{}{}
+						if exceptUserRules.ExceptUserRuleScope.Modules != nil {
+							exceptUserRuleScopeMap["modules"] = exceptUserRules.ExceptUserRuleScope.Modules
+						}
+
+						exceptUserRulesMap["except_user_rule_scope"] = []interface{}{exceptUserRuleScopeMap}
+					}
+
+					exceptUserRulesList = append(exceptUserRulesList, exceptUserRulesMap)
+				}
+				exceptConfigMap["except_user_rules"] = exceptUserRulesList
+			}
+
+			configMap["except_config"] = []interface{}{exceptConfigMap}
+		}
+		if securityPolicy.SecurityConfig.DropPageConfig != nil {
+			dropPageConfigMap := map[string]interface{}{}
+			if securityPolicy.SecurityConfig.DropPageConfig.Switch != nil {
+				dropPageConfigMap["switch"] = securityPolicy.SecurityConfig.DropPageConfig.Switch
+			}
+			if securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail != nil {
+				wafDropPageDetailMap := map[string]interface{}{}
+				if securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.PageId != nil {
+					wafDropPageDetailMap["page_id"] = securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.PageId
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.StatusCode != nil {
+					wafDropPageDetailMap["status_code"] = securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.StatusCode
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.Name != nil {
+					wafDropPageDetailMap["name"] = securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.Name
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.Type != nil {
+					wafDropPageDetailMap["type"] = securityPolicy.SecurityConfig.DropPageConfig.WafDropPageDetail.Type
+				}
+
+				dropPageConfigMap["waf_drop_page_detail"] = []interface{}{wafDropPageDetailMap}
+			}
+			if securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail != nil {
+				aclDropPageDetailMap := map[string]interface{}{}
+				if securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.PageId != nil {
+					aclDropPageDetailMap["page_id"] = securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.PageId
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.StatusCode != nil {
+					aclDropPageDetailMap["status_code"] = securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.StatusCode
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.Name != nil {
+					aclDropPageDetailMap["name"] = securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.Name
+				}
+				if securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.Type != nil {
+					aclDropPageDetailMap["type"] = securityPolicy.SecurityConfig.DropPageConfig.AclDropPageDetail.Type
+				}
+
+				dropPageConfigMap["acl_drop_page_detail"] = []interface{}{aclDropPageDetailMap}
+			}
+
+			configMap["drop_page_config"] = []interface{}{dropPageConfigMap}
+		}
 
 		_ = d.Set("config", []interface{}{configMap})
 	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -1316,7 +1682,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifySecurityPolicyRequest()
 
@@ -1357,7 +1722,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 					if v, ok := WafRulesMap["switch"]; ok {
 						wafRule.Switch = helper.String(v.(string))
 					}
-					if v, ok := WafRulesMap["block_rule_i_ds"]; ok {
+					if v, ok := WafRulesMap["block_rule_ids"]; ok {
 						blockRuleIDsSet := v.(*schema.Set).List()
 						for i := range blockRuleIDsSet {
 							blockRuleIDs := blockRuleIDsSet[i].(int)
@@ -1454,7 +1819,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 						if v, ok := DetailMap["mode"]; ok {
 							rateLimitTemplateDetail.Mode = helper.String(v.(string))
 						}
-						if v, ok := DetailMap["i_d"]; ok {
+						if v, ok := DetailMap["id"]; ok {
 							rateLimitTemplateDetail.ID = helper.IntInt64(v.(int))
 						}
 						if v, ok := DetailMap["action"]; ok {
@@ -1555,7 +1920,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 				}
 				if ManagedRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "managed_rule"); ok {
 					botManagedRule := teo.BotManagedRule{}
-					if v, ok := ManagedRuleMap["rule_i_d"]; ok {
+					if v, ok := ManagedRuleMap["rule_id"]; ok {
 						botManagedRule.RuleID = helper.IntInt64(v.(int))
 					}
 					if v, ok := ManagedRuleMap["action"]; ok {
@@ -1618,7 +1983,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 				}
 				if PortraitRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "portrait_rule"); ok {
 					botPortraitRule := teo.BotPortraitRule{}
-					if v, ok := PortraitRuleMap["rule_i_d"]; ok {
+					if v, ok := PortraitRuleMap["rule_id"]; ok {
 						botPortraitRule.RuleID = helper.IntInt64(v.(int))
 					}
 					if v, ok := PortraitRuleMap["alg_managed_ids"]; ok {
@@ -1701,13 +2066,105 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 						if v, ok := RulesMap["match_content"]; ok {
 							ipTableRule.MatchContent = helper.String(v.(string))
 						}
-						if v, ok := RulesMap["rule_i_d"]; ok {
+						if v, ok := RulesMap["rule_id"]; ok {
 							ipTableRule.RuleID = helper.IntInt64(v.(int))
 						}
 						ipTableConfig.IpTableRules = append(ipTableConfig.IpTableRules, &ipTableRule)
 					}
 				}
 				securityConfig.IpTableConfig = &ipTableConfig
+			}
+			if ExceptConfigMap, ok := helper.InterfaceToMap(dMap, "except_config"); ok {
+				exceptConfig := teo.ExceptConfig{}
+				if v, ok := ExceptConfigMap["switch"]; ok {
+					exceptConfig.Switch = helper.String(v.(string))
+				}
+				if v, ok := ExceptConfigMap["except_user_rules"]; ok {
+					for _, item := range v.([]interface{}) {
+						ExceptUserRulesMap := item.(map[string]interface{})
+						exceptUserRule := teo.ExceptUserRule{}
+						if v, ok := ExceptUserRulesMap["action"]; ok {
+							exceptUserRule.Action = helper.String(v.(string))
+						}
+						if v, ok := ExceptUserRulesMap["rule_status"]; ok {
+							exceptUserRule.RuleStatus = helper.String(v.(string))
+						}
+						if v, ok := ExceptUserRulesMap["rule_priority"]; ok {
+							exceptUserRule.RulePriority = helper.IntInt64(v.(int))
+						}
+						if v, ok := ExceptUserRulesMap["except_user_rule_conditions"]; ok {
+							for _, item := range v.([]interface{}) {
+								ExceptUserRuleConditionsMap := item.(map[string]interface{})
+								exceptUserRuleCondition := teo.ExceptUserRuleCondition{}
+								if v, ok := ExceptUserRuleConditionsMap["match_from"]; ok {
+									exceptUserRuleCondition.MatchFrom = helper.String(v.(string))
+								}
+								if v, ok := ExceptUserRuleConditionsMap["match_param"]; ok {
+									exceptUserRuleCondition.MatchParam = helper.String(v.(string))
+								}
+								if v, ok := ExceptUserRuleConditionsMap["operator"]; ok {
+									exceptUserRuleCondition.Operator = helper.String(v.(string))
+								}
+								if v, ok := ExceptUserRuleConditionsMap["match_content"]; ok {
+									exceptUserRuleCondition.MatchContent = helper.String(v.(string))
+								}
+								exceptUserRule.ExceptUserRuleConditions = append(exceptUserRule.ExceptUserRuleConditions, &exceptUserRuleCondition)
+							}
+						}
+						if ExceptUserRuleScopeMap, ok := helper.InterfaceToMap(ExceptUserRulesMap, "except_user_rule_scope"); ok {
+							exceptUserRuleScope := teo.ExceptUserRuleScope{}
+							if v, ok := ExceptUserRuleScopeMap["modules"]; ok {
+								modulesSet := v.(*schema.Set).List()
+								for i := range modulesSet {
+									modules := modulesSet[i].(string)
+									exceptUserRuleScope.Modules = append(exceptUserRuleScope.Modules, &modules)
+								}
+							}
+							exceptUserRule.ExceptUserRuleScope = &exceptUserRuleScope
+						}
+						exceptConfig.ExceptUserRules = append(exceptConfig.ExceptUserRules, &exceptUserRule)
+					}
+				}
+				securityConfig.ExceptConfig = &exceptConfig
+			}
+			if DropPageConfigMap, ok := helper.InterfaceToMap(dMap, "drop_page_config"); ok {
+				dropPageConfig := teo.DropPageConfig{}
+				if v, ok := DropPageConfigMap["switch"]; ok {
+					dropPageConfig.Switch = helper.String(v.(string))
+				}
+				if WafDropPageDetailMap, ok := helper.InterfaceToMap(DropPageConfigMap, "waf_drop_page_detail"); ok {
+					dropPageDetail := teo.DropPageDetail{}
+					if v, ok := WafDropPageDetailMap["page_id"]; ok {
+						dropPageDetail.PageId = helper.IntInt64(v.(int))
+					}
+					if v, ok := WafDropPageDetailMap["status_code"]; ok {
+						dropPageDetail.StatusCode = helper.IntInt64(v.(int))
+					}
+					if v, ok := WafDropPageDetailMap["name"]; ok {
+						dropPageDetail.Name = helper.String(v.(string))
+					}
+					if v, ok := WafDropPageDetailMap["type"]; ok {
+						dropPageDetail.Type = helper.String(v.(string))
+					}
+					dropPageConfig.WafDropPageDetail = &dropPageDetail
+				}
+				if AclDropPageDetailMap, ok := helper.InterfaceToMap(DropPageConfigMap, "acl_drop_page_detail"); ok {
+					dropPageDetail := teo.DropPageDetail{}
+					if v, ok := AclDropPageDetailMap["page_id"]; ok {
+						dropPageDetail.PageId = helper.IntInt64(v.(int))
+					}
+					if v, ok := AclDropPageDetailMap["status_code"]; ok {
+						dropPageDetail.StatusCode = helper.IntInt64(v.(int))
+					}
+					if v, ok := AclDropPageDetailMap["name"]; ok {
+						dropPageDetail.Name = helper.String(v.(string))
+					}
+					if v, ok := AclDropPageDetailMap["type"]; ok {
+						dropPageDetail.Type = helper.String(v.(string))
+					}
+					dropPageConfig.AclDropPageDetail = &dropPageDetail
+				}
+				securityConfig.DropPageConfig = &dropPageConfig
 			}
 			request.SecurityConfig = &securityConfig
 		}
@@ -1727,17 +2184,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo securityPolicy failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
