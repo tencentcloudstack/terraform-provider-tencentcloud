@@ -78,7 +78,14 @@ func TestAccTencentCloudCamUser_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_basic", "secret_key"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_basic", "secret_id"),
 				),
-			}, {
+			},
+			{
+				ResourceName:            "tencentcloud_cam_user.user_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"secret_key", "secret_id", "password"},
+			},
+			{
 				Config: testAccCamUser_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamUserExists("tencentcloud_cam_user.user_basic"),
@@ -96,11 +103,6 @@ func TestAccTencentCloudCamUser_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_basic", "secret_key"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_basic", "secret_id"),
 				),
-			}, {
-				ResourceName:            "tencentcloud_cam_user.user_basic",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"secret_key", "secret_id", "password", "need_reset_password", "use_api", "force_delete"},
 			},
 		},
 	})
@@ -214,7 +216,7 @@ resource "tencentcloud_cam_user" "user_basic" {
   phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
-  force_delete		  = true
+  force_delete		  = false
 }
 `
 

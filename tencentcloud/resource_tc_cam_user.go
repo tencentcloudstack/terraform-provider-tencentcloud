@@ -52,7 +52,13 @@ func resourceTencentCloudCamUser() *schema.Resource {
 		Update: resourceTencentCloudCamUserUpdate,
 		Delete: resourceTencentCloudCamUserDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"remark":              "",
+				"force_delete":        false,
+				"use_api":             true,
+				"console_login":       false,
+				"need_reset_password": true,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{

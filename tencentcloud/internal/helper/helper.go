@@ -164,3 +164,12 @@ func InterfaceToMap(d map[string]interface{}, key string) (result map[string]int
 	}
 	return nil, false
 }
+
+func ImportWithDefaultValue(defaultValues map[string]interface{}) schema.StateFunc {
+	return func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+		for k, v := range defaultValues {
+			_ = d.Set(k, v)
+		}
+		return []*schema.ResourceData{d}, nil
+	}
+}
