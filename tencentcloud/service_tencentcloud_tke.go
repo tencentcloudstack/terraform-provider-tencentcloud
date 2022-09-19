@@ -1904,7 +1904,8 @@ func (me *TkeService) DeleteTkeTmpAlertPolicyById(ctx context.Context, instanceI
 	return
 }
 
-func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (respParams *tke.DescribePrometheusConfigResponseParams, errRet error) {
+func (me *TkeService) DescribeTkeTmpConfigById(ctx context.Context, configId string) (respParams *tke.DescribePrometheusConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
 	request := tke.NewDescribePrometheusConfigRequest()
 
 	defer func() {
@@ -1943,7 +1944,8 @@ func (me *TkeService) DescribeTkeTmpConfigById(logId string, configId string) (r
 	return
 }
 
-func (me *TkeService) DeleteTkeTmpConfigByName(logId string, configId string, ServiceMonitors []*string, PodMonitors []*string, RawJobs []*string) (errRet error) {
+func (me *TkeService) DeleteTkeTmpConfigByName(ctx context.Context, configId string, ServiceMonitors []*string, PodMonitors []*string, RawJobs []*string) (errRet error) {
+	logId := getLogId(ctx)
 	request := tke.NewDeletePrometheusConfigRequest()
 
 	defer func() {

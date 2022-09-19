@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -15,32 +16,39 @@ func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_monitor_tmp_tke_config
 	resource.AddTestSweepers("tencentcloud_monitor_tmp_tke_config", &resource.Sweeper{
 		Name: "tencentcloud_monitor_tmp_tke_config",
-		F: func(r string) error {
-			logId := getLogId(contextNil)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
-			configId := packConfigId(defaultPrometheusId, defaultTkeClusterType, defaultTkeClusterId)
-
-			service := TkeService{client}
-
-			promConfigs, err := service.DescribeTkeTmpConfigById(logId, configId)
-
-			if err != nil {
-				return err
-			}
-
-			if promConfigs == nil {
-				return fmt.Errorf("Prometheus config %s not exist", configId)
-			}
-
-			ServiceMonitors := transObj2StrNames(promConfigs.ServiceMonitors)
-			PodMonitors := transObj2StrNames(promConfigs.PodMonitors)
-			RawJobs := transObj2StrNames(promConfigs.RawJobs)
-			service.DeleteTkeTmpConfigByName(logId, configId, ServiceMonitors, PodMonitors, RawJobs)
-
-			return nil
-		},
+		F:    testSweepTmpTkeConfig,
 	})
+}
+
+func testSweepTmpTkeConfig(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	sharedClient, err := sharedClientForRegion(region)
+	if err != nil {
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
+	}
+	client := sharedClient.(*TencentCloudClient)
+
+	service := TkeService{
+		client: client.apiV3Conn,
+	}
+
+	configId := packConfigId(defaultPrometheusId, defaultTkeClusterType, defaultTkeClusterId)
+	promConfigs, err := service.DescribeTkeTmpConfigById(ctx, configId)
+	if err != nil {
+		return fmt.Errorf("get instance list error: %s", err.Error())
+	}
+
+	ServiceMonitors := transObj2StrNames(promConfigs.ServiceMonitors)
+	PodMonitors := transObj2StrNames(promConfigs.PodMonitors)
+	RawJobs := transObj2StrNames(promConfigs.RawJobs)
+	err = service.DeleteTkeTmpConfigByName(ctx, configId, ServiceMonitors, PodMonitors, RawJobs)
+	if err != nil {
+		return fmt.Errorf("[ERROR] delete promConfigs error: %s", err.Error())
+	}
+
+	return nil
 }
 
 func TestAccTencentCloudMonitorTmpTkeConfig_basic(t *testing.T) {
@@ -83,10 +91,11 @@ func TestAccTencentCloudMonitorTmpTkeConfig_basic(t *testing.T) {
 func testAccCheckTmpTkeConfigDestroy(configId *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := TkeService{client}
 
-		promConfigs, err := service.DescribeTkeTmpConfigById(logId, *configId)
+		promConfigs, err := service.DescribeTkeTmpConfigById(ctx, *configId)
 
 		if err != nil {
 			return err
@@ -121,6 +130,7 @@ func testAccCheckTmpTkeConfigDestroy(configId *string) resource.TestCheckFunc {
 func testAccCheckTmpTkeConfigExists(n string, id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := TkeService{client}
 
@@ -134,7 +144,7 @@ func testAccCheckTmpTkeConfigExists(n string, id *string) resource.TestCheckFunc
 			return errors.New("no prometheus config ID is set")
 		}
 
-		promConfigs, err := service.DescribeTkeTmpConfigById(logId, configId)
+		promConfigs, err := service.DescribeTkeTmpConfigById(ctx, configId)
 		if err != nil {
 			return err
 		}

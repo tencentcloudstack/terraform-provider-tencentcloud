@@ -22,7 +22,7 @@ func TestAccTencentCloudMonitorTempAttachment_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTempAttachmentExists("tencentcloud_monitor_tmp_tke_template_attachment.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "template_id", "temp-gqunlvo1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.instance_id", "prom-1lspn8sw"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.instance_id", "keep-prom-1lspn8sw"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_template_attachment.basic", "targets.0.region", "ap-guangzhou"),
 				),
 			},
