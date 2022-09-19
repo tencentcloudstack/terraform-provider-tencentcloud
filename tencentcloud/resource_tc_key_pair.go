@@ -24,6 +24,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -95,9 +97,14 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 	publicKey := d.Get("public_key").(string)
 	projectId := d.Get("project_id").(int)
 
+	var tags map[string]string
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+
 	keyId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		id, err := cvmService.CreateKeyPair(ctx, keyName, publicKey, int64(projectId))
+		id, err := cvmService.CreateKeyPair(ctx, keyName, publicKey, int64(projectId), tags)
 		if err != nil {
 			return retryError(err)
 		}
@@ -108,6 +115,16 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	d.SetId(keyId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "keypair", tcClient.Region, keyId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+			return err
+		}
+	}
 
 	return resourceTencentCloudKeyPairRead(d, meta)
 }
@@ -151,6 +168,15 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("public_key", publicKey)
 	}
 
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client}
+
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "keypair", client.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -168,6 +194,20 @@ func resourceTencentCloudKeyPairUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("key_name") {
 		keyName := d.Get("key_name").(string)
 		err := cvmService.ModifyKeyPairName(ctx, keyId, keyName)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cvm", "keypair", region, keyId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}
