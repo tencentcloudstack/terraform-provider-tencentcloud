@@ -139,12 +139,6 @@ func resourceTencentCloudTeoDnsRecord() *schema.Resource {
 				Computed:    true,
 				Description: "Whether this domain enable load balancing, security, or l4 proxy capability. Valid values: `lb`, `security`, `l4`.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -194,7 +188,7 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateDnsRecord(request)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "OperationDenied")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -231,14 +225,6 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 	}
 
 	d.SetId(zoneId + FILED_SP + dnsRecordId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::teo:%s:uin/:zone/%s", region, dnsRecordId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudTeoDnsRecordRead(d, meta)
 }
 
@@ -324,14 +310,6 @@ func resourceTencentCloudTeoDnsRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("domain_status", dnsRecord.DomainStatus)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -340,10 +318,7 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	request := teo.NewModifyDnsRecordRequest()
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -410,17 +385,6 @@ func resourceTencentCloudTeoDnsRecordUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTeoDnsRecordRead(d, meta)
 }
 
@@ -440,7 +404,15 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 	zoneId := idSplit[0]
 	dnsRecordId := idSplit[1]
 
-	if err := service.DeleteTeoDnsRecordById(ctx, zoneId, dnsRecordId); err != nil {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if e := service.DeleteTeoDnsRecordById(ctx, zoneId, dnsRecordId); e != nil {
+			return retryError(e, "OperationDenied")
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[DELETE]%s delete teo dnsRecord failed, reason:%+v", logId, err)
 		return err
 	}
 

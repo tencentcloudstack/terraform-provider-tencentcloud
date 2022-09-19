@@ -125,6 +125,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -1213,10 +1214,10 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(15*time.Second, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneSetting(request)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "InvalidParameter.ZoneNotFound")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

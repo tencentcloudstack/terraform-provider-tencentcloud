@@ -297,12 +297,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request.Type = helper.String(v.(string))
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		for tagK, tagV := range tags {
-			request.Tags = append(request.Tags, &teo.Tag{TagKey: helper.String(tagK), TagValue: helper.String(tagV)})
-		}
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateZone(request)
 		if e != nil {
@@ -455,22 +449,6 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("cname_status", zone.CnameStatus)
 	}
 
-	if zone.Tags != nil {
-		tagsList := []interface{}{}
-		for _, tags := range zone.Tags {
-			tagsMap := map[string]interface{}{}
-			if tags.TagKey != nil {
-				tagsMap["tag_key"] = tags.TagKey
-			}
-			if tags.TagValue != nil {
-				tagsMap["tag_value"] = tags.TagValue
-			}
-
-			tagsList = append(tagsList, tagsMap)
-		}
-		_ = d.Set("tags", tagsList)
-	}
-
 	if zone.Resources != nil {
 		resourcesList := []interface{}{}
 		for _, resources := range zone.Resources {
@@ -555,7 +533,8 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("plan_type") {
-		return fmt.Errorf("`plan_type` do not support change now.")
+		log.Printf("[WARN] change `plan_type` is not supported now.")
+		_ = d.Set("plan_type", d.Get("plan_type"))
 	}
 
 	if d.HasChange("type") {
@@ -595,6 +574,30 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("paused") {
+		if v := d.Get("paused"); v != nil {
+			req := teo.NewModifyZoneStatusRequest()
+			req.ZoneId, req.Paused = &zoneId, helper.Bool(v.(bool))
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneStatus(req)
+			if e != nil {
+				log.Printf("[CRITAL]%s modify zone status failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
+	if d.HasChange("cname_speed_up") {
+		if v, ok := d.GetOk("cname_speed_up"); ok {
+			req := teo.NewModifyZoneCnameSpeedUpRequest()
+			req.ZoneId, req.Status = &zoneId, helper.String(v.(string))
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneCnameSpeedUp(req)
+			if e != nil {
+				log.Printf("[CRITAL]%s modify zone cname_speed_up failed, reason:%+v", logId, err)
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("tags") {
