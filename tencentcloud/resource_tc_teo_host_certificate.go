@@ -164,7 +164,7 @@ func resourceTencentCloudTeoHostCertificateRead(d *schema.ResourceData, meta int
 	host := idSplit[1]
 	cateId := idSplit[2]
 
-	hostCertificate, err := service.DescribeTeoHostCertificate(ctx, zoneId, host)
+	hostCertificate, err := service.DescribeTeoHostCertificate(ctx, zoneId, host, cateId)
 
 	if err != nil {
 		return err

@@ -668,7 +668,7 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 	return
 }
 
-func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate []*teo.HostsCertificate, errRet error) {
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host, certId string) (hostCertificate []*teo.HostsCertificate, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeHostCertificatesRequest()
@@ -692,8 +692,17 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 	request.Filters = append(
 		request.Filters,
 		&teo.AdvancedFilter{
-			Name:   helper.String("Host"),
+			Name:   helper.String("host"),
 			Values: []*string{&host},
+			Fuzzy:  helper.Bool(false),
+		},
+	)
+
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("cert-id"),
+			Values: []*string{&certId},
 			Fuzzy:  helper.Bool(false),
 		},
 	)
