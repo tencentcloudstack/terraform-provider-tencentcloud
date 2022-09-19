@@ -462,7 +462,6 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -472,19 +471,36 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 
-	err := resourceTencentCloudTeoApplicationProxyRead(d, meta)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
+		if  e != nil {
+			log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, e)
+			return resource.RetryableError(e)
+		}
+
+		status, _ := d.Get("status").(string)
+		if status == "offline" {
+			return nil
+		}
+		if status == "stopping" {
+			return resource.RetryableError(fmt.Errorf("applicationProxy stopping"))
+		}
+
+		statusRequest := teo.NewModifyApplicationProxyStatusRequest()
+		statusRequest.ZoneId = &zoneId
+		statusRequest.ProxyId = &proxyId
+		statusRequest.Status = helper.String("offline")
+		_, e = meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
+		if e != nil {
+			return resource.NonRetryableError(fmt.Errorf("setting applicationProxy `status` to offline failed, reason: %v", e))
+		}
+		return resource.RetryableError(fmt.Errorf("setting applicationProxy `status` to offline"))
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if v, ok := d.GetOk("status"); ok {
-		if v != "offline" {
-			return fmt.Errorf("delete teo applicationProxy failed, the current status is `%v`, please update the status to `offline`", v)
-		}
-	}
-
-	if err := service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
+	if err = service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
 		return err
 	}
 
