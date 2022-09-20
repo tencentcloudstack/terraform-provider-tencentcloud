@@ -37,12 +37,6 @@ func dataSourceTencentCloudTeoBotManagedRules() *schema.Resource {
 				Description: "Subdomain or application name.",
 			},
 
-			"total": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total managed rule number.",
-			},
-
 			"rules": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -112,10 +106,6 @@ func dataSourceTencentCloudTeoBotManagedRulesRead(d *schema.ResourceData, meta i
 	if err != nil {
 		log.Printf("[CRITAL]%s read Teo rules failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if rules != nil {
-		_ = d.Set("total", len(rules))
 	}
 
 	ruleList := []interface{}{}
