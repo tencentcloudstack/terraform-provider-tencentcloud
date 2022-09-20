@@ -71,6 +71,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -811,9 +812,17 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 	zoneId := idSplit[0]
 	ruleId := idSplit[1]
 
-	if err := service.DeleteTeoRuleEngineById(ctx, zoneId, ruleId); err != nil {
+
+	err := resource.Retry(5*time.Second, func() *resource.RetryError {
+		if e := service.DeleteTeoRuleEngineById(ctx, zoneId, ruleId); e != nil {
+			return retryError(e, "InternalError")
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete teo ruleEngine failed, reason:%+v", logId, err)
 		return err
 	}
-
 	return nil
 }
