@@ -21,7 +21,17 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   node_info_list {
     node_num  = 2
     node_type = "ES.S1.MEDIUM4"
-	encrypt = false
+    encrypt = false
+  }
+
+  es_acl {
+    black_list = [
+	  "9.9.9.9",
+	  "8.8.8.8",
+  ]
+    white_list = [
+	  "0.0.0.0",
+    ]
   }
 
   tags = {
@@ -167,6 +177,30 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Visual node specifications.",
+						},
+					},
+				},
+			},
+			"es_acl": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Kibana Access Control Configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"black_list": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Blacklist of kibana access.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"white_list": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Whitelist of kibana access.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 					},
 				},
@@ -385,7 +419,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			return retryError(errRet, InternalError)
 		}
 		if instance == nil || *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-			return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
+			return resource.RetryableError(fmt.Errorf("elasticsearch instance status is processing, retry... status:%v", *instance.Status))
 		}
 		return nil
 	})
@@ -478,6 +512,29 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	}
 	_ = d.Set("node_info_list", nodeInfoList)
 
+	if instance.EsAcl != nil {
+		esAcls := make([]map[string]interface{}, 0, 1)
+		esAcl := make(map[string]interface{}, 2)
+		// esAcl := es.EsAcl{}
+		if len(instance.EsAcl.BlackIpList) > 0 {
+			bList := make([]*string, 0, len(instance.EsAcl.BlackIpList))
+			for _, ip := range instance.EsAcl.BlackIpList {
+				bList = append(bList, ip)
+			}
+			esAcl["black_list"] = bList
+		}
+
+		if len(instance.EsAcl.WhiteIpList) > 0 {
+			wList := make([]*string, 0, len(instance.EsAcl.WhiteIpList))
+			for _, ip := range instance.EsAcl.WhiteIpList {
+				wList = append(wList, ip)
+			}
+			esAcl["white_list"] = wList
+		}
+		esAcls = append(esAcls, esAcl)
+		_ = d.Set("es_acl", esAcls)
+	}
+
 	if len(instance.TagList) > 0 {
 		tags := make(map[string]string)
 		for _, tag := range instance.TagList {
@@ -505,7 +562,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", 0, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", 0, nil, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -519,7 +576,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, 0, nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, 0, nil, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -592,7 +649,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("basic_security_type") {
 		basicSecurityType := d.Get("basic_security_type").(int)
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -614,7 +671,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeType: helper.String(value["node_type"].(string)),
 			}
 			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, info)
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, info, nil)
 				if errRet != nil {
 					return retryError(errRet)
 				}
@@ -649,7 +706,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			nodeInfoList = append(nodeInfoList, &dataDisk)
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList, nil)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -686,6 +743,39 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			return err
 		}
 		d.SetPartial("tags")
+	}
+	if d.HasChange("es_acl") {
+		esAcl := es.EsAcl{}
+		if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
+			if v, ok := aclMap["black_list"]; ok {
+				blist := v.([]interface{})
+				tmpList := make([]*string, 0, len(blist))
+				for _, d := range blist {
+					tmpList = append(tmpList, helper.String(d.(string)))
+				}
+				esAcl.BlackIpList = tmpList
+			}
+			if v, ok := aclMap["white_list"]; ok {
+				wlist := v.([]interface{})
+				tmpList := make([]*string, 0, len(wlist))
+				for _, d := range wlist {
+					tmpList = append(tmpList, helper.String(d.(string)))
+				}
+				esAcl.WhiteIpList = tmpList
+			}
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, nil, &esAcl)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		d.SetPartial("es_public_acl")
 	}
 
 	d.Partial(false)
