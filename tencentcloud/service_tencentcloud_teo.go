@@ -996,7 +996,7 @@ func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 20
+	var pageSize int64 = 9999999
 
 	for {
 		request.Offset = &offset
@@ -1016,7 +1016,7 @@ func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context,
 			break
 		}
 		botManagedRules = append(botManagedRules, response.Response.BotManagedRuleDetails...)
-		if len(response.Response.BotManagedRuleDetails) < int(pageSize) {
+		if *response.Response.Count < pageSize {
 			break
 		}
 		offset += pageSize
@@ -1187,6 +1187,9 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
 			break
 		}
 		wafGroupDetails = append(wafGroupDetails, response.Response.WafGroupInfo.WafGroupDetails...)
+		if *response.Response.Count <= pageSize {
+			break
+		}
 		offset += pageSize
 	}
 	return
