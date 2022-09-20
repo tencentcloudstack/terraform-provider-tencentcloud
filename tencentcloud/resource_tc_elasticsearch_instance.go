@@ -517,19 +517,11 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 		esAcl := make(map[string]interface{}, 2)
 		// esAcl := es.EsAcl{}
 		if len(instance.EsAcl.BlackIpList) > 0 {
-			bList := make([]*string, 0, len(instance.EsAcl.BlackIpList))
-			for _, ip := range instance.EsAcl.BlackIpList {
-				bList = append(bList, ip)
-			}
-			esAcl["black_list"] = bList
+			esAcl["black_list"] = instance.EsAcl.BlackIpList
 		}
 
 		if len(instance.EsAcl.WhiteIpList) > 0 {
-			wList := make([]*string, 0, len(instance.EsAcl.WhiteIpList))
-			for _, ip := range instance.EsAcl.WhiteIpList {
-				wList = append(wList, ip)
-			}
-			esAcl["white_list"] = wList
+			esAcl["white_list"] = instance.EsAcl.WhiteIpList
 		}
 		esAcls = append(esAcls, esAcl)
 		_ = d.Set("es_acl", esAcls)
