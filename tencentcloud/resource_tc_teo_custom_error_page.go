@@ -84,11 +84,13 @@ func resourceTencentCloudTeoCustomErrorPageCreate(d *schema.ResourceData, meta i
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
-		request.ZoneId = helper.String(v.(string))
+		zoneId = v.(string)
+		request.ZoneId = &zoneId
 	}
 
 	if v, ok := d.GetOk("entity"); ok {
-		request.Entity = helper.String(v.(string))
+		entity = v.(string)
+		request.Entity = &entity
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -153,18 +155,14 @@ func resourceTencentCloudTeoCustomErrorPageUpdate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_teo_custom_error_page.update")()
 	defer inconsistentCheck(d, meta)()
 
-	change := false
+	var change bool
 
 	if d.HasChange("zone_id") {
-
 		return fmt.Errorf("`zone_id` do not support change now.")
-
 	}
 
 	if d.HasChange("entity") {
-
 		return fmt.Errorf("`entity` do not support change now.")
-
 	}
 
 	if d.HasChange("name") {
