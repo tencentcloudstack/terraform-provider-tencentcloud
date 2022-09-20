@@ -178,9 +178,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 		Create: resourceTencentCloudTeoSecurityPolicyCreate,
 		Update: resourceTencentCloudTeoSecurityPolicyUpdate,
 		Delete: resourceTencentCloudTeoSecurityPolicyDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
