@@ -1072,7 +1072,6 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 		service  = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 		request  = teo.NewModifyDDoSPolicyHostRequest()
-		response *teo.ModifyDDoSPolicyHostResponse
 		zoneId   string
 		entity   string
 	)
@@ -1141,7 +1140,6 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

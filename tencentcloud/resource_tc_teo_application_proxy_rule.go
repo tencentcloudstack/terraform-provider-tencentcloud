@@ -131,8 +131,8 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewCreateApplicationProxyRulesRequest()
-		response *teo.CreateApplicationProxyRulesResponse
+		request  = teo.NewCreateApplicationProxyRuleRequest()
+		response *teo.CreateApplicationProxyRuleResponse
 		zoneId   string
 		proxyId  string
 		ruleId   string
@@ -148,41 +148,39 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 		request.ProxyId = helper.String(v.(string))
 	}
 
-	proxyRules := teo.ApplicationProxyRule{}
 	if v, ok := d.GetOk("port"); ok {
 		portSet := v.(*schema.Set).List()
 		for i := range portSet {
 			port := portSet[i].(string)
-			proxyRules.Port = append(proxyRules.Port, &port)
+			request.Port = append(request.Port, &port)
 		}
 	}
 
 	if v, ok := d.GetOk("proto"); ok {
-		proxyRules.Proto = helper.String(v.(string))
+		request.Proto = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_type"); ok {
-		proxyRules.OriginType = helper.String(v.(string))
+		request.OriginType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_value"); ok {
 		originValueSet := v.(*schema.Set).List()
 		for i := range originValueSet {
 			originValue := originValueSet[i].(string)
-			proxyRules.OriginValue = append(proxyRules.OriginValue, &originValue)
+			request.OriginValue = append(request.OriginValue, &originValue)
 		}
 	}
 	if v, ok := d.GetOk("forward_client_ip"); ok {
-		proxyRules.ForwardClientIp = helper.String(v.(string))
+		request.ForwardClientIp = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("session_persist"); ok {
-		proxyRules.SessionPersist = helper.Bool(v.(bool))
+		request.SessionPersist = helper.Bool(v.(bool))
 	}
-	request.ApplicationProxyRules = append(request.ApplicationProxyRules, &proxyRules)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxyRules(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxyRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -198,8 +196,8 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 		return err
 	}
 
-	if response.Response.RuleId != nil && len(response.Response.RuleId) > 0 {
-		ruleId = *response.Response.RuleId[0]
+	if response.Response.RuleId != nil {
+		ruleId = *response.Response.RuleId
 	}
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
