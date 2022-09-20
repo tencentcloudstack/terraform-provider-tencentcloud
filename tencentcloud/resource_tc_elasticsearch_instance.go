@@ -767,7 +767,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("es_public_acl")
+		d.SetPartial("es_acl")
 	}
 
 	d.Partial(false)
