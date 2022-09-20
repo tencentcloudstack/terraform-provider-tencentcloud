@@ -379,3 +379,10 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+teo security_policy can be imported using the zoneId#entity, e.g.
+```
+$ terraform import tencentcloud_teo_security_policy.security_policy zone-2983wizgxqvm#aaa.sfurnace.work
+```
+

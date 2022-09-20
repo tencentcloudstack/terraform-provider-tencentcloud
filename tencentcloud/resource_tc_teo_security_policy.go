@@ -157,6 +157,12 @@ resource "tencentcloud_teo_security_policy" "security_policy" {
 }
 
 ```
+Import
+
+teo security_policy can be imported using the zoneId#entity, e.g.
+```
+$ terraform import tencentcloud_teo_security_policy.security_policy zone-2983wizgxqvm#aaa.sfurnace.work
+```
 */
 package tencentcloud
 
@@ -178,7 +184,9 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 		Create: resourceTencentCloudTeoSecurityPolicyCreate,
 		Update: resourceTencentCloudTeoSecurityPolicyUpdate,
 		Delete: resourceTencentCloudTeoSecurityPolicyDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
