@@ -1167,7 +1167,7 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 20
+	var pageSize int64 = 9999999
 
 	for {
 		request.Offset = &offset
@@ -1187,9 +1187,6 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
 			break
 		}
 		wafGroupDetails = append(wafGroupDetails, response.Response.WafGroupInfo.WafGroupDetails...)
-		if len(response.Response.WafGroupInfo.WafGroupDetails) < int(pageSize) {
-			break
-		}
 		offset += pageSize
 	}
 	return
