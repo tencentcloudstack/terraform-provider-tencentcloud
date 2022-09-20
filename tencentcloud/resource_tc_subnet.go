@@ -132,6 +132,7 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		cidrBlock        string
 		isMulticast      bool
 		routeTableId     string
+		tags             map[string]string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
@@ -173,7 +174,11 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	subnetId, err := vpcService.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone)
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+
+	subnetId, err := vpcService.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone, tags)
 	if err != nil {
 		return err
 	}

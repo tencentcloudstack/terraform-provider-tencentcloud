@@ -128,14 +128,15 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 		}
 	}()
 	ratelimit.Check("CreateBucket")
-	response, err := me.client.UseCosClient().CreateBucket(&request)
+	client := me.client.UseCosClient()
+	response, err := client.CreateBucket(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "put bucket", request.String(), response.String())
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], endpoint %s\n",
+		logId, "put bucket", request.String(), response.String(), client.Endpoint)
 
 	return nil
 }
@@ -154,7 +155,8 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucket")
-	response, err := me.client.UseTencentCosClient(bucket).Bucket.Put(ctx, opt)
+	client := me.client.UseTencentCosClient(bucket)
+	response, err := client.Bucket.Put(ctx, opt)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
@@ -163,8 +165,8 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 
 	resp, _ := json.Marshal(response)
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "put bucket", req, resp)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
+		logId, "put bucket", req, resp, client.BaseURL.BucketURL)
 
 	return nil
 }

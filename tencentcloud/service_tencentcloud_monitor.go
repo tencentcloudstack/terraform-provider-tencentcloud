@@ -697,3 +697,304 @@ func (me *MonitorService) DeleteMonitorRecordingRule(ctx context.Context, instan
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorGrafanaInstance(ctx context.Context, instanceId string) (grafanaInstance *monitor.GrafanaInstanceInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeGrafanaInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceIds = []*string{&instanceId}
+	request.Offset = helper.IntInt64(0)
+	request.Limit = helper.IntInt64(10)
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Instances) < 1 {
+		return
+	}
+	grafanaInstance = response.Response.Instances[0]
+
+	return
+}
+
+func (me *MonitorService) DeleteMonitorGrafanaInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteGrafanaInstanceRequest()
+
+	request.InstanceIDs = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteGrafanaInstance(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaIntegration(ctx context.Context, integrationId, instanceId string) (grafanaIntegration *monitor.GrafanaIntegrationConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeGrafanaIntegrationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.IntegrationId = &integrationId
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaIntegrations(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil || len(response.Response.IntegrationSet) < 1 {
+		return
+	}
+	grafanaIntegration = response.Response.IntegrationSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorGrafanaIntegrationById(ctx context.Context, integrationId, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteGrafanaIntegrationRequest()
+
+	request.IntegrationId = &integrationId
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteGrafanaIntegration(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaNotificationChannel(ctx context.Context, channelId, instanceId string) (grafanaNotificationChannel *monitor.GrafanaChannel, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeGrafanaChannelsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.Offset = helper.IntInt64(0)
+	request.Limit = helper.IntInt64(10)
+	request.ChannelIds = []*string{&channelId}
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaChannels(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.NotificationChannelSet) < 1 {
+		return
+	}
+	grafanaNotificationChannel = response.Response.NotificationChannelSet[0]
+	return
+}
+
+func (me *MonitorService) DeleteMonitorGrafanaNotificationChannelById(ctx context.Context, channelId, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteGrafanaNotificationChannelRequest()
+
+	request.ChannelIDs = []*string{&channelId}
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteGrafanaNotificationChannel(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorSsoAccount(ctx context.Context, instanceId, userId string) (ssoAccount *monitor.GrafanaAccountInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeSSOAccountRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.UserId = &userId
+
+	response, err := me.client.UseMonitorClient().DescribeSSOAccount(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, v := range response.Response.AccountSet {
+		if *v.UserId == userId {
+			ssoAccount = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *MonitorService) DeleteMonitorSsoAccountById(ctx context.Context, instanceId, userId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeleteSSOAccountRequest()
+
+	request.InstanceId = &instanceId
+	request.UserId = &userId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeleteSSOAccount(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaPlugin(ctx context.Context, instanceId, pluginId string) (grafanaPlugin *monitor.GrafanaPlugin, errRet error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = monitor.NewDescribeInstalledPluginsRequest()
+		response *monitor.DescribeInstalledPluginsResponse
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.PluginId = &pluginId
+
+	response, err := me.client.UseMonitorClient().DescribeInstalledPlugins(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	for _, v := range response.Response.PluginSet {
+		if *v.PluginId == pluginId {
+			grafanaPlugin = v
+			return
+		}
+	}
+	return
+}
+
+func (me *MonitorService) DeleteMonitorGrafanaPluginById(ctx context.Context, instanceId, pluginId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewUninstallGrafanaPluginsRequest()
+
+	request.InstanceId = &instanceId
+	request.PluginIds = []*string{&pluginId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().UninstallGrafanaPlugins(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

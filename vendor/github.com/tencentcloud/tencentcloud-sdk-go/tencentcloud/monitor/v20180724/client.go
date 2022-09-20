@@ -49,6 +49,7 @@ func NewBindPrometheusManagedGrafanaRequest() (request *BindPrometheusManagedGra
     request = &BindPrometheusManagedGrafanaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "BindPrometheusManagedGrafana")
     
     
@@ -90,6 +91,7 @@ func NewBindingPolicyObjectRequest() (request *BindingPolicyObjectRequest) {
     request = &BindingPolicyObjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "BindingPolicyObject")
     
     
@@ -107,6 +109,7 @@ func NewBindingPolicyObjectResponse() (response *BindingPolicyObjectResponse) {
 // 将告警策略绑定到特定对象
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) BindingPolicyObject(request *BindingPolicyObjectRequest) (response *BindingPolicyObjectResponse, err error) {
@@ -117,6 +120,7 @@ func (c *Client) BindingPolicyObject(request *BindingPolicyObjectRequest) (respo
 // 将告警策略绑定到特定对象
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) BindingPolicyObjectWithContext(ctx context.Context, request *BindingPolicyObjectRequest) (response *BindingPolicyObjectResponse, err error) {
@@ -139,6 +143,7 @@ func NewBindingPolicyTagRequest() (request *BindingPolicyTagRequest) {
     request = &BindingPolicyTagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "BindingPolicyTag")
     
     
@@ -186,10 +191,61 @@ func (c *Client) BindingPolicyTagWithContext(ctx context.Context, request *Bindi
     return
 }
 
+func NewCleanGrafanaInstanceRequest() (request *CleanGrafanaInstanceRequest) {
+    request = &CleanGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CleanGrafanaInstance")
+    
+    
+    return
+}
+
+func NewCleanGrafanaInstanceResponse() (response *CleanGrafanaInstanceResponse) {
+    response = &CleanGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CleanGrafanaInstance
+// 强制销毁 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CleanGrafanaInstance(request *CleanGrafanaInstanceRequest) (response *CleanGrafanaInstanceResponse, err error) {
+    return c.CleanGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// CleanGrafanaInstance
+// 强制销毁 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CleanGrafanaInstanceWithContext(ctx context.Context, request *CleanGrafanaInstanceRequest) (response *CleanGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewCleanGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CleanGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCleanGrafanaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAlarmNoticeRequest() (request *CreateAlarmNoticeRequest) {
     request = &CreateAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlarmNotice")
     
     
@@ -249,6 +305,7 @@ func NewCreateAlarmPolicyRequest() (request *CreateAlarmPolicyRequest) {
     request = &CreateAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlarmPolicy")
     
     
@@ -308,6 +365,7 @@ func NewCreateAlertRuleRequest() (request *CreateAlertRuleRequest) {
     request = &CreateAlertRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateAlertRule")
     
     
@@ -385,6 +443,7 @@ func NewCreateExporterIntegrationRequest() (request *CreateExporterIntegrationRe
     request = &CreateExporterIntegrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateExporterIntegration")
     
     
@@ -448,10 +507,165 @@ func (c *Client) CreateExporterIntegrationWithContext(ctx context.Context, reque
     return
 }
 
+func NewCreateGrafanaInstanceRequest() (request *CreateGrafanaInstanceRequest) {
+    request = &CreateGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateGrafanaInstance")
+    
+    
+    return
+}
+
+func NewCreateGrafanaInstanceResponse() (response *CreateGrafanaInstanceResponse) {
+    response = &CreateGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateGrafanaInstance
+// 创建 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_CREATEINSTANCELIMITED = "FailedOperation.CreateInstanceLimited"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_REGIONUNAVAILABLE = "FailedOperation.RegionUnavailable"
+//  FAILEDOPERATION_ZONEUNAVAILABLE = "FailedOperation.ZoneUnavailable"
+func (c *Client) CreateGrafanaInstance(request *CreateGrafanaInstanceRequest) (response *CreateGrafanaInstanceResponse, err error) {
+    return c.CreateGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// CreateGrafanaInstance
+// 创建 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_CREATEINSTANCELIMITED = "FailedOperation.CreateInstanceLimited"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_REGIONUNAVAILABLE = "FailedOperation.RegionUnavailable"
+//  FAILEDOPERATION_ZONEUNAVAILABLE = "FailedOperation.ZoneUnavailable"
+func (c *Client) CreateGrafanaInstanceWithContext(ctx context.Context, request *CreateGrafanaInstanceRequest) (response *CreateGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGrafanaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGrafanaIntegrationRequest() (request *CreateGrafanaIntegrationRequest) {
+    request = &CreateGrafanaIntegrationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateGrafanaIntegration")
+    
+    
+    return
+}
+
+func NewCreateGrafanaIntegrationResponse() (response *CreateGrafanaIntegrationResponse) {
+    response = &CreateGrafanaIntegrationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateGrafanaIntegration
+// 创建 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateGrafanaIntegration(request *CreateGrafanaIntegrationRequest) (response *CreateGrafanaIntegrationResponse, err error) {
+    return c.CreateGrafanaIntegrationWithContext(context.Background(), request)
+}
+
+// CreateGrafanaIntegration
+// 创建 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateGrafanaIntegrationWithContext(ctx context.Context, request *CreateGrafanaIntegrationRequest) (response *CreateGrafanaIntegrationResponse, err error) {
+    if request == nil {
+        request = NewCreateGrafanaIntegrationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGrafanaIntegration require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGrafanaIntegrationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGrafanaNotificationChannelRequest() (request *CreateGrafanaNotificationChannelRequest) {
+    request = &CreateGrafanaNotificationChannelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateGrafanaNotificationChannel")
+    
+    
+    return
+}
+
+func NewCreateGrafanaNotificationChannelResponse() (response *CreateGrafanaNotificationChannelResponse) {
+    response = &CreateGrafanaNotificationChannelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateGrafanaNotificationChannel
+// 创建 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateGrafanaNotificationChannel(request *CreateGrafanaNotificationChannelRequest) (response *CreateGrafanaNotificationChannelResponse, err error) {
+    return c.CreateGrafanaNotificationChannelWithContext(context.Background(), request)
+}
+
+// CreateGrafanaNotificationChannel
+// 创建 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateGrafanaNotificationChannelWithContext(ctx context.Context, request *CreateGrafanaNotificationChannelRequest) (response *CreateGrafanaNotificationChannelResponse, err error) {
+    if request == nil {
+        request = NewCreateGrafanaNotificationChannelRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGrafanaNotificationChannel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGrafanaNotificationChannelResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreatePolicyGroupRequest() (request *CreatePolicyGroupRequest) {
     request = &CreatePolicyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreatePolicyGroup")
     
     
@@ -523,6 +737,7 @@ func NewCreatePrometheusAgentRequest() (request *CreatePrometheusAgentRequest) {
     request = &CreatePrometheusAgentRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreatePrometheusAgent")
     
     
@@ -588,6 +803,7 @@ func NewCreatePrometheusMultiTenantInstancePostPayModeRequest() (request *Create
     request = &CreatePrometheusMultiTenantInstancePostPayModeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreatePrometheusMultiTenantInstancePostPayMode")
     
     
@@ -659,6 +875,7 @@ func NewCreatePrometheusScrapeJobRequest() (request *CreatePrometheusScrapeJobRe
     request = &CreatePrometheusScrapeJobRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreatePrometheusScrapeJob")
     
     
@@ -728,6 +945,7 @@ func NewCreateRecordingRuleRequest() (request *CreateRecordingRuleRequest) {
     request = &CreateRecordingRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateRecordingRule")
     
     
@@ -793,10 +1011,81 @@ func (c *Client) CreateRecordingRuleWithContext(ctx context.Context, request *Cr
     return
 }
 
+func NewCreateSSOAccountRequest() (request *CreateSSOAccountRequest) {
+    request = &CreateSSOAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CreateSSOAccount")
+    
+    
+    return
+}
+
+func NewCreateSSOAccountResponse() (response *CreateSSOAccountResponse) {
+    response = &CreateSSOAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateSSOAccount
+// Grafana实例授权其他腾讯云用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateSSOAccount(request *CreateSSOAccountRequest) (response *CreateSSOAccountResponse, err error) {
+    return c.CreateSSOAccountWithContext(context.Background(), request)
+}
+
+// CreateSSOAccount
+// Grafana实例授权其他腾讯云用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateSSOAccountWithContext(ctx context.Context, request *CreateSSOAccountRequest) (response *CreateSSOAccountResponse, err error) {
+    if request == nil {
+        request = NewCreateSSOAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSSOAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSSOAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateServiceDiscoveryRequest() (request *CreateServiceDiscoveryRequest) {
     request = &CreateServiceDiscoveryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "CreateServiceDiscovery")
     
     
@@ -872,6 +1161,7 @@ func NewDeleteAlarmNoticesRequest() (request *DeleteAlarmNoticesRequest) {
     request = &DeleteAlarmNoticesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlarmNotices")
     
     
@@ -894,6 +1184,7 @@ func NewDeleteAlarmNoticesResponse() (response *DeleteAlarmNoticesResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAlarmNotices(request *DeleteAlarmNoticesRequest) (response *DeleteAlarmNoticesResponse, err error) {
     return c.DeleteAlarmNoticesWithContext(context.Background(), request)
 }
@@ -907,6 +1198,7 @@ func (c *Client) DeleteAlarmNotices(request *DeleteAlarmNoticesRequest) (respons
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAlarmNoticesWithContext(ctx context.Context, request *DeleteAlarmNoticesRequest) (response *DeleteAlarmNoticesResponse, err error) {
     if request == nil {
         request = NewDeleteAlarmNoticesRequest()
@@ -927,6 +1219,7 @@ func NewDeleteAlarmPolicyRequest() (request *DeleteAlarmPolicyRequest) {
     request = &DeleteAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlarmPolicy")
     
     
@@ -949,6 +1242,7 @@ func NewDeleteAlarmPolicyResponse() (response *DeleteAlarmPolicyResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAlarmPolicy(request *DeleteAlarmPolicyRequest) (response *DeleteAlarmPolicyResponse, err error) {
     return c.DeleteAlarmPolicyWithContext(context.Background(), request)
 }
@@ -962,6 +1256,7 @@ func (c *Client) DeleteAlarmPolicy(request *DeleteAlarmPolicyRequest) (response 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAlarmPolicyWithContext(ctx context.Context, request *DeleteAlarmPolicyRequest) (response *DeleteAlarmPolicyResponse, err error) {
     if request == nil {
         request = NewDeleteAlarmPolicyRequest()
@@ -982,6 +1277,7 @@ func NewDeleteAlertRulesRequest() (request *DeleteAlertRulesRequest) {
     request = &DeleteAlertRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteAlertRules")
     
     
@@ -1051,6 +1347,7 @@ func NewDeleteExporterIntegrationRequest() (request *DeleteExporterIntegrationRe
     request = &DeleteExporterIntegrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteExporterIntegration")
     
     
@@ -1120,10 +1417,161 @@ func (c *Client) DeleteExporterIntegrationWithContext(ctx context.Context, reque
     return
 }
 
+func NewDeleteGrafanaInstanceRequest() (request *DeleteGrafanaInstanceRequest) {
+    request = &DeleteGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DeleteGrafanaInstance")
+    
+    
+    return
+}
+
+func NewDeleteGrafanaInstanceResponse() (response *DeleteGrafanaInstanceResponse) {
+    response = &DeleteGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteGrafanaInstance
+// 删除 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaInstance(request *DeleteGrafanaInstanceRequest) (response *DeleteGrafanaInstanceResponse, err error) {
+    return c.DeleteGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// DeleteGrafanaInstance
+// 删除 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaInstanceWithContext(ctx context.Context, request *DeleteGrafanaInstanceRequest) (response *DeleteGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewDeleteGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGrafanaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGrafanaIntegrationRequest() (request *DeleteGrafanaIntegrationRequest) {
+    request = &DeleteGrafanaIntegrationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DeleteGrafanaIntegration")
+    
+    
+    return
+}
+
+func NewDeleteGrafanaIntegrationResponse() (response *DeleteGrafanaIntegrationResponse) {
+    response = &DeleteGrafanaIntegrationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteGrafanaIntegration
+// 删除 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaIntegration(request *DeleteGrafanaIntegrationRequest) (response *DeleteGrafanaIntegrationResponse, err error) {
+    return c.DeleteGrafanaIntegrationWithContext(context.Background(), request)
+}
+
+// DeleteGrafanaIntegration
+// 删除 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaIntegrationWithContext(ctx context.Context, request *DeleteGrafanaIntegrationRequest) (response *DeleteGrafanaIntegrationResponse, err error) {
+    if request == nil {
+        request = NewDeleteGrafanaIntegrationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGrafanaIntegration require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGrafanaIntegrationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGrafanaNotificationChannelRequest() (request *DeleteGrafanaNotificationChannelRequest) {
+    request = &DeleteGrafanaNotificationChannelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DeleteGrafanaNotificationChannel")
+    
+    
+    return
+}
+
+func NewDeleteGrafanaNotificationChannelResponse() (response *DeleteGrafanaNotificationChannelResponse) {
+    response = &DeleteGrafanaNotificationChannelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteGrafanaNotificationChannel
+// 删除 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaNotificationChannel(request *DeleteGrafanaNotificationChannelRequest) (response *DeleteGrafanaNotificationChannelResponse, err error) {
+    return c.DeleteGrafanaNotificationChannelWithContext(context.Background(), request)
+}
+
+// DeleteGrafanaNotificationChannel
+// 删除 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) DeleteGrafanaNotificationChannelWithContext(ctx context.Context, request *DeleteGrafanaNotificationChannelRequest) (response *DeleteGrafanaNotificationChannelResponse, err error) {
+    if request == nil {
+        request = NewDeleteGrafanaNotificationChannelRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGrafanaNotificationChannel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGrafanaNotificationChannelResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeletePolicyGroupRequest() (request *DeletePolicyGroupRequest) {
     request = &DeletePolicyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeletePolicyGroup")
     
     
@@ -1241,6 +1689,7 @@ func NewDeletePrometheusScrapeJobsRequest() (request *DeletePrometheusScrapeJobs
     request = &DeletePrometheusScrapeJobsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeletePrometheusScrapeJobs")
     
     
@@ -1310,6 +1759,7 @@ func NewDeleteRecordingRulesRequest() (request *DeleteRecordingRulesRequest) {
     request = &DeleteRecordingRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteRecordingRules")
     
     
@@ -1375,10 +1825,81 @@ func (c *Client) DeleteRecordingRulesWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDeleteSSOAccountRequest() (request *DeleteSSOAccountRequest) {
+    request = &DeleteSSOAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DeleteSSOAccount")
+    
+    
+    return
+}
+
+func NewDeleteSSOAccountResponse() (response *DeleteSSOAccountResponse) {
+    response = &DeleteSSOAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteSSOAccount
+// Grafana可视化服务 删除授权用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteSSOAccount(request *DeleteSSOAccountRequest) (response *DeleteSSOAccountResponse, err error) {
+    return c.DeleteSSOAccountWithContext(context.Background(), request)
+}
+
+// DeleteSSOAccount
+// Grafana可视化服务 删除授权用户
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteSSOAccountWithContext(ctx context.Context, request *DeleteSSOAccountRequest) (response *DeleteSSOAccountResponse, err error) {
+    if request == nil {
+        request = NewDeleteSSOAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSSOAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteSSOAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteServiceDiscoveryRequest() (request *DeleteServiceDiscoveryRequest) {
     request = &DeleteServiceDiscoveryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DeleteServiceDiscovery")
     
     
@@ -1452,6 +1973,7 @@ func NewDescribeAccidentEventListRequest() (request *DescribeAccidentEventListRe
     request = &DescribeAccidentEventListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAccidentEventList")
     
     
@@ -1507,6 +2029,7 @@ func NewDescribeAlarmEventsRequest() (request *DescribeAlarmEventsRequest) {
     request = &DescribeAlarmEventsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmEvents")
     
     
@@ -1556,6 +2079,7 @@ func NewDescribeAlarmHistoriesRequest() (request *DescribeAlarmHistoriesRequest)
     request = &DescribeAlarmHistoriesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmHistories")
     
     
@@ -1577,6 +2101,7 @@ func NewDescribeAlarmHistoriesResponse() (response *DescribeAlarmHistoriesRespon
 // 请注意，**如果使用子用户进行告警历史的查询，只能查询到被授权项目下的告警历史**，或不区分项目的产品的告警历史。如何对子账户授予项目的权限，请参考 [访问管理-项目与标签](https://cloud.tencent.com/document/product/598/32738)。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1595,6 +2120,7 @@ func (c *Client) DescribeAlarmHistories(request *DescribeAlarmHistoriesRequest) 
 // 请注意，**如果使用子用户进行告警历史的查询，只能查询到被授权项目下的告警历史**，或不区分项目的产品的告警历史。如何对子账户授予项目的权限，请参考 [访问管理-项目与标签](https://cloud.tencent.com/document/product/598/32738)。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1621,6 +2147,7 @@ func NewDescribeAlarmMetricsRequest() (request *DescribeAlarmMetricsRequest) {
     request = &DescribeAlarmMetricsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmMetrics")
     
     
@@ -1670,6 +2197,7 @@ func NewDescribeAlarmNoticeRequest() (request *DescribeAlarmNoticeRequest) {
     request = &DescribeAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNotice")
     
     
@@ -1729,6 +2257,7 @@ func NewDescribeAlarmNoticeCallbacksRequest() (request *DescribeAlarmNoticeCallb
     request = &DescribeAlarmNoticeCallbacksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNoticeCallbacks")
     
     
@@ -1788,6 +2317,7 @@ func NewDescribeAlarmNoticesRequest() (request *DescribeAlarmNoticesRequest) {
     request = &DescribeAlarmNoticesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmNotices")
     
     
@@ -1847,6 +2377,7 @@ func NewDescribeAlarmPoliciesRequest() (request *DescribeAlarmPoliciesRequest) {
     request = &DescribeAlarmPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmPolicies")
     
     
@@ -1898,6 +2429,7 @@ func NewDescribeAlarmPolicyRequest() (request *DescribeAlarmPolicyRequest) {
     request = &DescribeAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlarmPolicy")
     
     
@@ -1951,6 +2483,7 @@ func NewDescribeAlertRulesRequest() (request *DescribeAlertRulesRequest) {
     request = &DescribeAlertRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAlertRules")
     
     
@@ -2020,6 +2553,7 @@ func NewDescribeAllNamespacesRequest() (request *DescribeAllNamespacesRequest) {
     request = &DescribeAllNamespacesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeAllNamespaces")
     
     
@@ -2067,6 +2601,7 @@ func NewDescribeBaseMetricsRequest() (request *DescribeBaseMetricsRequest) {
     request = &DescribeBaseMetricsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBaseMetrics")
     
     
@@ -2114,6 +2649,7 @@ func NewDescribeBasicAlarmListRequest() (request *DescribeBasicAlarmListRequest)
     request = &DescribeBasicAlarmListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBasicAlarmList")
     
     
@@ -2171,6 +2707,7 @@ func NewDescribeBindingPolicyObjectListRequest() (request *DescribeBindingPolicy
     request = &DescribeBindingPolicyObjectListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeBindingPolicyObjectList")
     
     
@@ -2292,6 +2829,7 @@ func NewDescribeConditionsTemplateListRequest() (request *DescribeConditionsTemp
     request = &DescribeConditionsTemplateListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeConditionsTemplateList")
     
     
@@ -2405,10 +2943,59 @@ func (c *Client) DescribeConditionsTemplateListWithContext(ctx context.Context, 
     return
 }
 
+func NewDescribeDNSConfigRequest() (request *DescribeDNSConfigRequest) {
+    request = &DescribeDNSConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeDNSConfig")
+    
+    
+    return
+}
+
+func NewDescribeDNSConfigResponse() (response *DescribeDNSConfigResponse) {
+    response = &DescribeDNSConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDNSConfig
+// 列出 Grafana DNS 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDNSConfig(request *DescribeDNSConfigRequest) (response *DescribeDNSConfigResponse, err error) {
+    return c.DescribeDNSConfigWithContext(context.Background(), request)
+}
+
+// DescribeDNSConfig
+// 列出 Grafana DNS 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDNSConfigWithContext(ctx context.Context, request *DescribeDNSConfigRequest) (response *DescribeDNSConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeDNSConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDNSConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDNSConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeExporterIntegrationsRequest() (request *DescribeExporterIntegrationsRequest) {
     request = &DescribeExporterIntegrationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeExporterIntegrations")
     
     
@@ -2474,10 +3061,423 @@ func (c *Client) DescribeExporterIntegrationsWithContext(ctx context.Context, re
     return
 }
 
+func NewDescribeGrafanaChannelsRequest() (request *DescribeGrafanaChannelsRequest) {
+    request = &DescribeGrafanaChannelsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaChannels")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaChannelsResponse() (response *DescribeGrafanaChannelsResponse) {
+    response = &DescribeGrafanaChannelsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaChannels
+// 列出 Grafana 所有告警通道
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTNOTALLOWED = "FailedOperation.AgentNotAllowed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGrafanaChannels(request *DescribeGrafanaChannelsRequest) (response *DescribeGrafanaChannelsResponse, err error) {
+    return c.DescribeGrafanaChannelsWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaChannels
+// 列出 Grafana 所有告警通道
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTNOTALLOWED = "FailedOperation.AgentNotAllowed"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGrafanaChannelsWithContext(ctx context.Context, request *DescribeGrafanaChannelsRequest) (response *DescribeGrafanaChannelsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaChannelsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaChannels require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaChannelsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaConfigRequest() (request *DescribeGrafanaConfigRequest) {
+    request = &DescribeGrafanaConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaConfig")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaConfigResponse() (response *DescribeGrafanaConfigResponse) {
+    response = &DescribeGrafanaConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaConfig
+// 列出 Grafana 的设置，即 grafana.ini 文件内容
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaConfig(request *DescribeGrafanaConfigRequest) (response *DescribeGrafanaConfigResponse, err error) {
+    return c.DescribeGrafanaConfigWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaConfig
+// 列出 Grafana 的设置，即 grafana.ini 文件内容
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaConfigWithContext(ctx context.Context, request *DescribeGrafanaConfigRequest) (response *DescribeGrafanaConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaEnvironmentsRequest() (request *DescribeGrafanaEnvironmentsRequest) {
+    request = &DescribeGrafanaEnvironmentsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaEnvironments")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaEnvironmentsResponse() (response *DescribeGrafanaEnvironmentsResponse) {
+    response = &DescribeGrafanaEnvironmentsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaEnvironments
+// 列出 Grafana 环境变量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaEnvironments(request *DescribeGrafanaEnvironmentsRequest) (response *DescribeGrafanaEnvironmentsResponse, err error) {
+    return c.DescribeGrafanaEnvironmentsWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaEnvironments
+// 列出 Grafana 环境变量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaEnvironmentsWithContext(ctx context.Context, request *DescribeGrafanaEnvironmentsRequest) (response *DescribeGrafanaEnvironmentsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaEnvironmentsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaEnvironments require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaEnvironmentsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaInstancesRequest() (request *DescribeGrafanaInstancesRequest) {
+    request = &DescribeGrafanaInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaInstances")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaInstancesResponse() (response *DescribeGrafanaInstancesResponse) {
+    response = &DescribeGrafanaInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaInstances
+// 列出用户所有的 Grafana 服务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
+func (c *Client) DescribeGrafanaInstances(request *DescribeGrafanaInstancesRequest) (response *DescribeGrafanaInstancesResponse, err error) {
+    return c.DescribeGrafanaInstancesWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaInstances
+// 列出用户所有的 Grafana 服务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
+func (c *Client) DescribeGrafanaInstancesWithContext(ctx context.Context, request *DescribeGrafanaInstancesRequest) (response *DescribeGrafanaInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaIntegrationsRequest() (request *DescribeGrafanaIntegrationsRequest) {
+    request = &DescribeGrafanaIntegrationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaIntegrations")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaIntegrationsResponse() (response *DescribeGrafanaIntegrationsResponse) {
+    response = &DescribeGrafanaIntegrationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaIntegrations
+// 列出 Grafana 已安装的集成
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaIntegrations(request *DescribeGrafanaIntegrationsRequest) (response *DescribeGrafanaIntegrationsResponse, err error) {
+    return c.DescribeGrafanaIntegrationsWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaIntegrations
+// 列出 Grafana 已安装的集成
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaIntegrationsWithContext(ctx context.Context, request *DescribeGrafanaIntegrationsRequest) (response *DescribeGrafanaIntegrationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaIntegrationsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaIntegrations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaIntegrationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaNotificationChannelsRequest() (request *DescribeGrafanaNotificationChannelsRequest) {
+    request = &DescribeGrafanaNotificationChannelsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaNotificationChannels")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaNotificationChannelsResponse() (response *DescribeGrafanaNotificationChannelsResponse) {
+    response = &DescribeGrafanaNotificationChannelsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaNotificationChannels
+// 列出 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaNotificationChannels(request *DescribeGrafanaNotificationChannelsRequest) (response *DescribeGrafanaNotificationChannelsResponse, err error) {
+    return c.DescribeGrafanaNotificationChannelsWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaNotificationChannels
+// 列出 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaNotificationChannelsWithContext(ctx context.Context, request *DescribeGrafanaNotificationChannelsRequest) (response *DescribeGrafanaNotificationChannelsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaNotificationChannelsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaNotificationChannels require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaNotificationChannelsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGrafanaWhiteListRequest() (request *DescribeGrafanaWhiteListRequest) {
+    request = &DescribeGrafanaWhiteListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeGrafanaWhiteList")
+    
+    
+    return
+}
+
+func NewDescribeGrafanaWhiteListResponse() (response *DescribeGrafanaWhiteListResponse) {
+    response = &DescribeGrafanaWhiteListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeGrafanaWhiteList
+// 列出 Grafana 白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaWhiteList(request *DescribeGrafanaWhiteListRequest) (response *DescribeGrafanaWhiteListResponse, err error) {
+    return c.DescribeGrafanaWhiteListWithContext(context.Background(), request)
+}
+
+// DescribeGrafanaWhiteList
+// 列出 Grafana 白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeGrafanaWhiteListWithContext(ctx context.Context, request *DescribeGrafanaWhiteListRequest) (response *DescribeGrafanaWhiteListResponse, err error) {
+    if request == nil {
+        request = NewDescribeGrafanaWhiteListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGrafanaWhiteList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGrafanaWhiteListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstalledPluginsRequest() (request *DescribeInstalledPluginsRequest) {
+    request = &DescribeInstalledPluginsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeInstalledPlugins")
+    
+    
+    return
+}
+
+func NewDescribeInstalledPluginsResponse() (response *DescribeInstalledPluginsResponse) {
+    response = &DescribeInstalledPluginsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeInstalledPlugins
+// 列出实例已安装的插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeInstalledPlugins(request *DescribeInstalledPluginsRequest) (response *DescribeInstalledPluginsResponse, err error) {
+    return c.DescribeInstalledPluginsWithContext(context.Background(), request)
+}
+
+// DescribeInstalledPlugins
+// 列出实例已安装的插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeInstalledPluginsWithContext(ctx context.Context, request *DescribeInstalledPluginsRequest) (response *DescribeInstalledPluginsResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstalledPluginsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstalledPlugins require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstalledPluginsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeMonitorTypesRequest() (request *DescribeMonitorTypesRequest) {
     request = &DescribeMonitorTypesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeMonitorTypes")
     
     
@@ -2521,10 +3521,59 @@ func (c *Client) DescribeMonitorTypesWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribePluginOverviewsRequest() (request *DescribePluginOverviewsRequest) {
+    request = &DescribePluginOverviewsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribePluginOverviews")
+    
+    
+    return
+}
+
+func NewDescribePluginOverviewsResponse() (response *DescribePluginOverviewsResponse) {
+    response = &DescribePluginOverviewsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribePluginOverviews
+// 列出可安装的所有 Grafana 插件
+//
+// 可能返回的错误码:
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePluginOverviews(request *DescribePluginOverviewsRequest) (response *DescribePluginOverviewsResponse, err error) {
+    return c.DescribePluginOverviewsWithContext(context.Background(), request)
+}
+
+// DescribePluginOverviews
+// 列出可安装的所有 Grafana 插件
+//
+// 可能返回的错误码:
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePluginOverviewsWithContext(ctx context.Context, request *DescribePluginOverviewsRequest) (response *DescribePluginOverviewsResponse, err error) {
+    if request == nil {
+        request = NewDescribePluginOverviewsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePluginOverviews require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePluginOverviewsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePolicyConditionListRequest() (request *DescribePolicyConditionListRequest) {
     request = &DescribePolicyConditionListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyConditionList")
     
     
@@ -2642,6 +3691,7 @@ func NewDescribePolicyGroupInfoRequest() (request *DescribePolicyGroupInfoReques
     request = &DescribePolicyGroupInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyGroupInfo")
     
     
@@ -2759,6 +3809,7 @@ func NewDescribePolicyGroupListRequest() (request *DescribePolicyGroupListReques
     request = &DescribePolicyGroupListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePolicyGroupList")
     
     
@@ -2876,6 +3927,7 @@ func NewDescribeProductEventListRequest() (request *DescribeProductEventListRequ
     request = &DescribeProductEventListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeProductEventList")
     
     
@@ -2893,6 +3945,7 @@ func NewDescribeProductEventListResponse() (response *DescribeProductEventListRe
 // 分页获取产品事件的列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
@@ -2909,6 +3962,7 @@ func (c *Client) DescribeProductEventList(request *DescribeProductEventListReque
 // 分页获取产品事件的列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
@@ -2937,6 +3991,7 @@ func NewDescribeProductListRequest() (request *DescribeProductListRequest) {
     request = &DescribeProductListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeProductList")
     
     
@@ -3004,6 +4059,7 @@ func NewDescribePrometheusAgentsRequest() (request *DescribePrometheusAgentsRequ
     request = &DescribePrometheusAgentsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusAgents")
     
     
@@ -3067,6 +4123,7 @@ func NewDescribePrometheusInstancesRequest() (request *DescribePrometheusInstanc
     request = &DescribePrometheusInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusInstances")
     
     
@@ -3097,6 +4154,7 @@ func NewDescribePrometheusInstancesResponse() (response *DescribePrometheusInsta
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 //  INTERNALERROR = "InternalError"
@@ -3122,6 +4180,7 @@ func (c *Client) DescribePrometheusInstances(request *DescribePrometheusInstance
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 //  INTERNALERROR = "InternalError"
@@ -3146,6 +4205,7 @@ func NewDescribePrometheusScrapeJobsRequest() (request *DescribePrometheusScrape
     request = &DescribePrometheusScrapeJobsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribePrometheusScrapeJobs")
     
     
@@ -3213,6 +4273,7 @@ func NewDescribeRecordingRulesRequest() (request *DescribeRecordingRulesRequest)
     request = &DescribeRecordingRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeRecordingRules")
     
     
@@ -3276,10 +4337,59 @@ func (c *Client) DescribeRecordingRulesWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeSSOAccountRequest() (request *DescribeSSOAccountRequest) {
+    request = &DescribeSSOAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeSSOAccount")
+    
+    
+    return
+}
+
+func NewDescribeSSOAccountResponse() (response *DescribeSSOAccountResponse) {
+    response = &DescribeSSOAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSSOAccount
+// 列出当前grafana实例的所有授权账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeSSOAccount(request *DescribeSSOAccountRequest) (response *DescribeSSOAccountResponse, err error) {
+    return c.DescribeSSOAccountWithContext(context.Background(), request)
+}
+
+// DescribeSSOAccount
+// 列出当前grafana实例的所有授权账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeSSOAccountWithContext(ctx context.Context, request *DescribeSSOAccountRequest) (response *DescribeSSOAccountResponse, err error) {
+    if request == nil {
+        request = NewDescribeSSOAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSSOAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSSOAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeServiceDiscoveryRequest() (request *DescribeServiceDiscoveryRequest) {
     request = &DescribeServiceDiscoveryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeServiceDiscovery")
     
     
@@ -3351,6 +4461,7 @@ func NewDescribeStatisticDataRequest() (request *DescribeStatisticDataRequest) {
     request = &DescribeStatisticDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DescribeStatisticData")
     
     
@@ -3486,6 +4597,7 @@ func NewDestroyPrometheusInstanceRequest() (request *DestroyPrometheusInstanceRe
     request = &DestroyPrometheusInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "DestroyPrometheusInstance")
     
     
@@ -3545,10 +4657,155 @@ func (c *Client) DestroyPrometheusInstanceWithContext(ctx context.Context, reque
     return
 }
 
+func NewEnableGrafanaInternetRequest() (request *EnableGrafanaInternetRequest) {
+    request = &EnableGrafanaInternetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "EnableGrafanaInternet")
+    
+    
+    return
+}
+
+func NewEnableGrafanaInternetResponse() (response *EnableGrafanaInternetResponse) {
+    response = &EnableGrafanaInternetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// EnableGrafanaInternet
+// 设置 Grafana 公网访问
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) EnableGrafanaInternet(request *EnableGrafanaInternetRequest) (response *EnableGrafanaInternetResponse, err error) {
+    return c.EnableGrafanaInternetWithContext(context.Background(), request)
+}
+
+// EnableGrafanaInternet
+// 设置 Grafana 公网访问
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) EnableGrafanaInternetWithContext(ctx context.Context, request *EnableGrafanaInternetRequest) (response *EnableGrafanaInternetResponse, err error) {
+    if request == nil {
+        request = NewEnableGrafanaInternetRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableGrafanaInternet require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableGrafanaInternetResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableGrafanaSSORequest() (request *EnableGrafanaSSORequest) {
+    request = &EnableGrafanaSSORequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "EnableGrafanaSSO")
+    
+    
+    return
+}
+
+func NewEnableGrafanaSSOResponse() (response *EnableGrafanaSSOResponse) {
+    response = &EnableGrafanaSSOResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// EnableGrafanaSSO
+// 设置 Grafana 单点登录，使用腾讯云账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) EnableGrafanaSSO(request *EnableGrafanaSSORequest) (response *EnableGrafanaSSOResponse, err error) {
+    return c.EnableGrafanaSSOWithContext(context.Background(), request)
+}
+
+// EnableGrafanaSSO
+// 设置 Grafana 单点登录，使用腾讯云账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) EnableGrafanaSSOWithContext(ctx context.Context, request *EnableGrafanaSSORequest) (response *EnableGrafanaSSOResponse, err error) {
+    if request == nil {
+        request = NewEnableGrafanaSSORequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableGrafanaSSO require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableGrafanaSSOResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableSSOCamCheckRequest() (request *EnableSSOCamCheckRequest) {
+    request = &EnableSSOCamCheckRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "EnableSSOCamCheck")
+    
+    
+    return
+}
+
+func NewEnableSSOCamCheckResponse() (response *EnableSSOCamCheckResponse) {
+    response = &EnableSSOCamCheckResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// EnableSSOCamCheck
+// SSO单点登录时，设置是否cam鉴权
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+func (c *Client) EnableSSOCamCheck(request *EnableSSOCamCheckRequest) (response *EnableSSOCamCheckResponse, err error) {
+    return c.EnableSSOCamCheckWithContext(context.Background(), request)
+}
+
+// EnableSSOCamCheck
+// SSO单点登录时，设置是否cam鉴权
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+func (c *Client) EnableSSOCamCheckWithContext(ctx context.Context, request *EnableSSOCamCheckRequest) (response *EnableSSOCamCheckResponse, err error) {
+    if request == nil {
+        request = NewEnableSSOCamCheckRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableSSOCamCheck require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableSSOCamCheckResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetMonitorDataRequest() (request *GetMonitorDataRequest) {
     request = &GetMonitorDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "GetMonitorData")
     
     
@@ -3571,7 +4828,15 @@ func NewGetMonitorDataResponse() (response *GetMonitorDataResponse) {
 //
 // 若您需要调用的指标、对象较多，可能存在因限频出现拉取失败的情况，建议尽量将请求按时间维度均摊。
 //
+// 
+//
+// >?
+//
+// >- 2022年9月1日起，云监控开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
+//
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
+//  FAILEDOPERATION_ERROWED = "FailedOperation.ErrOwed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3588,7 +4853,15 @@ func (c *Client) GetMonitorData(request *GetMonitorDataRequest) (response *GetMo
 //
 // 若您需要调用的指标、对象较多，可能存在因限频出现拉取失败的情况，建议尽量将请求按时间维度均摊。
 //
+// 
+//
+// >?
+//
+// >- 2022年9月1日起，云监控开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
+//
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
+//  FAILEDOPERATION_ERROWED = "FailedOperation.ErrOwed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -3612,6 +4885,7 @@ func NewGetPrometheusAgentManagementCommandRequest() (request *GetPrometheusAgen
     request = &GetPrometheusAgentManagementCommandRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "GetPrometheusAgentManagementCommand")
     
     
@@ -3671,10 +4945,59 @@ func (c *Client) GetPrometheusAgentManagementCommandWithContext(ctx context.Cont
     return
 }
 
+func NewInstallPluginsRequest() (request *InstallPluginsRequest) {
+    request = &InstallPluginsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "InstallPlugins")
+    
+    
+    return
+}
+
+func NewInstallPluginsResponse() (response *InstallPluginsResponse) {
+    response = &InstallPluginsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// InstallPlugins
+// 安装 Grafana Plugin
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) InstallPlugins(request *InstallPluginsRequest) (response *InstallPluginsResponse, err error) {
+    return c.InstallPluginsWithContext(context.Background(), request)
+}
+
+// InstallPlugins
+// 安装 Grafana Plugin
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) InstallPluginsWithContext(ctx context.Context, request *InstallPluginsRequest) (response *InstallPluginsResponse, err error) {
+    if request == nil {
+        request = NewInstallPluginsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InstallPlugins require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInstallPluginsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAlarmNoticeRequest() (request *ModifyAlarmNoticeRequest) {
     request = &ModifyAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmNotice")
     
     
@@ -3698,6 +5021,7 @@ func NewModifyAlarmNoticeResponse() (response *ModifyAlarmNoticeResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyAlarmNotice(request *ModifyAlarmNoticeRequest) (response *ModifyAlarmNoticeResponse, err error) {
     return c.ModifyAlarmNoticeWithContext(context.Background(), request)
 }
@@ -3712,6 +5036,7 @@ func (c *Client) ModifyAlarmNotice(request *ModifyAlarmNoticeRequest) (response 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyAlarmNoticeWithContext(ctx context.Context, request *ModifyAlarmNoticeRequest) (response *ModifyAlarmNoticeResponse, err error) {
     if request == nil {
         request = NewModifyAlarmNoticeRequest()
@@ -3732,6 +5057,7 @@ func NewModifyAlarmPolicyConditionRequest() (request *ModifyAlarmPolicyCondition
     request = &ModifyAlarmPolicyConditionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyCondition")
     
     
@@ -3789,6 +5115,7 @@ func NewModifyAlarmPolicyInfoRequest() (request *ModifyAlarmPolicyInfoRequest) {
     request = &ModifyAlarmPolicyInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyInfo")
     
     
@@ -3848,6 +5175,7 @@ func NewModifyAlarmPolicyNoticeRequest() (request *ModifyAlarmPolicyNoticeReques
     request = &ModifyAlarmPolicyNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyNotice")
     
     
@@ -3901,6 +5229,7 @@ func NewModifyAlarmPolicyStatusRequest() (request *ModifyAlarmPolicyStatusReques
     request = &ModifyAlarmPolicyStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyStatus")
     
     
@@ -3958,6 +5287,7 @@ func NewModifyAlarmPolicyTasksRequest() (request *ModifyAlarmPolicyTasksRequest)
     request = &ModifyAlarmPolicyTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmPolicyTasks")
     
     
@@ -4013,6 +5343,7 @@ func NewModifyAlarmReceiversRequest() (request *ModifyAlarmReceiversRequest) {
     request = &ModifyAlarmReceiversRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyAlarmReceivers")
     
     
@@ -4064,10 +5395,59 @@ func (c *Client) ModifyAlarmReceiversWithContext(ctx context.Context, request *M
     return
 }
 
+func NewModifyGrafanaInstanceRequest() (request *ModifyGrafanaInstanceRequest) {
+    request = &ModifyGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "ModifyGrafanaInstance")
+    
+    
+    return
+}
+
+func NewModifyGrafanaInstanceResponse() (response *ModifyGrafanaInstanceResponse) {
+    response = &ModifyGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyGrafanaInstance
+// 修改 Grafana 实例属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) ModifyGrafanaInstance(request *ModifyGrafanaInstanceRequest) (response *ModifyGrafanaInstanceResponse, err error) {
+    return c.ModifyGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// ModifyGrafanaInstance
+// 修改 Grafana 实例属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+func (c *Client) ModifyGrafanaInstanceWithContext(ctx context.Context, request *ModifyGrafanaInstanceRequest) (response *ModifyGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewModifyGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGrafanaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyPolicyGroupRequest() (request *ModifyPolicyGroupRequest) {
     request = &ModifyPolicyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyPolicyGroup")
     
     
@@ -4157,6 +5537,7 @@ func NewModifyPrometheusInstanceAttributesRequest() (request *ModifyPrometheusIn
     request = &ModifyPrometheusInstanceAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "ModifyPrometheusInstanceAttributes")
     
     
@@ -4220,6 +5601,7 @@ func NewPutMonitorDataRequest() (request *PutMonitorDataRequest) {
     request = &PutMonitorDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "PutMonitorData")
     
     
@@ -4319,10 +5701,91 @@ func (c *Client) PutMonitorDataWithContext(ctx context.Context, request *PutMoni
     return
 }
 
+func NewResumeGrafanaInstanceRequest() (request *ResumeGrafanaInstanceRequest) {
+    request = &ResumeGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "ResumeGrafanaInstance")
+    
+    
+    return
+}
+
+func NewResumeGrafanaInstanceResponse() (response *ResumeGrafanaInstanceResponse) {
+    response = &ResumeGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ResumeGrafanaInstance
+// 恢复 Grafana 实例
+//
+// 可能返回的错误码:
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ResumeGrafanaInstance(request *ResumeGrafanaInstanceRequest) (response *ResumeGrafanaInstanceResponse, err error) {
+    return c.ResumeGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// ResumeGrafanaInstance
+// 恢复 Grafana 实例
+//
+// 可能返回的错误码:
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SERVICENOTENABLED = "FailedOperation.ServiceNotEnabled"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_EXETIMEOUT = "InternalError.ExeTimeout"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERPARAM = "InvalidParameter.InvalidParameterParam"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_METRICQUOTAEXCEEDED = "LimitExceeded.MetricQuotaExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ResumeGrafanaInstanceWithContext(ctx context.Context, request *ResumeGrafanaInstanceRequest) (response *ResumeGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewResumeGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResumeGrafanaInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSendCustomAlarmMsgRequest() (request *SendCustomAlarmMsgRequest) {
     request = &SendCustomAlarmMsgRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "SendCustomAlarmMsg")
     
     
@@ -4340,6 +5803,7 @@ func NewSendCustomAlarmMsgResponse() (response *SendCustomAlarmMsgResponse) {
 // 发送自定义消息告警
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
@@ -4356,6 +5820,7 @@ func (c *Client) SendCustomAlarmMsg(request *SendCustomAlarmMsgRequest) (respons
 // 发送自定义消息告警
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
@@ -4384,6 +5849,7 @@ func NewSetDefaultAlarmPolicyRequest() (request *SetDefaultAlarmPolicyRequest) {
     request = &SetDefaultAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "SetDefaultAlarmPolicy")
     
     
@@ -4445,6 +5911,7 @@ func NewTerminatePrometheusInstancesRequest() (request *TerminatePrometheusInsta
     request = &TerminatePrometheusInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "TerminatePrometheusInstances")
     
     
@@ -4508,6 +5975,7 @@ func NewUnBindingAllPolicyObjectRequest() (request *UnBindingAllPolicyObjectRequ
     request = &UnBindingAllPolicyObjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UnBindingAllPolicyObject")
     
     
@@ -4625,6 +6093,7 @@ func NewUnBindingPolicyObjectRequest() (request *UnBindingPolicyObjectRequest) {
     request = &UnBindingPolicyObjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UnBindingPolicyObject")
     
     
@@ -4746,6 +6215,7 @@ func NewUnbindPrometheusManagedGrafanaRequest() (request *UnbindPrometheusManage
     request = &UnbindPrometheusManagedGrafanaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UnbindPrometheusManagedGrafana")
     
     
@@ -4795,6 +6265,7 @@ func NewUninstallGrafanaDashboardRequest() (request *UninstallGrafanaDashboardRe
     request = &UninstallGrafanaDashboardRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UninstallGrafanaDashboard")
     
     
@@ -4840,10 +6311,59 @@ func (c *Client) UninstallGrafanaDashboardWithContext(ctx context.Context, reque
     return
 }
 
+func NewUninstallGrafanaPluginsRequest() (request *UninstallGrafanaPluginsRequest) {
+    request = &UninstallGrafanaPluginsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UninstallGrafanaPlugins")
+    
+    
+    return
+}
+
+func NewUninstallGrafanaPluginsResponse() (response *UninstallGrafanaPluginsResponse) {
+    response = &UninstallGrafanaPluginsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UninstallGrafanaPlugins
+// 删除已安装的插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UninstallGrafanaPlugins(request *UninstallGrafanaPluginsRequest) (response *UninstallGrafanaPluginsResponse, err error) {
+    return c.UninstallGrafanaPluginsWithContext(context.Background(), request)
+}
+
+// UninstallGrafanaPlugins
+// 删除已安装的插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UninstallGrafanaPluginsWithContext(ctx context.Context, request *UninstallGrafanaPluginsRequest) (response *UninstallGrafanaPluginsResponse, err error) {
+    if request == nil {
+        request = NewUninstallGrafanaPluginsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UninstallGrafanaPlugins require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUninstallGrafanaPluginsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateAlertRuleRequest() (request *UpdateAlertRuleRequest) {
     request = &UpdateAlertRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateAlertRule")
     
     
@@ -4921,6 +6441,7 @@ func NewUpdateAlertRuleStateRequest() (request *UpdateAlertRuleStateRequest) {
     request = &UpdateAlertRuleStateRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateAlertRuleState")
     
     
@@ -4986,10 +6507,81 @@ func (c *Client) UpdateAlertRuleStateWithContext(ctx context.Context, request *U
     return
 }
 
+func NewUpdateDNSConfigRequest() (request *UpdateDNSConfigRequest) {
+    request = &UpdateDNSConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateDNSConfig")
+    
+    
+    return
+}
+
+func NewUpdateDNSConfigResponse() (response *UpdateDNSConfigResponse) {
+    response = &UpdateDNSConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateDNSConfig
+// 更新 Grafana 的 DNS 配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateDNSConfig(request *UpdateDNSConfigRequest) (response *UpdateDNSConfigResponse, err error) {
+    return c.UpdateDNSConfigWithContext(context.Background(), request)
+}
+
+// UpdateDNSConfig
+// 更新 Grafana 的 DNS 配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_GENERATEINSTANCEIDFAILED = "FailedOperation.GenerateInstanceIDFailed"
+//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateDNSConfigWithContext(ctx context.Context, request *UpdateDNSConfigRequest) (response *UpdateDNSConfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateDNSConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateDNSConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateDNSConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateExporterIntegrationRequest() (request *UpdateExporterIntegrationRequest) {
     request = &UpdateExporterIntegrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateExporterIntegration")
     
     
@@ -5067,10 +6659,251 @@ func (c *Client) UpdateExporterIntegrationWithContext(ctx context.Context, reque
     return
 }
 
+func NewUpdateGrafanaConfigRequest() (request *UpdateGrafanaConfigRequest) {
+    request = &UpdateGrafanaConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateGrafanaConfig")
+    
+    
+    return
+}
+
+func NewUpdateGrafanaConfigResponse() (response *UpdateGrafanaConfigResponse) {
+    response = &UpdateGrafanaConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateGrafanaConfig
+// 更新 Grafana 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaConfig(request *UpdateGrafanaConfigRequest) (response *UpdateGrafanaConfigResponse, err error) {
+    return c.UpdateGrafanaConfigWithContext(context.Background(), request)
+}
+
+// UpdateGrafanaConfig
+// 更新 Grafana 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaConfigWithContext(ctx context.Context, request *UpdateGrafanaConfigRequest) (response *UpdateGrafanaConfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateGrafanaConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateGrafanaConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateGrafanaConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateGrafanaEnvironmentsRequest() (request *UpdateGrafanaEnvironmentsRequest) {
+    request = &UpdateGrafanaEnvironmentsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateGrafanaEnvironments")
+    
+    
+    return
+}
+
+func NewUpdateGrafanaEnvironmentsResponse() (response *UpdateGrafanaEnvironmentsResponse) {
+    response = &UpdateGrafanaEnvironmentsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateGrafanaEnvironments
+// 更新 Grafana 环境变量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaEnvironments(request *UpdateGrafanaEnvironmentsRequest) (response *UpdateGrafanaEnvironmentsResponse, err error) {
+    return c.UpdateGrafanaEnvironmentsWithContext(context.Background(), request)
+}
+
+// UpdateGrafanaEnvironments
+// 更新 Grafana 环境变量
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaEnvironmentsWithContext(ctx context.Context, request *UpdateGrafanaEnvironmentsRequest) (response *UpdateGrafanaEnvironmentsResponse, err error) {
+    if request == nil {
+        request = NewUpdateGrafanaEnvironmentsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateGrafanaEnvironments require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateGrafanaEnvironmentsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateGrafanaIntegrationRequest() (request *UpdateGrafanaIntegrationRequest) {
+    request = &UpdateGrafanaIntegrationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateGrafanaIntegration")
+    
+    
+    return
+}
+
+func NewUpdateGrafanaIntegrationResponse() (response *UpdateGrafanaIntegrationResponse) {
+    response = &UpdateGrafanaIntegrationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateGrafanaIntegration
+// 更新 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaIntegration(request *UpdateGrafanaIntegrationRequest) (response *UpdateGrafanaIntegrationResponse, err error) {
+    return c.UpdateGrafanaIntegrationWithContext(context.Background(), request)
+}
+
+// UpdateGrafanaIntegration
+// 更新 Grafana 集成配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaIntegrationWithContext(ctx context.Context, request *UpdateGrafanaIntegrationRequest) (response *UpdateGrafanaIntegrationResponse, err error) {
+    if request == nil {
+        request = NewUpdateGrafanaIntegrationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateGrafanaIntegration require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateGrafanaIntegrationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateGrafanaNotificationChannelRequest() (request *UpdateGrafanaNotificationChannelRequest) {
+    request = &UpdateGrafanaNotificationChannelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateGrafanaNotificationChannel")
+    
+    
+    return
+}
+
+func NewUpdateGrafanaNotificationChannelResponse() (response *UpdateGrafanaNotificationChannelResponse) {
+    response = &UpdateGrafanaNotificationChannelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateGrafanaNotificationChannel
+// 更新 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaNotificationChannel(request *UpdateGrafanaNotificationChannelRequest) (response *UpdateGrafanaNotificationChannelResponse, err error) {
+    return c.UpdateGrafanaNotificationChannelWithContext(context.Background(), request)
+}
+
+// UpdateGrafanaNotificationChannel
+// 更新 Grafana 告警通道
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaNotificationChannelWithContext(ctx context.Context, request *UpdateGrafanaNotificationChannelRequest) (response *UpdateGrafanaNotificationChannelResponse, err error) {
+    if request == nil {
+        request = NewUpdateGrafanaNotificationChannelRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateGrafanaNotificationChannel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateGrafanaNotificationChannelResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateGrafanaWhiteListRequest() (request *UpdateGrafanaWhiteListRequest) {
+    request = &UpdateGrafanaWhiteListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateGrafanaWhiteList")
+    
+    
+    return
+}
+
+func NewUpdateGrafanaWhiteListResponse() (response *UpdateGrafanaWhiteListResponse) {
+    response = &UpdateGrafanaWhiteListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateGrafanaWhiteList
+// 更新 Grafana 白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaWhiteList(request *UpdateGrafanaWhiteListRequest) (response *UpdateGrafanaWhiteListResponse, err error) {
+    return c.UpdateGrafanaWhiteListWithContext(context.Background(), request)
+}
+
+// UpdateGrafanaWhiteList
+// 更新 Grafana 白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) UpdateGrafanaWhiteListWithContext(ctx context.Context, request *UpdateGrafanaWhiteListRequest) (response *UpdateGrafanaWhiteListResponse, err error) {
+    if request == nil {
+        request = NewUpdateGrafanaWhiteListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateGrafanaWhiteList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateGrafanaWhiteListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdatePrometheusAgentStatusRequest() (request *UpdatePrometheusAgentStatusRequest) {
     request = &UpdatePrometheusAgentStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdatePrometheusAgentStatus")
     
     
@@ -5130,6 +6963,7 @@ func NewUpdatePrometheusScrapeJobRequest() (request *UpdatePrometheusScrapeJobRe
     request = &UpdatePrometheusScrapeJobRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdatePrometheusScrapeJob")
     
     
@@ -5197,6 +7031,7 @@ func NewUpdateRecordingRuleRequest() (request *UpdateRecordingRuleRequest) {
     request = &UpdateRecordingRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateRecordingRule")
     
     
@@ -5262,10 +7097,59 @@ func (c *Client) UpdateRecordingRuleWithContext(ctx context.Context, request *Up
     return
 }
 
+func NewUpdateSSOAccountRequest() (request *UpdateSSOAccountRequest) {
+    request = &UpdateSSOAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpdateSSOAccount")
+    
+    
+    return
+}
+
+func NewUpdateSSOAccountResponse() (response *UpdateSSOAccountResponse) {
+    response = &UpdateSSOAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateSSOAccount
+// 更新已授权账号的备注、权限信息，会直接覆盖原有的信息，不传则不会更新。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+func (c *Client) UpdateSSOAccount(request *UpdateSSOAccountRequest) (response *UpdateSSOAccountResponse, err error) {
+    return c.UpdateSSOAccountWithContext(context.Background(), request)
+}
+
+// UpdateSSOAccount
+// 更新已授权账号的备注、权限信息，会直接覆盖原有的信息，不传则不会更新。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+func (c *Client) UpdateSSOAccountWithContext(ctx context.Context, request *UpdateSSOAccountRequest) (response *UpdateSSOAccountResponse, err error) {
+    if request == nil {
+        request = NewUpdateSSOAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateSSOAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateSSOAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateServiceDiscoveryRequest() (request *UpdateServiceDiscoveryRequest) {
     request = &UpdateServiceDiscoveryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpdateServiceDiscovery")
     
     
@@ -5335,6 +7219,7 @@ func NewUpgradeGrafanaDashboardRequest() (request *UpgradeGrafanaDashboardReques
     request = &UpgradeGrafanaDashboardRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("monitor", APIVersion, "UpgradeGrafanaDashboard")
     
     
@@ -5388,6 +7273,68 @@ func (c *Client) UpgradeGrafanaDashboardWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewUpgradeGrafanaDashboardResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeGrafanaInstanceRequest() (request *UpgradeGrafanaInstanceRequest) {
+    request = &UpgradeGrafanaInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "UpgradeGrafanaInstance")
+    
+    
+    return
+}
+
+func NewUpgradeGrafanaInstanceResponse() (response *UpgradeGrafanaInstanceResponse) {
+    response = &UpgradeGrafanaInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeGrafanaInstance
+// 升级 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpgradeGrafanaInstance(request *UpgradeGrafanaInstanceRequest) (response *UpgradeGrafanaInstanceResponse, err error) {
+    return c.UpgradeGrafanaInstanceWithContext(context.Background(), request)
+}
+
+// UpgradeGrafanaInstance
+// 升级 Grafana 实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
+//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
+//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
+//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
+//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpgradeGrafanaInstanceWithContext(ctx context.Context, request *UpgradeGrafanaInstanceRequest) (response *UpgradeGrafanaInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpgradeGrafanaInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeGrafanaInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeGrafanaInstanceResponse()
     err = c.Send(request, response)
     return
 }

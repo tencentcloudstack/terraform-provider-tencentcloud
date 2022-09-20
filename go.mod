@@ -26,7 +26,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.466
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199
@@ -47,7 +47,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.413
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.443
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.494
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.391
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.490

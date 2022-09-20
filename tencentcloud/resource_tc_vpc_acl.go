@@ -76,6 +76,12 @@ func resourceTencentCloudVpcACL() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Deprecated:  "vpc acl do not support tag now.",
+				Description: "Tags of the vpc acl.",
+			},
 			//compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -98,6 +104,7 @@ func resourceTencentCloudVpcACLCreate(d *schema.ResourceData, meta interface{}) 
 		egress  []VpcACLRule
 		vpcID   = d.Get("vpc_id").(string)
 		name    = d.Get("name").(string)
+		tags    map[string]string
 	)
 
 	if temp, ok := d.GetOk("ingress"); ok {
@@ -121,15 +128,32 @@ func resourceTencentCloudVpcACLCreate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	aclID, err := vpcService.CreateVpcNetworkAcl(ctx, vpcID, name)
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+
+	aclID, err := vpcService.CreateVpcNetworkAcl(ctx, vpcID, name, tags)
 	if err != nil {
 		return err
 	}
 
 	d.SetId(aclID)
-	err = vpcService.AttachRulesToACL(ctx, aclID, ingress, egress)
-	if err != nil {
-		return err
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("vpc", "acl", region, aclID)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	if len(ingress) > 0 || len(egress) > 0 {
+		err = vpcService.AttachRulesToACL(ctx, aclID, ingress, egress)
+		if err != nil {
+			return err
+		}
 	}
 	return resourceTencentCloudVpcACLRead(d, meta)
 }
@@ -192,6 +216,15 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 	}
 	_ = d.Set("egress", egressList)
 	_ = d.Set("ingress", ingressList)
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "acl", region, id)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -275,6 +308,21 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		d.SetPartial("ingress")
 		d.SetPartial("egress")
 	}
+
+	if d.HasChange("tags") {
+		client := meta.(*TencentCloudClient).apiV3Conn
+		tagService := TagService{client: client}
+		region := client.Region
+
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("vpc", "acl", region, id)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudVpcACLRead(d, meta)

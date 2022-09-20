@@ -38,11 +38,10 @@ func TestAccTencentCloudCosBucketDataSource_tags(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCosBucketDataSource_tags(appid),
+				Config: testAccCosBucketDataSource_tags(),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestMatchResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.#", regexp.MustCompile(`^[1-9]\d*$`)),
-					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.tags.test", "test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.tags.fixed_resource", "do_not_remove"),
 				),
 			},
 		},
@@ -105,20 +104,13 @@ data "tencentcloud_cos_buckets" "bucket_list" {
 `, acctest.RandInt(), appid)
 }
 
-func testAccCosBucketDataSource_tags(appid string) string {
+func testAccCosBucketDataSource_tags() string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cos_bucket" "bucket_basic" {
-  bucket = "tf-tags-%d-%s"
-
-  tags = {
-    "test" = "test"
-  }
-}
-
+%s
 data "tencentcloud_cos_buckets" "bucket_list" {
-  tags = tencentcloud_cos_bucket.bucket_basic.tags
+  tags = var.fixed_tags
 }
-`, acctest.RandInt(), appid)
+`, fixedTagVariable)
 }
 
 func testAccCosBucketDataSource_full(appid string) string {
