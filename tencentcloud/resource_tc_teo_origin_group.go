@@ -130,7 +130,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Parameter Name. Valid values:- AccessKeyId：Access Key ID.- SecretAccessKey：Secret Access Key.",
+										Description: "Parameter Name. Valid values:- AccessKeyId:Access Key ID.- SecretAccessKey:Secret Access Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,

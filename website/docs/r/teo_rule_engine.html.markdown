@@ -4,48 +4,63 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_rule_engine"
 sidebar_current: "docs-tencentcloud-resource-teo_rule_engine"
 description: |-
-  Provides a resource to create a teo ruleEngine
+  Provides a resource to create a teo rule_engine
 ---
 
 # tencentcloud_teo_rule_engine
 
-Provides a resource to create a teo ruleEngine
+Provides a resource to create a teo rule_engine
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_teo_rule_engine" "rule_engine" {
-  zone_id   = tencentcloud_teo_zone.zone.id
-  rule_name = "rule0"
+  rule_name = "test-rule3"
   status    = "enable"
+  tags      = {}
+  zone_id   = "zone-297z8rf93cfw"
 
   rules {
-    conditions {
-      conditions {
-        operator = "equal"
-        target   = "host"
-        values = [
-          "www.sfurnace.work",
-        ]
-      }
-    }
-
     actions {
+
       normal_action {
-        action = "MaxAge"
+        action = "Http2"
 
         parameters {
-          name = "FollowOrigin"
+          name = "Switch"
+          values = [
+            "off",
+          ]
+        }
+      }
+    }
+    actions {
+
+      normal_action {
+        action = "ForceRedirect"
+
+        parameters {
+          name = "Switch"
           values = [
             "on",
           ]
         }
         parameters {
-          name = "MaxAgeTime"
+          name = "RedirectStatusCode"
           values = [
-            "0",
+            "302",
           ]
         }
+      }
+    }
+
+    conditions {
+      conditions {
+        operator = "equal"
+        target   = "host"
+        values = [
+          "www.toutiao2.com",
+        ]
       }
     }
   }
@@ -56,10 +71,10 @@ resource "tencentcloud_teo_rule_engine" "rule_engine" {
 
 The following arguments are supported:
 
+* `rule_name` - (Required, String) Rule name.
 * `rules` - (Required, List) Rule items list.
 * `status` - (Required, String) Status of the rule, valid value can be `enable` or `disable`.
 * `zone_id` - (Required, String) Site ID.
-* `rule_name` - (Optional, String) Rule name.
 
 The `actions` object supports the following:
 
@@ -79,7 +94,7 @@ The `conditions` object supports the following:
 The `conditions` object supports the following:
 
 * `operator` - (Required, String) Condition operator. Valid values are `equal`, `notequal`.
-* `target` - (Required, String) Condition target. Valid values:- host: Host of the URL.- filename: filename of the URL.- extension: file extension of the URL.- full_url: full url.- url: path of the URL.
+* `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
 * `values` - (Required, Set) Condition Value.
 
 The `normal_action` object supports the following:
@@ -89,7 +104,7 @@ The `normal_action` object supports the following:
 
 The `parameters` object supports the following:
 
-* `action` - (Required, String) Action to take on the HEADER.
+* `action` - (Required, String) Action to take on the HEADER. Valid values: `add`, `del`, `set`.
 * `name` - (Required, String) Target HEADER name.
 * `values` - (Required, Set) Parameter Value.
 
@@ -124,8 +139,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo ruleEngine can be imported using the id, e.g.
+teo rule_engine can be imported using the id#rule_id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.rule_engine zoneId#ruleId
+$ terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
 ```
 

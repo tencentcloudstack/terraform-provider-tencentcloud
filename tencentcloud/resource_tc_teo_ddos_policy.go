@@ -470,11 +470,6 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 													Optional:    true,
 													Description: "Action to take. Valid values: `drop`, `transmit`, `forward`.",
 												},
-												"default": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "Whether it is default configuration. Valid value:- `0`: custom configuration.- `1`: default configuration. .",
-												},
 											},
 										},
 									},
@@ -492,12 +487,12 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 									"package_limit": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Limit the number of packages. Valid range: 1 pps-10000 Gpps, 0 means no limitation, supported units: pps、Kpps、Mpps、Gpps.",
+										Description: "Limit the number of packages. Valid range: 1 pps-10000 Gpps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.",
 									},
 									"flux_limit": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Limit the number of fluxes. Valid range: 1 bps-10000 Gbps, 0 means no limitation, supported units: bps、Kbps、Mbps、Gbps.",
+										Description: "Limit the number of fluxes. Valid range: 1 bps-10000 Gbps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.",
 									},
 								},
 							},
@@ -800,9 +795,6 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 					if acls.Action != nil {
 						aclsMap["action"] = acls.Action
 					}
-					if acls.Default != nil {
-						aclsMap["default"] = acls.Default
-					}
 
 					aclsList = append(aclsList, aclsMap)
 				}
@@ -1062,9 +1054,6 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 						}
 						if v, ok := AclsMap["action"]; ok {
 							dDoSAcl.Action = helper.String(v.(string))
-						}
-						if v, ok := AclsMap["default"]; ok {
-							dDoSAcl.Default = helper.IntInt64(v.(int))
 						}
 						dDoSAcls.DDoSAclRules = append(dDoSAcls.DDoSAclRules, &dDoSAcl)
 					}

@@ -52,11 +52,6 @@ func dataSourceTencentCloudTeoZoneDDoSPolicy() *schema.Resource {
 							Computed:    true,
 							Description: "Policy ID.",
 						},
-						"share": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "Whether the resource is shared. Note: when using shared resource, proxy mode is not changeable.",
-						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -193,9 +188,6 @@ func dataSourceTencentCloudTeoZoneDDoSPolicyRead(d *schema.ResourceData, meta in
 			}
 			if shieldAreas.PolicyId != nil {
 				shieldAreasMap["policy_id"] = shieldAreas.PolicyId
-			}
-			if shieldAreas.Share != nil {
-				shieldAreasMap["share"] = shieldAreas.Share
 			}
 			if shieldAreas.Type != nil {
 				shieldAreasMap["type"] = shieldAreas.Type

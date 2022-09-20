@@ -670,7 +670,7 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_bot_portrait_rules
 	tencentcloud_teo_rule_engine_settings
 	tencentcloud_teo_security_policy_regions
-	tencentcloud_teo_waf_managed_rules
+	tencentcloud_teo_waf_rule_groups
 	tencentcloud_teo_zone_ddos_policy
 
   Resource
