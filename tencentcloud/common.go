@@ -77,6 +77,8 @@ var retryableErrorCode = []string{
 	"ResourceUnavailable",
 	// cbs
 	"ResourceBusy",
+	// teo
+	"InvalidParameter.ActionInProgress",
 }
 
 func init() {

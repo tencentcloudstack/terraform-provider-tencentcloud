@@ -220,10 +220,6 @@ func dataSourceTencentCloudTeoRuleEngineSettingsRead(d *schema.ResourceData, met
 		return err
 	}
 
-	if rules != nil {
-		_ = d.Set("total", len(rules))
-	}
-
 	ruleList := []interface{}{}
 	if rules != nil {
 		for _, rule := range rules {

@@ -121,8 +121,6 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_teo_default_certificate.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var (
 		zoneId string
 		certId string
@@ -143,32 +141,7 @@ func resourceTencentCloudTeoDefaultCertificateCreate(d *schema.ResourceData, met
 	}
 
 	d.SetId(zoneId + FILED_SP + certId)
-	err := resourceTencentCloudTeoDefaultCertificateUpdate(d, meta)
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo defaultCertificate failed, reason:%+v", logId, err)
-		return err
-	}
-
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoDefaultCertificate(ctx, zoneId, certId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.Status == "deployed" {
-			return nil
-		}
-		if *instance.Status == "disabled" {
-			return resource.NonRetryableError(fmt.Errorf("defaultCertificate status is %v, operate failed.", *instance.Status))
-		}
-		return resource.RetryableError(fmt.Errorf("defaultCertificate status is %v, retry...", *instance.Status))
-	})
-	if err != nil {
-		return err
-	}
-	return resourceTencentCloudTeoDefaultCertificateRead(d, meta)
+	return resourceTencentCloudTeoDefaultCertificateUpdate(d, meta)
 }
 
 func resourceTencentCloudTeoDefaultCertificateRead(d *schema.ResourceData, meta interface{}) error {
@@ -255,12 +228,6 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 	request.ZoneId = &zoneId
 	request.CertId = &certId
 
-	if d.HasChange("zone_id") {
-
-		return fmt.Errorf("`zone_id` do not support change now.")
-
-	}
-
 	if d.HasChange("cert_info") {
 		if v, ok := d.GetOk("cert_info"); ok {
 			for _, item := range v.([]interface{}) {
@@ -273,7 +240,6 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 				}
 			}
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -289,6 +255,24 @@ func resourceTencentCloudTeoDefaultCertificateUpdate(d *schema.ResourceData, met
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo defaultCertificate failed, reason:%+v", logId, err)
+		return err
+	}
+
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoDefaultCertificate(ctx, zoneId, certId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == *request.Status {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("defaultCertificate status is %v, retry...", *instance.Status))
+	})
+
+	if err != nil {
 		return err
 	}
 
