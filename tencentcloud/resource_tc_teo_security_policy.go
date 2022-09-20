@@ -1115,10 +1115,12 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 					break
 				}
 			}
-			if *areas.EntityName == entity {
-				policyId = areas.PolicyId
-				securityType = helper.String("on")
-				accelerateType = helper.String("on")
+			if policyId == nil || securityType == nil || accelerateType == nil {
+				if *areas.EntityName == entity {
+					policyId = areas.PolicyId
+					securityType = helper.String("on")
+					accelerateType = helper.String("on")
+				}
 			}
 		}
 		request.PolicyId = policyId
