@@ -44,6 +44,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
@@ -142,6 +143,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 		cidrBlock   string
 		dnsServers  = make([]string, 0, 4)
 		isMulticast bool
+		tags        map[string]string
 	)
 	if temp, ok := d.GetOk("name"); ok {
 		name = temp.(string)
@@ -166,7 +168,10 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	isMulticast = d.Get("is_multicast").(bool)
 
-	vpcId, _, err := vpcService.CreateVpc(ctx, name, cidrBlock, isMulticast, dnsServers)
+	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
+		tags = temp
+	}
+	vpcId, _, err := vpcService.CreateVpc(ctx, name, cidrBlock, isMulticast, dnsServers, tags)
 	if err != nil {
 		return err
 	}
@@ -183,17 +188,8 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:vpc/%s", region, vpcId)
-
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
+	// protected while tag is not ready, default is 1s
+	time.Sleep(waitReadTimeout)
 
 	return resourceTencentCloudVpcInstanceRead(d, meta)
 }

@@ -79,17 +79,18 @@ const (
 	defaultDayuBgpIp  = "bgpip-00000294"
 	defaultDayuNet    = "net-0000007e"
 
-	defaultGaapProxyId             = "link-ljb08m2l"
-	defaultGaapProxyId2            = "link-8lpyo88p"
-	defaultGaapSecurityPolicyId    = "sp-05t5q92x"
-	defaultGaapRealserverDomainId1 = "rs-qs0h6wxp"
-	defaultGaapRealserverDomain1   = "github.com"
-	defaultGaapRealserverDomainId2 = "rs-qcygnwpd"
-	defaultGaapRealserverDomain2   = "www.github.com"
-	defaultGaapRealserverIpId1     = "rs-24e1ol23"
-	defaultGaapRealserverIp1       = "119.29.29.35"
-	defaultGaapRealserverIpId2     = "rs-70qzt26p"
-	defaultGaapRealserverIp2       = "1.1.1.5"
+	defaultGaapProxyId              = "link-ljb08m2l"
+	defaultGaapProxyId2             = "link-8lpyo88p"
+	defaultGaapSecurityPolicyId     = "sp-05t5q92x"
+	defaultGaapRealserverDomainId1  = "rs-qs0h6wxp"
+	defaultGaapRealserverDomain1    = "github.com"
+	defaultGaapRealserverDomainId2  = "rs-qcygnwpd"
+	defaultGaapRealserverDomain2    = "www.github.com"
+	defaultGaapRealserverIpId1      = "rs-24e1ol23"
+	defaultGaapRealserverIp1        = "119.29.29.35"
+	defaultGaapRealserverIpId2      = "rs-70qzt26p"
+	defaultGaapRealserverIp2        = "1.1.1.5"
+	defaultHttpsDomainCertificateId = "cert-crg2aynt"
 
 	defaultSecurityGroup  = "sg-ijato2x1"
 	defaultSecurityGroup2 = "sg-51rgzop1"
@@ -194,6 +195,16 @@ const (
 	tkeClusterIdAgent     = "cls-9ae9qo9k"
 	tkeClusterTypeAgent   = "eks"
 	defaultAgentId        = "agent-q3zy8gt8"
+)
+
+// Cloud monitoring grafana visualization
+const (
+	defaultGrafanaVpcId      = "vpc-391sv4w3"
+	defaultGrafanaSubnetId   = "subnet-ljyn7h30"
+	defaultGrafanaInstanceId = "grafana-dp2hnnfa"
+	defaultGrafanaReceiver   = "Consumer-nfyxuzmbmq"
+	defaultGrafanaPlugin     = "grafana-clock-panel"
+	defaultGrafanaVersion    = "1.2.0"
 )
 
 /*

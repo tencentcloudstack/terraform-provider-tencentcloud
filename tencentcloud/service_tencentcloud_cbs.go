@@ -351,11 +351,20 @@ func (me *CbsService) DetachDisk(ctx context.Context, diskId, instanceId string)
 	return nil
 }
 
-func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName string) (snapshotId string, errRet error) {
+func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName string, tags map[string]string) (snapshotId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cbs.NewCreateSnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotName = &snapshotName
+	if len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := cbs.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().CreateSnapshot(request)
 	if err != nil {

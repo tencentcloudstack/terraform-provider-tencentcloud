@@ -178,9 +178,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 		Create: resourceTencentCloudTeoSecurityPolicyCreate,
 		Update: resourceTencentCloudTeoSecurityPolicyUpdate,
 		Delete: resourceTencentCloudTeoSecurityPolicyDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
@@ -1068,12 +1066,12 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		service  = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		request  = teo.NewModifyDDoSPolicyHostRequest()
-		zoneId   string
-		entity   string
+		logId   = getLogId(contextNil)
+		service = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		request = teo.NewModifyDDoSPolicyHostRequest()
+		zoneId  string
+		entity  string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -1117,13 +1115,11 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 					break
 				}
 			}
-			// todo
-			if *areas.EntityName == entity {
-				policyId = areas.PolicyId
-				for _, host := range ddosPolicy.DDoSHosts {
-					securityType = host.SecurityType
-					accelerateType = host.AccelerateType
-					break
+			if policyId == nil || securityType == nil || accelerateType == nil {
+				if *areas.EntityName == entity {
+					policyId = areas.PolicyId
+					securityType = helper.String("on")
+					accelerateType = helper.String("on")
 				}
 			}
 		}

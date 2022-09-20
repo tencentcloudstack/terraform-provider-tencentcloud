@@ -91,13 +91,15 @@ func testAccTencentCloudRedisBackupConfigDestroy(s *terraform.State) error {
 }
 
 func testAccRedisBackupConfigUpdate() string {
-	return `
+	return defaultVpcSubnets + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
   type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
-  name              = "terrform_test"
+  name              = "terraform_test"
+  vpc_id 			 = local.vpc_id
+  subnet_id			 = local.subnet_id
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
   redis_id      = tencentcloud_redis_instance.redis_instance_test.id
@@ -106,13 +108,15 @@ resource "tencentcloud_redis_backup_config" "redis_backup_config" {
 }
 
 func testAccRedisBackupConfig() string {
-	return `
+	return defaultVpcSubnets + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
   type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
-  name              = "terrform_test"
+  name              = "terraform_test"
+  vpc_id 			 = local.vpc_id
+  subnet_id			 = local.subnet_id
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
   redis_id      = tencentcloud_redis_instance.redis_instance_test.id

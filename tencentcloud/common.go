@@ -33,6 +33,7 @@ const logIdKey = contextLogId("logId")
 const (
 	PROVIDER_READ_RETRY_TIMEOUT  = "TENCENTCLOUD_READ_RETRY_TIMEOUT"
 	PROVIDER_WRITE_RETRY_TIMEOUT = "TENCENTCLOUD_WRITE_RETRY_TIMEOUT"
+	PROVIDER_WAIT_READ_TIMEOUT   = "TENCENTCLOUD_WAIT_READ_TIMEOUT"
 
 	SWEEPER_NEED_PROTECT            = "SWEEPER_NEED_PROTECT"
 	TENCENTCLOUD_COMMON_TIME_LAYOUT = "2006-01-02 15:04:05"
@@ -50,6 +51,11 @@ var readRetryTimeout = time.Duration(readRetry) * time.Minute
 //const writeRetryTimeout = 5 * time.Minute
 var writeRetry = getEnvDefault(PROVIDER_WRITE_RETRY_TIMEOUT, 5)
 var writeRetryTimeout = time.Duration(writeRetry) * time.Minute
+
+// writeRetryTimeout is write retry timeout
+//const writeRetryTimeout = 5 * time.Minute
+var waitRead = getEnvDefault(PROVIDER_WAIT_READ_TIMEOUT, 1)
+var waitReadTimeout = time.Duration(waitRead) * time.Second
 
 //const writeRetryTimeout = 5 * time.Minute
 var needProtect = getEnvDefault(SWEEPER_NEED_PROTECT, 0)

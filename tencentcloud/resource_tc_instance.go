@@ -708,6 +708,22 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		tags := make([]*cvm.Tag, 0)
+		for tagKey, tagValue := range v {
+			tag := cvm.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			tags = append(tags, &tag)
+		}
+		tagSpecification := cvm.TagSpecification{
+			ResourceType: helper.String("instance"),
+			Tags:         tags,
+		}
+		request.TagSpecification = append(request.TagSpecification, &tagSpecification)
+	}
+
 	instanceId := ""
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -746,8 +762,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if instance != nil && (*instance.InstanceState == CVM_STATUS_RUNNING ||
-			*instance.InstanceState == CVM_STATUS_LAUNCH_FAILED) {
+		if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+			//LatestOperationCodeMode
+			return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+		}
+		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			//get system disk ID
 			if instance.SystemDisk != nil && instance.SystemDisk.DiskId != nil {
 				systemDiskId = *instance.SystemDisk.DiskId
@@ -859,9 +878,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
-	if instance == nil {
+	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 		d.SetId("")
-		return nil
+		return fmt.Errorf("instance %s not exist or launch failed", instanceId)
 	}
 
 	var cvmImages []string
