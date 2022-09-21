@@ -201,7 +201,7 @@ The `user_rules` object supports the following:
 * `conditions` - (Required, List) Conditions of the rule.
 * `rule_name` - (Required, String) Rule name.
 * `rule_priority` - (Required, Int) Priority of the rule. Valid value range: 0-100.
-* `rule_status` - (Required, String) Status of the rule.
+* `rule_status` - (Required, String) Status of the rule. Valid values: `on`, `off`.
 * `name` - (Optional, String) Name of the custom response page.
 * `page_id` - (Optional, Int) ID of the custom response page.
 * `punish_time_unit` - (Optional, String) Time unit of the punish time. Valid values: `second`, `minutes`, `hour`.

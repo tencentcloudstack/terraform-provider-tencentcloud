@@ -520,7 +520,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												"rule_status": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "Status of the rule.",
+													Description: "Status of the rule. Valid values: `on`, `off`.",
 												},
 												"conditions": {
 													Type:        schema.TypeList,
@@ -574,6 +574,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												"name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Name of the custom response page.",
 												},
 												"page_id": {
@@ -1415,24 +1416,6 @@ func resourceTencentCloudTeoSecurityPolicyRead(d *schema.ResourceData, meta inte
 				if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Action != nil {
 					managedRuleMap["action"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Action
 				}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PunishTime != nil {
-				//	managedRuleMap["punish_time"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PunishTime
-				//}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PunishTimeUnit != nil {
-				//	managedRuleMap["punish_time_unit"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PunishTimeUnit
-				//}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Name != nil {
-				//	managedRuleMap["name"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.Name
-				//}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PageId != nil {
-				//	managedRuleMap["page_id"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.PageId
-				//}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.RedirectUrl != nil {
-				//	managedRuleMap["redirect_url"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.RedirectUrl
-				//}
-				//if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.ResponseCode != nil {
-				//	managedRuleMap["response_code"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.ResponseCode
-				//}
 				if securityPolicy.SecurityConfig.BotConfig.BotManagedRule.TransManagedIds != nil {
 					managedRuleMap["trans_managed_ids"] = securityPolicy.SecurityConfig.BotConfig.BotManagedRule.TransManagedIds
 				}
@@ -1906,24 +1889,6 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 					if v, ok := ManagedRuleMap["action"]; ok {
 						botManagedRule.Action = helper.String(v.(string))
 					}
-					//if v, ok := ManagedRuleMap["punish_time"]; ok {
-					//	botManagedRule.PunishTime = helper.IntInt64(v.(int))
-					//}
-					//if v, ok := ManagedRuleMap["punish_time_unit"]; ok {
-					//	botManagedRule.PunishTimeUnit = helper.String(v.(string))
-					//}
-					//if v, ok := ManagedRuleMap["name"]; ok {
-					//	botManagedRule.Name = helper.String(v.(string))
-					//}
-					//if v, ok := ManagedRuleMap["page_id"]; ok {
-					//	botManagedRule.PageId = helper.IntInt64(v.(int))
-					//}
-					//if v, ok := ManagedRuleMap["redirect_url"]; ok {
-					//	botManagedRule.RedirectUrl = helper.String(v.(string))
-					//}
-					//if v, ok := ManagedRuleMap["response_code"]; ok {
-					//	botManagedRule.ResponseCode = helper.IntInt64(v.(int))
-					//}
 					if v, ok := ManagedRuleMap["trans_managed_ids"]; ok {
 						transManagedIdsSet := v.(*schema.Set).List()
 						for i := range transManagedIdsSet {
