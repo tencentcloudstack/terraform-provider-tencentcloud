@@ -71,7 +71,7 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
   security_group_id = tencentcloud_security_group.foo.id
 
   ingress = [
-    "DROP#0.0.0.0/0#ALL#ALL",
+    "DROP#0.0.0.0/16#ALL#ALL",
   ]
 }
 
