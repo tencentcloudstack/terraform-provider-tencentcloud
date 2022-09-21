@@ -119,13 +119,13 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 				Description: "Rule items list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"conditions": {
+						"or": {
 							Type:        schema.TypeList,
 							Required:    true,
 							Description: "OR Conditions list of the rule. Rule would be triggered if any of the condition is true.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"conditions": {
+									"and": {
 										Type:        schema.TypeList,
 										Required:    true,
 										Description: "AND Conditions list of the rule. Rule would be triggered if all conditions are true.",
@@ -322,11 +322,11 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			ruleItem := teo.Rule{}
-			if v, ok := dMap["conditions"]; ok {
+			if v, ok := dMap["or"]; ok {
 				for _, item := range v.([]interface{}) {
 					ConditionsMap := item.(map[string]interface{})
 					ruleAndConditions := teo.RuleAndConditions{}
-					if v, ok := ConditionsMap["conditions"]; ok {
+					if v, ok := ConditionsMap["and"]; ok {
 						for _, item := range v.([]interface{}) {
 							ConditionsMap := item.(map[string]interface{})
 							ruleCondition := teo.RuleCondition{}
@@ -524,12 +524,12 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 
 							conditionsList = append(conditionsList, conditionsMap)
 						}
-						conditionsMap["conditions"] = conditionsList
+						conditionsMap["and"] = conditionsList
 					}
 
 					conditionsList = append(conditionsList, conditionsMap)
 				}
-				rulesMap["conditions"] = conditionsList
+				rulesMap["or"] = conditionsList
 			}
 			if rules.Actions != nil {
 				actionsList := []interface{}{}
@@ -660,11 +660,11 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
 				ruleItem := teo.Rule{}
-				if v, ok := dMap["conditions"]; ok {
+				if v, ok := dMap["or"]; ok {
 					for _, item := range v.([]interface{}) {
 						ConditionsMap := item.(map[string]interface{})
 						ruleAndConditions := teo.RuleAndConditions{}
-						if v, ok := ConditionsMap["conditions"]; ok {
+						if v, ok := ConditionsMap["and"]; ok {
 							for _, item := range v.([]interface{}) {
 								ConditionsMap := item.(map[string]interface{})
 								ruleCondition := teo.RuleCondition{}
