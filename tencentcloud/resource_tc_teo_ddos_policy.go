@@ -116,12 +116,6 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 							Computed:    true,
 							Description: "DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.",
 						},
-						"udp_shard_open": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "UDP shard switch. Valid values:- `on`: Enable.- `off`: Disable.",
-						},
 						"status_info": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
@@ -578,9 +572,6 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 		if ddosPolicy.DDoSRule.Switch != nil {
 			dDoSRuleMap["switch"] = ddosPolicy.DDoSRule.Switch
 		}
-		if ddosPolicy.DDoSRule.UdpShardOpen != nil {
-			dDoSRuleMap["udp_shard_open"] = ddosPolicy.DDoSRule.UdpShardOpen
-		}
 		if ddosPolicy.DDoSRule.DDoSStatusInfo != nil {
 			statusInfoMap := map[string]interface{}{}
 			if ddosPolicy.DDoSRule.DDoSStatusInfo.PlyLevel != nil {
@@ -845,9 +836,6 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 			ddosRule := teo.DDoSRule{}
 			if v, ok := dMap["switch"]; ok {
 				ddosRule.Switch = helper.String(v.(string))
-			}
-			if v, ok := dMap["udp_shard_open"]; ok {
-				ddosRule.UdpShardOpen = helper.String(v.(string))
 			}
 			if StatusInfoMap, ok := helper.InterfaceToMap(dMap, "status_info"); ok {
 				dDoSStatusInfo := teo.DDoSStatusInfo{}

@@ -84,8 +84,7 @@ The `ddos_rule` object supports the following:
 * `packet_filter` - (Optional, List) DDoS feature filtering configuration.
 * `speed_limit` - (Optional, List) DDoS access origin site speed limit configuration.
 * `status_info` - (Optional, List) DDoS protection level.
-* `switch` - (Optional, String) DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.
-* `udp_shard_open` - (Optional, String) UDP shard switch. Valid values:- `on`: Enable.- `off`: Disable.
+* `switch` - (Optional, String) DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.\
 
 The `acl` object supports the following:
 
@@ -164,7 +163,7 @@ The `packet_filters` object supports the following:
 
 The `speed_limit` object supports the following:
 
-* `flux_limit` - (Optional, String) Limit the number of fluxes. Valid range: 1 bps-10000 Gbps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.
+* `flux_limit` - (Optional, String) Limit the number of fluxes. Valid range: 1 bps-10000 Gbps, 0 means no limitation, supported units: `bps`,`Kbps`,`Mbps`,`Gbps`.
 * `package_limit` - (Optional, String) Limit the number of packages. Valid range: 1 pps-10000 Gpps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.
 
 The `status_info` object supports the following:
