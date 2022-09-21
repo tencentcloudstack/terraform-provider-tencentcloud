@@ -74,8 +74,8 @@ The following arguments are supported:
 
 The `es_acl` object supports the following:
 
-* `black_list` - (Optional, List) Blacklist of kibana access.
-* `white_list` - (Optional, List) Whitelist of kibana access.
+* `black_list` - (Optional, Set) Blacklist of kibana access.
+* `white_list` - (Optional, Set) Whitelist of kibana access.
 
 The `multi_zone_infos` object supports the following:
 
