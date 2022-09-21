@@ -140,6 +140,7 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "IPv6 access configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
