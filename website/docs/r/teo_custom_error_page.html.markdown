@@ -14,11 +14,12 @@ Provides a resource to create a teo custom_error_page
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_teo_custom_error_page" "custom_error_page" {
-  zone_id = ""
-  entity  = ""
-  name    = ""
-  content = ""
+resource "tencentcloud_teo_custom_error_page" "error_page_0" {
+  zone_id = data.tencentcloud_teo_zone_ddos_policy.zone_policy.zone_id
+  entity  = data.tencentcloud_teo_zone_ddos_policy.zone_policy.shield_areas[0].application[0].host
+
+  name    = "test"
+  content = "<html lang='en'><body><div><p>test content</p></div></body></html>"
 }
 ```
 

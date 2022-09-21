@@ -812,7 +812,6 @@ func resourceTencentCloudTeoRuleEngineDelete(d *schema.ResourceData, meta interf
 	zoneId := idSplit[0]
 	ruleId := idSplit[1]
 
-
 	err := resource.Retry(5*time.Second, func() *resource.RetryError {
 		if e := service.DeleteTeoRuleEngineById(ctx, zoneId, ruleId); e != nil {
 			return retryError(e, "InternalError")

@@ -37,6 +37,5 @@ In addition to all arguments above, the following attributes are exported:
   * `rule_id` - Rule ID.
   * `rule_type_name` - Type of the rule.
   * `status` - Status of the rule.
-* `total` - Total managed rule number.
 
 
