@@ -39,7 +39,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String) ID of the VPC instance.
 * `egress` - (Optional, List: [`String`]) Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.
 * `ingress` - (Optional, List: [`String`]) Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.
-* `tags` - (Optional, Map, **Deprecated**) vpc acl do not support tag now. Tags of the vpc acl.
+* `tags` - (Optional, Map) Tags of the vpc acl.
 
 ## Attributes Reference
 
