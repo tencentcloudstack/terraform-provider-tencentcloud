@@ -99,7 +99,7 @@ data "tencentcloud_cdh_instances" "list" {
 }
 
 resource "tencentcloud_key_pair" "random_key" {
-  key_name   = "tf_example_key6"
+  key_ids    = ["tf_example_key6"]
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 
@@ -112,7 +112,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone  = var.availability_zone
   instance_name      = "terraform-testing"
   image_id           = "img-ix05e4px"
-  key_name           = tencentcloud_key_pair.random_key.id
+  key_ids            = [tencentcloud_key_pair.random_key.id]
   placement_group_id = tencentcloud_placement_group.foo.id
   security_groups    = ["sg-9c3f33xk"]
   system_disk_type   = "CLOUD_PREMIUM"
