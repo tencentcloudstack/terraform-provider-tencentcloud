@@ -1077,19 +1077,16 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 		logId   = getLogId(contextNil)
 		service = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		request = teo.NewModifyDDoSPolicyHostRequest()
 		zoneId  string
 		entity  string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.ZoneId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("entity"); ok {
 		entity = v.(string)
-		request.Host = helper.String(v.(string))
 	}
 
 	var ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams
@@ -1109,67 +1106,44 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	if len(ddosPolicy.ShieldAreas) > 0 {
-		var (
-			policyId       *int64
-			securityType   *string
-			accelerateType *string
-		)
+		outer:
 		for _, areas := range ddosPolicy.ShieldAreas {
 			for _, host := range areas.DDoSHosts {
-				if *host.Host == entity {
-					policyId = areas.PolicyId
-					securityType = host.SecurityType
-					accelerateType = host.AccelerateType
-					break
+				if host.Host != nil && *host.Host == entity && host.SecurityType != nil && *host.SecurityType != "on" {
+					request := teo.NewModifyDDoSPolicyHostRequest()
+					request.ZoneId = &zoneId
+					request.Host = &entity
+					request.PolicyId = areas.PolicyId
+					request.SecurityType = helper.String("on")
+					request.AccelerateType = helper.String("on")
+
+					err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDDoSPolicyHost(request)
+						if e != nil {
+							return retryError(e)
+						} else {
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+								logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+						}
+						return nil
+					})
+
+					if err != nil {
+						log.Printf("[CRITAL]%s create teo securityPolicy failed, reason:%+v", logId, err)
+						return err
+					}
+					break outer
 				}
 			}
-			if policyId == nil || securityType == nil || accelerateType == nil {
-				if *areas.EntityName == entity {
-					policyId = areas.PolicyId
-					securityType = helper.String("on")
-					accelerateType = helper.String("on")
-				}
-			}
 		}
-		request.PolicyId = policyId
-		request.SecurityType = securityType
-		request.AccelerateType = accelerateType
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDDoSPolicyHost(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo securityPolicy failed, reason:%+v", logId, err)
-		return err
-	}
-
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoSecurityPolicy(ctx, zoneId, entity)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.SecurityConfig.SwitchConfig.WebSwitch == "on" {
-			return nil
-		}
-		if *instance.SecurityConfig.SwitchConfig.WebSwitch == "off" {
-			return resource.NonRetryableError(fmt.Errorf("securityPolicy status is %v, operate failed.", *instance.SecurityConfig.SwitchConfig.WebSwitch))
-		}
-		return resource.RetryableError(fmt.Errorf("securityPolicy status is %v, retry...", *instance.SecurityConfig.SwitchConfig.WebSwitch))
-	})
-	if err != nil {
-		return err
 	}
 
 	d.SetId(zoneId + FILED_SP + entity)
+	err = resourceTencentCloudTeoSecurityPolicyUpdate(d, meta)
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, err)
+		return err
+	}
 	return resourceTencentCloudTeoSecurityPolicyRead(d, meta)
 }
 
@@ -1698,11 +1672,15 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 	request.Entity = &entity
 
 	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
+		if old, _ := d.GetChange("zone_id"); old.(string) != "" {
+			return fmt.Errorf("`zone_id` do not support change now.")
+		}
 	}
 
 	if d.HasChange("entity") {
-		return fmt.Errorf("`entity` do not support change now.")
+		if old, _ := d.GetChange("entity"); old.(string) != "" {
+			return fmt.Errorf("`entity` do not support change now.")
+		}
 	}
 
 	if d.HasChange("config") {

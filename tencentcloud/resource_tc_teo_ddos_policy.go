@@ -535,27 +535,6 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, err)
 		return err
 	}
-
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoDdosPolicy(ctx, zoneId, policyId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.DDoSRule.Switch == "on" {
-			return nil
-		}
-		if *instance.DDoSRule.Switch == "off" {
-			return resource.NonRetryableError(fmt.Errorf("ddosPolicy status is %v, operate failed.", *instance.DDoSRule.Switch))
-		}
-		return resource.RetryableError(fmt.Errorf("ddosPolicy status is %v, retry...", *instance.DDoSRule.Switch))
-	})
-	if err != nil {
-		return err
-	}
-
 	return resourceTencentCloudTeoDdosPolicyRead(d, meta)
 }
 
@@ -851,7 +830,13 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("zone_id") {
 		if old, _ := d.GetChange("zone_id"); old.(string) != "" {
-			return fmt.Errorf("`zone_id` do not support change now")
+			return fmt.Errorf("`zone_id` do not support change now.")
+		}
+	}
+
+	if d.HasChange("policy_id") {
+		if old, _ := d.GetChange("policy_id"); old.(int) != 0 {
+			return fmt.Errorf("`policy_id` do not support change now.")
 		}
 	}
 
