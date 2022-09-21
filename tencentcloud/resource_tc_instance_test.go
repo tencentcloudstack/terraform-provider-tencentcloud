@@ -206,7 +206,7 @@ func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
+func TestAccTencentCloudInstanceWithKeyPairs(t *testing.T) {
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
@@ -216,12 +216,14 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudInstanceWithKeyPair("key_pair_0"),
+				Config: testAccTencentCloudInstanceWithKeyPair(
+					"[tencentcloud_key_pair.key_pair_0.id, tencentcloud_key_pair.key_pair_1.id]",
+				),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet(id, "key_name"),
+					resource.TestCheckResourceAttr(id, "key_ids.#", "2"),
 				),
 			},
 			{
@@ -229,12 +231,12 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
 					time.Sleep(time.Duration(time.Second * 5))
 				},
-				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
+				Config: testAccTencentCloudInstanceWithKeyPair("[tencentcloud_key_pair.key_pair_2.id]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet(id, "key_name"),
+					resource.TestCheckResourceAttr(id, "key_ids.#", "1"),
 				),
 			},
 		},
@@ -811,7 +813,8 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
-func testAccTencentCloudInstanceWithKeyPair(keyName string) string {
+func testAccTencentCloudInstanceWithKeyPair(keyIds string) string {
+
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_key_pair" "key_pair_0" {
@@ -824,16 +827,21 @@ resource "tencentcloud_key_pair" "key_pair_1" {
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzwYE6KI8uULEvSNA2k1tlsLtMDe+x1Saw6yL3V1mk9NFws0K2BshYqsnP/BlYiGZv/Nld5xmGoA9LupOcUpyyGGSHZdBrMx1Dz9ajewe7kGowRWwwMAHTlzh9+iqeg/v6P5vW6EwK4hpGWgv06vGs3a8CzfbHu1YRbZAO/ysp3ymdL+vGvw/vzC0T+YwPMisn9wFD5FTlJ+Em6s9PzxqR/41t4YssmCwUV78ZoYL8CyB0emuB8wALvcXbdUVxMxpBEHd5U6ZP5+HPxU2WFbWqiFCuErLIZRuxFw8L/Ot+JOyNnadN1XU4crYDX5cML1i/ExXKVIDoBaLtgAJOpyeP"
 }
 
+resource "tencentcloud_key_pair" "key_pair_2" {
+  key_name = "key_pair_2"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDJ1zyoM55pKxJptZBKceZSEypPN7BOunqBR1Qj3Tz5uImJ+dwfKzggu8PGcbHtuN8D2n1BH/GDkiGFaz/sIYUJWWZudcdut+ra32MqUvk953Sztf12rsFC1+lZ1CYEgon8Lt6ehxn+61tsS31yfUmpL1mq2vuca7J0NLdPMpxIYkGlifyAMISMmxi/m7gPYpbdZTmhQQS2aOhuLm+B4MwtTvT58jqNzIaFU0h5sqAvGQfzI5pcxwYvFTeQeXjJZfaYapDHN0MAg0b/vIWWNrDLv7dlv//OKBIaL0LIzIGQS8XXhF3HlyqfDuf3bjLBIKzYGSV/DRqlEsGBgzinJZXvJZug5oq1n2njDFsdXEvL6fYsP4WLvBLiQlceQ7oXi7m5nfrwFTaX+mpo7dUOR9AcyQ1AAgCcM67orB4E33ycaArGHtpjnCnWUjqQ+yCj4EXsD4yOL77wGsmhkbboVNnYAD9MJWsFP03hZE7p/RHY0C5NfLPT3mL45oZxBpC5mis="
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  key_name          = tencentcloud_key_pair.%s.id
+  key_ids           = %s
   system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
-		keyName,
+		keyIds,
 	)
 }
 
