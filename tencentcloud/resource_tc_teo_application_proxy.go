@@ -211,7 +211,16 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		request.Ipv6 = &ipv6Access
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	err := service.CheckZoneComplete(ctx, zoneId)
+	if err != nil {
+		log.Printf("[CRITAL]%s create teo dnsRecord failed, reason:%+v", logId, err)
+		return err
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxy(request)
 		if e != nil {
 			return retryError(e)
@@ -229,9 +238,6 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 	}
 
 	proxyId = *response.Response.ProxyId
-
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeTeoApplicationProxy(ctx, zoneId, proxyId)
