@@ -82,9 +82,12 @@ func dataSourceTencentCloudTeoBotManagedRulesRead(d *schema.ResourceData, meta i
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var zoneId string
+	var entity string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
 		paramMap["zone_id"] = v
 	}
 
@@ -130,7 +133,7 @@ func dataSourceTencentCloudTeoBotManagedRulesRead(d *schema.ResourceData, meta i
 		_ = d.Set("rules", ruleList)
 	}
 
-	d.SetId("bot_managed_rules")
+	d.SetId(zoneId + FILED_SP + entity)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

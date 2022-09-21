@@ -179,7 +179,7 @@ func dataSourceTencentCloudTeoWafRuleGroupsRead(d *schema.ResourceData, meta int
 		_ = d.Set("waf_rule_groups", wafGroupInfoList)
 	}
 
-	d.SetId(zoneId + "#" + entity)
+	d.SetId(zoneId + FILED_SP + entity)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
