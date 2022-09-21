@@ -17,6 +17,7 @@ Provides a resource to create a teo rule_engine
 resource "tencentcloud_teo_rule_engine" "rule_engine" {
   rule_name = "test-rule3"
   status    = "enable"
+  tags      = {}
   zone_id   = "zone-297z8rf93cfw"
 
   rules {
@@ -53,8 +54,8 @@ resource "tencentcloud_teo_rule_engine" "rule_engine" {
       }
     }
 
-    or {
-      and {
+    conditions {
+      conditions {
         operator = "equal"
         target   = "host"
         values = [
@@ -75,14 +76,11 @@ The following arguments are supported:
 * `status` - (Required, String) Status of the rule, valid value can be `enable` or `disable`.
 * `zone_id` - (Required, String) Site ID.
 
-The `rules` object supports the following:
+The `actions` object supports the following:
 
-* `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
-* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
-
-The `or` object supports the following:
-
-* `and` - (Required, List) AND Conditions list of the rule. Rule would be triggered if all conditions are true.
+* `code_action` - (Optional, List) Define a code action.
+* `normal_action` - (Optional, List) Define a normal action.
+* `rewrite_action` - (Optional, List) Define a rewrite action.
 
 The `and` object supports the following:
 
@@ -90,31 +88,35 @@ The `and` object supports the following:
 * `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
 * `values` - (Required, Set) Condition Value.
 
-The `actions` object supports the following:
+The `code_action` object supports the following:
 
-* `normal_action` - (Optional, List) Define a normal action.
-* `code_action` - (Optional, List) Define a code action.
-* `rewrite_action` - (Optional, List) Define a rewrite action.
+* `action` - (Required, String) Action name.
+* `parameters` - (Required, List) Action parameters.
 
 The `normal_action` object supports the following:
 
 * `action` - (Required, String) Action name.
 * `parameters` - (Required, List) Action parameters.
 
-The `parameters` object for `normal_action` supports the following:
+The `or` object supports the following:
 
-* `name` - (Required, String) Parameter Name.
-* `values` - (Required, Set) Parameter Values.
+* `and` - (Required, List) AND Conditions list of the rule. Rule would be triggered if all conditions are true.
 
-The `code_action` object supports the following:
+The `parameters` object supports the following:
 
-* `action` - (Required, String) Action name.
-* `parameters` - (Required, List) Action parameters.
+* `action` - (Required, String) Action to take on the HEADER. Valid values: `add`, `del`, `set`.
+* `name` - (Required, String) Target HEADER name.
+* `values` - (Required, Set) Parameter Value.
 
-The `parameters` object for `code_action` supports the following:
+The `parameters` object supports the following:
 
 * `name` - (Required, String) Parameter Name.
 * `status_code` - (Required, Int) HTTP status code to use.
+* `values` - (Required, Set) Parameter Values.
+
+The `parameters` object supports the following:
+
+* `name` - (Required, String) Parameter Name.
 * `values` - (Required, Set) Parameter Values.
 
 The `rewrite_action` object supports the following:
@@ -122,11 +124,10 @@ The `rewrite_action` object supports the following:
 * `action` - (Required, String) Action name.
 * `parameters` - (Required, List) Action parameters.
 
-The `parameters` object for `rewrite_action` supports the following:
+The `rules` object supports the following:
 
-* `action` - (Required, String) Action to take on the HEADER. Valid values: `add`, `del`, `set`.
-* `name` - (Required, String) Target HEADER name.
-* `values` - (Required, Set) Parameter Value.
+* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+* `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
 
 ## Attributes Reference
 

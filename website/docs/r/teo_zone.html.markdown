@@ -19,8 +19,17 @@ resource "tencentcloud_teo_zone" "zone" {
   plan_type = "sta"
   type      = "full"
   paused    = false
+  #  vanity_name_servers {
+  #    switch = ""
+  #    servers = ""
+  #
+  #  }
   cname_speed_up = "enabled"
-
+  #  tags {
+  #    tag_key = ""
+  #    tag_value = ""
+  #
+  #  }
   tags = {
     "createdBy" = "terraform"
   }

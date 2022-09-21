@@ -1107,7 +1107,7 @@ func resourceTencentCloudTeoSecurityPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	if len(ddosPolicy.ShieldAreas) > 0 {
-		outer:
+	outer:
 		for _, areas := range ddosPolicy.ShieldAreas {
 			for _, host := range areas.DDoSHosts {
 				if host.Host != nil && *host.Host == entity && host.SecurityType != nil && *host.SecurityType != "on" {

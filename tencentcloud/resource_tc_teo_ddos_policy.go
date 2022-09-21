@@ -507,8 +507,8 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 	var (
 		zoneId   string
 		policyId int64
-		service = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service  = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
