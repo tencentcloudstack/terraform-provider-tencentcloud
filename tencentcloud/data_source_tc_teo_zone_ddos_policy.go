@@ -1,10 +1,10 @@
 /*
-Use this data source to query zone ddos policy.
+Use this data source to query detailed information of teo zoneDDoSPolicy
 
 Example Usage
 
 ```hcl
-data "tencentcloud_teo_zone_ddos_policy" "example" {
+data "tencentcloud_teo_zone_ddos_policy" "zoneDDoSPolicy" {
   zone_id = ""
 }
 ```
@@ -14,32 +14,32 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
-func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
+func dataSourceTencentCloudTeoZoneDDoSPolicy() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTeoZoneDdosPolicyRead,
-
+		Read: dataSourceTencentCloudTeoZoneDDoSPolicyRead,
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Site ID.",
 			},
-			"app_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "App ID.",
-			},
+
+			//"app_id": {
+			//	Type:        schema.TypeInt,
+			//	Computed:    true,
+			//	Description: "AppID of the account.",
+			//},
+
 			"shield_areas": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Shield areas of the zone.",
+				Description: "Shielded areas of the zone.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"zone_id": {
@@ -77,15 +77,10 @@ func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
 							Computed:    true,
 							Description: "UDP forwarding rule number of layer 4 application.",
 						},
-						"share": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "Whether the resource is shared.",
-						},
 						"application": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Layer 7 Domain Name Parameters.",
+							Description: "DDoS layer 7 application.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"host": {
@@ -96,17 +91,17 @@ func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Status of the subdomain. Note: This field may return null, indicating that no valid value can be obtained, init: waiting to config NS; offline: waiting to enable site accelerating; process: config deployment processing; online: normal status.",
+										Description: "Status of the subdomain. Valid values:- `init`: waiting to config NS.- `offline`: need to enable site accelerating.- `process`: processing the config deployment.- `online`: normal status. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"accelerate_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "on: Enable; off: Disable.",
+										Description: "Acceleration function switch. Valid values:- `on`: Enable.- `off`: Disable.",
 									},
 									"security_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "on: Enable; off: Disable.",
+										Description: "Security function switch. Valid values:- `on`: Enable.- `off`: Disable.",
 									},
 								},
 							},
@@ -114,6 +109,7 @@ func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
 					},
 				},
 			},
+
 			"domains": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -128,116 +124,146 @@ func dataSourceTencentCloudTeoZoneDdosPolicy() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Status of the subdomain. Note: This field may return null, indicating that no valid value can be obtained, init: waiting to config NS; offline: waiting to enable site accelerating; process: config deployment processing; online: normal status.",
+							Description: "Status of the subdomain. Valid values:- `init`: waiting to config NS.- `offline`: need to enable site accelerating.- `process`: processing the config deployment.- `online`: normal status. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"accelerate_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "on: Enable; off: Disable.",
+							Description: "Acceleration function switch. Valid values:- `on`: Enable.- `off`: Disable.",
 						},
 						"security_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "on: Enable; off: Disable.",
+							Description: "Security function switch. Valid values:- `on`: Enable.- `off`: Disable.",
 						},
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used for save results.",
+				Description: "Used to save results.",
 			},
 		},
 	}
 }
 
-func dataSourceTencentCloudTeoZoneDdosPolicyRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudTeoZoneDDoSPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_teo_zone_ddos_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		zoneId     = d.Get("zone_id").(string)
-		ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams
-		err        error
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var zoneId string
 
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ddosPolicy, err = service.DescribeZoneDDoSPolicy(ctx, zoneId)
-		if err != nil {
-			return retryError(err, InternalError)
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("zone_id"); ok {
+		zoneId = v.(string)
+		paramMap["zone_id"] = v
+	}
+
+	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := teoService.DescribeTeoZoneDDoSPolicyByFilter(ctx, paramMap)
+		if e != nil {
+			return retryError(e)
 		}
+		ddosPolicy = results
 		return nil
-	}); err != nil {
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Teo planInfo failed, reason:%+v", logId, err)
 		return err
 	}
 
-	appId := strconv.FormatInt(*ddosPolicy.AppId, 10)
-
-	shieldAreasList := make([]map[string]interface{}, 0, len(ddosPolicy.ShieldAreas))
-	shieldAreas := ddosPolicy.ShieldAreas
-	for _, v := range shieldAreas {
-		applications := make([]map[string]interface{}, 0, len(v.Application))
-		for _, vv := range v.Application {
-			application := map[string]interface{}{
-				"host":            vv.Host,
-				"status":          vv.Status,
-				"accelerate_type": vv.AccelerateType,
-				"security_type":   vv.SecurityType,
+	shieldAreasList := []interface{}{}
+	if ddosPolicy != nil {
+		for _, shieldAreas := range ddosPolicy.ShieldAreas {
+			shieldAreasMap := map[string]interface{}{}
+			if shieldAreas.ZoneId != nil {
+				shieldAreasMap["zone_id"] = shieldAreas.ZoneId
 			}
-			applications = append(applications, application)
+			if shieldAreas.PolicyId != nil {
+				shieldAreasMap["policy_id"] = shieldAreas.PolicyId
+			}
+			if shieldAreas.Type != nil {
+				shieldAreasMap["type"] = shieldAreas.Type
+			}
+			if shieldAreas.Entity != nil {
+				shieldAreasMap["entity"] = shieldAreas.Entity
+			}
+			if shieldAreas.EntityName != nil {
+				shieldAreasMap["entity_name"] = shieldAreas.EntityName
+			}
+			if shieldAreas.TcpNum != nil {
+				shieldAreasMap["tcp_num"] = shieldAreas.TcpNum
+			}
+			if shieldAreas.UdpNum != nil {
+				shieldAreasMap["udp_num"] = shieldAreas.UdpNum
+			}
+			if shieldAreas.DDoSHosts != nil {
+				applicationList := []interface{}{}
+				for _, ddosHost := range shieldAreas.DDoSHosts {
+					applicationMap := map[string]interface{}{}
+					if ddosHost.Host != nil {
+						applicationMap["host"] = ddosHost.Host
+					}
+					if ddosHost.Status != nil {
+						applicationMap["status"] = ddosHost.Status
+					}
+					if ddosHost.AccelerateType != nil {
+						applicationMap["accelerate_type"] = ddosHost.AccelerateType
+					}
+					if ddosHost.SecurityType != nil {
+						applicationMap["security_type"] = ddosHost.SecurityType
+					}
+
+					applicationList = append(applicationList, applicationMap)
+				}
+				shieldAreasMap["application"] = applicationList
+			}
+
+			shieldAreasList = append(shieldAreasList, shieldAreasMap)
 		}
-		shieldArea := map[string]interface{}{
-			"zone_id":     v.ZoneId,
-			"policy_id":   v.PolicyId,
-			"type":        v.Type,
-			"entity_name": v.EntityName,
-			"application": applications,
-			"tcp_num":     v.TcpNum,
-			"udp_num":     v.UdpNum,
-			"entity":      v.Entity,
-			"share":       v.Share,
-		}
-		shieldAreasList = append(shieldAreasList, shieldArea)
-	}
-	if err = d.Set("shield_areas", shieldAreasList); err != nil {
-		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
-		return err
+		_ = d.Set("shield_areas", shieldAreasList)
 	}
 
-	domainsList := make([]map[string]interface{}, 0, len(ddosPolicy.Domains))
-	for _, v := range ddosPolicy.Domains {
-		application := map[string]interface{}{
-			"host":            v.Host,
-			"status":          v.Status,
-			"accelerate_type": v.AccelerateType,
-			"security_type":   v.SecurityType,
+	ddosHostList := []interface{}{}
+	if ddosPolicy != nil {
+		for _, planInfo := range ddosPolicy.DDoSHosts {
+			ddosHostMap := map[string]interface{}{}
+			if planInfo.Host != nil {
+				ddosHostMap["host"] = planInfo.Host
+			}
+			if planInfo.Status != nil {
+				ddosHostMap["status"] = planInfo.Status
+			}
+			if planInfo.AccelerateType != nil {
+				ddosHostMap["accelerate_type"] = planInfo.AccelerateType
+			}
+			if planInfo.SecurityType != nil {
+				ddosHostMap["security_type"] = planInfo.SecurityType
+			}
+
+			ddosHostList = append(ddosHostList, ddosHostMap)
 		}
-		domainsList = append(domainsList, application)
-	}
-	if err = d.Set("domains", domainsList); err != nil {
-		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
-		return err
+		_ = d.Set("domains", ddosHostList)
 	}
 
-	if err = d.Set("app_id", appId); err != nil {
-		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
-		return err
-	}
-
-	d.SetId(appId)
+	d.SetId(zoneId)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), map[string]interface{}{
-			"app_id":       appId,
 			"Shield_areas": shieldAreasList,
-			"domains":      domainsList,
+			"domains":      ddosHostList,
 		}); e != nil {
 			return e
 		}
 	}
+
 	return nil
 }

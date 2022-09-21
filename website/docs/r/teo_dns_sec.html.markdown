@@ -4,19 +4,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_dns_sec"
 sidebar_current: "docs-tencentcloud-resource-teo_dns_sec"
 description: |-
-  Provides a resource to create a teo dnsSec
+  Provides a resource to create a teo dns_sec
 ---
 
 # tencentcloud_teo_dns_sec
 
-Provides a resource to create a teo dnsSec
+Provides a resource to create a teo dns_sec
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_teo_dns_sec" "dns_sec" {
-  zone_id = tencentcloud_teo_zone.zone.id
-  status  = "disabled"
+  zone_id = "zone-297z8rf93cfw"
+  status  = "enabled"
 }
 ```
 
@@ -25,7 +25,7 @@ resource "tencentcloud_teo_dns_sec" "dns_sec" {
 The following arguments are supported:
 
 * `status` - (Required, String) DNSSEC status. Valid values: `enabled`, `disabled`.
-* `zone_id` - (Required, String) Site ID.
+* `zone_id` - (Required, String, ForceNew) Site ID.
 
 ## Attributes Reference
 
@@ -43,13 +43,12 @@ In addition to all arguments above, the following attributes are exported:
   * `key_type` - Encryption type.
   * `public_key` - Public key.
 * `modified_on` - Last modification date.
-* `zone_name` - Site Name.
 
 
 ## Import
 
-teo dns_sec can be imported using the id, e.g.
+teo dns_sec can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_dns_sec.dns_sec zoneId
+$ terraform import tencentcloud_teo_dns_sec.dns_sec zone-297z8rf93cfw
 ```
 

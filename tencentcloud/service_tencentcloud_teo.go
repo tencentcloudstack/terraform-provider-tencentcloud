@@ -2,12 +2,12 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -16,10 +16,10 @@ type TeoService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone *teo.DescribeZoneDetailsResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone *teo.Zone, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeZoneDetailsRequest()
+		request = teo.NewDescribeZonesRequest()
 	)
 
 	defer func() {
@@ -28,19 +28,49 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.Id = &zoneId
 
-	response, err := me.client.UseTeoClient().DescribeZoneDetails(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances := make([]*teo.Zone, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeZones(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Zones) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Zones...)
+		if len(response.Response.Zones) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	zone = instances[0]
 
-	zone = response.Response
 	return
 }
 
@@ -48,7 +78,7 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteZoneRequest()
-	request.Id = &zoneId
+	request.ZoneId = &zoneId
 
 	defer func() {
 		if errRet != nil {
@@ -69,7 +99,8 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
-func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name string) (dnsRecord *teo.DnsRecord, errRet error) {
+func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name string) (dnsRecord *teo.DnsRecord,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnsRecordsRequest()
@@ -85,15 +116,19 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name str
 	request.ZoneId = &zoneId
 	request.Filters = append(
 		request.Filters,
-		&teo.DnsRecordFilter{
-			Name:   helper.String("name"),
+		&teo.AdvancedFilter{
+			Name:   helper.String("record-id"),
 			Values: []*string{&name},
+			Fuzzy:  helper.Bool(false),
 		},
 	)
+	request.Match = helper.String("all")
+	request.Order = helper.String("created_on")
+	request.Direction = helper.String("desc")
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 100
+	var pageSize int64 = 10
 	instances := make([]*teo.DnsRecord, 0)
 
 	for {
@@ -110,11 +145,11 @@ func (me *TeoService) DescribeTeoDnsRecord(ctx context.Context, zoneId, name str
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Records) < 1 {
+		if response == nil || len(response.Response.DnsRecords) < 1 {
 			break
 		}
-		instances = append(instances, response.Response.Records...)
-		if len(response.Response.Records) < int(pageSize) {
+		instances = append(instances, response.Response.DnsRecords...)
+		if len(response.Response.DnsRecords) < int(pageSize) {
 			break
 		}
 		offset += pageSize
@@ -133,8 +168,9 @@ func (me *TeoService) DeleteTeoDnsRecordById(ctx context.Context, zoneId, dnsRec
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteDnsRecordsRequest()
-	request.Ids = []*string{&dnsRecordId}
+
 	request.ZoneId = &zoneId
+	request.DnsRecordIds = []*string{&dnsRecordId}
 
 	defer func() {
 		if errRet != nil {
@@ -155,10 +191,11 @@ func (me *TeoService) DeleteTeoDnsRecordById(ctx context.Context, zoneId, dnsRec
 	return
 }
 
-func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context, zoneId string, loadBalancingId string) (loadBalancing *teo.DescribeLoadBalancingDetailResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context,
+	zoneId, loadBalancingId string) (loadBalancing *teo.LoadBalancing, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeLoadBalancingDetailRequest()
+		request = teo.NewDescribeLoadBalancingRequest()
 	)
 
 	defer func() {
@@ -167,24 +204,60 @@ func (me *TeoService) DescribeTeoLoadBalancing(ctx context.Context, zoneId strin
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.ZoneId = &zoneId
-	request.LoadBalancingId = &loadBalancingId
 
-	response, err := me.client.UseTeoClient().DescribeLoadBalancingDetail(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("load-balancing-id"),
+			Values: []*string{&loadBalancingId},
+		},
+	)
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	loadBalancings := make([]*teo.LoadBalancing, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeLoadBalancing(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		loadBalancings = append(loadBalancings, response.Response.Data...)
+		if len(response.Response.Data) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(loadBalancings) < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	loadBalancing = loadBalancings[0]
 
-	loadBalancing = response.Response
 	return
 }
 
-func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId string, loadBalancingId string) (errRet error) {
+func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId string,
+	loadBalancingId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteLoadBalancingRequest()
@@ -210,10 +283,11 @@ func (me *TeoService) DeleteTeoLoadBalancingById(ctx context.Context, zoneId str
 	return
 }
 
-func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context, zoneId string, originGroupId string) (originGroup *teo.DescribeOriginGroupDetailResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context,
+	zoneId, originGroupId string) (originGroup *teo.OriginGroup, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeOriginGroupDetailRequest()
+		request = teo.NewDescribeOriginGroupRequest()
 	)
 
 	defer func() {
@@ -222,29 +296,64 @@ func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context, zoneId string,
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.ZoneId = &zoneId
-	request.OriginId = &originGroupId
 
-	response, err := me.client.UseTeoClient().DescribeOriginGroupDetail(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("origin-group-id"),
+			Values: []*string{&originGroupId},
+		},
+	)
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	originGroups := make([]*teo.OriginGroup, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeOriginGroup(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.OriginGroups) < 1 {
+			break
+		}
+		originGroups = append(originGroups, response.Response.OriginGroups...)
+		if len(response.Response.OriginGroups) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(originGroups) < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	originGroup = originGroups[0]
 
-	originGroup = response.Response
 	return
 }
 
-func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId string, originGroupId string) (errRet error) {
+func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId, originGroupId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteOriginGroupRequest()
 	request.ZoneId = &zoneId
-	request.OriginId = &originGroupId
+	request.OriginGroupId = &originGroupId
 
 	defer func() {
 		if errRet != nil {
@@ -265,7 +374,8 @@ func (me *TeoService) DeleteTeoOriginGroupById(ctx context.Context, zoneId strin
 	return
 }
 
-func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleSettingDetail, errRet error) {
+func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId string) (ruleEngine *teo.RuleItem,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeRulesRequest()
@@ -281,13 +391,12 @@ func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId 
 	request.ZoneId = &zoneId
 	request.Filters = append(
 		request.Filters,
-		&teo.RuleFilter{
-			Name:   helper.String("RULE_ID"),
+		&teo.Filter{
+			Name:   helper.String("rule-id"),
 			Values: []*string{&ruleId},
 		},
 	)
 	ratelimit.Check(request.GetAction())
-
 	response, err := me.client.UseTeoClient().DescribeRules(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -298,12 +407,14 @@ func (me *TeoService) DescribeTeoRuleEngine(ctx context.Context, zoneId, ruleId 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	instances := response.Response.RuleList
-
-	if len(instances) < 1 {
-		return
+	if response != nil && response.Response != nil && response.Response.RuleItems != nil {
+		for _, v := range response.Response.RuleItems {
+			if *v.RuleId == ruleId {
+				ruleEngine = v
+				return
+			}
+		}
 	}
-	ruleEngine = instances[0]
 
 	return
 
@@ -336,10 +447,11 @@ func (me *TeoService) DeleteTeoRuleEngineById(ctx context.Context, zoneId, ruleI
 	return
 }
 
-func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context, zoneId, proxyId string) (applicationProxy *teo.DescribeApplicationProxyDetailResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context,
+	zoneId, proxyId string) (applicationProxy *teo.ApplicationProxy, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeApplicationProxyDetailRequest()
+		request = teo.NewDescribeApplicationProxiesRequest()
 	)
 
 	defer func() {
@@ -348,19 +460,56 @@ func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context, zoneId, p
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.ZoneId = &zoneId
-	request.ProxyId = &proxyId
 
-	response, err := me.client.UseTeoClient().DescribeApplicationProxyDetail(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("proxy-id"),
+			Values: []*string{&proxyId},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances := make([]*teo.ApplicationProxy, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeApplicationProxies(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ApplicationProxies) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.ApplicationProxies...)
+		if len(response.Response.ApplicationProxies) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	applicationProxy = response.Response
+	applicationProxy = instances[0]
+
 	return
 }
 
@@ -391,23 +540,37 @@ func (me *TeoService) DeleteTeoApplicationProxyById(ctx context.Context, zoneId,
 	return
 }
 
-func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxyRule, errRet error) {
+func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context,
+	zoneId, proxyId, ruleId string) (applicationProxyRule *teo.ApplicationProxyRule, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeApplicationProxyDetailRequest()
+		request = teo.NewDescribeApplicationProxiesRequest()
 	)
 
-	rules := make([]*teo.ApplicationProxyRule, 0)
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("proxy-id"),
+			Values: []*string{&proxyId},
+		},
+	)
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.ZoneId = &zoneId
-	request.ProxyId = &proxyId
 
-	response, err := me.client.UseTeoClient().DescribeApplicationProxyDetail(request)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().DescribeApplicationProxies(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -416,17 +579,22 @@ func (me *TeoService) DescribeTeoApplicationProxyRule(ctx context.Context, zoneI
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	rules = response.Response.Rule
-	for _, rule := range rules {
-		if *rule.RuleId == ruleId {
-			applicationProxyRule = rule
+
+	if len(response.Response.ApplicationProxies) < 1 {
+		return
+	}
+	for _, v := range response.Response.ApplicationProxies[0].ApplicationProxyRules {
+		if *v.RuleId == ruleId {
+			applicationProxyRule = v
 			return
 		}
 	}
+
 	return
 }
 
-func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zoneId, proxyId, ruleId string) (errRet error) {
+func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context,
+	zoneId, proxyId, ruleId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := teo.NewDeleteApplicationProxyRuleRequest()
@@ -454,7 +622,8 @@ func (me *TeoService) DeleteTeoApplicationProxyRuleById(ctx context.Context, zon
 	return
 }
 
-func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.DescribeZoneSettingResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string) (zoneSetting *teo.ZoneSetting,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeZoneSettingRequest()
@@ -477,11 +646,12 @@ func (me *TeoService) DescribeTeoZoneSetting(ctx context.Context, zoneId string)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	zoneSetting = response.Response
+	zoneSetting = response.Response.ZoneSetting
 	return
 }
 
-func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, entity string) (securityPolicy *teo.DescribeSecurityPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context,
+	zoneId, entity string) (securityPolicy *teo.DescribeSecurityPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeSecurityPolicyRequest()
@@ -509,10 +679,11 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context, zoneId, ent
 	return
 }
 
-func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, host string) (hostCertificate *teo.HostCertSetting, errRet error) {
+func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context,
+	zoneId, host, certId string) (hostCertificate []*teo.HostsCertificate, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = teo.NewDescribeHostsCertificateRequest()
+		request = teo.NewDescribeHostCertificatesRequest()
 	)
 
 	defer func() {
@@ -522,26 +693,42 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 		}
 	}()
 
-	request.ZoneId = &zoneId
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+			Fuzzy:  helper.Bool(false),
+		},
+	)
+	request.Filters = append(
+		request.Filters,
+		&teo.AdvancedFilter{
+			Name:   helper.String("host"),
+			Values: []*string{&host},
+			Fuzzy:  helper.Bool(false),
+		},
+	)
 
 	request.Filters = append(
 		request.Filters,
-		&teo.CertFilter{
-			Name:   helper.String("host"),
-			Values: []*string{&host},
+		&teo.AdvancedFilter{
+			Name:   helper.String("cert-id"),
+			Values: []*string{&certId},
+			Fuzzy:  helper.Bool(false),
 		},
 	)
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
 	var pageSize int64 = 100
-	instances := make([]*teo.HostCertSetting, 0)
+	instances := make([]*teo.HostsCertificate, 0)
 
 	for {
 		request.Offset = &offset
 		request.Limit = &pageSize
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTeoClient().DescribeHostsCertificate(request)
+		response, err := me.client.UseTeoClient().DescribeHostCertificates(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -551,11 +738,11 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Hosts) < 1 {
+		if response == nil || len(response.Response.HostCertificates) < 1 {
 			break
 		}
-		instances = append(instances, response.Response.Hosts...)
-		if len(response.Response.Hosts) < int(pageSize) {
+		instances = append(instances, response.Response.HostCertificates...)
+		if len(response.Response.HostCertificates) < int(pageSize) {
 			break
 		}
 		offset += pageSize
@@ -564,12 +751,14 @@ func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context, zoneId, ho
 	if len(instances) < 1 {
 		return
 	}
-	hostCertificate = instances[0]
+	hostCertificate = instances
 
 	return
+
 }
 
-func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDnssecRequest()
@@ -581,7 +770,7 @@ func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dns
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.Id = &zoneId
+	request.ZoneId = &zoneId
 
 	response, err := me.client.UseTeoClient().DescribeDnssec(request)
 	if err != nil {
@@ -596,42 +785,71 @@ func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dns
 	return
 }
 
-func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context, zoneId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
+func (me *TeoService) DescribeTeoDefaultCertificate(ctx context.Context,
+	zoneId, certId string) (defaultCertificate *teo.DefaultServerCertInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDefaultCertificatesRequest()
 	)
 
-	defaultCertificates := make([]*teo.DefaultServerCertInfo, 0)
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.ZoneId = &zoneId
 
-	response, err := me.client.UseTeoClient().DescribeDefaultCertificates(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("zone-id"),
+			Values: []*string{&zoneId},
+		},
+	)
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	certificates := make([]*teo.DefaultServerCertInfo, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeDefaultCertificates(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DefaultServerCertInfo) < 1 {
+			break
+		}
+		certificates = append(certificates, response.Response.DefaultServerCertInfo...)
+		if len(response.Response.DefaultServerCertInfo) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(certificates) < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	defaultCertificates = response.Response.CertInfo
-
-	for _, cert := range defaultCertificates {
-		if *cert.CertId != "" {
-			defaultCertificate = cert
+	for _, v := range certificates {
+		if *v.CertId == certId {
+			defaultCertificate = v
 			return
 		}
 	}
+
 	return
 }
 
-func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId, policyId string) (ddosPolicy *teo.DescribeDDoSPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId string,
+	policyId int64) (ddosPolicy *teo.DescribeDDoSPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeDDoSPolicyRequest()
@@ -643,16 +861,8 @@ func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId, policyI
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-
-	policyId64, errRet := strconv.ParseInt(policyId, 10, 64)
-	if errRet != nil {
-		log.Printf("[DEBUG]%s api[%s] error, Type conversion failed, [%s] conversion int64 failed\n",
-			logId, request.GetAction(), policyId)
-		return nil, errRet
-	}
-
 	request.ZoneId = &zoneId
-	request.PolicyId = &policyId64
+	request.PolicyId = &policyId
 
 	response, err := me.client.UseTeoClient().DescribeDDoSPolicy(request)
 	if err != nil {
@@ -667,7 +877,8 @@ func (me *TeoService) DescribeTeoDdosPolicy(ctx context.Context, zoneId, policyI
 	return
 }
 
-func (me *TeoService) DescribeZoneDDoSPolicy(ctx context.Context, zoneId string) (ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZoneDDoSPolicyByFilter(ctx context.Context,
+	param map[string]interface{}) (ddosPolicy *teo.DescribeZoneDDoSPolicyResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeZoneDDoSPolicyRequest()
@@ -680,10 +891,13 @@ func (me *TeoService) DescribeZoneDDoSPolicy(ctx context.Context, zoneId string)
 		}
 	}()
 
-	if zoneId != "" {
-		request.ZoneId = &zoneId
-	}
+	for k, v := range param {
+		if k == "zone_id" {
+			request.ZoneId = helper.String(v.(string))
+		}
 
+	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTeoClient().DescribeZoneDDoSPolicy(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -697,41 +911,8 @@ func (me *TeoService) DescribeZoneDDoSPolicy(ctx context.Context, zoneId string)
 	return
 }
 
-func (me *TeoService) DeleteTeoDdosPolicyById(ctx context.Context, zoneId, policyId string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := teo.NewModifyDDoSPolicyRequest()
-
-	policyId64, errRet := strconv.ParseInt(policyId, 10, 64)
-	if errRet != nil {
-		log.Printf("[DEBUG]%s api[%s] error, Type conversion failed, [%s] conversion int64 failed\n",
-			logId, request.GetAction(), policyId)
-		return errRet
-	}
-
-	request.ZoneId = &zoneId
-	request.PolicyId = &policyId64
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTeoClient().ModifyDDoSPolicy(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
-}
-
-func (me *TeoService) DescribeAvailablePlans(ctx context.Context) (availablePlans *teo.DescribeAvailablePlansResponseParams, errRet error) {
+func (me *TeoService) DescribeTeoZoneAvailablePlansByFilter(ctx context.Context) (planInfos []*teo.PlanInfo,
+	errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = teo.NewDescribeAvailablePlansRequest()
@@ -753,6 +934,280 @@ func (me *TeoService) DescribeAvailablePlans(ctx context.Context) (availablePlan
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	availablePlans = response.Response
+
+	if response != nil || len(response.Response.PlanInfo) > 0 {
+		planInfos = response.Response.PlanInfo
+	}
 	return
+}
+
+func (me *TeoService) DescribeTeoRuleEnginePriority(ctx context.Context,
+	zoneId string) (ruleEnginePriority []*teo.RuleItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ZoneId = &zoneId
+
+	response, err := me.client.UseTeoClient().DescribeRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	ruleEnginePriority = response.Response.RuleItems
+	return
+}
+
+func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context,
+	param map[string]interface{}) (botManagedRules []*teo.BotManagedRuleDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeBotManagedRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "zone_id" {
+			request.ZoneId = helper.String(v.(string))
+		}
+
+		if k == "entity" {
+			request.Entity = helper.String(v.(string))
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 9999999
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeBotManagedRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BotManagedRuleDetails) < 1 {
+			break
+		}
+		botManagedRules = append(botManagedRules, response.Response.BotManagedRuleDetails...)
+		if *response.Response.Count < pageSize {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *TeoService) DescribeTeoBotPortraitRulesByFilter(ctx context.Context,
+	param map[string]interface{}) (portraitManagedRules []*teo.PortraitManagedRuleDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeSecurityPortraitRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "zone_id" {
+			request.ZoneId = helper.String(v.(string))
+		}
+
+		if k == "entity" {
+			request.Entity = helper.String(v.(string))
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().DescribeSecurityPortraitRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.PortraitManagedRuleDetails) > 0 {
+		portraitManagedRules = response.Response.PortraitManagedRuleDetails
+	}
+	return
+}
+
+func (me *TeoService) DescribeTeoRuleEngineSettingsByFilter(ctx context.Context) (actions []*teo.RulesSettingAction,
+	errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeRulesSettingRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTeoClient().DescribeRulesSetting(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Actions) > 0 {
+		actions = response.Response.Actions
+	}
+	return
+}
+func (me *TeoService) DescribeTeoSecurityPolicyRegionsByFilter(ctx context.Context) (geoIps []*teo.GeoIp,
+	errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeSecurityPolicyRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeSecurityPolicyRegions(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.GeoIps) < 1 {
+			break
+		}
+		geoIps = append(geoIps, response.Response.GeoIps...)
+		if len(response.Response.GeoIps) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
+	param map[string]interface{}) (wafGroupDetails []*teo.WafGroupDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeSecurityGroupManagedRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "zone_id" {
+			request.ZoneId = helper.String(v.(string))
+		}
+
+		if k == "entity" {
+			request.Entity = helper.String(v.(string))
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 9999999
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTeoClient().DescribeSecurityGroupManagedRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.WafGroupInfo == nil || len(response.Response.WafGroupInfo.WafGroupDetails) < 1 {
+			break
+		}
+		wafGroupDetails = append(wafGroupDetails, response.Response.WafGroupInfo.WafGroupDetails...)
+		if *response.Response.Count <= pageSize {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *TeoService) CheckZoneComplete(ctx context.Context, zoneId string) error {
+	zone, err := me.DescribeTeoZone(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+	if zone == nil || zone.Type == nil || zone.Status == nil || zone.CnameStatus == nil {
+		return fmt.Errorf("get zone[%s] info failed", zoneId)
+	}
+	if *zone.Type == "full" && *zone.Status != "active" {
+		return fmt.Errorf("`zone.Status` is not `active`, please modify NS records from the domain name provider first")
+	}
+	if *zone.Type == "partial" && *zone.CnameStatus != "finished" {
+		return fmt.Errorf("`zone.CnameStatus` is not `finished`, please verify ownership of the site first")
+	}
+	return nil
 }

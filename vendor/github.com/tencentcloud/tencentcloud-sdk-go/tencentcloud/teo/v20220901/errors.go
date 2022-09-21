@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v20220106
+package v20220901
 
 const (
 	// 此产品的特有错误码
+
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
 
 	// DryRun 操作，代表请求将会是成功的，只是多传了 DryRun 参数。
 	DRYRUNOPERATION = "DryRunOperation"
@@ -25,6 +28,15 @@ const (
 
 	// 证书不存在。
 	FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+
+	// 创建日志集失败，请检查日志集名是否已存在。
+	FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+
+	// 创建日志主题任务失败，请检查日志主题名或任务名是否已存在。
+	FAILEDOPERATION_CREATECLSLOGTOPICTASKFAILED = "FailedOperation.CreateClsLogTopicTaskFailed"
+
+	// 站点状态不正确。
+	FAILEDOPERATION_INVALIDZONESTATUS = "FailedOperation.InvalidZoneStatus"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -53,7 +65,7 @@ const (
 	// 后端服务路由地址错误。
 	INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 
-	// 内部错误。
+	// 系统错误。
 	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 
 	// 参数错误。
@@ -71,8 +83,8 @@ const (
 	// 无效的客户端IP请求头。
 	INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
 
-	// 套餐包不支持智能加速配置。
-	INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
+	// 不合法的过滤字段。
+	INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
 
 	// 无效的源站。
 	INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
@@ -86,11 +98,8 @@ const (
 	// 无套餐包。
 	INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
 
-	// 无效的规则引擎条件。
-	INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
-
-	// 无效的规则引擎文件后缀条件。
-	INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+	// URL重写的目标URL无效。
+	INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 
 	// 无效的WebSocket。
 	INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
@@ -161,6 +170,9 @@ const (
 	// 域名尚未备案。
 	OPERATIONDENIED_DOMAINNOICP = "OperationDenied.DomainNoICP"
 
+	// 4层代理资源处于封禁中，禁止操作。
+	OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
@@ -176,14 +188,23 @@ const (
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
+	// 无剩余可创建新任务的域名。
+	RESOURCEUNAVAILABLE_AVAILABLEDOMAINNOTFOUND = "ResourceUnavailable.AvailableDomainNotFound"
+
 	// 证书不存在或未授权。
 	RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
 
 	// 域名不存在或未开启代理。
 	RESOURCEUNAVAILABLE_HOSTNOTFOUND = "ResourceUnavailable.HostNotFound"
 
+	// 未拉取到已开启代理的zone信息。
+	RESOURCEUNAVAILABLE_PROXYZONENOTFOUND = "ResourceUnavailable.ProxyZoneNotFound"
+
 	// 站点不存在或不属于该账号。
 	RESOURCEUNAVAILABLE_ZONENOTFOUND = "ResourceUnavailable.ZoneNotFound"
+
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
 	// Cam 未授权。
 	UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -193,4 +214,13 @@ const (
 
 	// 子账户没有操作权限，请添加权限后继续操作。
 	UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+
+	// 后端服务器发生未知错误。
+	UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )

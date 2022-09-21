@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v20220106
+package v20220901
 
 import (
     "context"
@@ -22,7 +22,7 @@ import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
-const APIVersion = "2022-01-06"
+const APIVersion = "2022-09-01"
 
 type Client struct {
     common.Client
@@ -117,6 +117,7 @@ func NewCreateApplicationProxyResponse() (response *CreateApplicationProxyRespon
 // 创建应用代理
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
@@ -130,6 +131,7 @@ func (c *Client) CreateApplicationProxy(request *CreateApplicationProxyRequest) 
 // 创建应用代理
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
@@ -174,6 +176,8 @@ func NewCreateApplicationProxyRuleResponse() (response *CreateApplicationProxyRu
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxyRule(request *CreateApplicationProxyRuleRequest) (response *CreateApplicationProxyRuleResponse, err error) {
     return c.CreateApplicationProxyRuleWithContext(context.Background(), request)
 }
@@ -183,6 +187,8 @@ func (c *Client) CreateApplicationProxyRule(request *CreateApplicationProxyRuleR
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateApplicationProxyRuleWithContext(ctx context.Context, request *CreateApplicationProxyRuleRequest) (response *CreateApplicationProxyRuleResponse, err error) {
     if request == nil {
         request = NewCreateApplicationProxyRuleRequest()
@@ -199,50 +205,54 @@ func (c *Client) CreateApplicationProxyRuleWithContext(ctx context.Context, requ
     return
 }
 
-func NewCreateApplicationProxyRulesRequest() (request *CreateApplicationProxyRulesRequest) {
-    request = &CreateApplicationProxyRulesRequest{
+func NewCreateCredentialRequest() (request *CreateCredentialRequest) {
+    request = &CreateCredentialRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "CreateApplicationProxyRules")
+    request.Init().WithApiInfo("teo", APIVersion, "CreateCredential")
     
     
     return
 }
 
-func NewCreateApplicationProxyRulesResponse() (response *CreateApplicationProxyRulesResponse) {
-    response = &CreateApplicationProxyRulesResponse{
+func NewCreateCredentialResponse() (response *CreateCredentialResponse) {
+    response = &CreateCredentialResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// CreateApplicationProxyRules
-// 批量创建应用代理规则
+// CreateCredential
+// 用于创建COS回源私有凭证
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-func (c *Client) CreateApplicationProxyRules(request *CreateApplicationProxyRulesRequest) (response *CreateApplicationProxyRulesResponse, err error) {
-    return c.CreateApplicationProxyRulesWithContext(context.Background(), request)
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) CreateCredential(request *CreateCredentialRequest) (response *CreateCredentialResponse, err error) {
+    return c.CreateCredentialWithContext(context.Background(), request)
 }
 
-// CreateApplicationProxyRules
-// 批量创建应用代理规则
+// CreateCredential
+// 用于创建COS回源私有凭证
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-func (c *Client) CreateApplicationProxyRulesWithContext(ctx context.Context, request *CreateApplicationProxyRulesRequest) (response *CreateApplicationProxyRulesResponse, err error) {
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) CreateCredentialWithContext(ctx context.Context, request *CreateCredentialRequest) (response *CreateCredentialResponse, err error) {
     if request == nil {
-        request = NewCreateApplicationProxyRulesRequest()
+        request = NewCreateCredentialRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("CreateApplicationProxyRules require credential")
+        return nil, errors.New("CreateCredential require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewCreateApplicationProxyRulesResponse()
+    response = NewCreateCredentialResponse()
     err = c.Send(request, response)
     return
 }
@@ -269,7 +279,9 @@ func NewCreateCustomErrorPageResponse() (response *CreateCustomErrorPageResponse
 // 创建自定义规则的自定义页
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateCustomErrorPage(request *CreateCustomErrorPageRequest) (response *CreateCustomErrorPageResponse, err error) {
     return c.CreateCustomErrorPageWithContext(context.Background(), request)
 }
@@ -278,7 +290,9 @@ func (c *Client) CreateCustomErrorPage(request *CreateCustomErrorPageRequest) (r
 // 创建自定义规则的自定义页
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateCustomErrorPageWithContext(ctx context.Context, request *CreateCustomErrorPageRequest) (response *CreateCustomErrorPageResponse, err error) {
     if request == nil {
         request = NewCreateCustomErrorPageRequest()
@@ -369,6 +383,64 @@ func (c *Client) CreateDnsRecordWithContext(ctx context.Context, request *Create
     return
 }
 
+func NewCreateIpTableListRequest() (request *CreateIpTableListRequest) {
+    request = &CreateIpTableListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateIpTableList")
+    
+    
+    return
+}
+
+func NewCreateIpTableListResponse() (response *CreateIpTableListResponse) {
+    response = &CreateIpTableListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateIpTableList
+// 创建IP黑白名单列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateIpTableList(request *CreateIpTableListRequest) (response *CreateIpTableListResponse, err error) {
+    return c.CreateIpTableListWithContext(context.Background(), request)
+}
+
+// CreateIpTableList
+// 创建IP黑白名单列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateIpTableListWithContext(ctx context.Context, request *CreateIpTableListRequest) (response *CreateIpTableListResponse, err error) {
+    if request == nil {
+        request = NewCreateIpTableListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateIpTableList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateIpTableListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateLoadBalancingRequest() (request *CreateLoadBalancingRequest) {
     request = &CreateLoadBalancingRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -417,6 +489,110 @@ func (c *Client) CreateLoadBalancingWithContext(ctx context.Context, request *Cr
     return
 }
 
+func NewCreateLogSetRequest() (request *CreateLogSetRequest) {
+    request = &CreateLogSetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateLogSet")
+    
+    
+    return
+}
+
+func NewCreateLogSetResponse() (response *CreateLogSetResponse) {
+    response = &CreateLogSetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateLogSet
+// 本接口（CreateClsLog）用于创建CLS日志集。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+func (c *Client) CreateLogSet(request *CreateLogSetRequest) (response *CreateLogSetResponse, err error) {
+    return c.CreateLogSetWithContext(context.Background(), request)
+}
+
+// CreateLogSet
+// 本接口（CreateClsLog）用于创建CLS日志集。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGSETFAILED = "FailedOperation.CreateClsLogSetFailed"
+func (c *Client) CreateLogSetWithContext(ctx context.Context, request *CreateLogSetRequest) (response *CreateLogSetResponse, err error) {
+    if request == nil {
+        request = NewCreateLogSetRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLogSet require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLogSetResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateLogTopicTaskRequest() (request *CreateLogTopicTaskRequest) {
+    request = &CreateLogTopicTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateLogTopicTask")
+    
+    
+    return
+}
+
+func NewCreateLogTopicTaskResponse() (response *CreateLogTopicTaskResponse) {
+    response = &CreateLogTopicTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateLogTopicTask
+// 本接口（CreateLogTopicTask）用于创建日志推送任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGTOPICTASKFAILED = "FailedOperation.CreateClsLogTopicTaskFailed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE_AVAILABLEDOMAINNOTFOUND = "ResourceUnavailable.AvailableDomainNotFound"
+func (c *Client) CreateLogTopicTask(request *CreateLogTopicTaskRequest) (response *CreateLogTopicTaskResponse, err error) {
+    return c.CreateLogTopicTaskWithContext(context.Background(), request)
+}
+
+// CreateLogTopicTask
+// 本接口（CreateLogTopicTask）用于创建日志推送任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATECLSLOGTOPICTASKFAILED = "FailedOperation.CreateClsLogTopicTaskFailed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE_AVAILABLEDOMAINNOTFOUND = "ResourceUnavailable.AvailableDomainNotFound"
+func (c *Client) CreateLogTopicTaskWithContext(ctx context.Context, request *CreateLogTopicTaskRequest) (response *CreateLogTopicTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateLogTopicTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLogTopicTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLogTopicTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateOriginGroupRequest() (request *CreateOriginGroupRequest) {
     request = &CreateOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -436,7 +612,7 @@ func NewCreateOriginGroupResponse() (response *CreateOriginGroupResponse) {
 }
 
 // CreateOriginGroup
-// 源站组创建
+// 创建源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -447,7 +623,7 @@ func (c *Client) CreateOriginGroup(request *CreateOriginGroupRequest) (response 
 }
 
 // CreateOriginGroup
-// 源站组创建
+// 创建源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -657,6 +833,74 @@ func (c *Client) CreatePurgeTaskWithContext(ctx context.Context, request *Create
     return
 }
 
+func NewCreateReplayTaskRequest() (request *CreateReplayTaskRequest) {
+    request = &CreateReplayTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateReplayTask")
+    
+    
+    return
+}
+
+func NewCreateReplayTaskResponse() (response *CreateReplayTaskResponse) {
+    response = &CreateReplayTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateReplayTask
+// 创建刷新/预热重放任务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateReplayTask(request *CreateReplayTaskRequest) (response *CreateReplayTaskResponse, err error) {
+    return c.CreateReplayTaskWithContext(context.Background(), request)
+}
+
+// CreateReplayTask
+// 创建刷新/预热重放任务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateReplayTaskWithContext(ctx context.Context, request *CreateReplayTaskRequest) (response *CreateReplayTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateReplayTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateReplayTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateReplayTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRuleRequest() (request *CreateRuleRequest) {
     request = &CreateRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -679,7 +923,17 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 // 规则引擎创建规则。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
     return c.CreateRuleWithContext(context.Background(), request)
 }
@@ -688,7 +942,17 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 // 规则引擎创建规则。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateRuleWithContext(ctx context.Context, request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
     if request == nil {
         request = NewCreateRuleRequest()
@@ -701,6 +965,128 @@ func (c *Client) CreateRuleWithContext(ctx context.Context, request *CreateRuleR
     request.SetContext(ctx)
     
     response = NewCreateRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSecurityDropPageRequest() (request *CreateSecurityDropPageRequest) {
+    request = &CreateSecurityDropPageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateSecurityDropPage")
+    
+    
+    return
+}
+
+func NewCreateSecurityDropPageResponse() (response *CreateSecurityDropPageResponse) {
+    response = &CreateSecurityDropPageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateSecurityDropPage
+// 创建自定义拦截页面。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateSecurityDropPage(request *CreateSecurityDropPageRequest) (response *CreateSecurityDropPageResponse, err error) {
+    return c.CreateSecurityDropPageWithContext(context.Background(), request)
+}
+
+// CreateSecurityDropPage
+// 创建自定义拦截页面。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
+//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
+//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
+//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
+//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
+//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
+//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
+//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
+//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) CreateSecurityDropPageWithContext(ctx context.Context, request *CreateSecurityDropPageRequest) (response *CreateSecurityDropPageResponse, err error) {
+    if request == nil {
+        request = NewCreateSecurityDropPageRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSecurityDropPage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSecurityDropPageResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSpeedTestingRequest() (request *CreateSpeedTestingRequest) {
+    request = &CreateSpeedTestingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateSpeedTesting")
+    
+    
+    return
+}
+
+func NewCreateSpeedTestingResponse() (response *CreateSpeedTestingResponse) {
+    response = &CreateSpeedTestingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateSpeedTesting
+// 对用户指定的域名进行一次站点拨测
+//
+// 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) CreateSpeedTesting(request *CreateSpeedTestingRequest) (response *CreateSpeedTestingResponse, err error) {
+    return c.CreateSpeedTestingWithContext(context.Background(), request)
+}
+
+// CreateSpeedTesting
+// 对用户指定的域名进行一次站点拨测
+//
+// 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) CreateSpeedTestingWithContext(ctx context.Context, request *CreateSpeedTestingRequest) (response *CreateSpeedTestingResponse, err error) {
+    if request == nil {
+        request = NewCreateSpeedTestingRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSpeedTesting require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSpeedTestingResponse()
     err = c.Send(request, response)
     return
 }
@@ -724,7 +1110,7 @@ func NewCreateZoneResponse() (response *CreateZoneResponse) {
 }
 
 // CreateZone
-// 用于用户接入新的站点
+// 用于用户接入新的站点。
 //
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
@@ -737,7 +1123,7 @@ func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneRes
 }
 
 // CreateZone
-// 用于用户接入新的站点
+// 用于用户接入新的站点。
 //
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
@@ -948,8 +1334,6 @@ func NewDeleteLoadBalancingResponse() (response *DeleteLoadBalancingResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteLoadBalancing(request *DeleteLoadBalancingRequest) (response *DeleteLoadBalancingResponse, err error) {
     return c.DeleteLoadBalancingWithContext(context.Background(), request)
 }
@@ -959,8 +1343,6 @@ func (c *Client) DeleteLoadBalancing(request *DeleteLoadBalancingRequest) (respo
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteLoadBalancingWithContext(ctx context.Context, request *DeleteLoadBalancingRequest) (response *DeleteLoadBalancingResponse, err error) {
     if request == nil {
         request = NewDeleteLoadBalancingRequest()
@@ -973,6 +1355,54 @@ func (c *Client) DeleteLoadBalancingWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDeleteLoadBalancingResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLogTopicTaskRequest() (request *DeleteLogTopicTaskRequest) {
+    request = &DeleteLogTopicTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteLogTopicTask")
+    
+    
+    return
+}
+
+func NewDeleteLogTopicTaskResponse() (response *DeleteLogTopicTaskResponse) {
+    response = &DeleteLogTopicTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteLogTopicTask
+// 本接口（DeleteLogTopicTask）用于删除日志推送任务。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DeleteLogTopicTask(request *DeleteLogTopicTaskRequest) (response *DeleteLogTopicTaskResponse, err error) {
+    return c.DeleteLogTopicTaskWithContext(context.Background(), request)
+}
+
+// DeleteLogTopicTask
+// 本接口（DeleteLogTopicTask）用于删除日志推送任务。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DeleteLogTopicTaskWithContext(ctx context.Context, request *DeleteLogTopicTaskRequest) (response *DeleteLogTopicTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogTopicTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLogTopicTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogTopicTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -996,23 +1426,19 @@ func NewDeleteOriginGroupResponse() (response *DeleteOriginGroupResponse) {
 }
 
 // DeleteOriginGroup
-// 源站组删除
+// 删除源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteOriginGroup(request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
     return c.DeleteOriginGroupWithContext(context.Background(), request)
 }
 
 // DeleteOriginGroup
-// 源站组删除
+// 删除源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteOriginGroupWithContext(ctx context.Context, request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
     if request == nil {
         request = NewDeleteOriginGroupRequest()
@@ -1052,8 +1478,6 @@ func NewDeleteRulesResponse() (response *DeleteRulesResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRulesResponse, err error) {
     return c.DeleteRulesWithContext(context.Background(), request)
 }
@@ -1063,8 +1487,6 @@ func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRules
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteRulesWithContext(ctx context.Context, request *DeleteRulesRequest) (response *DeleteRulesResponse, err error) {
     if request == nil {
         request = NewDeleteRulesRequest()
@@ -1100,23 +1522,19 @@ func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
 }
 
 // DeleteZone
-// 删除站点
+// 删除站点。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
     return c.DeleteZoneWithContext(context.Background(), request)
 }
 
 // DeleteZone
-// 删除站点
+// 删除站点。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteZoneWithContext(ctx context.Context, request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
     if request == nil {
         request = NewDeleteZoneRequest()
@@ -1133,104 +1551,100 @@ func (c *Client) DeleteZoneWithContext(ctx context.Context, request *DeleteZoneR
     return
 }
 
-func NewDescribeApplicationProxyRequest() (request *DescribeApplicationProxyRequest) {
-    request = &DescribeApplicationProxyRequest{
+func NewDescribeAddableEntityListRequest() (request *DescribeAddableEntityListRequest) {
+    request = &DescribeAddableEntityListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeApplicationProxy")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeAddableEntityList")
     
     
     return
 }
 
-func NewDescribeApplicationProxyResponse() (response *DescribeApplicationProxyResponse) {
-    response = &DescribeApplicationProxyResponse{
+func NewDescribeAddableEntityListResponse() (response *DescribeAddableEntityListResponse) {
+    response = &DescribeAddableEntityListResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeApplicationProxy
-// 获取应用代理列表
+// DescribeAddableEntityList
+// 本接口（DescribeAddableEntityList）用于查询剩余可添加的日志推送实体列表。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeApplicationProxy(request *DescribeApplicationProxyRequest) (response *DescribeApplicationProxyResponse, err error) {
-    return c.DescribeApplicationProxyWithContext(context.Background(), request)
+//  RESOURCEUNAVAILABLE_PROXYZONENOTFOUND = "ResourceUnavailable.ProxyZoneNotFound"
+func (c *Client) DescribeAddableEntityList(request *DescribeAddableEntityListRequest) (response *DescribeAddableEntityListResponse, err error) {
+    return c.DescribeAddableEntityListWithContext(context.Background(), request)
 }
 
-// DescribeApplicationProxy
-// 获取应用代理列表
+// DescribeAddableEntityList
+// 本接口（DescribeAddableEntityList）用于查询剩余可添加的日志推送实体列表。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeApplicationProxyWithContext(ctx context.Context, request *DescribeApplicationProxyRequest) (response *DescribeApplicationProxyResponse, err error) {
+//  RESOURCEUNAVAILABLE_PROXYZONENOTFOUND = "ResourceUnavailable.ProxyZoneNotFound"
+func (c *Client) DescribeAddableEntityListWithContext(ctx context.Context, request *DescribeAddableEntityListRequest) (response *DescribeAddableEntityListResponse, err error) {
     if request == nil {
-        request = NewDescribeApplicationProxyRequest()
+        request = NewDescribeAddableEntityListRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeApplicationProxy require credential")
+        return nil, errors.New("DescribeAddableEntityList require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeApplicationProxyResponse()
+    response = NewDescribeAddableEntityListResponse()
     err = c.Send(request, response)
     return
 }
 
-func NewDescribeApplicationProxyDetailRequest() (request *DescribeApplicationProxyDetailRequest) {
-    request = &DescribeApplicationProxyDetailRequest{
+func NewDescribeApplicationProxiesRequest() (request *DescribeApplicationProxiesRequest) {
+    request = &DescribeApplicationProxiesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeApplicationProxyDetail")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeApplicationProxies")
     
     
     return
 }
 
-func NewDescribeApplicationProxyDetailResponse() (response *DescribeApplicationProxyDetailResponse) {
-    response = &DescribeApplicationProxyDetailResponse{
+func NewDescribeApplicationProxiesResponse() (response *DescribeApplicationProxiesResponse) {
+    response = &DescribeApplicationProxiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeApplicationProxyDetail
-// 获取应用代理详细信息
+// DescribeApplicationProxies
+// 查询应用代理列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeApplicationProxyDetail(request *DescribeApplicationProxyDetailRequest) (response *DescribeApplicationProxyDetailResponse, err error) {
-    return c.DescribeApplicationProxyDetailWithContext(context.Background(), request)
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeApplicationProxies(request *DescribeApplicationProxiesRequest) (response *DescribeApplicationProxiesResponse, err error) {
+    return c.DescribeApplicationProxiesWithContext(context.Background(), request)
 }
 
-// DescribeApplicationProxyDetail
-// 获取应用代理详细信息
+// DescribeApplicationProxies
+// 查询应用代理列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeApplicationProxyDetailWithContext(ctx context.Context, request *DescribeApplicationProxyDetailRequest) (response *DescribeApplicationProxyDetailResponse, err error) {
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeApplicationProxiesWithContext(ctx context.Context, request *DescribeApplicationProxiesRequest) (response *DescribeApplicationProxiesResponse, err error) {
     if request == nil {
-        request = NewDescribeApplicationProxyDetailRequest()
+        request = NewDescribeApplicationProxiesRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeApplicationProxyDetail require credential")
+        return nil, errors.New("DescribeApplicationProxies require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeApplicationProxyDetailResponse()
+    response = NewDescribeApplicationProxiesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1258,7 +1672,7 @@ func NewDescribeAvailablePlansResponse() (response *DescribeAvailablePlansRespon
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeAvailablePlans(request *DescribeAvailablePlansRequest) (response *DescribeAvailablePlansResponse, err error) {
     return c.DescribeAvailablePlansWithContext(context.Background(), request)
 }
@@ -1268,7 +1682,7 @@ func (c *Client) DescribeAvailablePlans(request *DescribeAvailablePlansRequest) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeAvailablePlansWithContext(ctx context.Context, request *DescribeAvailablePlansRequest) (response *DescribeAvailablePlansResponse, err error) {
     if request == nil {
         request = NewDescribeAvailablePlansRequest()
@@ -1281,6 +1695,206 @@ func (c *Client) DescribeAvailablePlansWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeAvailablePlansResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBillingDataRequest() (request *DescribeBillingDataRequest) {
+    request = &DescribeBillingDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBillingData")
+    
+    
+    return
+}
+
+func NewDescribeBillingDataResponse() (response *DescribeBillingDataResponse) {
+    response = &DescribeBillingDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBillingData
+// 获取计费数据。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeBillingData(request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
+    return c.DescribeBillingDataWithContext(context.Background(), request)
+}
+
+// DescribeBillingData
+// 获取计费数据。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeBillingDataWithContext(ctx context.Context, request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeBillingDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBillingData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBillingDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotClientIpListRequest() (request *DescribeBotClientIpListRequest) {
+    request = &DescribeBotClientIpListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBotClientIpList")
+    
+    
+    return
+}
+
+func NewDescribeBotClientIpListResponse() (response *DescribeBotClientIpListResponse) {
+    response = &DescribeBotClientIpListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBotClientIpList
+// 本接口（DescribeBotClientIpList）用于查询Bot攻击客户端Ip信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeBotClientIpList(request *DescribeBotClientIpListRequest) (response *DescribeBotClientIpListResponse, err error) {
+    return c.DescribeBotClientIpListWithContext(context.Background(), request)
+}
+
+// DescribeBotClientIpList
+// 本接口（DescribeBotClientIpList）用于查询Bot攻击客户端Ip信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeBotClientIpListWithContext(ctx context.Context, request *DescribeBotClientIpListRequest) (response *DescribeBotClientIpListResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotClientIpListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotClientIpList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotClientIpListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotDataRequest() (request *DescribeBotDataRequest) {
+    request = &DescribeBotDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBotData")
+    
+    
+    return
+}
+
+func NewDescribeBotDataResponse() (response *DescribeBotDataResponse) {
+    response = &DescribeBotDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBotData
+// 本接口（DescribeBotData）查询Bot攻击时序数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeBotData(request *DescribeBotDataRequest) (response *DescribeBotDataResponse, err error) {
+    return c.DescribeBotDataWithContext(context.Background(), request)
+}
+
+// DescribeBotData
+// 本接口（DescribeBotData）查询Bot攻击时序数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeBotDataWithContext(ctx context.Context, request *DescribeBotDataRequest) (response *DescribeBotDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBotHitRuleDetailRequest() (request *DescribeBotHitRuleDetailRequest) {
+    request = &DescribeBotHitRuleDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBotHitRuleDetail")
+    
+    
+    return
+}
+
+func NewDescribeBotHitRuleDetailResponse() (response *DescribeBotHitRuleDetailResponse) {
+    response = &DescribeBotHitRuleDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBotHitRuleDetail
+// 本接口（DescribeBotHitRuleDetail）用于查询Bot攻击命中规则详情信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeBotHitRuleDetail(request *DescribeBotHitRuleDetailRequest) (response *DescribeBotHitRuleDetailResponse, err error) {
+    return c.DescribeBotHitRuleDetailWithContext(context.Background(), request)
+}
+
+// DescribeBotHitRuleDetail
+// 本接口（DescribeBotHitRuleDetail）用于查询Bot攻击命中规则详情信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeBotHitRuleDetailWithContext(ctx context.Context, request *DescribeBotHitRuleDetailRequest) (response *DescribeBotHitRuleDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeBotHitRuleDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBotHitRuleDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBotHitRuleDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -1304,21 +1918,19 @@ func NewDescribeBotLogResponse() (response *DescribeBotLogResponse) {
 }
 
 // DescribeBotLog
-// 查询Bot攻击日志
+// 本接口（DescribeBotLog）用于查询Bot攻击日志。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DescribeBotLog(request *DescribeBotLogRequest) (response *DescribeBotLogResponse, err error) {
     return c.DescribeBotLogWithContext(context.Background(), request)
 }
 
 // DescribeBotLog
-// 查询Bot攻击日志
+// 本接口（DescribeBotLog）用于查询Bot攻击日志。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DescribeBotLogWithContext(ctx context.Context, request *DescribeBotLogRequest) (response *DescribeBotLogResponse, err error) {
     if request == nil {
         request = NewDescribeBotLogRequest()
@@ -1354,7 +1966,7 @@ func NewDescribeBotManagedRulesResponse() (response *DescribeBotManagedRulesResp
 }
 
 // DescribeBotManagedRules
-// 分页查询Bot托管规则
+// 查询Bot托管规则
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
@@ -1363,7 +1975,7 @@ func (c *Client) DescribeBotManagedRules(request *DescribeBotManagedRulesRequest
 }
 
 // DescribeBotManagedRules
-// 分页查询Bot托管规则
+// 查询Bot托管规则
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
@@ -1383,52 +1995,498 @@ func (c *Client) DescribeBotManagedRulesWithContext(ctx context.Context, request
     return
 }
 
-func NewDescribeCnameStatusRequest() (request *DescribeCnameStatusRequest) {
-    request = &DescribeCnameStatusRequest{
+func NewDescribeBotTopDataRequest() (request *DescribeBotTopDataRequest) {
+    request = &DescribeBotTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeCnameStatus")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeBotTopData")
     
     
     return
 }
 
-func NewDescribeCnameStatusResponse() (response *DescribeCnameStatusResponse) {
-    response = &DescribeCnameStatusResponse{
+func NewDescribeBotTopDataResponse() (response *DescribeBotTopDataResponse) {
+    response = &DescribeBotTopDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeCnameStatus
-// 查询域名 CNAME 状态
+// DescribeBotTopData
+// 本接口（DescribeBotTopData）查询Bot攻击TopN数据。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  FAILEDOPERATION = "FailedOperation"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeCnameStatus(request *DescribeCnameStatusRequest) (response *DescribeCnameStatusResponse, err error) {
-    return c.DescribeCnameStatusWithContext(context.Background(), request)
+func (c *Client) DescribeBotTopData(request *DescribeBotTopDataRequest) (response *DescribeBotTopDataResponse, err error) {
+    return c.DescribeBotTopDataWithContext(context.Background(), request)
 }
 
-// DescribeCnameStatus
-// 查询域名 CNAME 状态
+// DescribeBotTopData
+// 本接口（DescribeBotTopData）查询Bot攻击TopN数据。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  FAILEDOPERATION = "FailedOperation"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeCnameStatusWithContext(ctx context.Context, request *DescribeCnameStatusRequest) (response *DescribeCnameStatusResponse, err error) {
+func (c *Client) DescribeBotTopDataWithContext(ctx context.Context, request *DescribeBotTopDataRequest) (response *DescribeBotTopDataResponse, err error) {
     if request == nil {
-        request = NewDescribeCnameStatusRequest()
+        request = NewDescribeBotTopDataRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCnameStatus require credential")
+        return nil, errors.New("DescribeBotTopData require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeCnameStatusResponse()
+    response = NewDescribeBotTopDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClientRuleListRequest() (request *DescribeClientRuleListRequest) {
+    request = &DescribeClientRuleListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeClientRuleList")
+    
+    
+    return
+}
+
+func NewDescribeClientRuleListResponse() (response *DescribeClientRuleListResponse) {
+    response = &DescribeClientRuleListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClientRuleList
+// 本接口（DescribeClientRuleList）用于查询封禁客户端信息列表。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeClientRuleList(request *DescribeClientRuleListRequest) (response *DescribeClientRuleListResponse, err error) {
+    return c.DescribeClientRuleListWithContext(context.Background(), request)
+}
+
+// DescribeClientRuleList
+// 本接口（DescribeClientRuleList）用于查询封禁客户端信息列表。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeClientRuleListWithContext(ctx context.Context, request *DescribeClientRuleListRequest) (response *DescribeClientRuleListResponse, err error) {
+    if request == nil {
+        request = NewDescribeClientRuleListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClientRuleList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClientRuleListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeContentQuotaRequest() (request *DescribeContentQuotaRequest) {
+    request = &DescribeContentQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeContentQuota")
+    
+    
+    return
+}
+
+func NewDescribeContentQuotaResponse() (response *DescribeContentQuotaResponse) {
+    response = &DescribeContentQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeContentQuota
+// 查询内容管理接口配额
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeContentQuota(request *DescribeContentQuotaRequest) (response *DescribeContentQuotaResponse, err error) {
+    return c.DescribeContentQuotaWithContext(context.Background(), request)
+}
+
+// DescribeContentQuota
+// 查询内容管理接口配额
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeContentQuotaWithContext(ctx context.Context, request *DescribeContentQuotaRequest) (response *DescribeContentQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeContentQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeContentQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeContentQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSAttackDataRequest() (request *DescribeDDoSAttackDataRequest) {
+    request = &DescribeDDoSAttackDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSAttackData")
+    
+    
+    return
+}
+
+func NewDescribeDDoSAttackDataResponse() (response *DescribeDDoSAttackDataResponse) {
+    response = &DescribeDDoSAttackDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSAttackData
+// 本接口（DescribeDDoSAttackData）用于查询DDoS攻击时序数据。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackData(request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
+    return c.DescribeDDoSAttackDataWithContext(context.Background(), request)
+}
+
+// DescribeDDoSAttackData
+// 本接口（DescribeDDoSAttackData）用于查询DDoS攻击时序数据。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackDataWithContext(ctx context.Context, request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSAttackDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSAttackData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSAttackDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSAttackEventRequest() (request *DescribeDDoSAttackEventRequest) {
+    request = &DescribeDDoSAttackEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSAttackEvent")
+    
+    
+    return
+}
+
+func NewDescribeDDoSAttackEventResponse() (response *DescribeDDoSAttackEventResponse) {
+    response = &DescribeDDoSAttackEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSAttackEvent
+// 本接口（DescribeDDoSAttackEvent）用于查询DDoS攻击事件列表。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackEvent(request *DescribeDDoSAttackEventRequest) (response *DescribeDDoSAttackEventResponse, err error) {
+    return c.DescribeDDoSAttackEventWithContext(context.Background(), request)
+}
+
+// DescribeDDoSAttackEvent
+// 本接口（DescribeDDoSAttackEvent）用于查询DDoS攻击事件列表。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackEventWithContext(ctx context.Context, request *DescribeDDoSAttackEventRequest) (response *DescribeDDoSAttackEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSAttackEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSAttackEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSAttackEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSAttackEventDetailRequest() (request *DescribeDDoSAttackEventDetailRequest) {
+    request = &DescribeDDoSAttackEventDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSAttackEventDetail")
+    
+    
+    return
+}
+
+func NewDescribeDDoSAttackEventDetailResponse() (response *DescribeDDoSAttackEventDetailResponse) {
+    response = &DescribeDDoSAttackEventDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSAttackEventDetail
+// 本接口（DescribeDDoSAttackEventDetail）用于查询DDoS攻击事件详情。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackEventDetail(request *DescribeDDoSAttackEventDetailRequest) (response *DescribeDDoSAttackEventDetailResponse, err error) {
+    return c.DescribeDDoSAttackEventDetailWithContext(context.Background(), request)
+}
+
+// DescribeDDoSAttackEventDetail
+// 本接口（DescribeDDoSAttackEventDetail）用于查询DDoS攻击事件详情。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackEventDetailWithContext(ctx context.Context, request *DescribeDDoSAttackEventDetailRequest) (response *DescribeDDoSAttackEventDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSAttackEventDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSAttackEventDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSAttackEventDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSAttackSourceEventRequest() (request *DescribeDDoSAttackSourceEventRequest) {
+    request = &DescribeDDoSAttackSourceEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSAttackSourceEvent")
+    
+    
+    return
+}
+
+func NewDescribeDDoSAttackSourceEventResponse() (response *DescribeDDoSAttackSourceEventResponse) {
+    response = &DescribeDDoSAttackSourceEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSAttackSourceEvent
+// 本接口（DescribeDDoSAttackSourceEvent）用于查询DDoS攻击源信息列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackSourceEvent(request *DescribeDDoSAttackSourceEventRequest) (response *DescribeDDoSAttackSourceEventResponse, err error) {
+    return c.DescribeDDoSAttackSourceEventWithContext(context.Background(), request)
+}
+
+// DescribeDDoSAttackSourceEvent
+// 本接口（DescribeDDoSAttackSourceEvent）用于查询DDoS攻击源信息列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackSourceEventWithContext(ctx context.Context, request *DescribeDDoSAttackSourceEventRequest) (response *DescribeDDoSAttackSourceEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSAttackSourceEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSAttackSourceEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSAttackSourceEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSAttackTopDataRequest() (request *DescribeDDoSAttackTopDataRequest) {
+    request = &DescribeDDoSAttackTopDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSAttackTopData")
+    
+    
+    return
+}
+
+func NewDescribeDDoSAttackTopDataResponse() (response *DescribeDDoSAttackTopDataResponse) {
+    response = &DescribeDDoSAttackTopDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSAttackTopData
+// 本接口（DescribeDDoSAttackTopData）用于查询DDoS攻击Top数据。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackTopData(request *DescribeDDoSAttackTopDataRequest) (response *DescribeDDoSAttackTopDataResponse, err error) {
+    return c.DescribeDDoSAttackTopDataWithContext(context.Background(), request)
+}
+
+// DescribeDDoSAttackTopData
+// 本接口（DescribeDDoSAttackTopData）用于查询DDoS攻击Top数据。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSAttackTopDataWithContext(ctx context.Context, request *DescribeDDoSAttackTopDataRequest) (response *DescribeDDoSAttackTopDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSAttackTopDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSAttackTopData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSAttackTopDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSBlockListRequest() (request *DescribeDDoSBlockListRequest) {
+    request = &DescribeDDoSBlockListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSBlockList")
+    
+    
+    return
+}
+
+func NewDescribeDDoSBlockListResponse() (response *DescribeDDoSBlockListResponse) {
+    response = &DescribeDDoSBlockListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSBlockList
+// 本接口（DescribeDDoSBlockList）用于查询DDoS封禁解封列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSBlockList(request *DescribeDDoSBlockListRequest) (response *DescribeDDoSBlockListResponse, err error) {
+    return c.DescribeDDoSBlockListWithContext(context.Background(), request)
+}
+
+// DescribeDDoSBlockList
+// 本接口（DescribeDDoSBlockList）用于查询DDoS封禁解封列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSBlockListWithContext(ctx context.Context, request *DescribeDDoSBlockListRequest) (response *DescribeDDoSBlockListResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSBlockListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSBlockList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSBlockListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDDoSMajorAttackEventRequest() (request *DescribeDDoSMajorAttackEventRequest) {
+    request = &DescribeDDoSMajorAttackEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDoSMajorAttackEvent")
+    
+    
+    return
+}
+
+func NewDescribeDDoSMajorAttackEventResponse() (response *DescribeDDoSMajorAttackEventResponse) {
+    response = &DescribeDDoSMajorAttackEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDDoSMajorAttackEvent
+// 本接口（DescribeDDoSMajorAttackEvent）用于查询DDoS主攻击事件列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSMajorAttackEvent(request *DescribeDDoSMajorAttackEventRequest) (response *DescribeDDoSMajorAttackEventResponse, err error) {
+    return c.DescribeDDoSMajorAttackEventWithContext(context.Background(), request)
+}
+
+// DescribeDDoSMajorAttackEvent
+// 本接口（DescribeDDoSMajorAttackEvent）用于查询DDoS主攻击事件列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeDDoSMajorAttackEventWithContext(ctx context.Context, request *DescribeDDoSMajorAttackEventRequest) (response *DescribeDDoSMajorAttackEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeDDoSMajorAttackEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSMajorAttackEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDDoSMajorAttackEventResponse()
     err = c.Send(request, response)
     return
 }
@@ -1455,7 +2513,10 @@ func NewDescribeDDoSPolicyResponse() (response *DescribeDDoSPolicyResponse) {
 // 查询DDoS防护配置详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSPolicy(request *DescribeDDoSPolicyRequest) (response *DescribeDDoSPolicyResponse, err error) {
     return c.DescribeDDoSPolicyWithContext(context.Background(), request)
@@ -1465,7 +2526,10 @@ func (c *Client) DescribeDDoSPolicy(request *DescribeDDoSPolicyRequest) (respons
 // 查询DDoS防护配置详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSPolicyWithContext(ctx context.Context, request *DescribeDDoSPolicyRequest) (response *DescribeDDoSPolicyResponse, err error) {
     if request == nil {
@@ -1479,304 +2543,6 @@ func (c *Client) DescribeDDoSPolicyWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeDDoSPolicyResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosAttackDataRequest() (request *DescribeDDosAttackDataRequest) {
-    request = &DescribeDDosAttackDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackData")
-    
-    
-    return
-}
-
-func NewDescribeDDosAttackDataResponse() (response *DescribeDDosAttackDataResponse) {
-    response = &DescribeDDosAttackDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosAttackData
-// 查询DDos攻击时序数据
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackData(request *DescribeDDosAttackDataRequest) (response *DescribeDDosAttackDataResponse, err error) {
-    return c.DescribeDDosAttackDataWithContext(context.Background(), request)
-}
-
-// DescribeDDosAttackData
-// 查询DDos攻击时序数据
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackDataWithContext(ctx context.Context, request *DescribeDDosAttackDataRequest) (response *DescribeDDosAttackDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosAttackDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosAttackData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosAttackDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosAttackEventRequest() (request *DescribeDDosAttackEventRequest) {
-    request = &DescribeDDosAttackEventRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackEvent")
-    
-    
-    return
-}
-
-func NewDescribeDDosAttackEventResponse() (response *DescribeDDosAttackEventResponse) {
-    response = &DescribeDDosAttackEventResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosAttackEvent
-// 查询DDos攻击事件
-//
-// 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackEvent(request *DescribeDDosAttackEventRequest) (response *DescribeDDosAttackEventResponse, err error) {
-    return c.DescribeDDosAttackEventWithContext(context.Background(), request)
-}
-
-// DescribeDDosAttackEvent
-// 查询DDos攻击事件
-//
-// 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackEventWithContext(ctx context.Context, request *DescribeDDosAttackEventRequest) (response *DescribeDDosAttackEventResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosAttackEventRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosAttackEvent require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosAttackEventResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosAttackEventDetailRequest() (request *DescribeDDosAttackEventDetailRequest) {
-    request = &DescribeDDosAttackEventDetailRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackEventDetail")
-    
-    
-    return
-}
-
-func NewDescribeDDosAttackEventDetailResponse() (response *DescribeDDosAttackEventDetailResponse) {
-    response = &DescribeDDosAttackEventDetailResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosAttackEventDetail
-// 查询DDos攻击事件详情
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackEventDetail(request *DescribeDDosAttackEventDetailRequest) (response *DescribeDDosAttackEventDetailResponse, err error) {
-    return c.DescribeDDosAttackEventDetailWithContext(context.Background(), request)
-}
-
-// DescribeDDosAttackEventDetail
-// 查询DDos攻击事件详情
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackEventDetailWithContext(ctx context.Context, request *DescribeDDosAttackEventDetailRequest) (response *DescribeDDosAttackEventDetailResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosAttackEventDetailRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosAttackEventDetail require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosAttackEventDetailResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosAttackSourceEventRequest() (request *DescribeDDosAttackSourceEventRequest) {
-    request = &DescribeDDosAttackSourceEventRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackSourceEvent")
-    
-    
-    return
-}
-
-func NewDescribeDDosAttackSourceEventResponse() (response *DescribeDDosAttackSourceEventResponse) {
-    response = &DescribeDDosAttackSourceEventResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosAttackSourceEvent
-// 查询DDos攻击源信息
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackSourceEvent(request *DescribeDDosAttackSourceEventRequest) (response *DescribeDDosAttackSourceEventResponse, err error) {
-    return c.DescribeDDosAttackSourceEventWithContext(context.Background(), request)
-}
-
-// DescribeDDosAttackSourceEvent
-// 查询DDos攻击源信息
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackSourceEventWithContext(ctx context.Context, request *DescribeDDosAttackSourceEventRequest) (response *DescribeDDosAttackSourceEventResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosAttackSourceEventRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosAttackSourceEvent require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosAttackSourceEventResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosAttackTopDataRequest() (request *DescribeDDosAttackTopDataRequest) {
-    request = &DescribeDDosAttackTopDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosAttackTopData")
-    
-    
-    return
-}
-
-func NewDescribeDDosAttackTopDataResponse() (response *DescribeDDosAttackTopDataResponse) {
-    response = &DescribeDDosAttackTopDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosAttackTopData
-// 查询DDos攻击Top数据
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackTopData(request *DescribeDDosAttackTopDataRequest) (response *DescribeDDosAttackTopDataResponse, err error) {
-    return c.DescribeDDosAttackTopDataWithContext(context.Background(), request)
-}
-
-// DescribeDDosAttackTopData
-// 查询DDos攻击Top数据
-//
-// 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosAttackTopDataWithContext(ctx context.Context, request *DescribeDDosAttackTopDataRequest) (response *DescribeDDosAttackTopDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosAttackTopDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosAttackTopData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosAttackTopDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDosMajorAttackEventRequest() (request *DescribeDDosMajorAttackEventRequest) {
-    request = &DescribeDDosMajorAttackEventRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeDDosMajorAttackEvent")
-    
-    
-    return
-}
-
-func NewDescribeDDosMajorAttackEventResponse() (response *DescribeDDosMajorAttackEventResponse) {
-    response = &DescribeDDosMajorAttackEventResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeDDosMajorAttackEvent
-// 查询DDos主攻击事件
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosMajorAttackEvent(request *DescribeDDosMajorAttackEventRequest) (response *DescribeDDosMajorAttackEventResponse, err error) {
-    return c.DescribeDDosMajorAttackEventWithContext(context.Background(), request)
-}
-
-// DescribeDDosMajorAttackEvent
-// 查询DDos主攻击事件
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeDDosMajorAttackEventWithContext(ctx context.Context, request *DescribeDDosMajorAttackEventRequest) (response *DescribeDDosMajorAttackEventResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDosMajorAttackEventRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDosMajorAttackEvent require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDosMajorAttackEventResponse()
     err = c.Send(request, response)
     return
 }
@@ -1989,58 +2755,60 @@ func (c *Client) DescribeDnssecWithContext(ctx context.Context, request *Describ
     return
 }
 
-func NewDescribeHostsCertificateRequest() (request *DescribeHostsCertificateRequest) {
-    request = &DescribeHostsCertificateRequest{
+func NewDescribeHostCertificatesRequest() (request *DescribeHostCertificatesRequest) {
+    request = &DescribeHostCertificatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeHostsCertificate")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeHostCertificates")
     
     
     return
 }
 
-func NewDescribeHostsCertificateResponse() (response *DescribeHostsCertificateResponse) {
-    response = &DescribeHostsCertificateResponse{
+func NewDescribeHostCertificatesResponse() (response *DescribeHostCertificatesResponse) {
+    response = &DescribeHostCertificatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeHostsCertificate
+// DescribeHostCertificates
 // 查询域名证书列表，支持搜索、分页、排序、过滤。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) DescribeHostsCertificate(request *DescribeHostsCertificateRequest) (response *DescribeHostsCertificateResponse, err error) {
-    return c.DescribeHostsCertificateWithContext(context.Background(), request)
+func (c *Client) DescribeHostCertificates(request *DescribeHostCertificatesRequest) (response *DescribeHostCertificatesResponse, err error) {
+    return c.DescribeHostCertificatesWithContext(context.Background(), request)
 }
 
-// DescribeHostsCertificate
+// DescribeHostCertificates
 // 查询域名证书列表，支持搜索、分页、排序、过滤。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) DescribeHostsCertificateWithContext(ctx context.Context, request *DescribeHostsCertificateRequest) (response *DescribeHostsCertificateResponse, err error) {
+func (c *Client) DescribeHostCertificatesWithContext(ctx context.Context, request *DescribeHostCertificatesRequest) (response *DescribeHostCertificatesResponse, err error) {
     if request == nil {
-        request = NewDescribeHostsCertificateRequest()
+        request = NewDescribeHostCertificatesRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeHostsCertificate require credential")
+        return nil, errors.New("DescribeHostCertificates require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeHostsCertificateResponse()
+    response = NewDescribeHostCertificatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2099,50 +2867,50 @@ func (c *Client) DescribeHostsSettingWithContext(ctx context.Context, request *D
     return
 }
 
-func NewDescribeIdentificationRequest() (request *DescribeIdentificationRequest) {
-    request = &DescribeIdentificationRequest{
+func NewDescribeIdentificationsRequest() (request *DescribeIdentificationsRequest) {
+    request = &DescribeIdentificationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeIdentification")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeIdentifications")
     
     
     return
 }
 
-func NewDescribeIdentificationResponse() (response *DescribeIdentificationResponse) {
-    response = &DescribeIdentificationResponse{
+func NewDescribeIdentificationsResponse() (response *DescribeIdentificationsResponse) {
+    response = &DescribeIdentificationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeIdentification
-// 查询验证结果
+// DescribeIdentifications
+// 查询站点的验证信息。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeIdentification(request *DescribeIdentificationRequest) (response *DescribeIdentificationResponse, err error) {
-    return c.DescribeIdentificationWithContext(context.Background(), request)
+func (c *Client) DescribeIdentifications(request *DescribeIdentificationsRequest) (response *DescribeIdentificationsResponse, err error) {
+    return c.DescribeIdentificationsWithContext(context.Background(), request)
 }
 
-// DescribeIdentification
-// 查询验证结果
+// DescribeIdentifications
+// 查询站点的验证信息。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeIdentificationWithContext(ctx context.Context, request *DescribeIdentificationRequest) (response *DescribeIdentificationResponse, err error) {
+func (c *Client) DescribeIdentificationsWithContext(ctx context.Context, request *DescribeIdentificationsRequest) (response *DescribeIdentificationsResponse, err error) {
     if request == nil {
-        request = NewDescribeIdentificationRequest()
+        request = NewDescribeIdentificationsRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeIdentification require credential")
+        return nil, errors.New("DescribeIdentifications require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeIdentificationResponse()
+    response = NewDescribeIdentificationsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2197,50 +2965,148 @@ func (c *Client) DescribeLoadBalancingWithContext(ctx context.Context, request *
     return
 }
 
-func NewDescribeLoadBalancingDetailRequest() (request *DescribeLoadBalancingDetailRequest) {
-    request = &DescribeLoadBalancingDetailRequest{
+func NewDescribeLogSetsRequest() (request *DescribeLogSetsRequest) {
+    request = &DescribeLogSetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeLoadBalancingDetail")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeLogSets")
     
     
     return
 }
 
-func NewDescribeLoadBalancingDetailResponse() (response *DescribeLoadBalancingDetailResponse) {
-    response = &DescribeLoadBalancingDetailResponse{
+func NewDescribeLogSetsResponse() (response *DescribeLogSetsResponse) {
+    response = &DescribeLogSetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeLoadBalancingDetail
-// 获取负载均衡详细信息
+// DescribeLogSets
+// 本接口（DescribeLogSets）用于获取日志集列表。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeLoadBalancingDetail(request *DescribeLoadBalancingDetailRequest) (response *DescribeLoadBalancingDetailResponse, err error) {
-    return c.DescribeLoadBalancingDetailWithContext(context.Background(), request)
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeLogSets(request *DescribeLogSetsRequest) (response *DescribeLogSetsResponse, err error) {
+    return c.DescribeLogSetsWithContext(context.Background(), request)
 }
 
-// DescribeLoadBalancingDetail
-// 获取负载均衡详细信息
+// DescribeLogSets
+// 本接口（DescribeLogSets）用于获取日志集列表。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeLoadBalancingDetailWithContext(ctx context.Context, request *DescribeLoadBalancingDetailRequest) (response *DescribeLoadBalancingDetailResponse, err error) {
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeLogSetsWithContext(ctx context.Context, request *DescribeLogSetsRequest) (response *DescribeLogSetsResponse, err error) {
     if request == nil {
-        request = NewDescribeLoadBalancingDetailRequest()
+        request = NewDescribeLogSetsRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeLoadBalancingDetail require credential")
+        return nil, errors.New("DescribeLogSets require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeLoadBalancingDetailResponse()
+    response = NewDescribeLogSetsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogTopicTaskDetailRequest() (request *DescribeLogTopicTaskDetailRequest) {
+    request = &DescribeLogTopicTaskDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeLogTopicTaskDetail")
+    
+    
+    return
+}
+
+func NewDescribeLogTopicTaskDetailResponse() (response *DescribeLogTopicTaskDetailResponse) {
+    response = &DescribeLogTopicTaskDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogTopicTaskDetail
+// 本接口（DescribeLogTopicTaskDetail）用于获取日志推送任务详细信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeLogTopicTaskDetail(request *DescribeLogTopicTaskDetailRequest) (response *DescribeLogTopicTaskDetailResponse, err error) {
+    return c.DescribeLogTopicTaskDetailWithContext(context.Background(), request)
+}
+
+// DescribeLogTopicTaskDetail
+// 本接口（DescribeLogTopicTaskDetail）用于获取日志推送任务详细信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeLogTopicTaskDetailWithContext(ctx context.Context, request *DescribeLogTopicTaskDetailRequest) (response *DescribeLogTopicTaskDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogTopicTaskDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogTopicTaskDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogTopicTaskDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogTopicTasksRequest() (request *DescribeLogTopicTasksRequest) {
+    request = &DescribeLogTopicTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeLogTopicTasks")
+    
+    
+    return
+}
+
+func NewDescribeLogTopicTasksResponse() (response *DescribeLogTopicTasksResponse) {
+    response = &DescribeLogTopicTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogTopicTasks
+// 本接口（DescribeLogTopicTasks）用于获取日志推送任务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeLogTopicTasks(request *DescribeLogTopicTasksRequest) (response *DescribeLogTopicTasksResponse, err error) {
+    return c.DescribeLogTopicTasksWithContext(context.Background(), request)
+}
+
+// DescribeLogTopicTasks
+// 本接口（DescribeLogTopicTasks）用于获取日志推送任务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeLogTopicTasksWithContext(ctx context.Context, request *DescribeLogTopicTasksRequest) (response *DescribeLogTopicTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogTopicTasksRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogTopicTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogTopicTasksResponse()
     err = c.Send(request, response)
     return
 }
@@ -2264,19 +3130,19 @@ func NewDescribeOriginGroupResponse() (response *DescribeOriginGroupResponse) {
 }
 
 // DescribeOriginGroup
-// 获取源站组信息列表
+// 获取源站组列表
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DescribeOriginGroup(request *DescribeOriginGroupRequest) (response *DescribeOriginGroupResponse, err error) {
     return c.DescribeOriginGroupWithContext(context.Background(), request)
 }
 
 // DescribeOriginGroup
-// 获取源站组信息列表
+// 获取源站组列表
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DescribeOriginGroupWithContext(ctx context.Context, request *DescribeOriginGroupRequest) (response *DescribeOriginGroupResponse, err error) {
     if request == nil {
         request = NewDescribeOriginGroupRequest()
@@ -2289,54 +3155,6 @@ func (c *Client) DescribeOriginGroupWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeOriginGroupResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeOriginGroupDetailRequest() (request *DescribeOriginGroupDetailRequest) {
-    request = &DescribeOriginGroupDetailRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeOriginGroupDetail")
-    
-    
-    return
-}
-
-func NewDescribeOriginGroupDetailResponse() (response *DescribeOriginGroupDetailResponse) {
-    response = &DescribeOriginGroupDetailResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeOriginGroupDetail
-// 获取源站组详细信息
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeOriginGroupDetail(request *DescribeOriginGroupDetailRequest) (response *DescribeOriginGroupDetailResponse, err error) {
-    return c.DescribeOriginGroupDetailWithContext(context.Background(), request)
-}
-
-// DescribeOriginGroupDetail
-// 获取源站组详细信息
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeOriginGroupDetailWithContext(ctx context.Context, request *DescribeOriginGroupDetailRequest) (response *DescribeOriginGroupDetailResponse, err error) {
-    if request == nil {
-        request = NewDescribeOriginGroupDetailRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeOriginGroupDetail require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeOriginGroupDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -2360,7 +3178,7 @@ func NewDescribeOverviewL7DataResponse() (response *DescribeOverviewL7DataRespon
 }
 
 // DescribeOverviewL7Data
-// 查询七层监控类时序流量数据
+// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
@@ -2371,7 +3189,7 @@ func (c *Client) DescribeOverviewL7Data(request *DescribeOverviewL7DataRequest) 
 }
 
 // DescribeOverviewL7Data
-// 查询七层监控类时序流量数据
+// 本接口（DescribeOverviewL7Data）用于查询七层监控类时序流量数据。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
@@ -2499,6 +3317,60 @@ func (c *Client) DescribePurgeTasksWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeRateLimitIntelligenceRuleRequest() (request *DescribeRateLimitIntelligenceRuleRequest) {
+    request = &DescribeRateLimitIntelligenceRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeRateLimitIntelligenceRule")
+    
+    
+    return
+}
+
+func NewDescribeRateLimitIntelligenceRuleResponse() (response *DescribeRateLimitIntelligenceRuleResponse) {
+    response = &DescribeRateLimitIntelligenceRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRateLimitIntelligenceRule
+// 查询速率限制智能客户端过滤学习出来的规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeRateLimitIntelligenceRule(request *DescribeRateLimitIntelligenceRuleRequest) (response *DescribeRateLimitIntelligenceRuleResponse, err error) {
+    return c.DescribeRateLimitIntelligenceRuleWithContext(context.Background(), request)
+}
+
+// DescribeRateLimitIntelligenceRule
+// 查询速率限制智能客户端过滤学习出来的规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeRateLimitIntelligenceRuleWithContext(ctx context.Context, request *DescribeRateLimitIntelligenceRuleRequest) (response *DescribeRateLimitIntelligenceRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeRateLimitIntelligenceRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRateLimitIntelligenceRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRateLimitIntelligenceRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRulesRequest() (request *DescribeRulesRequest) {
     request = &DescribeRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2522,8 +3394,9 @@ func NewDescribeRulesResponse() (response *DescribeRulesResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeRules(request *DescribeRulesRequest) (response *DescribeRulesResponse, err error) {
     return c.DescribeRulesWithContext(context.Background(), request)
 }
@@ -2533,8 +3406,9 @@ func (c *Client) DescribeRules(request *DescribeRulesRequest) (response *Describ
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeRulesWithContext(ctx context.Context, request *DescribeRulesRequest) (response *DescribeRulesResponse, err error) {
     if request == nil {
         request = NewDescribeRulesRequest()
@@ -2574,8 +3448,9 @@ func NewDescribeRulesSettingResponse() (response *DescribeRulesSettingResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeRulesSetting(request *DescribeRulesSettingRequest) (response *DescribeRulesSettingResponse, err error) {
     return c.DescribeRulesSettingWithContext(context.Background(), request)
 }
@@ -2585,8 +3460,9 @@ func (c *Client) DescribeRulesSetting(request *DescribeRulesSettingRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
 func (c *Client) DescribeRulesSettingWithContext(ctx context.Context, request *DescribeRulesSettingRequest) (response *DescribeRulesSettingResponse, err error) {
     if request == nil {
         request = NewDescribeRulesSettingRequest()
@@ -2599,6 +3475,54 @@ func (c *Client) DescribeRulesSettingWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeRulesSettingResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSecurityGroupManagedRulesRequest() (request *DescribeSecurityGroupManagedRulesRequest) {
+    request = &DescribeSecurityGroupManagedRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityGroupManagedRules")
+    
+    
+    return
+}
+
+func NewDescribeSecurityGroupManagedRulesResponse() (response *DescribeSecurityGroupManagedRulesResponse) {
+    response = &DescribeSecurityGroupManagedRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSecurityGroupManagedRules
+// 获取托管规则组
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSecurityGroupManagedRules(request *DescribeSecurityGroupManagedRulesRequest) (response *DescribeSecurityGroupManagedRulesResponse, err error) {
+    return c.DescribeSecurityGroupManagedRulesWithContext(context.Background(), request)
+}
+
+// DescribeSecurityGroupManagedRules
+// 获取托管规则组
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSecurityGroupManagedRulesWithContext(ctx context.Context, request *DescribeSecurityGroupManagedRulesRequest) (response *DescribeSecurityGroupManagedRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityGroupManagedRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityGroupManagedRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityGroupManagedRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2625,9 +3549,7 @@ func NewDescribeSecurityPolicyResponse() (response *DescribeSecurityPolicyRespon
 // 查询安全防护配置详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeSecurityPolicy(request *DescribeSecurityPolicyRequest) (response *DescribeSecurityPolicyResponse, err error) {
     return c.DescribeSecurityPolicyWithContext(context.Background(), request)
 }
@@ -2636,9 +3558,7 @@ func (c *Client) DescribeSecurityPolicy(request *DescribeSecurityPolicyRequest) 
 // 查询安全防护配置详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeSecurityPolicyWithContext(ctx context.Context, request *DescribeSecurityPolicyRequest) (response *DescribeSecurityPolicyResponse, err error) {
     if request == nil {
         request = NewDescribeSecurityPolicyRequest()
@@ -2703,102 +3623,6 @@ func (c *Client) DescribeSecurityPolicyListWithContext(ctx context.Context, requ
     return
 }
 
-func NewDescribeSecurityPolicyManagedRulesRequest() (request *DescribeSecurityPolicyManagedRulesRequest) {
-    request = &DescribeSecurityPolicyManagedRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyManagedRules")
-    
-    
-    return
-}
-
-func NewDescribeSecurityPolicyManagedRulesResponse() (response *DescribeSecurityPolicyManagedRulesResponse) {
-    response = &DescribeSecurityPolicyManagedRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeSecurityPolicyManagedRules
-// 分页查询门神规则
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
-func (c *Client) DescribeSecurityPolicyManagedRules(request *DescribeSecurityPolicyManagedRulesRequest) (response *DescribeSecurityPolicyManagedRulesResponse, err error) {
-    return c.DescribeSecurityPolicyManagedRulesWithContext(context.Background(), request)
-}
-
-// DescribeSecurityPolicyManagedRules
-// 分页查询门神规则
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
-func (c *Client) DescribeSecurityPolicyManagedRulesWithContext(ctx context.Context, request *DescribeSecurityPolicyManagedRulesRequest) (response *DescribeSecurityPolicyManagedRulesResponse, err error) {
-    if request == nil {
-        request = NewDescribeSecurityPolicyManagedRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeSecurityPolicyManagedRules require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeSecurityPolicyManagedRulesResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeSecurityPolicyManagedRulesIdRequest() (request *DescribeSecurityPolicyManagedRulesIdRequest) {
-    request = &DescribeSecurityPolicyManagedRulesIdRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityPolicyManagedRulesId")
-    
-    
-    return
-}
-
-func NewDescribeSecurityPolicyManagedRulesIdResponse() (response *DescribeSecurityPolicyManagedRulesIdResponse) {
-    response = &DescribeSecurityPolicyManagedRulesIdResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeSecurityPolicyManagedRulesId
-// 规则id查询门神规则详情
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
-func (c *Client) DescribeSecurityPolicyManagedRulesId(request *DescribeSecurityPolicyManagedRulesIdRequest) (response *DescribeSecurityPolicyManagedRulesIdResponse, err error) {
-    return c.DescribeSecurityPolicyManagedRulesIdWithContext(context.Background(), request)
-}
-
-// DescribeSecurityPolicyManagedRulesId
-// 规则id查询门神规则详情
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
-func (c *Client) DescribeSecurityPolicyManagedRulesIdWithContext(ctx context.Context, request *DescribeSecurityPolicyManagedRulesIdRequest) (response *DescribeSecurityPolicyManagedRulesIdResponse, err error) {
-    if request == nil {
-        request = NewDescribeSecurityPolicyManagedRulesIdRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeSecurityPolicyManagedRulesId require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeSecurityPolicyManagedRulesIdResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeSecurityPolicyRegionsRequest() (request *DescribeSecurityPolicyRegionsRequest) {
     request = &DescribeSecurityPolicyRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2822,6 +3646,7 @@ func NewDescribeSecurityPolicyRegionsResponse() (response *DescribeSecurityPolic
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeSecurityPolicyRegions(request *DescribeSecurityPolicyRegionsRequest) (response *DescribeSecurityPolicyRegionsResponse, err error) {
     return c.DescribeSecurityPolicyRegionsWithContext(context.Background(), request)
 }
@@ -2831,6 +3656,7 @@ func (c *Client) DescribeSecurityPolicyRegions(request *DescribeSecurityPolicyRe
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeSecurityPolicyRegionsWithContext(ctx context.Context, request *DescribeSecurityPolicyRegionsRequest) (response *DescribeSecurityPolicyRegionsResponse, err error) {
     if request == nil {
         request = NewDescribeSecurityPolicyRegionsRequest()
@@ -2897,6 +3723,260 @@ func (c *Client) DescribeSecurityPortraitRulesWithContext(ctx context.Context, r
     return
 }
 
+func NewDescribeSecurityRuleIdRequest() (request *DescribeSecurityRuleIdRequest) {
+    request = &DescribeSecurityRuleIdRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSecurityRuleId")
+    
+    
+    return
+}
+
+func NewDescribeSecurityRuleIdResponse() (response *DescribeSecurityRuleIdResponse) {
+    response = &DescribeSecurityRuleIdResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSecurityRuleId
+// 查询安全规则详情
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSecurityRuleId(request *DescribeSecurityRuleIdRequest) (response *DescribeSecurityRuleIdResponse, err error) {
+    return c.DescribeSecurityRuleIdWithContext(context.Background(), request)
+}
+
+// DescribeSecurityRuleId
+// 查询安全规则详情
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSecurityRuleIdWithContext(ctx context.Context, request *DescribeSecurityRuleIdRequest) (response *DescribeSecurityRuleIdResponse, err error) {
+    if request == nil {
+        request = NewDescribeSecurityRuleIdRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSecurityRuleId require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSecurityRuleIdResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSingleL7AnalysisDataRequest() (request *DescribeSingleL7AnalysisDataRequest) {
+    request = &DescribeSingleL7AnalysisDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSingleL7AnalysisData")
+    
+    
+    return
+}
+
+func NewDescribeSingleL7AnalysisDataResponse() (response *DescribeSingleL7AnalysisDataResponse) {
+    response = &DescribeSingleL7AnalysisDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSingleL7AnalysisData
+// 本接口（DescribeSingleL7AnalysisData）用于查询七层数据分析类单值流量数据列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSingleL7AnalysisData(request *DescribeSingleL7AnalysisDataRequest) (response *DescribeSingleL7AnalysisDataResponse, err error) {
+    return c.DescribeSingleL7AnalysisDataWithContext(context.Background(), request)
+}
+
+// DescribeSingleL7AnalysisData
+// 本接口（DescribeSingleL7AnalysisData）用于查询七层数据分析类单值流量数据列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSingleL7AnalysisDataWithContext(ctx context.Context, request *DescribeSingleL7AnalysisDataRequest) (response *DescribeSingleL7AnalysisDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeSingleL7AnalysisDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSingleL7AnalysisData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSingleL7AnalysisDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSpeedTestingDetailsRequest() (request *DescribeSpeedTestingDetailsRequest) {
+    request = &DescribeSpeedTestingDetailsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSpeedTestingDetails")
+    
+    
+    return
+}
+
+func NewDescribeSpeedTestingDetailsResponse() (response *DescribeSpeedTestingDetailsResponse) {
+    response = &DescribeSpeedTestingDetailsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSpeedTestingDetails
+// 用于查询拨测分地区数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSpeedTestingDetails(request *DescribeSpeedTestingDetailsRequest) (response *DescribeSpeedTestingDetailsResponse, err error) {
+    return c.DescribeSpeedTestingDetailsWithContext(context.Background(), request)
+}
+
+// DescribeSpeedTestingDetails
+// 用于查询拨测分地区数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeSpeedTestingDetailsWithContext(ctx context.Context, request *DescribeSpeedTestingDetailsRequest) (response *DescribeSpeedTestingDetailsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpeedTestingDetailsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSpeedTestingDetails require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSpeedTestingDetailsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSpeedTestingMetricDataRequest() (request *DescribeSpeedTestingMetricDataRequest) {
+    request = &DescribeSpeedTestingMetricDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSpeedTestingMetricData")
+    
+    
+    return
+}
+
+func NewDescribeSpeedTestingMetricDataResponse() (response *DescribeSpeedTestingMetricDataResponse) {
+    response = &DescribeSpeedTestingMetricDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSpeedTestingMetricData
+// 查询站点拨测结果
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeSpeedTestingMetricData(request *DescribeSpeedTestingMetricDataRequest) (response *DescribeSpeedTestingMetricDataResponse, err error) {
+    return c.DescribeSpeedTestingMetricDataWithContext(context.Background(), request)
+}
+
+// DescribeSpeedTestingMetricData
+// 查询站点拨测结果
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeSpeedTestingMetricDataWithContext(ctx context.Context, request *DescribeSpeedTestingMetricDataRequest) (response *DescribeSpeedTestingMetricDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpeedTestingMetricDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSpeedTestingMetricData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSpeedTestingMetricDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSpeedTestingQuotaRequest() (request *DescribeSpeedTestingQuotaRequest) {
+    request = &DescribeSpeedTestingQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeSpeedTestingQuota")
+    
+    
+    return
+}
+
+func NewDescribeSpeedTestingQuotaResponse() (response *DescribeSpeedTestingQuotaResponse) {
+    response = &DescribeSpeedTestingQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSpeedTestingQuota
+// 查询站点拨测配额
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeSpeedTestingQuota(request *DescribeSpeedTestingQuotaRequest) (response *DescribeSpeedTestingQuotaResponse, err error) {
+    return c.DescribeSpeedTestingQuotaWithContext(context.Background(), request)
+}
+
+// DescribeSpeedTestingQuota
+// 查询站点拨测配额
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeSpeedTestingQuotaWithContext(ctx context.Context, request *DescribeSpeedTestingQuotaRequest) (response *DescribeSpeedTestingQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpeedTestingQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSpeedTestingQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSpeedTestingQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTimingL4DataRequest() (request *DescribeTimingL4DataRequest) {
     request = &DescribeTimingL4DataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2916,7 +3996,7 @@ func NewDescribeTimingL4DataResponse() (response *DescribeTimingL4DataResponse) 
 }
 
 // DescribeTimingL4Data
-// 四层时序流量数据查询
+// 本接口（DescribeTimingL4Data）用于查询四层时序流量数据列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2928,7 +4008,7 @@ func (c *Client) DescribeTimingL4Data(request *DescribeTimingL4DataRequest) (res
 }
 
 // DescribeTimingL4Data
-// 四层时序流量数据查询
+// 本接口（DescribeTimingL4Data）用于查询四层时序流量数据列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2970,7 +4050,7 @@ func NewDescribeTimingL7AnalysisDataResponse() (response *DescribeTimingL7Analys
 }
 
 // DescribeTimingL7AnalysisData
-// 查询七层数据分析类时序流量数据
+// 本接口（DescribeTimingL7AnalysisData）查询七层数据分析类时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2983,7 +4063,7 @@ func (c *Client) DescribeTimingL7AnalysisData(request *DescribeTimingL7AnalysisD
 }
 
 // DescribeTimingL7AnalysisData
-// 查询七层数据分析类时序流量数据
+// 本接口（DescribeTimingL7AnalysisData）查询七层数据分析类时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3026,7 +4106,7 @@ func NewDescribeTimingL7CacheDataResponse() (response *DescribeTimingL7CacheData
 }
 
 // DescribeTimingL7CacheData
-// 七层查询缓存分析时序类流量数据
+// 本接口（DescribeTimingL7CacheData）用于查询七层缓存分析时序类流量数据。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3036,7 +4116,7 @@ func (c *Client) DescribeTimingL7CacheData(request *DescribeTimingL7CacheDataReq
 }
 
 // DescribeTimingL7CacheData
-// 七层查询缓存分析时序类流量数据
+// 本接口（DescribeTimingL7CacheData）用于查询七层缓存分析时序类流量数据。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3076,7 +4156,7 @@ func NewDescribeTopL7AnalysisDataResponse() (response *DescribeTopL7AnalysisData
 }
 
 // DescribeTopL7AnalysisData
-// 查询top类流量数据
+// 本接口（DescribeTopL7AnalysisData）用于查询七层流量前topN的数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3089,7 +4169,7 @@ func (c *Client) DescribeTopL7AnalysisData(request *DescribeTopL7AnalysisDataReq
 }
 
 // DescribeTopL7AnalysisData
-// 查询top类流量数据
+// 本接口（DescribeTopL7AnalysisData）用于查询七层流量前topN的数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3132,7 +4212,7 @@ func NewDescribeTopL7CacheDataResponse() (response *DescribeTopL7CacheDataRespon
 }
 
 // DescribeTopL7CacheData
-// 七层查询缓存分析top类流量数据
+// 本接口（DescribeTopL7CacheData）用于查询七层缓存分析topN流量数据。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3142,7 +4222,7 @@ func (c *Client) DescribeTopL7CacheData(request *DescribeTopL7CacheDataRequest) 
 }
 
 // DescribeTopL7CacheData
-// 七层查询缓存分析top类流量数据
+// 本接口（DescribeTopL7CacheData）用于查询七层缓存分析topN流量数据。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3159,54 +4239,6 @@ func (c *Client) DescribeTopL7CacheDataWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeTopL7CacheDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeWebManagedRulesAttackEventsRequest() (request *DescribeWebManagedRulesAttackEventsRequest) {
-    request = &DescribeWebManagedRulesAttackEventsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesAttackEvents")
-    
-    
-    return
-}
-
-func NewDescribeWebManagedRulesAttackEventsResponse() (response *DescribeWebManagedRulesAttackEventsResponse) {
-    response = &DescribeWebManagedRulesAttackEventsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeWebManagedRulesAttackEvents
-// 查询Web托管攻击事件
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeWebManagedRulesAttackEvents(request *DescribeWebManagedRulesAttackEventsRequest) (response *DescribeWebManagedRulesAttackEventsResponse, err error) {
-    return c.DescribeWebManagedRulesAttackEventsWithContext(context.Background(), request)
-}
-
-// DescribeWebManagedRulesAttackEvents
-// 查询Web托管攻击事件
-//
-// 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeWebManagedRulesAttackEventsWithContext(ctx context.Context, request *DescribeWebManagedRulesAttackEventsRequest) (response *DescribeWebManagedRulesAttackEventsResponse, err error) {
-    if request == nil {
-        request = NewDescribeWebManagedRulesAttackEventsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWebManagedRulesAttackEvents require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeWebManagedRulesAttackEventsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3230,7 +4262,7 @@ func NewDescribeWebManagedRulesDataResponse() (response *DescribeWebManagedRules
 }
 
 // DescribeWebManagedRulesData
-// 查询waf攻击时序数据
+// 本接口（DescribeWebManagedRulesData）用于查询WAF攻击的时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3240,7 +4272,7 @@ func (c *Client) DescribeWebManagedRulesData(request *DescribeWebManagedRulesDat
 }
 
 // DescribeWebManagedRulesData
-// 查询waf攻击时序数据
+// 本接口（DescribeWebManagedRulesData）用于查询WAF攻击的时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3257,6 +4289,56 @@ func (c *Client) DescribeWebManagedRulesDataWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeWebManagedRulesDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWebManagedRulesHitRuleDetailRequest() (request *DescribeWebManagedRulesHitRuleDetailRequest) {
+    request = &DescribeWebManagedRulesHitRuleDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesHitRuleDetail")
+    
+    
+    return
+}
+
+func NewDescribeWebManagedRulesHitRuleDetailResponse() (response *DescribeWebManagedRulesHitRuleDetailResponse) {
+    response = &DescribeWebManagedRulesHitRuleDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeWebManagedRulesHitRuleDetail
+// 本接口（DescribeWebManagedRulesHitRuleDetail）用于查询WAF攻击命中规则详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeWebManagedRulesHitRuleDetail(request *DescribeWebManagedRulesHitRuleDetailRequest) (response *DescribeWebManagedRulesHitRuleDetailResponse, err error) {
+    return c.DescribeWebManagedRulesHitRuleDetailWithContext(context.Background(), request)
+}
+
+// DescribeWebManagedRulesHitRuleDetail
+// 本接口（DescribeWebManagedRulesHitRuleDetail）用于查询WAF攻击命中规则详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeWebManagedRulesHitRuleDetailWithContext(ctx context.Context, request *DescribeWebManagedRulesHitRuleDetailRequest) (response *DescribeWebManagedRulesHitRuleDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeWebManagedRulesHitRuleDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWebManagedRulesHitRuleDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWebManagedRulesHitRuleDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -3280,7 +4362,7 @@ func NewDescribeWebManagedRulesLogResponse() (response *DescribeWebManagedRulesL
 }
 
 // DescribeWebManagedRulesLog
-// 查询waf攻击日志
+// 本接口（DescribeWebManagedRulesLog）用于查询Web攻击日志。
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3289,7 +4371,7 @@ func (c *Client) DescribeWebManagedRulesLog(request *DescribeWebManagedRulesLogR
 }
 
 // DescribeWebManagedRulesLog
-// 查询waf攻击日志
+// 本接口（DescribeWebManagedRulesLog）用于查询Web攻击日志。
 //
 // 可能返回的错误码:
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3305,60 +4387,6 @@ func (c *Client) DescribeWebManagedRulesLogWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeWebManagedRulesLogResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeWebManagedRulesTopDataRequest() (request *DescribeWebManagedRulesTopDataRequest) {
-    request = &DescribeWebManagedRulesTopDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebManagedRulesTopData")
-    
-    
-    return
-}
-
-func NewDescribeWebManagedRulesTopDataResponse() (response *DescribeWebManagedRulesTopDataResponse) {
-    response = &DescribeWebManagedRulesTopDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeWebManagedRulesTopData
-// 查询waf攻击top数据
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeWebManagedRulesTopData(request *DescribeWebManagedRulesTopDataRequest) (response *DescribeWebManagedRulesTopDataResponse, err error) {
-    return c.DescribeWebManagedRulesTopDataWithContext(context.Background(), request)
-}
-
-// DescribeWebManagedRulesTopData
-// 查询waf攻击top数据
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeWebManagedRulesTopDataWithContext(ctx context.Context, request *DescribeWebManagedRulesTopDataRequest) (response *DescribeWebManagedRulesTopDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeWebManagedRulesTopDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWebManagedRulesTopData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeWebManagedRulesTopDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -3382,7 +4410,7 @@ func NewDescribeWebProtectionAttackEventsResponse() (response *DescribeWebProtec
 }
 
 // DescribeWebProtectionAttackEvents
-// 查询web防护攻击事件
+// 本接口（DescribeWebProtectionAttackEvents）用于查询CC相关攻击事件列表。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -3391,7 +4419,7 @@ func (c *Client) DescribeWebProtectionAttackEvents(request *DescribeWebProtectio
 }
 
 // DescribeWebProtectionAttackEvents
-// 查询web防护攻击事件
+// 本接口（DescribeWebProtectionAttackEvents）用于查询CC相关攻击事件列表。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -3407,6 +4435,54 @@ func (c *Client) DescribeWebProtectionAttackEventsWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewDescribeWebProtectionAttackEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWebProtectionClientIpListRequest() (request *DescribeWebProtectionClientIpListRequest) {
+    request = &DescribeWebProtectionClientIpListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionClientIpList")
+    
+    
+    return
+}
+
+func NewDescribeWebProtectionClientIpListResponse() (response *DescribeWebProtectionClientIpListResponse) {
+    response = &DescribeWebProtectionClientIpListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeWebProtectionClientIpList
+// 本接口（DescribeWebProtectionClientIpList）用于查询CC防护客户端（攻击源）IP信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeWebProtectionClientIpList(request *DescribeWebProtectionClientIpListRequest) (response *DescribeWebProtectionClientIpListResponse, err error) {
+    return c.DescribeWebProtectionClientIpListWithContext(context.Background(), request)
+}
+
+// DescribeWebProtectionClientIpList
+// 本接口（DescribeWebProtectionClientIpList）用于查询CC防护客户端（攻击源）IP信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeWebProtectionClientIpListWithContext(ctx context.Context, request *DescribeWebProtectionClientIpListRequest) (response *DescribeWebProtectionClientIpListResponse, err error) {
+    if request == nil {
+        request = NewDescribeWebProtectionClientIpListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWebProtectionClientIpList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWebProtectionClientIpListResponse()
     err = c.Send(request, response)
     return
 }
@@ -3430,7 +4506,7 @@ func NewDescribeWebProtectionDataResponse() (response *DescribeWebProtectionData
 }
 
 // DescribeWebProtectionData
-// 查询CC防护时序数据
+// 本接口（DescribeWebProtectionData）用于查询CC防护时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3440,7 +4516,7 @@ func (c *Client) DescribeWebProtectionData(request *DescribeWebProtectionDataReq
 }
 
 // DescribeWebProtectionData
-// 查询CC防护时序数据
+// 本接口（DescribeWebProtectionData）用于查询CC防护时序数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3461,52 +4537,102 @@ func (c *Client) DescribeWebProtectionDataWithContext(ctx context.Context, reque
     return
 }
 
-func NewDescribeWebProtectionLogRequest() (request *DescribeWebProtectionLogRequest) {
-    request = &DescribeWebProtectionLogRequest{
+func NewDescribeWebProtectionHitRuleDetailRequest() (request *DescribeWebProtectionHitRuleDetailRequest) {
+    request = &DescribeWebProtectionHitRuleDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionLog")
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionHitRuleDetail")
     
     
     return
 }
 
-func NewDescribeWebProtectionLogResponse() (response *DescribeWebProtectionLogResponse) {
-    response = &DescribeWebProtectionLogResponse{
+func NewDescribeWebProtectionHitRuleDetailResponse() (response *DescribeWebProtectionHitRuleDetailResponse) {
+    response = &DescribeWebProtectionHitRuleDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeWebProtectionLog
-// 查询CC防护日志
+// DescribeWebProtectionHitRuleDetail
+// 本接口（DescribeWebProtectionHitRuleDetail）用于查询CC防护命中规则详情列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeWebProtectionLog(request *DescribeWebProtectionLogRequest) (response *DescribeWebProtectionLogResponse, err error) {
-    return c.DescribeWebProtectionLogWithContext(context.Background(), request)
+func (c *Client) DescribeWebProtectionHitRuleDetail(request *DescribeWebProtectionHitRuleDetailRequest) (response *DescribeWebProtectionHitRuleDetailResponse, err error) {
+    return c.DescribeWebProtectionHitRuleDetailWithContext(context.Background(), request)
 }
 
-// DescribeWebProtectionLog
-// 查询CC防护日志
+// DescribeWebProtectionHitRuleDetail
+// 本接口（DescribeWebProtectionHitRuleDetail）用于查询CC防护命中规则详情列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeWebProtectionLogWithContext(ctx context.Context, request *DescribeWebProtectionLogRequest) (response *DescribeWebProtectionLogResponse, err error) {
+func (c *Client) DescribeWebProtectionHitRuleDetailWithContext(ctx context.Context, request *DescribeWebProtectionHitRuleDetailRequest) (response *DescribeWebProtectionHitRuleDetailResponse, err error) {
     if request == nil {
-        request = NewDescribeWebProtectionLogRequest()
+        request = NewDescribeWebProtectionHitRuleDetailRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWebProtectionLog require credential")
+        return nil, errors.New("DescribeWebProtectionHitRuleDetail require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeWebProtectionLogResponse()
+    response = NewDescribeWebProtectionHitRuleDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWebProtectionTopDataRequest() (request *DescribeWebProtectionTopDataRequest) {
+    request = &DescribeWebProtectionTopDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeWebProtectionTopData")
+    
+    
+    return
+}
+
+func NewDescribeWebProtectionTopDataResponse() (response *DescribeWebProtectionTopDataResponse) {
+    response = &DescribeWebProtectionTopDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeWebProtectionTopData
+// 本接口（DescribeWebProtectionTopData）用于查询CC防护的Top数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeWebProtectionTopData(request *DescribeWebProtectionTopDataRequest) (response *DescribeWebProtectionTopDataResponse, err error) {
+    return c.DescribeWebProtectionTopDataWithContext(context.Background(), request)
+}
+
+// DescribeWebProtectionTopData
+// 本接口（DescribeWebProtectionTopData）用于查询CC防护的Top数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeWebProtectionTopDataWithContext(ctx context.Context, request *DescribeWebProtectionTopDataRequest) (response *DescribeWebProtectionTopDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeWebProtectionTopDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWebProtectionTopData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWebProtectionTopDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -3559,58 +4685,6 @@ func (c *Client) DescribeZoneDDoSPolicyWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeZoneDDoSPolicyResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeZoneDetailsRequest() (request *DescribeZoneDetailsRequest) {
-    request = &DescribeZoneDetailsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeZoneDetails")
-    
-    
-    return
-}
-
-func NewDescribeZoneDetailsResponse() (response *DescribeZoneDetailsResponse) {
-    response = &DescribeZoneDetailsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeZoneDetails
-// 根据站点 ID 查询站点的详细信息
-//
-// 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeZoneDetails(request *DescribeZoneDetailsRequest) (response *DescribeZoneDetailsResponse, err error) {
-    return c.DescribeZoneDetailsWithContext(context.Background(), request)
-}
-
-// DescribeZoneDetails
-// 根据站点 ID 查询站点的详细信息
-//
-// 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-func (c *Client) DescribeZoneDetailsWithContext(ctx context.Context, request *DescribeZoneDetailsRequest) (response *DescribeZoneDetailsResponse, err error) {
-    if request == nil {
-        request = NewDescribeZoneDetailsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeZoneDetails require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeZoneDetailsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3690,7 +4764,7 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 }
 
 // DescribeZones
-// 用户查询用户站点信息列表，支持分页
+// 用户查询用户站点信息列表，支持分页。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3701,7 +4775,7 @@ func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *Describ
 }
 
 // DescribeZones
-// 用户查询用户站点信息列表，支持分页
+// 用户查询用户站点信息列表，支持分页。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3719,6 +4793,54 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     request.SetContext(ctx)
     
     response = NewDescribeZonesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDownloadL4LogsRequest() (request *DownloadL4LogsRequest) {
+    request = &DownloadL4LogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DownloadL4Logs")
+    
+    
+    return
+}
+
+func NewDownloadL4LogsResponse() (response *DownloadL4LogsResponse) {
+    response = &DownloadL4LogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DownloadL4Logs
+// 本接口（DownloadL4Logs）用于下载四层离线日志。
+//
+// 可能返回的错误码:
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DownloadL4Logs(request *DownloadL4LogsRequest) (response *DownloadL4LogsResponse, err error) {
+    return c.DownloadL4LogsWithContext(context.Background(), request)
+}
+
+// DownloadL4Logs
+// 本接口（DownloadL4Logs）用于下载四层离线日志。
+//
+// 可能返回的错误码:
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DownloadL4LogsWithContext(ctx context.Context, request *DownloadL4LogsRequest) (response *DownloadL4LogsResponse, err error) {
+    if request == nil {
+        request = NewDownloadL4LogsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DownloadL4Logs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDownloadL4LogsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3742,7 +4864,7 @@ func NewDownloadL7LogsResponse() (response *DownloadL7LogsResponse) {
 }
 
 // DownloadL7Logs
-// 查询七层离线日志
+// 本接口（DownloadL7Logs）下载七层离线日志。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3753,7 +4875,7 @@ func (c *Client) DownloadL7Logs(request *DownloadL7LogsRequest) (response *Downl
 }
 
 // DownloadL7Logs
-// 查询七层离线日志
+// 本接口（DownloadL7Logs）下载七层离线日志。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3794,7 +4916,7 @@ func NewIdentifyZoneResponse() (response *IdentifyZoneResponse) {
 }
 
 // IdentifyZone
-// 用于验证站点所有权
+// 用于验证站点所有权。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3804,7 +4926,7 @@ func (c *Client) IdentifyZone(request *IdentifyZoneRequest) (response *IdentifyZ
 }
 
 // IdentifyZone
-// 用于验证站点所有权
+// 用于验证站点所有权。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -3825,52 +4947,100 @@ func (c *Client) IdentifyZoneWithContext(ctx context.Context, request *IdentifyZ
     return
 }
 
-func NewImportDnsRecordsRequest() (request *ImportDnsRecordsRequest) {
-    request = &ImportDnsRecordsRequest{
+func NewModifyAlarmConfigRequest() (request *ModifyAlarmConfigRequest) {
+    request = &ModifyAlarmConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "ImportDnsRecords")
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyAlarmConfig")
     
     
     return
 }
 
-func NewImportDnsRecordsResponse() (response *ImportDnsRecordsResponse) {
-    response = &ImportDnsRecordsResponse{
+func NewModifyAlarmConfigResponse() (response *ModifyAlarmConfigResponse) {
+    response = &ModifyAlarmConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// ImportDnsRecords
-// 导入 DNS 记录
+// ModifyAlarmConfig
+// 本接口（ModifyAlarmConfig）用于修改用户告警配置。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ImportDnsRecords(request *ImportDnsRecordsRequest) (response *ImportDnsRecordsResponse, err error) {
-    return c.ImportDnsRecordsWithContext(context.Background(), request)
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyAlarmConfig(request *ModifyAlarmConfigRequest) (response *ModifyAlarmConfigResponse, err error) {
+    return c.ModifyAlarmConfigWithContext(context.Background(), request)
 }
 
-// ImportDnsRecords
-// 导入 DNS 记录
+// ModifyAlarmConfig
+// 本接口（ModifyAlarmConfig）用于修改用户告警配置。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) ImportDnsRecordsWithContext(ctx context.Context, request *ImportDnsRecordsRequest) (response *ImportDnsRecordsResponse, err error) {
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyAlarmConfigWithContext(ctx context.Context, request *ModifyAlarmConfigRequest) (response *ModifyAlarmConfigResponse, err error) {
     if request == nil {
-        request = NewImportDnsRecordsRequest()
+        request = NewModifyAlarmConfigRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("ImportDnsRecords require credential")
+        return nil, errors.New("ModifyAlarmConfig require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewImportDnsRecordsResponse()
+    response = NewModifyAlarmConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAlarmDefaultThresholdRequest() (request *ModifyAlarmDefaultThresholdRequest) {
+    request = &ModifyAlarmDefaultThresholdRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyAlarmDefaultThreshold")
+    
+    
+    return
+}
+
+func NewModifyAlarmDefaultThresholdResponse() (response *ModifyAlarmDefaultThresholdResponse) {
+    response = &ModifyAlarmDefaultThresholdResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyAlarmDefaultThreshold
+// 此接口（ModifyAlarmDefaultThreshold）用于修改告警默认阈值。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyAlarmDefaultThreshold(request *ModifyAlarmDefaultThresholdRequest) (response *ModifyAlarmDefaultThresholdResponse, err error) {
+    return c.ModifyAlarmDefaultThresholdWithContext(context.Background(), request)
+}
+
+// ModifyAlarmDefaultThreshold
+// 此接口（ModifyAlarmDefaultThreshold）用于修改告警默认阈值。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) ModifyAlarmDefaultThresholdWithContext(ctx context.Context, request *ModifyAlarmDefaultThresholdRequest) (response *ModifyAlarmDefaultThresholdResponse, err error) {
+    if request == nil {
+        request = NewModifyAlarmDefaultThresholdRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAlarmDefaultThreshold require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAlarmDefaultThresholdResponse()
     err = c.Send(request, response)
     return
 }
@@ -3898,7 +5068,7 @@ func NewModifyApplicationProxyResponse() (response *ModifyApplicationProxyRespon
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
     return c.ModifyApplicationProxyWithContext(context.Background(), request)
 }
@@ -3908,7 +5078,7 @@ func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) 
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyWithContext(ctx context.Context, request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRequest()
@@ -3948,6 +5118,8 @@ func NewModifyApplicationProxyRuleResponse() (response *ModifyApplicationProxyRu
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyRule(request *ModifyApplicationProxyRuleRequest) (response *ModifyApplicationProxyRuleResponse, err error) {
     return c.ModifyApplicationProxyRuleWithContext(context.Background(), request)
 }
@@ -3957,6 +5129,8 @@ func (c *Client) ModifyApplicationProxyRule(request *ModifyApplicationProxyRuleR
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyRuleWithContext(ctx context.Context, request *ModifyApplicationProxyRuleRequest) (response *ModifyApplicationProxyRuleResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRuleRequest()
@@ -3995,7 +5169,8 @@ func NewModifyApplicationProxyRuleStatusResponse() (response *ModifyApplicationP
 // 修改应用代理规则的状态
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyRuleStatus(request *ModifyApplicationProxyRuleStatusRequest) (response *ModifyApplicationProxyRuleStatusResponse, err error) {
     return c.ModifyApplicationProxyRuleStatusWithContext(context.Background(), request)
 }
@@ -4004,7 +5179,8 @@ func (c *Client) ModifyApplicationProxyRuleStatus(request *ModifyApplicationProx
 // 修改应用代理规则的状态
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyRuleStatusWithContext(ctx context.Context, request *ModifyApplicationProxyRuleStatusRequest) (response *ModifyApplicationProxyRuleStatusResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRuleStatusRequest()
@@ -4043,7 +5219,8 @@ func NewModifyApplicationProxyStatusResponse() (response *ModifyApplicationProxy
 // 修改应用代理的状态
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyStatus(request *ModifyApplicationProxyStatusRequest) (response *ModifyApplicationProxyStatusResponse, err error) {
     return c.ModifyApplicationProxyStatusWithContext(context.Background(), request)
 }
@@ -4052,7 +5229,8 @@ func (c *Client) ModifyApplicationProxyStatus(request *ModifyApplicationProxySta
 // 修改应用代理的状态
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
 func (c *Client) ModifyApplicationProxyStatusWithContext(ctx context.Context, request *ModifyApplicationProxyStatusRequest) (response *ModifyApplicationProxyStatusResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyStatusRequest()
@@ -4187,6 +5365,7 @@ func NewModifyDefaultCertificateResponse() (response *ModifyDefaultCertificateRe
 // 修改默认证书状态
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDZONESTATUS = "FailedOperation.InvalidZoneStatus"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
@@ -4198,6 +5377,7 @@ func (c *Client) ModifyDefaultCertificate(request *ModifyDefaultCertificateReque
 // 修改默认证书状态
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDZONESTATUS = "FailedOperation.InvalidZoneStatus"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
@@ -4298,7 +5478,7 @@ func NewModifyDnssecResponse() (response *ModifyDnssecResponse) {
 }
 
 // ModifyDnssec
-// 修改 DNSSEC 状态
+// 设置站点DNSSEC状态
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4307,7 +5487,7 @@ func (c *Client) ModifyDnssec(request *ModifyDnssecRequest) (response *ModifyDns
 }
 
 // ModifyDnssec
-// 修改 DNSSEC 状态
+// 设置站点DNSSEC状态
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4408,6 +5588,7 @@ func NewModifyLoadBalancingResponse() (response *ModifyLoadBalancingResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyLoadBalancing(request *ModifyLoadBalancingRequest) (response *ModifyLoadBalancingResponse, err error) {
     return c.ModifyLoadBalancingWithContext(context.Background(), request)
 }
@@ -4417,6 +5598,7 @@ func (c *Client) ModifyLoadBalancing(request *ModifyLoadBalancingRequest) (respo
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyLoadBalancingWithContext(ctx context.Context, request *ModifyLoadBalancingRequest) (response *ModifyLoadBalancingResponse, err error) {
     if request == nil {
         request = NewModifyLoadBalancingRequest()
@@ -4481,6 +5663,54 @@ func (c *Client) ModifyLoadBalancingStatusWithContext(ctx context.Context, reque
     return
 }
 
+func NewModifyLogTopicTaskRequest() (request *ModifyLogTopicTaskRequest) {
+    request = &ModifyLogTopicTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyLogTopicTask")
+    
+    
+    return
+}
+
+func NewModifyLogTopicTaskResponse() (response *ModifyLogTopicTaskResponse) {
+    response = &ModifyLogTopicTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyLogTopicTask
+// 本接口（ModifyLogTopicTask）用于修改日志推送任务信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyLogTopicTask(request *ModifyLogTopicTaskRequest) (response *ModifyLogTopicTaskResponse, err error) {
+    return c.ModifyLogTopicTaskWithContext(context.Background(), request)
+}
+
+// ModifyLogTopicTask
+// 本接口（ModifyLogTopicTask）用于修改日志推送任务信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyLogTopicTaskWithContext(ctx context.Context, request *ModifyLogTopicTaskRequest) (response *ModifyLogTopicTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyLogTopicTaskRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLogTopicTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLogTopicTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyOriginGroupRequest() (request *ModifyOriginGroupRequest) {
     request = &ModifyOriginGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4500,7 +5730,7 @@ func NewModifyOriginGroupResponse() (response *ModifyOriginGroupResponse) {
 }
 
 // ModifyOriginGroup
-// 源站组修改
+// 修改源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4509,7 +5739,7 @@ func (c *Client) ModifyOriginGroup(request *ModifyOriginGroupRequest) (response 
 }
 
 // ModifyOriginGroup
-// 源站组修改
+// 修改源站组
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4551,7 +5781,7 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 // 修改规则引擎规则。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleResponse, err error) {
     return c.ModifyRuleWithContext(context.Background(), request)
 }
@@ -4560,7 +5790,7 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 // 修改规则引擎规则。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 func (c *Client) ModifyRuleWithContext(ctx context.Context, request *ModifyRuleRequest) (response *ModifyRuleResponse, err error) {
     if request == nil {
         request = NewModifyRuleRequest()
@@ -4599,7 +5829,7 @@ func NewModifyRulePriorityResponse() (response *ModifyRulePriorityResponse) {
 // 修改规则引擎规则优先级
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 func (c *Client) ModifyRulePriority(request *ModifyRulePriorityRequest) (response *ModifyRulePriorityResponse, err error) {
     return c.ModifyRulePriorityWithContext(context.Background(), request)
 }
@@ -4608,7 +5838,7 @@ func (c *Client) ModifyRulePriority(request *ModifyRulePriorityRequest) (respons
 // 修改规则引擎规则优先级
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
 func (c *Client) ModifyRulePriorityWithContext(ctx context.Context, request *ModifyRulePriorityRequest) (response *ModifyRulePriorityResponse, err error) {
     if request == nil {
         request = NewModifyRulePriorityRequest()
@@ -4677,6 +5907,54 @@ func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *M
     return
 }
 
+func NewModifySecurityWafGroupPolicyRequest() (request *ModifySecurityWafGroupPolicyRequest) {
+    request = &ModifySecurityWafGroupPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifySecurityWafGroupPolicy")
+    
+    
+    return
+}
+
+func NewModifySecurityWafGroupPolicyResponse() (response *ModifySecurityWafGroupPolicyResponse) {
+    response = &ModifySecurityWafGroupPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifySecurityWafGroupPolicy
+// 修改安全配置托管规则
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+func (c *Client) ModifySecurityWafGroupPolicy(request *ModifySecurityWafGroupPolicyRequest) (response *ModifySecurityWafGroupPolicyResponse, err error) {
+    return c.ModifySecurityWafGroupPolicyWithContext(context.Background(), request)
+}
+
+// ModifySecurityWafGroupPolicy
+// 修改安全配置托管规则
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
+func (c *Client) ModifySecurityWafGroupPolicyWithContext(ctx context.Context, request *ModifySecurityWafGroupPolicyRequest) (response *ModifySecurityWafGroupPolicyResponse, err error) {
+    if request == nil {
+        request = NewModifySecurityWafGroupPolicyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySecurityWafGroupPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySecurityWafGroupPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyZoneRequest() (request *ModifyZoneRequest) {
     request = &ModifyZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4696,7 +5974,7 @@ func NewModifyZoneResponse() (response *ModifyZoneResponse) {
 }
 
 // ModifyZone
-// 用该站点信息
+// 修改站点信息。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4707,7 +5985,7 @@ func (c *Client) ModifyZone(request *ModifyZoneRequest) (response *ModifyZoneRes
 }
 
 // ModifyZone
-// 用该站点信息
+// 修改站点信息。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4748,7 +6026,7 @@ func NewModifyZoneCnameSpeedUpResponse() (response *ModifyZoneCnameSpeedUpRespon
 }
 
 // ModifyZoneCnameSpeedUp
-// 开启，关闭 CNAME 加速
+// 开启，关闭 CNAME 加速。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4758,7 +6036,7 @@ func (c *Client) ModifyZoneCnameSpeedUp(request *ModifyZoneCnameSpeedUpRequest) 
 }
 
 // ModifyZoneCnameSpeedUp
-// 开启，关闭 CNAME 加速
+// 开启，关闭 CNAME 加速。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -4803,7 +6081,6 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 // 可能返回的错误码:
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
-//  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
@@ -4824,7 +6101,6 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 // 可能返回的错误码:
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
-//  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
@@ -4870,7 +6146,7 @@ func NewModifyZoneStatusResponse() (response *ModifyZoneStatusResponse) {
 }
 
 // ModifyZoneStatus
-// 用于开启，关闭站点
+// 用于开启，关闭站点。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -4880,7 +6156,7 @@ func (c *Client) ModifyZoneStatus(request *ModifyZoneStatusRequest) (response *M
 }
 
 // ModifyZoneStatus
-// 用于开启，关闭站点
+// 用于开启，关闭站点。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -4920,7 +6196,7 @@ func NewReclaimZoneResponse() (response *ReclaimZoneResponse) {
 }
 
 // ReclaimZone
-// 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点
+// 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -4930,7 +6206,7 @@ func (c *Client) ReclaimZone(request *ReclaimZoneRequest) (response *ReclaimZone
 }
 
 // ReclaimZone
-// 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点
+// 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -4951,52 +6227,52 @@ func (c *Client) ReclaimZoneWithContext(ctx context.Context, request *ReclaimZon
     return
 }
 
-func NewScanDnsRecordsRequest() (request *ScanDnsRecordsRequest) {
-    request = &ScanDnsRecordsRequest{
+func NewSwitchLogTopicTaskRequest() (request *SwitchLogTopicTaskRequest) {
+    request = &SwitchLogTopicTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("teo", APIVersion, "ScanDnsRecords")
+    request.Init().WithApiInfo("teo", APIVersion, "SwitchLogTopicTask")
     
     
     return
 }
 
-func NewScanDnsRecordsResponse() (response *ScanDnsRecordsResponse) {
-    response = &ScanDnsRecordsResponse{
+func NewSwitchLogTopicTaskResponse() (response *SwitchLogTopicTaskResponse) {
+    response = &SwitchLogTopicTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// ScanDnsRecords
-// 扫描站点历史解析记录
+// SwitchLogTopicTask
+// 本接口（SwitchLogTopicTask）用于开启/关闭推送任务。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-func (c *Client) ScanDnsRecords(request *ScanDnsRecordsRequest) (response *ScanDnsRecordsResponse, err error) {
-    return c.ScanDnsRecordsWithContext(context.Background(), request)
+func (c *Client) SwitchLogTopicTask(request *SwitchLogTopicTaskRequest) (response *SwitchLogTopicTaskResponse, err error) {
+    return c.SwitchLogTopicTaskWithContext(context.Background(), request)
 }
 
-// ScanDnsRecords
-// 扫描站点历史解析记录
+// SwitchLogTopicTask
+// 本接口（SwitchLogTopicTask）用于开启/关闭推送任务。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-func (c *Client) ScanDnsRecordsWithContext(ctx context.Context, request *ScanDnsRecordsRequest) (response *ScanDnsRecordsResponse, err error) {
+func (c *Client) SwitchLogTopicTaskWithContext(ctx context.Context, request *SwitchLogTopicTaskRequest) (response *SwitchLogTopicTaskResponse, err error) {
     if request == nil {
-        request = NewScanDnsRecordsRequest()
+        request = NewSwitchLogTopicTaskRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("ScanDnsRecords require credential")
+        return nil, errors.New("SwitchLogTopicTask require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewScanDnsRecordsResponse()
+    response = NewSwitchLogTopicTaskResponse()
     err = c.Send(request, response)
     return
 }

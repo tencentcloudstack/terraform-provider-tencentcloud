@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"runtime"
@@ -140,4 +141,12 @@ func WrapError(cause error, id, requestId string) error {
 		Cause:     cause,
 		frame:     frame,
 	}
+}
+
+func UnwarpSDKError(err error) *sdkErrors.TencentCloudSDKError {
+	var result *sdkErrors.TencentCloudSDKError
+	if errors.As(err, &result) {
+		return result
+	}
+	return nil
 }

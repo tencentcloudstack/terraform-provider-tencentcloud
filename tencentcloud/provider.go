@@ -672,6 +672,12 @@ TencentCloud Elastic Microservice(TEM)
 TencentCloud EdgeOne(TEO)
   Data Source
 	tencentcloud_teo_zone_available_plans
+	tencentcloud_teo_bot_managed_rules
+	tencentcloud_teo_bot_portrait_rules
+	tencentcloud_teo_rule_engine_settings
+	tencentcloud_teo_security_policy_regions
+	tencentcloud_teo_waf_rule_groups
+	tencentcloud_teo_zone_ddos_policy
 
   Resource
 	tencentcloud_teo_zone
@@ -681,10 +687,12 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
+	tencentcloud_teo_rule_engine_priority
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_host_certificate
-	tencentcloud_teo_default_certificate
+	tencentcloud_teo_ddos_policy
+	tencentcloud_teo_security_policy
+	tencentcloud_teo_custom_error_page
 */
 package tencentcloud
 
@@ -974,6 +982,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cdh_instances":                            dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                 dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                 dataSourceTencentCloudTeoZoneAvailablePlans(),
+			"tencentcloud_teo_bot_managed_rules":                    dataSourceTencentCloudTeoBotManagedRules(),
+			"tencentcloud_teo_bot_portrait_rules":                   dataSourceTencentCloudTeoBotPortraitRules(),
+			"tencentcloud_teo_rule_engine_settings":                 dataSourceTencentCloudTeoRuleEngineSettings(),
+			"tencentcloud_teo_security_policy_regions":              dataSourceTencentCloudTeoSecurityPolicyRegions(),
+			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
+			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1224,11 +1238,14 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_load_balancing":                       resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                         resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                          resourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_rule_engine_priority":                 resourceTencentCloudTeoRuleEnginePriority(),
 			"tencentcloud_teo_application_proxy":                    resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":               resourceTencentCloudTeoApplicationProxyRule(),
-			"tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
-			"tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
+			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
+			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
+			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
+			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 		},
 
 		ConfigureFunc: providerConfigure,
