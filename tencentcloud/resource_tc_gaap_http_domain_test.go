@@ -58,7 +58,7 @@ func TestAccTencentCloudGaapHttpDomain_https_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
@@ -90,7 +90,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
@@ -132,7 +132,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
@@ -167,7 +167,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
@@ -203,7 +203,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
@@ -218,7 +218,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
@@ -246,7 +246,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
@@ -261,7 +261,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_domain.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-10.elementtest.org"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "true"),
@@ -346,36 +346,24 @@ resource tencentcloud_gaap_http_domain "foo" {
 `, defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttps = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 7171
   proxy_id         = "%s"
-  certificate_id   = tencentcloud_gaap_certificate.foo.id
+  certificate_id   = "%s"
   forward_protocol = "HTTP"
   auth_type        = 0
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id    = tencentcloud_gaap_layer7_listener.foo.id
-  domain         = "www.qq.com"
+  domain         = "zhyu-10.elementtest.org"
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
+`, defaultGaapProxyId, defaultHttpsDomainCertificateId)
 
 var testAccGaapHttpDomainHttpsMutualAuthentication = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -387,7 +375,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7172
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -395,11 +383,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
+  domain      = "zhyu-10.elementtest.org"
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId, defaultHttpsDomainCertificateId)
 
 var testAccGaapHttpDomainHttpsMutualAuthenticationUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -448,7 +435,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7172
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -456,13 +443,13 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id           = tencentcloud_gaap_layer7_listener.foo.id
-  domain                = "www.qq.com"
-  certificate_id        = tencentcloud_gaap_certificate.server.id
+  domain                = "zhyu-10.elementtest.org"
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.client.id
 
   realserver_auth               = true
   realserver_certificate_id     = tencentcloud_gaap_certificate.realserver.id
-  realserver_certificate_domain = "qq.com"
+  realserver_certificate_domain = "elementtest.org"
 
   basic_auth    = true
   basic_auth_id = tencentcloud_gaap_certificate.basic.id
@@ -479,15 +466,11 @@ resource tencentcloud_gaap_http_domain "foo" {
 	"\"test:tx2KGdo3zJg/.\"",
 	"<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF",
 	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
+	defaultHttpsDomainCertificateId,
 )
 
 var testAccGaapHttpDomainHttpsPolyClientCertificateIds = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -505,7 +488,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7173
   proxy_id                    = "%s"
-  certificate_id              = tencentcloud_gaap_certificate.foo.id
+  certificate_id              = "%s"
   client_certificate_ids      = [tencentcloud_gaap_certificate.bar.id]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
@@ -513,22 +496,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                 = tencentcloud_gaap_layer7_listener.foo.id
-  domain                      = "www.qq.com"
+  domain                      = "zhyu-10.elementtest.org"
   client_certificate_ids = [tencentcloud_gaap_certificate.client1.id]
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	defaultGaapProxyId)
+	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
+)
 
 var testAccGaapHttpDomainHttpsPolyClientCertificateIdsUpdate = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -552,7 +530,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7173
   proxy_id                    = "%s"
-  certificate_id              = tencentcloud_gaap_certificate.foo.id
+  certificate_id              = "%s"
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
@@ -560,23 +538,18 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                 = tencentcloud_gaap_layer7_listener.foo.id
-  domain                      = "www.qq.com"
+  domain                      = "zhyu-10.elementtest.org"
   client_certificate_ids = [tencentcloud_gaap_certificate.client2.id, tencentcloud_gaap_certificate.client3.id]
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	defaultGaapProxyId)
+	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
+)
 
 var testAccGaapHttpDomainHttpsCcId = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -594,7 +567,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7174
   proxy_id                    = "%s"
-  certificate_id              = tencentcloud_gaap_certificate.foo.id
+  certificate_id              = "%s"
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
@@ -602,22 +575,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id           = tencentcloud_gaap_layer7_listener.foo.id
-  domain                = "www.qq.com"
+  domain                = "zhyu-10.elementtest.org"
   client_certificate_id = tencentcloud_gaap_certificate.client1.id
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	defaultGaapProxyId)
+	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
+)
 
 var testAccGaapHttpDomainHttpsPolyIds = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -635,7 +603,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 7174
   proxy_id                    = "%s"
-  certificate_id              = tencentcloud_gaap_certificate.foo.id
+  certificate_id              = "%s"
   client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
@@ -643,22 +611,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                = tencentcloud_gaap_layer7_listener.foo.id
-  domain                     = "www.qq.com"
- client_certificate_ids = [tencentcloud_gaap_certificate.client1.id]
+  domain                     = "zhyu-10.elementtest.org"
+  client_certificate_ids = [tencentcloud_gaap_certificate.client1.id]
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	defaultGaapProxyId)
+	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
+)
 
 var testAccGaapHttpDomainHttpsRsIdOld = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -676,7 +639,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7176
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -684,25 +647,19 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
+  domain      = "zhyu-10.elementtest.org"
 
   realserver_auth               = true
   realserver_certificate_id     = tencentcloud_gaap_certificate.realserver1.id
   realserver_certificate_domain = "qq.com"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
 )
 
 var testAccGaapHttpDomainHttpsRsIds2 = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -720,7 +677,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7177
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -728,25 +685,19 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
+  domain      = "zhyu-10.elementtest.org"
 
   realserver_auth               = true
   realserver_certificate_ids    = [tencentcloud_gaap_certificate.realserver1.id]
   realserver_certificate_domain = "qq.com"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
 )
 
 var testAccGaapHttpDomainHttpsRsIds = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -764,7 +715,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7176
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -772,25 +723,19 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
+  domain      = "zhyu-10.elementtest.org"
 
   realserver_auth               = true
   realserver_certificate_ids    = [tencentcloud_gaap_certificate.realserver1.id]
   realserver_certificate_domain = "qq.com"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
 )
 
 var testAccGaapHttpDomainHttpsRsIdsUpdate = fmt.Sprintf(`
-resource tencentcloud_gaap_certificate "foo" {
-  type    = "SERVER"
-  content = %s
-  key     = %s
-}
-
 resource tencentcloud_gaap_certificate "bar" {
   type    = "CLIENT"
   content = %s
@@ -814,7 +759,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 7177
   proxy_id              = "%s"
-  certificate_id        = tencentcloud_gaap_certificate.foo.id
+  certificate_id        = "%s"
   client_certificate_id = tencentcloud_gaap_certificate.bar.id
   forward_protocol      = "HTTPS"
   auth_type             = 1
@@ -822,15 +767,15 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
+  domain      = "zhyu-10.elementtest.org"
 
   realserver_auth               = true
   realserver_certificate_ids    = [tencentcloud_gaap_certificate.realserver1.id, tencentcloud_gaap_certificate.realserver2.id]
   realserver_certificate_domain = "qq.com"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+`, "<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	defaultGaapProxyId,
+	defaultHttpsDomainCertificateId,
 )

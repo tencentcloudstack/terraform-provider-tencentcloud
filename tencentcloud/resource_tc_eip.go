@@ -185,7 +185,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		if errRet != nil {
 			return retryError(errRet)
 		}
-		if *eip.AddressStatus == EIP_STATUS_CREATING {
+		if eip != nil && *eip.AddressStatus == EIP_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("eip is still creating"))
 		}
 		return nil
