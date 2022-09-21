@@ -694,10 +694,10 @@ func (me *CvmService) DeleteKeyPair(ctx context.Context, keyId string) error {
 	return nil
 }
 
-func (me *CvmService) UnbindKeyPair(ctx context.Context, keyId string, instanceIds []*string) error {
+func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, instanceIds []*string) error {
 	logId := getLogId(ctx)
 	request := cvm.NewDisassociateInstancesKeyPairsRequest()
-	request.KeyIds = []*string{&keyId}
+	request.KeyIds = keyIds
 	request.InstanceIds = instanceIds
 	request.ForceStop = helper.Bool(true)
 
@@ -714,10 +714,10 @@ func (me *CvmService) UnbindKeyPair(ctx context.Context, keyId string, instanceI
 	return nil
 }
 
-func (me *CvmService) BindKeyPair(ctx context.Context, keyId, instanceId string) error {
+func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanceId string) error {
 	logId := getLogId(ctx)
 	request := cvm.NewAssociateInstancesKeyPairsRequest()
-	request.KeyIds = []*string{&keyId}
+	request.KeyIds = keyIds
 	request.InstanceIds = []*string{&instanceId}
 	request.ForceStop = helper.Bool(true)
 
