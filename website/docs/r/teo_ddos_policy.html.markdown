@@ -71,9 +71,21 @@ resource "tencentcloud_teo_ddos_policy" "ddos_policy" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required, Int) Policy ID.
 * `zone_id` - (Required, String) Site ID.
+* `policy_id` - (Required, Int) Policy ID.
 * `ddos_rule` - (Optional, List) DDoS Configuration of the zone.
+
+The `ddos_rule` object supports the following:
+
+* `acl` - (Optional, List) DDoS ACL rule configuration.
+* `allow_block` - (Optional, List) DDoS black-white list.
+* `anti_ply` - (Optional, List) DDoS protocol and connection protection.
+* `geo_ip` - (Optional, List) DDoS Protection by Geo Info.
+* `packet_filter` - (Optional, List) DDoS feature filtering configuration.
+* `speed_limit` - (Optional, List) DDoS access origin site speed limit configuration.
+* `status_info` - (Optional, List) DDoS protection level.
+* `switch` - (Optional, String) DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.
+* `udp_shard_open` - (Optional, String) UDP shard switch. Valid values:- `on`: Enable.- `off`: Disable.
 
 The `acl` object supports the following:
 
@@ -89,15 +101,15 @@ The `acls` object supports the following:
 * `sport_end` - (Optional, Int) End of the source port range. Valid value range: 0-65535.
 * `sport_start` - (Optional, Int) Start of the source port range. Valid value range: 0-65535.
 
+The `allow_block` object supports the following:
+
+* `switch` - (Optional, String) - `on`: Enable. `AllowBlockIps` parameter is required.- `off`: Disable.
+* `allow_block_ips` - (Optional, List) DDoS black-white list detail.
+
 The `allow_block_ips` object supports the following:
 
 * `type` - (Required, String) Valid values: `block`, `allow`.
 * `ip` - (Optional, String) Valid value format:- ip, for example 1.1.1.1- ip range, for example 1.1.1.2-1.1.1.3- network segment, for example 1.2.1.0/24- network segment range, for example 1.2.1.0/24-1.2.2.0/24.
-
-The `allow_block` object supports the following:
-
-* `allow_block_ips` - (Optional, List) DDoS black-white list detail.
-* `switch` - (Optional, String) - `on`: Enable. `AllowBlockIps` parameter is required.- `off`: Disable.
 
 The `anti_ply` object supports the following:
 
@@ -116,27 +128,15 @@ The `anti_ply` object supports the following:
 * `source_create_limit` - (Required, Int) Limitation of new connection to origin site per second. Valid value range: 0-4294967295.
 * `udp_shard` - (Optional, String) UDP shard protection switch. Valid values: `on`, `off`.
 
-The `ddos_rule` object supports the following:
-
-* `acl` - (Optional, List) DDoS ACL rule configuration.
-* `allow_block` - (Optional, List) DDoS black-white list.
-* `anti_ply` - (Optional, List) DDoS protocol and connection protection.
-* `geo_ip` - (Optional, List) DDoS Protection by Geo Info.
-* `packet_filter` - (Optional, List) DDoS feature filtering configuration.
-* `speed_limit` - (Optional, List) DDoS access origin site speed limit configuration.
-* `status_info` - (Optional, List) DDoS protection level.
-* `switch` - (Optional, String) DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.
-* `udp_shard_open` - (Optional, String) UDP shard switch. Valid values:- `on`: Enable.- `off`: Disable.
-
 The `geo_ip` object supports the following:
 
-* `region_ids` - (Optional, Set) Region ID. See details in data source `security_policy_regions`.
 * `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `region_ids` - (Optional, Set) Region ID. See details in data source `security_policy_regions`.
 
 The `packet_filter` object supports the following:
 
-* `packet_filters` - (Optional, List) DDoS feature filtering configuration detail.
 * `switch` - (Optional, String) - `on`: Enable. `PacketFilters` parameter is required.- `off`: Disable.
+* `packet_filters` - (Optional, List) DDoS feature filtering configuration detail.
 
 The `packet_filters` object supports the following:
 

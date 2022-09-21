@@ -171,32 +171,43 @@ resource "tencentcloud_teo_security_policy" "security_policy" {
 
 The following arguments are supported:
 
-* `entity` - (Required, String) Subdomain.
 * `zone_id` - (Required, String) Site ID.
+* `entity` - (Required, String) Subdomain.
 * `config` - (Optional, List) Security policy configuration.
+
+The `config` object supports the following:
+
+* `switch_config` - (Optional, List) Main switch of 7-layer security.
+* `acl_config` - (Optional, List) ACL configuration.
+* `bot_config` - (Optional, List) Bot Configuration.
+* `drop_page_config` - (Optional, List) Custom drop page configuration.
+* `except_config` - (Optional, List) Exception rule configuration.
+* `ip_table_config` - (Optional, List) Basic access control.
+* `rate_limit_config` - (Optional, List) RateLimit Configuration.
+* `waf_config` - (Optional, List) WAF (Web Application Firewall) Configuration.
+
+The `switch_config` object supports the following:
+
+* `web_switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
 
 The `acl_config` object supports the following:
 
 * `switch` - (Required, String) - `on`: Enable.- `off`: Disable.
 * `user_rules` - (Optional, List) Custom configuration.
 
-The `acl_drop_page_detail` object supports the following:
+The `user_rules` object supports the following:
 
-* `name` - (Optional, String) File name or URL.
-* `page_id` - (Optional, Int) ID of the custom error page. when set to 0, use system default error page.
-* `status_code` - (Optional, Int) HTTP status code to use. Valid range: 100-600.
-* `type` - (Optional, String) Type of the custom error page. Valid values: `file`, `url`.
-
-The `ai_rule` object supports the following:
-
-* `mode` - (Optional, String) Valid values:- `smart_status_close`: disabled.- `smart_status_open`: blocked.- `smart_status_observe`: observed.
-
-The `bot_config` object supports the following:
-
-* `intelligence_rule` - (Optional, List) Bot intelligent rule configuration.
-* `managed_rule` - (Optional, List) Preset rules.
-* `portrait_rule` - (Optional, List) Portrait rule.
-* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `action` - (Required, String) Action to take. Valid values: `trans`, `drop`, `monitor`, `ban`, `redirect`, `page`, `alg`.
+* `conditions` - (Required, List) Conditions of the rule.
+* `rule_name` - (Required, String) Rule name.
+* `rule_priority` - (Required, Int) Priority of the rule. Valid value range: 0-100.
+* `rule_status` - (Required, String) Status of the rule.
+* `name` - (Optional, String) Name of the custom response page.
+* `page_id` - (Optional, Int) ID of the custom response page.
+* `punish_time_unit` - (Optional, String) Time unit of the punish time. Valid values: `second`, `minutes`, `hour`.
+* `punish_time` - (Optional, Int) Punish time, Valid value range: 0-2 days.
+* `redirect_url` - (Optional, String) Redirect target URL, must be an sub-domain from one of the account&#39;s site.
+* `response_code` - (Optional, Int) Response code to use when redirecting.
 
 The `conditions` object supports the following:
 
@@ -205,75 +216,12 @@ The `conditions` object supports the following:
 * `match_param` - (Required, String) Parameter for match item. For example, when match from header, match parameter can be set to a header key.
 * `operator` - (Required, String) Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.
 
-The `config` object supports the following:
+The `bot_config` object supports the following:
 
-* `acl_config` - (Optional, List) ACL configuration.
-* `bot_config` - (Optional, List) Bot Configuration.
-* `drop_page_config` - (Optional, List) Custom drop page configuration.
-* `except_config` - (Optional, List) Exception rule configuration.
-* `ip_table_config` - (Optional, List) Basic access control.
-* `rate_limit_config` - (Optional, List) RateLimit Configuration.
-* `switch_config` - (Optional, List) Main switch of 7-layer security.
-* `waf_config` - (Optional, List) WAF (Web Application Firewall) Configuration.
-
-The `detail` object supports the following:
-
-* `action` - (Optional, String) Action to take.
-* `id` - (Optional, Int) Template ID. Note: This field may return null, indicating that no valid value can be obtained.
-* `mode` - (Optional, String) Template Name. Note: This field may return null, indicating that no valid value can be obtained.
-* `period` - (Optional, Int) Period.
-* `punish_time` - (Optional, Int) Punish time.
-* `threshold` - (Optional, Int) Threshold.
-
-The `drop_page_config` object supports the following:
-
-* `acl_drop_page_detail` - (Optional, List) Custom error page of ACL rules.
 * `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-* `waf_drop_page_detail` - (Optional, List) Custom error page of WAF rules.
-
-The `except_config` object supports the following:
-
-* `except_user_rules` - (Optional, List) Exception rules.
-* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-
-The `except_user_rule_conditions` object supports the following:
-
-* `match_content` - (Optional, String) Content to match.
-* `match_from` - (Optional, String) Items to match. Valid values:- `host`: Host of the request.- `sip`: Client IP.- `ua`: User-Agent.- `cookie`: Session cookie.- `cgi`: CGI script.- `xff`: XFF extension header.- `url`: URL of the request.- `accept`: Accept encoding of the request.- `method`: HTTP method of the request.- `header`: HTTP header of the request.- `sip_proto`: Network protocol of the request.
-* `match_param` - (Optional, String) Parameter for match item. For example, when match from header, match parameter can be set to a header key.
-* `operator` - (Optional, String) Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.
-
-The `except_user_rule_scope` object supports the following:
-
-* `modules` - (Optional, Set) Modules in which the rule take effect. Valid values: `waf`.
-
-The `except_user_rules` object supports the following:
-
-* `action` - (Optional, String) Action to take. Valid values: `skip`.
-* `except_user_rule_conditions` - (Optional, List) Conditions of the rule.
-* `except_user_rule_scope` - (Optional, List) Scope of the rule in effect.
-* `rule_priority` - (Optional, Int) Priority of the rule. Valid value range: 0-100.
-* `rule_status` - (Optional, String) Status of the rule. Valid values:- `on`: Enabled.- `off`: Disabled.
-
-The `intelligence_rule` object supports the following:
-
-* `items` - (Optional, List) Configuration detail.
-* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-
-The `intelligence` object supports the following:
-
-* `action` - (Optional, String) Action to take. Valid values: `monitor`, `alg`.
-* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-
-The `ip_table_config` object supports the following:
-
-* `rules` - (Optional, List) Rules list.
-* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-
-The `items` object supports the following:
-
-* `action` - (Optional, String) Action to take. Valid values: `trans`, `monitor`, `alg`, `captcha`, `drop`.
-* `label` - (Optional, String) Bot label, valid values: `evil_bot`, `suspect_bot`, `good_bot`, `normal`.
+* `managed_rule` - (Optional, List) Preset rules.
+* `intelligence_rule` - (Optional, List) Bot intelligent rule configuration.
+* `portrait_rule` - (Optional, List) Portrait rule.
 
 The `managed_rule` object supports the following:
 
@@ -291,6 +239,16 @@ The `managed_rule` object supports the following:
 * `response_code` - (Optional, Int) Response code to use when redirecting.
 * `trans_managed_ids` - (Optional, Set) Rules to enable when action is `trans`. See details in data source `bot_managed_rules`.
 
+The `intelligence_rule` object supports the following:
+
+* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `items` - (Optional, List) Configuration detail.
+
+The `items` object supports the following:
+
+* `action` - (Optional, String) Action to take. Valid values: `trans`, `monitor`, `alg`, `captcha`, `drop`.
+* `label` - (Optional, String) Bot label, valid values: `evil_bot`, `suspect_bot`, `good_bot`, `normal`.
+
 The `portrait_rule` object supports the following:
 
 * `alg_managed_ids` - (Optional, Set) Rules to enable when action is `alg`. See details in data source `bot_portrait_rules`.
@@ -300,12 +258,54 @@ The `portrait_rule` object supports the following:
 * `rule_id` - (Optional, Int) Rule ID.
 * `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
 
-The `rate_limit_config` object supports the following:
+The `drop_page_config` object supports the following:
 
-* `intelligence` - (Optional, List) Intelligent client filter.
 * `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-* `template` - (Optional, List) Default Template. Note: This field may return null, indicating that no valid value can be obtained.
-* `user_rules` - (Optional, List) Custom configuration.
+* `acl_drop_page_detail` - (Optional, List) Custom error page of ACL rules.
+* `waf_drop_page_detail` - (Optional, List) Custom error page of WAF rules.
+
+The `acl_drop_page_detail` object supports the following:
+
+* `name` - (Optional, String) File name or URL.
+* `page_id` - (Optional, Int) ID of the custom error page. when set to 0, use system default error page.
+* `status_code` - (Optional, Int) HTTP status code to use. Valid range: 100-600.
+* `type` - (Optional, String) Type of the custom error page. Valid values: `file`, `url`.
+
+The `waf_drop_page_detail` object supports the following:
+
+* `name` - (Optional, String) File name or URL.
+* `page_id` - (Optional, Int) ID of the custom error page. when set to 0, use system default error page.
+* `status_code` - (Optional, Int) HTTP status code to use. Valid range: 100-600.
+* `type` - (Optional, String) Type of the custom error page. Valid values: `file`, `url`.
+
+The `except_config` object supports the following:
+
+* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `except_user_rules` - (Optional, List) Exception rules.
+
+The `except_user_rules` object supports the following:
+
+* `action` - (Optional, String) Action to take. Valid values: `skip`.
+* `except_user_rule_conditions` - (Optional, List) Conditions of the rule.
+* `except_user_rule_scope` - (Optional, List) Scope of the rule in effect.
+* `rule_priority` - (Optional, Int) Priority of the rule. Valid value range: 0-100.
+* `rule_status` - (Optional, String) Status of the rule. Valid values:- `on`: Enabled.- `off`: Disabled.
+
+The `except_user_rule_conditions` object supports the following:
+
+* `match_content` - (Optional, String) Content to match.
+* `match_from` - (Optional, String) Items to match. Valid values:- `host`: Host of the request.- `sip`: Client IP.- `ua`: User-Agent.- `cookie`: Session cookie.- `cgi`: CGI script.- `xff`: XFF extension header.- `url`: URL of the request.- `accept`: Accept encoding of the request.- `method`: HTTP method of the request.- `header`: HTTP header of the request.- `sip_proto`: Network protocol of the request.
+* `match_param` - (Optional, String) Parameter for match item. For example, when match from header, match parameter can be set to a header key.
+* `operator` - (Optional, String) Valid values:- `equal`: string equal.- `not_equal`: string not equal.- `include`: string include.- `not_include`: string not include.- `match`: ip match.- `not_match`: ip not match.- `include_area`: area include.- `is_empty`: field existed but empty.- `not_exists`: field is not existed.- `regexp`: regex match.- `len_gt`: value greater than.- `len_lt`: value less than.- `len_eq`: value equal.- `match_prefix`: string prefix match.- `match_suffix`: string suffix match.- `wildcard`: wildcard match.
+
+The `except_user_rule_scope` object supports the following:
+
+* `modules` - (Optional, Set) Modules in which the rule take effect. Valid values: `waf`.
+
+The `ip_table_config` object supports the following:
+
+* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `rules` - (Optional, List) Rules list.
 
 The `rules` object supports the following:
 
@@ -314,28 +314,12 @@ The `rules` object supports the following:
 * `match_from` - (Optional, String) Matching type. Valid values: `ip`, `area`.
 * `rule_id` - (Optional, Int) Rule ID.
 
-The `switch_config` object supports the following:
+The `rate_limit_config` object supports the following:
 
-* `web_switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
-
-The `template` object supports the following:
-
-* `detail` - (Optional, List) Detail of the template.
-* `mode` - (Optional, String) Template Name. Note: This field may return null, indicating that no valid value can be obtained.
-
-The `user_rules` object supports the following:
-
-* `action` - (Required, String) Action to take. Valid values: `trans`, `drop`, `monitor`, `ban`, `redirect`, `page`, `alg`.
-* `conditions` - (Required, List) Conditions of the rule.
-* `rule_name` - (Required, String) Rule name.
-* `rule_priority` - (Required, Int) Priority of the rule. Valid value range: 0-100.
-* `rule_status` - (Required, String) Status of the rule.
-* `name` - (Optional, String) Name of the custom response page.
-* `page_id` - (Optional, Int) ID of the custom response page.
-* `punish_time_unit` - (Optional, String) Time unit of the punish time. Valid values: `second`, `minutes`, `hour`.
-* `punish_time` - (Optional, Int) Punish time, Valid value range: 0-2 days.
-* `redirect_url` - (Optional, String) Redirect target URL, must be an sub-domain from one of the account&#39;s site.
-* `response_code` - (Optional, Int) Response code to use when redirecting.
+* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `user_rules` - (Optional, List) Custom configuration.
+* `intelligence` - (Optional, List) Intelligent client filter.
+* `template` - (Optional, List) Default Template. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `user_rules` object supports the following:
 
@@ -350,20 +334,36 @@ The `user_rules` object supports the following:
 * `freq_fields` - (Optional, Set) Filter words.
 * `rule_status` - (Optional, String) Status of the rule. Valid values: `on`, `off`, `hour`.
 
+The `intelligence` object supports the following:
+
+* `switch` - (Optional, String) - `on`: Enable.- `off`: Disable.
+* `action` - (Optional, String) Action to take. Valid values: `monitor`, `alg`.
+
+The `template` object supports the following:
+
+* `mode` - (Optional, String) Template Name. Note: This field may return null, indicating that no valid value can be obtained.
+* `detail` - (Optional, List) Detail of the template.
+
+The `detail` object supports the following:
+
+* `action` - (Optional, String) Action to take.
+* `id` - (Optional, Int) Template ID. Note: This field may return null, indicating that no valid value can be obtained.
+* `mode` - (Optional, String) Template Name. Note: This field may return null, indicating that no valid value can be obtained.
+* `period` - (Optional, Int) Period.
+* `punish_time` - (Optional, Int) Punish time.
+* `threshold` - (Optional, Int) Threshold.
+
 The `waf_config` object supports the following:
 
+* `switch` - (Required, String) Whether to enable WAF rules. Valid values:- `on`: Enable.- `off`: Disable.
 * `level` - (Required, String) Protection level. Valid values: `loose`, `normal`, `strict`, `stricter`, `custom`.
 * `mode` - (Required, String) Protection mode. Valid values:- `block`: use block mode globally, you still can set a group of rules to use observe mode.- `observe`: use observe mode globally.
-* `switch` - (Required, String) Whether to enable WAF rules. Valid values:- `on`: Enable.- `off`: Disable.
-* `waf_rules` - (Required, List) WAF Rules Configuration.
 * `ai_rule` - (Optional, List) AI based rules configuration.
+* `waf_rules` - (Required, List) WAF Rules Configuration.
 
-The `waf_drop_page_detail` object supports the following:
+The `ai_rule` object supports the following:
 
-* `name` - (Optional, String) File name or URL.
-* `page_id` - (Optional, Int) ID of the custom error page. when set to 0, use system default error page.
-* `status_code` - (Optional, Int) HTTP status code to use. Valid range: 100-600.
-* `type` - (Optional, String) Type of the custom error page. Valid values: `file`, `url`.
+* `mode` - (Optional, String) Valid values:- `smart_status_close`: disabled.- `smart_status_open`: blocked.- `smart_status_observe`: observed.
 
 The `waf_rules` object supports the following:
 
