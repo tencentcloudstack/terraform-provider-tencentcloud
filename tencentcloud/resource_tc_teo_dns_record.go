@@ -218,13 +218,10 @@ func resourceTencentCloudTeoDnsRecordCreate(d *schema.ResourceData, meta interfa
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *instance.Status == "active" {
-			return nil
-		}
 		if *instance.Status == "pending" {
-			return resource.NonRetryableError(fmt.Errorf("dnsRecord status is %v, operate failed.", *instance.Status))
+			return resource.RetryableError(fmt.Errorf("dnsRecord status is %v, retry...", *instance.Status))
 		}
-		return resource.RetryableError(fmt.Errorf("dnsRecord status is %v, retry...", *instance.Status))
+		return nil
 	})
 	if err != nil {
 		return err
@@ -412,7 +409,7 @@ func resourceTencentCloudTeoDnsRecordDelete(d *schema.ResourceData, meta interfa
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if e := service.DeleteTeoDnsRecordById(ctx, zoneId, dnsRecordId); e != nil {
-			return retryError(e, "OperationDenied")
+			return retryError(e, "OperationDenied", InternalError)
 		}
 		return nil
 	})

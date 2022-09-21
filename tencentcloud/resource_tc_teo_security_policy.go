@@ -622,7 +622,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"rule_id": {
 													Type:        schema.TypeInt,
-													Required:    true,
+													Computed:    true,
 													Description: "Rule ID.",
 												},
 												"action": {
@@ -713,7 +713,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"rule_id": {
 													Type:        schema.TypeInt,
-													Optional:    true,
+													Computed:    true,
 													Description: "Rule ID.",
 												},
 												"alg_managed_ids": {
@@ -848,7 +848,7 @@ func resourceTencentCloudTeoSecurityPolicy() *schema.Resource {
 												},
 												"rule_id": {
 													Type:        schema.TypeInt,
-													Optional:    true,
+													Computed:    true,
 													Description: "Rule ID.",
 												},
 												"update_time": {
@@ -1883,7 +1883,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 				}
 				if ManagedRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "managed_rule"); ok {
 					botManagedRule := teo.BotManagedRule{}
-					if v, ok := ManagedRuleMap["rule_id"]; ok {
+					if v, ok := ManagedRuleMap["rule_id"]; ok && v.(int) != 0 {
 						botManagedRule.RuleID = helper.IntInt64(v.(int))
 					}
 					if v, ok := ManagedRuleMap["action"]; ok {
@@ -1928,7 +1928,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 				}
 				if PortraitRuleMap, ok := helper.InterfaceToMap(BotConfigMap, "portrait_rule"); ok {
 					botPortraitRule := teo.BotPortraitRule{}
-					if v, ok := PortraitRuleMap["rule_id"]; ok {
+					if v, ok := PortraitRuleMap["rule_id"]; ok && v.(int) != 0 {
 						botPortraitRule.RuleID = helper.IntInt64(v.(int))
 					}
 					if v, ok := PortraitRuleMap["alg_managed_ids"]; ok {
@@ -2011,7 +2011,7 @@ func resourceTencentCloudTeoSecurityPolicyUpdate(d *schema.ResourceData, meta in
 						if v, ok := RulesMap["match_content"]; ok {
 							ipTableRule.MatchContent = helper.String(v.(string))
 						}
-						if v, ok := RulesMap["rule_id"]; ok {
+						if v, ok := RulesMap["rule_id"]; ok && v.(int) != 0 {
 							ipTableRule.RuleID = helper.IntInt64(v.(int))
 						}
 						ipTableConfig.IpTableRules = append(ipTableConfig.IpTableRules, &ipTableRule)

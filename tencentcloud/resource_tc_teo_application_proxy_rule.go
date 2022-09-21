@@ -182,7 +182,7 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxyRule(request)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

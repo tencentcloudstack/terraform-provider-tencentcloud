@@ -507,6 +507,8 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 	var (
 		zoneId   string
 		policyId int64
+		service = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -523,8 +525,35 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	var (
+		policyIdChecked bool
+		ddosPolicy      *teo.DescribeZoneDDoSPolicyResponseParams
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := service.DescribeTeoZoneDDoSPolicyByFilter(ctx, map[string]interface{}{
+			"zone_id": zoneId,
+		})
+		if e != nil {
+			return retryError(e)
+		}
+		ddosPolicy = results
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Teo planInfo failed, reason:%+v", logId, err)
+		return err
+	}
+	for _, areas := range ddosPolicy.ShieldAreas {
+		if *areas.PolicyId == policyId {
+			policyIdChecked = true
+		}
+	}
+	if !policyIdChecked {
+		return fmt.Errorf("create teo ddosPolicy failed, reason: invalid policy id %v", policyId)
+	}
+
 	d.SetId(zoneId + FILED_SP + strconv.Itoa(int(policyId)))
-	err := resourceTencentCloudTeoDdosPolicyUpdate(d, meta)
+	err = resourceTencentCloudTeoDdosPolicyUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, err)
 		return err
