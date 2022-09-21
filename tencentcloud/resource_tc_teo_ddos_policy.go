@@ -520,7 +520,13 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 	}
 
 	if v, ok := d.GetOk("policy_id"); ok {
-		policyId = v.(int64)
+		if policyId, ok = v.(int64); !ok {
+			var tmpPolicyId int
+			if tmpPolicyId, ok = v.(int); !ok {
+				return fmt.Errorf("create teo ddosPolicy failed, reason: invalid policyId %+v", v)
+			}
+			policyId = int64(tmpPolicyId)
+		}
 	}
 
 	d.SetId(zoneId + FILED_SP + strconv.Itoa(int(policyId)))
@@ -844,15 +850,9 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 	request.PolicyId = helper.Int64(policyId64)
 
 	if d.HasChange("zone_id") {
-
-		return fmt.Errorf("`zone_id` do not support change now.")
-
-	}
-
-	if d.HasChange("policy_id") {
-
-		return fmt.Errorf("`policy_id` do not support change now.")
-
+		if old, _ := d.GetChange("zone_id"); old.(string) != "" {
+			return fmt.Errorf("`zone_id` do not support change now")
+		}
 	}
 
 	if d.HasChange("ddos_rule") {
