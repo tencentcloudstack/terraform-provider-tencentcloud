@@ -34,6 +34,16 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
     encrypt   = false
   }
 
+  es_acl {
+    black_list = [
+      "9.9.9.9",
+      "8.8.8.8",
+    ]
+    white_list = [
+      "0.0.0.0",
+    ]
+  }
+
   tags = {
     test = "test"
   }
@@ -53,6 +63,7 @@ The following arguments are supported:
 * `charge_period` - (Optional, Int, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `deploy_mode` - (Optional, Int, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `license_type` - (Optional, String) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, List, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
@@ -60,6 +71,11 @@ The following arguments are supported:
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.
 * `tags` - (Optional, Map) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `web_node_type_info` - (Optional, List) Visual node configuration.
+
+The `es_acl` object supports the following:
+
+* `black_list` - (Optional, Set) Blacklist of kibana access.
+* `white_list` - (Optional, Set) Whitelist of kibana access.
 
 The `multi_zone_infos` object supports the following:
 
