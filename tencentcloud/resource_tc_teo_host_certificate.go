@@ -4,14 +4,14 @@ Provides a resource to create a teo host_certificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_host_certificate" "host_certificate" {
-  zone_id = ""
-  host = ""
-  cert_info {
-			cert_id = ""
-			status = ""
+resource "tencentcloud_teo_host_certificate" "vstest_sfurnace_work" {
+ zone_id = tencentcloud_teo_zone.sfurnace_work.id
+ host    = tencentcloud_teo_dns_record.vstest_sfurnace_work.name
 
-  }
+ cert_info {
+   cert_id = "yqWPPbs7"
+   status  = "deployed"
+ }
 }
 
 ```

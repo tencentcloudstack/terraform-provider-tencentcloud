@@ -5,9 +5,6 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
-  tags    = {
-    "createdBy" = "terraform"
-  }
   zone_id = "zone-294v965lwmn6"
 
   rules_priority {

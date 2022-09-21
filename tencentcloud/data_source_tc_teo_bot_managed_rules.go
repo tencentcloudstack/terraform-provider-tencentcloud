@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_teo_bot_managed_rules" "botManagedRules" {
   zone_id = ""
   entity = ""
-    }
+}
 ```
 */
 package tencentcloud

@@ -4,30 +4,32 @@ Provides a resource to create a teo rule_engine
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine" "rule_engine" {
-  rule_name = "test-rule3"
-  status    = "enable"
-  tags      = {}
-  zone_id   = "zone-297z8rf93cfw"
+resource "tencentcloud_teo_rule_engine" "rule1" {
+  zone_id   = tencentcloud_teo_zone.example.id
+  rule_name = "test-rule"
+  status    = "disable"
 
   rules {
-    actions {
-
-      normal_action {
-        action = "Http2"
-
-        parameters {
-          name   = "Switch"
-          values = [
-            "off",
-          ]
-        }
+    or {
+      and {
+        operator = "equal"
+        target   = "host"
+        values   = [
+          tencentcloud_teo_dns_record.example.name,
+        ]
+      }
+      and {
+        operator = "equal"
+        target   = "extension"
+        values   = [
+          "mp4",
+        ]
       }
     }
-    actions {
 
+    actions {
       normal_action {
-        action = "ForceRedirect"
+        action = "CachePrefresh"
 
         parameters {
           name   = "Switch"
@@ -36,21 +38,36 @@ resource "tencentcloud_teo_rule_engine" "rule_engine" {
           ]
         }
         parameters {
-          name   = "RedirectStatusCode"
+          name   = "Percent"
           values = [
-            "302",
+            "80",
           ]
         }
       }
     }
 
-    conditions {
-      conditions {
-        operator = "equal"
-        target   = "host"
-        values   = [
-          "www.toutiao2.com",
-        ]
+    actions {
+      normal_action {
+        action = "CacheKey"
+
+        parameters {
+          name   = "Type"
+          values = [
+            "Header",
+          ]
+        }
+        parameters {
+          name   = "Switch"
+          values = [
+            "on",
+          ]
+        }
+        parameters {
+          name   = "Value"
+          values = [
+            "Duck",
+          ]
+        }
       }
     }
   }

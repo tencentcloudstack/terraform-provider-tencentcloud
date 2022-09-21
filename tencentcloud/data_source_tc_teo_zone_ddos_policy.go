@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_teo_zone_ddos_policy" "zoneDDoSPolicy" {
   zone_id = ""
-      }
+}
 ```
 */
 package tencentcloud

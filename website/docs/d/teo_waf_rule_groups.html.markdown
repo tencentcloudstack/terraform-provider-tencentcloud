@@ -15,6 +15,8 @@ Use this data source to query detailed information of teo wafRuleGroups
 
 ```hcl
 data "tencentcloud_teo_waf_rule_groups" "wafRuleGroups" {
+  zone_id = ""
+  entity  = ""
 }
 ```
 

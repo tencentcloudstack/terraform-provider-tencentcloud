@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_teo_security_policy_regions" "securityPolicyRegions" {
-    }
+}
 ```
 */
 package tencentcloud

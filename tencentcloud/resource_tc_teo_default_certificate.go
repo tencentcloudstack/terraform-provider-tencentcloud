@@ -11,9 +11,6 @@ resource "tencentcloud_teo_default_certificate" "default_certificate" {
 			status = ""
 
   }
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 
 ```

@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_teo_rule_engine_settings" "ruleEngineSettings" {
-  }
+}
 ```
 */
 package tencentcloud

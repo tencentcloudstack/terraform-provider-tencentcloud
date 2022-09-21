@@ -22,10 +22,6 @@ resource "tencentcloud_teo_dns_record" "dns_record" {
   mode     = "proxied"
   ttl      = "1"
   priority = 1
-  #  status    = ""
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 ```
 

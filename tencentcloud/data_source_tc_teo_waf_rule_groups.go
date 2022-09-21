@@ -5,7 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_teo_waf_rule_groups" "wafRuleGroups" {
-  }
+  zone_id = ""
+  entity = ""
+}
 ```
 */
 package tencentcloud
