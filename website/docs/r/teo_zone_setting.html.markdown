@@ -18,7 +18,6 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
   zone_id = "zone-297z8rf93cfw"
 
   cache {
-
     follow_origin {
       switch = "on"
     }

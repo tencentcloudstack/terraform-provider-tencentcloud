@@ -20,12 +20,7 @@ resource "tencentcloud_teo_dns_record" "dns_record" {
   name     = "www.toutiao2.com"
   content  = "150.109.8.2"
   mode     = "proxied"
-  ttl      = "1"
-  priority = 1
-  #  status    = ""
-  tags = {
-    "createdBy" = "terraform"
-  }
+  ttl      = "600"
 }
 ```
 
@@ -39,7 +34,6 @@ The following arguments are supported:
 * `type` - (Required, String) DNS record Type. Valid values: `A`, `AAAA`, `CNAME`, `MX`, `TXT`, `NS`, `CAA`, `SRV`.
 * `zone_id` - (Required, String) Site ID.
 * `priority` - (Optional, Int) Priority of the record. Valid value range: 1-50, the smaller value, the higher priority.
-* `status` - (Optional, String) Resolution status. Valid values: `active`, `pending`.
 * `ttl` - (Optional, Int) Time to live of the DNS record cache in seconds.
 
 ## Attributes Reference
@@ -47,6 +41,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `status` - Resolution status. Valid values: `active`, `pending`.
 * `cname` - CNAME address. Note: This field may return null, indicating that no valid value can be obtained.
 * `created_on` - Creation date.
 * `dns_record_id` - DNS record ID.

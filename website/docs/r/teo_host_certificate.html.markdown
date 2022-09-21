@@ -20,7 +20,6 @@ resource "tencentcloud_teo_host_certificate" "host_certificate" {
   cert_info {
     cert_id = ""
     status  = ""
-
   }
 }
 ```

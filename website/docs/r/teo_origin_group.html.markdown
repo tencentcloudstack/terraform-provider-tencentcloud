@@ -18,7 +18,6 @@ resource "tencentcloud_teo_origin_group" "origin_group" {
   configuration_type = "weight"
   origin_group_name  = "test-group"
   origin_type        = "self"
-  tags               = {}
   zone_id            = "zone-297z8rf93cfw"
 
   origin_records {

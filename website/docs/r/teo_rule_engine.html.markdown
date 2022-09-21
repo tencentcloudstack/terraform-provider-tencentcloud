@@ -17,7 +17,6 @@ Provides a resource to create a teo rule_engine
 resource "tencentcloud_teo_rule_engine" "rule_engine" {
   rule_name = "test-rule3"
   status    = "enable"
-  tags      = {}
   zone_id   = "zone-297z8rf93cfw"
 
   rules {
