@@ -300,10 +300,9 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_clb_listener.listener_https",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"scheduler"},
+				ResourceName:      "tencentcloud_clb_listener.listener_https",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
