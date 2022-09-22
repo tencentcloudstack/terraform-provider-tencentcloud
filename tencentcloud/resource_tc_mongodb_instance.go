@@ -395,7 +395,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
+		startUpdate := false
 		errUpdate := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
@@ -405,19 +405,21 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist", logId))
 			}
 
-			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+			if *infos.Status == MONGODB_INSTANCE_STATUS_RUNNING && !startUpdate {
+				return resource.RetryableError(fmt.Errorf("waiting for mongo upgrade start"))
 			}
+
+			if *infos.Status == MONGODB_INSTANCE_STATUS_PROCESSING {
+				startUpdate = true
+				resource.RetryableError(fmt.Errorf("waiting for mongo upgrade finish"))
+			}
+
 			return nil
 		})
 		if errUpdate != nil {
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -426,7 +428,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 
 	if d.HasChange("project_id") {
@@ -435,7 +436,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("password") {
@@ -445,7 +445,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("tags") {
@@ -457,7 +456,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -471,7 +469,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
 	}
 
 	d.Partial(false)
