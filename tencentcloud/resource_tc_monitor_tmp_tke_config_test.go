@@ -191,7 +191,7 @@ variable "tke_cluster_type" {
 }
 
 variable "tke_cluster_id" {
-  default = "` + tkeClusterIdAgent + `"
+  default = "` + defaultTkeClusterId + `"
 }
 
 variable "pod_monitors_name_fully" {
