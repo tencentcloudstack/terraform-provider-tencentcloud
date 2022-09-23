@@ -154,14 +154,14 @@ func resourceTencentCloudTcrVpcAttachmentCreate(d *schema.ResourceData, meta int
 	}
 
 	if enablePublicDomainDns := d.Get("enable_public_domain_dns").(bool); enablePublicDomainDns {
-		err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true)
+		err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true, regionName)
 		if err != nil {
 			return err
 		}
 	}
 
 	if enableVpcDomainDns := d.Get("enable_vpc_domain_dns").(bool); enableVpcDomainDns {
-		err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false)
+		err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false, regionName)
 		if err != nil {
 			return err
 		}
@@ -240,17 +240,18 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 		instanceId = d.Get("instance_id").(string)
 		vpcId      = d.Get("vpc_id").(string)
 		subnetId   = d.Get("subnet_id").(string)
+		regionName = d.Get("region_name").(string)
 	)
 
 	d.Partial(true)
 	if d.HasChange("enable_public_domain_dns") {
 		if isEnabled := d.Get("enable_public_domain_dns").(bool); isEnabled {
-			err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true)
+			err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true, regionName)
 			if err != nil {
 				return err
 			}
 		} else {
-			err := DisableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true)
+			err := DisableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, true, regionName)
 			if err != nil {
 				return err
 			}
@@ -260,12 +261,12 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 
 	if d.HasChange("enable_vpc_domain_dns") {
 		if isEnabled := d.Get("enable_vpc_domain_dns").(bool); isEnabled {
-			err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false)
+			err := EnableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false, regionName)
 			if err != nil {
 				return err
 			}
 		} else {
-			err := DisableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false)
+			err := DisableTcrVpcDns(ctx, tcrService, instanceId, vpcId, subnetId, false, regionName)
 			if err != nil {
 				return err
 			}
@@ -355,14 +356,14 @@ func WaitForAccessIpExists(ctx context.Context, tcrService TCRService, instanceI
 	return
 }
 
-func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool) error {
+func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool, regionName string) error {
 	accessIp, err := WaitForAccessIpExists(ctx, tcrService, instanceId, vpcId, subnetId)
 	if err != nil {
 		return err
 	}
 
 	outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := tcrService.CreateTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain)
+		inErr := tcrService.CreateTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain, regionName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -372,14 +373,14 @@ func EnableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId stri
 	return outErr
 }
 
-func DisableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool) error {
+func DisableTcrVpcDns(ctx context.Context, tcrService TCRService, instanceId string, vpcId string, subnetId string, usePublicDomain bool, regionName string) error {
 	accessIp, err := WaitForAccessIpExists(ctx, tcrService, instanceId, vpcId, subnetId)
 	if err != nil {
 		return err
 	}
 
 	outErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := tcrService.DeleteTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain)
+		inErr := tcrService.DeleteTcrVpcDns(ctx, instanceId, vpcId, accessIp, usePublicDomain, regionName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
