@@ -741,7 +741,7 @@ func (me *TCRService) DescribeTCRVPCAttachmentById(ctx context.Context, instance
 	return
 }
 
-func (me *TCRService) CreateTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool) (errRet error) {
+func (me *TCRService) CreateTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool, regionName string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateInternalEndpointDnsRequest()
 	defer func() {
@@ -753,6 +753,7 @@ func (me *TCRService) CreateTcrVpcDns(ctx context.Context, instanceId string, vp
 	request.VpcId = &vpcId
 	request.EniLBIp = &accessIp
 	request.UsePublicDomain = &usePublicDomain
+	request.RegionName = &regionName
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateInternalEndpointDns(request)
@@ -766,7 +767,7 @@ func (me *TCRService) CreateTcrVpcDns(ctx context.Context, instanceId string, vp
 	return
 }
 
-func (me *TCRService) DeleteTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool) (errRet error) {
+func (me *TCRService) DeleteTcrVpcDns(ctx context.Context, instanceId string, vpcId string, accessIp string, usePublicDomain bool, regionName string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewDeleteInternalEndpointDnsRequest()
 	defer func() {
@@ -778,6 +779,7 @@ func (me *TCRService) DeleteTcrVpcDns(ctx context.Context, instanceId string, vp
 	request.VpcId = &vpcId
 	request.EniLBIp = &accessIp
 	request.UsePublicDomain = &usePublicDomain
+	request.RegionName = &regionName
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().DeleteInternalEndpointDns(request)
