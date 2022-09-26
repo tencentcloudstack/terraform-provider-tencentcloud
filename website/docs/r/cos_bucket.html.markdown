@@ -30,6 +30,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl               = "private"
   multi_az          = true
   versioning_enable = true
+  force_clean       = true
 }
 ```
 
@@ -241,6 +242,7 @@ The following arguments are supported:
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid value is `AES256`.
+* `force_clean` - (Optional, Bool) Force cleanup all objects before delete bucket.
 * `lifecycle_rules` - (Optional, List) A configuration of object lifecycle management (documented below).
 * `log_enable` - (Optional, Bool) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
 * `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.

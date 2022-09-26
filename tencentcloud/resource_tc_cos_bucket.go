@@ -21,6 +21,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl      = "private"
   multi_az = true
   versioning_enable = true
+  force_clean       = true
 }
 ```
 
