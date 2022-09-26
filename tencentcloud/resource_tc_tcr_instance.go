@@ -35,7 +35,7 @@ Create with Replications
 
 resource "tencentcloud_tcr_instance" "foo" {
   name                  = "example"
-  instance_type		    = "basic"
+  instance_type		    = "premium"
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
   }
@@ -159,7 +159,7 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 			"replications": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Specify List of instance Replications. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.",
+				Description: "Specify List of instance Replications, premium only. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -175,7 +175,7 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 						"syn_tag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Specify whether to sync TCR cloud tags to COS Bucket.",
+							Description: "Specify whether to sync TCR cloud tags to COS Bucket. NOTE: You have to specify when adding, modifying will be ignored for now.",
 						},
 					},
 				},

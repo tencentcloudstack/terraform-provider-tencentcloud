@@ -45,7 +45,7 @@ Create with Replications
 ```hcl
 resource "tencentcloud_tcr_instance" "foo" {
   name          = "example"
-  instance_type = "basic"
+  instance_type = "premium"
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
   }
@@ -86,14 +86,14 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional, Bool) Control public network access.
-* `replications` - (Optional, List) Specify List of instance Replications. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.
+* `replications` - (Optional, List) Specify List of instance Replications, premium only. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.
 * `security_policy` - (Optional, Set) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
 * `tags` - (Optional, Map) The available tags within this TCR instance.
 
 The `replications` object supports the following:
 
 * `region_id` - (Optional, Int) Replication region ID, check the example at the top of page to find out id of region.
-* `syn_tag` - (Optional, Bool) Specify whether to sync TCR cloud tags to COS Bucket.
+* `syn_tag` - (Optional, Bool) Specify whether to sync TCR cloud tags to COS Bucket. NOTE: You have to specify when adding, modifying will be ignored for now.
 
 The `security_policy` object supports the following:
 
