@@ -59,7 +59,7 @@ func testSweepCosBuckets(region string) error {
 		}
 		log.Printf("[INFO] deleting cos bucket: %s", bucket)
 
-		if err = cosService.DeleteBucket(ctx, bucket); err != nil {
+		if err = cosService.DeleteBucket(ctx, bucket, true, true); err != nil {
 			log.Printf("[ERROR] delete bucket %s error: %s", bucket, err.Error())
 		}
 	}
@@ -87,13 +87,15 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "versioning_enable", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "force_clean", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_basic", "cos_bucket_url"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cos_bucket.bucket_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_cos_bucket.bucket_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_clean"},
 			},
 		},
 	})
@@ -211,7 +213,7 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_cors",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
 			},
 		},
 	})
@@ -263,7 +265,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_lifecycle",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
 			},
 		},
 	})
@@ -300,7 +302,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_website",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
 			},
 		},
 	})
@@ -325,7 +327,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
+				ImportStateVerifyIgnore: []string{"acl", "multi_az", "force_clean"},
 			},
 		},
 	})
@@ -401,7 +403,7 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.with_origin",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
 			},
 		},
 	})
@@ -488,7 +490,7 @@ func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.with_replication",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "replica_role"},
+				ImportStateVerifyIgnore: []string{"acl", "replica_role", "force_clean"},
 			},
 		},
 	})
@@ -555,6 +557,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
   acl                  = "private"
   encryption_algorithm = "AES256"
   versioning_enable    = true
+  force_clean          = true
 }
 `, userInfoData)
 }
