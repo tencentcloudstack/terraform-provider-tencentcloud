@@ -184,21 +184,37 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 			"es_acl": {
 				Type:        schema.TypeList,
 				Optional:    true,
+<<<<<<< HEAD
+=======
+				Computed:    true,
+>>>>>>> e6278bc551417ece79d8f5c48c9b8c764456ea34
 				MaxItems:    1,
 				Description: "Kibana Access Control Configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"black_list": {
+<<<<<<< HEAD
 							Type:        schema.TypeList,
 							Optional:    true,
+=======
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Computed:    true,
+>>>>>>> e6278bc551417ece79d8f5c48c9b8c764456ea34
 							Description: "Blacklist of kibana access.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 						},
 						"white_list": {
+<<<<<<< HEAD
 							Type:        schema.TypeList,
 							Optional:    true,
+=======
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Computed:    true,
+>>>>>>> e6278bc551417ece79d8f5c48c9b8c764456ea34
 							Description: "Whitelist of kibana access.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
@@ -514,6 +530,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 
 	if instance.EsAcl != nil {
 		esAcls := make([]map[string]interface{}, 0, 1)
+<<<<<<< HEAD
 		esAcl := make(map[string]interface{}, 2)
 		// esAcl := es.EsAcl{}
 		if len(instance.EsAcl.BlackIpList) > 0 {
@@ -522,6 +539,11 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 
 		if len(instance.EsAcl.WhiteIpList) > 0 {
 			esAcl["white_list"] = instance.EsAcl.WhiteIpList
+=======
+		esAcl := map[string]interface{}{
+			"black_list": instance.EsAcl.BlackIpList,
+			"white_list": instance.EsAcl.WhiteIpList,
+>>>>>>> e6278bc551417ece79d8f5c48c9b8c764456ea34
 		}
 		esAcls = append(esAcls, esAcl)
 		_ = d.Set("es_acl", esAcls)
@@ -740,6 +762,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		esAcl := es.EsAcl{}
 		if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
 			if v, ok := aclMap["black_list"]; ok {
+<<<<<<< HEAD
 				blist := v.([]interface{})
 				tmpList := make([]*string, 0, len(blist))
 				for _, d := range blist {
@@ -754,6 +777,18 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					tmpList = append(tmpList, helper.String(d.(string)))
 				}
 				esAcl.WhiteIpList = tmpList
+=======
+				blist := v.(*schema.Set).List()
+				for _, d := range blist {
+					esAcl.BlackIpList = append(esAcl.BlackIpList, helper.String(d.(string)))
+				}
+			}
+			if v, ok := aclMap["white_list"]; ok {
+				wlist := v.(*schema.Set).List()
+				for _, d := range wlist {
+					esAcl.WhiteIpList = append(esAcl.WhiteIpList, helper.String(d.(string)))
+				}
+>>>>>>> e6278bc551417ece79d8f5c48c9b8c764456ea34
 			}
 		}
 

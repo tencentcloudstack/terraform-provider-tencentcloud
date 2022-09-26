@@ -88,7 +88,7 @@ data "tencentcloud_cdh_instances" "list" {
 }
 
 resource "tencentcloud_key_pair" "random_key" {
-  key_name   = "tf_example_key6"
+  key_ids   = ["tf_example_key6"]
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 
@@ -101,7 +101,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = var.availability_zone
   instance_name     = "terraform-testing"
   image_id          = "img-ix05e4px"
-  key_name          = tencentcloud_key_pair.random_key.id
+  key_ids           = [tencentcloud_key_pair.random_key.id]
   placement_group_id = tencentcloud_placement_group.foo.id
   security_groups               = ["sg-9c3f33xk"]
   system_disk_type  = "CLOUD_PREMIUM"
@@ -424,10 +424,21 @@ func resourceTencentCloudInstance() *schema.Resource {
 			},
 			// login
 			"key_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Deprecated:    "Please use `key_ids` instead.",
+				ConflictsWith: []string{"key_ids"},
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+			},
+			"key_ids": {
+				Type:          schema.TypeSet,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"key_name", "password"},
+				Description:   "The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.",
+				Set:           schema.HashString,
+				Elem:          &schema.Schema{Type: schema.TypeString},
 			},
 			"password": {
 				Type:        schema.TypeString,
@@ -446,7 +457,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 						return old == new
 					}
 				},
-				ConflictsWith: []string{"key_name", "password"},
+				ConflictsWith: []string{"key_name", "key_ids", "password"},
 				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.",
 			},
 			"user_data": {
@@ -687,7 +698,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	// login
 	request.LoginSettings = &cvm.LoginSettings{}
-	if v, ok := d.GetOk("key_name"); ok {
+	keyIds := d.Get("key_ids").(*schema.Set).List()
+	if len(keyIds) > 0 {
+		request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(keyIds)
+	} else if v, ok := d.GetOk("key_name"); ok {
 		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
 	}
 	if v, ok := d.GetOk("password"); ok {
@@ -753,7 +767,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(instanceId)
 
-	// wait for status
 	//get system disk ID and data disk ID
 	var systemDiskId string
 	var dataDiskIds []string
@@ -904,7 +917,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	if d.Get("image_id").(string) == "" || !IsContains(cvmImages, *instance.ImageId) {
+	if d.Get("image_id").(string) == "" || instance.ImageId == nil || !IsContains(cvmImages, *instance.ImageId) {
 		_ = d.Set("image_id", instance.ImageId)
 	}
 
@@ -1005,7 +1018,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
-		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
+		if _, ok := d.GetOk("key_name"); ok {
+			_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
+		} else {
+			_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
+		}
 	} else {
 		_ = d.Set("key_name", "")
 	}
@@ -1200,7 +1217,10 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("key_name"); ok {
+		if v, ok := d.GetOk("key_ids"); ok {
+			updateAttr = append(updateAttr, "key_ids")
+			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
+		} else if v, ok := d.GetOk("key_name"); ok {
 			updateAttr = append(updateAttr, "key_name")
 			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
 		}
@@ -1237,11 +1257,12 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		if d.HasChange("key_name") {
-			old, new := d.GetChange("key_name")
-			oldKeyId := old.(string)
-			keyId := new.(string)
+			o, n := d.GetChange("key_name")
+			oldKeyId := o.(string)
+			keyId := n.(string)
+
 			if oldKeyId != "" {
-				err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId})
 				if err != nil {
 					return err
 				}
@@ -1252,7 +1273,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if keyId != "" {
-				err = cvmService.BindKeyPair(ctx, keyId, instanceId)
+				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId)
 				if err != nil {
 					return err
 				}
@@ -1261,7 +1282,38 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 					return err
 				}
 			}
-			d.SetPartial("key_name")
+		}
+
+		// support remove old `key_name` to `key_ids`, so do not follow "else"
+		if d.HasChange("key_ids") {
+			o, n := d.GetChange("key_ids")
+			ov := o.(*schema.Set)
+
+			nv := n.(*schema.Set)
+
+			adds := nv.Difference(ov)
+			removes := ov.Difference(nv)
+
+			if removes.Len() > 0 {
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				if err != nil {
+					return err
+				}
+				err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+				if err != nil {
+					return err
+				}
+			}
+			if adds.Len() > 0 {
+				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				if err != nil {
+					return err
+				}
+				err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+				if err != nil {
+					return err
+				}
+			}
 		}
 	}
 

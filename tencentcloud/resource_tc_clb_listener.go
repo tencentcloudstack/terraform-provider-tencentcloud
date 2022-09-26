@@ -166,9 +166,10 @@ func resourceTencentCloudClbListener() *schema.Resource {
 		Update: resourceTencentCloudClbListenerUpdate,
 		Delete: resourceTencentCloudClbListenerDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"scheduler": CLB_LISTENER_SCHEDULER_WRR,
+			}),
 		},
-
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
 				Type:         schema.TypeString,

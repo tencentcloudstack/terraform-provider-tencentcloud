@@ -26,6 +26,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
@@ -38,11 +40,10 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 		Update: resourceTencentCloudTcrVpcAttachmentUpdate,
 		Delete: resourceTencentCLoudTcrVpcAttachmentDelete,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				_ = d.Set("enable_public_domain_dns", false)
-				_ = d.Set("enable_vpc_domain_dns", false)
-				return []*schema.ResourceData{d}, nil
-			},
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"enable_public_domain_dns": false,
+				"enable_vpc_domain_dns":    false,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{

@@ -1,96 +1,68 @@
 /*
-Provides a resource to create a teo ddosPolicy
+Provides a resource to create a teo ddos_policy
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_ddos_policy" "ddosPolicy" {
-  zone_id = ""
-  policy_id = ""
-  ddos_rule {
-			switch = ""
-			udp_shard_open = ""
-		ddos_status_info {
-				ply_level = ""
-		}
-		ddos_geo_ip {
-				region_id = ""
-				switch = ""
-		}
-		ddos_allow_block {
-				switch = ""
-			user_allow_block_ip {
-					ip = ""
-					mask = ""
-					type = ""
-					ip2 = ""
-					mask2 = ""
-			}
-		}
-		ddos_anti_ply {
-				drop_tcp = ""
-				drop_udp = ""
-				drop_icmp = ""
-				drop_other = ""
-				source_create_limit = ""
-				source_connect_limit = ""
-				destination_create_limit = ""
-				destination_connect_limit = ""
-				abnormal_connect_num = ""
-				abnormal_syn_ratio = ""
-				abnormal_syn_num = ""
-				connect_timeout = ""
-				empty_connect_protect = ""
-				udp_shard = ""
-		}
-		ddos_packet_filter {
-				switch = ""
-			packet_filter {
-					action = ""
-					protocol = ""
-					dport_start = ""
-					dport_end = ""
-					packet_min = ""
-					packet_max = ""
-					sport_start = ""
-					sport_end = ""
-					match_type = ""
-					is_not = ""
-					offset = ""
-					depth = ""
-					match_begin = ""
-					str = ""
-					match_type2 = ""
-					is_not2 = ""
-					offset2 = ""
-					depth2 = ""
-					match_begin2 = ""
-					str2 = ""
-					match_logic = ""
-			}
-		}
-		ddos_acl {
-				switch = ""
-			acl {
-					dport_end = ""
-					dport_start = ""
-					sport_end = ""
-					sport_start = ""
-					protocol = ""
-					action = ""
-					default = ""
-			}
-		}
+resource "tencentcloud_teo_ddos_policy" "ddos_policy" {
+  policy_id = 1278
+  zone_id   = "zone-2983wizgxqvm"
 
+  ddos_rule {
+    switch = "on"
+
+    acl {
+      switch = "on"
+    }
+
+    allow_block {
+      switch = "on"
+    }
+
+    anti_ply {
+      abnormal_connect_num      = 0
+      abnormal_syn_num          = 0
+      abnormal_syn_ratio        = 0
+      connect_timeout           = 0
+      destination_connect_limit = 0
+      destination_create_limit  = 0
+      drop_icmp                 = "off"
+      drop_other                = "off"
+      drop_tcp                  = "off"
+      drop_udp                  = "off"
+      empty_connect_protect     = "off"
+      source_connect_limit      = 0
+      source_create_limit       = 0
+      udp_shard                 = "off"
+    }
+
+    geo_ip {
+      region_ids = []
+      switch     = "on"
+    }
+
+    packet_filter {
+      switch = "on"
+    }
+
+    speed_limit {
+      flux_limit    = "0 bps"
+      package_limit = "0 pps"
+    }
+
+    status_info {
+      ply_level = "middle"
+    }
   }
 }
+
 
 ```
 Import
 
-teo ddosPolicy can be imported using the id, e.g.
+teo ddos_policy can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_ddos_policy.ddosPolicy ddosPolicy_id
+$ terraform import tencentcloud_teo_ddos_policy.ddos_policy ddosPolicy_id
 ```
 */
 package tencentcloud
@@ -104,7 +76,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -142,37 +114,33 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "DDoS protection switch. Valid values:- on: Enable.- off: Disable.",
+							Description: "DDoS protection switch. Valid values:- `on`: Enable.- `off`: Disable.",
 						},
-						"udp_shard_open": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "UDP shard switch. Valid values:- on: Enable.- off: Disable.",
-						},
-						"ddos_status_info": {
+						"status_info": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS protection level.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ply_level": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Policy level. Valid values:- low: loose.- middle: moderate.- high: strict.",
+										Description: "Policy level. Valid values:- `low`: loose.- `middle`: moderate.- `high`: strict.",
 									},
 								},
 							},
 						},
-						"ddos_geo_ip": {
+						"geo_ip": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS Protection by Geo Info.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"region_id": {
+									"region_ids": {
 										Type: schema.TypeSet,
 										Elem: &schema.Schema{
 											Type: schema.TypeInt,
@@ -185,15 +153,16 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "- on: Enable.- off: Disable.",
+										Description: "- `on`: Enable.- `off`: Disable.",
 									},
 								},
 							},
 						},
-						"ddos_allow_block": {
+						"allow_block": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS black-white list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -201,9 +170,9 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "- on: Enable. `UserAllowBlockIp` parameter is required.- off: Disable.",
+										Description: "- `on`: Enable. `AllowBlockIps` parameter is required.- `off`: Disable.",
 									},
-									"user_allow_block_ip": {
+									"allow_block_ips": {
 										Type:        schema.TypeList,
 										Optional:    true,
 										Computed:    true,
@@ -213,12 +182,7 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 												"ip": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Client IP.",
-												},
-												"mask": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "IP Mask.",
+													Description: "Valid value format:- ip, for example 1.1.1.1- ip range, for example 1.1.1.2-1.1.1.3- network segment, for example 1.2.1.0/24- network segment range, for example 1.2.1.0/24-1.2.2.0/24.",
 												},
 												"type": {
 													Type:        schema.TypeString,
@@ -230,26 +194,17 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 													Computed:    true,
 													Description: "Last modification date.",
 												},
-												"ip2": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "End of the IP address when setting an IP range.",
-												},
-												"mask2": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "IP mask of the end IP address.",
-												},
 											},
 										},
 									},
 								},
 							},
 						},
-						"ddos_anti_ply": {
+						"anti_ply": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS protocol and connection protection.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -276,12 +231,12 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 									"source_create_limit": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Limitation of new connection to origin website per second. Valid value range: 0-4294967295.",
+										Description: "Limitation of new connection to origin site per second. Valid value range: 0-4294967295.",
 									},
 									"source_connect_limit": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Limitation of connections to origin website. Valid value range: 0-4294967295.",
+										Description: "Limitation of connections to origin site. Valid value range: 0-4294967295.",
 									},
 									"destination_create_limit": {
 										Type:        schema.TypeInt,
@@ -327,10 +282,11 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 								},
 							},
 						},
-						"ddos_packet_filter": {
+						"packet_filter": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS feature filtering configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -338,11 +294,12 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "- on: Enable. `ModifyDDoSPolicy` parameter is required.- off: Disable.",
+										Description: "- `on`: Enable. `PacketFilters` parameter is required.- `off`: Disable.",
 									},
-									"packet_filter": {
+									"packet_filters": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "DDoS feature filtering configuration detail.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -389,12 +346,12 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 												"match_type": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Match type of feature 1. Valid values:- pcre: regex expression.- sunday: string match.",
+													Description: "Match type of feature 1. Valid values:- `pcre`: regex expression.- `sunday`: string match.",
 												},
 												"is_not": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Negate the match condition of feature 1. Valid values:- 0: match.- 1: not match.",
+													Description: "Negate the match condition of feature 1. Valid values:- `0`: match.- `1`: not match.",
 												},
 												"offset": {
 													Type:        schema.TypeInt,
@@ -409,7 +366,7 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 												"match_begin": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Packet layer for matching begin of feature 1. Valid values:- begin_l5: matching from packet payload.- begin_l4: matching from TCP/UDP header.- begin_l3: matching from IP header.",
+													Description: "Packet layer for matching begin of feature 1. Valid values:- `begin_l5`: matching from packet payload.- `begin_l4`: matching from TCP/UDP header.- `begin_l3`: matching from IP header.",
 												},
 												"str": {
 													Type:        schema.TypeString,
@@ -419,12 +376,12 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 												"match_type2": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Match type of feature 2. Valid values:- pcre: regex expression.- sunday: string match.",
+													Description: "Match type of feature 2. Valid values:- `pcre`: regex expression.- `sunday`: string match.",
 												},
 												"is_not2": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Negate the match condition of feature 2. Valid values:- 0: match.- 1: not match.",
+													Description: "Negate the match condition of feature 2. Valid values:- `0`: match.- `1`: not match.",
 												},
 												"offset2": {
 													Type:        schema.TypeInt,
@@ -439,7 +396,7 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 												"match_begin2": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Packet layer for matching begin of feature 2. Valid values:- begin_l5: matching from packet payload.- begin_l4: matching from TCP/UDP header.- begin_l3: matching from IP header.",
+													Description: "Packet layer for matching begin of feature 2. Valid values:- `begin_l5`: matching from packet payload.- `begin_l4`: matching from TCP/UDP header.- `begin_l3`: matching from IP header.",
 												},
 												"str2": {
 													Type:        schema.TypeString,
@@ -457,10 +414,11 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 								},
 							},
 						},
-						"ddos_acl": {
+						"acl": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "DDoS ACL rule configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -468,9 +426,9 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "- on: Enable. `Acl` parameter is require.- off: Disable.",
+										Description: "- `on`: Enable. `Acl` parameter is require.- `off`: Disable.",
 									},
-									"acl": {
+									"acls": {
 										Type:        schema.TypeList,
 										Optional:    true,
 										Description: "DDoS ACL rule configuration detail.",
@@ -506,13 +464,29 @@ func resourceTencentCloudTeoDdosPolicy() *schema.Resource {
 													Optional:    true,
 													Description: "Action to take. Valid values: `drop`, `transmit`, `forward`.",
 												},
-												"default": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "Whether it is default configuration. Valid value:- 0: custom configuration.- 1: default configuration.",
-												},
 											},
 										},
+									},
+								},
+							},
+						},
+						"speed_limit": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Computed:    true,
+							Description: "DDoS access origin site speed limit configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"package_limit": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Limit the number of packages. Valid range: 1 pps-10000 Gpps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.",
+									},
+									"flux_limit": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Limit the number of fluxes. Valid range: 1 bps-10000 Gbps, 0 means no limitation, supported units: `pps`,`Kpps`,`Mpps`,`Gpps`.",
 									},
 								},
 							},
@@ -531,260 +505,59 @@ func resourceTencentCloudTeoDdosPolicyCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 
 	var (
-		request  = teo.NewModifyDDoSPolicyRequest()
-		response *teo.ModifyDDoSPolicyResponse
 		zoneId   string
+		policyId int64
+		service  = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.ZoneId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("policy_id"); ok {
-		request.PolicyId = helper.IntInt64(v.(int))
+		if policyId, ok = v.(int64); !ok {
+			var tmpPolicyId int
+			if tmpPolicyId, ok = v.(int); !ok {
+				return fmt.Errorf("create teo ddosPolicy failed, reason: invalid policyId %+v", v)
+			}
+			policyId = int64(tmpPolicyId)
+		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "ddos_rule"); ok {
-		ddosRule := teo.DdosRule{}
-		if v, ok := dMap["switch"]; ok {
-			ddosRule.Switch = helper.String(v.(string))
-		}
-		if v, ok := dMap["udp_shard_open"]; ok {
-			ddosRule.UdpShardOpen = helper.String(v.(string))
-		}
-		if DdosStatusInfoMap, ok := helper.InterfaceToMap(dMap, "ddos_status_info"); ok {
-			dDoSStatusInfo := teo.DDoSStatusInfo{}
-			if v, ok := DdosStatusInfoMap["ply_level"]; ok {
-				dDoSStatusInfo.PlyLevel = helper.String(v.(string))
-			}
-			ddosRule.DdosStatusInfo = &dDoSStatusInfo
-		}
-		if DdosGeoIpMap, ok := helper.InterfaceToMap(dMap, "ddos_geo_ip"); ok {
-			dDoSGeoIp := teo.DDoSGeoIp{}
-			if v, ok := DdosGeoIpMap["region_id"]; ok {
-				regionIdSet := v.(*schema.Set).List()
-				for i := range regionIdSet {
-					regionId := regionIdSet[i].(int)
-					dDoSGeoIp.RegionId = append(dDoSGeoIp.RegionId, helper.IntInt64(regionId))
-				}
-			}
-			if v, ok := DdosGeoIpMap["switch"]; ok {
-				dDoSGeoIp.Switch = helper.String(v.(string))
-			}
-			ddosRule.DdosGeoIp = &dDoSGeoIp
-		}
-		if DdosAllowBlockMap, ok := helper.InterfaceToMap(dMap, "ddos_allow_block"); ok {
-			ddosAllowBlock := teo.DdosAllowBlock{}
-			if v, ok := DdosAllowBlockMap["switch"]; ok {
-				ddosAllowBlock.Switch = helper.String(v.(string))
-			}
-			if v, ok := DdosAllowBlockMap["user_allow_block_ip"]; ok {
-				for _, item := range v.([]interface{}) {
-					UserAllowBlockIpMap := item.(map[string]interface{})
-					dDoSUserAllowBlockIP := teo.DDoSUserAllowBlockIP{}
-					if v, ok := UserAllowBlockIpMap["ip"]; ok {
-						dDoSUserAllowBlockIP.Ip = helper.String(v.(string))
-					}
-					if v, ok := UserAllowBlockIpMap["mask"]; ok {
-						dDoSUserAllowBlockIP.Mask = helper.IntInt64(v.(int))
-					}
-					if v, ok := UserAllowBlockIpMap["type"]; ok {
-						dDoSUserAllowBlockIP.Type = helper.String(v.(string))
-					}
-					if v, ok := UserAllowBlockIpMap["ip2"]; ok {
-						dDoSUserAllowBlockIP.Ip2 = helper.String(v.(string))
-					}
-					if v, ok := UserAllowBlockIpMap["mask2"]; ok {
-						dDoSUserAllowBlockIP.Mask2 = helper.IntInt64(v.(int))
-					}
-					ddosAllowBlock.UserAllowBlockIp = append(ddosAllowBlock.UserAllowBlockIp, &dDoSUserAllowBlockIP)
-				}
-			}
-			ddosRule.DdosAllowBlock = &ddosAllowBlock
-		}
-		if DdosAntiPlyMap, ok := helper.InterfaceToMap(dMap, "ddos_anti_ply"); ok {
-			dDoSAntiPly := teo.DDoSAntiPly{}
-			if v, ok := DdosAntiPlyMap["drop_tcp"]; ok {
-				dDoSAntiPly.DropTcp = helper.String(v.(string))
-			}
-			if v, ok := DdosAntiPlyMap["drop_udp"]; ok {
-				dDoSAntiPly.DropUdp = helper.String(v.(string))
-			}
-			if v, ok := DdosAntiPlyMap["drop_icmp"]; ok {
-				dDoSAntiPly.DropIcmp = helper.String(v.(string))
-			}
-			if v, ok := DdosAntiPlyMap["drop_other"]; ok {
-				dDoSAntiPly.DropOther = helper.String(v.(string))
-			}
-			if v, ok := DdosAntiPlyMap["source_create_limit"]; ok {
-				dDoSAntiPly.SourceCreateLimit = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["source_connect_limit"]; ok {
-				dDoSAntiPly.SourceConnectLimit = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["destination_create_limit"]; ok {
-				dDoSAntiPly.DestinationCreateLimit = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["destination_connect_limit"]; ok {
-				dDoSAntiPly.DestinationConnectLimit = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["abnormal_connect_num"]; ok {
-				dDoSAntiPly.AbnormalConnectNum = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["abnormal_syn_ratio"]; ok {
-				dDoSAntiPly.AbnormalSynRatio = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["abnormal_syn_num"]; ok {
-				dDoSAntiPly.AbnormalSynNum = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["connect_timeout"]; ok {
-				dDoSAntiPly.ConnectTimeout = helper.IntInt64(v.(int))
-			}
-			if v, ok := DdosAntiPlyMap["empty_connect_protect"]; ok {
-				dDoSAntiPly.EmptyConnectProtect = helper.String(v.(string))
-			}
-			if v, ok := DdosAntiPlyMap["udp_shard"]; ok {
-				dDoSAntiPly.UdpShard = helper.String(v.(string))
-			}
-			ddosRule.DdosAntiPly = &dDoSAntiPly
-		}
-		if DdosPacketFilterMap, ok := helper.InterfaceToMap(dMap, "ddos_packet_filter"); ok {
-			ddosPacketFilter := teo.DdosPacketFilter{}
-			if v, ok := DdosPacketFilterMap["switch"]; ok {
-				ddosPacketFilter.Switch = helper.String(v.(string))
-			}
-			if v, ok := DdosPacketFilterMap["packet_filter"]; ok {
-				for _, item := range v.([]interface{}) {
-					PacketFilterMap := item.(map[string]interface{})
-					dDoSFeaturesFilter := teo.DDoSFeaturesFilter{}
-					if v, ok := PacketFilterMap["action"]; ok {
-						dDoSFeaturesFilter.Action = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["protocol"]; ok {
-						dDoSFeaturesFilter.Protocol = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["dport_start"]; ok {
-						dDoSFeaturesFilter.DportStart = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["dport_end"]; ok {
-						dDoSFeaturesFilter.DportEnd = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["packet_min"]; ok {
-						dDoSFeaturesFilter.PacketMin = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["packet_max"]; ok {
-						dDoSFeaturesFilter.PacketMax = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["sport_start"]; ok {
-						dDoSFeaturesFilter.SportStart = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["sport_end"]; ok {
-						dDoSFeaturesFilter.SportEnd = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["match_type"]; ok {
-						dDoSFeaturesFilter.MatchType = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["is_not"]; ok {
-						dDoSFeaturesFilter.IsNot = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["offset"]; ok {
-						dDoSFeaturesFilter.Offset = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["depth"]; ok {
-						dDoSFeaturesFilter.Depth = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["match_begin"]; ok {
-						dDoSFeaturesFilter.MatchBegin = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["str"]; ok {
-						dDoSFeaturesFilter.Str = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["match_type2"]; ok {
-						dDoSFeaturesFilter.MatchType2 = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["is_not2"]; ok {
-						dDoSFeaturesFilter.IsNot2 = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["offset2"]; ok {
-						dDoSFeaturesFilter.Offset2 = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["depth2"]; ok {
-						dDoSFeaturesFilter.Depth2 = helper.IntInt64(v.(int))
-					}
-					if v, ok := PacketFilterMap["match_begin2"]; ok {
-						dDoSFeaturesFilter.MatchBegin2 = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["str2"]; ok {
-						dDoSFeaturesFilter.Str2 = helper.String(v.(string))
-					}
-					if v, ok := PacketFilterMap["match_logic"]; ok {
-						dDoSFeaturesFilter.MatchLogic = helper.String(v.(string))
-					}
-					ddosPacketFilter.PacketFilter = append(ddosPacketFilter.PacketFilter, &dDoSFeaturesFilter)
-				}
-			}
-			ddosRule.DdosPacketFilter = &ddosPacketFilter
-		}
-		if DdosAclMap, ok := helper.InterfaceToMap(dMap, "ddos_acl"); ok {
-			ddosAcls := teo.DdosAcls{}
-			if v, ok := DdosAclMap["switch"]; ok {
-				ddosAcls.Switch = helper.String(v.(string))
-			}
-			if v, ok := DdosAclMap["acl"]; ok {
-				for _, item := range v.([]interface{}) {
-					AclMap := item.(map[string]interface{})
-					dDoSAcl := teo.DDoSAcl{}
-					if v, ok := AclMap["dport_end"]; ok {
-						dDoSAcl.DportEnd = helper.IntInt64(v.(int))
-					}
-					if v, ok := AclMap["dport_start"]; ok {
-						dDoSAcl.DportStart = helper.IntInt64(v.(int))
-					}
-					if v, ok := AclMap["sport_end"]; ok {
-						dDoSAcl.SportEnd = helper.IntInt64(v.(int))
-					}
-					if v, ok := AclMap["sport_start"]; ok {
-						dDoSAcl.SportStart = helper.IntInt64(v.(int))
-					}
-					if v, ok := AclMap["protocol"]; ok {
-						dDoSAcl.Protocol = helper.String(v.(string))
-					}
-					if v, ok := AclMap["action"]; ok {
-						dDoSAcl.Action = helper.String(v.(string))
-					}
-					if v, ok := AclMap["default"]; ok {
-						dDoSAcl.Default = helper.IntInt64(v.(int))
-					}
-					ddosAcls.Acl = append(ddosAcls.Acl, &dDoSAcl)
-				}
-			}
-			ddosRule.DdosAcl = &ddosAcls
-		}
-
-		request.DdosRule = &ddosRule
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDDoSPolicy(request)
+	var (
+		policyIdChecked bool
+		ddosPolicy      *teo.DescribeZoneDDoSPolicyResponseParams
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := service.DescribeTeoZoneDDoSPolicyByFilter(ctx, map[string]interface{}{
+			"zone_id": zoneId,
+		})
 		if e != nil {
 			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+		ddosPolicy = results
 		return nil
 	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Teo planInfo failed, reason:%+v", logId, err)
+		return err
+	}
+	for _, areas := range ddosPolicy.ShieldAreas {
+		if *areas.PolicyId == policyId {
+			policyIdChecked = true
+		}
+	}
+	if !policyIdChecked {
+		return fmt.Errorf("create teo ddosPolicy failed, reason: invalid policy id %v", policyId)
+	}
 
+	d.SetId(zoneId + FILED_SP + strconv.Itoa(int(policyId)))
+	err = resourceTencentCloudTeoDdosPolicyUpdate(d, meta)
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, err)
 		return err
 	}
-
-	ddosPolicyId := strconv.FormatInt(*response.Response.PolicyId, 10)
-
-	d.SetId(zoneId + FILED_SP + ddosPolicyId)
 	return resourceTencentCloudTeoDdosPolicyRead(d, meta)
 }
 
@@ -804,7 +577,12 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 	zoneId := idSplit[0]
 	policyId := idSplit[1]
 
-	ddosPolicy, err := service.DescribeTeoDdosPolicy(ctx, zoneId, policyId)
+	policyId64, err := strconv.ParseInt(policyId, 10, 64)
+	if err != nil {
+		log.Printf("[READ]%s read teo ddosPolicy parseInt[%v] failed, reason:%+v", logId, policyId, err)
+		return err
+	}
+	ddosPolicy, err := service.DescribeTeoDdosPolicy(ctx, zoneId, policyId64)
 
 	if err != nil {
 		return err
@@ -816,237 +594,233 @@ func resourceTencentCloudTeoDdosPolicyRead(d *schema.ResourceData, meta interfac
 	}
 
 	_ = d.Set("zone_id", zoneId)
-	_ = d.Set("policy_id", policyId)
+	_ = d.Set("policy_id", policyId64)
 
-	if ddosPolicy.DdosRule != nil {
-		ddosRuleMap := map[string]interface{}{}
-		if ddosPolicy.DdosRule.Switch != nil {
-			ddosRuleMap["switch"] = ddosPolicy.DdosRule.Switch
+	if ddosPolicy.DDoSRule != nil {
+		dDoSRuleMap := map[string]interface{}{}
+		if ddosPolicy.DDoSRule.Switch != nil {
+			dDoSRuleMap["switch"] = ddosPolicy.DDoSRule.Switch
 		}
-		if ddosPolicy.DdosRule.UdpShardOpen != nil {
-			ddosRuleMap["udp_shard_open"] = ddosPolicy.DdosRule.UdpShardOpen
-		}
-		if ddosPolicy.DdosRule.DdosStatusInfo != nil {
-			ddosStatusInfoMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel != nil {
-				ddosStatusInfoMap["ply_level"] = ddosPolicy.DdosRule.DdosStatusInfo.PlyLevel
+		if ddosPolicy.DDoSRule.DDoSStatusInfo != nil {
+			statusInfoMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSStatusInfo.PlyLevel != nil {
+				statusInfoMap["ply_level"] = ddosPolicy.DDoSRule.DDoSStatusInfo.PlyLevel
 			}
 
-			ddosRuleMap["ddos_status_info"] = []interface{}{ddosStatusInfoMap}
+			dDoSRuleMap["status_info"] = []interface{}{statusInfoMap}
 		}
-		if ddosPolicy.DdosRule.DdosGeoIp != nil {
-			ddosGeoIpMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosGeoIp.RegionId != nil {
-				ddosGeoIpMap["region_id"] = ddosPolicy.DdosRule.DdosGeoIp.RegionId
+		if ddosPolicy.DDoSRule.DDoSGeoIp != nil {
+			geoIpMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSGeoIp.RegionIds != nil {
+				geoIpMap["region_ids"] = ddosPolicy.DDoSRule.DDoSGeoIp.RegionIds
 			}
-			if ddosPolicy.DdosRule.DdosGeoIp.Switch != nil {
-				ddosGeoIpMap["switch"] = ddosPolicy.DdosRule.DdosGeoIp.Switch
+			if ddosPolicy.DDoSRule.DDoSGeoIp.Switch != nil {
+				geoIpMap["switch"] = ddosPolicy.DDoSRule.DDoSGeoIp.Switch
 			}
 
-			ddosRuleMap["ddos_geo_ip"] = []interface{}{ddosGeoIpMap}
+			dDoSRuleMap["geo_ip"] = []interface{}{geoIpMap}
 		}
-		if ddosPolicy.DdosRule.DdosAllowBlock != nil {
-			ddosAllowBlockMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosAllowBlock.Switch != nil {
-				ddosAllowBlockMap["switch"] = ddosPolicy.DdosRule.DdosAllowBlock.Switch
+		if ddosPolicy.DDoSRule.DDoSAllowBlock != nil {
+			allowBlockMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSAllowBlock.Switch != nil {
+				allowBlockMap["switch"] = ddosPolicy.DDoSRule.DDoSAllowBlock.Switch
 			}
-			if ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp != nil {
-				userAllowBlockIpList := []interface{}{}
-				for _, userAllowBlockIp := range ddosPolicy.DdosRule.DdosAllowBlock.UserAllowBlockIp {
-					userAllowBlockIpMap := map[string]interface{}{}
-					if userAllowBlockIp.Ip != nil {
-						userAllowBlockIpMap["ip"] = userAllowBlockIp.Ip
+			if ddosPolicy.DDoSRule.DDoSAllowBlock.DDoSAllowBlockRules != nil {
+				allowBlockIpsList := []interface{}{}
+				for _, allowBlockIps := range ddosPolicy.DDoSRule.DDoSAllowBlock.DDoSAllowBlockRules {
+					allowBlockIpsMap := map[string]interface{}{}
+					if allowBlockIps.Ip != nil {
+						allowBlockIpsMap["ip"] = allowBlockIps.Ip
 					}
-					if userAllowBlockIp.Mask != nil {
-						userAllowBlockIpMap["mask"] = userAllowBlockIp.Mask
+					if allowBlockIps.Type != nil {
+						allowBlockIpsMap["type"] = allowBlockIps.Type
 					}
-					if userAllowBlockIp.Type != nil {
-						userAllowBlockIpMap["type"] = userAllowBlockIp.Type
-					}
-					if userAllowBlockIp.UpdateTime != nil {
-						userAllowBlockIpMap["update_time"] = userAllowBlockIp.UpdateTime
-					}
-					if userAllowBlockIp.Ip2 != nil {
-						userAllowBlockIpMap["ip2"] = userAllowBlockIp.Ip2
-					}
-					if userAllowBlockIp.Mask2 != nil {
-						userAllowBlockIpMap["mask2"] = userAllowBlockIp.Mask2
+					if allowBlockIps.UpdateTime != nil {
+						allowBlockIpsMap["update_time"] = allowBlockIps.UpdateTime
 					}
 
-					userAllowBlockIpList = append(userAllowBlockIpList, userAllowBlockIpMap)
+					allowBlockIpsList = append(allowBlockIpsList, allowBlockIpsMap)
 				}
-				ddosAllowBlockMap["user_allow_block_ip"] = userAllowBlockIpList
+				allowBlockMap["allow_block_ips"] = allowBlockIpsList
 			}
 
-			ddosRuleMap["ddos_allow_block"] = []interface{}{ddosAllowBlockMap}
+			dDoSRuleMap["allow_block"] = []interface{}{allowBlockMap}
 		}
-		if ddosPolicy.DdosRule.DdosAntiPly != nil {
-			ddosAntiPlyMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosAntiPly.DropTcp != nil {
-				ddosAntiPlyMap["drop_tcp"] = ddosPolicy.DdosRule.DdosAntiPly.DropTcp
+		if ddosPolicy.DDoSRule.DDoSAntiPly != nil {
+			antiPlyMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DropTcp != nil {
+				antiPlyMap["drop_tcp"] = ddosPolicy.DDoSRule.DDoSAntiPly.DropTcp
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.DropUdp != nil {
-				ddosAntiPlyMap["drop_udp"] = ddosPolicy.DdosRule.DdosAntiPly.DropUdp
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DropUdp != nil {
+				antiPlyMap["drop_udp"] = ddosPolicy.DDoSRule.DDoSAntiPly.DropUdp
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.DropIcmp != nil {
-				ddosAntiPlyMap["drop_icmp"] = ddosPolicy.DdosRule.DdosAntiPly.DropIcmp
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DropIcmp != nil {
+				antiPlyMap["drop_icmp"] = ddosPolicy.DDoSRule.DDoSAntiPly.DropIcmp
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.DropOther != nil {
-				ddosAntiPlyMap["drop_other"] = ddosPolicy.DdosRule.DdosAntiPly.DropOther
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DropOther != nil {
+				antiPlyMap["drop_other"] = ddosPolicy.DDoSRule.DDoSAntiPly.DropOther
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit != nil {
-				ddosAntiPlyMap["source_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceCreateLimit
+			if ddosPolicy.DDoSRule.DDoSAntiPly.SourceCreateLimit != nil {
+				antiPlyMap["source_create_limit"] = ddosPolicy.DDoSRule.DDoSAntiPly.SourceCreateLimit
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit != nil {
-				ddosAntiPlyMap["source_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.SourceConnectLimit
+			if ddosPolicy.DDoSRule.DDoSAntiPly.SourceConnectLimit != nil {
+				antiPlyMap["source_connect_limit"] = ddosPolicy.DDoSRule.DDoSAntiPly.SourceConnectLimit
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit != nil {
-				ddosAntiPlyMap["destination_create_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationCreateLimit
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DestinationCreateLimit != nil {
+				antiPlyMap["destination_create_limit"] = ddosPolicy.DDoSRule.DDoSAntiPly.DestinationCreateLimit
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit != nil {
-				ddosAntiPlyMap["destination_connect_limit"] = ddosPolicy.DdosRule.DdosAntiPly.DestinationConnectLimit
+			if ddosPolicy.DDoSRule.DDoSAntiPly.DestinationConnectLimit != nil {
+				antiPlyMap["destination_connect_limit"] = ddosPolicy.DDoSRule.DDoSAntiPly.DestinationConnectLimit
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum != nil {
-				ddosAntiPlyMap["abnormal_connect_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalConnectNum
+			if ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalConnectNum != nil {
+				antiPlyMap["abnormal_connect_num"] = ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalConnectNum
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio != nil {
-				ddosAntiPlyMap["abnormal_syn_ratio"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynRatio
+			if ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalSynRatio != nil {
+				antiPlyMap["abnormal_syn_ratio"] = ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalSynRatio
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum != nil {
-				ddosAntiPlyMap["abnormal_syn_num"] = ddosPolicy.DdosRule.DdosAntiPly.AbnormalSynNum
+			if ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalSynNum != nil {
+				antiPlyMap["abnormal_syn_num"] = ddosPolicy.DDoSRule.DDoSAntiPly.AbnormalSynNum
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout != nil {
-				ddosAntiPlyMap["connect_timeout"] = ddosPolicy.DdosRule.DdosAntiPly.ConnectTimeout
+			if ddosPolicy.DDoSRule.DDoSAntiPly.ConnectTimeout != nil {
+				antiPlyMap["connect_timeout"] = ddosPolicy.DDoSRule.DDoSAntiPly.ConnectTimeout
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect != nil {
-				ddosAntiPlyMap["empty_connect_protect"] = ddosPolicy.DdosRule.DdosAntiPly.EmptyConnectProtect
+			if ddosPolicy.DDoSRule.DDoSAntiPly.EmptyConnectProtect != nil {
+				antiPlyMap["empty_connect_protect"] = ddosPolicy.DDoSRule.DDoSAntiPly.EmptyConnectProtect
 			}
-			if ddosPolicy.DdosRule.DdosAntiPly.UdpShard != nil {
-				ddosAntiPlyMap["udp_shard"] = ddosPolicy.DdosRule.DdosAntiPly.UdpShard
+			if ddosPolicy.DDoSRule.DDoSAntiPly.UdpShard != nil {
+				antiPlyMap["udp_shard"] = ddosPolicy.DDoSRule.DDoSAntiPly.UdpShard
 			}
 
-			ddosRuleMap["ddos_anti_ply"] = []interface{}{ddosAntiPlyMap}
+			dDoSRuleMap["anti_ply"] = []interface{}{antiPlyMap}
 		}
-		if ddosPolicy.DdosRule.DdosPacketFilter != nil {
-			ddosPacketFilterMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosPacketFilter.Switch != nil {
-				ddosPacketFilterMap["switch"] = ddosPolicy.DdosRule.DdosPacketFilter.Switch
+		if ddosPolicy.DDoSRule.DDoSPacketFilter != nil {
+			packetFilterMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSPacketFilter.Switch != nil {
+				packetFilterMap["switch"] = ddosPolicy.DDoSRule.DDoSPacketFilter.Switch
 			}
-			if ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter != nil {
-				packetFilterList := []interface{}{}
-				for _, packetFilter := range ddosPolicy.DdosRule.DdosPacketFilter.PacketFilter {
-					packetFilterMap := map[string]interface{}{}
-					if packetFilter.Action != nil {
-						packetFilterMap["action"] = packetFilter.Action
+			if ddosPolicy.DDoSRule.DDoSPacketFilter.DDoSFeaturesFilters != nil {
+				packetFiltersList := []interface{}{}
+				for _, packetFilters := range ddosPolicy.DDoSRule.DDoSPacketFilter.DDoSFeaturesFilters {
+					packetFiltersMap := map[string]interface{}{}
+					if packetFilters.Action != nil {
+						packetFiltersMap["action"] = packetFilters.Action
 					}
-					if packetFilter.Protocol != nil {
-						packetFilterMap["protocol"] = packetFilter.Protocol
+					if packetFilters.Protocol != nil {
+						packetFiltersMap["protocol"] = packetFilters.Protocol
 					}
-					if packetFilter.DportStart != nil {
-						packetFilterMap["dport_start"] = packetFilter.DportStart
+					if packetFilters.DportStart != nil {
+						packetFiltersMap["dport_start"] = packetFilters.DportStart
 					}
-					if packetFilter.DportEnd != nil {
-						packetFilterMap["dport_end"] = packetFilter.DportEnd
+					if packetFilters.DportEnd != nil {
+						packetFiltersMap["dport_end"] = packetFilters.DportEnd
 					}
-					if packetFilter.PacketMin != nil {
-						packetFilterMap["packet_min"] = packetFilter.PacketMin
+					if packetFilters.PacketMin != nil {
+						packetFiltersMap["packet_min"] = packetFilters.PacketMin
 					}
-					if packetFilter.PacketMax != nil {
-						packetFilterMap["packet_max"] = packetFilter.PacketMax
+					if packetFilters.PacketMax != nil {
+						packetFiltersMap["packet_max"] = packetFilters.PacketMax
 					}
-					if packetFilter.SportStart != nil {
-						packetFilterMap["sport_start"] = packetFilter.SportStart
+					if packetFilters.SportStart != nil {
+						packetFiltersMap["sport_start"] = packetFilters.SportStart
 					}
-					if packetFilter.SportEnd != nil {
-						packetFilterMap["sport_end"] = packetFilter.SportEnd
+					if packetFilters.SportEnd != nil {
+						packetFiltersMap["sport_end"] = packetFilters.SportEnd
 					}
-					if packetFilter.MatchType != nil {
-						packetFilterMap["match_type"] = packetFilter.MatchType
+					if packetFilters.MatchType != nil {
+						packetFiltersMap["match_type"] = packetFilters.MatchType
 					}
-					if packetFilter.IsNot != nil {
-						packetFilterMap["is_not"] = packetFilter.IsNot
+					if packetFilters.IsNot != nil {
+						packetFiltersMap["is_not"] = packetFilters.IsNot
 					}
-					if packetFilter.Offset != nil {
-						packetFilterMap["offset"] = packetFilter.Offset
+					if packetFilters.Offset != nil {
+						packetFiltersMap["offset"] = packetFilters.Offset
 					}
-					if packetFilter.Depth != nil {
-						packetFilterMap["depth"] = packetFilter.Depth
+					if packetFilters.Depth != nil {
+						packetFiltersMap["depth"] = packetFilters.Depth
 					}
-					if packetFilter.MatchBegin != nil {
-						packetFilterMap["match_begin"] = packetFilter.MatchBegin
+					if packetFilters.MatchBegin != nil {
+						packetFiltersMap["match_begin"] = packetFilters.MatchBegin
 					}
-					if packetFilter.Str != nil {
-						packetFilterMap["str"] = packetFilter.Str
+					if packetFilters.Str != nil {
+						packetFiltersMap["str"] = packetFilters.Str
 					}
-					if packetFilter.MatchType2 != nil {
-						packetFilterMap["match_type2"] = packetFilter.MatchType2
+					if packetFilters.MatchType2 != nil {
+						packetFiltersMap["match_type2"] = packetFilters.MatchType2
 					}
-					if packetFilter.IsNot2 != nil {
-						packetFilterMap["is_not2"] = packetFilter.IsNot2
+					if packetFilters.IsNot2 != nil {
+						packetFiltersMap["is_not2"] = packetFilters.IsNot2
 					}
-					if packetFilter.Offset2 != nil {
-						packetFilterMap["offset2"] = packetFilter.Offset2
+					if packetFilters.Offset2 != nil {
+						packetFiltersMap["offset2"] = packetFilters.Offset2
 					}
-					if packetFilter.Depth2 != nil {
-						packetFilterMap["depth2"] = packetFilter.Depth2
+					if packetFilters.Depth2 != nil {
+						packetFiltersMap["depth2"] = packetFilters.Depth2
 					}
-					if packetFilter.MatchBegin2 != nil {
-						packetFilterMap["match_begin2"] = packetFilter.MatchBegin2
+					if packetFilters.MatchBegin2 != nil {
+						packetFiltersMap["match_begin2"] = packetFilters.MatchBegin2
 					}
-					if packetFilter.Str2 != nil {
-						packetFilterMap["str2"] = packetFilter.Str2
+					if packetFilters.Str2 != nil {
+						packetFiltersMap["str2"] = packetFilters.Str2
 					}
-					if packetFilter.MatchLogic != nil {
-						packetFilterMap["match_logic"] = packetFilter.MatchLogic
+					if packetFilters.MatchLogic != nil {
+						packetFiltersMap["match_logic"] = packetFilters.MatchLogic
 					}
 
-					packetFilterList = append(packetFilterList, packetFilterMap)
+					packetFiltersList = append(packetFiltersList, packetFiltersMap)
 				}
-				ddosPacketFilterMap["packet_filter"] = packetFilterList
+				packetFilterMap["packet_filters"] = packetFiltersList
 			}
 
-			ddosRuleMap["ddos_packet_filter"] = []interface{}{ddosPacketFilterMap}
+			dDoSRuleMap["packet_filter"] = []interface{}{packetFilterMap}
 		}
-		if ddosPolicy.DdosRule.DdosAcl != nil {
-			ddosAclMap := map[string]interface{}{}
-			if ddosPolicy.DdosRule.DdosAcl.Switch != nil {
-				ddosAclMap["switch"] = ddosPolicy.DdosRule.DdosAcl.Switch
+		if ddosPolicy.DDoSRule.DDoSAcl != nil {
+			aclMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSAcl.Switch != nil {
+				aclMap["switch"] = ddosPolicy.DDoSRule.DDoSAcl.Switch
 			}
-			if ddosPolicy.DdosRule.DdosAcl.Acl != nil {
-				aclList := []interface{}{}
-				for _, acl := range ddosPolicy.DdosRule.DdosAcl.Acl {
-					aclMap := map[string]interface{}{}
-					if acl.DportEnd != nil {
-						aclMap["dport_end"] = acl.DportEnd
+			if ddosPolicy.DDoSRule.DDoSAcl.DDoSAclRules != nil {
+				aclsList := []interface{}{}
+				for _, acls := range ddosPolicy.DDoSRule.DDoSAcl.DDoSAclRules {
+					aclsMap := map[string]interface{}{}
+					if acls.DportEnd != nil {
+						aclsMap["dport_end"] = acls.DportEnd
 					}
-					if acl.DportStart != nil {
-						aclMap["dport_start"] = acl.DportStart
+					if acls.DportStart != nil {
+						aclsMap["dport_start"] = acls.DportStart
 					}
-					if acl.SportEnd != nil {
-						aclMap["sport_end"] = acl.SportEnd
+					if acls.SportEnd != nil {
+						aclsMap["sport_end"] = acls.SportEnd
 					}
-					if acl.SportStart != nil {
-						aclMap["sport_start"] = acl.SportStart
+					if acls.SportStart != nil {
+						aclsMap["sport_start"] = acls.SportStart
 					}
-					if acl.Protocol != nil {
-						aclMap["protocol"] = acl.Protocol
+					if acls.Protocol != nil {
+						aclsMap["protocol"] = acls.Protocol
 					}
-					if acl.Action != nil {
-						aclMap["action"] = acl.Action
-					}
-					if acl.Default != nil {
-						aclMap["default"] = acl.Default
+					if acls.Action != nil {
+						aclsMap["action"] = acls.Action
 					}
 
-					aclList = append(aclList, aclMap)
+					aclsList = append(aclsList, aclsMap)
 				}
-				ddosAclMap["acl"] = aclList
+				aclMap["acls"] = aclsList
 			}
 
-			ddosRuleMap["ddos_acl"] = []interface{}{ddosAclMap}
+			dDoSRuleMap["acl"] = []interface{}{aclMap}
+		}
+		if ddosPolicy.DDoSRule.DDoSSpeedLimit != nil {
+			speedLimitMap := map[string]interface{}{}
+			if ddosPolicy.DDoSRule.DDoSSpeedLimit.PackageLimit != nil {
+				speedLimitMap["package_limit"] = ddosPolicy.DDoSRule.DDoSSpeedLimit.PackageLimit
+			}
+			if ddosPolicy.DDoSRule.DDoSSpeedLimit.FluxLimit != nil {
+				speedLimitMap["flux_limit"] = ddosPolicy.DDoSRule.DDoSSpeedLimit.FluxLimit
+			}
+
+			dDoSRuleMap["speed_limit"] = []interface{}{speedLimitMap}
 		}
 
-		_ = d.Set("ddos_rule", []interface{}{ddosRuleMap})
+		_ = d.Set("ddos_rule", []interface{}{dDoSRuleMap})
 	}
 
 	return nil
@@ -1066,245 +840,245 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 	zoneId := idSplit[0]
 	policyId := idSplit[1]
 
-	policyId64, errRet := strconv.ParseInt(policyId, 10, 64)
-	if errRet != nil {
-		return fmt.Errorf("Type conversion failed, [%s] conversion int64 failed\n", policyId)
+	policyId64, err := strconv.ParseInt(policyId, 10, 64)
+	if err != nil {
+		log.Printf("[UPDATE]%s update teo ddosPolicy parseInt[%v] failed, reason:%+v", logId, policyId, err)
+		return err
 	}
-
 	request.ZoneId = &zoneId
-	request.PolicyId = &policyId64
+	request.PolicyId = helper.Int64(policyId64)
 
 	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
+		if old, _ := d.GetChange("zone_id"); old.(string) != "" {
+			return fmt.Errorf("`zone_id` do not support change now.")
+		}
 	}
 
 	if d.HasChange("policy_id") {
-		return fmt.Errorf("`policy_id` do not support change now.")
+		if old, _ := d.GetChange("policy_id"); old.(int) != 0 {
+			return fmt.Errorf("`policy_id` do not support change now.")
+		}
 	}
 
 	if d.HasChange("ddos_rule") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ddos_rule"); ok {
-			ddosRule := teo.DdosRule{}
+			ddosRule := teo.DDoSRule{}
 			if v, ok := dMap["switch"]; ok {
 				ddosRule.Switch = helper.String(v.(string))
 			}
-			if v, ok := dMap["udp_shard_open"]; ok {
-				ddosRule.UdpShardOpen = helper.String(v.(string))
-			}
-			if DdosStatusInfoMap, ok := helper.InterfaceToMap(dMap, "ddos_status_info"); ok {
+			if StatusInfoMap, ok := helper.InterfaceToMap(dMap, "status_info"); ok {
 				dDoSStatusInfo := teo.DDoSStatusInfo{}
-				if v, ok := DdosStatusInfoMap["ply_level"]; ok {
+				if v, ok := StatusInfoMap["ply_level"]; ok {
 					dDoSStatusInfo.PlyLevel = helper.String(v.(string))
 				}
-				ddosRule.DdosStatusInfo = &dDoSStatusInfo
+				ddosRule.DDoSStatusInfo = &dDoSStatusInfo
 			}
-			if DdosGeoIpMap, ok := helper.InterfaceToMap(dMap, "ddos_geo_ip"); ok {
+			if GeoIpMap, ok := helper.InterfaceToMap(dMap, "geo_ip"); ok {
 				dDoSGeoIp := teo.DDoSGeoIp{}
-				if v, ok := DdosGeoIpMap["region_id"]; ok {
-					regionIdSet := v.(*schema.Set).List()
-					for i := range regionIdSet {
-						regionId := regionIdSet[i].(int)
-						dDoSGeoIp.RegionId = append(dDoSGeoIp.RegionId, helper.IntInt64(regionId))
+				if v, ok := GeoIpMap["region_ids"]; ok {
+					regionIdsSet := v.(*schema.Set).List()
+					for i := range regionIdsSet {
+						regionIds := regionIdsSet[i].(int)
+						dDoSGeoIp.RegionIds = append(dDoSGeoIp.RegionIds, helper.IntInt64(regionIds))
 					}
 				}
-				if v, ok := DdosGeoIpMap["switch"]; ok {
+				if v, ok := GeoIpMap["switch"]; ok {
 					dDoSGeoIp.Switch = helper.String(v.(string))
 				}
-				ddosRule.DdosGeoIp = &dDoSGeoIp
+				ddosRule.DDoSGeoIp = &dDoSGeoIp
 			}
-			if DdosAllowBlockMap, ok := helper.InterfaceToMap(dMap, "ddos_allow_block"); ok {
-				ddosAllowBlock := teo.DdosAllowBlock{}
-				if v, ok := DdosAllowBlockMap["switch"]; ok {
-					ddosAllowBlock.Switch = helper.String(v.(string))
+			if AllowBlockMap, ok := helper.InterfaceToMap(dMap, "allow_block"); ok {
+				dDoSAllowBlock := teo.DDoSAllowBlock{}
+				if v, ok := AllowBlockMap["switch"]; ok {
+					dDoSAllowBlock.Switch = helper.String(v.(string))
 				}
-				if v, ok := DdosAllowBlockMap["user_allow_block_ip"]; ok {
+				if v, ok := AllowBlockMap["allow_block_ips"]; ok {
 					for _, item := range v.([]interface{}) {
-						UserAllowBlockIpMap := item.(map[string]interface{})
-						dDoSUserAllowBlockIP := teo.DDoSUserAllowBlockIP{}
-						if v, ok := UserAllowBlockIpMap["ip"]; ok {
+						AllowBlockIpsMap := item.(map[string]interface{})
+						dDoSUserAllowBlockIP := teo.DDoSAllowBlockRule{}
+						if v, ok := AllowBlockIpsMap["ip"]; ok {
 							dDoSUserAllowBlockIP.Ip = helper.String(v.(string))
 						}
-						if v, ok := UserAllowBlockIpMap["mask"]; ok {
-							dDoSUserAllowBlockIP.Mask = helper.IntInt64(v.(int))
-						}
-						if v, ok := UserAllowBlockIpMap["type"]; ok {
+						if v, ok := AllowBlockIpsMap["type"]; ok {
 							dDoSUserAllowBlockIP.Type = helper.String(v.(string))
 						}
-						if v, ok := UserAllowBlockIpMap["ip2"]; ok {
-							dDoSUserAllowBlockIP.Ip2 = helper.String(v.(string))
-						}
-						if v, ok := UserAllowBlockIpMap["mask2"]; ok {
-							dDoSUserAllowBlockIP.Mask2 = helper.IntInt64(v.(int))
-						}
-						ddosAllowBlock.UserAllowBlockIp = append(ddosAllowBlock.UserAllowBlockIp, &dDoSUserAllowBlockIP)
+						dDoSAllowBlock.DDoSAllowBlockRules = append(dDoSAllowBlock.DDoSAllowBlockRules, &dDoSUserAllowBlockIP)
 					}
 				}
-				ddosRule.DdosAllowBlock = &ddosAllowBlock
+				ddosRule.DDoSAllowBlock = &dDoSAllowBlock
 			}
-			if DdosAntiPlyMap, ok := helper.InterfaceToMap(dMap, "ddos_anti_ply"); ok {
+			if AntiPlyMap, ok := helper.InterfaceToMap(dMap, "anti_ply"); ok {
 				dDoSAntiPly := teo.DDoSAntiPly{}
-				if v, ok := DdosAntiPlyMap["drop_tcp"]; ok {
+				if v, ok := AntiPlyMap["drop_tcp"]; ok {
 					dDoSAntiPly.DropTcp = helper.String(v.(string))
 				}
-				if v, ok := DdosAntiPlyMap["drop_udp"]; ok {
+				if v, ok := AntiPlyMap["drop_udp"]; ok {
 					dDoSAntiPly.DropUdp = helper.String(v.(string))
 				}
-				if v, ok := DdosAntiPlyMap["drop_icmp"]; ok {
+				if v, ok := AntiPlyMap["drop_icmp"]; ok {
 					dDoSAntiPly.DropIcmp = helper.String(v.(string))
 				}
-				if v, ok := DdosAntiPlyMap["drop_other"]; ok {
+				if v, ok := AntiPlyMap["drop_other"]; ok {
 					dDoSAntiPly.DropOther = helper.String(v.(string))
 				}
-				if v, ok := DdosAntiPlyMap["source_create_limit"]; ok {
+				if v, ok := AntiPlyMap["source_create_limit"]; ok {
 					dDoSAntiPly.SourceCreateLimit = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["source_connect_limit"]; ok {
+				if v, ok := AntiPlyMap["source_connect_limit"]; ok {
 					dDoSAntiPly.SourceConnectLimit = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["destination_create_limit"]; ok {
+				if v, ok := AntiPlyMap["destination_create_limit"]; ok {
 					dDoSAntiPly.DestinationCreateLimit = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["destination_connect_limit"]; ok {
+				if v, ok := AntiPlyMap["destination_connect_limit"]; ok {
 					dDoSAntiPly.DestinationConnectLimit = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["abnormal_connect_num"]; ok {
+				if v, ok := AntiPlyMap["abnormal_connect_num"]; ok {
 					dDoSAntiPly.AbnormalConnectNum = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["abnormal_syn_ratio"]; ok {
+				if v, ok := AntiPlyMap["abnormal_syn_ratio"]; ok {
 					dDoSAntiPly.AbnormalSynRatio = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["abnormal_syn_num"]; ok {
+				if v, ok := AntiPlyMap["abnormal_syn_num"]; ok {
 					dDoSAntiPly.AbnormalSynNum = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["connect_timeout"]; ok {
+				if v, ok := AntiPlyMap["connect_timeout"]; ok {
 					dDoSAntiPly.ConnectTimeout = helper.IntInt64(v.(int))
 				}
-				if v, ok := DdosAntiPlyMap["empty_connect_protect"]; ok {
+				if v, ok := AntiPlyMap["empty_connect_protect"]; ok {
 					dDoSAntiPly.EmptyConnectProtect = helper.String(v.(string))
 				}
-				if v, ok := DdosAntiPlyMap["udp_shard"]; ok {
+				if v, ok := AntiPlyMap["udp_shard"]; ok {
 					dDoSAntiPly.UdpShard = helper.String(v.(string))
 				}
-				ddosRule.DdosAntiPly = &dDoSAntiPly
+				ddosRule.DDoSAntiPly = &dDoSAntiPly
 			}
-			if DdosPacketFilterMap, ok := helper.InterfaceToMap(dMap, "ddos_packet_filter"); ok {
-				ddosPacketFilter := teo.DdosPacketFilter{}
-				if v, ok := DdosPacketFilterMap["switch"]; ok {
-					ddosPacketFilter.Switch = helper.String(v.(string))
+			if PacketFilterMap, ok := helper.InterfaceToMap(dMap, "packet_filter"); ok {
+				dDoSPacketFilter := teo.DDoSPacketFilter{}
+				if v, ok := PacketFilterMap["switch"]; ok {
+					dDoSPacketFilter.Switch = helper.String(v.(string))
 				}
-				if v, ok := DdosPacketFilterMap["packet_filter"]; ok {
+				if v, ok := PacketFilterMap["packet_filters"]; ok {
 					for _, item := range v.([]interface{}) {
-						PacketFilterMap := item.(map[string]interface{})
+						PacketFiltersMap := item.(map[string]interface{})
 						dDoSFeaturesFilter := teo.DDoSFeaturesFilter{}
-						if v, ok := PacketFilterMap["action"]; ok {
+						if v, ok := PacketFiltersMap["action"]; ok {
 							dDoSFeaturesFilter.Action = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["protocol"]; ok {
+						if v, ok := PacketFiltersMap["protocol"]; ok {
 							dDoSFeaturesFilter.Protocol = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["dport_start"]; ok {
+						if v, ok := PacketFiltersMap["dport_start"]; ok {
 							dDoSFeaturesFilter.DportStart = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["dport_end"]; ok {
+						if v, ok := PacketFiltersMap["dport_end"]; ok {
 							dDoSFeaturesFilter.DportEnd = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["packet_min"]; ok {
+						if v, ok := PacketFiltersMap["packet_min"]; ok {
 							dDoSFeaturesFilter.PacketMin = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["packet_max"]; ok {
+						if v, ok := PacketFiltersMap["packet_max"]; ok {
 							dDoSFeaturesFilter.PacketMax = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["sport_start"]; ok {
+						if v, ok := PacketFiltersMap["sport_start"]; ok {
 							dDoSFeaturesFilter.SportStart = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["sport_end"]; ok {
+						if v, ok := PacketFiltersMap["sport_end"]; ok {
 							dDoSFeaturesFilter.SportEnd = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["match_type"]; ok {
+						if v, ok := PacketFiltersMap["match_type"]; ok {
 							dDoSFeaturesFilter.MatchType = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["is_not"]; ok {
+						if v, ok := PacketFiltersMap["is_not"]; ok {
 							dDoSFeaturesFilter.IsNot = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["offset"]; ok {
+						if v, ok := PacketFiltersMap["offset"]; ok {
 							dDoSFeaturesFilter.Offset = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["depth"]; ok {
+						if v, ok := PacketFiltersMap["depth"]; ok {
 							dDoSFeaturesFilter.Depth = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["match_begin"]; ok {
+						if v, ok := PacketFiltersMap["match_begin"]; ok {
 							dDoSFeaturesFilter.MatchBegin = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["str"]; ok {
+						if v, ok := PacketFiltersMap["str"]; ok {
 							dDoSFeaturesFilter.Str = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["match_type2"]; ok {
+						if v, ok := PacketFiltersMap["match_type2"]; ok {
 							dDoSFeaturesFilter.MatchType2 = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["is_not2"]; ok {
+						if v, ok := PacketFiltersMap["is_not2"]; ok {
 							dDoSFeaturesFilter.IsNot2 = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["offset2"]; ok {
+						if v, ok := PacketFiltersMap["offset2"]; ok {
 							dDoSFeaturesFilter.Offset2 = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["depth2"]; ok {
+						if v, ok := PacketFiltersMap["depth2"]; ok {
 							dDoSFeaturesFilter.Depth2 = helper.IntInt64(v.(int))
 						}
-						if v, ok := PacketFilterMap["match_begin2"]; ok {
+						if v, ok := PacketFiltersMap["match_begin2"]; ok {
 							dDoSFeaturesFilter.MatchBegin2 = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["str2"]; ok {
+						if v, ok := PacketFiltersMap["str2"]; ok {
 							dDoSFeaturesFilter.Str2 = helper.String(v.(string))
 						}
-						if v, ok := PacketFilterMap["match_logic"]; ok {
+						if v, ok := PacketFiltersMap["match_logic"]; ok {
 							dDoSFeaturesFilter.MatchLogic = helper.String(v.(string))
 						}
-						ddosPacketFilter.PacketFilter = append(ddosPacketFilter.PacketFilter, &dDoSFeaturesFilter)
+						dDoSPacketFilter.DDoSFeaturesFilters = append(dDoSPacketFilter.DDoSFeaturesFilters, &dDoSFeaturesFilter)
 					}
 				}
-				ddosRule.DdosPacketFilter = &ddosPacketFilter
+				ddosRule.DDoSPacketFilter = &dDoSPacketFilter
 			}
-			if DdosAclMap, ok := helper.InterfaceToMap(dMap, "ddos_acl"); ok {
-				ddosAcls := teo.DdosAcls{}
-				if v, ok := DdosAclMap["switch"]; ok {
-					ddosAcls.Switch = helper.String(v.(string))
+			if AclMap, ok := helper.InterfaceToMap(dMap, "acl"); ok {
+				dDoSAcls := teo.DDoSAcl{}
+				if v, ok := AclMap["switch"]; ok {
+					dDoSAcls.Switch = helper.String(v.(string))
 				}
-				if v, ok := DdosAclMap["acl"]; ok {
+				if v, ok := AclMap["acls"]; ok {
 					for _, item := range v.([]interface{}) {
-						AclMap := item.(map[string]interface{})
-						dDoSAcl := teo.DDoSAcl{}
-						if v, ok := AclMap["dport_end"]; ok {
+						AclsMap := item.(map[string]interface{})
+						dDoSAcl := teo.DDoSAclRule{}
+						if v, ok := AclsMap["dport_end"]; ok {
 							dDoSAcl.DportEnd = helper.IntInt64(v.(int))
 						}
-						if v, ok := AclMap["dport_start"]; ok {
+						if v, ok := AclsMap["dport_start"]; ok {
 							dDoSAcl.DportStart = helper.IntInt64(v.(int))
 						}
-						if v, ok := AclMap["sport_end"]; ok {
+						if v, ok := AclsMap["sport_end"]; ok {
 							dDoSAcl.SportEnd = helper.IntInt64(v.(int))
 						}
-						if v, ok := AclMap["sport_start"]; ok {
+						if v, ok := AclsMap["sport_start"]; ok {
 							dDoSAcl.SportStart = helper.IntInt64(v.(int))
 						}
-						if v, ok := AclMap["protocol"]; ok {
+						if v, ok := AclsMap["protocol"]; ok {
 							dDoSAcl.Protocol = helper.String(v.(string))
 						}
-						if v, ok := AclMap["action"]; ok {
+						if v, ok := AclsMap["action"]; ok {
 							dDoSAcl.Action = helper.String(v.(string))
 						}
-						if v, ok := AclMap["default"]; ok {
-							dDoSAcl.Default = helper.IntInt64(v.(int))
-						}
-						ddosAcls.Acl = append(ddosAcls.Acl, &dDoSAcl)
+						dDoSAcls.DDoSAclRules = append(dDoSAcls.DDoSAclRules, &dDoSAcl)
 					}
 				}
-				ddosRule.DdosAcl = &ddosAcls
+				ddosRule.DDoSAcl = &dDoSAcls
+			}
+			if SpeedLimitMap, ok := helper.InterfaceToMap(dMap, "speed_limit"); ok {
+				dDoSSpeedLimit := teo.DDoSSpeedLimit{}
+				if v, ok := SpeedLimitMap["package_limit"]; ok {
+					dDoSSpeedLimit.PackageLimit = helper.String(v.(string))
+				}
+				if v, ok := SpeedLimitMap["flux_limit"]; ok {
+					dDoSSpeedLimit.FluxLimit = helper.String(v.(string))
+				}
+				ddosRule.DDoSSpeedLimit = &dDoSSpeedLimit
 			}
 
-			request.DdosRule = &ddosRule
+			request.DDoSRule = &ddosRule
 		}
+
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	modifyErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyDDoSPolicy(request)
 		if e != nil {
 			return retryError(e)
@@ -1315,8 +1089,9 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 		return nil
 	})
 
-	if err != nil {
-		return err
+	if modifyErr != nil {
+		log.Printf("[CRITAL]%s create teo ddosPolicy failed, reason:%+v", logId, modifyErr)
+		return modifyErr
 	}
 
 	return resourceTencentCloudTeoDdosPolicyRead(d, meta)
@@ -1325,22 +1100,6 @@ func resourceTencentCloudTeoDdosPolicyUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudTeoDdosPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_ddos_policy.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	zoneId := idSplit[0]
-	policyId := idSplit[1]
-
-	if err := service.DeleteTeoDdosPolicyById(ctx, zoneId, policyId); err != nil {
-		return err
-	}
 
 	return nil
 }

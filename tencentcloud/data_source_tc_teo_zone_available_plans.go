@@ -1,10 +1,11 @@
 /*
-Use this data source to query zone available plans.
+Use this data source to query detailed information of teo zoneAvailablePlans
 
 Example Usage
 
 ```hcl
-data "tencentcloud_teo_zone_available_plans" "available_plans" {}
+data "tencentcloud_teo_zone_available_plans" "zoneAvailablePlans" {
+}
 ```
 */
 package tencentcloud
@@ -15,7 +16,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 )
 
 func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
@@ -26,7 +27,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 			"plan_info_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Available plans for a zone.",
+				Description: "Zone plans which current account can use.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"plan_type": {
@@ -37,7 +38,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 						"currency": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Currency type. Valid values: `CNY`, `USD`.",
+							Description: "Settlement Currency Type. Valid values: `CNY`, `USD`.",
 						},
 						"flux": {
 							Type:        schema.TypeInt,
@@ -47,7 +48,7 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 						"frequency": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Billing cycle. Valid values: `y`: Billed by the year; `m`: Billed by the month; `h`: Billed by the hour; `M`: Billed by the minute; `s`: Billed by the second.",
+							Description: "Billing cycle. Valid values:- `y`: Billed by the year.- `m`: Billed by the month.- `h`: Billed by the hour.- `M`: Billed by the minute.- `s`: Billed by the second.",
 						},
 						"price": {
 							Type:        schema.TypeInt,
@@ -64,13 +65,19 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 							Computed:    true,
 							Description: "The number of zones this zone plan can bind.",
 						},
+						"area": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Acceleration area of the plan. Valid value: `mainland`, `overseas`.",
+						},
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used for save results.",
+				Description: "Used to save results.",
 			},
 		},
 	}
@@ -78,44 +85,59 @@ func dataSourceTencentCloudTeoZoneAvailablePlans() *schema.Resource {
 
 func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_teo_zone_available_plans.read")()
+	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
-		service        = TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		availablePlans *teo.DescribeAvailablePlansResponseParams
-		err            error
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var outErr, inErr error
-	availablePlans, outErr = service.DescribeAvailablePlans(ctx)
-	if outErr != nil {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			availablePlans, inErr = service.DescribeAvailablePlans(ctx)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			return nil
-		})
-	}
+	teoService := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	planInfos := availablePlans.PlanInfoList
-	planInfoList := make([]map[string]interface{}, 0, len(planInfos))
-	for _, v := range planInfos {
-		planInfo := map[string]interface{}{
-			"plan_type":   v.PlanType,
-			"currency":    v.Currency,
-			"flux":        v.Flux,
-			"frequency":   v.Frequency,
-			"price":       v.Price,
-			"request":     v.Request,
-			"site_number": v.SiteNumber,
+	var planInfos []*teo.PlanInfo
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := teoService.DescribeTeoZoneAvailablePlansByFilter(ctx)
+		if e != nil {
+			return retryError(e)
 		}
-		planInfoList = append(planInfoList, planInfo)
-	}
-	if err = d.Set("plan_info_list", planInfoList); err != nil {
-		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
+		planInfos = results
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Teo planInfo failed, reason:%+v", logId, err)
 		return err
+	}
+
+	planInfoList := []interface{}{}
+	if planInfos != nil {
+		for _, planInfo := range planInfos {
+			planInfoMap := map[string]interface{}{}
+			if planInfo.PlanType != nil {
+				planInfoMap["plan_type"] = planInfo.PlanType
+			}
+			if planInfo.Currency != nil {
+				planInfoMap["currency"] = planInfo.Currency
+			}
+			if planInfo.Flux != nil {
+				planInfoMap["flux"] = planInfo.Flux
+			}
+			if planInfo.Frequency != nil {
+				planInfoMap["frequency"] = planInfo.Frequency
+			}
+			if planInfo.Price != nil {
+				planInfoMap["price"] = planInfo.Price
+			}
+			if planInfo.Request != nil {
+				planInfoMap["request"] = planInfo.Request
+			}
+			if planInfo.SiteNumber != nil {
+				planInfoMap["site_number"] = planInfo.SiteNumber
+			}
+			if planInfo.Area != nil {
+				planInfoMap["area"] = planInfo.Area
+			}
+
+			planInfoList = append(planInfoList, planInfoMap)
+		}
+		_ = d.Set("plan_info_list", planInfoList)
 	}
 
 	d.SetId("zone_available_plans")
@@ -126,5 +148,6 @@ func dataSourceTencentCloudTeoZoneAvailablePlansRead(d *schema.ResourceData, met
 			return e
 		}
 	}
+
 	return nil
 }

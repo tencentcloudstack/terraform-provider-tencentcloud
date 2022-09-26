@@ -56,7 +56,7 @@ import (
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
-	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220106"
+	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"

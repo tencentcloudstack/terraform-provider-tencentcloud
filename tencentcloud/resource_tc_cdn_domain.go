@@ -156,15 +156,20 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 		Update: resourceTencentCloudCdnDomainUpdate,
 		Delete: resourceTencentCloudCdnDomainDelete,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				getDefaultSwitchOffMap := func() []interface{} {
-					return []interface{}{
-						map[string]interface{}{"switch": "off"},
-					}
-				}
-				_ = d.Set("authentication", getDefaultSwitchOffMap())
-				return []*schema.ResourceData{d}, nil
-			},
+			//State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+			//	getDefaultSwitchOffMap := func() []interface{} {
+			//		return []interface{}{
+			//			map[string]interface{}{"switch": "off"},
+			//		}
+			//	}
+			//	_ = d.Set("authentication", getDefaultSwitchOffMap())
+			//	return []*schema.ResourceData{d}, nil
+			//},
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"authentication": []interface{}{map[string]interface{}{
+					"switch": "off",
+				}},
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{

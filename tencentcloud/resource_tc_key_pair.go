@@ -246,7 +246,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 
 	if len(keyPair.AssociatedInstanceIds) > 0 {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := cvmService.UnbindKeyPair(ctx, keyId, keyPair.AssociatedInstanceIds)
+			errRet := cvmService.UnbindKeyPair(ctx, []*string{&keyId}, keyPair.AssociatedInstanceIds)
 			if errRet != nil {
 				if sdkErr, ok := errRet.(*errors.TencentCloudSDKError); ok {
 					if sdkErr.Code == CVM_NOT_FOUND_ERROR {

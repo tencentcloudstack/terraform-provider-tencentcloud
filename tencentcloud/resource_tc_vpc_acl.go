@@ -79,7 +79,6 @@ func resourceTencentCloudVpcACL() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Deprecated:  "vpc acl do not support tag now.",
 				Description: "Tags of the vpc acl.",
 			},
 			//compute
