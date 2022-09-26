@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -826,5 +827,149 @@ func (me *TCRService) DescribeTcrVpcDnsById(ctx context.Context, instanceId stri
 
 	vpcPrivateDomainStatus = response.Response.VpcSet[0]
 	has = true
+	return
+}
+
+func (me *TCRService) CreateReplicationInstance(ctx context.Context, request *tcr.CreateReplicationInstanceRequest) (id string, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().CreateReplicationInstance(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	id = *response.Response.ReplicationRegistryId
+
+	startPolling := false
+
+	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+		req := tcr.NewDescribeReplicationInstancesRequest()
+		req.RegistryId = request.RegistryId
+		req.Limit = helper.IntInt64(100)
+		replicas, err := me.DescribeReplicationInstances(ctx, req)
+		if err != nil {
+			return retryError(err)
+		}
+		if len(replicas) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("no replica found in registry %s", *request.RegistryId))
+		}
+
+		for i := range replicas {
+			item := replicas[i]
+			if *item.Status == "Running" {
+				continue
+			}
+			startPolling = true
+			return resource.RetryableError(fmt.Errorf("replica %s is %s, waiting for task finish", *request.RegistryId, *item.Status))
+		}
+
+		if !startPolling {
+			return resource.RetryableError(fmt.Errorf("waiting for polling start"))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) DeleteReplicationInstance(ctx context.Context, request *tcr.DeleteReplicationInstanceRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DeleteReplicationInstance(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	startPolling := false
+
+	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+		req := tcr.NewDescribeReplicationInstancesRequest()
+		req.RegistryId = request.RegistryId
+		req.Limit = helper.IntInt64(100)
+		replicas, err := me.DescribeReplicationInstances(ctx, req)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if len(replicas) == 0 {
+			return nil
+		}
+
+		for i := range replicas {
+			item := replicas[i]
+			if *item.Status == "Running" {
+				continue
+			}
+			startPolling = true
+			return resource.RetryableError(fmt.Errorf("replica %s is %s, waiting for task finish", *request.RegistryId, *item.Status))
+		}
+
+		if !startPolling {
+			return resource.RetryableError(fmt.Errorf("waiting for polling start"))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) DescribeReplicationInstances(ctx context.Context, request *tcr.DescribeReplicationInstancesRequest) (list []*tcr.ReplicationRegistry, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTCRClient().DescribeReplicationInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	list = response.Response.ReplicationRegistries
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
