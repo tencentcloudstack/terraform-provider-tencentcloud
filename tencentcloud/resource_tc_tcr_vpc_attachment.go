@@ -69,6 +69,7 @@ func resourceTencentCloudTcrVpcAttachment() *schema.Resource {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"region_name"},
+				Deprecated:    "this argument was deprecated, use `region_name` instead.",
 				Description:   "ID of region. Conflict with region_name, can not be set at the same time.",
 			},
 			"region_name": {
