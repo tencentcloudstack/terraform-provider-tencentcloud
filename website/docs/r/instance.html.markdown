@@ -99,7 +99,7 @@ data "tencentcloud_cdh_instances" "list" {
 }
 
 resource "tencentcloud_key_pair" "random_key" {
-  key_name   = "tf_example_key6"
+  key_ids    = ["tf_example_key6"]
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 
@@ -112,7 +112,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone  = var.availability_zone
   instance_name      = "terraform-testing"
   image_id           = "img-ix05e4px"
-  key_name           = tencentcloud_key_pair.random_key.id
+  key_ids            = [tencentcloud_key_pair.random_key.id]
   placement_group_id = tencentcloud_placement_group.foo.id
   security_groups    = ["sg-9c3f33xk"]
   system_disk_type   = "CLOUD_PREMIUM"
@@ -160,7 +160,8 @@ The following arguments are supported:
 * `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
 * `internet_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.
-* `key_name` - (Optional, String) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
+* `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
+* `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
 * `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.
 * `placement_group_id` - (Optional, String, ForceNew) The ID of a placement group.
 * `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
