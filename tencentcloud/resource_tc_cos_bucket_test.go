@@ -130,7 +130,7 @@ func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_acl",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl_body", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl_body"},
 			},
 		},
 	})
@@ -213,7 +213,7 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_cors",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -265,7 +265,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_lifecycle",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -302,7 +302,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_website",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -327,7 +327,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "multi_az", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
 			},
 		},
 	})
@@ -403,7 +403,7 @@ func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.with_origin",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -490,7 +490,7 @@ func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 				ResourceName:            "tencentcloud_cos_bucket.with_replication",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "replica_role", "force_clean"},
+				ImportStateVerifyIgnore: []string{"acl", "replica_role"},
 			},
 		},
 	})

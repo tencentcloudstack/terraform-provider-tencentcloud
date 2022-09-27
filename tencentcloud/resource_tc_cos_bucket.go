@@ -389,7 +389,9 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 		Update: resourceTencentCloudCosBucketUpdate,
 		Delete: resourceTencentCloudCosBucketDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"force_clean": false,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
