@@ -21,6 +21,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl      = "private"
   multi_az = true
   versioning_enable = true
+  force_clean       = true
 }
 ```
 
@@ -388,7 +389,9 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 		Update: resourceTencentCloudCosBucketUpdate,
 		Delete: resourceTencentCloudCosBucketDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"force_clean": false,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -440,6 +443,12 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "Enable bucket versioning.",
+			},
+			"force_clean": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Force cleanup all objects before delete bucket.",
 			},
 			"replica_role": {
 				Type:         schema.TypeString,
@@ -1065,10 +1074,12 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Id()
+	forced := d.Get("force_clean").(bool)
+	versioned := d.Get("versioning_enable").(bool)
 	cosService := CosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := cosService.DeleteBucket(ctx, bucket)
+	err := cosService.DeleteBucket(ctx, bucket, forced, versioned)
 	if err != nil {
 		return err
 	}

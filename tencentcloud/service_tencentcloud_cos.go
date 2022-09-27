@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
@@ -265,8 +266,17 @@ func (me *CosService) TencentcloudHeadBucket(ctx context.Context, bucket string)
 	return
 }
 
-func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet error) {
+func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bool, versioned bool) (errRet error) {
 	logId := getLogId(ctx)
+
+	if forced {
+		log.Printf("[DEBUG]%s api[%s] triggered, bucket [%s], versioned [%v]\n",
+			logId, "ForceCleanObject", bucket, versioned)
+		err := me.ForceCleanObject(ctx, bucket, versioned)
+		if err != nil {
+			return err
+		}
+	}
 
 	request := s3.DeleteBucketInput{
 		Bucket: aws.String(bucket),
@@ -281,6 +291,110 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet e
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "delete bucket", request.String(), response.String())
 
+	return nil
+}
+
+func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool) error {
+	logId := getLogId(ctx)
+
+	// Get the object list of bucket with all versions
+	verOpt := cos.BucketGetObjectVersionsOptions{}
+	objList, resp, err := me.client.UseTencentCosClient(bucket).Bucket.GetObjectVersions(ctx, &verOpt)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
+			logId, "GetObjectVersions", resp.Body, err.Error())
+		return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
+	}
+	if objList.IsTruncated {
+		return fmt.Errorf("cos force clean object error: the list of objects is truncated and the bucket[%s] needs to be deleted manually!!!", bucket)
+	}
+
+	verCnt := len(objList.Version)
+	markerCnt := len(objList.DeleteMarker)
+	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, get [%v] versions of object, get [%v] deleteMarker, versioned[%v].\n", logId, "GetObjectVersions", verCnt, markerCnt, versioned)
+
+	delCnt := verCnt + markerCnt
+	if delCnt == 0 {
+		return nil
+	}
+
+	delObjs := make([]cos.Object, 0, delCnt)
+	if versioned {
+		//add the versions
+		for _, v := range objList.Version {
+			delObjs = append(delObjs, cos.Object{
+				Key:       v.Key,
+				VersionId: v.VersionId,
+			})
+		}
+		// add the delete-marker
+		for _, m := range objList.DeleteMarker {
+			delObjs = append(delObjs, cos.Object{
+				Key:       m.Key,
+				VersionId: m.VersionId,
+			})
+		}
+	} else {
+		for _, v := range objList.Version {
+			delObjs = append(delObjs, cos.Object{
+				Key: v.Key,
+			})
+		}
+	}
+
+	opt := cos.ObjectDeleteMultiOptions{
+		Quiet:   true,
+		Objects: delObjs,
+	}
+
+	// Multi-delete by specified object.
+	result, resp, err := me.client.UseTencentCosClient(bucket).Object.DeleteMulti(ctx, &opt)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s], opt[%v]\n",
+			logId, "DeleteMulti", resp.Body, err.Error(), opt)
+		return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] completed, removed [%v] versions of object. [%v] failed to remove.\n",
+		logId, "DeleteMulti", len(result.DeletedObjects), len(result.Errors))
+
+	// Clean the failed removal version.
+	if len(result.Errors) > 0 {
+		log.Printf("[CRITAL]%s api[%s] it still [%v] objects have not been removed, need try DeleteMulti again.\n",
+			logId, "DeleteMulti", len(result.Errors))
+
+		if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			unDelObjs := make([]cos.Object, 0, len(result.Errors))
+			for _, v := range result.Errors {
+				unDelObjs = append(unDelObjs, cos.Object{
+					Key:       v.Key,
+					VersionId: v.VersionId,
+				})
+			}
+			unDelOpt := cos.ObjectDeleteMultiOptions{
+				Quiet:   true,
+				Objects: unDelObjs,
+			}
+
+			result, resp, err := me.client.UseTencentCosClient(bucket).Object.DeleteMulti(ctx, &unDelOpt)
+			if err != nil {
+				log.Printf("[CRITAL][retry]%s api[%s] fail, resp body [%s], reason[%s]\n",
+					logId, "DeleteMulti ", resp.Body, err.Error())
+				return retryError(err, InternalError)
+			}
+			if len(result.Errors) > 0 {
+				return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still %v objects have not been removed, need try DeleteMulti again.\n",
+					logId, "DeleteMulti", len(result.Errors)))
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+	}
+
+	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, [%v] objects have been cleaned.\n",
+		logId, "ForceCleanObject", len(result.DeletedObjects))
 	return nil
 }
 
