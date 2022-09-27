@@ -143,7 +143,7 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 func TestAccTencentCloudTCRInstance_replication(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
