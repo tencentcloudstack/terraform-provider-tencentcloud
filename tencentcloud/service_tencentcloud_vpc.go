@@ -1885,21 +1885,33 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
 	// policy.CidrBlock will be nil if address template is set
 	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
-		if *policy.CidrBlock != *info.CidrIp {
+		if info.CidrIp == nil || *policy.CidrBlock != *info.CidrIp {
+			return false
+		}
+	} else {
+		if info.CidrIp != nil && *info.CidrIp != "" {
 			return false
 		}
 	}
 
 	// policy.Port will be nil if protocol template is set
 	if policy.Port != nil && *policy.Port != "" {
-		if *policy.Port != *info.PortRange {
+		if info.PortRange != nil || *policy.Port != *info.PortRange {
+			return false
+		}
+	} else {
+		if info.PortRange != nil && *info.PortRange != "" {
 			return false
 		}
 	}
 
 	// policy.Protocol will be nil if protocol template is set
 	if policy.Protocol != nil && *policy.Protocol != "" {
-		if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+		if info.Protocol == nil || !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+			return false
+		}
+	} else {
+		if info.Protocol != nil && *info.Protocol != "" {
 			return false
 		}
 	}
@@ -1919,20 +1931,38 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 			log.Printf("%s %v test", *info.ProtocolTemplateId, policy.ServiceTemplate)
 			return false
 		}
+	} else {
+		if policy.ServiceTemplate != nil && policy.ServiceTemplate.ServiceId != nil && *policy.ServiceTemplate.ServiceId != "" {
+			return false
+		}
 	}
+
 	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
 		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceGroupId == nil || *info.ProtocolTemplateGroupId != *policy.ServiceTemplate.ServiceGroupId {
 			log.Printf("%s %v test", *info.ProtocolTemplateGroupId, policy.ServiceTemplate)
 			return false
 		}
+	} else {
+		if policy.ServiceTemplate != nil && policy.ServiceTemplate.ServiceGroupId != nil && *policy.ServiceTemplate.ServiceGroupId != "" {
+			return false
+		}
 	}
+
 	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
 		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressGroupId == nil || *info.AddressTemplateGroupId != *policy.AddressTemplate.AddressGroupId {
+			return false
+		}
+	} else {
+		if policy.AddressTemplate != nil && policy.AddressTemplate.AddressGroupId != nil && *policy.AddressTemplate.AddressGroupId != "" {
 			return false
 		}
 	}
 	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
 		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressId == nil || *info.AddressTemplateId != *policy.AddressTemplate.AddressId {
+			return false
+		}
+	} else {
+		if policy.AddressTemplate != nil && policy.AddressTemplate.AddressId != nil && *policy.AddressTemplate.AddressId != "" {
 			return false
 		}
 	}
