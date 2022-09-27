@@ -622,7 +622,7 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 
 	for i := range replicas {
 		item := replicas[i]
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(writeRetryTimeout*5, func() *resource.RetryError {
 			request := tcr.NewDeleteReplicationInstanceRequest()
 			request.RegistryId = &instanceId
 			request.ReplicationRegistryId = item.ReplicationRegistryId
@@ -763,13 +763,16 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 			if synTag, ok := replica["syn_tag"].(bool); ok {
 				request.SyncTag = &synTag
 			}
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(writeRetryTimeout*5, func() *resource.RetryError {
 				_, err := service.CreateReplicationInstance(ctx, request)
 				if err != nil {
 					sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
 					if ok {
 						code := sdkErr.GetCode()
 						message := sdkErr.GetMessage()
+						if code == tcr.INTERNALERROR_ERRORCONFLICT {
+							return resource.RetryableError(err)
+						}
 						if code == tcr.INTERNALERROR && strings.Contains(message, "409 InvalidBucketState") {
 							log.Printf("[WARN] Got COS retryable error %s: %s", code, message)
 							return resource.RetryableError(sdkErr)
@@ -800,10 +803,18 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 			request.RegistryId = helper.String(d.Id())
 			request.ReplicationRegistryId = helper.String(id)
 			request.ReplicationRegionId = helper.IntUint64(regionId)
-			err := service.DeleteReplicationInstance(ctx, request)
+			err := resource.Retry(writeRetryTimeout*5, func() *resource.RetryError {
+				err := service.DeleteReplicationInstance(ctx, request)
+				if err != nil {
+					return retryError(err, tcr.INTERNALERROR_ERRCONFLICT)
+				}
+				return nil
+			})
 			if err != nil {
 				errs = *multierror.Append(err)
 			}
+			// Buffered for Request Limit
+			time.Sleep(time.Second * 3)
 		}
 	}
 

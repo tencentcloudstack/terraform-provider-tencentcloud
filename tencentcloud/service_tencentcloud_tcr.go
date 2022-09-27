@@ -851,7 +851,7 @@ func (me *TCRService) CreateReplicationInstance(ctx context.Context, request *tc
 
 	startPolling := false
 
-	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
 		req := tcr.NewDescribeReplicationInstancesRequest()
 		req.RegistryId = request.RegistryId
 		req.Limit = helper.IntInt64(100)
