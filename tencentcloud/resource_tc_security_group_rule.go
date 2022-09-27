@@ -62,6 +62,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
@@ -444,6 +445,11 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := service.DeleteSecurityGroupPolicy(ctx, ruleId)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.GetCode() == "ResourceNotFound" {
+					return nil
+				}
+			}
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
 		}
 		return nil

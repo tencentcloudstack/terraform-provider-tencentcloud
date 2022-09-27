@@ -1476,6 +1476,10 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
 	}
 
+	if info.Description != nil && *info.Description != "" {
+		policy.PolicyDescription = info.Description
+	}
+
 	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
 		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
