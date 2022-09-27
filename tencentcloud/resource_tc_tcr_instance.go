@@ -29,6 +29,45 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
+Create with Replications
+
+```hcl
+
+resource "tencentcloud_tcr_instance" "foo" {
+  name                  = "example"
+  instance_type		    = "premium"
+  replications {
+    region_id = var.tcr_region_map["ap-guangzhou"] # 1
+  }
+  replications {
+    region_id = var.tcr_region_map["ap-singapore"] # 9
+  }
+}
+
+variable "tcr_region_map" {
+  default = {
+    "ap-guangzhou"     = 1
+    "ap-shanghai"      = 4
+    "ap-hongkong"      = 5
+    "ap-beijing"       = 8
+    "ap-singapore"     = 9
+    "na-siliconvalley" = 15
+    "ap-chengdu"       = 16
+    "eu-frankfurt"     = 17
+    "ap-seoul"         = 18
+    "ap-chongqing"     = 19
+    "ap-mumbai"        = 21
+    "na-ashburn"       = 22
+    "ap-bangkok"       = 23
+    "eu-moscow"        = 24
+    "ap-tokyo"         = 25
+    "ap-nanjing"       = 33
+    "ap-taipei"        = 39
+    "ap-jakarta"       = 72
+  }
+}
+```
+
 Import
 
 tcr instance can be imported using the id, e.g.
@@ -43,6 +82,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
+	"time"
+
+	"github.com/hashicorp/go-multierror"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -108,6 +152,30 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Version of policy.",
+						},
+					},
+				},
+			},
+			"replications": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Specify List of instance Replications, premium only. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Replication registry ID (readonly).",
+						},
+						"region_id": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Replication region ID, check the example at the top of page to find out id of region.",
+						},
+						"syn_tag": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Specify whether to sync TCR cloud tags to COS Bucket. NOTE: You have to specify when adding, modifying will be ignored for now.",
 						},
 					},
 				},
@@ -249,6 +317,13 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		} else if !operation {
 			log.Printf("[WARN] `open_public_operation` was not opened, skip `security_policy` set.")
 		}
+
+		if _, ok := d.GetOk("replications"); ok {
+			err := resourceTencentCloudTcrReplicationSet(ctx, d, meta)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -359,6 +434,39 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	replicas := d.Get("replications").([]interface{})
+
+	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+		request := tcr.NewDescribeReplicationInstancesRequest()
+		request.RegistryId = helper.String(d.Id())
+		request.Limit = helper.IntInt64(100)
+		response, err := tcrService.DescribeReplicationInstances(ctx, request)
+		if err != nil {
+			return retryError(err)
+		}
+		for i := range response {
+			item := response[i]
+			if *item.Status != "Running" {
+				return resource.RetryableError(
+					fmt.Errorf(
+						"replica %d of registry %s is now %s, waiting for task finish",
+						*item.ReplicationRegionId,
+						*item.RegistryId,
+						*item.Status))
+			}
+		}
+		replicas = resourceTencentCloudTcrFillReplicas(replicas, response)
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if len(replicas) > 0 {
+		_ = d.Set("replications", replicas)
+	}
+
 	tags := make(map[string]string, len(instance.TagSpecification.Tags))
 	for _, tag := range instance.TagSpecification.Tags {
 		tags[*tag.Key] = *tag.Value
@@ -446,6 +554,13 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 		d.SetPartial("security_policy")
 	}
 
+	if d.HasChange("replications") {
+		err := resourceTencentCloudTcrReplicationSet(ctx, d, meta)
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -495,6 +610,30 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 
 	var inErr, outErr error
 	var has bool
+
+	// Delete replications first
+	repRequest := tcr.NewDescribeReplicationInstancesRequest()
+	repRequest.RegistryId = &instanceId
+	replicas, outErr := tcrService.DescribeReplicationInstances(ctx, repRequest)
+
+	if outErr != nil {
+		return outErr
+	}
+
+	for i := range replicas {
+		item := replicas[i]
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			request := tcr.NewDeleteReplicationInstanceRequest()
+			request.RegistryId = &instanceId
+			request.ReplicationRegistryId = item.ReplicationRegistryId
+			request.ReplicationRegionId = item.ReplicationRegionId
+			err := tcrService.DeleteReplicationInstance(ctx, request)
+			if err != nil {
+				return retryError(err, tcr.INTERNALERROR_ERRORCONFLICT)
+			}
+			return nil
+		})
+	}
 
 	outErr = tcrService.DeleteTCRInstance(ctx, instanceId, deleteBucket)
 	if outErr != nil {
@@ -588,4 +727,115 @@ func resourceTencentCloudTcrSecurityPolicyRemove(d *schema.ResourceData, meta in
 		return err
 	}
 	return nil
+}
+
+func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	var errs multierror.Error
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := TCRService{client}
+	o, n := d.GetChange("replications")
+	ov := o.([]interface{})
+	nv := n.([]interface{})
+
+	setFunc := func(v interface{}) int {
+		item, ok := v.(map[string]interface{})
+		if !ok {
+			return 0
+		}
+		return item["region_id"].(int)
+	}
+
+	oSet := schema.NewSet(setFunc, ov)
+	nSet := schema.NewSet(setFunc, nv)
+	adds := nSet.Difference(oSet)
+	removes := oSet.Difference(nSet)
+
+	log.Printf("[DEBUG] TCR - replicas will be add: %v", adds)
+	log.Printf("[DEBUG] TCR - replicas will be delete %v", removes)
+
+	if list := adds.List(); adds.Len() > 0 {
+		for i := range list {
+			request := tcr.NewCreateReplicationInstanceRequest()
+			replica := list[i].(map[string]interface{})
+			request.RegistryId = helper.String(d.Id())
+			request.ReplicationRegionId = helper.IntUint64(replica["region_id"].(int))
+			if synTag, ok := replica["syn_tag"].(bool); ok {
+				request.SyncTag = &synTag
+			}
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				_, err := service.CreateReplicationInstance(ctx, request)
+				if err != nil {
+					sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+					if ok {
+						code := sdkErr.GetCode()
+						message := sdkErr.GetMessage()
+						if code == tcr.INTERNALERROR && strings.Contains(message, "409 InvalidBucketState") {
+							log.Printf("[WARN] Got COS retryable error %s: %s", code, message)
+							return resource.RetryableError(sdkErr)
+						}
+					}
+					return retryError(err)
+				}
+				return nil
+			})
+			if err != nil {
+				errs = *multierror.Append(err)
+			}
+			// Buffered for Request Limit: 1 time per sec
+			time.Sleep(time.Second * 3)
+		}
+	}
+
+	if list := removes.List(); removes.Len() > 0 {
+		for i := range list {
+			replica := list[i].(map[string]interface{})
+			id, ok := replica["id"].(string)
+			regionId := replica["region_id"].(int)
+			if !ok || id == "" {
+				errs = *multierror.Append(fmt.Errorf("replication region %d has no id", regionId))
+				continue
+			}
+			request := tcr.NewDeleteReplicationInstanceRequest()
+			request.RegistryId = helper.String(d.Id())
+			request.ReplicationRegistryId = helper.String(id)
+			request.ReplicationRegionId = helper.IntUint64(regionId)
+			err := service.DeleteReplicationInstance(ctx, request)
+			if err != nil {
+				errs = *multierror.Append(err)
+			}
+		}
+	}
+
+	return errs.ErrorOrNil()
+}
+
+func resourceTencentCloudTcrFillReplicas(replicas []interface{}, registries []*tcr.ReplicationRegistry) []interface{} {
+	replicaRegionIndexes := map[int]int{}
+	for i := range replicas {
+		item := replicas[i].(map[string]interface{})
+		regionId := item["region_id"].(int)
+		replicaRegionIndexes[regionId] = i
+	}
+
+	var newReplicas []interface{}
+	for i := range registries {
+		item := registries[i]
+		id := *item.ReplicationRegistryId
+		regionId := *item.ReplicationRegionId
+		if index, ok := replicaRegionIndexes[int(regionId)]; ok && index >= 0 {
+			replicas[index].(map[string]interface{})["id"] = id
+		} else {
+			newReplicas = append(newReplicas, map[string]interface{}{
+				"id":        id,
+				"region_id": int(regionId),
+			})
+		}
+	}
+
+	if len(newReplicas) > 0 {
+		replicas = append(replicas, newReplicas...)
+	}
+
+	return replicas
 }

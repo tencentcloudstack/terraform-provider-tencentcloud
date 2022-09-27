@@ -40,6 +40,44 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
+Create with Replications
+
+```hcl
+resource "tencentcloud_tcr_instance" "foo" {
+  name          = "example"
+  instance_type = "premium"
+  replications {
+    region_id = var.tcr_region_map["ap-guangzhou"] # 1
+  }
+  replications {
+    region_id = var.tcr_region_map["ap-singapore"] # 9
+  }
+}
+
+variable "tcr_region_map" {
+  default = {
+    "ap-guangzhou"     = 1
+    "ap-shanghai"      = 4
+    "ap-hongkong"      = 5
+    "ap-beijing"       = 8
+    "ap-singapore"     = 9
+    "na-siliconvalley" = 15
+    "ap-chengdu"       = 16
+    "eu-frankfurt"     = 17
+    "ap-seoul"         = 18
+    "ap-chongqing"     = 19
+    "ap-mumbai"        = 21
+    "na-ashburn"       = 22
+    "ap-bangkok"       = 23
+    "eu-moscow"        = 24
+    "ap-tokyo"         = 25
+    "ap-nanjing"       = 33
+    "ap-taipei"        = 39
+    "ap-jakarta"       = 72
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -48,8 +86,14 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `open_public_operation` - (Optional, Bool) Control public network access.
+* `replications` - (Optional, List) Specify List of instance Replications, premium only. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.
 * `security_policy` - (Optional, Set) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
 * `tags` - (Optional, Map) The available tags within this TCR instance.
+
+The `replications` object supports the following:
+
+* `region_id` - (Optional, Int) Replication region ID, check the example at the top of page to find out id of region.
+* `syn_tag` - (Optional, Bool) Specify whether to sync TCR cloud tags to COS Bucket. NOTE: You have to specify when adding, modifying will be ignored for now.
 
 The `security_policy` object supports the following:
 

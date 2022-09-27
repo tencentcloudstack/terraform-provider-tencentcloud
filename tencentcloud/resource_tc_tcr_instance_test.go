@@ -7,6 +7,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -39,6 +43,34 @@ func init() {
 				if isResourcePersist(name, &created) {
 					continue
 				}
+
+				// Delete replicas
+
+				// Delete replications first
+				repRequest := tcr.NewDescribeReplicationInstancesRequest()
+				repRequest.RegistryId = &id
+				replicas, outErr := service.DescribeReplicationInstances(ctx, repRequest)
+
+				if outErr != nil {
+					return outErr
+				}
+
+				for i := range replicas {
+					item := replicas[i]
+					outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						request := tcr.NewDeleteReplicationInstanceRequest()
+						request.RegistryId = &id
+						request.ReplicationRegistryId = item.ReplicationRegistryId
+						request.ReplicationRegionId = item.ReplicationRegionId
+						err := service.DeleteReplicationInstance(ctx, request)
+						if err != nil {
+							return retryError(err, tcr.INTERNALERROR_ERRORCONFLICT)
+						}
+						return nil
+					})
+				}
+
+				// Delete Instance
 				log.Printf("instance %s:%s will delete", id, name)
 				err = service.DeleteTCRInstance(ctx, id, true)
 				if err != nil {
@@ -69,7 +101,6 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance", "public_domain"),
 				),
-				Destroy: false,
 			},
 			{
 				ResourceName:            "tencentcloud_tcr_instance.mytcr_instance",
@@ -88,7 +119,6 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
 					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.1.cidr_block", "10.0.0.1/16"),
 				),
-				Destroy: false,
 			},
 			{
 				Config: testAccTCRInstance_basic_update_security,
@@ -108,6 +138,134 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestAccTencentCloudTCRInstance_replication(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTCRInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTCRInstance_replica,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "2"),
+				),
+			},
+			//{
+			//	ResourceName:            "tencentcloud_tcr_instance.mytcr_instance",
+			//	ImportState:             true,
+			//	ImportStateVerify:       true,
+			//	ImportStateVerifyIgnore: []string{"delete_bucket"},
+			//},
+			{
+				Config: testAccTCRInstance_replica_update,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "3"),
+				),
+			},
+		},
+	})
+}
+
+func TestUnitTencentCloudTCRReplicaSet(t *testing.T) {
+
+	inputs := []interface{}{
+		map[string]interface{}{
+			"region_id": 1,
+			"sync_cos":  true,
+		},
+		map[string]interface{}{
+			"region_id": 2,
+		},
+		map[string]interface{}{
+			"region_id": 3,
+			"sync_cos":  false,
+		},
+	}
+
+	registries1 := []*tcr.ReplicationRegistry{
+		{
+			ReplicationRegistryId: helper.String("a"),
+			RegistryId:            helper.String("x"),
+			ReplicationRegionId:   helper.IntUint64(1),
+		},
+		{
+			ReplicationRegistryId: helper.String("b"),
+			RegistryId:            helper.String("x"),
+			ReplicationRegionId:   helper.IntUint64(2),
+		},
+		{
+			ReplicationRegistryId: helper.String("c"),
+			RegistryId:            helper.String("x"),
+			ReplicationRegionId:   helper.IntUint64(3),
+		},
+	}
+
+	result1 := resourceTencentCloudTcrFillReplicas(inputs, registries1)
+	expected1 := []interface{}{
+		map[string]interface{}{
+			"id":        "a",
+			"region_id": 1,
+			"sync_cos":  true,
+		},
+		map[string]interface{}{
+			"id":        "b",
+			"region_id": 2,
+		},
+		map[string]interface{}{
+			"id":        "c",
+			"region_id": 3,
+			"sync_cos":  false,
+		},
+	}
+	assert.Equalf(t, expected1, result1, "%s case 1 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected1, result1)
+
+	var registries2 []*tcr.ReplicationRegistry
+	var registries2Incr = []*tcr.ReplicationRegistry{
+		{
+			ReplicationRegistryId: helper.String("d"),
+			RegistryId:            helper.String("x"),
+			ReplicationRegionId:   helper.IntUint64(4),
+		},
+		{
+			ReplicationRegistryId: helper.String("e"),
+			RegistryId:            helper.String("x"),
+			ReplicationRegionId:   helper.IntUint64(5),
+		},
+	}
+	registries2 = append(registries2, registries1...)
+	registries2 = append(registries2, registries2Incr...)
+	result2 := resourceTencentCloudTcrFillReplicas(inputs, registries2)
+	expected2 := []interface{}{
+		map[string]interface{}{
+			"id":        "a",
+			"region_id": 1,
+			"sync_cos":  true,
+		},
+		map[string]interface{}{
+			"id":        "b",
+			"region_id": 2,
+		},
+		map[string]interface{}{
+			"id":        "c",
+			"region_id": 3,
+			"sync_cos":  false,
+		},
+		map[string]interface{}{
+			"id":        "d",
+			"region_id": 4,
+		},
+		map[string]interface{}{
+			"id":        "e",
+			"region_id": 5,
+		},
+	}
+
+	assert.Equalf(t, expected2, result2, "%s case 2 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected2, result2)
 }
 
 func testAccCheckTCRInstanceDestroy(s *terraform.State) error {
@@ -163,6 +321,38 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
 
   tags ={
 	test = "test"
+  }
+}`
+
+const testAccTCRInstance_replica = `
+resource "tencentcloud_tcr_instance" "mytcr_instance" {
+  name        = "tfreplicas"
+  instance_type = "premium"
+  delete_bucket = true
+
+  replications {
+    region_id = 4 # ap-shanghai
+  }
+  replications {
+    region_id = 5 # ap-hongkong
+  }
+}`
+
+const testAccTCRInstance_replica_update = `
+resource "tencentcloud_tcr_instance" "mytcr_instance" {
+  name        = "tfreplicas"
+  instance_type = "premium"
+  delete_bucket = true
+
+  replications {
+    region_id = 5 # ap-hongkong
+  }
+  replications {
+    region_id = 8 # ap-beijing
+  }
+  replications {
+    region_id = 16 #ap-chengdu
+    syn_tag = true
   }
 }`
 
