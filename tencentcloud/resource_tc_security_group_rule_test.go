@@ -34,7 +34,6 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "ip_protocol", "tcp"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "description", ""),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "type", "ingress"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "policy_index", "1"),
 					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in1", "source_sgid"),
 				),
 			},

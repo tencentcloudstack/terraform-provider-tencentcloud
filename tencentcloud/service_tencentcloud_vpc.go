@@ -1295,7 +1295,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	return response.Response.SecurityGroupAssociationStatisticsSet, nil
 }
 
-func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfo) (ruleId string, err error) {
+func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfoWithPolicyIndex) (ruleId string, err error) {
 	logId := getLogId(ctx)
 
 	createRequest := vpc.NewCreateSecurityGroupPoliciesRequest()
@@ -1358,7 +1358,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 		info.SourceSgId = common.StringPtr("")
 	}
 
-	ruleId, err = buildSecurityGroupRuleId(info)
+	ruleId, err = buildSecurityGroupRuleId(info.securityGroupRuleBasicInfo)
 	if err != nil {
 		return "", fmt.Errorf("build rule id error, reason: %v", err)
 	}
@@ -1495,6 +1495,32 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	}
 
 	return nil
+}
+
+func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndex(ctx context.Context, policyIndex int64, sgId, policyType string) error {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = helper.String(sgId)
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	policy := new(vpc.SecurityGroupPolicy)
+	policy.PolicyIndex = helper.Int64(policyIndex)
+	switch strings.ToLower(policyType) {
+	case "ingress":
+		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
+
+	case "egress":
+		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
+	}
+	ratelimit.Check(request.GetAction())
+	if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+	return nil
+
 }
 
 func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
@@ -1796,7 +1822,11 @@ type securityGroupRuleBasicInfo struct {
 	AddressTemplateGroupId  *string `json:"address_template_group_id,omitempty"`
 	ProtocolTemplateId      *string `json:"protocol_template_id,omitempty"`
 	ProtocolTemplateGroupId *string `json:"protocol_template_group_id,omitempty"`
-	PolicyIndex             int64   `json:"policy_index"`
+}
+
+type securityGroupRuleBasicInfoWithPolicyIndex struct {
+	securityGroupRuleBasicInfo
+	PolicyIndex int64 `json:"policy_index"`
 }
 
 // Build an ID for a Security Group Rule (new version)
@@ -1883,6 +1913,15 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
+	if policy.PolicyDescription != nil && *policy.PolicyDescription != "" {
+		if info.Description == nil || *policy.PolicyDescription != *info.Description {
+			return false
+		}
+	} else {
+		if info.Description != nil && *info.Description != "" {
+			return false
+		}
+	}
 	// policy.CidrBlock will be nil if address template is set
 	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
 		if info.CidrIp == nil || *policy.CidrBlock != *info.CidrIp {
@@ -1896,11 +1935,11 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 
 	// policy.Port will be nil if protocol template is set
 	if policy.Port != nil && *policy.Port != "" {
-		if info.PortRange != nil || *policy.Port != *info.PortRange {
+		if info.PortRange == nil || *policy.Port != *info.PortRange {
 			return false
 		}
 	} else {
-		if info.PortRange != nil && *info.PortRange != "" {
+		if info.PortRange != nil && *info.PortRange != "" && *info.PortRange != "ALL" {
 			return false
 		}
 	}
@@ -1911,7 +1950,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 			return false
 		}
 	} else {
-		if info.Protocol != nil && *info.Protocol != "" {
+		if info.Protocol != nil && *info.Protocol != "" && *info.Protocol != "ALL" {
 			return false
 		}
 	}
