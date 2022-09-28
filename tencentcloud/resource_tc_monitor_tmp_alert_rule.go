@@ -66,7 +66,7 @@ func resourceTencentCloudMonitorTmpAlertRule() *schema.Resource {
 			"expr": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule expression.",
+				Description: "Rule expression, reference documentation: `https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/`.",
 			},
 			"receivers": {
 				Type:        schema.TypeSet,
