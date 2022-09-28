@@ -32,13 +32,13 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `agent_id` - Agent id.
 
 
 ## Import
 
 monitor tmpCvmAgent can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent tmpCvmAgent_id
+$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instance_id#agent_id
 ```
 
