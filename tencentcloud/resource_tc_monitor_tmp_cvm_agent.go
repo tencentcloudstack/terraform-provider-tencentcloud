@@ -14,7 +14,7 @@ Import
 
 monitor tmpCvmAgent can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent tmpCvmAgent_id
+$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instance_id#agent_id
 ```
 */
 package tencentcloud
@@ -53,6 +53,12 @@ func resourceTencentCloudMonitorTmpCvmAgent() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Agent name.",
+			},
+
+			"agent_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Agent id.",
 			},
 		},
 	}
@@ -134,6 +140,10 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 
 	if tmpCvmAgent.Name != nil {
 		_ = d.Set("name", tmpCvmAgent.Name)
+	}
+
+	if tmpCvmAgent.AgentId != nil {
+		_ = d.Set("agent_id", tmpCvmAgent.AgentId)
 	}
 
 	return nil
