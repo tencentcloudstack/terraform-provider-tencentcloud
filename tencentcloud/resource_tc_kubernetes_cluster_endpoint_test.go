@@ -63,12 +63,12 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 }
 
 const testAccTkeClusterEndpointNewSG = `
-resource "tencentcloud_security_group" "foo" {
+resource "tencentcloud_security_group" "new_sg" {
   name = "test-endpoint"
 }
 
-resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = tencentcloud_security_group.foo.id
+resource "tencentcloud_security_group_lite_rule" "new_sg" {
+  security_group_id = tencentcloud_security_group.new_sg.id
 
   ingress = [
     "DROP#0.0.0.0/16#ALL#ALL",
@@ -76,7 +76,7 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
 }
 
 locals {
-  new_sg = tencentcloud_security_group_lite_rule.foo.id
+  new_sg = tencentcloud_security_group.new_sg.id
 }
 
 `
