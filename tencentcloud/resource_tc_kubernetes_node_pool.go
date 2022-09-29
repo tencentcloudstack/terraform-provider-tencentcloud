@@ -354,13 +354,11 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"instance_name": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
 			Description: "Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://cloud.tencent.com/document/product/377/20447.",
 		},
 		"host_name": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
 			Description: "The hostname of the cloud server, dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows instances are not supported. Examples of other types (Linux, etc.): The character length is [2, 40], multiple periods are allowed, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (unlimited case), numbers and dashes (-). Pure numbers are not allowed. For usage, refer to `HostNameSettings` in https://cloud.tencent.com/document/product/377/20447.",
 		},
 	}
