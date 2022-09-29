@@ -36,7 +36,7 @@ resource "tencentcloud_monitor_tmp_alert_rule" "tmpAlertRule" {
 
 The following arguments are supported:
 
-* `expr` - (Required, String) Rule expression.
+* `expr` - (Required, String) Rule expression, reference documentation: `https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/`.
 * `instance_id` - (Required, String) Instance id.
 * `receivers` - (Required, Set: [`String`]) Alarm notification template id list.
 * `rule_name` - (Required, String) Rule name.
