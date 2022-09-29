@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -25,6 +26,8 @@ func init() {
 		F:    testNodePoolSweep,
 	})
 }
+
+var nodePoolNameReg = regexp.MustCompile("^(mynodepool|np)")
 
 func testNodePoolSweep(region string) error {
 	logId := getLogId(contextNil)
@@ -50,7 +53,11 @@ func testNodePoolSweep(region string) error {
 	for i := range nodePools {
 		poolId := *nodePools[i].NodePoolId
 		poolName := nodePools[i].Name
-		if poolName == nil || (*poolName != "mynodepool" && *poolName != "mynodepoolupdate") {
+		if poolName == nil {
+			continue
+		}
+
+		if !nodePoolNameReg.MatchString(*poolName) {
 			continue
 		}
 		err := service.DeleteClusterNodePool(ctx, defaultTkeClusterId, poolId, false)
