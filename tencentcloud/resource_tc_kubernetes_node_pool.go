@@ -1138,8 +1138,13 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		if _, ok := d.GetOk("cam_role_name"); ok || launchCfg.CamRoleName != nil {
 			launchConfig["cam_role_name"] = launchCfg.CamRoleName
 		}
-		launchConfig["instance_name"] = launchCfg.InstanceNameSettings.InstanceName
-		launchConfig["host_name"] = launchCfg.HostNameSettings.HostName
+		if launchCfg.InstanceNameSettings != nil && launchCfg.InstanceNameSettings.InstanceName != nil {
+			launchConfig["instance_name"] = launchCfg.InstanceNameSettings.InstanceName
+		}
+		if launchCfg.HostNameSettings != nil && launchCfg.HostNameSettings.HostName != nil {
+			launchConfig["host_name"] = launchCfg.HostNameSettings.HostName
+		}
+
 		asgConfig := make([]interface{}, 0, 1)
 		asgConfig = append(asgConfig, launchConfig)
 		if err := d.Set("auto_scaling_config", asgConfig); err != nil {
