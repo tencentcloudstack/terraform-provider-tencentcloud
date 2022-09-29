@@ -29,13 +29,6 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "type", "ingress"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "policy_index", "0"),
 					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in", "source_sgid"),
-
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "cidr_ip", "1.1.1.2"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "ip_protocol", "tcp"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "description", ""),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "type", "ingress"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in1", "policy_index", "1"),
-					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in1", "source_sgid"),
 				),
 			},
 		},
@@ -261,15 +254,6 @@ resource "tencentcloud_security_group_rule" "http-in" {
   policy            = "accept"
   policy_index      = 0
 }
-resource "tencentcloud_security_group_rule" "http-in1" {
-	security_group_id = tencentcloud_security_group.foo.id
-	type              = "ingress"
-	cidr_ip           = "1.1.1.2"
-	ip_protocol       = "tcp"
-	port_range        = "80,8080"
-	policy            = "accept"
-	policy_index      = 1
-  }
 `
 
 const testAccSecurityGroupRuleConfigSSH = `

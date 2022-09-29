@@ -1295,7 +1295,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	return response.Response.SecurityGroupAssociationStatisticsSet, nil
 }
 
-func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfo) (ruleId string, err error) {
+func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfoWithPolicyIndex) (ruleId string, err error) {
 	logId := getLogId(ctx)
 
 	createRequest := vpc.NewCreateSecurityGroupPoliciesRequest()
@@ -1358,7 +1358,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 		info.SourceSgId = common.StringPtr("")
 	}
 
-	ruleId, err = buildSecurityGroupRuleId(info)
+	ruleId, err = buildSecurityGroupRuleId(info.securityGroupRuleBasicInfo)
 	if err != nil {
 		return "", fmt.Errorf("build rule id error, reason: %v", err)
 	}
@@ -1476,6 +1476,10 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 		policy.ServiceTemplate.ServiceId = info.ProtocolTemplateId
 	}
 
+	if info.Description != nil && *info.Description != "" {
+		policy.PolicyDescription = info.Description
+	}
+
 	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
 		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
@@ -1491,6 +1495,32 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	}
 
 	return nil
+}
+
+func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndex(ctx context.Context, policyIndex int64, sgId, policyType string) error {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = helper.String(sgId)
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	policy := new(vpc.SecurityGroupPolicy)
+	policy.PolicyIndex = helper.Int64(policyIndex)
+	switch strings.ToLower(policyType) {
+	case "ingress":
+		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
+
+	case "egress":
+		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
+	}
+	ratelimit.Check(request.GetAction())
+	if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+	return nil
+
 }
 
 func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
@@ -1792,7 +1822,11 @@ type securityGroupRuleBasicInfo struct {
 	AddressTemplateGroupId  *string `json:"address_template_group_id,omitempty"`
 	ProtocolTemplateId      *string `json:"protocol_template_id,omitempty"`
 	ProtocolTemplateGroupId *string `json:"protocol_template_group_id,omitempty"`
-	PolicyIndex             int64   `json:"policy_index"`
+}
+
+type securityGroupRuleBasicInfoWithPolicyIndex struct {
+	securityGroupRuleBasicInfo
+	PolicyIndex int64 `json:"policy_index"`
 }
 
 // Build an ID for a Security Group Rule (new version)
@@ -1879,23 +1913,44 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
+	if policy.PolicyDescription != nil && *policy.PolicyDescription != "" {
+		if info.Description == nil || *policy.PolicyDescription != *info.Description {
+			return false
+		}
+	} else {
+		if info.Description != nil && *info.Description != "" {
+			return false
+		}
+	}
 	// policy.CidrBlock will be nil if address template is set
 	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
-		if *policy.CidrBlock != *info.CidrIp {
+		if info.CidrIp == nil || *policy.CidrBlock != *info.CidrIp {
+			return false
+		}
+	} else {
+		if info.CidrIp != nil && *info.CidrIp != "" {
 			return false
 		}
 	}
 
 	// policy.Port will be nil if protocol template is set
 	if policy.Port != nil && *policy.Port != "" {
-		if *policy.Port != *info.PortRange {
+		if info.PortRange == nil || *policy.Port != *info.PortRange {
+			return false
+		}
+	} else {
+		if info.PortRange != nil && *info.PortRange != "" && *info.PortRange != "ALL" {
 			return false
 		}
 	}
 
 	// policy.Protocol will be nil if protocol template is set
 	if policy.Protocol != nil && *policy.Protocol != "" {
-		if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+		if info.Protocol == nil || !strings.EqualFold(*policy.Protocol, *info.Protocol) {
+			return false
+		}
+	} else {
+		if info.Protocol != nil && *info.Protocol != "" && *info.Protocol != "ALL" {
 			return false
 		}
 	}
@@ -1915,20 +1970,38 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 			log.Printf("%s %v test", *info.ProtocolTemplateId, policy.ServiceTemplate)
 			return false
 		}
+	} else {
+		if policy.ServiceTemplate != nil && policy.ServiceTemplate.ServiceId != nil && *policy.ServiceTemplate.ServiceId != "" {
+			return false
+		}
 	}
+
 	if info.ProtocolTemplateGroupId != nil && *info.ProtocolTemplateGroupId != "" {
 		if policy.ServiceTemplate == nil || policy.ServiceTemplate.ServiceGroupId == nil || *info.ProtocolTemplateGroupId != *policy.ServiceTemplate.ServiceGroupId {
 			log.Printf("%s %v test", *info.ProtocolTemplateGroupId, policy.ServiceTemplate)
 			return false
 		}
+	} else {
+		if policy.ServiceTemplate != nil && policy.ServiceTemplate.ServiceGroupId != nil && *policy.ServiceTemplate.ServiceGroupId != "" {
+			return false
+		}
 	}
+
 	if info.AddressTemplateGroupId != nil && *info.AddressTemplateGroupId != "" {
 		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressGroupId == nil || *info.AddressTemplateGroupId != *policy.AddressTemplate.AddressGroupId {
+			return false
+		}
+	} else {
+		if policy.AddressTemplate != nil && policy.AddressTemplate.AddressGroupId != nil && *policy.AddressTemplate.AddressGroupId != "" {
 			return false
 		}
 	}
 	if info.AddressTemplateId != nil && *info.AddressTemplateId != "" {
 		if policy.AddressTemplate == nil || policy.AddressTemplate.AddressId == nil || *info.AddressTemplateId != *policy.AddressTemplate.AddressId {
+			return false
+		}
+	} else {
+		if policy.AddressTemplate != nil && policy.AddressTemplate.AddressId != nil && *policy.AddressTemplate.AddressId != "" {
 			return false
 		}
 	}
