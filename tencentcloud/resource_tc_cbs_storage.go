@@ -54,13 +54,12 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Type of CBS medium. Valid values: CLOUD_PREMIUM, CLOUD_SSD, CLOUD_TSSD and CLOUD_HSSD.",
+				Description: "Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.",
 			},
 			"storage_size": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ValidateFunc: validateIntegerInRange(10, 16000),
-				Description:  "Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Volume of CBS, and unit is GB.",
 			},
 			"period": {
 				Deprecated:   "It has been deprecated from version 1.33.0. Set `prepaid_period` instead.",
