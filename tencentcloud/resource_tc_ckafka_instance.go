@@ -477,6 +477,7 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	instanceId := d.Id()
 
 	var info *ckafka.InstanceDetail
+	var isExist = true
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		res, has, e := service.DescribeCkafkaInstanceById(ctx, instanceId)
@@ -485,6 +486,7 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		}
 		if !has {
 			d.SetId("")
+			isExist = false
 			return nil
 		}
 		info = res
@@ -493,6 +495,11 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return fmt.Errorf("[API]Describe kafka instance fail, reason:%s", err.Error())
 	}
+
+	if !isExist {
+		return nil
+	}
+
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
 	// calculate period
