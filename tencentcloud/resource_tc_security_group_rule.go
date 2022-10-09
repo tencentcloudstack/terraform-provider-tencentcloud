@@ -62,6 +62,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
@@ -143,7 +144,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			"policy_index": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Computed:    true,
+				ForceNew:    true,
 				Description: "The security group rule index number, the value of which dynamically changes as the security group rule changes.",
 			},
 			"source_sgid": {
@@ -327,10 +328,14 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		AddressTemplateGroupId:  addressTemplateGroupId,
 		ProtocolTemplateId:      protocolTemplateId,
 		ProtocolTemplateGroupId: protocolTemplateGroupId,
-		PolicyIndex:             policyIndex,
+	}
+	//Forward Compatibility
+	infoWithPolicyIndex := securityGroupRuleBasicInfoWithPolicyIndex{
+		info,
+		policyIndex,
 	}
 
-	ruleId, err := service.CreateSecurityGroupPolicy(ctx, info)
+	ruleId, err := service.CreateSecurityGroupPolicy(ctx, infoWithPolicyIndex)
 	if err != nil {
 		return err
 	}
@@ -412,9 +417,6 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 			}
 			_ = d.Set("ip_protocol", inputProtocol)
 		}
-		if policy.PolicyIndex != nil {
-			_ = d.Set("policy_index", *policy.PolicyIndex)
-		}
 		if policy.Port != nil && *policy.Port != "" {
 			_ = d.Set("port_range", *policy.Port)
 		}
@@ -441,9 +443,19 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	ruleId := d.Id()
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := service.DeleteSecurityGroupPolicy(ctx, ruleId)
+	sgId, policyType, policy, err := service.DescribeSecurityGroupPolicy(ctx, ruleId)
+	if err != nil {
+		log.Printf("[CRITAL]%s security group rule query failed: %s\n ", logId, err.Error())
+		return err
+	}
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := service.DeleteSecurityGroupPolicyByPolicyIndex(ctx, *policy.PolicyIndex, sgId, policyType)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.GetCode() == "ResourceNotFound" {
+					return nil
+				}
+			}
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
 		}
 		return nil
