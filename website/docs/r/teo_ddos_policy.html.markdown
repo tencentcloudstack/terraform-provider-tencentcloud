@@ -180,8 +180,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo ddos_policy can be imported using the id, e.g.
+teo ddos_policy can be imported using the id#ddosPolicy_id, e.g.
 ```
-$ terraform import tencentcloud_teo_ddos_policy.ddos_policy ddosPolicy_id
+$ terraform import tencentcloud_teo_ddos_policy.ddos_policy zone-2a1u0y616jz6#11587
 ```
 

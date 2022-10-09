@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTeoBotManagedRulesDataSource -v
 func TestAccTencentCloudTeoBotManagedRulesDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -23,11 +24,21 @@ func TestAccTencentCloudTeoBotManagedRulesDataSource(t *testing.T) {
 	})
 }
 
-const testAccDataSourceTeoBotManagedRules = `
+const testAccDataSourceTeoBotManagedRulesVar = `
+variable "zone_id" {
+  default = "` + defaultZoneId + `"
+}
+
+variable "entity" {
+  default = "` + defaultZoneName + `"
+}
+`
+
+const testAccDataSourceTeoBotManagedRules = testAccDataSourceTeoBotManagedRulesVar + `
 
 data "tencentcloud_teo_bot_managed_rules" "bot_managed_rules" {
-  zone_id = ""
-  entity = ""
-    }
+  zone_id = var.zone_id
+  entity = var.entity
+}
 
 `

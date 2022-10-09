@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixTeoOriginGroup_basic(t *testing.T) {
+func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
