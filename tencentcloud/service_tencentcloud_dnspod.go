@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -68,5 +69,61 @@ func (me *DnspodService) ModifyDnsPodDomainRemark(ctx context.Context, domain st
 		log.Printf("[CRITAL]%s modify dnspod domain remark failed, reason: %v", logId, err)
 		return err
 	}
+	return
+}
+
+func (me *DnspodService) DescribeDomain(ctx context.Context, domain string) (ret *dnspod.DescribeDomainResponse, errRet error) {
+
+	logId := getLogId(ctx)
+	request := dnspod.NewDescribeDomainRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Domain = helper.String(domain)
+
+	response, err := me.client.UseDnsPodClient().DescribeDomain(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return nil, fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	return response, nil
+}
+
+func (me *DnspodService) DeleteDomain(ctx context.Context, domain string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := dnspod.NewDeleteDomainRequest()
+	ratelimit.Check(request.GetAction())
+	request.Domain = helper.String(domain)
+
+	response, err := me.client.UseDnsPodClient().DeleteDomain(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	errRet = err
 	return
 }
