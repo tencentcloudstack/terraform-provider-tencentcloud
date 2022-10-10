@@ -23,7 +23,7 @@ func TestAccTencentCloudTeoSecurityPolicy_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists("tencentcloud_teo_security_policy.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "zone_id", defaultZoneId),
-					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "entity", "aaa."+defaultZoneName),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "entity", "www."+defaultZoneName),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "type", "full"),
 				),
 			},
@@ -71,7 +71,7 @@ variable "zone_id" {
 }
 
 variable "zone_name" {
-  default = "aaa.` + defaultZoneName + `"
+  default = "www.` + defaultZoneName + `"
 }`
 
 const testAccTeoSecurityPolicy = testAccTeoSecurityPolicyVar + `
@@ -134,5 +134,4 @@ resource "tencentcloud_teo_security_policy" "basic" {
       }
     }
   }
-}
-`
+}`
