@@ -45,7 +45,7 @@ func testAccCheckApplicationProxyRuleDestroy(s *terraform.State) error {
 			continue
 		}
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
+		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		zoneId := idSplit[0]
@@ -74,7 +74,7 @@ func testAccCheckApplicationProxyRuleExists(r string) resource.TestCheckFunc {
 		}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
+		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		zoneId := idSplit[0]
@@ -97,7 +97,11 @@ func testAccCheckApplicationProxyRuleExists(r string) resource.TestCheckFunc {
 const testAccTeoApplicationProxyRuleVar = `
 variable "default_zone_id" {
   default = "` + defaultZoneId + `"
-}`
+}
+variable "proxy_id" {
+  default = "` + defaultPolicyId + `"
+}
+`
 
 const testAccTeoApplicationProxyRule = testAccTeoApplicationProxyRuleVar + testAccTeoApplicationProxy + `
 
@@ -111,7 +115,7 @@ resource "tencentcloud_teo_application_proxy_rule" "basic" {
     "8083",
   ]
   proto             = "TCP"
-  proxy_id          = data.tencentcloud_teo_application_proxy.basic.proxy_id
+  proxy_id          = tencentcloud_teo_application_proxy.basic.proxy_id
   session_persist   = false
   status            = "online"
   zone_id           = var.default_zone_id
