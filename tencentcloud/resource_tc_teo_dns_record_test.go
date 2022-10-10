@@ -57,7 +57,7 @@ func TestAccTencentCloudTeoDnsRecord_basic(t *testing.T) {
 				Config: testAccTeoDnsRecord,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDnsRecordExists("tencentcloud_teo_dns_record.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_dns_record.basic", "zone_id", "zone-29nmwa08q4yq"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_dns_record.basic", "zone_id", defaultZoneId),
 				),
 			},
 			{
