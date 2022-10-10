@@ -17,21 +17,21 @@ func TestAccTencentCloudTeoSecurityPolicy_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers: testAccProviders,
-		Steps:     []resource.TestStep{
-			//{
-			//	Config: testAccTeoSecurityPolicy,
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckSecurityPolicyExists("tencentcloud_teo_security_policy.basic"),
-			//		resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "zone_id", defaultZoneId),
-			//		resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "entity", "aaa."+defaultZoneName),
-			//		resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "type", "full"),
-			//	),
-			//},
-			//{
-			//	ResourceName:      "tencentcloud_teo_security_policy.basic",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoSecurityPolicy,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPolicyExists("tencentcloud_teo_security_policy.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "entity", "aaa."+defaultZoneName),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "type", "full"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_teo_security_policy.basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

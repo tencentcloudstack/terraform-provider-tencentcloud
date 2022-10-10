@@ -126,19 +126,15 @@ variable "zone_name" {
 const testAccTeoZone = testAccTeoZoneVar + `
 
 resource "tencentcloud_teo_zone" "basic" {
-  zone_name      = var.zone_name
-  plan_type      = "ent_with_bot"
-  type           = "full"
-  paused         = false
-  cname_speed_up = "enabled"
-
-  vanity_name_servers {
-    switch  = "on"
-    servers = ["ns5.tf-teo-test.com", "ns6.tencent-tf-teo-tset.com"]
-  }
+  cname_speed_up          = "enabled"
+  plan_type               = "ent_with_bot"
+  paused                  = false
+  tags                    = {}
+  type                    = "full"
+  zone_name               = var.zone_name
 
   tags = {
-    "TestKey" = "TestValue"
+    "TestKey" = "terraform"
   }
 }
 
