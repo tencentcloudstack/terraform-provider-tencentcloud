@@ -133,9 +133,9 @@ resource "tencentcloud_teo_zone" "basic" {
   type                    = "full"
   zone_name               = var.zone_name
 
-  tags = {
-    "TestKey" = "terraform"
-  }
+  #tags = {
+  #  "TestKey" = "terraform"
+  #}
 }
 
 `
