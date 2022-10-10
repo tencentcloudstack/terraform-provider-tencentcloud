@@ -24,7 +24,7 @@ func TestAccTencentCloudTeoSecurityPolicy_basic(t *testing.T) {
 					testAccCheckSecurityPolicyExists("tencentcloud_teo_security_policy.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "zone_id", defaultZoneId),
 					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "entity", "www."+defaultZoneName),
-					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "type", "full"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_security_policy.basic", "config.#", "1"),
 				),
 			},
 			{
