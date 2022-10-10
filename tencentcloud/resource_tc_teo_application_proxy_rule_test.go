@@ -15,7 +15,7 @@ import (
 func TestAccTencentCloudTeoApplicationProxyRule_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckApplicationProxyRuleDestroy,
 		Steps: []resource.TestStep{
