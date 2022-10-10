@@ -135,7 +135,7 @@ variable "zone_name" {
 
 const testAccTeoDnsRecord = testAccTeoDnsRecordVar + `
 
-resource "tencentcloud_teo_dns_record" "dns_record" {
+resource "tencentcloud_teo_dns_record" "basic" {
   zone_id   = var.zone_id
   type      = "A"
   name      = var.zone_name
