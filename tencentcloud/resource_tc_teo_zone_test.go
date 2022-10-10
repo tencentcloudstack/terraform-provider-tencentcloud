@@ -118,12 +118,7 @@ func testAccCheckZoneExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoZoneVar = `
-variable "zone_name" {
-  default = "` + defaultZoneName + `"
-}`
-
-const testAccTeoZone = testAccTeoZoneVar + `
+const testAccTeoZone = `
 
 resource "tencentcloud_teo_zone" "basic" {
   cname_speed_up          = "enabled"
@@ -131,7 +126,7 @@ resource "tencentcloud_teo_zone" "basic" {
   paused                  = false
   tags                    = {}
   type                    = "full"
-  zone_name               = var.zone_name
+  zone_name               = "tf-teo.xyz"
 
   #tags = {
   #  "TestKey" = "terraform"
