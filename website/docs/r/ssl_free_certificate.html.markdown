@@ -35,13 +35,13 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 The following arguments are supported:
 
 * `domain` - (Required, String, ForceNew) Specify domain name.
-* `dv_auth_method` - (Required, String, ForceNew) Specify DV authorize method, available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
 * `alias` - (Optional, String) Specify alias for remark.
 * `contact_email` - (Optional, String) Email address.
 * `contact_phone` - (Optional, String) Phone number.
 * `csr_encrypt_algo` - (Optional, String) Specify CSR encrypt algorithm, only support `RSA` for now.
 * `csr_key_parameter` - (Optional, String) Specify CSR key parameter, only support `"2048"` for now.
 * `csr_key_password` - (Optional, String) Specify CSR key password.
+* `dv_auth_method` - (Optional, String, ForceNew) Specify DV authorize method, required when creating. Available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
 * `old_certificate_id` - (Optional, String, ForceNew) Specify old certificate ID, used for re-apply.
 * `package_type` - (Optional, String) Type of package. Only support `"2"` (TrustAsia TLS RSA CA).
 * `project_id` - (Optional, Int) ID of projects which this certification belong to.
