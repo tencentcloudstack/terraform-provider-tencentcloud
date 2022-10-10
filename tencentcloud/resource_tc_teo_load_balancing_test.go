@@ -18,7 +18,7 @@ func TestAccTencentCloudTeoLoadBalancing_basic(t *testing.T) {
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLoadBalancingDestroy,
-		Steps: []resource.TestStep{
+		Steps:        []resource.TestStep{
 			//{
 			//	Config: testAccTeoLoadBalancing,
 			//	Check: resource.ComposeTestCheckFunc(
