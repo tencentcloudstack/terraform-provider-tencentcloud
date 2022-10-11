@@ -70,6 +70,11 @@ func TestAccTencentCloudNeedFixSSLFreeCertificate(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_ssl_free_certificate.foo", "domain"),
 				),
 			},
+			{
+				ImportState:       true,
+				ImportStateVerify: true,
+				ResourceName:      "tencentcloud_ssl_free_certificate.foo",
+			},
 		},
 	})
 }
