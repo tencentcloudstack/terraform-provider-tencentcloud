@@ -789,9 +789,14 @@ func Provider() terraform.ResourceProvider {
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": {
-							Type:         schema.TypeInt,
-							Required:     true,
-							InputDefault: "7200",
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
 							ValidateFunc: validateIntegerInRange(0, 43200),
 							Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
