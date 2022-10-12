@@ -53,8 +53,8 @@ func resourceTencentCloudSSLFreeCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"dv_auth_method": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Specify DV authorize method, required when creating. Available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.",
+				Required:    true,
+				Description: "Specify DV authorize method. Available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
@@ -285,10 +285,6 @@ func resourceTencentCloudFreeCertificateCreate(d *schema.ResourceData, meta inte
 	request.DvAuthMethod = &authMethod
 	request.DomainName = &domain
 
-	if authMethod != "DNS" && authMethod != "FILE" {
-		return fmt.Errorf("invalid value of dv_auth_method: `%s` expected `DNS` or `FILE`", authMethod)
-	}
-
 	if v, ok := d.GetOk("package_type"); ok {
 		request.PackageType = helper.String(v.(string))
 	}
@@ -369,6 +365,7 @@ func resourceTencentCloudFreeCertificateUpdate(d *schema.ResourceData, meta inte
 	}
 
 	immutableFields := []string{
+		"dv_auth_method",
 		"package_type",
 		"contact_email",
 		"contact_phone",
