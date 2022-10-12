@@ -500,7 +500,8 @@ data "tencentcloud_domains" "domains" {}
 data "tencentcloud_user_info" "info" {}
 
 locals {
-  domain = data.tencentcloud_domains.domains.list.0.domain_name
+  domains = data.tencentcloud_domains.domains.list.*.domain_name
+  domain = [for i in local.domains: i if length(regexall("^tencent", i)) > 0][0]
   bucket_url = "keep-cdn-test-${data.tencentcloud_user_info.info.app_id}.cos.ap-singapore.myqcloud.com"
 }
 `
