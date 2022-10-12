@@ -351,6 +351,18 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ForceNew:    true,
 			Description: "Name of cam role.",
 		},
+		"instance_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
+		},
+		"host_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The hostname of the cloud server, dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows instances are not supported. Examples of other types (Linux, etc.): The character length is [2, 40], multiple periods are allowed, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (unlimited case), numbers and dashes (-). Pure numbers are not allowed. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
+		},
 	}
 
 	return needSchema
@@ -790,6 +802,18 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	if v, ok := dMap["cam_role_name"]; ok {
 		request.CamRoleName = helper.String(v.(string))
 	}
+
+	if v, ok := dMap["instance_name"]; ok && v != "" {
+		request.InstanceNameSettings = &as.InstanceNameSettings{
+			InstanceName: helper.String(v.(string)),
+		}
+	}
+
+	if v, ok := dMap["host_name"]; ok && v != "" {
+		request.HostNameSettings = &as.HostNameSettings{
+			HostName: helper.String(v.(string)),
+		}
+	}
 	result = request.ToJsonString()
 	return result, errRet
 }
@@ -894,6 +918,18 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		request.InstanceChargePrepaid = &as.InstanceChargePrepaid{
 			Period:    helper.IntInt64(period),
 			RenewFlag: &renewFlag,
+		}
+	}
+
+	if v, ok := dMap["instance_name"]; ok && v != "" {
+		request.InstanceNameSettings = &as.InstanceNameSettings{
+			InstanceName: helper.String(v.(string)),
+		}
+	}
+
+	if v, ok := dMap["host_name"]; ok && v != "" {
+		request.HostNameSettings = &as.HostNameSettings{
+			HostName: helper.String(v.(string)),
 		}
 	}
 
@@ -1104,6 +1140,13 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		if _, ok := d.GetOk("cam_role_name"); ok || launchCfg.CamRoleName != nil {
 			launchConfig["cam_role_name"] = launchCfg.CamRoleName
 		}
+		if launchCfg.InstanceNameSettings != nil && launchCfg.InstanceNameSettings.InstanceName != nil {
+			launchConfig["instance_name"] = launchCfg.InstanceNameSettings.InstanceName
+		}
+		if launchCfg.HostNameSettings != nil && launchCfg.HostNameSettings.HostName != nil {
+			launchConfig["host_name"] = launchCfg.HostNameSettings.HostName
+		}
+
 		asgConfig := make([]interface{}, 0, 1)
 		asgConfig = append(asgConfig, launchConfig)
 		if err := d.Set("auto_scaling_config", asgConfig); err != nil {
