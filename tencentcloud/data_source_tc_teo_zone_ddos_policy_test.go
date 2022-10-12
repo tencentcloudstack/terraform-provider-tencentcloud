@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTeoZoneDDoSPolicyDataSource -v
 func TestAccTencentCloudTeoZoneDDoSPolicyDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -23,10 +24,16 @@ func TestAccTencentCloudTeoZoneDDoSPolicyDataSource(t *testing.T) {
 	})
 }
 
-const testAccDataSourceTeoZoneDDoSPolicy = `
+const testAccDataSourceTeoZoneDDoSPolicyVar = `
+variable "zone_id" {
+  default = "` + defaultZoneId + `"
+}
+`
+
+const testAccDataSourceTeoZoneDDoSPolicy = testAccDataSourceTeoZoneDDoSPolicyVar + `
 
 data "tencentcloud_teo_zone_ddos_policy" "zone_ddos_policy" {
-  zone_id = ""
+  zone_id = var.zone_id
 }
 
 `

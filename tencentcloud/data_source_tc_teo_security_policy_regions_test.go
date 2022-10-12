@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTeoSecurityPolicyRegionsDataSource -v
 func TestAccTencentCloudTeoSecurityPolicyRegionsDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -26,6 +27,6 @@ func TestAccTencentCloudTeoSecurityPolicyRegionsDataSource(t *testing.T) {
 const testAccDataSourceTeoSecurityPolicyRegions = `
 
 data "tencentcloud_teo_security_policy_regions" "security_policy_regions" {
-    }
+}
 
 `

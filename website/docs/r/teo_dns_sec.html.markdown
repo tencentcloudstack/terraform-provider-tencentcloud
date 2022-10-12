@@ -26,22 +26,16 @@ The following arguments are supported:
 
 * `status` - (Required, String) DNSSEC status. Valid values: `enabled`, `disabled`.
 * `zone_id` - (Required, String, ForceNew) Site ID.
+* `dnssec` - (Optional, List) DNSSEC infos.
+
+The `dnssec` object supports the following:
+
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `dnssec` - DNSSEC infos.
-  * `algorithm` - Encryption algorithm.
-  * `d_s` - DS record value.
-  * `digest_algorithm` - Digest algorithm.
-  * `digest_type` - Digest type.
-  * `digest` - Digest message.
-  * `flags` - Flag.
-  * `key_tag` - Key tag.
-  * `key_type` - Encryption type.
-  * `public_key` - Public key.
 * `modified_on` - Last modification date.
 
 

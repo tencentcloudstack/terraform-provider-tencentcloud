@@ -57,6 +57,7 @@ func resourceTencentCloudTeoDnsSec() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Computed:    true,
+				Optional:    true,
 				Description: "DNSSEC infos.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -197,7 +198,9 @@ func resourceTencentCloudTeoDnsSecRead(d *schema.ResourceData, meta interface{})
 			dnssecMap["public_key"] = dnsSec.DnssecInfo.PublicKey
 		}
 
-		_ = d.Set("dnssec", []interface{}{dnssecMap})
+		if len(dnssecMap) > 0 {
+			_ = d.Set("dnssec", []interface{}{dnssecMap})
+		}
 	}
 
 	if dnsSec.ModifiedOn != nil {
