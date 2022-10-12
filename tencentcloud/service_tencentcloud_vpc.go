@@ -76,18 +76,22 @@ type VpcRouteTableBasicInfo struct {
 }
 
 type VpcSecurityGroupLiteRule struct {
-	action          string
-	cidrIp          string
-	port            string
-	protocol        string
-	addressId       string
-	addressGroupId  string
-	securityGroupId string
+	action                  string
+	cidrIp                  string
+	port                    string
+	protocol                string
+	addressId               string
+	addressGroupId          string
+	securityGroupId         string
+	protocolTemplateId      string
+	protocolTemplateGroupId string
 }
 
 var securityGroupIdRE = regexp.MustCompile(`^sg-\\w{8}$`)
 var ipAddressIdRE = regexp.MustCompile(`^ipm-\\w{8}$`)
 var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\\w{8}$`)
+var protocolTemplateIdRE = regexp.MustCompile(`^ppm-\\w{8}$`)
+var protocolTemplateGroupIdRE = regexp.MustCompile(`^ppmg-\\w{8}$`)
 var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
@@ -119,6 +123,14 @@ func (rule VpcSecurityGroupLiteRule) String() string {
 	}
 	if rule.addressGroupId != "" {
 		source = rule.addressGroupId
+	}
+
+	if rule.protocolTemplateId != "" {
+		source = rule.protocolTemplateId
+	}
+
+	if rule.protocolTemplateGroupId != "" {
+		source = rule.protocolTemplateGroupId
 	}
 
 	return fmt.Sprintf("%s#%s#%s#%s", rule.action, source, rule.port, rule.protocol)
@@ -1726,7 +1738,6 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 
 		for _, in := range policySet.Ingress {
 			if nilFields := CheckNil(in, map[string]string{
-				"Protocol":        "protocol",
 				"Port":            "port",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
@@ -1752,12 +1763,16 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 				liteRule.addressGroupId = *in.AddressTemplate.AddressGroupId
 			}
 
+			if in.ServiceTemplate != nil {
+				liteRule.protocolTemplateId = *in.ServiceTemplate.ServiceId
+				liteRule.protocolTemplateGroupId = *in.ServiceTemplate.ServiceGroupId
+			}
+
 			ingress = append(ingress, liteRule)
 		}
 
 		for _, eg := range policySet.Egress {
 			if nilFields := CheckNil(eg, map[string]string{
-				"Protocol":        "protocol",
 				"Port":            "port",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
@@ -1767,16 +1782,24 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 			}
 
 			liteRule := VpcSecurityGroupLiteRule{
-				protocol:        strings.ToUpper(*eg.Protocol),
 				port:            *eg.Port,
 				action:          *eg.Action,
 				cidrIp:          *eg.CidrBlock,
 				securityGroupId: *eg.SecurityGroupId,
 			}
 
+			if eg.Protocol != nil {
+				liteRule.protocol = strings.ToUpper(*eg.Protocol)
+			}
+
 			if eg.AddressTemplate != nil {
 				liteRule.addressId = *eg.AddressTemplate.AddressId
 				liteRule.addressGroupId = *eg.AddressTemplate.AddressGroupId
+			}
+
+			if eg.ServiceTemplate != nil {
+				liteRule.protocolTemplateId = *eg.ServiceTemplate.ServiceId
+				liteRule.protocolTemplateGroupId = *eg.ServiceTemplate.ServiceGroupId
 			}
 
 			egress = append(egress, liteRule)
@@ -2036,6 +2059,10 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 		liteRule.addressId = source
 	} else if ipAddressGroupIdRE.MatchString(source) {
 		liteRule.addressGroupId = source
+	} else if protocolTemplateIdRE.MatchString(source) {
+		liteRule.protocolTemplateId = source
+	} else if protocolTemplateGroupIdRE.MatchString(source) {
+		liteRule.protocolTemplateGroupId = source
 	} else {
 		isInstanceIdSource = false
 		liteRule.cidrIp = source
