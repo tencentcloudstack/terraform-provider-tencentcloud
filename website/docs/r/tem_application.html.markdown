@@ -32,6 +32,7 @@ The following arguments are supported:
 * `application_name` - (Required, String) application name.
 * `coding_language` - (Required, String) program language, like JAVA.
 * `description` - (Optional, String) application description.
+* `instance_id` - (Optional, String) tcr instance id.
 * `repo_name` - (Optional, String) repository name.
 * `repo_server` - (Optional, String) registry address.
 * `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 4: demo image.
