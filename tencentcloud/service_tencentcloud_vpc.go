@@ -27,15 +27,16 @@ var eipUnattachLocker = &sync.Mutex{}
 
 // VPC basic information
 type VpcBasicInfo struct {
-	vpcId          string
-	name           string
-	cidr           string
-	isMulticast    bool
-	isDefault      bool
-	dnsServers     []string
-	createTime     string
-	tags           []*vpc.Tag
-	assistantCidrs []string
+	vpcId                string
+	name                 string
+	cidr                 string
+	isMulticast          bool
+	isDefault            bool
+	dnsServers           []string
+	createTime           string
+	tags                 []*vpc.Tag
+	assistantCidrs       []string
+	dockerAssistantCidrs []string
 }
 
 // subnet basic information
@@ -353,8 +354,13 @@ getMoreData:
 
 		if len(item.AssistantCidrSet) > 0 {
 			for i := range item.AssistantCidrSet {
+				kind := item.AssistantCidrSet[i].AssistantType
 				cidr := item.AssistantCidrSet[i].CidrBlock
-				basicInfo.assistantCidrs = append(basicInfo.assistantCidrs, *cidr)
+				if kind != nil && *kind == 0 {
+					basicInfo.assistantCidrs = append(basicInfo.assistantCidrs, *cidr)
+				} else {
+					basicInfo.dockerAssistantCidrs = append(basicInfo.dockerAssistantCidrs, *cidr)
+				}
 			}
 		}
 
