@@ -109,6 +109,7 @@ resource "tencentcloud_ckafka_topic" "kafka_topic_acl" {
 	unclean_leader_election_enable  = false
 	segment                         = 86400000
 	retention                       = 60000
+	max_message_bytes               = 8388608
 }
 
 resource "tencentcloud_ckafka_acl" foo {
