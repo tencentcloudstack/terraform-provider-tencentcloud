@@ -112,6 +112,11 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the layer4 listener.",
 						},
+						"proxy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the GAAP proxy.",
+						},
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -216,6 +221,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"protocol":        "TCP",
 				"id":              ls.ListenerId,
 				"name":            ls.ListenerName,
+				"proxy_id":        ls.ProxyId,
 				"port":            ls.Port,
 				"realserver_type": ls.RealServerType,
 				"status":          ls.ListenerStatus,
@@ -245,6 +251,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"protocol":        "UDP",
 				"id":              ls.ListenerId,
 				"name":            ls.ListenerName,
+				"proxy_id":        ls.ProxyId,
 				"port":            ls.Port,
 				"realserver_type": ls.RealServerType,
 				"status":          ls.ListenerStatus,

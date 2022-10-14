@@ -303,6 +303,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		createTime     string
 		realservers    []map[string]interface{}
 		clientIpMethod *uint64
+		proxyId        *string
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -327,6 +328,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		port = listener.Port
 		scheduler = listener.Scheduler
 		realServerType = listener.RealServerType
+		proxyId = listener.ProxyId
 
 		if listener.HealthCheck == nil {
 			return errors.New("listener health check is nil")
@@ -364,6 +366,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		port = listener.Port
 		scheduler = listener.Scheduler
 		realServerType = listener.RealServerType
+		proxyId = listener.ProxyId
 
 		healthCheck = helper.Bool(false)
 		connectTimeout = helper.IntUint64(2)
@@ -406,6 +409,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	_ = d.Set("realserver_bind_set", realservers)
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
+	_ = d.Set("proxy_id", proxyId)
 
 	return nil
 }
