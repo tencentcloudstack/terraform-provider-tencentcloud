@@ -42,7 +42,7 @@ The following arguments are supported:
 * `clean_up_policy` - (Optional, String) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
 * `enable_white_list` - (Optional, Bool) Whether to open the ip whitelist, `true`: open, `false`: close.
 * `ip_white_list` - (Optional, List: [`String`]) Ip whitelist, quota limit, required when enableWhileList=true.
-* `max_message_bytes` - (Optional, Int) Max message bytes.
+* `max_message_bytes` - (Optional, Int) Max message bytes. min: 1024 Byte(1KB), max: 8388608 Byte(8MB).
 * `note` - (Optional, String) The subject note. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
 * `retention` - (Optional, Int) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
 * `segment` - (Optional, Int) Segment scrolling time, in ms, the current minimum is 3600000ms.
