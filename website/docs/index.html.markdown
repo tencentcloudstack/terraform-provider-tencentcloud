@@ -157,19 +157,9 @@ provider "tencentcloud" {
 }
 ```
 
-The `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables with a empty `assume_role` block.
+The `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
 
 Usage:
-
-```hcl
-provider "tencentcloud" {
-  secret_id  = "my-secret-id"
-  secret_key = "my-secret-key"
-  region     = "ap-guangzhou"
-
-  assume_role {}
-}
-```
 
 ```shell
 $ export TENCENTCLOUD_SECRET_ID="my-secret-id"
