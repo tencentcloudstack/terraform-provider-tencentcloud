@@ -113,7 +113,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY,
-				Description: "Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.",
+				Description: "Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW`.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
@@ -352,12 +352,40 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 
 	unsupportedUpdateFields := []string{
 		"prepaid_period",
-		"prepaid_renew_flag",
 		"type",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("Template resource_tc_vpn_gateway update on %s is not supportted yet. Please renew it on controller web page.", field)
+		}
+	}
+
+	if d.HasChange("prepaid_renew_flag") {
+		chargeType := d.Get("charge_type").(string)
+		renewFlag := d.Get("prepaid_renew_flag").(string)
+		if chargeType != VPN_CHARGE_TYPE_PREPAID {
+			return fmt.Errorf("Invalid renew flag change. Only support pre-paid vpn.")
+		}
+		request := vpc.NewSetVpnGatewaysRenewFlagRequest()
+		request.VpnGatewayIds = []*string{&gatewayId}
+		if renewFlag == "NOTIFY_AND_AUTO_RENEW" {
+			request.AutoRenewFlag = helper.IntInt64(1)
+		} else {
+			request.AutoRenewFlag = helper.IntInt64(0)
+		}
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().SetVpnGatewaysRenewFlag(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify VPN gateway renewflag failed, reason:%s\n", logId, err.Error())
+			return err
 		}
 	}
 

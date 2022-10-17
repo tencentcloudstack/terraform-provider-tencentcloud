@@ -260,6 +260,15 @@ const (
 	// 集群类型不同的IP不可在同一请求中。
 	INVALIDPARAMETERVALUE_MIXEDADDRESSIPSETTYPE = "InvalidParameterValue.MixedAddressIpSetType"
 
+	// NAT网关的DNAT转换规则已存在。
+	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULEEXISTED = "InvalidParameterValue.NatGatewayDnatRuleExisted"
+
+	// NAT网关的DNAT转换规则不存在。
+	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULENOTEXISTS = "InvalidParameterValue.NatGatewayDnatRuleNotExists"
+
+	// DNAT转换规则的内网IP需为虚拟机上网卡所用的IP。
+	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULEPIPNEEDVM = "InvalidParameterValue.NatGatewayDnatRulePipNeedVm"
+
 	// NAT网关的SNAT转换规则不存在。
 	INVALIDPARAMETERVALUE_NATGATEWAYSNATRULENOTEXISTS = "InvalidParameterValue.NatGatewaySnatRuleNotExists"
 
@@ -358,6 +367,9 @@ const (
 
 	// 无效参数值。参数值太长。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+
+	// 该流量包ID不合法。
+	INVALIDPARAMETERVALUE_TRAFFICPACKAGEIDMALFORMED = "InvalidParameterValue.TrafficPackageIdMalformed"
 
 	// 该可用区不可用。
 	INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
@@ -499,6 +511,9 @@ const (
 
 	// 网段资源不足。
 	RESOURCEINSUFFICIENT_CIDRBLOCK = "ResourceInsufficient.CidrBlock"
+
+	// 子网IP资源不足, 无法分配IP。
+	RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
@@ -728,6 +743,9 @@ const (
 	// 当前云联网为非后付费类型，无法进行此操作。
 	UNSUPPORTEDOPERATION_NOTPOSTPAIDCCNOPERATION = "UnsupportedOperation.NotPostpaidCcnOperation"
 
+	// 当前云联网不支持同时关联EDGE实例和跨境实例
+	UNSUPPORTEDOPERATION_NOTSUPPORTATTACHEDGEANDCROSSBORDERINSTANCE = "UnsupportedOperation.NotSupportAttachEdgeAndCrossBorderInstance"
+
 	// 不支持删除默认路由表。
 	UNSUPPORTEDOPERATION_NOTSUPPORTDELETEDEFAULTROUTETABLE = "UnsupportedOperation.NotSupportDeleteDefaultRouteTable"
 
@@ -778,6 +796,9 @@ const (
 
 	// 路由表绑定了子网。
 	UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
+
+	// SNAT子网 不支持分配IP。
+	UNSUPPORTEDOPERATION_SNATSUBNET = "UnsupportedOperation.SnatSubnet"
 
 	// 指定的终端节点服务所创建的终端节点不支持绑定安全组。
 	UNSUPPORTEDOPERATION_SPECIALENDPOINTSERVICE = "UnsupportedOperation.SpecialEndPointService"
