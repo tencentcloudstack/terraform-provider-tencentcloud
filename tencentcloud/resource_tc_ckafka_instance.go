@@ -164,9 +164,12 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Elem:         &schema.Schema{Type: schema.TypeInt},
 			},
 			"tags": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Partition size, the professional version does not need tag.",
+				Type:          schema.TypeList,
+				Optional:      true,
+				Computed:      true,
+				Deprecated:    "It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead.",
+				ConflictsWith: []string{"tag_set"},
+				Description:   "Tags of instance. Partition size, the professional version does not need tag.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
@@ -181,6 +184,13 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 						},
 					},
 				},
+			},
+			"tag_set": {
+				Type:          schema.TypeMap,
+				Optional:      true,
+				Computed:      true,
+				Description:   "Tag set of instance.",
+				ConflictsWith: []string{"tags"},
 			},
 			"disk_type": {
 				Type:        schema.TypeString,
@@ -461,6 +471,18 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
 		}
 	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+
+	if tags := helper.GetTags(d, "tag_set"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("ckafka", "ckafkaId", region, *instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudCkafkaInstanceRead(d, meta)
 }
 
@@ -535,6 +557,17 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		})
 	}
 	_ = d.Set("tags", tagSets)
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+
+	tags, err := tagService.DescribeResourceTags(ctx, "ckafka", "ckafkaId", region, instanceId)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tag_set", tags)
+
 	_ = d.Set("disk_type", info.DiskType)
 	_ = d.Set("rebalance_time", info.RebalanceTime)
 
@@ -591,11 +624,10 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("zone_id") || d.HasChange("period") || d.HasChange("vpc_id") || d.HasChange("subnet_id") ||
-		d.HasChange("renew_flag") || d.HasChange("kafka_version") || d.HasChange("multi_zone_flag") || d.HasChange("zone_ids") ||
-		d.HasChange("tags") || d.HasChange("disk_type") {
+		d.HasChange("renew_flag") || d.HasChange("kafka_version") || d.HasChange("multi_zone_flag") || d.HasChange("zone_ids") || d.HasChange("disk_type") {
 
 		return fmt.Errorf("parms like 'zone_id | period | vpc_id | subnet_id | renew_flag | " +
-			"kafka_version | multi_zone_flag | zone_ids | tags | disk_type', do not support change now.")
+			"kafka_version | multi_zone_flag | zone_id | disk_type', do not support change now.")
 	}
 
 	instanceId := d.Id()
@@ -700,6 +732,21 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		})
 
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("tag_set") {
+
+		client := meta.(*TencentCloudClient).apiV3Conn
+		tagService := TagService{client: client}
+		region := client.Region
+
+		oldTags, newTags := d.GetChange("tag_set")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("ckafka", "ckafkaId", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}
