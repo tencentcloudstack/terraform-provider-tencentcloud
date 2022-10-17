@@ -97,6 +97,11 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the layer7 listener.",
 						},
+						"proxy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the GAAP proxy.",
+						},
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -214,6 +219,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 			listeners = append(listeners, map[string]interface{}{
 				"protocol":    "HTTP",
 				"id":          *ls.ListenerId,
+				"proxy_id":    *ls.ProxyId,
 				"name":        *ls.ListenerName,
 				"port":        *ls.Port,
 				"status":      *ls.ListenerStatus,
@@ -274,6 +280,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"protocol":               "HTTPS",
 				"id":                     ls.ListenerId,
 				"name":                   ls.ListenerName,
+				"proxy_id":               ls.ProxyId,
 				"port":                   ls.Port,
 				"status":                 ls.ListenerStatus,
 				"certificate_id":         ls.CertificateId,

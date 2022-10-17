@@ -188,6 +188,10 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   dynamic_retention_config {
     enable = 1
   }
+
+  tag_set = {
+    createdBy = "terraform"
+  }
 }
 `
 

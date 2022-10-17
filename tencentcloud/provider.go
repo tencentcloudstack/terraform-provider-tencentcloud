@@ -789,9 +789,14 @@ func Provider() terraform.ResourceProvider {
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": {
-							Type:         schema.TypeInt,
-							Required:     true,
-							InputDefault: "7200",
+							Type:     schema.TypeInt,
+							Required: true,
+							DefaultFunc: func() (interface{}, error) {
+								if v := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); v != "" {
+									return strconv.Atoi(v)
+								}
+								return 7200, nil
+							},
 							ValidateFunc: validateIntegerInRange(0, 43200),
 							Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
@@ -1273,7 +1278,27 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Domain:   domain,
 	}
 
-	// assume role client
+	envRoleArn := os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
+	envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
+
+	// get assume role from env
+	if envRoleArn != "" && envSessionName != "" {
+		var assumeRoleSessionDuration int
+		if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
+			var err error
+			assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if assumeRoleSessionDuration == 0 {
+			assumeRoleSessionDuration = 7200
+		}
+
+		genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+	}
+
+	// get assume role from tf config
 	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
 	if len(assumeRoleList) == 1 {
 		assumeRole := assumeRoleList[0].(map[string]interface{})
@@ -1281,37 +1306,31 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleSessionName := assumeRole["session_name"].(string)
 		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
 		assumeRolePolicy := assumeRole["policy"].(string)
-		if assumeRoleSessionDuration == 0 {
-			var err error
-			if duration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); duration != "" {
-				assumeRoleSessionDuration, err = strconv.Atoi(duration)
-				if err != nil {
-					return nil, err
-				}
-				if assumeRoleSessionDuration == 0 {
-					assumeRoleSessionDuration = 7200
-				}
-			}
-		}
-		// applying STS credentials
-		request := sts.NewAssumeRoleRequest()
-		request.RoleArn = helper.String(assumeRoleArn)
-		request.RoleSessionName = helper.String(assumeRoleSessionName)
-		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
-		if assumeRolePolicy != "" {
-			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
-		}
-		ratelimit.Check(request.GetAction())
-		response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
-		if err != nil {
-			return nil, err
-		}
-		// using STS credentials
-		tcClient.apiV3Conn.Credential = common.NewTokenCredential(
-			*response.Response.Credentials.TmpSecretId,
-			*response.Response.Credentials.TmpSecretKey,
-			*response.Response.Credentials.Token,
-		)
+
+		genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 	}
 	return &tcClient, nil
+}
+
+func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {
+	// applying STS credentials
+	request := sts.NewAssumeRoleRequest()
+	request.RoleArn = helper.String(assumeRoleArn)
+	request.RoleSessionName = helper.String(assumeRoleSessionName)
+	request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
+	if assumeRolePolicy != "" {
+		request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
+	if err != nil {
+		return err
+	}
+	// using STS credentials
+	tcClient.apiV3Conn.Credential = common.NewTokenCredential(
+		*response.Response.Credentials.TmpSecretId,
+		*response.Response.Credentials.TmpSecretKey,
+		*response.Response.Credentials.Token,
+	)
+	return nil
 }

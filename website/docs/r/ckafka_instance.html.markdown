@@ -72,7 +72,8 @@ The following arguments are supported:
 * `public_network` - (Optional, Int) Timestamp.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
-* `tags` - (Optional, List) Partition size, the professional version does not need tag.
+* `tag_set` - (Optional, Map) Tag set of instance.
+* `tags` - (Optional, List, **Deprecated**) It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead. Tags of instance. Partition size, the professional version does not need tag.
 * `zone_ids` - (Optional, Set: [`Int`]) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 
 The `config` object supports the following:

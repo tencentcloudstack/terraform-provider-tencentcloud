@@ -255,8 +255,8 @@ func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MultiClbName),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100003"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100004"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100004"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "mytest"),
 				),
 			},
@@ -266,8 +266,8 @@ func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.multiple_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "network_type", "OPEN"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "clb_name", MultiClbName),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100003"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100004"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "master_zone_id", "100004"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "slave_zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.multiple_instance", "tags.test", "open"),
 				),
 			},
@@ -567,8 +567,8 @@ const testAccClbInstance__multi_instance = `
 resource "tencentcloud_clb_instance" "multiple_instance" {
   network_type              = "OPEN"
   clb_name                  = "` + MultiClbName + `"
-  master_zone_id = "100003"
-  slave_zone_id = "100004"
+  master_zone_id = "100004"
+  slave_zone_id = "100003"
 
   tags = {
     test = "mytest"
@@ -580,8 +580,8 @@ const testAccClbInstance__multi_instance_update = `
 resource "tencentcloud_clb_instance" "multiple_instance" {
   network_type              = "OPEN"
   clb_name                  = "` + MultiClbName + `"
-  master_zone_id = "100003"
-  slave_zone_id = "100004"
+  master_zone_id = "100004"
+  slave_zone_id = "100003"
 
   tags = {
     test = "open"

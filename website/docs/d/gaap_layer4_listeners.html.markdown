@@ -75,6 +75,7 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of the layer4 listener.
   * `port` - Port of the layer4 listener.
   * `protocol` - Protocol of the layer4 listener.
+  * `proxy_id` - ID of the GAAP proxy.
   * `realserver_type` - Type of the realserver.
   * `scheduler` - Scheduling policy of the layer4 listener.
   * `status` - Status of the layer4 listener.
