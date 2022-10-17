@@ -163,10 +163,6 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbServerAttachment_tcp = instanceCommonTestCase + `
-data "tencentcloud_ssl_certificates" "foo" {
-  name = "keep"
-}
-
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-test"
@@ -200,10 +196,6 @@ resource "tencentcloud_clb_attachment" "foo" {
 `
 
 const testAccClbServerAttachment_tcp_update = instanceCommonTestCase + presetCVM + `
-data "tencentcloud_ssl_certificates" "foo" {
-  name = "keep"
-}
-
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-tcp-test"
@@ -239,7 +231,7 @@ resource "tencentcloud_clb_attachment" "foo" {
 
 const testAccClbServerAttachment_tcp_update_ssl = instanceCommonTestCase + presetCVM + `
 data "tencentcloud_ssl_certificates" "foo" {
-  name = "keep"
+  name = "keep-svr-ca"
 }
 
 resource "tencentcloud_clb_instance" "foo" {
