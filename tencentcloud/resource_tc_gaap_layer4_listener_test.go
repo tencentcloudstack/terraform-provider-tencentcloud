@@ -110,13 +110,13 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_gaap_layer4_listener.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"proxy_id"},
+				ResourceName:      "tencentcloud_gaap_layer4_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -146,6 +146,7 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 		},
@@ -177,6 +178,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 			{
@@ -230,15 +232,13 @@ func TestAccTencentCloudGaapLayer4Listener_udp_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 			{
 				ResourceName:      "tencentcloud_gaap_layer4_listener.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"proxy_id",
-				},
 			},
 		},
 	})
@@ -267,6 +267,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 		},
@@ -296,6 +297,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 				),
 			},
 			{

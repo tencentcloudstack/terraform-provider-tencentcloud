@@ -105,6 +105,7 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 			{
@@ -118,9 +119,6 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"proxy_id",
-				},
 			},
 		},
 	})
@@ -147,6 +145,7 @@ func TestAccTencentCloudGaapLayer7Listener_https_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 			{
@@ -161,9 +160,6 @@ func TestAccTencentCloudGaapLayer7Listener_https_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"proxy_id",
-				},
 			},
 		},
 	})
@@ -191,6 +187,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 		},
@@ -218,6 +215,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 		},
@@ -246,6 +244,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 			{
@@ -260,9 +259,6 @@ func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *test
 				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{
-					"proxy_id",
-				},
 			},
 		},
 	})
@@ -290,6 +286,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsCcToPoly(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "proxy_id"),
 				),
 			},
 			{
