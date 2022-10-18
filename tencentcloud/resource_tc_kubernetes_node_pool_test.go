@@ -101,6 +101,8 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_count", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "autoscaling_added_total", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "manually_added_total", "0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np2", "test2"),
 				),
 			},
 			{
@@ -130,6 +132,8 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "testI"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np3", "testIII"),
 				),
 			},
 		},
@@ -292,6 +296,11 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     effect = "PreferNoSchedule"
   }
 
+  tags = {
+    keep-test-np1 = "test1"
+    keep-test-np2 = "test2"
+  }
+
   node_config {
     extra_args = [
       "root-dir=/var/lib/kubelet"
@@ -358,6 +367,11 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	key = "test_taint"
     value = "taint_value"
     effect = "PreferNoSchedule"
+  }
+
+  tags = {
+    keep-test-np1 = "testI"
+    keep-test-np3 = "testIII"
   }
 
   node_config {

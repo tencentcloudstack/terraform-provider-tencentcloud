@@ -172,6 +172,7 @@ The following arguments are supported:
 * `scaling_group_project_id` - (Optional, Int) Project ID the scaling group belongs to.
 * `scaling_mode` - (Optional, String, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
 * `subnet_ids` - (Optional, List: [`String`], ForceNew) ID list of subnet, and for VPC it is required.
+* `tags` - (Optional, Map) Node pool tag specifications, will passthroughs to the scaling instances.
 * `taints` - (Optional, List) Taints of kubernetes node pool created nodes.
 * `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
