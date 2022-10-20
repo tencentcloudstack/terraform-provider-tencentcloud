@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: PR_CHECK
+name: FMT_CHECK
 
 # Controls when the workflow will run
 on:
@@ -30,7 +30,7 @@ jobs:
         run: |
           make fmtcheck
           if [ $? -ne 0 ]; then
-              printf "COMMIT FAILED\n"
+              printf "FMT FAILED\n"
               exit 1
           fi
 
