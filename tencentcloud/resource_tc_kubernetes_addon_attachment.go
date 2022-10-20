@@ -80,7 +80,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -195,7 +194,7 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 
 	resData := &AddonResponseData{}
 	reason := "unknown error"
-	phase, has, err := service.PollingAddonsPhase(ctx, clusterId, addonName, resData)
+	phase, has, _ := service.PollingAddonsPhase(ctx, clusterId, addonName, resData)
 
 	if resData.Status != nil && resData.Status["reason"] != nil {
 		reason = resData.Status["reason"].(string)
@@ -207,7 +206,6 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 
 	if phase == "ChartFetchFailed" || phase == "Failed" || phase == "RollbackFailed" || phase == "SyncFailed" {
 		msg := fmt.Sprintf("Unexpected chart phase `%s`, reason: %s", phase, reason)
-		log.Printf(msg)
 		if err := resourceTencentCloudTkeAddonAttachmentDelete(d, meta); err != nil {
 			return err
 		}

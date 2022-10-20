@@ -1295,7 +1295,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			assumeRoleSessionDuration = 7200
 		}
 
-		genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
 	}
 
 	// get assume role from tf config
@@ -1307,7 +1307,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
 		assumeRolePolicy := assumeRole["policy"].(string)
 
-		genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 	}
 	return &tcClient, nil
 }

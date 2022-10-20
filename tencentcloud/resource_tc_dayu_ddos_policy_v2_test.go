@@ -13,7 +13,7 @@ import (
 func TestAccTencentCloudDayuDdosPolicyV2Resource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATIONAL) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuDdosPolicyV2Destroy,
 		Steps: []resource.TestStep{

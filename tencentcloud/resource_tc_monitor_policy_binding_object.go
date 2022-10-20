@@ -152,7 +152,7 @@ func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, met
 
 	request.Dimensions = make([]*monitor.BindingPolicyObjectDimension, 0, len(dimensions))
 
-	idSeeds = append(idSeeds, fmt.Sprintf("%s", policyId))
+	idSeeds = append(idSeeds, policyId)
 
 	for _, v := range dimensions {
 		m := v.(map[string]interface{})

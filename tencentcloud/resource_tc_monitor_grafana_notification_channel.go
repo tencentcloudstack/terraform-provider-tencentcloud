@@ -186,10 +186,6 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 		_ = d.Set("channel_name", grafanaNotificationChannel.ChannelName)
 	}
 
-	var receivers []string
-	for _, v := range grafanaNotificationChannel.Receivers {
-		receivers = append(receivers, *v)
-	}
 	_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
 
 	return nil

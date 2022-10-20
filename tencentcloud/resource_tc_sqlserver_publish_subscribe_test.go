@@ -84,7 +84,7 @@ func testAccCheckPubSubsExists() error {
 
 	pubInstanceId := *instance[0].InstanceId
 
-	pubsubs, err := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
+	pubsubs, _ := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
 		"instanceId": pubInstanceId,
 	})
 
@@ -96,7 +96,7 @@ func testAccCheckPubSubsExists() error {
 
 func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, instanceId string) {
 
-	pubsubs, err := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
+	pubsubs, _ := service.DescribeSqlserverPublishSubscribes(ctx, map[string]interface{}{
 		"instanceId": instanceId,
 	})
 
@@ -116,7 +116,7 @@ func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, ins
 			helper.String(defaultSQLServerPubSubDB),
 		},
 	}
-	err = service.DeletePublishSubscribe(ctx, pubSub, tuples)
+	err := service.DeletePublishSubscribe(ctx, pubSub, tuples)
 	if err != nil {
 		fmt.Printf("[ERROR] %s", err.Error())
 	}

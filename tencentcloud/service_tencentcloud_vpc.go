@@ -4583,7 +4583,7 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 		}
 	}()
 	request.VpnGatewayId = &vpnGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 
@@ -4966,7 +4966,7 @@ func (me *VpcService) DescribeNatGatewaySnats(ctx context.Context, natGatewayId 
 		}
 	}()
 	request.NatGatewayId = &natGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 

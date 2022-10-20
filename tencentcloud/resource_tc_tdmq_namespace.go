@@ -214,7 +214,7 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 		remark = old.(string)
 	}
 
-	old, now = d.GetChange("retention_policy")
+	_, now = d.GetChange("retention_policy")
 	if d.HasChange("retention_policy") {
 		temp := now.(map[string]interface{})
 		time := temp["time_in_minutes"].(int64)

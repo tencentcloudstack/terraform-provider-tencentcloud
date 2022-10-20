@@ -860,45 +860,6 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 `, userInfoData)
 }
 
-func testAccBucket_originDomain(randomName int) string {
-	return fmt.Sprintf(`
-%s
-
-provider "tencentcloud" {
-  region = "ap-singapore"
-}
-resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-${local.app_id}-%d"
-  acl    = "private"
-  origin_domain_rules {
-	status = "ENABLED"
-	domain = "www.example.com"
-  }
-}
-`, userInfoData, randomName)
-}
-
-func testAccBucket_originDomainUpdate(randomName int) string {
-	return fmt.Sprintf(`
-%s
-
-provider "tencentcloud" {
-  region = "ap-singapore"
-}
-resource "tencentcloud_cos_bucket" "with_domain" {
-  bucket = "tf-bucket-domain-${local.app_id}-%d"
-  acl    = "private"
-  origin_domain_rules {
-	status = "DISABLED"
-	domain = "www.example.com"
-  }
-  origin_domain_rules {
-	domain = "test.example1.com"
-  }
-}
-`, userInfoData, randomName)
-}
-
 func testAccBucketReplication() string {
 	return fmt.Sprintf(`
 %s

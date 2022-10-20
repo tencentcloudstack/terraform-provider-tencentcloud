@@ -370,6 +370,7 @@ func resourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
+				Deprecated:  "It has been deprecated from version 1.18.1.",
 				Description: "ID of trigger condition template.",
 			},
 			"conditions": {
@@ -657,7 +658,7 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 	}); err != nil {
 		return err
 	}
-	d.SetId(fmt.Sprintf("%s", *policyId))
+	d.SetId(*policyId)
 
 	// binding tag
 	if v, ok := d.GetOk("policy_tag"); ok {

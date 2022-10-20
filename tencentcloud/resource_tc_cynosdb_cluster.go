@@ -588,7 +588,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 
 		mysqlService := MysqlService{client: client}
 
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_ = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				return resource.NonRetryableError(err)

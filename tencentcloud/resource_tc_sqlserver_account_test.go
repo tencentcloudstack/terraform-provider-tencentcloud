@@ -38,7 +38,7 @@ func init() {
 
 			instanceId := *db[0].InstanceId
 
-			accounts, err := service.DescribeSqlserverAccounts(ctx, instanceId)
+			accounts, _ := service.DescribeSqlserverAccounts(ctx, instanceId)
 
 			for i := range accounts {
 				account := accounts[i]

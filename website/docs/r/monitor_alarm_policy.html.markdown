@@ -231,7 +231,7 @@ The following arguments are supported:
 * `namespace` - (Required, String, ForceNew) The type of alarm.
 * `policy_name` - (Required, String) The name of policy.
 * `conditions` - (Optional, List) A list of metric trigger condition.
-* `conditon_template_id` - (Optional, Int, ForceNew) ID of trigger condition template.
+* `conditon_template_id` - (Optional, Int, ForceNew, **Deprecated**) It has been deprecated from version 1.18.1. ID of trigger condition template.
 * `enable` - (Optional, Int) Whether to enable, default is `1`.
 * `event_conditions` - (Optional, List) A list of event trigger condition.
 * `notice_ids` - (Optional, List: [`String`]) List of notification rule IDs.

@@ -27,8 +27,6 @@ func TestAccTencentCloudCfsAccessGroupsDataSource(t *testing.T) {
 	})
 }
 
-const BasicCfsAccessGroup = "pgroupbasic"
-
 const defaultCfsAccessGroup = `
 data "tencentcloud_cfs_access_groups" "access_groups" {
   name = "keep_access_group"

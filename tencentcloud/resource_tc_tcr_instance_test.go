@@ -57,7 +57,7 @@ func init() {
 
 				for i := range replicas {
 					item := replicas[i]
-					outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					_ = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 						request := tcr.NewDeleteReplicationInstanceRequest()
 						request.RegistryId = &id
 						request.ReplicationRegistryId = item.ReplicationRegistryId

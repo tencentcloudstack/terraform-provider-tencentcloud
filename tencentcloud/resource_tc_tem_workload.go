@@ -411,7 +411,7 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 						"min_available": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "minimal availabe instances duration deployment.",
+							Description: "minimal available instances duration deployment.",
 						},
 						"force": {
 							Type:        schema.TypeBool,
