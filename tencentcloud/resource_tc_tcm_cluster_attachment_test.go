@@ -116,16 +116,31 @@ func testAccCheckClusterAttachmentExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcmClusterAttachment = `
+const testAccTcmClusterAttachmentVar = `
+variable "cluster_id" {
+  default = "` + defaultMeshClusterId + `"
+}
+variable "mesh_id" {
+  default = "` + defaultMeshId + `"
+}
+variable "vpc_id" {
+  default = "` + defaultMeshVpcId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultMeshSubnetId + `"
+}
+`
+
+const testAccTcmClusterAttachment = testAccTcmClusterAttachmentVar + `
 
 resource "tencentcloud_tcm_cluster_attachment" "basic" {
-  mesh_id = "mesh-b9q6vf9l"
+  mesh_id = var.mesh_id
   cluster_list {
-    cluster_id = "cls-rc5uy6dy"
+    cluster_id = var.cluster_id
     region = "ap-guangzhou"
     role = "REMOTE"
-    vpc_id = "vpc-a1jycmbx"
-    subnet_id = "subnet-lkyb3ayc"
+    vpc_id = var.vpc_id
+    subnet_id = var.subnet_id
     type = "TKE"
   }
 }
