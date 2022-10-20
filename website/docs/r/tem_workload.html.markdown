@@ -86,7 +86,7 @@ The `deploy_strategy_conf` object supports the following:
 * `batch_interval` - (Optional, Int) interval between batches.
 * `beta_batch_num` - (Optional, Int) beta batch number.
 * `force` - (Optional, Bool) force update.
-* `min_available` - (Optional, Int) minimal availabe instances duration deployment.
+* `min_available` - (Optional, Int) minimal available instances duration deployment.
 
 The `env_conf` object supports the following:
 

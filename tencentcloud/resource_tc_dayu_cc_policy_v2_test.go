@@ -13,7 +13,7 @@ import (
 func TestAccTencentCloudDayuCCPolicyV2Resource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATIONAL) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuCCPolicyV2Destroy,
 		Steps: []resource.TestStep{
@@ -95,16 +95,6 @@ func testAccCheckDayuCCPolicyV2Destroy(s *terraform.State) error {
 		}
 	}
 	return nil
-}
-
-func testAccCheckDayuCCPolicyV2Exists(n string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		_, ok := s.RootModule().Resources[n]
-		if !ok {
-			return fmt.Errorf("resource %s is not found", n)
-		}
-		return nil
-	}
 }
 
 const testAccDayuCCPolicyV2 string = `

@@ -12,14 +12,6 @@ import (
 
 // basic information
 
-type TdmqNamespaceInfo struct {
-	environId        string
-	msgTtl           uint64
-	remark           string
-	retentionSize    uint64
-	retentionMinutes uint64
-}
-
 type TdmqService struct {
 	client *connectivity.TencentCloudClient
 }
@@ -586,7 +578,7 @@ func (me *TdmqService) ModifyTdmqNamespaceRoleAttachment(ctx context.Context,
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s modify tdmq enviroment role failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s modify tdmq environment role failed, reason: %v", logId, err)
 		return err
 	}
 	return

@@ -103,12 +103,8 @@ func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonNa
 			return nil
 		}
 
-		reason := addonResponseData.Status["reason"]
 		if addonResponseData.Status["phase"] != nil {
 			phase = addonResponseData.Status["phase"].(string)
-		}
-		if reason == nil {
-			reason = helper.String("unknown error")
 		}
 
 		if phase == "Upgrading" || phase == "Installing" || phase == "ChartFetched" || phase == "RollingBack" || phase == "Terminating" {

@@ -186,9 +186,9 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 							Switch: helper.String("on"),
 							PageRules: []*cdn.ErrorPageRule{
 								{
-									helper.IntInt64(403),
-									helper.IntInt64(302),
-									helper.String("https://www.test.com/error3.html"),
+									StatusCode:   helper.IntInt64(403),
+									RedirectCode: helper.IntInt64(302),
+									RedirectUrl:  helper.String("https://www.test.com/error3.html"),
 								},
 							},
 						}

@@ -5,7 +5,7 @@ Provides a CVM instance set resource.
 
 ~> **NOTE:** This resource is designed to cater for the scenario of creating CVM in large batches.
 
-~> **NOTE:** After run command `terraform apply`, must wait all cvms is ready, then run command `terraform plan`, either it will casue state change.
+~> **NOTE:** After run command `terraform apply`, must wait all cvms is ready, then run command `terraform plan`, either it will cause state change.
 
 Example Usage
 

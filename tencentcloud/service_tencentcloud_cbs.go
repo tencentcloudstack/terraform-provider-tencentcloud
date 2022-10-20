@@ -78,11 +78,11 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 		filter := &cbs.Filter{
 			Name: helper.String(k),
 		}
-		switch v.(type) {
+		switch v := v.(type) {
 		case string:
-			filter.Values = []*string{helper.String(v.(string))}
+			filter.Values = []*string{helper.String(v)}
 		case []*string:
-			filter.Values = v.([]*string)
+			filter.Values = v
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -127,11 +127,11 @@ func (me *CbsService) DescribeDisksInParallelByFilter(ctx context.Context, param
 		filter := &cbs.Filter{
 			Name: helper.String(k),
 		}
-		switch v.(type) {
+		switch v := v.(type) {
 		case string:
-			filter.Values = []*string{helper.String(v.(string))}
+			filter.Values = []*string{helper.String(v)}
 		case []*string:
-			filter.Values = v.([]*string)
+			filter.Values = v
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -167,11 +167,11 @@ func (me *CbsService) DescribeDisksInParallelByFilter(ctx context.Context, param
 				filter := &cbs.Filter{
 					Name: helper.String(k),
 				}
-				switch v.(type) {
+				switch v := v.(type) {
 				case string:
-					filter.Values = []*string{helper.String(v.(string))}
+					filter.Values = []*string{helper.String(v)}
 				case []*string:
-					filter.Values = v.([]*string)
+					filter.Values = v
 				}
 				request.Filters = append(request.Filters, filter)
 			}

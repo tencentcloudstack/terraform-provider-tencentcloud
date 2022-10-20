@@ -129,7 +129,7 @@ func init() {
 					return err
 				}
 
-				wait("CleanUpInstance", taskId)
+				_ = wait("CleanUpInstance", taskId)
 			}
 
 			return nil

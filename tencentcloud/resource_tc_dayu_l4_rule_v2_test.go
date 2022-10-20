@@ -18,7 +18,7 @@ var testDayuL4RuleV2ResourceKeyTCP = testDayuL4RuleV2ResourceNameTCP + ".test"
 func TestAccTencentCloudDayuL4RuleV2Resource_TCP(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATION) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATIONAL) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuL4RuleV2Destroy,
 		Steps: []resource.TestStep{

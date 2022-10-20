@@ -294,7 +294,7 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 				)
 				status, _, err = tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
 				if err != nil {
-					return resource.NonRetryableError(fmt.Errorf("an error occured during DescribeExternalEndpointStatus: %s", err.Error()))
+					return resource.NonRetryableError(fmt.Errorf("an error occurred during DescribeExternalEndpointStatus: %s", err.Error()))
 				}
 
 				if status == "Opened" {
@@ -516,7 +516,7 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			)
 			status, _, err = tcrService.DescribeExternalEndpointStatus(ctx, instanceId)
 			if err != nil {
-				return resource.NonRetryableError(fmt.Errorf("an error occured during DescribeExternalEndpointStatus: %s", err.Error()))
+				return resource.NonRetryableError(fmt.Errorf("an error occurred during DescribeExternalEndpointStatus: %s", err.Error()))
 			}
 
 			if status == "Opened" {
@@ -622,7 +622,7 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 
 	for i := range replicas {
 		item := replicas[i]
-		outErr = resource.Retry(writeRetryTimeout*5, func() *resource.RetryError {
+		_ = resource.Retry(writeRetryTimeout*5, func() *resource.RetryError {
 			request := tcr.NewDeleteReplicationInstanceRequest()
 			request.RegistryId = &instanceId
 			request.ReplicationRegistryId = item.ReplicationRegistryId

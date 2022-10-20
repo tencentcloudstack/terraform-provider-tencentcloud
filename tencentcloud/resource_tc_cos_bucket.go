@@ -345,42 +345,42 @@ func originPullRules() *schema.Resource {
 }
 
 // x-cos-grant-* headers may conflict with xml acl body, we don't open up for now.
-func aclGrantHeaders() *schema.Schema {
-	return &schema.Schema{
-		Type:        schema.TypeMap,
-		Optional:    true,
-		Description: "ACL x-cos-grant-* headers for multiple grand info",
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"grant_read": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: "Allows grantee to read the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
-				},
-				"grant_write": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: "Allows grantee to write to the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
-				},
-				"grant_read_acp": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: "Allows grantee to read the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
-				},
-				"grant_write_acp": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: "Allows grantee to write the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
-				},
-				"grant_full_control": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: "Grants a user full permission to perform operations on the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
-				},
-			},
-		},
-	}
-}
+//func aclGrantHeaders() *schema.Schema {
+//	return &schema.Schema{
+//		Type:        schema.TypeMap,
+//		Optional:    true,
+//		Description: "ACL x-cos-grant-* headers for multiple grand info",
+//		Elem: &schema.Resource{
+//			Schema: map[string]*schema.Schema{
+//				"grant_read": {
+//					Type:        schema.TypeString,
+//					Optional:    true,
+//					Description: "Allows grantee to read the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+//				},
+//				"grant_write": {
+//					Type:        schema.TypeString,
+//					Optional:    true,
+//					Description: "Allows grantee to write to the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+//				},
+//				"grant_read_acp": {
+//					Type:        schema.TypeString,
+//					Optional:    true,
+//					Description: "Allows grantee to read the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+//				},
+//				"grant_write_acp": {
+//					Type:        schema.TypeString,
+//					Optional:    true,
+//					Description: "Allows grantee to write the ACL of the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+//				},
+//				"grant_full_control": {
+//					Type:        schema.TypeString,
+//					Optional:    true,
+//					Description: "Grants a user full permission to perform operations on the bucket; format: `id=\"[OwnerUin]\"`.Use comma (,) to separate multiple users, e.g `id=\"100000000001\",id=\"100000000002\"`",
+//				},
+//			},
+//		},
+//	}
+//}
 
 func resourceTencentCloudCosBucket() *schema.Resource {
 	return &schema.Resource{
@@ -1583,7 +1583,7 @@ func resourceTencentCloudCosBucketOriginPullUpdate(ctx context.Context, service 
 			}
 		)
 
-		if v, _ := dMap["sync_back_to_source"]; v.(bool) {
+		if v := dMap["sync_back_to_source"]; v.(bool) {
 			item.OriginType = "Mirror"
 		} else {
 			item.OriginType = "Proxy"
@@ -1809,7 +1809,7 @@ func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.Buc
 
 func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicationResult) (err error) {
 	if result.Role != "" {
-		err = d.Set("replica_role", result.Role)
+		_ = d.Set("replica_role", result.Role)
 	}
 	rules := make([]map[string]interface{}, 0)
 	if len(result.Rule) > 0 {

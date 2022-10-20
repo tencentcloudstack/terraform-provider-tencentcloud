@@ -159,7 +159,7 @@ import (
 func getNodePoolInstanceTypes(d *schema.ResourceData) []*string {
 	configParas := d.Get("auto_scaling_config").([]interface{})
 	dMap := configParas[0].(map[string]interface{})
-	instanceType, _ := dMap["instance_type"]
+	instanceType := dMap["instance_type"]
 	currInsType := instanceType.(string)
 	v, ok := dMap["backup_instance_types"]
 	backupInstanceTypes := v.([]interface{})

@@ -34,7 +34,6 @@ func resourceTencentCloudClbLogTopic() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbInstanceTopicCreate,
 		Read:   resourceTencentCloudClbInstanceTopicRead,
-		//Update: resourceTencentCloudClbInstanceTopicUpdate,
 		Delete: resourceTencentCloudClbInstanceTopicDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -135,10 +134,6 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	_ = d.Set("status", res.Status)
 	return nil
 
-}
-
-func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta interface{}) error {
-	return nil
 }
 
 func resourceTencentCloudClbInstanceTopicDelete(d *schema.ResourceData, meta interface{}) error {

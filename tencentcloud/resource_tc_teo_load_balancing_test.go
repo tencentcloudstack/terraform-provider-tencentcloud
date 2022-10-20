@@ -64,53 +64,24 @@ func testAccCheckLoadBalancingDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckLoadBalancingExists(r string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+//const testAccTeoLoadBalancingVar = `
+//variable "zone_id" {
+//  default = "` + defaultZoneId + `"
+//}
+//
+//variable "zone_name" {
+//  default = "aaa.` + defaultZoneName + `"
+//}
+//`
 
-		rs, ok := s.RootModule().Resources[r]
-		if !ok {
-			return fmt.Errorf("resource %s is not found", r)
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		zoneId := idSplit[0]
-		loadBalancingId := idSplit[1]
-
-		service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		loadBalancing, err := service.DescribeTeoLoadBalancing(ctx, zoneId, loadBalancingId)
-		if loadBalancing == nil {
-			return fmt.Errorf("zone loadBalancing %s is not found", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-}
-
-const testAccTeoLoadBalancingVar = `
-variable "zone_id" {
-  default = "` + defaultZoneId + `"
-}
-
-variable "zone_name" {
-  default = "aaa.` + defaultZoneName + `"
-}
-`
-
-const testAccTeoLoadBalancing = testAccTeoLoadBalancingVar + `
-
-resource "tencentcloud_teo_load_balancing" "basic" {
-  host                   = var.zone_name
-  origin_group_id        = "origin-8a6e424e-47b4-11ed-8422-5254006e4802"
-  type                   = "proxied"
-  zone_id                = var.zone_id
-  backup_origin_group_id = ""
-}
-
-`
+//const testAccTeoLoadBalancing = testAccTeoLoadBalancingVar + `
+//
+//resource "tencentcloud_teo_load_balancing" "basic" {
+//  host                   = var.zone_name
+//  origin_group_id        = "origin-8a6e424e-47b4-11ed-8422-5254006e4802"
+//  type                   = "proxied"
+//  zone_id                = var.zone_id
+//  backup_origin_group_id = ""
+//}
+//
+//`
