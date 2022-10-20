@@ -27,13 +27,13 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version-file: .go-version
+          go-version: 1.17.1
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: latest
+          version: v1.27.0
           working-directory: ./tencentcloud
 
 
