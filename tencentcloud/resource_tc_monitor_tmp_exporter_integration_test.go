@@ -38,7 +38,7 @@ func testSweepExporterIntegration(region string) error {
 		}
 
 		if instances == nil {
-			return fmt.Errorf("instances does not exist")
+			break
 		}
 
 		id := strings.Join([]string{*instances.Name, instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
