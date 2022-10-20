@@ -122,7 +122,6 @@ resource "tencentcloud_teo_zone" "basic" {
   cname_speed_up          = "enabled"
   plan_type               = "ent_with_bot"
   paused                  = false
-  tags                    = {}
   type                    = "full"
   zone_name               = "tf-teo.xyz"
 
