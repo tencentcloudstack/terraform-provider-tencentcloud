@@ -61,7 +61,7 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "full"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "cname_speed_up", "enabled"),
-					//resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "vanity_name_servers.0.servers", ""),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.createdBy", "terraform"),
 				),
 			},
 			//{
