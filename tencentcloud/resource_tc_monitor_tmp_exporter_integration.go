@@ -112,7 +112,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.ClusterId = helper.String(clusterId)
 	}
 
-	var initStatus *tke.DescribePrometheusInstanceInitStatusRequest
+	initStatus := tke.NewDescribePrometheusInstanceInitStatusRequest()
 	initStatus.InstanceId = request.InstanceId
 	err := resource.Retry(8*readRetryTimeout, func() *resource.RetryError {
 		results, errRet := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribePrometheusInstanceInitStatus(initStatus)
