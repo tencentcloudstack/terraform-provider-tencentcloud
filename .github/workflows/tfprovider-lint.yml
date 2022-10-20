@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+
+name: tfprovider-lint
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    types: [ opened, reopened ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  tfprovider-lint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: .go-version
+
+      - name: install tfproviderlint
+        run: cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
+
+      # Runs a set of commands using the runners shell
+      - name: tfprovider-lint
+        run: |
+          tfproviderlint \
+          		-c 1 \
+                -AT001 \
+          		-AT002 \
+          		-AT005 \
+          		-AT006 \
+          		-AT007 \
+          		-AT008 \
+          		-R003 \
+          		-R012 \
+          		-R013 \
+          		-S001 \
+          		-S002 \
+          		-S003 \
+          		-S004 \
+          		-S005 \
+          		-S007 \
+          		-S008 \
+          		-S009 \
+          		-S010 \
+          		-S011 \
+          		-S012 \
+          		-S013 \
+          		-S014 \
+          		-S015 \
+          		-S016 \
+          		-S017 \
+          		-S019 \
+          		-S020 \
+          		-S021 \
+          		-S023 \
+          		-S024 \
+          		-S025 \
+          		-S026 \
+          		-S027 \
+          		-S028 \
+          		-S029 \
+          		-S030 \
+          		-S031 \
+          		-S032 \
+          		-S033 \
+          		-S034 \
+          		-S035 \
+          		-S036 \
+          		-S037 \
+          		-V002 \
+          		-V003 \
+          		-V004 \
+          		-V005 \
+          		-V006 \
+          		-V007 \
+          		-V008 \
+          		./tencentcloud
