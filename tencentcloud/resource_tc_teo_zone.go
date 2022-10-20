@@ -343,7 +343,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		resourceName := fmt.Sprintf("qcs::teo::uin/:zone/%s", zoneName)
+		resourceName := fmt.Sprintf("qcs::teo::uin/:zone/%s", zoneId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -507,7 +507,7 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", "", *zone.ZoneName)
+	tags, err := tagService.DescribeResourceTags(ctx, "teo", "zone", "", zoneId)
 	if err != nil {
 		return err
 	}
@@ -605,7 +605,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("teo", "zone", "", d.Get("zone_name").(string))
+		resourceName := BuildTagResourceName("teo", "zone", "", zoneId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
