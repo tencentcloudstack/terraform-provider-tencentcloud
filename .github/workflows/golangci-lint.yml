@@ -25,12 +25,10 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: install golangci-lint
-        run: GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
-
       # Runs a set of commands using the runners shell
       - name: golangci-lint check
         run: |
+          GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
           make lint
           if [ $? -ne 0 ]; then
               printf "LINT FAILED\n"
