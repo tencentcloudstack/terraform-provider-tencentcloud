@@ -126,9 +126,9 @@ resource "tencentcloud_teo_zone" "basic" {
   type                    = "full"
   zone_name               = "tf-teo.xyz"
 
-  #tags = {
-  #  "TestKey" = "terraform"
-  #}
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 
 `
