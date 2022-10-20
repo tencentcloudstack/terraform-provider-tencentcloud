@@ -66,7 +66,7 @@ resource "tencentcloud_dayu_cc_policy_v2" "demo" {
 
 The following arguments are supported:
 
-* `business` - (Required, String) Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
+* `business` - (Required, String) Business of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
 * `resource_id` - (Required, String) The ID of the resource instance.
 * `cc_black_white_ips` - (Optional, List) Blacklist and whitelist.
 * `cc_geo_ip_policys` - (Optional, List) Details of the CC region blocking policy list.

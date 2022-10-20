@@ -1341,7 +1341,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err := cbsService.ResizeDisk(ctx, diskId, size)
 
 			if err != nil {
-				return fmt.Errorf("an error occured when modifying %s, reason: %s", sizeKey, err.Error())
+				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
 			}
 			d.SetPartial(sizeKey)
 		}
@@ -1371,7 +1371,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		err := cvmService.ResizeInstanceDisks(ctx, req)
 		if err != nil {
-			return fmt.Errorf("an error occured when modifying system_disk, reason: %s", err.Error())
+			return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
 		}
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

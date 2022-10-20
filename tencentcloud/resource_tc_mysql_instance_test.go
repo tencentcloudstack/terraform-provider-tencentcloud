@@ -64,7 +64,7 @@ func testSweepMySQLInstance(region string) error {
 			return err
 		}
 
-		err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+		_ = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 			mysqlInfo, err := service.DescribeDBInstanceById(ctx, id)
 
 			if err != nil {

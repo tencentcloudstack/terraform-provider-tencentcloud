@@ -86,6 +86,13 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 				Optional:    true,
 				Description: "repository name.",
 			},
+
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "tcr instance id.",
+			},
 		},
 	}
 }
@@ -125,6 +132,10 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("repo_name"); ok {
 		request.RepoName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	request.DeployMode = helper.String("IMAGE")
@@ -200,6 +211,10 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("repo_name", application.RepoName)
 	}
 
+	if application.InstanceId != nil {
+		_ = d.Set("instance_id", application.InstanceId)
+	}
+
 	return nil
 }
 
@@ -241,6 +256,10 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("repo_name") {
 		return fmt.Errorf("`repo_name` do not support change now.")
+	}
+
+	if d.HasChange("instance_id") {
+		return fmt.Errorf("`instance_id` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

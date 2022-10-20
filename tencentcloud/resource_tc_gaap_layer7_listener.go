@@ -227,6 +227,7 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		status                   *uint64
 		createTime               string
 		polyClientCertificateIds []*string
+		proxyId                  *string
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -283,6 +284,7 @@ LOOP:
 			name = listener.ListenerName
 			port = listener.Port
 			status = listener.ListenerStatus
+			proxyId = listener.ProxyId
 
 			if listener.CreateTime == nil {
 				return errors.New("listener create time is nil")
@@ -318,6 +320,7 @@ LOOP:
 			certificateId = listener.CertificateId
 			forwardProtocol = listener.ForwardProtocol
 			authType = listener.AuthType
+			proxyId = listener.ProxyId
 
 			// mutual authentication
 			if *authType == 1 {
@@ -349,6 +352,7 @@ LOOP:
 	_ = d.Set("client_certificate_ids", polyClientCertificateIds)
 	_ = d.Set("status", status)
 	_ = d.Set("create_time", createTime)
+	_ = d.Set("proxy_id", proxyId)
 
 	return nil
 }

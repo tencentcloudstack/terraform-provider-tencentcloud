@@ -98,7 +98,15 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 			"assistant_cidrs": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "List of Assistant CIDR.",
+				Description: "List of Assistant CIDR, NOTE: Only `NORMAL` typed CIDRs included, check the Docker CIDR by readonly `assistant_docker_cidrs`.",
+				Computed:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"docker_assistant_cidrs": {
+				Type:        schema.TypeList,
+				Description: "List of Docker Assistant CIDR.",
 				Computed:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -256,6 +264,7 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("create_time", info.createTime)
 		_ = d.Set("is_default", info.isDefault)
 		_ = d.Set("assistant_cidrs", info.assistantCidrs)
+		_ = d.Set("docker_assistant_cidrs", info.dockerAssistantCidrs)
 		_ = d.Set("tags", tags)
 
 		return nil

@@ -149,13 +149,6 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 	return nil
 }
 
-func resourceTencentCloudMonitorTmpCvmAgentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.update")()
-	defer inconsistentCheck(d, meta)()
-
-	return resourceTencentCloudMonitorTmpCvmAgentRead(d, meta)
-}
-
 func resourceTencentCloudMonitorTmpCvmAgentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.delete")()
 	defer inconsistentCheck(d, meta)()

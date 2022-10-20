@@ -95,9 +95,7 @@ const (
 	defaultSecurityGroup  = "sg-ijato2x1"
 	defaultSecurityGroup2 = "sg-51rgzop1"
 
-	defaultProjectId   = "1250480"
-	defaultDayuBgpIdV2 = "bgpip-000004x0"
-	defaultDayuBgpIpV2 = "119.28.217.253"
+	defaultProjectId = "1250480"
 
 	defaultTkeOSImageId   = "img-2lr9q49h"
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
@@ -473,42 +471,6 @@ locals {
   app_id = data.tencentcloud_user_info.info.app_id
   uin = data.tencentcloud_user_info.info.uin
   owner_uin = data.tencentcloud_user_info.info.owner_uin
-}
-`
-
-const mysqlInstanceCommonTestCase = defaultVpcVariable + `
-resource "tencentcloud_mysql_instance" "default" {
-  mem_size = 1000
-  volume_size = 25
-  instance_name = var.instance_name
-  engine_version = "5.7"
-  root_password = "0153Y474"
-  availability_zone = var.availability_zone
-  force_delete = true
-}
-`
-const mysqlInstanceHighPerformanceTestCase = defaultVpcVariable + `
-resource "tencentcloud_mysql_instance" "default" {
-  mem_size = 1000
-  volume_size = 50
-  instance_name = var.instance_name
-  engine_version = "5.7"
-  root_password = "0153Y474"
-  availability_zone = var.availability_zone
-  force_delete = true
-}
-`
-
-const mysqlInstanceHighPerformancePrepaidTestCase = defaultVpcVariable + `
-resource "tencentcloud_mysql_instance" "default" {
-  mem_size = 1000
-  volume_size = 50
-  pay_type = 0
-  instance_name = var.instance_name
-  engine_version = "5.7"
-  root_password = "0153Y474"
-  availability_zone = var.availability_zone
-  force_delete = true
 }
 `
 

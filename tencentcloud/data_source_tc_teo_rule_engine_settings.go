@@ -124,7 +124,6 @@ func dataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
 												},
 												"extra_parameter": {
 													Type:        schema.TypeList,
-													MaxItems:    1,
 													Computed:    true,
 													Description: "Special parameter. Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
@@ -155,7 +154,6 @@ func dataSourceTencentCloudTeoRuleEngineSettings() *schema.Resource {
 									},
 									"extra_parameter": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
 										Computed:    true,
 										Description: "Special parameter. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{

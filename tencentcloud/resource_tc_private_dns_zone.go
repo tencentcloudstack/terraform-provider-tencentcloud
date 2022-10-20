@@ -222,8 +222,7 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	var response *privatedns.CreatePrivateZoneResponse
-	response = result
+	response := result
 
 	id := *response.Response.ZoneId
 	d.SetId(id)

@@ -62,6 +62,7 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of the layer7 listener.
   * `port` - Port of the layer7 listener.
   * `protocol` - Protocol of the layer7 listener.
+  * `proxy_id` - ID of the GAAP proxy.
   * `status` - Status of the layer7 listener.
 
 

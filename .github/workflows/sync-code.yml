@@ -1,6 +1,6 @@
 # This is a sync code to tgit workflow
 
-name: SYNC_CODE
+name: sync-code
 
 on:
   push:
@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: firstly
+      - name: clone
         run: |
           if [ -d terraform-provider-tencentcloud ]; then
             rm -rf terraform-provider-tencentcloud
           fi
           git clone https://github.com/tencentcloudstack/terraform-provider-tencentcloud.git
-      - name: secondly
+      - name: sync
         run: |
           cd terraform-provider-tencentcloud
           git remote add tgit_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/tencentcloudstack/terraform-provider-tencentcloud.git

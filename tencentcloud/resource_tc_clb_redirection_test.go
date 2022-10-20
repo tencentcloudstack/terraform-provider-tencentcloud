@@ -100,20 +100,20 @@ func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 }
 
 const testAccClbRedirection_basic = `
-resource "tencentcloud_clb_instance" "clb_basic" {
+resource "tencentcloud_clb_instance" "clb_basic_redirection" {
   network_type = "OPEN"
   clb_name     = "tf-clb-redirection-basic"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  clb_id        = tencentcloud_clb_instance.clb_basic_redirection.id
   port          = 1
   protocol      = "HTTP"
   listener_name = "listener_basic"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  clb_id              = tencentcloud_clb_instance.clb_basic_redirection.id
   listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
   domain              = "abc.com"
   url                 = "/"
@@ -122,14 +122,14 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_target" {
-  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  clb_id        = tencentcloud_clb_instance.clb_basic_redirection.id
   port          = 44
   protocol      = "HTTP"
   listener_name = "listener_basic1"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_target" {
-  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  clb_id              = tencentcloud_clb_instance.clb_basic_redirection.id
   listener_id         = tencentcloud_clb_listener.listener_target.listener_id
   domain              = "abcd.com"
   url                 = "/"
@@ -138,7 +138,7 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
 }
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
-  clb_id             = tencentcloud_clb_instance.clb_basic.id
+  clb_id             = tencentcloud_clb_instance.clb_basic_redirection.id
   source_listener_id = tencentcloud_clb_listener.listener_basic.listener_id
   target_listener_id = tencentcloud_clb_listener.listener_target.listener_id
   source_rule_id     = tencentcloud_clb_listener_rule.rule_basic.rule_id

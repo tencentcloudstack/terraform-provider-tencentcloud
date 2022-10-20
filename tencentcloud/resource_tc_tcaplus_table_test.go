@@ -36,7 +36,7 @@ func init() {
 
 			clusterId := *clusters[0].ClusterId
 
-			tables, err := service.DescribeTables(ctx, clusterId, "", "", "")
+			tables, _ := service.DescribeTables(ctx, clusterId, "", "", "")
 
 			for _, table := range tables {
 				name := *table.TableName

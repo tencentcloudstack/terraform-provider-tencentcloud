@@ -161,7 +161,7 @@ func TestAccTencentCloudAsScalingConfig_charge(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccAsScalingConfig_charge_perpaid(),
+				Config: testAccAsScalingConfig_charge_prepaid(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type", "PREPAID"),
@@ -317,10 +317,10 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	`
 }
 
-func testAccAsScalingConfig_charge_perpaid() string {
+func testAccAsScalingConfig_charge_prepaid() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-basic-charge-perpaid"
+	configuration_name = "tf-as-basic-charge-prepaid"
 	image_id = "img-2lr9q49h"
 	instance_types = ["SA1.SMALL1"]
 	instance_charge_type = "PREPAID"

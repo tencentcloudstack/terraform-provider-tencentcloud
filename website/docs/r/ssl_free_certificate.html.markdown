@@ -35,7 +35,7 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 The following arguments are supported:
 
 * `domain` - (Required, String, ForceNew) Specify domain name.
-* `dv_auth_method` - (Required, String, ForceNew) Specify DV authorize method, available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
+* `dv_auth_method` - (Required, String) Specify DV authorize method. Available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.
 * `alias` - (Optional, String) Specify alias for remark.
 * `contact_email` - (Optional, String) Email address.
 * `contact_phone` - (Optional, String) Phone number.

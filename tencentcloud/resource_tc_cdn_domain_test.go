@@ -186,9 +186,9 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 							Switch: helper.String("on"),
 							PageRules: []*cdn.ErrorPageRule{
 								{
-									helper.IntInt64(403),
-									helper.IntInt64(302),
-									helper.String("https://www.test.com/error3.html"),
+									StatusCode:   helper.IntInt64(403),
+									RedirectCode: helper.IntInt64(302),
+									RedirectUrl:  helper.String("https://www.test.com/error3.html"),
 								},
 							},
 						}
@@ -500,7 +500,8 @@ data "tencentcloud_domains" "domains" {}
 data "tencentcloud_user_info" "info" {}
 
 locals {
-  domain = data.tencentcloud_domains.domains.list.0.domain_name
+  domains = data.tencentcloud_domains.domains.list.*.domain_name
+  domain = [for i in local.domains: i if length(regexall("^tencent", i)) > 0][0]
   bucket_url = "keep-cdn-test-${data.tencentcloud_user_info.info.app_id}.cos.ap-singapore.myqcloud.com"
 }
 `

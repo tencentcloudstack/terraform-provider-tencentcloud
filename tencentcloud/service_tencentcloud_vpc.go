@@ -27,15 +27,16 @@ var eipUnattachLocker = &sync.Mutex{}
 
 // VPC basic information
 type VpcBasicInfo struct {
-	vpcId          string
-	name           string
-	cidr           string
-	isMulticast    bool
-	isDefault      bool
-	dnsServers     []string
-	createTime     string
-	tags           []*vpc.Tag
-	assistantCidrs []string
+	vpcId                string
+	name                 string
+	cidr                 string
+	isMulticast          bool
+	isDefault            bool
+	dnsServers           []string
+	createTime           string
+	tags                 []*vpc.Tag
+	assistantCidrs       []string
+	dockerAssistantCidrs []string
 }
 
 // subnet basic information
@@ -84,9 +85,9 @@ type VpcSecurityGroupLiteRule struct {
 	securityGroupId string
 }
 
-var securityGroupIdRE = regexp.MustCompile("^sg-\\w{8}$")
-var ipAddressIdRE = regexp.MustCompile("^ipm-\\w{8}$")
-var ipAddressGroupIdRE = regexp.MustCompile("^ipmg-\\w{8}$")
+var securityGroupIdRE = regexp.MustCompile(`^sg-\\w{8}$`)
+var ipAddressIdRE = regexp.MustCompile(`^ipm-\\w{8}$`)
+var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\\w{8}$`)
 var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
@@ -353,8 +354,13 @@ getMoreData:
 
 		if len(item.AssistantCidrSet) > 0 {
 			for i := range item.AssistantCidrSet {
+				kind := item.AssistantCidrSet[i].AssistantType
 				cidr := item.AssistantCidrSet[i].CidrBlock
-				basicInfo.assistantCidrs = append(basicInfo.assistantCidrs, *cidr)
+				if kind != nil && *kind == 0 {
+					basicInfo.assistantCidrs = append(basicInfo.assistantCidrs, *cidr)
+				} else {
+					basicInfo.dockerAssistantCidrs = append(basicInfo.dockerAssistantCidrs, *cidr)
+				}
 			}
 		}
 
@@ -4577,7 +4583,7 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 		}
 	}()
 	request.VpnGatewayId = &vpnGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 
@@ -4960,7 +4966,7 @@ func (me *VpcService) DescribeNatGatewaySnats(ctx context.Context, natGatewayId 
 		}
 	}()
 	request.NatGatewayId = &natGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 

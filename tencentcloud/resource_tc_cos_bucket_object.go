@@ -259,7 +259,7 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 		}
 		return err
 	}
-	err = d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

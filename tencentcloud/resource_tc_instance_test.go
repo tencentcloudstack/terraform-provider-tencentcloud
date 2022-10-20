@@ -229,7 +229,7 @@ func TestAccTencentCloudInstanceWithKeyPairs(t *testing.T) {
 			{
 				PreConfig: func() {
 					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
-					time.Sleep(time.Duration(time.Second * 5))
+					time.Sleep(time.Second * 5)
 				},
 				Config: testAccTencentCloudInstanceWithKeyPair("[tencentcloud_key_pair.key_pair_2.id]"),
 				Check: resource.ComposeTestCheckFunc(
@@ -266,7 +266,7 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 			{
 				PreConfig: func() {
 					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
-					time.Sleep(time.Duration(time.Second * 5))
+					time.Sleep(time.Second * 5)
 				},
 				Config: testAccTencentCloudInstanceWithPassword("TF_test_123456"),
 				Check: resource.ComposeTestCheckFunc(

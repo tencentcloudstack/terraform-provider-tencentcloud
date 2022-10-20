@@ -120,7 +120,8 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"max_message_bytes": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Max message bytes.",
+				Computed:    true,
+				Description: "Max message bytes. min: 1024 Byte(1KB), max: 8388608 Byte(8MB).",
 			},
 			"segment": {
 				Type:         schema.TypeInt,
@@ -200,6 +201,9 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		if v.(int) != 0 {
 			request.SegmentMs = helper.IntInt64(v.(int))
 		}
+	}
+	if v, ok := d.GetOk("max_message_bytes"); ok {
+		request.MaxMessageBytes = helper.IntInt64(v.(int))
 	}
 	request.InstanceId = &instanceId
 	request.TopicName = &topicName

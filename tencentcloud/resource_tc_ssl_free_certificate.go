@@ -54,8 +54,7 @@ func resourceTencentCloudSSLFreeCertificate() *schema.Resource {
 			"dv_auth_method": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Specify DV authorize method, available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.",
+				Description: "Specify DV authorize method. Available values: `DNS_AUTO` - automatic DNS auth, `DNS` - manual DNS auth, `FILE` - auth by file.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
@@ -202,6 +201,10 @@ func resourceTencentCloudFreeCertificateRead(d *schema.ResourceData, meta interf
 	detail := response.Response
 
 	d.SetId(id)
+
+	if detail.VerifyType != nil {
+		_ = d.Set("dv_auth_method", detail.VerifyType)
+	}
 
 	if detail.Domain != nil {
 		_ = d.Set("domain", detail.Domain)
@@ -362,6 +365,7 @@ func resourceTencentCloudFreeCertificateUpdate(d *schema.ResourceData, meta inte
 	}
 
 	immutableFields := []string{
+		"dv_auth_method",
 		"package_type",
 		"contact_email",
 		"contact_phone",

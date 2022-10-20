@@ -43,7 +43,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.383
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.397
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.413
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
@@ -65,7 +65,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.489
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.479
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.515
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.38
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
