@@ -65,3 +65,30 @@ func (me *TcmService) DeleteTcmMeshById(ctx context.Context, meshId string) (err
 
 	return
 }
+
+func (me *TcmService) DeleteTcmClusterAttachmentById(ctx context.Context, meshId, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcm.NewUnlinkClusterRequest()
+
+	request.MeshId = &meshId
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTcmClient().UnlinkCluster(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -4,29 +4,26 @@ Provides a resource to create a tcm mesh
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcm_mesh" "mesh" {
-  mesh_id = "mesh-xxxxxxxx"
-  display_name = "test mesh"
-  mesh_version = "1.8.1"
+resource "tencentcloud_tcm_mesh" "basic" {
+  display_name = "test_mesh"
+  mesh_version = "1.12.5"
   type = "HOSTED"
   config {
-		istio {
-				outbound_traffic_policy = "ALLOW_ANY"
-				disable_policy_checks = true
-				enable_pilot_http = true
-				disable_http_retry = true
-			smart_dns {
-					istio_meta_dns_capture = true
-					istio_meta_dns_auto_allocate = true
-			}
-		}
-
+    istio {
+      outbound_traffic_policy = "ALLOW_ANY"
+      disable_policy_checks = true
+      enable_pilot_http = true
+      disable_http_retry = true
+      smart_dns {
+        istio_meta_dns_capture = true
+        istio_meta_dns_auto_allocate = true
+      }
+    }
   }
   tag_list {
-			key = "key"
-			value = "value"
-			passthrough = true
-
+    key = "key"
+    value = "value"
+    passthrough = true
   }
 }
 
