@@ -91,30 +91,11 @@ func testAccCheckCosBucketDoaminCertificateExists(n string, id *string) resource
 	}
 }
 
-const testAccUserInfoData = `
-data "tencentcloud_user_info" "myinfo" {}
-
-locals {
-  app_id = data.tencentcloud_user_info.myinfo.app_id
-  uin    = data.tencentcloud_user_info.myinfo.uin
-}
-`
-
 const testAccCosDomain = `
 provider "tencentcloud" {
   region = "ap-singapore"
 }
 
-`
-
-const testAccCosBucketRes = `
-resource "tencentcloud_cos_bucket" "object_bucket" {
-  bucket = "keep-cert-test-${local.app_id}"
-  origin_domain_rules {
-    status = "ENABLED"
-    domain = "${local.domainKeep}"
-  }
-}
 `
 
 // name = "keep-c-ssl"keep-cos-domain-cert

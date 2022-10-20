@@ -26,7 +26,7 @@ func TestAccTencentCloudDomainsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_domains.domains", "list.0.creation_date"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_domains.domains", "list.0.tld"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_domains.domains", "list.0.buy_status"),
-					resource.TestMatchOutput("domain", regexp.MustCompile("\\w+\\.\\w+")),
+					resource.TestMatchOutput("domain", regexp.MustCompile(`\\w+\\.\\w+`)),
 				),
 			},
 		},

@@ -20,7 +20,6 @@ func init() {
 }
 
 func testSweepSecurityGroups(region string) error {
-	const NamePrefix = "ci-temp-test-sg"
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 

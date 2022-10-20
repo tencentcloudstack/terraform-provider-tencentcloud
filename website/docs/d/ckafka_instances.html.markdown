@@ -63,7 +63,7 @@ In addition to all arguments above, the following attributes are exported:
   * `renew_flag` - Whether the instance is renewed, the int enumeration value: 1 indicates auto-renewal, and 2 indicates that it is not automatically renewed.
   * `status` - The status of the instance. 0: Created, 1: Running, 2: Delete: 5 Quarantined, -1 Creation failed.
   * `subnet_id` - Subnet id.
-  * `tags` - Tag infomation.
+  * `tags` - Tag information.
     * `tag_key` - Tag Key.
     * `tag_value` - Tag Value.
   * `topic_num` - The number of topics.

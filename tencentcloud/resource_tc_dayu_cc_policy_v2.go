@@ -80,7 +80,7 @@ func resourceTencentCloudDayuCCPolicyV2() *schema.Resource {
 			"business": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.",
+				Description: "Business of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.",
 			},
 			"thresholds": {
 				Type:     schema.TypeList,
@@ -733,7 +733,7 @@ func resourceTencentCloudDayuCCPolicyV2Update(d *schema.ResourceData, meta inter
 					Id:         oldCCGeoIpPolicy.PolicyId,
 					RegionType: oldCCGeoIpPolicy.RegionType,
 				}
-				antiddosService.DeleteCcGeoIPBlockConfig(ctx, instanceId, ccGeoIPBlockConfig)
+				_ = antiddosService.DeleteCcGeoIPBlockConfig(ctx, instanceId, ccGeoIPBlockConfig)
 			}
 		}
 
@@ -1013,7 +1013,7 @@ func resourceTencentCloudDayuCCPolicyV2Delete(d *schema.ResourceData, meta inter
 			Id:         ccGeoIpPolicy.PolicyId,
 			RegionType: ccGeoIpPolicy.RegionType,
 		}
-		antiddosService.DeleteCcGeoIPBlockConfig(ctx, instanceId, ccGeoIPBlockConfig)
+		_ = antiddosService.DeleteCcGeoIPBlockConfig(ctx, instanceId, ccGeoIPBlockConfig)
 	}
 
 	ccBlackWhiteIpList, err := antiddosService.DescribeCcBlackWhiteIpList(ctx, business, instanceId)

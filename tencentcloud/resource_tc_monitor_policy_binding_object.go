@@ -135,7 +135,6 @@ func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, met
 		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewBindingPolicyObjectRequest()
-		idSeeds        []string
 		policyId       = d.Get("policy_id").(string)
 	)
 
@@ -152,8 +151,6 @@ func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, met
 
 	request.Dimensions = make([]*monitor.BindingPolicyObjectDimension, 0, len(dimensions))
 
-	idSeeds = append(idSeeds, fmt.Sprintf("%s", policyId))
-
 	for _, v := range dimensions {
 		m := v.(map[string]interface{})
 		var dimension monitor.BindingPolicyObjectDimension
@@ -163,7 +160,6 @@ func resourceTencentMonitorPolicyBindingObjectCreate(d *schema.ResourceData, met
 		if region == "" {
 			return fmt.Errorf("monitor not support region `%s` bind", monitorService.client.Region)
 		}
-		idSeeds = append(idSeeds, dimensionsJson, region)
 		dimension.Dimensions = &dimensionsJson
 		dimension.Region = &region
 		request.Dimensions = append(request.Dimensions, &dimension)

@@ -80,9 +80,6 @@ getMoreData:
 		return
 	}
 
-	for _, item := range response.Response.RecordSet {
-		recordInfos = append(recordInfos, item)
-
-	}
+	recordInfos = append(recordInfos, response.Response.RecordSet...)
 	goto getMoreData
 }

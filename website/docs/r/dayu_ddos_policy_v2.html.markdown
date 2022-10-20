@@ -95,7 +95,7 @@ The following arguments are supported:
 * `resource_id` - (Required, String, ForceNew) The ID of the resource instance.
 * `acls` - (Optional, List) Port ACL policy for DDoS protection.
 * `black_white_ips` - (Optional, List) DDoS-protected IP blacklist and whitelist.
-* `business` - (Optional, String) Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
+* `business` - (Optional, String) Business of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.
 * `ddos_ai` - (Optional, String) AI protection switch, take the value [`on`, `off`].
 * `ddos_connect_limit` - (Optional, List) DDoS connection suppression options.
 * `ddos_geo_ip_block_config` - (Optional, List) DDoS-protected area block configuration.

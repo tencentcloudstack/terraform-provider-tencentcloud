@@ -36,7 +36,6 @@ lint:
 	@GOGC=30 GOPACKAGESPRINTGOLISTERRORS=1 golangci-lint run --timeout=30m ./$(PKG_NAME)
 	@tfproviderlint \
 		-c 1 \
-		-AT001 \
 		-AT002 \
 		-AT005 \
 		-AT006 \
@@ -64,7 +63,6 @@ lint:
 		-S019 \
 		-S020 \
 		-S021 \
-		-S022 \
 		-S023 \
 		-S024 \
 		-S025 \

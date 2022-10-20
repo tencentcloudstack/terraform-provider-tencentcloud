@@ -152,8 +152,6 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
@@ -913,16 +911,4 @@ func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 	}
 	errRet = err
 	return
-}
-
-func snatIpSetInitFn(i interface{}) int {
-	item := i.(map[string]interface{})
-	subnet := item["subnet_id"].(string)
-	allocatedIp := item["allocated_snat_ip"].(string)
-	ip, ok := item["ip"].(string)
-
-	if !ok || ip == "" {
-		ip = allocatedIp
-	}
-	return hashcode.String(subnet + ip)
 }

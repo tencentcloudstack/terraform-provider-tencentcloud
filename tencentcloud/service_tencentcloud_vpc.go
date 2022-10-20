@@ -85,9 +85,9 @@ type VpcSecurityGroupLiteRule struct {
 	securityGroupId string
 }
 
-var securityGroupIdRE = regexp.MustCompile("^sg-\\w{8}$")
-var ipAddressIdRE = regexp.MustCompile("^ipm-\\w{8}$")
-var ipAddressGroupIdRE = regexp.MustCompile("^ipmg-\\w{8}$")
+var securityGroupIdRE = regexp.MustCompile(`^sg-\\w{8}$`)
+var ipAddressIdRE = regexp.MustCompile(`^ipm-\\w{8}$`)
+var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\\w{8}$`)
 var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
@@ -4583,7 +4583,7 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 		}
 	}()
 	request.VpnGatewayId = &vpnGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 
@@ -4966,7 +4966,7 @@ func (me *VpcService) DescribeNatGatewaySnats(ctx context.Context, natGatewayId 
 		}
 	}()
 	request.NatGatewayId = &natGatewayId
-	if filters != nil && len(filters) > 0 {
+	if len(filters) > 0 {
 		request.Filters = filters
 	}
 

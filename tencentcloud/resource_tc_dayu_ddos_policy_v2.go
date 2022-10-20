@@ -109,7 +109,7 @@ func resourceTencentCloudDayuDdosPolicyV2() *schema.Resource {
 			"business": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Bussiness of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.",
+				Description: "Business of resource instance. bgpip indicates anti-anti-ip ip; bgp means exclusive package; bgp-multip means shared packet; net indicates anti-anti-ip pro version.",
 			},
 			"ddos_threshold": {
 				Type:        schema.TypeInt,
@@ -985,7 +985,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			ipType := oldBlackWhiteIp.Type
 			key := *ipType + "_" + *ip
 			if newUniqIpMap[key] == 0 {
-				antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, []string{*ip}, *ipType)
+				_ = antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, []string{*ip}, *ipType)
 			}
 		}
 
@@ -1026,7 +1026,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		increments, decrements := DeltaList(oldAclConfigs, newAclConfigs)
 		for _, decrementItem := range decrements {
 			var decrement antiddos.AclConfig
-			json.Unmarshal([]byte(decrementItem), &decrement)
+			_ = json.Unmarshal([]byte(decrementItem), &decrement)
 			err := antiddosService.DeletePortAclConfig(ctx, resourceId, decrement)
 			if err != nil {
 				return err
@@ -1034,7 +1034,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		}
 		for _, incrementItems := range increments {
 			var increment antiddos.AclConfig
-			json.Unmarshal([]byte(incrementItems), &increment)
+			_ = json.Unmarshal([]byte(incrementItems), &increment)
 			err := antiddosService.CreatePortAclConfig(ctx, resourceId, increment)
 			if err != nil {
 				return err
@@ -1077,7 +1077,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		increments, decrements := DeltaList(oldDDoSGeoIPBlockConfigs, newDDoSGeoIPBlockConfigs)
 		for _, decrementItem := range decrements {
 			var decrement antiddos.DDoSGeoIPBlockConfig
-			json.Unmarshal([]byte(decrementItem), &decrement)
+			_ = json.Unmarshal([]byte(decrementItem), &decrement)
 			err := antiddosService.DeleteDDoSGeoIPBlockConfig(ctx, resourceId, decrement)
 			if err != nil {
 				return err
@@ -1085,7 +1085,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		}
 		for _, incrementItems := range increments {
 			var increment antiddos.DDoSGeoIPBlockConfig
-			json.Unmarshal([]byte(incrementItems), &increment)
+			_ = json.Unmarshal([]byte(incrementItems), &increment)
 			err := antiddosService.CreateDDoSGeoIPBlockConfig(ctx, resourceId, increment)
 			if err != nil {
 				return err
@@ -1137,7 +1137,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		increments, decrements := DeltaList(oldDDoSSpeedLimitConfigs, newDDoSSpeedLimitConfigs)
 		for _, decrementItem := range decrements {
 			var decrement antiddos.DDoSSpeedLimitConfig
-			json.Unmarshal([]byte(decrementItem), &decrement)
+			_ = json.Unmarshal([]byte(decrementItem), &decrement)
 			err := antiddosService.DeleteDDoSSpeedLimitConfig(ctx, resourceId, decrement)
 			if err != nil {
 				return err
@@ -1145,7 +1145,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		}
 		for _, incrementItems := range increments {
 			var increment antiddos.DDoSSpeedLimitConfig
-			json.Unmarshal([]byte(incrementItems), &increment)
+			_ = json.Unmarshal([]byte(incrementItems), &increment)
 			err := antiddosService.CreateDDoSSpeedLimitConfig(ctx, resourceId, increment)
 			if err != nil {
 				return err
@@ -1222,7 +1222,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 
 		for _, decrementItem := range decrements {
 			var decrement antiddos.PacketFilterConfig
-			json.Unmarshal([]byte(decrementItem), &decrement)
+			_ = json.Unmarshal([]byte(decrementItem), &decrement)
 			err := antiddosService.DeletePacketFilterConfig(ctx, resourceId, decrement)
 			if err != nil {
 				return err
@@ -1230,7 +1230,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 		}
 		for _, incrementItem := range increments {
 			var increment antiddos.PacketFilterConfig
-			json.Unmarshal([]byte(incrementItem), &increment)
+			_ = json.Unmarshal([]byte(incrementItem), &increment)
 			err := antiddosService.CreatePacketFilterConfig(ctx, resourceId, increment)
 			if err != nil {
 				return err
@@ -1257,8 +1257,8 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 	resourceId := items[0]
 	business := items[1]
 
-	antiddosService.DeleteyDDoSLevel(ctx, business, resourceId)
-	antiddosService.DeleteDDoSThreshold(ctx, business, resourceId)
+	_ = antiddosService.DeleteyDDoSLevel(ctx, business, resourceId)
+	_ = antiddosService.DeleteDDoSThreshold(ctx, business, resourceId)
 
 	blackWhiteIpRelationList, err := antiddosService.DescribeListBlackWhiteIpList(ctx, resourceId)
 	if err != nil {
@@ -1277,10 +1277,10 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 		}
 	}
 	if len(blacks) > 0 {
-		antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, blacks, DDOS_BLACK_WHITE_IP_TYPE_BLACK)
+		_ = antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, blacks, DDOS_BLACK_WHITE_IP_TYPE_BLACK)
 	}
 	if len(whites) > 0 {
-		antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, whites, DDOS_BLACK_WHITE_IP_TYPE_WHITE)
+		_ = antiddosService.DeleteDDoSBlackWhiteIpList(ctx, resourceId, whites, DDOS_BLACK_WHITE_IP_TYPE_WHITE)
 	}
 
 	aclConfigRelationList, err := antiddosService.DescribeListPortAclList(ctx, resourceId)
@@ -1289,19 +1289,19 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 	}
 	for _, aclConfigRelation := range aclConfigRelationList {
 		deleteAclConfigRelation := aclConfigRelation
-		antiddosService.DeletePortAclConfig(ctx, resourceId, *deleteAclConfigRelation.AclConfig)
+		_ = antiddosService.DeletePortAclConfig(ctx, resourceId, *deleteAclConfigRelation.AclConfig)
 	}
 
-	antiddosService.DeleteProtocolBlockConfig(ctx, resourceId)
-	antiddosService.DeleteDDoSConnectLimit(ctx, resourceId)
-	antiddosService.DeleteDDoSAI(ctx, resourceId)
+	_ = antiddosService.DeleteProtocolBlockConfig(ctx, resourceId)
+	_ = antiddosService.DeleteDDoSConnectLimit(ctx, resourceId)
+	_ = antiddosService.DeleteDDoSAI(ctx, resourceId)
 
 	ddosGeoIPBlockConfigRelations, err := antiddosService.DescribeListDDoSGeoIPBlockConfig(ctx, resourceId)
 	if err != nil {
 		return err
 	}
 	for _, ddosGeoIPBlockConfigRelation := range ddosGeoIPBlockConfigRelations {
-		antiddosService.DeleteDDoSGeoIPBlockConfig(ctx, resourceId, *ddosGeoIPBlockConfigRelation.GeoIPBlockConfig)
+		_ = antiddosService.DeleteDDoSGeoIPBlockConfig(ctx, resourceId, *ddosGeoIPBlockConfigRelation.GeoIPBlockConfig)
 	}
 
 	ddosSpeedLimitConfigRelations, err := antiddosService.DescribeListDDoSSpeedLimitConfig(ctx, resourceId)
@@ -1309,7 +1309,7 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 		return err
 	}
 	for _, ddosSpeedLimitConfigRelation := range ddosSpeedLimitConfigRelations {
-		antiddosService.DeleteDDoSSpeedLimitConfig(ctx, resourceId, *ddosSpeedLimitConfigRelation.SpeedLimitConfig)
+		_ = antiddosService.DeleteDDoSSpeedLimitConfig(ctx, resourceId, *ddosSpeedLimitConfigRelation.SpeedLimitConfig)
 
 	}
 
@@ -1319,7 +1319,7 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 	}
 
 	for _, packetFilterRelation := range packetFilterRelationList {
-		antiddosService.DeletePacketFilterConfig(ctx, resourceId, *packetFilterRelation.PacketFilterConfig)
+		_ = antiddosService.DeletePacketFilterConfig(ctx, resourceId, *packetFilterRelation.PacketFilterConfig)
 	}
 	return nil
 }

@@ -150,7 +150,7 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	if err != nil {
 		stateMembers = &schema.Set{}
 	}
-	memberResult := make([]*string, 0)
+	var memberResult []*string
 	if stateMembers.Len() != 0 {
 		//the old state exist
 		//create a new membership with state

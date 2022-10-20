@@ -25,8 +25,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbLogSet() *schema.Resource {
@@ -34,7 +32,6 @@ func resourceTencentCloudClbLogSet() *schema.Resource {
 		Create: resourceTencentCloudClbLogSetCreate,
 		Read:   resourceTencentCloudClbLogSetRead,
 		Delete: resourceTencentCloudClbLogSetDelete,
-		//Update: resourceTencentCloudClbLogSetUpdate,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -118,33 +115,10 @@ func resourceTencentCloudClbLogSetCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 	//加一个创建保护
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 	d.SetId(id)
 
 	return resourceTencentCloudClbLogSetRead(d, meta)
-}
-
-// All fields are now Computed/ForceNew, means it does not support update
-func resourceTencentCloudClbLogSetUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clb_logset.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	request := cls.NewModifyLogsetRequest()
-
-	request.LogsetId = helper.String(d.Id())
-
-	if d.HasChange("name") {
-		request.LogsetName = helper.String(d.Get("name").(string))
-	}
-
-	err := service.UpdateClsLogSet(ctx, request)
-
-	if err != nil {
-		return err
-	}
-
-	return resourceTencentCloudClbLogSetCreate(d, meta)
 }
 
 func resourceTencentCloudClbLogSetDelete(d *schema.ResourceData, meta interface{}) error {

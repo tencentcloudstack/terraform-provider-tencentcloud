@@ -212,7 +212,7 @@ func dataSourceTencentCloudCkafkaInstances() *schema.Resource {
 									},
 								},
 							},
-							Description: "Tag infomation.",
+							Description: "Tag information.",
 						},
 						"version": {
 							Type:        schema.TypeString,

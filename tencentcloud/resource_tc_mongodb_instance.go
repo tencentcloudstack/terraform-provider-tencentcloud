@@ -365,7 +365,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	}
 	_ = d.Set("standby_instance_list", standbyInsList)
 
-	tags, err := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
+	tags, _ := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
 
 	_ = d.Set("tags", tags)
 
