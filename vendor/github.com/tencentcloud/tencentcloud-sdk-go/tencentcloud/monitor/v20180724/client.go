@@ -2571,6 +2571,7 @@ func NewDescribeAllNamespacesResponse() (response *DescribeAllNamespacesResponse
 // 查询所有名字空间
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllNamespaces(request *DescribeAllNamespacesRequest) (response *DescribeAllNamespacesResponse, err error) {
     return c.DescribeAllNamespacesWithContext(context.Background(), request)
@@ -2580,6 +2581,7 @@ func (c *Client) DescribeAllNamespaces(request *DescribeAllNamespacesRequest) (r
 // 查询所有名字空间
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllNamespacesWithContext(ctx context.Context, request *DescribeAllNamespacesRequest) (response *DescribeAllNamespacesResponse, err error) {
     if request == nil {
@@ -2619,6 +2621,7 @@ func NewDescribeBaseMetricsResponse() (response *DescribeBaseMetricsResponse) {
 // 获取基础指标属性
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBaseMetrics(request *DescribeBaseMetricsRequest) (response *DescribeBaseMetricsResponse, err error) {
     return c.DescribeBaseMetricsWithContext(context.Background(), request)
@@ -2628,6 +2631,7 @@ func (c *Client) DescribeBaseMetrics(request *DescribeBaseMetricsRequest) (respo
 // 获取基础指标属性
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBaseMetricsWithContext(ctx context.Context, request *DescribeBaseMetricsRequest) (response *DescribeBaseMetricsResponse, err error) {
     if request == nil {
@@ -2667,6 +2671,7 @@ func NewDescribeBasicAlarmListResponse() (response *DescribeBasicAlarmListRespon
 // 获取基础告警列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2681,6 +2686,7 @@ func (c *Client) DescribeBasicAlarmList(request *DescribeBasicAlarmListRequest) 
 // 获取基础告警列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -3083,18 +3089,7 @@ func NewDescribeGrafanaChannelsResponse() (response *DescribeGrafanaChannelsResp
 // 列出 Grafana 所有告警通道
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_AGENTNOTALLOWED = "FailedOperation.AgentNotAllowed"
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeGrafanaChannels(request *DescribeGrafanaChannelsRequest) (response *DescribeGrafanaChannelsResponse, err error) {
     return c.DescribeGrafanaChannelsWithContext(context.Background(), request)
 }
@@ -3103,18 +3098,7 @@ func (c *Client) DescribeGrafanaChannels(request *DescribeGrafanaChannelsRequest
 // 列出 Grafana 所有告警通道
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_AGENTNOTALLOWED = "FailedOperation.AgentNotAllowed"
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeGrafanaChannelsWithContext(ctx context.Context, request *DescribeGrafanaChannelsRequest) (response *DescribeGrafanaChannelsResponse, err error) {
     if request == nil {
         request = NewDescribeGrafanaChannelsRequest()
@@ -3251,6 +3235,7 @@ func NewDescribeGrafanaInstancesResponse() (response *DescribeGrafanaInstancesRe
 // 可能返回的错误码:
 //  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeGrafanaInstances(request *DescribeGrafanaInstancesRequest) (response *DescribeGrafanaInstancesResponse, err error) {
@@ -3263,6 +3248,7 @@ func (c *Client) DescribeGrafanaInstances(request *DescribeGrafanaInstancesReque
 // 可能返回的错误码:
 //  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeGrafanaInstancesWithContext(ctx context.Context, request *DescribeGrafanaInstancesRequest) (response *DescribeGrafanaInstancesResponse, err error) {
