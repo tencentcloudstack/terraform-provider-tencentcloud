@@ -38,7 +38,10 @@ func init() {
 			ServiceMonitors := transObj2StrNames(promConfigs.ServiceMonitors)
 			PodMonitors := transObj2StrNames(promConfigs.PodMonitors)
 			RawJobs := transObj2StrNames(promConfigs.RawJobs)
-			_ = service.DeleteTkeTmpConfigByName(ctx, configId, ServiceMonitors, PodMonitors, RawJobs)
+			err = service.DeleteTkeTmpConfigByName(ctx, configId, ServiceMonitors, PodMonitors, RawJobs)
+			if err != nil {
+				return err
+			}
 
 			return nil
 		},
