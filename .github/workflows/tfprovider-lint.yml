@@ -37,7 +37,6 @@ jobs:
         run: |
           tfproviderlint \
           		-c 1 \
-                -AT001 \
           		-AT002 \
           		-AT005 \
           		-AT006 \
