@@ -128,8 +128,7 @@ func resourceTencentCloudDPrivateDnsRecordCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	var response *privatedns.CreatePrivateZoneRecordResponse
-	response = result
+	response := result
 
 	recordId := *response.Response.RecordId
 	d.SetId(strings.Join([]string{zoneId, recordId}, FILED_SP))

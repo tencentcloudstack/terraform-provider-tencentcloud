@@ -112,8 +112,8 @@ func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, ins
 	}
 	tuples := []*sqlserver.DatabaseTuple{
 		{
-			helper.String(defaultSQLServerPubSubDB),
-			helper.String(defaultSQLServerPubSubDB),
+			PublishDatabase:   helper.String(defaultSQLServerPubSubDB),
+			SubscribeDatabase: helper.String(defaultSQLServerPubSubDB),
 		},
 	}
 	err := service.DeletePublishSubscribe(ctx, pubSub, tuples)

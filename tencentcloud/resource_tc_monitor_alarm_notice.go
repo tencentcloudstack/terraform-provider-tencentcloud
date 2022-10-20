@@ -401,6 +401,9 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_alarm_notice.read")()
 
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		err            error
@@ -412,7 +415,7 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 	var tmpAlarmNotice = []*string{helper.String(d.Id())}
 	alarmNoticeMap["noticeArr"] = tmpAlarmNotice
 
-	alarmNotice, err = monitorService.DescribeAlarmNoticeById(nil, alarmNoticeMap)
+	alarmNotice, err = monitorService.DescribeAlarmNoticeById(ctx, alarmNoticeMap)
 	if err != nil {
 		return err
 	}

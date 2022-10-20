@@ -184,22 +184,22 @@ func resourceTencentCloudClbSnatIpUpdate(d *schema.ResourceData, meta interface{
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := ClbService{client}
 
-	instanceSnatIps := make([]interface{}, 0)
-	instance, err := service.DescribeLoadBalancerById(ctx, clbId)
-	if err != nil {
-		return err
-	}
+	//instanceSnatIps := make([]interface{}, 0)
+	//instance, err := service.DescribeLoadBalancerById(ctx, clbId)
+	//if err != nil {
+	//	return err
+	//}
 
-	if len(instance.SnatIps) > 0 {
-		for i := range instance.SnatIps {
-			subnet := *instance.SnatIps[i].SubnetId
-			ip := *instance.SnatIps[i].Ip
-			instanceSnatIps = append(instanceSnatIps, map[string]interface{}{
-				"ip":        ip,
-				"subnet_id": subnet,
-			})
-		}
-	}
+	//if len(instance.SnatIps) > 0 {
+	//	for i := range instance.SnatIps {
+	//		subnet := *instance.SnatIps[i].SubnetId
+	//		ip := *instance.SnatIps[i].Ip
+	//		instanceSnatIps = append(instanceSnatIps, map[string]interface{}{
+	//			"ip":        ip,
+	//			"subnet_id": subnet,
+	//		})
+	//	}
+	//}
 
 	if d.HasChange("ips") {
 		o, n := d.GetChange("ips")
