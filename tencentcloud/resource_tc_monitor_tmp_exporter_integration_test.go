@@ -47,6 +47,7 @@ func testSweepExporterIntegration(region string) error {
 			return err
 		}
 	}
+	return nil
 }
 
 func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {
