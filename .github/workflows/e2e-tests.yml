@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: E2E_TESTS
+name: e2e-tests
 
 # Controls when the workflow will run
 on:
@@ -46,7 +46,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       # Runs a set of commands using the runners shell
-      - name: MR INFO
+      - name: e2e tests
         run: |
           make deltatest
           if [ $? -ne 0 ]; then
