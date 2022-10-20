@@ -343,18 +343,18 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, m
 	agent["cluster_type"] = clusterAgent.ClusterType
 	agent["status"] = clusterAgent.Status
 	agent["cluster_name"] = clusterAgent.ClusterName
-	if clusterAgent.ExternalLabels != nil {
-		clusterAgentList := clusterAgent.ExternalLabels
-		result := make([]map[string]interface{}, 0, len(clusterAgentList))
-		for _, v := range clusterAgentList {
-			mapping := map[string]interface{}{
-				"name":  v.Name,
-				"value": v.Value,
-			}
-			result = append(result, mapping)
-		}
-		agent["external_labels"] = result
-	}
+	//if clusterAgent.ExternalLabels != nil {
+	//	clusterAgentList := clusterAgent.ExternalLabels
+	//	result := make([]map[string]interface{}, 0, len(clusterAgentList))
+	//	for _, v := range clusterAgentList {
+	//		mapping := map[string]interface{}{
+	//			"name":  v.Name,
+	//			"value": v.Value,
+	//		}
+	//		result = append(result, mapping)
+	//	}
+	//	agent["external_labels"] = result
+	//}
 	agents = append(agents, agent)
 	_ = d.Set("agents", agents)
 
