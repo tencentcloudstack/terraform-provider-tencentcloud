@@ -23,7 +23,7 @@ func TestAccTencentCloudTcmClusterAttachment_basic(t *testing.T) {
 				Config: testAccTcmClusterAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClusterAttachmentExists("tencentcloud_tcm_cluster_attachment.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "mesh_id", "mesh-b9q6vf9l"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "mesh_id", defaultMeshId),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.#", "1"),
 				),
 			},
