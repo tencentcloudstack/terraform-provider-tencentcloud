@@ -1,0 +1,8 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_exporter_integration: support cluster initialization
+```
+
+```release-note:bug
+resource/tencentcloud_monitor_tmp_tke_cluster_agent: modify field undefined problem
+resource/tencentcloud_monitor_tmp_tke_config: modify unit
+```
