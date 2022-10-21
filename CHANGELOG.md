@@ -345,7 +345,7 @@ COMMON:
 ENHANCEMENTS:
 
 * resource `tencentcloud_ckafka_instance` support upgrade config
-* resource `tencentcloud_kubernetes_cluster` support log agent/audit/event persistense
+* resource `tencentcloud_kubernetes_cluster` support log agent/audit/event persistence
 
 ## 1.72.4 (May 18, 2022)
 
@@ -387,7 +387,7 @@ COMMON:
 
 ENHANCEMENTS:
 
-* resource `tencentcloud_scf_function` suport java handler
+* resource `tencentcloud_scf_function` support java handler
 * resource `tencentcloud_mongodb_instance` fix engine version doc
 
 ## 1.72.0 (May 5, 2022)
@@ -1724,7 +1724,7 @@ ENHANCEMENTS:
   system.
 * Resource: `tencentcloud_kubernetes_cluster` add new argument `mount_target` to support set disk mount path.
 * Resource: `tencentcloud_kubernetes_cluster` add new argument `docker_graph_path` to support set docker graph path.
-* Resource: `tencentcloud_clb_redirection` add new argument `delete_all_auto_rewirte` to delete all auto-associated
+* Resource: `tencentcloud_clb_redirection` add new argument `delete_all_auto_rewrite` to delete all auto-associated
   redirection when destroying the resource.
 * Resource: `tencentcloud_kubernetes_scale_worker` add new argument `labels` to support scale worker labels.
 * Data Source: `tencentcloud_kubernetes_clusters` add new argument `kube_config`.
