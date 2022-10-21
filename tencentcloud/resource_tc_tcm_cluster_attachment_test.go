@@ -111,8 +111,6 @@ func testAccCheckClusterAttachmentExists(r string) resource.TestCheckFunc {
 		} else {
 			return fmt.Errorf("clusterList %s is not found", rs.Primary.ID)
 		}
-
-		return nil
 	}
 }
 
