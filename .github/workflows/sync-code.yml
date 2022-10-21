@@ -10,7 +10,7 @@ on:
     tags: v*
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
 
     steps:

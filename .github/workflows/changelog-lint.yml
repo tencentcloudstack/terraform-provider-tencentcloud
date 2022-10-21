@@ -1,12 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: gofmt
+name: changelog-lint
 
 # Controls when the workflow will run
 on:
   pull_request:
     paths:
-      - tencentcloud/**
+      - .changelog/*
+      - CHANGELOG.md
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -14,7 +15,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  fmt:
+  changelog-lint:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -26,12 +27,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      # Runs a set of commands using the runners shell
-      - name: gofmt check
-        run: |
-          make fmtcheck
-          if [ $? -ne 0 ]; then
-              printf "FMT FAILED\n"
-              exit 1
-          fi
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: .go-version
 
+      - name: install misspell
+        run: cd .ci/tools && go install github.com/client9/misspell/cmd/misspell
+
+      # Runs a set of commands using the runners shell
+      - name: changelog-lint
+        run: misspell -error -source text CHANGELOG.md .changelog
