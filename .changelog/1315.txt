@@ -2,6 +2,6 @@
 data-source/tencentcloud_security_groups: support protocol template readings
 ```
 
-```release-note:feat
+```release-note:enhancement
 resource/tencentcloud_security_group_lite_rule: support protocol template creating/updating
 ```
