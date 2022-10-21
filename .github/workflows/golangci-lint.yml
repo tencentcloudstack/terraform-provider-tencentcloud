@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.17.1
+          go-version-file: .go-version
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
