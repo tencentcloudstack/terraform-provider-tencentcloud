@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version-file: 1.18.1
+          go-version: 1.18.1
       - name: install actionlint
         run: cd .ci/tools && go install github.com/rhysd/actionlint/cmd/actionlint
       - name: actionlint
