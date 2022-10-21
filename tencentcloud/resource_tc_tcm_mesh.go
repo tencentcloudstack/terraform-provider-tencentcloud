@@ -363,24 +363,24 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("config", []interface{}{configMap})
 	}
 
-	//if mesh.TagList != nil {
-	//	tagListList := []interface{}{}
-	//	for _, tagList := range mesh.TagList {
-	//		tagListMap := map[string]interface{}{}
-	//		if tagList.Key != nil {
-	//			tagListMap["key"] = tagList.Key
-	//		}
-	//		if tagList.Value != nil {
-	//			tagListMap["value"] = tagList.Value
-	//		}
-	//		if tagList.Passthrough != nil {
-	//			tagListMap["passthrough"] = tagList.Passthrough
-	//		}
-	//
-	//		tagListList = append(tagListList, tagListMap)
-	//	}
-	//	_ = d.Set("tag_list", tagListList)
-	//}
+	if mesh.TagList != nil {
+		tagListList := []interface{}{}
+		for _, tagList := range mesh.TagList {
+			tagListMap := map[string]interface{}{}
+			if tagList.Key != nil {
+				tagListMap["key"] = tagList.Key
+			}
+			if tagList.Value != nil {
+				tagListMap["value"] = tagList.Value
+			}
+			if tagList.Passthrough != nil {
+				tagListMap["passthrough"] = tagList.Passthrough
+			}
+
+			tagListList = append(tagListList, tagListMap)
+		}
+		_ = d.Set("tag_list", tagListList)
+	}
 
 	return nil
 }
@@ -484,19 +484,25 @@ func resourceTencentCloudTcmMeshDelete(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	//err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-	//	mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
-	//	if errRet != nil {
-	//		return retryError(errRet, InternalError)
-	//	}
-	//	if *mesh.Mesh.State == "DELETING" {
-	//		return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
-	//	}
-	//	return nil
-	//})
-	//if err != nil {
-	//	return err
-	//}
+	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		mesh, _ := service.DescribeTcmMesh(ctx, meshId)
+		// Supplement this part of exception handling after waiting for the interface to be improved
+		//if errRet != nil {
+		//	return nil
+		//}
+		if mesh != nil {
+			if *mesh.Mesh.State == "DELETING" {
+				return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
+			}
+			if *mesh.Mesh.State == "DELETE_FAILED" {
+				return resource.NonRetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

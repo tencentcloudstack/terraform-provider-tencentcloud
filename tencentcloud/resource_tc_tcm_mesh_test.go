@@ -25,11 +25,11 @@ func TestAccTencentCloudTcmMesh_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "display_name", "test_mesh"),
 				),
 			},
-			//{
-			//	ResourceName:      "tencentcloud_tcm_mesh.basic",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
+			{
+				ResourceName:      "tencentcloud_tcm_mesh.basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -43,12 +43,9 @@ func testAccCheckMeshDestroy(s *terraform.State) error {
 			continue
 		}
 
-		mesh, err := service.DescribeTcmMesh(ctx, rs.Primary.ID)
+		mesh, _ := service.DescribeTcmMesh(ctx, rs.Primary.ID)
 		if mesh != nil {
 			return fmt.Errorf("tcm mesh %v still exists", *mesh.Mesh.State)
-		}
-		if err != nil {
-			return err
 		}
 	}
 	return nil
@@ -98,7 +95,7 @@ resource "tencentcloud_tcm_mesh" "basic" {
   tag_list {
     key = "key"
     value = "value"
-    passthrough = true
+    passthrough = false
   }
 }
 
