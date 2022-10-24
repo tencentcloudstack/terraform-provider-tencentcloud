@@ -326,7 +326,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Description:   "ID list of keys.",
 		},
 		"security_group_ids": {
-			Type:        schema.TypeList,
+			Type:        schema.TypeSet,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Security groups to which a CVM instance belongs.",
@@ -748,12 +748,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	}
 
 	if v, ok := dMap["security_group_ids"]; ok {
-		securityGroups := v.([]interface{})
-		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
-		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
-		}
+		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 	}
 
 	request.EnhancedService = &as.EnhancedService{}
@@ -886,12 +881,7 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	}
 
 	if v, ok := dMap["security_group_ids"]; ok {
-		securityGroups := v.([]interface{})
-		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
-		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroup)
-		}
+		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 	}
 
 	chargeType, ok := dMap["instance_charge_type"].(string)
