@@ -195,7 +195,11 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Instance tags.",
 		},
-
+		"retry_creating": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Specify whether to retry while instance create timeout with client token, default `false`.",
+		},
 		"force_delete": {
 			Type:        schema.TypeBool,
 			Optional:    true,
@@ -557,6 +561,12 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	logId := getLogId(ctx)
 
 	request := cdb.NewCreateDBInstanceRequest()
+	var clientToken string
+
+	if v := d.Get("retry_creating").(bool); v {
+		clientToken = helper.BuildToken()
+		request.ClientToken = &clientToken
+	}
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -578,15 +588,27 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		return err
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
+	var response *cdb.CreateDBInstanceResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err)
+		}
+
+		if response.Response.InstanceIds == nil && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
@@ -598,6 +620,12 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 
 	logId := getLogId(ctx)
 	request := cdb.NewCreateDBInstanceHourRequest()
+	var clientToken string
+
+	if v := d.Get("retry_creating").(bool); v {
+		clientToken = helper.BuildToken()
+		request.ClientToken = &clientToken
+	}
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
@@ -607,15 +635,26 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 		return err
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
+	var response *cdb.CreateDBInstanceHourResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
+		if err != nil {
+			return retryError(err)
+		}
+		if response.Response.InstanceIds == nil && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+		return nil
+	})
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
