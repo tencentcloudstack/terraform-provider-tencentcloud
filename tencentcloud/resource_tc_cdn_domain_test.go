@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -322,7 +323,13 @@ func testAccGetTestingDomain() (string, error) {
 	if len(domains) == 0 {
 		return "", nil
 	}
-	return *domains[0].DomainName, nil
+	for i := range domains {
+		item := domains[i]
+		if v := *item.DomainName; strings.HasPrefix(v, "tencent") {
+			return v, nil
+		}
+	}
+	return "", fmt.Errorf("no available domain")
 }
 
 func testAccCdnDomainVerify(domainPrefix string) error {
@@ -580,6 +587,10 @@ resource "tencentcloud_cdn_domain" "foo" {
       status_code = "404"
       cache_time = 10
     }
+  }
+  post_max_size {
+    switch = "on"
+    max_size = 63
   }
 }
 `

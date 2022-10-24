@@ -54,6 +54,29 @@ func (me *CdnService) DescribeDomainsConfigByDomain(ctx context.Context, domain 
 	return
 }
 
+func (me *CdnService) UpdateDomainConfig(ctx context.Context, request *cdn.UpdateDomainConfigRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().UpdateDomainConfig(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *CdnService) DeleteDomain(ctx context.Context, domain string) error {
 	logId := getLogId(ctx)
 	request := cdn.NewDeleteCdnDomainRequest()
