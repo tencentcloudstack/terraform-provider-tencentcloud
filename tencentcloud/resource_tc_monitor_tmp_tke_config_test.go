@@ -70,13 +70,13 @@ func TestAccTencentCloudMonitorTmpTkeConfig_basic(t *testing.T) {
 			{
 				Config: testAccTmpTkeConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.update"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "instance_id", defaultPrometheusId),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "cluster_type", defaultTkeClusterType),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "cluster_id", defaultTkeClusterId),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "raw_jobs.0.config", "scrape_configs:\n- job_name: "+raw_job_name+"\n  scrape_interval: 20s\n  honor_labels: true\n"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "service_monitors.0.config", "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: "+service_monitors_name+"\n  namespace: kube-system\nspec:\n  endpoints:\n    - interval: 20s\n      port: 8080-8080-tcp\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - __meta_kubernetes_pod_label_app\n          targetLabel: application\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      app: test"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.update", "pod_monitors.0.config", "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: "+pod_monitors_name+"\n  namespace: kube-system\nspec:\n  podMetricsEndpoints:\n    - interval: 20s\n      port: metric-port\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - instance\n          regex: (.*)\n          targetLabel: instance\n          replacement: xxxxxx\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      k8s-app: test"),
+					testAccCheckTmpTkeConfigExists("tencentcloud_monitor_tmp_tke_config.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "instance_id", defaultPrometheusId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "cluster_type", defaultTkeClusterType),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "raw_jobs.0.config", "scrape_configs:\n- job_name: "+raw_job_name+"\n  scrape_interval: 20s\n  honor_labels: true\n"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "service_monitors.0.config", "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: "+service_monitors_name+"\n  namespace: kube-system\nspec:\n  endpoints:\n    - interval: 20s\n      port: 8080-8080-tcp\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - __meta_kubernetes_pod_label_app\n          targetLabel: application\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      app: test"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_config.basic", "pod_monitors.0.config", "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: "+pod_monitors_name+"\n  namespace: kube-system\nspec:\n  podMetricsEndpoints:\n    - interval: 20s\n      port: metric-port\n      path: /metrics\n      relabelings:\n        - action: replace\n          sourceLabels:\n            - instance\n          regex: (.*)\n          targetLabel: instance\n          replacement: xxxxxx\n  namespaceSelector:\n    matchNames:\n      - test\n  selector:\n    matchLabels:\n      k8s-app: test"),
 				),
 			},
 		},
@@ -228,7 +228,7 @@ resource "tencentcloud_monitor_tmp_tke_config" "basic" {
 }`
 
 const testAccTmpTkeConfig_update = testAccTmpTkeConfigVar + `
-resource "tencentcloud_monitor_tmp_tke_config" "update" {
+resource "tencentcloud_monitor_tmp_tke_config" "basic" {
   instance_id  = var.prometheus_id
   cluster_type = var.tke_cluster_type
   cluster_id   = var.tke_cluster_id
