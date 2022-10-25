@@ -693,6 +693,10 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_ddos_policy
 	tencentcloud_teo_security_policy
 	tencentcloud_teo_custom_error_page
+
+mariadb
+  Resource
+	tencentcloud_mariadb_db_instance
 */
 package tencentcloud
 
@@ -1249,6 +1253,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
 			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
+			"tencentcloud_mariadb_db_instance":                      resourceTencentCloudMariadbDbInstance(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 		},
