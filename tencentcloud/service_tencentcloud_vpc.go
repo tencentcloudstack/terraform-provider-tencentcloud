@@ -76,18 +76,23 @@ type VpcRouteTableBasicInfo struct {
 }
 
 type VpcSecurityGroupLiteRule struct {
-	action          string
-	cidrIp          string
-	port            string
-	protocol        string
-	addressId       string
-	addressGroupId  string
-	securityGroupId string
+	action                  string
+	cidrIp                  string
+	port                    string
+	protocol                string
+	addressId               string
+	addressGroupId          string
+	securityGroupId         string
+	protocolTemplateId      string
+	protocolTemplateGroupId string
 }
 
-var securityGroupIdRE = regexp.MustCompile(`^sg-\\w{8}$`)
-var ipAddressIdRE = regexp.MustCompile(`^ipm-\\w{8}$`)
-var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\\w{8}$`)
+var securityGroupIdRE = regexp.MustCompile(`^sg-\w{8}$`)
+var ipAddressIdRE = regexp.MustCompile(`^ipm-\w{8}$`)
+var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\w{8}$`)
+var protocolTemplateRE = regexp.MustCompile(`^ppmg?-\w{8}$`)
+var protocolTemplateIdRE = regexp.MustCompile(`^ppm-\w{8}$`)
+var protocolTemplateGroupIdRE = regexp.MustCompile(`^ppmg-\w{8}$`)
 var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
@@ -121,7 +126,15 @@ func (rule VpcSecurityGroupLiteRule) String() string {
 		source = rule.addressGroupId
 	}
 
-	return fmt.Sprintf("%s#%s#%s#%s", rule.action, source, rule.port, rule.protocol)
+	protocol := rule.protocol
+
+	if protocol == "" && rule.protocolTemplateId != "" {
+		protocol = rule.protocolTemplateId
+	} else if protocol == "" && rule.protocolTemplateGroupId != "" {
+		protocol = rule.protocolTemplateGroupId
+	}
+
+	return fmt.Sprintf("%s#%s#%s#%s", rule.action, source, rule.port, protocol)
 }
 
 func getSecurityGroupPolicies(rules []VpcSecurityGroupLiteRule) []*vpc.SecurityGroupPolicy {
@@ -130,8 +143,7 @@ func getSecurityGroupPolicies(rules []VpcSecurityGroupLiteRule) []*vpc.SecurityG
 	for i := range rules {
 		rule := rules[i]
 		policy := &vpc.SecurityGroupPolicy{
-			Protocol: &rule.protocol,
-			Action:   &rule.action,
+			Action: &rule.action,
 		}
 
 		if rule.securityGroupId != "" {
@@ -148,7 +160,23 @@ func getSecurityGroupPolicies(rules []VpcSecurityGroupLiteRule) []*vpc.SecurityG
 			policy.CidrBlock = &rule.cidrIp
 		}
 
-		if rule.port != "" {
+		usingProtocolTemplate := rule.protocolTemplateId != "" || rule.protocolTemplateGroupId != ""
+
+		if usingProtocolTemplate {
+			policy.ServiceTemplate = &vpc.ServiceTemplateSpecification{}
+			if rule.protocolTemplateId != "" {
+				policy.ServiceTemplate.ServiceId = &rule.protocolTemplateId
+			}
+			if rule.protocolTemplateGroupId != "" {
+				policy.ServiceTemplate.ServiceGroupId = &rule.protocolTemplateGroupId
+			}
+		}
+
+		if !usingProtocolTemplate {
+			policy.Protocol = &rule.protocol
+		}
+
+		if !usingProtocolTemplate && rule.port != "" {
 			policy.Port = &rule.port
 		}
 
@@ -1726,8 +1754,6 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 
 		for _, in := range policySet.Ingress {
 			if nilFields := CheckNil(in, map[string]string{
-				"Protocol":        "protocol",
-				"Port":            "port",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
@@ -1737,7 +1763,7 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 
 			liteRule := VpcSecurityGroupLiteRule{
 				//protocol:        strings.ToUpper(*in.Protocol),
-				port:            *in.Port,
+				//port:            *in.Port,
 				cidrIp:          *in.CidrBlock,
 				action:          *in.Action,
 				securityGroupId: *in.SecurityGroupId,
@@ -1747,9 +1773,18 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 				liteRule.protocol = strings.ToUpper(*in.Protocol)
 			}
 
+			if in.Port != nil {
+				liteRule.port = *in.Port
+			}
+
 			if in.AddressTemplate != nil {
 				liteRule.addressId = *in.AddressTemplate.AddressId
 				liteRule.addressGroupId = *in.AddressTemplate.AddressGroupId
+			}
+
+			if in.ServiceTemplate != nil {
+				liteRule.protocolTemplateId = *in.ServiceTemplate.ServiceId
+				liteRule.protocolTemplateGroupId = *in.ServiceTemplate.ServiceGroupId
 			}
 
 			ingress = append(ingress, liteRule)
@@ -1757,8 +1792,6 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 
 		for _, eg := range policySet.Egress {
 			if nilFields := CheckNil(eg, map[string]string{
-				"Protocol":        "protocol",
-				"Port":            "port",
 				"Action":          "action",
 				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
@@ -1767,16 +1800,27 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 			}
 
 			liteRule := VpcSecurityGroupLiteRule{
-				protocol:        strings.ToUpper(*eg.Protocol),
-				port:            *eg.Port,
 				action:          *eg.Action,
 				cidrIp:          *eg.CidrBlock,
 				securityGroupId: *eg.SecurityGroupId,
 			}
 
+			if eg.Port != nil {
+				liteRule.port = *eg.Port
+			}
+
+			if eg.Protocol != nil {
+				liteRule.protocol = strings.ToUpper(*eg.Protocol)
+			}
+
 			if eg.AddressTemplate != nil {
 				liteRule.addressId = *eg.AddressTemplate.AddressId
 				liteRule.addressGroupId = *eg.AddressTemplate.AddressGroupId
+			}
+
+			if eg.ServiceTemplate != nil {
+				liteRule.protocolTemplateId = *eg.ServiceTemplate.ServiceId
+				liteRule.protocolTemplateGroupId = *eg.ServiceTemplate.ServiceGroupId
 			}
 
 			egress = append(egress, liteRule)
@@ -2023,12 +2067,14 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 	}
 
 	var (
-		source string
+		source   string
+		port     string
+		protocol string
 		// source is "sg-xxxxxx" / "ipm-xxxxxx" / "ipmg-xxxxxx" formatted
 		isInstanceIdSource = true
 	)
 
-	liteRule.action, source, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+	liteRule.action, source, port, protocol = split[0], split[1], split[2], split[3]
 
 	if securityGroupIdRE.MatchString(source) {
 		liteRule.securityGroupId = source
@@ -2041,11 +2087,9 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 		liteRule.cidrIp = source
 	}
 
-	switch liteRule.action {
-	default:
-		err = fmt.Errorf("invalid action %s, allow action is `ACCEPT` or `DROP`", liteRule.action)
+	if v := liteRule.action; v != "ACCEPT" && v != "DROP" {
+		err = fmt.Errorf("invalid action `%s`, available actions: `ACCEPT`, `DROP`", v)
 		return
-	case "ACCEPT", "DROP":
 	}
 
 	if net.ParseIP(liteRule.cidrIp) == nil && !isInstanceIdSource {
@@ -2055,26 +2099,33 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 		}
 	}
 
-	if liteRule.port != "ALL" && !portRE.MatchString(liteRule.port) {
+	liteRule.port = port
+	if port != "ALL" && !portRE.MatchString(port) && !protocolTemplateRE.MatchString(protocol) {
 		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
 		return
 	}
 
-	switch liteRule.protocol {
-	default:
-		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP` or `ICMP`", liteRule.protocol)
-		return
-
-	case "ALL", "ICMP":
-		if liteRule.port != "ALL" {
-			err = fmt.Errorf("when protocol is %s, port must be ALL", liteRule.protocol)
-			return
-		}
-
-		// when protocol is ALL or ICMP, port should be "" to avoid sdk error
+	liteRule.protocol = protocol
+	if protocolTemplateRE.MatchString(protocol) {
 		liteRule.port = ""
+		liteRule.protocol = ""
+		if protocolTemplateIdRE.MatchString(protocol) {
+			liteRule.protocolTemplateId = protocol
+		} else if protocolTemplateGroupIdRE.MatchString(protocol) {
+			liteRule.protocolTemplateGroupId = protocol
+		}
+	} else if protocol != "TCP" && protocol != "UDP" && protocol != "ALL" && protocol != "ICMP" {
+		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP`, `ICMP` or `ppm(g?)-xxxxxxxx`", liteRule.protocol)
+	} else if protocol == "ALL" || protocol == "ICMP" {
+		if liteRule.port != "ALL" {
+			err = fmt.Errorf("when protocol is %s, port must be ALL", protocol)
+		} else {
+			liteRule.port = ""
+		}
+	}
 
-	case "TCP", "UDP":
+	if err != nil {
+		return
 	}
 
 	return
