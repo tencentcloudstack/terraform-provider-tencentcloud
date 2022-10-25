@@ -113,6 +113,8 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.0.cache_time", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.1.status_code", "404"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.1.cache_time", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.max_size", "63"),
 				),
 			},
 			{
@@ -130,6 +132,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					"response_header",
 					"downstream_capping",
 					"origin_pull_optimization",
+					"post_max_size",
 					"referer",
 					"max_age",
 					"aws_private_access",
