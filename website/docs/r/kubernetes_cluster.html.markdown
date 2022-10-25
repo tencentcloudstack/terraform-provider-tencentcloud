@@ -252,28 +252,22 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "NodeProblemDetectorPlus"
-    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
-  }
-  extension_addon {
     name  = "OOMGuard"
-    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"oomguard\",\"chartVersion\":\"1.0.1\"}}}"
   }
   extension_addon {
-    name  = "DNSAutoscaler"
-    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
+    name  = "SecuritPolicy",
+    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"securitygrouppolicy\",\"chartVersion\":\"0.1.0\"}}}"
+  }
+  # param now can be ignored because we will auto fill if empty
+  extension_addon {
+    name = "COS"
   }
   extension_addon {
-    name  = "COS"
-    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
+    name = "CFS"
   }
   extension_addon {
-    name  = "CFS"
-    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
-  }
-  extension_addon {
-    name  = "CBS"
-    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
+    name = "CBS"
   }
 }
 ```
@@ -466,7 +460,7 @@ The following arguments are supported:
 * `eni_subnet_ids` - (Optional, List: [`String`]) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `event_persistence` - (Optional, List) Specify cluster Event Persistence config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `exist_instance` - (Optional, List, ForceNew) create tke cluster by existed instances.
-* `extension_addon` - (Optional, List, ForceNew) Information of the add-on to be installed.
+* `extension_addon` - (Optional, List) Information of the add-on to be installed.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
 * `globe_desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, and it takes effect for all nodes.
 * `ignore_cluster_cidr_conflict` - (Optional, Bool, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
@@ -535,7 +529,7 @@ The `exist_instance` object supports the following:
 The `extension_addon` object supports the following:
 
 * `name` - (Required, String) Add-on name.
-* `param` - (Required, String) Description of the add-on resource object in JSON string format.
+* `param` - (Optional, String) Description of the add-on resource object in JSON string format.
 
 The `instances_para` object supports the following:
 

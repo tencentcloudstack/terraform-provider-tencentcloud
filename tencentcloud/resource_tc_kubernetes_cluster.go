@@ -242,28 +242,22 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "NodeProblemDetectorPlus"
-    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
-  }
-  extension_addon {
     name  = "OOMGuard"
-    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"oomguard\",\"chartVersion\":\"1.0.1\"}}}"
   }
   extension_addon {
-    name  = "DNSAutoscaler"
-    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
+    name  = "SecuritPolicy",
+    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"securitygrouppolicy\",\"chartVersion\":\"0.1.0\"}}}"
   }
+  # param now can be ignored because we will auto fill if empty
   extension_addon {
     name  = "COS"
-    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
   }
   extension_addon {
     name  = "CFS"
-    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
   }
   extension_addon {
     name  = "CBS"
-    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
   }
 }
 ```
@@ -1260,9 +1254,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.",
 		},
 		"extension_addon": {
-			Type:     schema.TypeList,
-			Optional: true,
-			ForceNew: true,
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Information of the add-on to be installed.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"name": {
@@ -1271,13 +1265,14 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						Description: "Add-on name.",
 					},
 					"param": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Description of the add-on resource object in JSON string format.",
+						Type:             schema.TypeString,
+						Optional:         true,
+						Computed:         true,
+						DiffSuppressFunc: helper.DiffSupressJSON,
+						Description:      "Description of the add-on resource object in JSON string format.",
 					},
 				},
 			},
-			Description: "Information of the add-on to be installed.",
 		},
 		"log_agent": {
 			Type:        schema.TypeList,
@@ -2148,17 +2143,9 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("master_config+worker_config and exist_instance can not exist at the same time")
 	}
 
-	if v, ok := d.GetOk("extension_addon"); ok {
-		for _, i := range v.([]interface{}) {
-			dMap := i.(map[string]interface{})
-			name := dMap["name"].(string)
-			param := dMap["param"].(string)
-			addon := &tke.ExtensionAddon{
-				AddonName:  helper.String(name),
-				AddonParam: helper.String(param),
-			}
-			extensionAddons = append(extensionAddons, addon)
-		}
+	extensionAddons, err := getExtensionAddons(d, meta)
+	if err != nil {
+		return err
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -2991,4 +2978,48 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	}
 	return err
 
+}
+
+func getExtensionAddons(d *schema.ResourceData, meta interface{}) (result []*tke.ExtensionAddon, err error) {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	addons, ok := d.Get("extension_addon").([]interface{})
+	if !ok {
+		return
+	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := TkeService{client}
+	request := tke.NewGetTkeAppChartListRequest()
+
+	latestChartVersions := make(map[string]string)
+	chartList, getErr := service.GetTkeAppChartList(ctx, request)
+	if getErr != nil {
+		err = getErr
+		return
+	}
+	for i := range chartList {
+		chart := chartList[i]
+		latestChartVersions[*chart.Name] = *chart.LatestVersion
+	}
+
+	for i := range addons {
+		item := addons[i].(map[string]interface{})
+		name := item["name"].(string)
+		param, ok := item["param"].(string)
+		if _, ok := latestChartVersions[name]; !ok {
+			err = fmt.Errorf("extension addon %s not exist or unsupported", name)
+			return
+		}
+		addon := &tke.ExtensionAddon{
+			AddonName: &name,
+		}
+		if !ok || param == "" {
+			param = fmt.Sprintf("{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"%s\",\"chartVersion\":\"%s\"}}}", name, latestChartVersions[name])
+		}
+		addon.AddonParam = &param
+		result = append(result, addon)
+	}
+	return
 }
