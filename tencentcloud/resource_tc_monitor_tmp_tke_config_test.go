@@ -227,7 +227,7 @@ resource "tencentcloud_monitor_tmp_tke_config" "basic" {
 }`
 
 const testAccTmpTkeConfig_update = testAccTmpTkeConfigVar + `
-resource "tencentcloud_monitor_tmp_tke_config" "update" {
+resource "tencentcloud_monitor_tmp_tke_config" "basic" {
   instance_id  = var.prometheus_id
   cluster_type = var.tke_cluster_type
   cluster_id   = var.tke_cluster_id
