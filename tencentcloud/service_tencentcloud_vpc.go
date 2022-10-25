@@ -87,12 +87,12 @@ type VpcSecurityGroupLiteRule struct {
 	protocolTemplateGroupId string
 }
 
-var securityGroupIdRE = regexp.MustCompile(`^sg-\\w{8}$`)
-var ipAddressIdRE = regexp.MustCompile(`^ipm-\\w{8}$`)
-var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\\w{8}$`)
-var protocolTemplateRE = regexp.MustCompile(`^ppmg?-\\w{8}$`)
-var protocolTemplateIdRE = regexp.MustCompile(`^ppm-\\w{8}$`)
-var protocolTemplateGroupIdRE = regexp.MustCompile(`^ppmg-\\w{8}$`)
+var securityGroupIdRE = regexp.MustCompile(`^sg-\w{8}$`)
+var ipAddressIdRE = regexp.MustCompile(`^ipm-\w{8}$`)
+var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\w{8}$`)
+var protocolTemplateRE = regexp.MustCompile(`^ppmg?-\w{8}$`)
+var protocolTemplateIdRE = regexp.MustCompile(`^ppm-\w{8}$`)
+var protocolTemplateGroupIdRE = regexp.MustCompile(`^ppmg-\w{8}$`)
 var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
