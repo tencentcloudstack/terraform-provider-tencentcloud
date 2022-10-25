@@ -31,6 +31,20 @@ type AlarmEvent struct {
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 }
 
+type AlarmHierarchicalValue struct {
+	// 提醒等级阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remind *string `json:"Remind,omitempty" name:"Remind"`
+
+	// 警告等级阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Warn *string `json:"Warn,omitempty" name:"Warn"`
+
+	// 严重等级阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Serious *string `json:"Serious,omitempty" name:"Serious"`
+}
+
 type AlarmHistory struct {
 	// 告警历史Id
 	AlarmId *string `json:"AlarmId,omitempty" name:"AlarmId"`
@@ -172,6 +186,10 @@ type AlarmNotice struct {
 	// 推送cls渠道
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitempty" name:"CLSNotices"`
+
+	// 通知模版绑定的标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type AlarmPolicy struct {
@@ -309,6 +327,14 @@ type AlarmPolicy struct {
 	// 高级指标数量
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AdvancedMetricNumber *int64 `json:"AdvancedMetricNumber,omitempty" name:"AdvancedMetricNumber"`
+
+	// 策略是否是全部对象策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsBindAll *int64 `json:"IsBindAll,omitempty" name:"IsBindAll"`
+
+	// 策略标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type AlarmPolicyCondition struct {
@@ -411,6 +437,18 @@ type AlarmPolicyRule struct {
 	// 集成中心产品ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProductId *string `json:"ProductId,omitempty" name:"ProductId"`
+
+	// 最大值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ValueMax *float64 `json:"ValueMax,omitempty" name:"ValueMax"`
+
+	// 最小值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ValueMin *float64 `json:"ValueMin,omitempty" name:"ValueMin"`
+
+	// 告警分级阈值配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HierarchicalValue *AlarmHierarchicalValue `json:"HierarchicalValue,omitempty" name:"HierarchicalValue"`
 }
 
 type AlarmPolicyTriggerTask struct {
@@ -801,7 +839,7 @@ type Condition struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CalcValue *string `json:"CalcValue,omitempty" name:"CalcValue"`
 
-	// 持续时间
+	// 持续时间，单位秒
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ContinueTime *string `json:"ContinueTime,omitempty" name:"ContinueTime"`
 
@@ -819,6 +857,16 @@ type Condition struct {
 
 	// 指标单位
 	Unit *string `json:"Unit,omitempty" name:"Unit"`
+
+	// 是否为高级指标，0：否；1：是
+	IsAdvanced *int64 `json:"IsAdvanced,omitempty" name:"IsAdvanced"`
+
+	// 是否开通高级指标，0：否；1：是
+	IsOpen *int64 `json:"IsOpen,omitempty" name:"IsOpen"`
+
+	// 产品ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProductId *string `json:"ProductId,omitempty" name:"ProductId"`
 }
 
 type ConditionsTemp struct {
@@ -857,6 +905,9 @@ type CreateAlarmNoticeRequestParams struct {
 
 	// 推送CLS日志服务的操作 最多1个
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitempty" name:"CLSNotices"`
+
+	// 模版绑定的标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type CreateAlarmNoticeRequest struct {
@@ -882,6 +933,9 @@ type CreateAlarmNoticeRequest struct {
 
 	// 推送CLS日志服务的操作 最多1个
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitempty" name:"CLSNotices"`
+
+	// 模版绑定的标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateAlarmNoticeRequest) ToJsonString() string {
@@ -903,6 +957,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "UserNotices")
 	delete(f, "URLNotices")
 	delete(f, "CLSNotices")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmNoticeRequest has unknown keys!", "")
 	}
@@ -977,6 +1032,12 @@ type CreateAlarmPolicyRequestParams struct {
 
 	// 聚合维度列表，指定按哪些维度 key 来做 group by
 	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+
+	// 模版绑定的标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 日志告警信息
+	LogAlarmReqInfo *LogAlarmReq `json:"LogAlarmReqInfo,omitempty" name:"LogAlarmReqInfo"`
 }
 
 type CreateAlarmPolicyRequest struct {
@@ -1023,6 +1084,12 @@ type CreateAlarmPolicyRequest struct {
 
 	// 聚合维度列表，指定按哪些维度 key 来做 group by
 	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+
+	// 模版绑定的标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 日志告警信息
+	LogAlarmReqInfo *LogAlarmReq `json:"LogAlarmReqInfo,omitempty" name:"LogAlarmReqInfo"`
 }
 
 func (r *CreateAlarmPolicyRequest) ToJsonString() string {
@@ -1051,6 +1118,8 @@ func (r *CreateAlarmPolicyRequest) FromJsonString(s string) error {
 	delete(f, "TriggerTasks")
 	delete(f, "Filter")
 	delete(f, "GroupBy")
+	delete(f, "Tags")
+	delete(f, "LogAlarmReqInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmPolicyRequest has unknown keys!", "")
 	}
@@ -3671,6 +3740,9 @@ type DescribeAlarmNoticesRequestParams struct {
 
 	// 根据通知模板 id 过滤，空数组/不传则不过滤
 	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
+
+	// 模版根据标签过滤
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type DescribeAlarmNoticesRequest struct {
@@ -3705,6 +3777,9 @@ type DescribeAlarmNoticesRequest struct {
 
 	// 根据通知模板 id 过滤，空数组/不传则不过滤
 	NoticeIds []*string `json:"NoticeIds,omitempty" name:"NoticeIds"`
+
+	// 模版根据标签过滤
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
@@ -3729,6 +3804,7 @@ func (r *DescribeAlarmNoticesRequest) FromJsonString(s string) error {
 	delete(f, "UserIds")
 	delete(f, "GroupIds")
 	delete(f, "NoticeIds")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmNoticesRequest has unknown keys!", "")
 	}
@@ -3836,6 +3912,15 @@ type DescribeAlarmPoliciesRequestParams struct {
 
 	// 根据一键告警策略筛选 不传展示全部策略 ONECLICK=展示一键告警策略 NOT_ONECLICK=展示非一键告警策略
 	OneClickPolicyType []*string `json:"OneClickPolicyType,omitempty" name:"OneClickPolicyType"`
+
+	// 根据全部对象过滤，1代表需要过滤掉全部对象，0则无需过滤
+	NotBindAll *int64 `json:"NotBindAll,omitempty" name:"NotBindAll"`
+
+	// 根据实例对象过滤，1代表需要过滤掉有实例对象，0则无需过滤
+	NotInstanceGroup *int64 `json:"NotInstanceGroup,omitempty" name:"NotInstanceGroup"`
+
+	// 策略根据标签过滤
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type DescribeAlarmPoliciesRequest struct {
@@ -3912,6 +3997,15 @@ type DescribeAlarmPoliciesRequest struct {
 
 	// 根据一键告警策略筛选 不传展示全部策略 ONECLICK=展示一键告警策略 NOT_ONECLICK=展示非一键告警策略
 	OneClickPolicyType []*string `json:"OneClickPolicyType,omitempty" name:"OneClickPolicyType"`
+
+	// 根据全部对象过滤，1代表需要过滤掉全部对象，0则无需过滤
+	NotBindAll *int64 `json:"NotBindAll,omitempty" name:"NotBindAll"`
+
+	// 根据实例对象过滤，1代表需要过滤掉有实例对象，0则无需过滤
+	NotInstanceGroup *int64 `json:"NotInstanceGroup,omitempty" name:"NotInstanceGroup"`
+
+	// 策略根据标签过滤
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *DescribeAlarmPoliciesRequest) ToJsonString() string {
@@ -3947,6 +4041,9 @@ func (r *DescribeAlarmPoliciesRequest) FromJsonString(s string) error {
 	delete(f, "NeedCorrespondence")
 	delete(f, "TriggerTasks")
 	delete(f, "OneClickPolicyType")
+	delete(f, "NotBindAll")
+	delete(f, "NotInstanceGroup")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAlarmPoliciesRequest has unknown keys!", "")
 	}
@@ -4726,6 +4823,9 @@ type DescribeConditionsTemplateListRequestParams struct {
 
 	// 指定按更新时间的排序方式，asc=升序, desc=降序
 	UpdateTimeOrder *string `json:"UpdateTimeOrder,omitempty" name:"UpdateTimeOrder"`
+
+	// 指定按绑定策略数目的排序方式，asc=升序, desc=降序
+	PolicyCountOrder *string `json:"PolicyCountOrder,omitempty" name:"PolicyCountOrder"`
 }
 
 type DescribeConditionsTemplateListRequest struct {
@@ -4751,6 +4851,9 @@ type DescribeConditionsTemplateListRequest struct {
 
 	// 指定按更新时间的排序方式，asc=升序, desc=降序
 	UpdateTimeOrder *string `json:"UpdateTimeOrder,omitempty" name:"UpdateTimeOrder"`
+
+	// 指定按绑定策略数目的排序方式，asc=升序, desc=降序
+	PolicyCountOrder *string `json:"PolicyCountOrder,omitempty" name:"PolicyCountOrder"`
 }
 
 func (r *DescribeConditionsTemplateListRequest) ToJsonString() string {
@@ -4772,6 +4875,7 @@ func (r *DescribeConditionsTemplateListRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "UpdateTimeOrder")
+	delete(f, "PolicyCountOrder")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConditionsTemplateListRequest has unknown keys!", "")
 	}
@@ -7881,6 +7985,9 @@ type GetMonitorDataResponseParams struct {
 	// 结束时间
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
+	// 返回信息
+	Msg *string `json:"Msg,omitempty" name:"Msg"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -8245,6 +8352,31 @@ type IntegrationConfiguration struct {
 	GrafanaDashboardURL *string `json:"GrafanaDashboardURL,omitempty" name:"GrafanaDashboardURL"`
 }
 
+type LogAlarmReq struct {
+	// apm实例id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 检索条件信息
+	Filter []*LogFilterInfo `json:"Filter,omitempty" name:"Filter"`
+
+	// 告警合并开启/暂停
+	AlarmMerge *string `json:"AlarmMerge,omitempty" name:"AlarmMerge"`
+
+	// 告警合并时间
+	AlarmMergeTime *string `json:"AlarmMergeTime,omitempty" name:"AlarmMergeTime"`
+}
+
+type LogFilterInfo struct {
+	// 字段名
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 比较符号
+	Operator *string `json:"Operator,omitempty" name:"Operator"`
+
+	// 字段值
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
 type ManagementCommand struct {
 	// Agent 安装命令
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -8519,6 +8651,9 @@ type ModifyAlarmPolicyConditionRequestParams struct {
 
 	// 聚合维度列表，指定按哪些维度 key 来做 group by
 	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+
+	// 日志告警创建请求参数信息
+	LogAlarmReqInfo *LogAlarmReq `json:"LogAlarmReqInfo,omitempty" name:"LogAlarmReqInfo"`
 }
 
 type ModifyAlarmPolicyConditionRequest struct {
@@ -8544,6 +8679,9 @@ type ModifyAlarmPolicyConditionRequest struct {
 
 	// 聚合维度列表，指定按哪些维度 key 来做 group by
 	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+
+	// 日志告警创建请求参数信息
+	LogAlarmReqInfo *LogAlarmReq `json:"LogAlarmReqInfo,omitempty" name:"LogAlarmReqInfo"`
 }
 
 func (r *ModifyAlarmPolicyConditionRequest) ToJsonString() string {
@@ -8565,6 +8703,7 @@ func (r *ModifyAlarmPolicyConditionRequest) FromJsonString(s string) error {
 	delete(f, "EventCondition")
 	delete(f, "Filter")
 	delete(f, "GroupBy")
+	delete(f, "LogAlarmReqInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmPolicyConditionRequest has unknown keys!", "")
 	}
@@ -9583,6 +9722,10 @@ type PrometheusInstancesItem struct {
 	// 预聚合规则限制
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RecordingRuleLimit *int64 `json:"RecordingRuleLimit,omitempty" name:"RecordingRuleLimit"`
+
+	// 迁移状态，0-不在迁移中，1-迁移中、原实例，2-迁移中、目标实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MigrationType *int64 `json:"MigrationType,omitempty" name:"MigrationType"`
 }
 
 type PrometheusRuleKV struct {
@@ -10024,6 +10167,14 @@ func (r *SetDefaultAlarmPolicyResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *SetDefaultAlarmPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type Tag struct {
+	// 标签key
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 标签value
+	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
 type TagInstance struct {
