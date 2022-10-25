@@ -37,6 +37,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -175,6 +176,11 @@ func resourceTencentCloudMariadbDbInstanceCreate(d *schema.ResourceData, meta in
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().CreateDBInstance(request)
 		if e != nil {
+			if err, ok := e.(*errors.TencentCloudSDKError); ok {
+				if err.Code == "FailedOperation.PayFailed" {
+					return &resource.RetryError{e, false}
+				}
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
