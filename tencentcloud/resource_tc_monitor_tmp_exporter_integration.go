@@ -22,6 +22,8 @@ import (
 	"strconv"
 	"strings"
 
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -110,7 +112,45 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.ClusterId = helper.String(clusterId)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	initStatus := tke.NewDescribePrometheusInstanceInitStatusRequest()
+	initStatus.InstanceId = request.InstanceId
+	err := resource.Retry(8*readRetryTimeout, func() *resource.RetryError {
+		results, errRet := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribePrometheusInstanceInitStatus(initStatus)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		status := results.Response.Status
+		if status == nil {
+			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
+		}
+		if *status == "running" {
+			return nil
+		}
+		if *status == "uninitialized" {
+			iniRequest := tke.NewRunPrometheusInstanceRequest()
+			iniRequest.InstanceId = request.InstanceId
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().RunPrometheusInstance(iniRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
+			}
+			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
+		}
+		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %v, retry...", *status))
+	})
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateExporterIntegration(request)
 		if e != nil {
 			return retryError(e)

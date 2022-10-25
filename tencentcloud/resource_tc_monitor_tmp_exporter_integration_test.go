@@ -38,7 +38,7 @@ func testSweepExporterIntegration(region string) error {
 		}
 
 		if instances == nil {
-			return nil
+			break
 		}
 
 		id := strings.Join([]string{*instances.Name, instanceId, strconv.Itoa(1), clusterId, defaultKind}, FILED_SP)
@@ -47,6 +47,7 @@ func testSweepExporterIntegration(region string) error {
 			return err
 		}
 	}
+	return nil
 }
 
 func TestAccTencentCloudMonitorExporterIntegration_basic(t *testing.T) {

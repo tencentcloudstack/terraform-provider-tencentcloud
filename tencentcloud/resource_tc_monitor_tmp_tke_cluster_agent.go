@@ -337,22 +337,27 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, m
 		return fmt.Errorf("resource `global_notification` %s does not exist", instanceId)
 	}
 
-	_ = d.Set("cluster_id", clusterAgent.ClusterId)
-	_ = d.Set("cluster_type", clusterAgent.ClusterType)
-	_ = d.Set("status", clusterAgent.Status)
-	_ = d.Set("cluster_name", clusterAgent.ClusterName)
-	if clusterAgent.ExternalLabels != nil {
-		clusterAgentList := clusterAgent.ExternalLabels
-		result := make([]map[string]interface{}, 0, len(clusterAgentList))
-		for _, v := range clusterAgentList {
-			mapping := map[string]interface{}{
-				"name":  v.Name,
-				"value": v.Value,
-			}
-			result = append(result, mapping)
-		}
-		_ = d.Set("external_labels", result)
-	}
+	var agents []map[string]interface{}
+	agent := make(map[string]interface{})
+	agent["cluster_id"] = clusterAgent.ClusterId
+	agent["cluster_type"] = clusterAgent.ClusterType
+	agent["status"] = clusterAgent.Status
+	agent["cluster_name"] = clusterAgent.ClusterName
+	agent["region"] = clusterAgent.Region
+	//if clusterAgent.ExternalLabels != nil {
+	//	clusterAgentList := clusterAgent.ExternalLabels
+	//	result := make([]map[string]interface{}, 0, len(clusterAgentList))
+	//	for _, v := range clusterAgentList {
+	//		mapping := map[string]interface{}{
+	//			"name":  v.Name,
+	//			"value": v.Value,
+	//		}
+	//		result = append(result, mapping)
+	//	}
+	//	agent["external_labels"] = result
+	//}
+	agents = append(agents, agent)
+	_ = d.Set("agents", agents)
 
 	return nil
 }

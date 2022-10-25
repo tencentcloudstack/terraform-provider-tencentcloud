@@ -31,6 +31,7 @@ resource "tencentcloud_monitor_tmp_tke_config" "foo" {
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -153,11 +154,12 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 
 	var (
 		logId    = getLogId(contextNil)
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 		service  = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		configId = d.Id()
 	)
 
-	params, err := service.DescribeTkeTmpConfigById(logId, configId)
+	params, err := service.DescribeTkeTmpConfigById(ctx, configId)
 
 	if err != nil {
 		return err
@@ -288,6 +290,7 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 
 	var (
 		logId           = getLogId(contextNil)
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
 		service         = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		ServiceMonitors = []*string{}
 		PodMonitors     = []*string{}
@@ -306,7 +309,7 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 		RawJobs = serializePromConfigItemNames(v)
 	}
 
-	if err := service.DeleteTkeTmpConfigByName(logId, d.Id(), ServiceMonitors, PodMonitors, RawJobs); err != nil {
+	if err := service.DeleteTkeTmpConfigByName(ctx, d.Id(), ServiceMonitors, PodMonitors, RawJobs); err != nil {
 		return err
 	}
 

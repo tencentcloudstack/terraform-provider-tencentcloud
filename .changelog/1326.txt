@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_teo_zone: change tag description from zoneName to zoneId
+```

@@ -557,7 +557,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.515
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.519
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -587,7 +587,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.494
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.518
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.391
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
@@ -617,7 +617,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.489
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
