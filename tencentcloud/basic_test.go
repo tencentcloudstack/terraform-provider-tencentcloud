@@ -256,6 +256,10 @@ variable "subnet_id" {
   default = "` + defaultSubnetId + `"
 }
 
+variable "sg_id" {
+  default = "` + defaultSecurityGroup + `"
+}
+
 variable "subnet_cidr" {
   default = "` + defaultSubnetCidr + `"
 }
