@@ -744,3 +744,14 @@ const (
 )
 
 // End of TEO
+
+// TCM
+
+const (
+	defaultMeshClusterId = "cls-9ae9qo9k"
+	defaultMeshId        = "mesh-rofjmux7"
+	defaultMeshVpcId     = "vpc-pyyv5k3v"
+	defaultMeshSubnetId  = "subnet-06i8auk6"
+)
+
+// End of TCM

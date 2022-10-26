@@ -58,6 +58,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.503
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472

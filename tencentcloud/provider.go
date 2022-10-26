@@ -693,6 +693,12 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_ddos_policy
 	tencentcloud_teo_security_policy
 	tencentcloud_teo_custom_error_page
+
+TencentCloud ServiceMesh(TCM)
+  Resource
+	tencentcloud_tcm_mesh
+	tencentcloud_tcm_cluster_attachment
+
 */
 package tencentcloud
 
@@ -1251,6 +1257,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_tcm_mesh":               resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment": resourceTencentCloudTcmClusterAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
