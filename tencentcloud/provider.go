@@ -1254,6 +1254,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			"tencentcloud_mariadb_db_instance":                      resourceTencentCloudMariadbDbInstance(),
+			"tencentcloud_mariadb_dedicatedcluster_db_instance":     resourceTencentCloudMariadbDedicatedClusterDBInstance(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 		},

@@ -1,18 +1,17 @@
 /*
-Provides a resource to create a mariadb db_instance
+Provides a resource to create a mariadb dedicatedcluster_db_instance
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_db_instance" "db_instance" {
-  zones = ""
-  node_count = ""
+resource "tencentcloud_mariadb_dedicatedcluster_db_instance" "dedicatedcluster_db_instance" {
+  goods_num = ""
   memory = ""
   storage = ""
+  cluster_id = ""
   vpc_id = ""
   subnet_id = ""
   db_version_id = ""
-  period = ""
   instance_name = ""
   tags = {
     "createdBy" = "terraform"
@@ -22,9 +21,9 @@ resource "tencentcloud_mariadb_db_instance" "db_instance" {
 ```
 Import
 
-mariadb db_instance can be imported using the id, e.g.
+mariadb dedicatedcluster_db_instance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_db_instance.db_instance dbInstance_id
+$ terraform import tencentcloud_mariadb_dedicatedcluster_db_instance.dedicatedcluster_db_instance dedicatedClusterDBInstance_id
 ```
 */
 
@@ -42,30 +41,21 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMariadbDbInstance() *schema.Resource {
+func resourceTencentCloudMariadbDedicatedClusterDBInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMariadbDbInstanceRead,
-		Create: resourceTencentCloudMariadbDbInstanceCreate,
+		Read:   resourceTencentCloudMariadbDedicatedClusterDBInstanceRead,
+		Create: resourceTencentCloudMariadbDedicatedClusterDBInstanceCreate,
 
-		Update: resourceTencentCloudMariadbDbInstanceUpdate,
-		Delete: resourceTencentCloudMariadbDbInstanceDelete,
+		Update: resourceTencentCloudMariadbDedicatedClusterDBInstanceUpdate,
+		Delete: resourceTencentCloudMariadbDedicatedClusterDBInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"zones": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Required:    true,
-				Description: "available of instance.",
-			},
-
-			"node_count": {
+			"goods_num": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "number of node for instance.",
+				Description: "number of instance.",
 			},
 
 			"memory": {
@@ -80,30 +70,30 @@ func resourceTencentCloudMariadbDbInstance() *schema.Resource {
 				Description: "instance disk storage.",
 			},
 
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "dedicated cluster id.",
+			},
+
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "vpc id for this instance.",
+				Description: "vpc id for instance.",
 			},
 
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "subnet id for this instance, it&amp;#39;s required when vpcId is set.",
+				Description: "subnet id for instance, it&amp;#39;s required when vpcId is set.",
 			},
 
 			"db_version_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "db engine version for this instance, default to Percona 5.7.17.",
-			},
-
-			"period": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "subscribes month of instance",
+				Description: "db engine version for instance, default to 0.",
 			},
 
 			"instance_name": {
@@ -121,28 +111,20 @@ func resourceTencentCloudMariadbDbInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudMariadbDbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_db_instance.create")()
+func resourceTencentCloudMariadbDedicatedClusterDBInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_dedicatedcluster_db_instance.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request    = mariadb.NewCreateDBInstanceRequest()
-		response   *mariadb.CreateDBInstanceResponse
+		request    = mariadb.NewCreateDedicatedClusterDBInstanceRequest()
+		response   *mariadb.CreateDedicatedClusterDBInstanceResponse
 		instanceId string
 	)
 
-	if v, ok := d.GetOk("zones"); ok {
-		zonesSet := v.(*schema.Set).List()
-		for i := range zonesSet {
-			zones := zonesSet[i].(string)
-			request.Zones = append(request.Zones, &zones)
-		}
-	}
-
-	if v, ok := d.GetOk("node_count"); ok {
-		request.NodeCount = helper.IntInt64(v.(int))
+	if v, ok := d.GetOk("goods_num"); ok {
+		request.GoodsNum = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("memory"); ok {
@@ -151,6 +133,10 @@ func resourceTencentCloudMariadbDbInstanceCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("storage"); ok {
 		request.Storage = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("cluster_id"); ok {
+		request.ClusterId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
@@ -165,16 +151,12 @@ func resourceTencentCloudMariadbDbInstanceCreate(d *schema.ResourceData, meta in
 		request.DbVersionId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("period"); ok {
-		request.Period = helper.IntInt64(v.(int))
-	}
-
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().CreateDBInstance(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().CreateDedicatedClusterDBInstance(request)
 		if e != nil {
 			if err, ok := e.(*errors.TencentCloudSDKError); ok {
 				if err.Code == "FailedOperation.PayFailed" {
@@ -191,27 +173,27 @@ func resourceTencentCloudMariadbDbInstanceCreate(d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb dbInstance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create mariadb dedicatedClusterDBInstance failed, reason:%+v", logId, err)
 		return err
 	}
 
-	instanceId = *response.Response.InstanceIds[0]
+	dedicatedClusterDBInstanceId := *response.Response.InstanceIds[0]
 
 	d.SetId(instanceId)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::mariadb:%s:uin/:mariadb-instance/%s", region, instanceId)
+		resourceName := fmt.Sprintf("qcs::mariadb:%s:uin/:mariadb-dedicatedcluster-instance/%s", region, dedicatedClusterDBInstanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
-	return resourceTencentCloudMariadbDbInstanceRead(d, meta)
+	return resourceTencentCloudMariadbDedicatedClusterDBInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMariadbDbInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_db_instance.read")()
+func resourceTencentCloudMariadbDedicatedClusterDBInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_dedicatedcluster_db_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -219,60 +201,52 @@ func resourceTencentCloudMariadbDbInstanceRead(d *schema.ResourceData, meta inte
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	dbInstanceId := d.Id()
+	instanceId := d.Id()
 
-	dbInstances, err := service.DescribeMariadbDbInstance(ctx, dbInstanceId)
+	dedicatedClusterDBInstances, err := service.DescribeMariadbDedicatedClusterDBInstance(ctx, instanceId)
 
 	if err != nil {
 		return err
 	}
 
-	if dbInstances == nil {
+	if dedicatedClusterDBInstances == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `dbInstance` %s does not exist", dbInstanceId)
+		return fmt.Errorf("resource `dedicatedClusterDBInstance` %s does not exist", instanceId)
 	}
 
-	if len(dbInstances.Instances) == 0 {
+	if len(dedicatedClusterDBInstances.Instances) == 0 {
 		d.SetId("")
-		return fmt.Errorf("resource `dbInstance` %s does not exist", dbInstanceId)
+		return fmt.Errorf("resource `dedicatedClusterDBInstance` %s does not exist", instanceId)
 	}
-	dbInstance := dbInstances.Instances[0]
+	dedicatedClusterDBInstance := dedicatedClusterDBInstances.Instances[0]
 
-	if dbInstance.Zone != nil {
-		_ = d.Set("zones", dbInstance.Zone)
-	}
-
-	if dbInstance.NodeCount != nil {
-		_ = d.Set("node_count", dbInstance.NodeCount)
+	if dedicatedClusterDBInstance.Memory != nil {
+		_ = d.Set("memory", dedicatedClusterDBInstance.Memory)
 	}
 
-	if dbInstance.Memory != nil {
-		_ = d.Set("memory", dbInstance.Memory)
+	if dedicatedClusterDBInstance.Storage != nil {
+		_ = d.Set("storage", dedicatedClusterDBInstance.Storage)
 	}
 
-	if dbInstance.Storage != nil {
-		_ = d.Set("storage", dbInstance.Storage)
+	if dedicatedClusterDBInstance.VpcId != nil {
+		_ = d.Set("vpc_id", dedicatedClusterDBInstance.VpcId)
 	}
 
-	if dbInstance.VpcId != nil {
-		_ = d.Set("vpc_id", dbInstance.VpcId)
+	if dedicatedClusterDBInstance.SubnetId != nil {
+		_ = d.Set("subnet_id", dedicatedClusterDBInstance.SubnetId)
 	}
 
-	if dbInstance.SubnetId != nil {
-		_ = d.Set("subnet_id", dbInstance.SubnetId)
+	if dedicatedClusterDBInstance.DbVersionId != nil {
+		_ = d.Set("db_version_id", dedicatedClusterDBInstance.DbVersionId)
 	}
 
-	if dbInstance.DbVersionId != nil {
-		_ = d.Set("db_version_id", dbInstance.DbVersionId)
-	}
-
-	if dbInstance.InstanceName != nil {
-		_ = d.Set("instance_name", dbInstance.InstanceName)
+	if dedicatedClusterDBInstance.InstanceName != nil {
+		_ = d.Set("instance_name", dedicatedClusterDBInstance.InstanceName)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "mariadb-instance", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "mariadb-dedicatedcluster-instance", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -281,8 +255,8 @@ func resourceTencentCloudMariadbDbInstanceRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_db_instance.update")()
+func resourceTencentCloudMariadbDedicatedClusterDBInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_dedicatedcluster_db_instance.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -294,15 +268,9 @@ func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta in
 
 	request.InstanceId = &instanceId
 
-	if d.HasChange("zones") {
+	if d.HasChange("goods_num") {
 
-		return fmt.Errorf("`zones` do not support change now.")
-
-	}
-
-	if d.HasChange("node_count") {
-
-		return fmt.Errorf("`node_count` do not support change now.")
+		return fmt.Errorf("`goods_num` do not support change now.")
 
 	}
 
@@ -315,6 +283,12 @@ func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta in
 	if d.HasChange("storage") {
 
 		return fmt.Errorf("`storage` do not support change now.")
+
+	}
+
+	if d.HasChange("cluster_id") {
+
+		return fmt.Errorf("`cluster_id` do not support change now.")
 
 	}
 
@@ -336,16 +310,11 @@ func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta in
 
 	}
 
-	if d.HasChange("period") {
-
-		return fmt.Errorf("`period` do not support change now.")
-
-	}
-
 	if d.HasChange("instance_name") {
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
+
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -360,7 +329,7 @@ func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb dbInstance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create mariadb dedicatedClusterDBInstance failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -369,17 +338,17 @@ func resourceTencentCloudMariadbDbInstanceUpdate(d *schema.ResourceData, meta in
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("mariadb", "mariadb-instance", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("mariadb", "mariadb-dedicatedcluster-instance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}
 
-	return resourceTencentCloudMariadbDbInstanceRead(d, meta)
+	return resourceTencentCloudMariadbDedicatedClusterDBInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMariadbDbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_db_instance.delete")()
+func resourceTencentCloudMariadbDedicatedClusterDBInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_dedicatedcluster_db_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -389,7 +358,7 @@ func resourceTencentCloudMariadbDbInstanceDelete(d *schema.ResourceData, meta in
 
 	instanceId := d.Id()
 
-	if err := service.DeleteMariadbDbInstanceById(ctx, instanceId); err != nil {
+	if err := service.DeleteMariadbDedicatedClusterDBInstanceById(ctx, instanceId); err != nil {
 		return err
 	}
 
