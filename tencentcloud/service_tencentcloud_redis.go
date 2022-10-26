@@ -598,7 +598,6 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 	}
 	errRet = err
 	return
-
 }
 
 func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redisId string) (sg []string, errRet error) {

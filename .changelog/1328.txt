@@ -1,4 +1,4 @@
-```release-note:enhancement
-resource/tencentcloud_tcm_mesh: support service mash creating/updating
-resource/tencentcloud_tcm_cluster_attachment: support for service mesh binding/unbinding of clusters
+```release-note:new-resource
+tencentcloud_tcm_mesh
+tencentcloud_tcm_cluster_attachment
 ```
