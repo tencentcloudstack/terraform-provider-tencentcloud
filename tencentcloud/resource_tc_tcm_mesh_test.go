@@ -43,7 +43,12 @@ func testAccCheckMeshDestroy(s *terraform.State) error {
 			continue
 		}
 
-		mesh, _ := service.DescribeTcmMesh(ctx, rs.Primary.ID)
+		mesh, err := service.DescribeTcmMesh(ctx, rs.Primary.ID)
+		if err != nil {
+			if isExpectError(err, []string{"ResourceNotFound"}) {
+				return nil
+			}
+		}
 		if mesh != nil {
 			return fmt.Errorf("tcm mesh %v still exists", *mesh.Mesh.State)
 		}

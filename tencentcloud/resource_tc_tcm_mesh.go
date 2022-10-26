@@ -184,11 +184,6 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 		meshId   string
 	)
 
-	//if v, ok := d.GetOk("mesh_id"); ok {
-	//	meshId = v.(string)
-	//	request.Type = helper.String(v.(string))
-	//}
-
 	if v, ok := d.GetOk("display_name"); ok {
 		request.DisplayName = helper.String(v.(string))
 	}
@@ -485,11 +480,13 @@ func resourceTencentCloudTcmMeshDelete(d *schema.ResourceData, meta interface{})
 	}
 
 	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		mesh, _ := service.DescribeTcmMesh(ctx, meshId)
-		// Supplement this part of exception handling after waiting for the interface to be improved
-		//if errRet != nil {
-		//	return nil
-		//}
+		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
+		if errRet != nil {
+			if isExpectError(errRet, []string{"ResourceNotFound"}) {
+				return nil
+			}
+			return retryError(errRet, InternalError)
+		}
 		if mesh != nil {
 			if *mesh.Mesh.State == "DELETING" {
 				return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
