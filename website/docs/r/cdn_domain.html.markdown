@@ -163,6 +163,7 @@ The following arguments are supported:
 * `origin_pull_optimization` - (Optional, List) Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).
 * `origin_pull_timeout` - (Optional, List) Cross-border linkage optimization configuration.
 * `oss_private_access` - (Optional, List) Access authentication for OSS origin.
+* `post_max_size` - (Optional, List) Maximum post size configuration.
 * `project_id` - (Optional, Int) The project CDN belongs to, default to 0.
 * `qn_private_access` - (Optional, List) Access authentication for OBS origin.
 * `quic_switch` - (Optional, String) QUIC switch, available values: `on`, `off` (default).
@@ -352,6 +353,11 @@ The `page_rules` object supports the following:
 * `redirect_code` - (Required, Int) Redirect code of error page rules.
 * `redirect_url` - (Required, String) Redirect url of error page rules.
 * `status_code` - (Required, Int) Status code of error page rules.
+
+The `post_max_size` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
+* `max_size` - (Optional, Int) Maximum size in MB, value range is `[1, 200]`.
 
 The `qn_private_access` object supports the following:
 

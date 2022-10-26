@@ -101,6 +101,9 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_count", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "autoscaling_added_total", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "manually_added_total", "0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np2", "test2"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "1"),
 				),
 			},
 			{
@@ -130,6 +133,9 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "testI"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np3", "testIII"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "2"),
 				),
 			},
 		},
@@ -241,6 +247,10 @@ data "tencentcloud_vpc_subnets" "vpc" {
 data "tencentcloud_security_groups" "sg" {
   name = "default"
 }
+
+data "tencentcloud_security_groups" "sg_as" {
+  name = "keep-for-as"
+}
 `
 
 const testAccTkeNodePoolCluster string = testAccTkeNodePoolClusterBasic + `
@@ -292,6 +302,11 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     effect = "PreferNoSchedule"
   }
 
+  tags = {
+    keep-test-np1 = "test1"
+    keep-test-np2 = "test2"
+  }
+
   node_config {
     extra_args = [
       "root-dir=/var/lib/kubelet"
@@ -323,7 +338,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
-    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_as.security_groups[0].security_group_id]
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
@@ -358,6 +373,11 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	key = "test_taint"
     value = "taint_value"
     effect = "PreferNoSchedule"
+  }
+
+  tags = {
+    keep-test-np1 = "testI"
+    keep-test-np3 = "testIII"
   }
 
   node_config {

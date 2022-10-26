@@ -1346,6 +1346,25 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Optional:    true,
 				Description: "Offline cache switch, available values: `on`, `off` (default).",
 			},
+			"post_max_size": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Maximum post size configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Configuration switch, available values: `on`, `off` (default).",
+						},
+						"max_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Maximum size in MB, value range is `[1, 200]`.",
+						},
+					},
+				},
+			},
 			"quic_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -2284,7 +2303,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().AddCdnDomain(request)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE || sdkErr.Code == CDN_HOST_EXISTS {
+				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROR || sdkErr.Code == CDN_HOST_EXISTS {
 					return resource.NonRetryableError(err)
 				}
 			}
@@ -2309,6 +2328,10 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
+		return err
+	}
+
+	if err := updateCdnModifyOnlyParams(d, meta, ctx); err != nil {
 		return err
 	}
 
@@ -2802,6 +2825,13 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			"receive_timeout": dc.OriginPullTimeout.ReceiveTimeout,
 		})
 	}
+	if ok := checkCdnInfoWritable(d, "post_max_size", dc.PostMaxSize); ok {
+		dMap := map[string]interface{}{
+			"switch":   dc.PostMaxSize.Switch,
+			"max_size": *dc.PostMaxSize.MaxSize / 1024 / 1024,
+		}
+		_ = helper.SetMapInterfaces(d, "post_max_size", dMap)
+	}
 	if _, ok := d.GetOk("offline_cache_switch"); ok && dc.OfflineCache != nil {
 		_ = d.Set("offline_cache_switch", dc.OfflineCache.Switch)
 	}
@@ -3189,6 +3219,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 
 	// more added
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "ip_filter"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "ip_filter")
 		vSwitch := v["switch"].(string)
 		request.IpFilter = &cdn.IpFilter{
 			Switch: &vSwitch,
@@ -3228,6 +3259,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "ip_freq_limit"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "ip_freq_limit")
 		vSwitch := v["switch"].(string)
 		qps := v["qps"].(int)
 		request.IpFreqLimit = &cdn.IpFreqLimit{
@@ -3236,6 +3268,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "status_code_cache"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "status_code_cache")
 		vSwitch := v["switch"].(string)
 		request.StatusCodeCache = &cdn.StatusCodeCache{
 			Switch: &vSwitch,
@@ -3255,6 +3288,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.StatusCodeCache.CacheRules = requestRules
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "compression"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "compression")
 		vSwitch := v["switch"].(string)
 		request.Compression = &cdn.Compression{
 			Switch: &vSwitch,
@@ -3294,6 +3328,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "band_width_alert"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "band_width_alert")
 		vSwitch := v["switch"].(string)
 		request.BandwidthAlert = &cdn.BandwidthAlert{
 			Switch: &vSwitch,
@@ -3321,6 +3356,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "error_page"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "error_page")
 		vSwitch := v["switch"].(string)
 		request.ErrorPage = &cdn.ErrorPage{
 			Switch: &vSwitch,
@@ -3344,6 +3380,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.ErrorPage.PageRules = requestRules
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "response_header"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "response_header")
 		vSwitch := v["switch"].(string)
 		request.ResponseHeader = &cdn.ResponseHeader{
 			Switch: &vSwitch,
@@ -3373,6 +3410,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.ResponseHeader.HeaderRules = responseRules
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "downstream_capping"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "downstream_capping")
 		vSwitch := v["switch"].(string)
 		request.DownstreamCapping = &cdn.DownstreamCapping{
 			Switch: &vSwitch,
@@ -3395,12 +3433,18 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.DownstreamCapping.CappingRules = requestRules
 	}
-	if v, ok := d.GetOk("response_header_cache_switch"); ok {
+	if d.HasChange("response_header_cache_switch") {
+		updateAttrs = append(updateAttrs, "response_header_cache_switch")
+		v, ok := d.Get("response_header_cache_switch").(string)
+		if !ok || v == "" {
+			v = "off"
+		}
 		request.ResponseHeaderCache = &cdn.ResponseHeaderCache{
-			Switch: helper.String(v.(string)),
+			Switch: &v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_pull_optimization"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "origin_pull_optimization")
 		vSwitch := v["switch"].(string)
 		request.OriginPullOptimization = &cdn.OriginPullOptimization{
 			Switch: &vSwitch,
@@ -3409,12 +3453,18 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.OriginPullOptimization.OptimizationType = &v
 		}
 	}
-	if v, ok := d.GetOk("seo_switch"); ok {
+	if d.HasChange("seo_switch") {
+		updateAttrs = append(updateAttrs, "seo_switch")
+		v, ok := d.Get("seo_switch").(string)
+		if !ok || v == "" {
+			v = "off"
+		}
 		request.Seo = &cdn.Seo{
-			Switch: helper.String(v.(string)),
+			Switch: &v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "referer"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "referer")
 		vSwitch := v["switch"].(string)
 		request.Referer = &cdn.Referer{
 			Switch: &vSwitch,
@@ -3443,12 +3493,18 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		request.Referer.RefererRules = requestRules
 	}
-	if v, ok := d.GetOk("video_seek_switch"); ok {
+	if d.HasChange("video_seek_switch") {
+		updateAttrs = append(updateAttrs, "video_seek_switch")
+		v, ok := d.Get("video_seek_switch").(string)
+		if !ok || v == "" {
+			v = "off"
+		}
 		request.VideoSeek = &cdn.VideoSeek{
-			Switch: helper.String(v.(string)),
+			Switch: &v,
 		}
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "max_age"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "max_age")
 		vSwitch := v["switch"].(string)
 		request.MaxAge = &cdn.MaxAge{
 			Switch: &vSwitch,
@@ -3477,6 +3533,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.MaxAge.MaxAgeRules = requestRules
 	}
 	if v, ok := d.GetOk("specific_config_mainland"); ok && v.(string) != "" {
+		updateAttrs = append(updateAttrs, "specific_config_mainland")
 		request.SpecificConfig = &cdn.SpecificConfig{}
 		configStruct := cdn.MainlandConfig{}
 		err := json.Unmarshal([]byte(v.(string)), &configStruct)
@@ -3486,6 +3543,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.SpecificConfig.Mainland = &configStruct
 	}
 	if v, ok := d.GetOk("specific_config_overseas"); ok && v.(string) != "" {
+		updateAttrs = append(updateAttrs, "specific_config_overseas")
 		if request.SpecificConfig == nil {
 			request.SpecificConfig = &cdn.SpecificConfig{}
 		}
@@ -3497,12 +3555,24 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.SpecificConfig.Overseas = &configStruct
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "origin_pull_timeout"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "origin_pull_timeout")
 		request.OriginPullTimeout = &cdn.OriginPullTimeout{}
 		if vv, ok := v["connect_timeout"].(int); ok && vv > 0 {
 			request.OriginPullTimeout.ConnectTimeout = helper.IntUint64(vv)
 		}
 		if vv, ok := v["receive_timeout"].(int); ok && vv > 0 {
 			request.OriginPullTimeout.ReceiveTimeout = helper.IntUint64(vv)
+		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "post_max_size"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "post_max_size")
+		vSwitch := v["switch"].(string)
+		maxSize := v["max_size"].(int)
+		request.PostMaxSize = &cdn.PostSize{
+			Switch: &vSwitch,
+		}
+		if maxSize > 0 {
+			request.PostMaxSize.MaxSize = helper.IntInt64(maxSize * 1024 * 1024)
 		}
 	}
 	if v, ok := d.GetOk("offline_cache_switch"); ok {
@@ -3590,7 +3660,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().UpdateDomainConfig(request)
 			if err != nil {
 				if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROE {
+					if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROR {
 						return resource.NonRetryableError(err)
 					}
 				}
@@ -3600,10 +3670,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		})
 		if err != nil {
 			return err
-		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
 		}
 
 		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
@@ -3719,6 +3785,47 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx context.Context) error {
+	if !d.HasChanges("post_max_size") {
+		return nil
+	}
+
+	domain := d.Id()
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := CdnService{client}
+	request := cdn.NewUpdateDomainConfigRequest()
+	request.Domain = &domain
+
+	if v, ok := helper.InterfacesHeadMap(d, "post_max_size"); ok {
+		vSwitch := v["switch"].(string)
+		maxSize := v["max_size"].(int)
+		request.PostMaxSize = &cdn.PostSize{
+			Switch: &vSwitch,
+		}
+		if maxSize > 0 {
+			request.PostMaxSize.MaxSize = helper.IntInt64(maxSize * 1024 * 1024)
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := service.UpdateDomainConfig(ctx, request)
+		if err != nil {
+			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROR {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return retryError(err)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}

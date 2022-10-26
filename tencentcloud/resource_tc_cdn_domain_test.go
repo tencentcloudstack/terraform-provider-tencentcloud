@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -112,6 +113,8 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.0.cache_time", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.1.status_code", "404"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.1.cache_time", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.max_size", "63"),
 				),
 			},
 			{
@@ -129,6 +132,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					"response_header",
 					"downstream_capping",
 					"origin_pull_optimization",
+					"post_max_size",
 					"referer",
 					"max_age",
 					"aws_private_access",
@@ -322,7 +326,13 @@ func testAccGetTestingDomain() (string, error) {
 	if len(domains) == 0 {
 		return "", nil
 	}
-	return *domains[0].DomainName, nil
+	for i := range domains {
+		item := domains[i]
+		if v := *item.DomainName; strings.HasPrefix(v, "tencent") {
+			return v, nil
+		}
+	}
+	return "", fmt.Errorf("no available domain")
 }
 
 func testAccCdnDomainVerify(domainPrefix string) error {
@@ -580,6 +590,10 @@ resource "tencentcloud_cdn_domain" "foo" {
       status_code = "404"
       cache_time = 10
     }
+  }
+  post_max_size {
+    switch = "on"
+    max_size = 63
   }
 }
 `
