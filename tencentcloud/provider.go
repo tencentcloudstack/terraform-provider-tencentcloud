@@ -697,6 +697,8 @@ TencentCloud EdgeOne(TEO)
 mariadb
   Resource
 	tencentcloud_mariadb_db_instance
+    tencentcloud_mariadb_dedicatedcluster_db_instance
+    tencentcloud_mariadb_hour_db_instance
 */
 package tencentcloud
 
@@ -1255,6 +1257,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			"tencentcloud_mariadb_db_instance":                      resourceTencentCloudMariadbDbInstance(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":     resourceTencentCloudMariadbDedicatedClusterDBInstance(),
+			"tencentcloud_mariadb_hour_db_instance":                 resourceTencentCloudMariadbHourDbInstance(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 		},
