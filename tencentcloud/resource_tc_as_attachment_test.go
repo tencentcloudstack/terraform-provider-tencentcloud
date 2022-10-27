@@ -3,12 +3,63 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_as_attachment", &resource.Sweeper{
+		Name: "tencentcloud_as_attachment",
+		F:    testSweepAsAttachment,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_as_attachment
+func testSweepAsAttachment(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	asService := AsService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "", nil)
+	if err != nil {
+		return fmt.Errorf("list scaling group error: %s", err.Error())
+	}
+
+	for _, v := range scalingGroups {
+		scalingGroupId := *v.AutoScalingGroupId
+		scalingGroupName := *v.AutoScalingGroupName
+		if !strings.HasPrefix(scalingGroupName, "tf-as-") {
+			continue
+		}
+
+		var instanceIds []string
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId, true)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			instanceIds = result
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		if len(instanceIds) == 0 {
+			continue
+		}
+
+		if err = asService.DetachInstances(ctx, scalingGroupId, instanceIds); err != nil {
+			log.Printf("[ERROR] delete scaling group %s error: %s", scalingGroupId, err.Error())
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudAsAttachment(t *testing.T) {
 	t.Parallel()
@@ -51,7 +102,7 @@ func testAccCheckAsAttachmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling attachment id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID)
+		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID, false)
 		if err != nil {
 			return err
 		}
@@ -74,7 +125,7 @@ func testAccCheckAsAttachmentDestroy(s *terraform.State) error {
 			continue
 		}
 
-		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID)
+		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID, false)
 		if err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 				if sdkErr.Code == AsScalingGroupNotFound {

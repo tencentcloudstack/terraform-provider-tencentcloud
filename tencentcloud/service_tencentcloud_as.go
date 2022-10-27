@@ -301,7 +301,7 @@ func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string,
 	return nil
 }
 
-func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingGroupId string) (instanceIds []string, errRet error) {
+func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingGroupId string, fully bool) (instanceIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingInstancesRequest()
 	request.Filters = []*as.Filter{
@@ -321,7 +321,7 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 
 	instanceIds = make([]string, 0)
 	for _, instance := range response.Response.AutoScalingInstanceSet {
-		if *instance.CreationType == "MANUAL_ATTACHING" {
+		if *instance.CreationType == "MANUAL_ATTACHING" || fully {
 			instanceIds = append(instanceIds, *instance.InstanceId)
 		}
 	}
