@@ -694,6 +694,11 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_security_policy
 	tencentcloud_teo_custom_error_page
 
+TencentCloud ServiceMesh(TCM)
+  Resource
+	tencentcloud_tcm_mesh
+	tencentcloud_tcm_cluster_attachment
+
 mariadb
   Data Source
     tencentcloud_mariadb_db_instances
@@ -1264,6 +1269,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_hour_db_instance":                 resourceTencentCloudMariadbHourDbInstance(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_tcm_mesh":               resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment": resourceTencentCloudTcmClusterAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

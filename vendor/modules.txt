@@ -589,7 +589,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.494
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.518
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.391
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
@@ -611,6 +611,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.519
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.503
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
@@ -619,7 +621,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.489
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717

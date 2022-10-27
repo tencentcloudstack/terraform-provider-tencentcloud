@@ -191,7 +191,7 @@ func TestAccTencentCloudRedisInstanceBasic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccRedisInstanceUpdateMemSizeAndPassword(),
+				Config: testAccRedisInstanceUpdateMemSizeAndPasswordAndSg(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "ip"),
@@ -549,7 +549,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }`
 }
 
-func testAccRedisInstanceUpdateMemSizeAndPassword() string {
+func testAccRedisInstanceUpdateMemSizeAndPasswordAndSg() string {
 	return defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
@@ -562,6 +562,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   redis_replicas_num = 1
   vpc_id 			 = var.vpc_id
   subnet_id			 = var.subnet_id
+  security_groups    = [var.sg_id]
 
   tags = {
     "abc" = "abc"

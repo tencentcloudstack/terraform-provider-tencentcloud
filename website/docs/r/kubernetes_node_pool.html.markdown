@@ -12,6 +12,7 @@ description: |-
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  We recommend the usage of one cluster with essential worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+~> **NOTE:**  In order to ensure the integrity of customer data, if you destroy nodepool instance, it will keep the cvm instance associate with nodepool by default. If you want destroy together, please set `delete_keep_instance` to `false`.
 
 ## Example Usage
 
@@ -172,6 +173,7 @@ The following arguments are supported:
 * `scaling_group_project_id` - (Optional, Int) Project ID the scaling group belongs to.
 * `scaling_mode` - (Optional, String, ForceNew) Auto scaling mode. Valid values are `CLASSIC_SCALING`(scaling by create/destroy instances), `WAKE_UP_STOPPED_SCALING`(Boot priority for expansion. When expanding the capacity, the shutdown operation is given priority to the shutdown of the instance. If the number of instances is still lower than the expected number of instances after the startup, the instance will be created, and the method of destroying the instance will still be used for shrinking).
 * `subnet_ids` - (Optional, List: [`String`], ForceNew) ID list of subnet, and for VPC it is required.
+* `tags` - (Optional, Map) Node pool tag specifications, will passthroughs to the scaling instances.
 * `taints` - (Optional, List) Taints of kubernetes node pool created nodes.
 * `termination_policies` - (Optional, List: [`String`]) Policy of scaling group termination. Available values: `["OLDEST_INSTANCE"]`, `["NEWEST_INSTANCE"]`.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
@@ -196,7 +198,7 @@ The `auto_scaling_config` object supports the following:
 * `key_ids` - (Optional, List, ForceNew) ID list of keys.
 * `password` - (Optional, String, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, List) Security groups to which a CVM instance belongs.
+* `security_group_ids` - (Optional, Set) Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.

@@ -48,7 +48,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.413
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.520
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.494
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.518
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.391
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.490
@@ -59,11 +59,12 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.503
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.489
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.515
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199

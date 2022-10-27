@@ -196,7 +196,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"security_groups": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
@@ -681,7 +680,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
 	}
 
 	// MemSize, ShardNum and ReplicaNum can only change one for each upgrade invoke
@@ -796,7 +794,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis change password fail, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("params_template_id") {
@@ -822,7 +819,18 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+	}
+
+	if d.HasChanges("security_groups") {
+		sgs := d.Get("security_groups").(*schema.Set).List()
+		var sgIds []*string
+		for _, sgId := range sgs {
+			sgIds = append(sgIds, helper.String(sgId.(string)))
+		}
+		err := redisService.ModifyDBInstanceSecurityGroups(ctx, "redis", d.Id(), sgIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -833,8 +841,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
