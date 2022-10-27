@@ -695,6 +695,9 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_custom_error_page
 
 mariadb
+  Data Source
+    tencentcloud_mariadb_db_instances
+
   Resource
 	tencentcloud_mariadb_db_instance
     tencentcloud_mariadb_dedicatedcluster_db_instance
@@ -999,6 +1002,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy_regions":              dataSourceTencentCloudTeoSecurityPolicyRegions(),
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
+			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
