@@ -1,5 +1,7 @@
 /*
-Provides an elastic kubernetes service container instance.
+Provides an elastic kubernetes service container instance (offlined).
+
+~> **NOTE:**  This resource was offline no longer suppored.
 
 Example Usage
 

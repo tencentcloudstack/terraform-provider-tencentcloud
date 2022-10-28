@@ -1,5 +1,7 @@
 /*
-Provide a datasource to query EKS cluster credential info.
+Provide a datasource to query EKS cluster credential info (offlined).
+
+~> **NOTE:**  This resource was offline no longer suppored.
 
 Example Usage
 

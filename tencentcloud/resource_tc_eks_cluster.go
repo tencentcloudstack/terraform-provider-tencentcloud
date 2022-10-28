@@ -1,5 +1,7 @@
 /*
-Provides an elastic kubernetes cluster resource.
+Provides an elastic kubernetes cluster resource (offlined).
+
+~> **NOTE:**  This resource was offline no longer suppored.
 
 Example Usage
 

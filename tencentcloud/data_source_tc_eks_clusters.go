@@ -1,5 +1,7 @@
 /*
-Use this data source to query elastic kubernetes cluster resource.
+Use this data source to query elastic kubernetes cluster resource (offlined).
+
+~> **NOTE:**  This resource was offline no longer suppored.
 
 Example Usage
 
