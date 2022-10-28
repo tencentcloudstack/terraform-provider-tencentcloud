@@ -811,6 +811,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			// "tencentcloud_sms_template": dataSourceTencentCloudSmsTemplate(), // sms
 			"tencentcloud_availability_regions":                     dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_emr":                                      dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                dataSourceTencentCloudEmrNodes(),
@@ -996,6 +997,10 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"tencentcloud_ses_template": resourceTencentCloudSesTemplate(), //ses 邮件推送
+			"tencentcloud_sms_template": resourceTencentCloudSmsTemplate(),// sms 短信服务
+			"tencentcloud_sms_sign": resourceTencentCloudSmsSign(), //sms sign  短信签名
+			"tencentcloud_pts_project": resourceTencentCloudPtsProject(), //pts 云压测
 			"tencentcloud_emr_cluster":                              resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                 resourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                             resourceTencentCloudInstanceSet(),

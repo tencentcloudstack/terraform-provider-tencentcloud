@@ -45,8 +45,11 @@ import (
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728" //pts
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002" //ses 邮件推送
+	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111" //sms 短信服务
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
@@ -121,7 +124,47 @@ type TencentCloudClient struct {
 	lighthouseConn     *lighthouse.Client
 	temConn            *tem.Client
 	teoConn            *teo.Client
+	smsConn            *sms.Client   //sms 短信服务
+	sesConn *ses.Client //ses 邮件推送
+	ptsConn *pts.Client //pts
 }
+func (me *TencentCloudClient) UsePtsClient() *pts.Client {
+	if me.ptsConn != nil {
+		return me.ptsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.ptsConn, _ = pts.NewClient(me.Credential, me.Region, cpf)
+	me.ptsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ptsConn
+}
+
+// ses 邮件推送
+func (me *TencentCloudClient) UseSesClient() *ses.Client {
+	if me.sesConn != nil {
+		return me.sesConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.sesConn, _ = ses.NewClient(me.Credential, me.Region, cpf)
+	me.sesConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sesConn
+}
+// sms 短信服务
+func (me *TencentCloudClient) UseSmsClient() *sms.Client {
+	if me.smsConn != nil {
+		return me.smsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.smsConn, _ = sms.NewClient(me.Credential, me.Region, cpf)
+	me.smsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.smsConn
+}
+
 
 // NewClientProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfile {
