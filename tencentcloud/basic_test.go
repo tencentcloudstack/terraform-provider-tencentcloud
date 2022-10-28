@@ -81,7 +81,7 @@ const (
 
 	defaultGaapProxyId              = "link-ljb08m2l"
 	defaultGaapProxyId2             = "link-8lpyo88p"
-	defaultGaapSecurityPolicyId     = "sp-05t5q92x"
+	defaultGaapSecurityPolicyId     = "sp-5lqp4l77"
 	defaultGaapRealserverDomainId1  = "rs-qs0h6wxp"
 	defaultGaapRealserverDomain1    = "github.com"
 	defaultGaapRealserverDomainId2  = "rs-qcygnwpd"
