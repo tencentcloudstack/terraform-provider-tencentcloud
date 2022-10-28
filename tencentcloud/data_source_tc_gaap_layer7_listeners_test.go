@@ -61,7 +61,6 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapLayer7Listeners_https(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
