@@ -81,7 +81,7 @@ const (
 
 	defaultGaapProxyId              = "link-ljb08m2l"
 	defaultGaapProxyId2             = "link-8lpyo88p"
-	defaultGaapSecurityPolicyId     = "sp-05t5q92x"
+	defaultGaapSecurityPolicyId     = "sp-5lqp4l77"
 	defaultGaapRealserverDomainId1  = "rs-qs0h6wxp"
 	defaultGaapRealserverDomain1    = "github.com"
 	defaultGaapRealserverDomainId2  = "rs-qcygnwpd"
@@ -254,6 +254,10 @@ variable "vpc_cidr_less" {
 
 variable "subnet_id" {
   default = "` + defaultSubnetId + `"
+}
+
+variable "sg_id" {
+  default = "` + defaultSecurityGroup + `"
 }
 
 variable "subnet_cidr" {
@@ -744,3 +748,14 @@ const (
 )
 
 // End of TEO
+
+// TCM
+
+const (
+	defaultMeshClusterId = "cls-9ae9qo9k"
+	defaultMeshId        = "mesh-rofjmux7"
+	defaultMeshVpcId     = "vpc-pyyv5k3v"
+	defaultMeshSubnetId  = "subnet-06i8auk6"
+)
+
+// End of TCM

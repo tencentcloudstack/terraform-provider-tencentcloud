@@ -31,7 +31,7 @@ const (
 
 	CDN_HOST_NOT_FOUND      = "ResourceNotFound.CdnHostNotExists"
 	CDN_HOST_EXISTS         = "ResourceInUse.CdnHostExists"
-	CDN_DOMAIN_CONFIG_ERROE = "FailedOperation.CdnConfigError"
+	CDN_DOMAIN_CONFIG_ERROR = "FailedOperation.CdnConfigError"
 
 	CDN_RULE_TYPE_ALL       = "all"
 	CDN_RULE_TYPE_FILE      = "file"

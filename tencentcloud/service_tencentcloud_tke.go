@@ -1215,7 +1215,7 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	return
 }
 
-func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint) (errRet error) {
+func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, tags map[string]string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewModifyClusterNodePoolRequest()
 
@@ -1238,6 +1238,17 @@ func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, node
 
 	if len(labels) > 0 {
 		request.Labels = labels
+	}
+
+	if len(tags) > 0 {
+		for k, v := range tags {
+			key := k
+			val := v
+			request.Tags = append(request.Tags, &tke.Tag{
+				Key:   &key,
+				Value: &val,
+			})
+		}
 	}
 
 	ratelimit.Check(request.GetAction())

@@ -1,0 +1,8 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: support PostMaxSize Params.
+```
+
+```release-note:bug
+resource/tencentcloud_cdn_domain: Fix testing domain verification failed.
+```
+

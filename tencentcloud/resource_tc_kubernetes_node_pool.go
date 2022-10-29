@@ -2,6 +2,7 @@
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  We recommend the usage of one cluster with essential worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+~> **NOTE:**  In order to ensure the integrity of customer data, if you destroy nodepool instance, it will keep the cvm instance associate with nodepool by default. If you want destroy together, please set `delete_keep_instance` to `false`.
 
 Example Usage
 
@@ -559,6 +560,11 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Description: "Policy of scaling group termination. Available values: `[\"OLDEST_INSTANCE\"]`, `[\"NEWEST_INSTANCE\"]`.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Node pool tag specifications, will passthroughs to the scaling instances.",
+			},
 			//computed
 			"status": {
 				Type:        schema.TypeString,
@@ -1031,6 +1037,15 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("node_os_type", nodePool.OsCustomizeType)
 	}
 
+	if tags := nodePool.Tags; tags != nil {
+		tagMap := make(map[string]string)
+		for i := range tags {
+			tag := tags[i]
+			tagMap[*tag.Key] = *tag.Value
+		}
+		_ = d.Set("tags", tagMap)
+	}
+
 	//if nodePool.DeletionProtection != nil {
 	//	_ = d.Set("deletion_protection", nodePool.DeletionProtection)
 	//}
@@ -1358,8 +1373,9 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		nodeOsType := d.Get("node_os_type").(string)
 		labels := GetTkeLabels(d, "labels")
 		taints := GetTkeTaints(d, "taints")
+		tags := helper.GetTags(d, "tags")
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := service.ModifyClusterNodePool(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints)
+			errRet := service.ModifyClusterNodePool(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints, tags)
 			if errRet != nil {
 				return retryError(errRet)
 			}
