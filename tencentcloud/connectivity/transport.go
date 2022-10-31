@@ -10,7 +10,14 @@ import (
 	"time"
 )
 
-const ReqClient = "Terraform-v1.56.1"
+var ReqClient = "Terraform-latest"
+
+func SetReqClient(name string) {
+	if name == "" {
+		return
+	}
+	ReqClient = name
+}
 
 type LogRoundTripper struct {
 }
@@ -62,7 +69,7 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 	buf.WriteString("######")
 	tag := "[DEBUG]"
 	if err != nil {
-		tag = "[CRITAL]"
+		tag = "[CRITICAL]"
 	}
 	buf.WriteString(tag)
 	if len(in) > 0 {
