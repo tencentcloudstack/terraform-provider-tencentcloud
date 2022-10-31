@@ -610,6 +610,8 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_gateway_snat
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
+	tencentcloud_vpc_bandwidth_package
+	tencentcloud_vpc_bandwidth_package_resources
 
 VPN
   Data Source
@@ -1257,8 +1259,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_tcm_mesh":               resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment": resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_tcm_mesh":                        resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":          resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_vpc_bandwidth_package":           resourceTencentCloudVpcBandwidthPackage(),
+			"tencentcloud_vpc_bandwidth_package_resources": resourceTencentCloudVpcBandwidthPackageResources(),
 		},
 
 		ConfigureFunc: providerConfigure,
