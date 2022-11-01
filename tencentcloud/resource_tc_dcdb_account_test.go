@@ -105,7 +105,7 @@ func testAccCheckDcdbAccountExists(re string) resource.TestCheckFunc {
 const testAccDcdbAccount_basic = `
 
 resource "tencentcloud_dcdb_account" "basic" {
-	instance_id = "tdsqlshard-kkpoxvnv"
+	instance_id = "tdsqlshard-lgz66iqr" # use the hard code before the dcdb_instance resource is ready.
 	user_name = "mysql"
 	host = "127.0.0.1"
 	password = "===password==="
@@ -118,7 +118,7 @@ resource "tencentcloud_dcdb_account" "basic" {
 const testAccDcdbAccount_update = `
 
 resource "tencentcloud_dcdb_account" "basic" {
-  instance_id = "tdsqlshard-kkpoxvnv"
+  instance_id = "tdsqlshard-lgz66iqr" # use the hard code before the dcdb_instance resource is ready.
   user_name = "mysql"
   host = "127.0.0.1"
   password = "===password==="
