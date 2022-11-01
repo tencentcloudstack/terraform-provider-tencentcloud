@@ -2,16 +2,6 @@
 
 FEATURES:
 
-* **New Resource:** `tencentcloud_sts_caller_identity` ([#1340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1340))
-
-ENHANCEMENTS:
-
-* provider: Specify req client header with -ldflag ([#1318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1318))
-
-## 1.78.6 (October 27, 2022)
-
-FEATURES:
-
 * **New Resource:** `tencentcloud_tcm_mesh` ([#1328](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1328))
 * **New Resource:** `tencentcloud_tcm_cluster_attachment` ([#1328](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1328))
 
