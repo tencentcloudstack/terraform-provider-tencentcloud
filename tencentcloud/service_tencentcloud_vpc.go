@@ -5241,7 +5241,7 @@ func (me *VpcService) DeleteVpcBandwidthPackageById(ctx context.Context, bandwid
 	return
 }
 
-func (me *VpcService) DescribeVpcBandwidthPackageResources(ctx context.Context, bandwidthPackageId, resourceId, resourceType string) (bandwidthPackageResources *vpc.Resource, errRet error) {
+func (me *VpcService) DescribeVpcBandwidthPackageAttachment(ctx context.Context, bandwidthPackageId, resourceId string) (bandwidthPackageResources *vpc.Resource, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = vpc.NewDescribeBandwidthPackageResourcesRequest()
@@ -5262,13 +5262,7 @@ func (me *VpcService) DescribeVpcBandwidthPackageResources(ctx context.Context, 
 			Values: []*string{&resourceId},
 		},
 	)
-	request.Filters = append(
-		request.Filters,
-		&vpc.Filter{
-			Name:   helper.String("resource-type"),
-			Values: []*string{&resourceType},
-		},
-	)
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeBandwidthPackageResources(request)
 	if err != nil {
@@ -5286,13 +5280,12 @@ func (me *VpcService) DescribeVpcBandwidthPackageResources(ctx context.Context, 
 
 }
 
-func (me *VpcService) DeleteVpcBandwidthPackageResourcesById(ctx context.Context, bandwidthPackageId, resourceId, resourceType string) (errRet error) {
+func (me *VpcService) DeleteVpcBandwidthPackageAttachmentById(ctx context.Context, bandwidthPackageId, resourceId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := vpc.NewRemoveBandwidthPackageResourcesRequest()
 
 	request.BandwidthPackageId = &bandwidthPackageId
-	request.ResourceType = &resourceType
 	request.ResourceIds = []*string{&resourceId}
 
 	defer func() {

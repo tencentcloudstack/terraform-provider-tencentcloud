@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a vpc bandwidth_package_resources
+Provides a resource to create a vpc bandwidth_package_attachment
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package_resources" "bandwidth_package_resources" {
+resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
   resource_ids          = "lb-dv1ai6ma"
   bandwidth_package_id  = "bwp-atmf0p9g"
   network_type          = "BGP"
@@ -12,6 +12,12 @@ resource "tencentcloud_vpc_bandwidth_package_resources" "bandwidth_package_resou
   protocol              = ""
 }
 
+```
+Import
+
+vpc bandwidth_package_attachment can be imported using the id, e.g.
+```
+$ terraform import tencentcloud_vpc_bandwidth_package_attachment.bandwidth_package_attachment bandwidthPackageAttachment_id
 ```
 */
 package tencentcloud
@@ -28,67 +34,62 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpcBandwidthPackageResources() *schema.Resource {
+func resourceTencentCloudVpcBandwidthPackageAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudVpcBandwidthPackageResourcesRead,
-		Create: resourceTencentCloudVpcBandwidthPackageResourcesCreate,
-		Delete: resourceTencentCloudVpcBandwidthPackageResourcesDelete,
+		Read:   resourceTencentCloudVpcBandwidthPackageAttachmentRead,
+		Create: resourceTencentCloudVpcBandwidthPackageAttachmentCreate,
+		Delete: resourceTencentCloudVpcBandwidthPackageAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"resource_ids": {
+			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The unique ID of the resource, currently supports EIP resources and LB resources, such as `eip-xxxx`, `lb-xxxx`.",
 			},
 
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Bandwidth package unique ID, in the form of `bwp-xxxx`.",
 			},
 
 			"network_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Bandwidth packet type, currently supports `BGP` type, indicating that the internal resource is BGP IP.",
 			},
 
 			"resource_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Resource types, including `Address`, `LoadBalance`.",
 			},
 
 			"protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Bandwidth packet protocol type. Currently `ipv4` and `ipv6` protocol types are supported.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudVpcBandwidthPackageResourcesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_resources.create")()
+func resourceTencentCloudVpcBandwidthPackageAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_attachment.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
 		request            = vpc.NewAddBandwidthPackageResourcesRequest()
-		resourceId         string
+		response           *vpc.AddBandwidthPackageResourcesResponse
 		bandwidthPackageId string
-		resourceType       string
+		resourceId         string
 	)
 
-	if v, ok := d.GetOk("resource_ids"); ok {
+	if v, ok := d.GetOk("resource_id"); ok {
 		resourceId = v.(string)
 		request.ResourceIds = append(request.ResourceIds, helper.String(v.(string)))
 	}
@@ -99,11 +100,12 @@ func resourceTencentCloudVpcBandwidthPackageResourcesCreate(d *schema.ResourceDa
 	}
 
 	if v, ok := d.GetOk("network_type"); ok {
+
 		request.NetworkType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("resource_type"); ok {
-		resourceType = v.(string)
+
 		request.ResourceType = helper.String(v.(string))
 	}
 
@@ -120,20 +122,21 @@ func resourceTencentCloudVpcBandwidthPackageResourcesCreate(d *schema.ResourceDa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create vpc bandwidthPackageResources failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create vpc bandwidthPackageAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(strings.Join([]string{bandwidthPackageId, resourceId, resourceType}, FILED_SP))
-	return resourceTencentCloudVpcBandwidthPackageResourcesRead(d, meta)
+	d.SetId(bandwidthPackageId + FILED_SP + resourceId)
+	return resourceTencentCloudVpcBandwidthPackageAttachmentRead(d, meta)
 }
 
-func resourceTencentCloudVpcBandwidthPackageResourcesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_resources.read")()
+func resourceTencentCloudVpcBandwidthPackageAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_attachment.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -141,49 +144,47 @@ func resourceTencentCloudVpcBandwidthPackageResourcesRead(d *schema.ResourceData
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	bandwidthPackageId := idSplit[0]
+	resourceId := idSplit[1]
 
-	bandwidthPackageId := ids[0]
-	resourceId := ids[1]
-	resourceType := ids[2]
-
-	bandwidthPackageResources, err := service.DescribeVpcBandwidthPackageResources(ctx, bandwidthPackageId, resourceId, resourceType)
+	bandwidthPackageAttachment, err := service.DescribeVpcBandwidthPackageAttachment(ctx, bandwidthPackageId, resourceId)
 
 	if err != nil {
 		return err
 	}
 
-	if bandwidthPackageResources == nil {
+	if bandwidthPackageAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `bandwidthPackageResources` %s does not exist", resourceId)
+		return fmt.Errorf("resource `bandwidthPackageAttachment` %s does not exist", bandwidthPackageId)
 	}
 
 	_ = d.Set("bandwidth_package_id", bandwidthPackageId)
 
-	if bandwidthPackageResources.ResourceId != nil {
-		_ = d.Set("resource_ids", bandwidthPackageResources.ResourceId)
+	if bandwidthPackageAttachment.ResourceId != nil {
+		_ = d.Set("resource_id", bandwidthPackageAttachment.ResourceId)
 	}
 
-	//if bandwidthPackageResources.NetworkType != nil {
-	//	_ = d.Set("network_type", bandwidthPackageResources.NetworkType)
+	//if bandwidthPackageAttachment.NetworkType != nil {
+	//	_ = d.Set("network_type", bandwidthPackageAttachment.NetworkType)
 	//}
 
-	if bandwidthPackageResources.ResourceType != nil {
-		_ = d.Set("resource_type", bandwidthPackageResources.ResourceType)
+	if bandwidthPackageAttachment.ResourceType != nil {
+		_ = d.Set("resource_type", bandwidthPackageAttachment.ResourceType)
 	}
 
-	//if bandwidthPackageResources.Protocol != nil {
-	//	_ = d.Set("protocol", bandwidthPackageResources.Protocol)
+	//if bandwidthPackageAttachment.Protocol != nil {
+	//	_ = d.Set("protocol", bandwidthPackageAttachment.Protocol)
 	//}
 
 	return nil
 }
 
-func resourceTencentCloudVpcBandwidthPackageResourcesDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_resources.delete")()
+func resourceTencentCloudVpcBandwidthPackageAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package_attachment.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -191,16 +192,14 @@ func resourceTencentCloudVpcBandwidthPackageResourcesDelete(d *schema.ResourceDa
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	bandwidthPackageId := idSplit[0]
+	resourceId := idSplit[1]
 
-	bandwidthPackageId := ids[0]
-	resourceId := ids[1]
-	resourceType := ids[2]
-
-	if err := service.DeleteVpcBandwidthPackageResourcesById(ctx, bandwidthPackageId, resourceId, resourceType); err != nil {
+	if err := service.DeleteVpcBandwidthPackageAttachmentById(ctx, bandwidthPackageId, resourceId); err != nil {
 		return err
 	}
 
