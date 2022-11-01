@@ -157,6 +157,7 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntInt64(memory)
 	request.Storage = helper.IntInt64(storage)
+	request.WaitSwitch = helper.IntInt64(0)
 	if autoVoucher != 0 {
 		request.AutoVoucher = helper.IntInt64(autoVoucher)
 	}
@@ -180,7 +181,7 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 	errRet = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := me.DescribeSqlserverInstanceById(ctx, instanceId)
 		if err != nil {
-			return resource.NonRetryableError(errors.WithStack(err))
+			return retryError(err)
 		}
 		if !has {
 			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server instance %s", instanceId))
