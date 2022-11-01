@@ -15,13 +15,13 @@ Provides a resource to create a dcdb account
 
 ```hcl
 resource "tencentcloud_dcdb_account" "account" {
-  instance_id          = ""
-  user_name            = ""
-  host                 = ""
-  password             = ""
-  read_only            = ""
-  description          = ""
-  max_user_connections = ""
+  instance_id          = "tdsqlshard-kkpoxvnv"
+  user_name            = "mysql"
+  host                 = "127.0.0.1"
+  password             = "===password==="
+  read_only            = 0
+  description          = "this is a test account"
+  max_user_connections = 10
 }
 ```
 
