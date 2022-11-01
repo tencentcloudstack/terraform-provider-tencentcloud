@@ -41,10 +41,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-vpc bandwidth_package_attachment can be imported using the bandwidthPackageId#resource_id, e.g.
-```
-$ terraform import tencentcloud_vpc_bandwidth_package_attachment.bandwidth_package_attachment bandwidthPackageAttachment_id
-```
-
