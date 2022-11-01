@@ -72,7 +72,7 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 			"repo_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 4: demo image.",
+				Description: "repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.",
 			},
 
 			"repo_server": {

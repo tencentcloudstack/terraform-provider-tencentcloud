@@ -62,7 +62,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.503
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.527
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
