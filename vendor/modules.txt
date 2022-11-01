@@ -557,7 +557,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.519
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.524
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -603,7 +603,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813

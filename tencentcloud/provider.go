@@ -699,6 +699,10 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
 
+Security Token Service(STS)
+  Data Source
+	tencentcloud_sts_caller_identity
+
 */
 package tencentcloud
 
@@ -999,6 +1003,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy_regions":              dataSourceTencentCloudTeoSecurityPolicyRegions(),
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
+			"tencentcloud_sts_caller_identity":                      dataSourceTencentCloudStsCallerIdentity(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
