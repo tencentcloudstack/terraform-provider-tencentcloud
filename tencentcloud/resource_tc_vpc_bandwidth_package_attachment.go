@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
-  resource_ids          = "lb-dv1ai6ma"
+  resource_id           = "lb-dv1ai6ma"
   bandwidth_package_id  = "bwp-atmf0p9g"
   network_type          = "BGP"
   resource_type         = "LoadBalance"
@@ -15,7 +15,7 @@ resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_atta
 ```
 Import
 
-vpc bandwidth_package_attachment can be imported using the id, e.g.
+vpc bandwidth_package_attachment can be imported using the bandwidthPackageId#resource_id, e.g.
 ```
 $ terraform import tencentcloud_vpc_bandwidth_package_attachment.bandwidth_package_attachment bandwidthPackageAttachment_id
 ```
@@ -46,30 +46,35 @@ func resourceTencentCloudVpcBandwidthPackageAttachment() *schema.Resource {
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The unique ID of the resource, currently supports EIP resources and LB resources, such as `eip-xxxx`, `lb-xxxx`.",
 			},
 
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Bandwidth package unique ID, in the form of `bwp-xxxx`.",
 			},
 
 			"network_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Bandwidth packet type, currently supports `BGP` type, indicating that the internal resource is BGP IP.",
 			},
 
 			"resource_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Resource types, including `Address`, `LoadBalance`.",
 			},
 
 			"protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Bandwidth packet protocol type. Currently `ipv4` and `ipv6` protocol types are supported.",
 			},
 		},
@@ -84,7 +89,6 @@ func resourceTencentCloudVpcBandwidthPackageAttachmentCreate(d *schema.ResourceD
 
 	var (
 		request            = vpc.NewAddBandwidthPackageResourcesRequest()
-		response           *vpc.AddBandwidthPackageResourcesResponse
 		bandwidthPackageId string
 		resourceId         string
 	)
@@ -100,17 +104,14 @@ func resourceTencentCloudVpcBandwidthPackageAttachmentCreate(d *schema.ResourceD
 	}
 
 	if v, ok := d.GetOk("network_type"); ok {
-
 		request.NetworkType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("resource_type"); ok {
-
 		request.ResourceType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("protocol"); ok {
-
 		request.Protocol = helper.String(v.(string))
 	}
 
@@ -122,7 +123,6 @@ func resourceTencentCloudVpcBandwidthPackageAttachmentCreate(d *schema.ResourceD
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 

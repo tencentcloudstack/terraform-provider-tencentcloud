@@ -25,9 +25,9 @@ func TestAccTencentCloudVpcBandwidthPackageAttachment_basic(t *testing.T) {
 				Config: testAccVpcBandwidthPackageAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBandwidthPackageAttachmentExists("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_ids", "lb-5dnrkgry"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_id", "eip-r2l240dq"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "network_type", "BGP"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_type", "LoadBalance"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_type", "Address"),
 				),
 			},
 		},
@@ -112,11 +112,11 @@ resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
   }
 }
 
-resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
-  resource_ids          = "lb-5dnrkgry"
+resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidthPackageAttachment" {
+  resource_id          = "eip-r2l240dq"
   bandwidth_package_id  = tencentcloud_vpc_bandwidth_package.bandwidth_package.id
   network_type          = "BGP"
-  resource_type         = "LoadBalance"
+  resource_type         = "Address"
 }
 
 `

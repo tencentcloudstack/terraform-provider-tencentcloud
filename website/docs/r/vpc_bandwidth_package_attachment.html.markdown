@@ -15,7 +15,7 @@ Provides a resource to create a vpc bandwidth_package_attachment
 
 ```hcl
 resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
-  resource_ids         = "lb-dv1ai6ma"
+  resource_id          = "lb-dv1ai6ma"
   bandwidth_package_id = "bwp-atmf0p9g"
   network_type         = "BGP"
   resource_type        = "LoadBalance"
@@ -27,11 +27,11 @@ resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_atta
 
 The following arguments are supported:
 
-* `resource_id` - (Required, String) The unique ID of the resource, currently supports EIP resources and LB resources, such as `eip-xxxx`, `lb-xxxx`.
-* `bandwidth_package_id` - (Optional, String) Bandwidth package unique ID, in the form of `bwp-xxxx`.
-* `network_type` - (Optional, String) Bandwidth packet type, currently supports `BGP` type, indicating that the internal resource is BGP IP.
-* `protocol` - (Optional, String) Bandwidth packet protocol type. Currently `ipv4` and `ipv6` protocol types are supported.
-* `resource_type` - (Optional, String) Resource types, including `Address`, `LoadBalance`.
+* `bandwidth_package_id` - (Required, String, ForceNew) Bandwidth package unique ID, in the form of `bwp-xxxx`.
+* `resource_id` - (Required, String, ForceNew) The unique ID of the resource, currently supports EIP resources and LB resources, such as `eip-xxxx`, `lb-xxxx`.
+* `network_type` - (Optional, String, ForceNew) Bandwidth packet type, currently supports `BGP` type, indicating that the internal resource is BGP IP.
+* `protocol` - (Optional, String, ForceNew) Bandwidth packet protocol type. Currently `ipv4` and `ipv6` protocol types are supported.
+* `resource_type` - (Optional, String, ForceNew) Resource types, including `Address`, `LoadBalance`.
 
 ## Attributes Reference
 
@@ -43,7 +43,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-vpc bandwidth_package_attachment can be imported using the id, e.g.
+vpc bandwidth_package_attachment can be imported using the bandwidthPackageId#resource_id, e.g.
 ```
 $ terraform import tencentcloud_vpc_bandwidth_package_attachment.bandwidth_package_attachment bandwidthPackageAttachment_id
 ```

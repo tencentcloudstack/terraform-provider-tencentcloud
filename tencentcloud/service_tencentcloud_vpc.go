@@ -5285,6 +5285,12 @@ func (me *VpcService) DeleteVpcBandwidthPackageAttachmentById(ctx context.Contex
 
 	request := vpc.NewRemoveBandwidthPackageResourcesRequest()
 
+	if strings.HasPrefix(resourceId, "eip") {
+		request.ResourceType = helper.String("Address")
+	} else {
+		request.ResourceType = helper.String("LoadBalance")
+	}
+
 	request.BandwidthPackageId = &bandwidthPackageId
 	request.ResourceIds = []*string{&resourceId}
 
