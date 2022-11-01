@@ -3,6 +3,7 @@ GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=tencentcloud
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PLATFORMS=darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm openbsd/amd64 openbsd/386 solaris/amd64 windows/386 windows/amd64
+GO_VER ?= go
 
 default: build
 
@@ -163,6 +164,7 @@ endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 changelog:
-	./scripts/draft-changelog.sh
+	cd .ci/tools && $(GO_VER) install github.com/hashicorp/go-changelog/cmd/changelog-build
+	./scripts/generate-changelog.sh
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test

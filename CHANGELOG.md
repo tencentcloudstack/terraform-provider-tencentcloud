@@ -1,3 +1,200 @@
+## 1.78.6 (October 27, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_sts_caller_identity` ([#1340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1340))
+
+ENHANCEMENTS:
+
+* provider: Specify req client header with -ldflag ([#1318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1318))
+
+## 1.78.6 (October 27, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tcm_mesh` ([#1328](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1328))
+* **New Resource:** `tencentcloud_tcm_cluster_attachment` ([#1328](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1328))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: support PostMaxSize Params. ([#1329](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1329))
+* resource/tencentcloud_kubernetes_node_pool: Support tag specifications ([#1317](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1317))
+* resource/tencentcloud_monitor_tmp_exporter_integration: support cluster initialization ([#1320](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1320))
+* resource/tencentcloud_redis_instance: support update `security_groups` ([#1336](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1336))
+* resource/tencentcloud_security_group_lite_rule: support protocol template creating/updating ([#1315](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1315))
+
+BUG FIXES:
+
+* data-source/tencentcloud_security_groups: support protocol template readings ([#1315](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1315))
+* resource/tencentcloud_cdn_domain: Fix testing domain verification failed. ([#1329](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1329))
+* resource/tencentcloud_kubernetes_node_pool: adjust `security_group_ids` type to unordered ([#1321](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1321))
+* resource/tencentcloud_teo_zone: change tag description from zoneName to zoneId ([#1326](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1326))
+
+## 1.78.5 (October 17, 2022)
+
+COMMON:
+* support env `PROVIDER_ASSUME_ROLE_SESSION_DURATION`
+
+ENHANCEMENTS:
+* resource `tencentcloud_ckafka_instance` support tag change
+* resource `tencentcloud_gaap_layer4_listener` support read proxy_id
+* resource `tencentcloud_gaap_layer7_listener` support read proxy_id
+* resource `tencentcloud_vpn_gateway` support change prepaid_renew_flag
+* data source `tencentcloud_gaap_layer4_listener` support read proxy_id
+* data source `tencentcloud_gaap_layer7_listener` support read proxy_id
+
+BUGFIXES:
+* fix ckafka backend change
+* fix clb unit test
+
+## 1.78.4 (October 12, 2022)
+
+COMMON:
+
+* Add default teo variable for testcases
+* Fix teo, dnspod, cdn testcases
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_kubernetes_node_pool` support hostname and instance name
+
+BUGFIXES:
+
+* resource `tencentcloud_ssl_free_certificate` optimize dv auth method import
+* resource `tencentcloud_tem_application` support  set tcr instance id
+* resource `tencentcloud_vpc` distinguish normal and docker assistant cidr
+
+## 1.78.3 (September 29, 2022)
+
+ENHANCEMENTS:
+* resource `tencentcloud_monitor_tmp_cvm_agent` support `agent_id` param
+
+BUGFIXES:
+* resource `tencentcloud_security_group_rule` fix rule read error
+* resource `tencentcloud_security_group_rule` fix one resource delete multi-rule which only description difference
+* fix tke unit test
+
+## 1.78.2 (September 27, 2022)
+
+BUGFIXES:
+
+* resource `tencentcloud_tcr_instance` extend replications retry timeout
+
+## 1.78.1 (September 27, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_tcr_instance` support replications
+* resource `tencentcloud_tcr_vpc_attachment` support cross region
+* resource `tencentcloud_cos_bucket` add `force_clean` to support cleaning up all objects when a bucket is deleted
+
+## 1.78.0 (September 21, 2022)
+
+FEATURES:
+
+* resource `tencentcloud_teo_xxxx` support api v2
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_elasticsearch_instance` add `es_acl` to support whitelist and blacklist
+* resource `tencentcloud_instance` add `key_ids`, deprecate `key_name`
+* resource `tencentcloud_key_pair` change servcie params
+* resource `tencentcloud_vpc_acl` support tag
+
+## 1.77.11 (September 19, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_key_pair` support cam policy with restrict tag permission
+
+## 1.77.10 (September 16, 2022)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_image` and `tencentcloud_cbs_storage` etc support cam policy with restrict tag permission (#1275)
+
+## 1.77.9 (September 14, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_monitor_grafana_instance`
+* New resource `tencentcloud_monitor_grafana_integration`
+* New resource `tencentcloud_monitor_grafana_notification_channel`
+* New resource `tencentcloud_monitor_grafana_plugin`
+* New resource `tencentcloud_monitor_grafana_sso_account`
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_vpc` and `tencentcloud_instance` support cam policy with tag permission
+
+## 1.77.8 (August 24, 2022)
+
+FEATURES:
+
+* New resource `tencentcloud_cos_bucket_domain_certificate_attachment` (#1258)
+
+ENHANCEMENTS:
+
+* resource `tencentcloud_dnspod_record` support import (#1260)
+* resource `tencentcloud_tem_application` update param desc (#1264)
+
+BUGFIXES:
+
+* resource `tencentcloud_monitor_tmp_instance` fix cluster agent status handle (#1261)
+* resource `tencentcloud_tcaplus_idl` tcaplusdb support tdr (#1263)
+
+COMMON:
+
+* fix common testcases(#1259)
+
+## 1.77.7 (August 24, 2022)
+
+FEATURES:
+
+* New data source `tencentcloud_cynosdb_zone_config`
+
+ENHANCEMENTS:
+
+feat: redis - support field: param template (#1249)
+* resource `tencentcloud_instance` system support bssd (#1253)
+* resource `tencentcloud_kubernetes_cluster` support internet security group modify (#1248)
+* resource `tencentcloud_kubernetes_cluster_endpoint` support internet security group modify (#1248)
+
+BUGFIXES:
+
+* resource `tencentcloud_cynosdb_cluster` param_items not effect in create cluster (#1238)
+* resource `tencentcloud_monitor_tmp_tke_cluster_agent` update irregular type (#1241)
+* resource `tencentcloud_monitor_tmp_tke_global_notification` update irregular type (#1241)
+
+COMMON:
+
+* feat: pr lable (#1250)
+* fix: auto label (#1256)
+* fix: update irregular type (#1241)
+
+## 1.77.6 (September 1, 2022)
+
+ENHANCEMENTS:
+* update teo/tem doc
+
+## 1.77.5 (September 1, 2022)
+
+FEATURES:
+
+* new resource `tencentcloud_teo_zone`
+* new resource `tencentcloud_teo_zone_setting`
+* new resource `tencentcloud_teo_dns_record`
+* new resource `tencentcloud_teo_dns_sec`
+* new resource `tencentcloud_teo_load_balancing`
+* new resource `tencentcloud_teo_origin_group`
+* new resource `tencentcloud_teo_rule_engine`
+
+## 1.77.4 (August 24, 2022)
+
+ENHANCEMENTS:
+
+* support TencentCloud Prometheus
+
 ## 1.77.3 (August 16, 2022)
 
 ENHANCEMENTS:
