@@ -74,10 +74,13 @@ The following arguments are supported:
 * `post_start` - (Optional, String) mem.
 * `pre_stop` - (Optional, String) mem.
 * `readiness` - (Optional, List) .
+* `repo_server` - (Optional, String) repo server addr when deploy by image.
+* `repo_type` - (Optional, Int) repo type when deploy: 0: tcr personal; 1: tcr enterprise; 2: public repository; 3: tem host tcr; 4: demo repo.
 * `security_group_ids` - (Optional, Set: [`String`]) security groups.
 * `startup_probe` - (Optional, List) .
 * `storage_confs` - (Optional, List) storage configuration.
 * `storage_mount_confs` - (Optional, List) storage mount configuration.
+* `tcr_instance_id` - (Optional, String) tcr instance id when deploy by image.
 
 The `deploy_strategy_conf` object supports the following:
 

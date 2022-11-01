@@ -147,6 +147,24 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 				Description: "security groups.",
 			},
 
+			"repo_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "repo type when deploy: 0: tcr personal; 1: tcr enterprise; 2: public repository; 3: tem host tcr; 4: demo repo.",
+			},
+
+			"repo_server": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "repo server addr when deploy by image.",
+			},
+
+			"tcr_instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "tcr instance id when deploy by image.",
+			},
+
 			"env_conf": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -487,6 +505,18 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
+	if v, ok := d.GetOk("repo_type"); ok {
+		request.RepoType = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("repo_server"); ok {
+		request.RepoServer = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("tcr_instance_id"); ok {
+		request.TcrInstanceId = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("env_conf"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -747,6 +777,18 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("security_group_ids", workload.SecurityGroupIds)
 	}
 
+	if workload.RepoType != nil {
+		_ = d.Set("repo_type", workload.RepoType)
+	}
+
+	if workload.RepoServer != nil {
+		_ = d.Set("repo_server", workload.RepoServer)
+	}
+
+	if workload.TcrInstanceId != nil {
+		_ = d.Set("tcr_instance_id", workload.TcrInstanceId)
+	}
+
 	if workload.EnvConf != nil {
 		envConfList := []interface{}{}
 		for _, envConf := range workload.EnvConf {
@@ -924,8 +966,9 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("deploy_version") || d.HasChange("deploy_mode") || d.HasChange("img_repo") || d.HasChange("init_pod_num") ||
 		d.HasChange("cpu_spec") || d.HasChange("memory_spec") || d.HasChange("post_start") || d.HasChange("pre_stop") || d.HasChange("security_group_ids") ||
-		d.HasChange("env_conf") || d.HasChange("storage_confs") || d.HasChange("storage_mount_confs") || d.HasChange("liveness") ||
-		d.HasChange("readiness") || d.HasChange("startup_probe") || d.HasChange("deploy_strategy_conf") {
+		d.HasChange("repo_type") || d.HasChange("repo_server") || d.HasChange("tcr_instance_id") || d.HasChange("env_conf") || d.HasChange("storage_confs") ||
+		d.HasChange("storage_mount_confs") || d.HasChange("liveness") || d.HasChange("readiness") || d.HasChange("startup_probe") || d.HasChange("deploy_strategy_conf") {
+
 		if v, ok := d.GetOk("deploy_version"); ok {
 			request.DeployVersion = helper.String(v.(string))
 		}
@@ -964,6 +1007,18 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 				securityGroupIds := securityGroupIdsSet[i].(string)
 				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupIds)
 			}
+		}
+
+		if v, ok := d.GetOk("repo_type"); ok {
+			request.RepoType = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOk("repo_server"); ok {
+			request.RepoServer = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("tcr_instance_id"); ok {
+			request.TcrInstanceId = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("env_conf"); ok {
