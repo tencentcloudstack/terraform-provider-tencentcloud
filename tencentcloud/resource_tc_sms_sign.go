@@ -172,8 +172,9 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 
 	signId = *response.Response.AddSignStatus.SignId //数据结构修改
 	signId_string := strconv.FormatUint(signId, 10) //数据转换
-
+	d.Set("international", helper.IntUint64(international.(int)))
 	d.SetId(signId_string)  //id字符串类型
+
 	return resourceTencentCloudSmsSignRead(d, meta)
 }
 
@@ -187,8 +188,8 @@ func resourceTencentCloudSmsSignRead(d *schema.ResourceData, meta interface{}) e
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	signId := d.Id()
-
-	sign, err := service.DescribeSmsSign(ctx, signId)
+	international := helper.IntUint64(d.Get("international").(int))
+	sign, err := service.DescribeSmsSign(ctx, signId, international)
 
 	if err != nil {
 		return err

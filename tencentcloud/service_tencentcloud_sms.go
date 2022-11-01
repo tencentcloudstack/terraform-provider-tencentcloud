@@ -15,7 +15,7 @@ type SmsService struct {
 }
 
 // sms sign
-func (me *SmsService) DescribeSmsSign(ctx context.Context, signId_string string) (sign *sms.DescribeSignListStatus, errRet error) {
+func (me *SmsService) DescribeSmsSign(ctx context.Context, signId_string string, international *uint64) (sign *sms.DescribeSignListStatus, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = sms.NewDescribeSmsSignListRequest()
@@ -30,6 +30,7 @@ func (me *SmsService) DescribeSmsSign(ctx context.Context, signId_string string)
 	// 类型转换
 	signId, _ := strconv.ParseUint(signId_string, 10, 64)
 	request.SignIdSet = []*uint64{&signId}
+	request.International = international
 
 	response, err := me.client.UseSmsClient().DescribeSmsSignList(request)
 	if err != nil {
@@ -75,7 +76,7 @@ func (me *SmsService) DeleteSmsSignById(ctx context.Context, signId_string strin
 	return
 }
 
-func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId_string string) (template *sms.DescribeTemplateListStatus, errRet error) {
+func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId_string string, international *uint64) (template *sms.DescribeTemplateListStatus, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = sms.NewDescribeSmsTemplateListRequest()
@@ -89,6 +90,7 @@ func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId_string
 	}()
 	templateId, _ := strconv.ParseUint(templateId_string, 10, 64) //类型转换
 	request.TemplateIdSet = []*uint64{&templateId}  // id数组，需进行类型转换
+	request.International = international  //添加新的传参 international
 
 	response, err := me.client.UseSmsClient().DescribeSmsTemplateList(request)
 	if err != nil {

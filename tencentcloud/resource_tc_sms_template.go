@@ -136,6 +136,7 @@ func resourceTencentCloudSmsTemplateCreate(d *schema.ResourceData, meta interfac
 	// templateId, _ = strconv.ParseUint(templateId_string, 10, 64) //类型修改，未使用
 
 	d.SetId(templateId_string)  //函数只接受字符串id
+	d.Set("international", international) //
 	return resourceTencentCloudSmsTemplateRead(d, meta)
 }
 
@@ -148,9 +149,10 @@ func resourceTencentCloudSmsTemplateRead(d *schema.ResourceData, meta interface{
 
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	//read api 传参
 	templateId := d.Id()
-
-	template, err := service.DescribeSmsTemplate(ctx, templateId)
+	international := d.Get("international") 
+	template, err := service.DescribeSmsTemplate(ctx, templateId, helper.IntUint64(international.(int)))
 
 	if err != nil {
 		return err
