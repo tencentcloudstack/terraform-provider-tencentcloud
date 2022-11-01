@@ -106,7 +106,6 @@ func resourceTencentCloudDcdbAccountCreate(d *schema.ResourceData, meta interfac
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
