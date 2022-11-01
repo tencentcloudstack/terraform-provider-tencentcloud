@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -124,6 +126,7 @@ type TencentCloudClient struct {
 	temConn            *tem.Client
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
+	sesConn            *ses.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -775,6 +778,19 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	me.tcmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcmConn
+}
+
+// UseSesClient returns teo client for service
+func (me *TencentCloudClient) UseSesClient() *ses.Client {
+	if me.sesConn != nil {
+		return me.sesConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.sesConn, _ = ses.NewClient(me.Credential, me.Region, cpf)
+	me.sesConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sesConn
 }
 
 func getEnvDefault(key string, defVal int) int {
