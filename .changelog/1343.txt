@@ -1,4 +1,7 @@
 ```release-note:new-resource
 tencentcloud_vpc_bandwidth_package
+```
+
+```release-note:new-resource
 tencentcloud_vpc_bandwidth_package_attachment
 ```
