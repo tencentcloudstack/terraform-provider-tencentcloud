@@ -5,7 +5,7 @@ set -o nounset
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __parent="$(dirname "$__dir")"
-__root="$(dirname "$__parent")"
+__root="$(dirname "$__dir")"
 
 CHANGELOG_FILE_NAME="CHANGELOG.md"
 CHANGELOG_TMP_FILE_NAME="CHANGELOG.tmp"
@@ -24,7 +24,7 @@ if [ -z "$PREVIOUS_CHANGELOG" ]
 then
     echo "Unable to locate previous changelog contents."
     exit 1
-fi 
+fi
 
 CHANGELOG=$($(go env GOPATH)/bin/changelog-build -this-release $TARGET_SHA \
                       -last-release $PREVIOUS_RELEASE_SHA \
