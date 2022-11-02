@@ -50,6 +50,7 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
@@ -126,6 +127,7 @@ type TencentCloudClient struct {
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
 	dcdbConn           *dcdb.Client
+	smsConn            *sms.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -790,6 +792,19 @@ func (me *TencentCloudClient) UseDcdbClient() *dcdb.Client {
 	me.dcdbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dcdbConn
+}
+
+// UseSmsClient returns teo client for service
+func (me *TencentCloudClient) UseSmsClient() *sms.Client {
+	if me.smsConn != nil {
+		return me.smsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.smsConn, _ = sms.NewClient(me.Credential, me.Region, cpf)
+	me.smsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.smsConn
 }
 
 func getEnvDefault(key string, defVal int) int {
