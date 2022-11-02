@@ -705,6 +705,13 @@ Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
 
+TencentDB for MariaDB(MariaDB)
+  Data Source
+    tencentcloud_mariadb_db_instances
+  Resource
+    tencentcloud_mariadb_dedicatedcluster_db_instance
+    tencentcloud_mariadb_hour_db_instance
+
 */
 package tencentcloud
 
@@ -1006,6 +1013,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
 			"tencentcloud_sts_caller_identity":                      dataSourceTencentCloudStsCallerIdentity(),
+			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1264,10 +1272,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_tcm_mesh":                         resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":           resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_vpc_bandwidth_package":            resourceTencentCloudVpcBandwidthPackage(),
-			"tencentcloud_vpc_bandwidth_package_attachment": resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_tcm_mesh":                             resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":               resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_vpc_bandwidth_package":                resourceTencentCloudVpcBandwidthPackage(),
+			"tencentcloud_vpc_bandwidth_package_attachment":     resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_mariadb_dedicatedcluster_db_instance": resourceTencentCloudMariadbDedicatedclusterDbInstance(),
+			"tencentcloud_mariadb_hour_db_instance":             resourceTencentCloudMariadbHourDbInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

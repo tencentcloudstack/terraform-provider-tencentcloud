@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
+
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -124,6 +126,7 @@ type TencentCloudClient struct {
 	temConn            *tem.Client
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
+	mariadbConn        *mariadb.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -775,6 +778,19 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	me.tcmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcmConn
+}
+
+// UseMariadbClient returns mariadb client for service
+func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
+	if me.mariadbConn != nil {
+		return me.mariadbConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.mariadbConn, _ = mariadb.NewClient(me.Credential, me.Region, cpf)
+	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mariadbConn
 }
 
 func getEnvDefault(key string, defVal int) int {
