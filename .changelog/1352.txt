@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_sms_sign
+```
+
+```release-note:new-resource
+tencentcloud_sms_template
+```
