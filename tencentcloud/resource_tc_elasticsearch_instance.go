@@ -640,6 +640,9 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 			return nil
 		})
+		if err != nil {
+			return err
+		}
 		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 
 		if err != nil {
