@@ -524,6 +524,13 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	}
 	_ = d.Set("node_info_list", nodeInfoList)
 
+	if webInfo := instance.WebNodeTypeInfo; webInfo != nil {
+		_ = helper.SetMapInterfaces(d, "web_node_type_info", map[string]interface{}{
+			"node_type": webInfo.NodeType,
+			"node_num":  webInfo.NodeNum,
+		})
+	}
+
 	if instance.EsAcl != nil {
 		esAcls := make([]map[string]interface{}, 0, 1)
 		esAcl := map[string]interface{}{
@@ -757,7 +764,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudElasticsearchInstanceRead(d, meta)
 }
 
 func resourceTencentCloudElasticsearchInstanceDelete(d *schema.ResourceData, meta interface{}) error {
