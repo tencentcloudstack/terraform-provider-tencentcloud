@@ -10,19 +10,15 @@ func TestAccTencentCloudSmsSign_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_SMS) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSmsSign,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_sms_sign.sign", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_sign.sign", "sign_name", "terraform"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_sms_sign.sign",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -31,14 +27,12 @@ func TestAccTencentCloudSmsSign_basic(t *testing.T) {
 const testAccSmsSign = `
 
 resource "tencentcloud_sms_sign" "sign" {
-  sign_name = "SignName"
-  sign_type = 0
-  document_type = 0
+  sign_name     = "terraform"
+  sign_type     = 1
+  document_type = 4
   international = 0
-  sign_purpose = 0
-  proof_image = ""
-  commission_image = ""
-  remark = ""
+  sign_purpose  = 0
+  proof_image = "dGhpcyBpcyBhIGV4YW1wbGU="
 }
 
 `

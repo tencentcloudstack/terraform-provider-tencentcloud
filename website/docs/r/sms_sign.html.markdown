@@ -15,14 +15,12 @@ Provides a resource to create a sms sign
 
 ```hcl
 resource "tencentcloud_sms_sign" "sign" {
-  sign_name        = "SignName"
-  sign_type        = 0
-  document_type    = 0
-  international    = 0
-  sign_purpose     = 0
-  proof_image      = ""
-  commission_image = ""
-  remark           = ""
+  sign_name     = "terraform"
+  sign_type     = 1
+  document_type = 4
+  international = 0
+  sign_purpose  = 0
+  proof_image   = "dGhpcyBpcyBhIGV4YW1wbGU="
 }
 ```
 
@@ -46,11 +44,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-sms sign can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_sms_sign.sign sign_id
-```
 

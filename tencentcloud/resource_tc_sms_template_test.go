@@ -10,19 +10,19 @@ func TestAccTencentCloudSmsTemplate_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_SMS) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSmsTemplate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_sms_template.template", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_template.template", "template_name", "Template By Terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_template.template", "template_content", "Template Content"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_template.template", "international", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_template.template", "sms_type", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_sms_template.template", "remark", "terraform test"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_sms_template.template",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -31,11 +31,11 @@ func TestAccTencentCloudSmsTemplate_basic(t *testing.T) {
 const testAccSmsTemplate = `
 
 resource "tencentcloud_sms_template" "template" {
-  template_name = "TemplateName"
-  template_content = "Template test content"
+  template_name = "Template By Terraform"
+  template_content = "Template Content"
   international = 0
   sms_type = 0
-  remark = "短信tf测试"
+  remark = "terraform test"
 }
 
 `

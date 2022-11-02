@@ -5,23 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sms_sign" "sign" {
-  sign_name = "SignName"
-  sign_type = 0
-  document_type = 0
+  sign_name     = "terraform"
+  sign_type     = 1
+  document_type = 4
   international = 0
-  sign_purpose = 0
-  proof_image = ""
-  commission_image = ""
-  remark = ""
+  sign_purpose  = 0
+  proof_image = "dGhpcyBpcyBhIGV4YW1wbGU="
 }
+```
 
-```
-Import
-
-sms sign can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_sms_sign.sign sign_id
-```
 */
 package tencentcloud
 
@@ -29,6 +21,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -42,9 +36,6 @@ func resourceTencentCloudSmsSign() *schema.Resource {
 		Create: resourceTencentCloudSmsSignCreate,
 		Update: resourceTencentCloudSmsSignUpdate,
 		Delete: resourceTencentCloudSmsSignDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"sign_name": {
 				Type:        schema.TypeString,
@@ -104,9 +95,10 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 	logId := getLogId(contextNil)
 
 	var (
-		request  = sms.NewAddSmsSignRequest()
-		response *sms.AddSmsSignResponse
-		signId   uint64
+		request       = sms.NewAddSmsSignRequest()
+		response      *sms.AddSmsSignResponse
+		signId        uint64
+		international int
 	)
 
 	if v, ok := d.GetOk("sign_name"); ok {
@@ -122,7 +114,8 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	if v, _ := d.GetOk("international"); v != nil {
-		request.International = helper.IntUint64(v.(int))
+		international = v.(int)
+		request.International = helper.IntUint64(international)
 	}
 
 	if v, _ := d.GetOk("sign_purpose"); v != nil {
@@ -159,7 +152,7 @@ func resourceTencentCloudSmsSignCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	signId = *response.Response.AddSignStatus.SignId
-	d.SetId(helper.UInt64ToStr(signId))
+	d.SetId(helper.UInt64ToStr(signId) + FILED_SP + strconv.Itoa(international))
 	return resourceTencentCloudSmsSignRead(d, meta)
 }
 
@@ -172,9 +165,14 @@ func resourceTencentCloudSmsSignRead(d *schema.ResourceData, meta interface{}) e
 
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	signId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	signId := idSplit[0]
+	international := idSplit[1]
 
-	sign, err := service.DescribeSmsSign(ctx, signId)
+	sign, err := service.DescribeSmsSign(ctx, signId, international)
 
 	if err != nil {
 		return err
@@ -204,56 +202,44 @@ func resourceTencentCloudSmsSignUpdate(d *schema.ResourceData, meta interface{})
 
 	request := sms.NewModifySmsSignRequest()
 
-	signId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	signId := idSplit[0]
 
 	request.SignId = helper.Uint64(helper.StrToUInt64(signId))
 
-	if d.HasChange("sign_name") {
-		if v, ok := d.GetOk("sign_name"); ok {
-			request.SignName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("sign_name"); ok {
+		request.SignName = helper.String(v.(string))
 	}
 
-	if d.HasChange("sign_type") {
-		if v, _ := d.GetOk("sign_type"); v != nil {
-			request.SignType = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("sign_type"); v != nil {
+		request.SignType = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("document_type") {
-		if v, _ := d.GetOk("document_type"); v != nil {
-			request.DocumentType = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("document_type"); v != nil {
+		request.DocumentType = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("international") {
-		if v, _ := d.GetOk("international"); v != nil {
-			request.International = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("international"); v != nil {
+		request.International = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("sign_purpose") {
-		if v, _ := d.GetOk("sign_purpose"); v != nil {
-			request.SignPurpose = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("sign_purpose"); v != nil {
+		request.SignPurpose = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("proof_image") {
-		if v, ok := d.GetOk("proof_image"); ok {
-			request.ProofImage = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("proof_image"); ok {
+		request.ProofImage = helper.String(v.(string))
 	}
 
-	if d.HasChange("commission_image") {
-		if v, ok := d.GetOk("commission_image"); ok {
-			request.CommissionImage = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("commission_image"); ok {
+		request.CommissionImage = helper.String(v.(string))
 	}
 
-	if d.HasChange("remark") {
-		if v, ok := d.GetOk("remark"); ok {
-			request.Remark = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -284,7 +270,11 @@ func resourceTencentCloudSmsSignDelete(d *schema.ResourceData, meta interface{})
 
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	signId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	signId := idSplit[0]
 
 	if err := service.DeleteSmsSignById(ctx, signId); err != nil {
 		return err

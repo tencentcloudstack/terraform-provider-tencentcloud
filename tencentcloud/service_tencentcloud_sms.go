@@ -14,7 +14,7 @@ type SmsService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *SmsService) DescribeSmsSign(ctx context.Context, signId string) (sign *sms.DescribeSignListStatus, errRet error) {
+func (me *SmsService) DescribeSmsSign(ctx context.Context, signId string, international string) (sign *sms.DescribeSignListStatus, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = sms.NewDescribeSmsSignListRequest()
@@ -27,6 +27,7 @@ func (me *SmsService) DescribeSmsSign(ctx context.Context, signId string) (sign 
 		}
 	}()
 	request.SignIdSet = []*uint64{helper.Uint64(helper.StrToUInt64(signId))}
+	request.International = helper.Uint64(helper.StrToUInt64(international))
 
 	response, err := me.client.UseSmsClient().DescribeSmsSignList(request)
 	if err != nil {
@@ -69,7 +70,7 @@ func (me *SmsService) DeleteSmsSignById(ctx context.Context, signId string) (err
 	return
 }
 
-func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId string) (template *sms.DescribeTemplateListStatus, errRet error) {
+func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId string, international string) (template *sms.DescribeTemplateListStatus, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = sms.NewDescribeSmsTemplateListRequest()
@@ -82,6 +83,7 @@ func (me *SmsService) DescribeSmsTemplate(ctx context.Context, templateId string
 		}
 	}()
 	request.TemplateIdSet = []*uint64{helper.Uint64(helper.StrToUInt64(templateId))}
+	request.International = helper.Uint64(helper.StrToUInt64(international))
 
 	response, err := me.client.UseSmsClient().DescribeSmsTemplateList(request)
 	if err != nil {

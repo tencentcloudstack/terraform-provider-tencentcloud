@@ -5,19 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sms_template" "template" {
-  template_name = "TemplateName"
-  template_content = "Template test content"
+  template_name = "Template By Terraform"
+  template_content = "Template Content"
   international = 0
   sms_type = 0
   remark = "terraform test"
 }
 
-```
-Import
-
-sms template can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_sms_template.template template_id
 ```
 */
 package tencentcloud
@@ -26,6 +20,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -83,9 +79,10 @@ func resourceTencentCloudSmsTemplateCreate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 
 	var (
-		request    = sms.NewAddSmsTemplateRequest()
-		response   *sms.AddSmsTemplateResponse
-		templateId string
+		request       = sms.NewAddSmsTemplateRequest()
+		response      *sms.AddSmsTemplateResponse
+		templateId    string
+		international int
 	)
 
 	if v, ok := d.GetOk("template_name"); ok {
@@ -97,7 +94,8 @@ func resourceTencentCloudSmsTemplateCreate(d *schema.ResourceData, meta interfac
 	}
 
 	if v, _ := d.GetOk("international"); v != nil {
-		request.International = helper.IntUint64(v.(int))
+		international = v.(int)
+		request.International = helper.IntUint64(international)
 	}
 
 	if v, _ := d.GetOk("sms_type"); v != nil {
@@ -127,7 +125,7 @@ func resourceTencentCloudSmsTemplateCreate(d *schema.ResourceData, meta interfac
 
 	templateId = *response.Response.AddTemplateStatus.TemplateId
 
-	d.SetId(templateId)
+	d.SetId(templateId + FILED_SP + strconv.Itoa(international))
 	return resourceTencentCloudSmsTemplateRead(d, meta)
 }
 
@@ -140,8 +138,14 @@ func resourceTencentCloudSmsTemplateRead(d *schema.ResourceData, meta interface{
 
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateId := d.Id()
-	template, err := service.DescribeSmsTemplate(ctx, templateId)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	templateId := idSplit[0]
+	international := idSplit[1]
+
+	template, err := service.DescribeSmsTemplate(ctx, templateId, international)
 
 	if err != nil {
 		return err
@@ -174,38 +178,32 @@ func resourceTencentCloudSmsTemplateUpdate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	request := sms.NewModifySmsTemplateRequest()
 
-	templateId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	templateId := idSplit[0]
 
 	request.TemplateId = helper.Uint64(helper.StrToUInt64(templateId))
 
-	if d.HasChange("template_name") {
-		if v, ok := d.GetOk("template_name"); ok {
-			request.TemplateName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("template_name"); ok {
+		request.TemplateName = helper.String(v.(string))
 	}
 
-	if d.HasChange("template_content") {
-		if v, ok := d.GetOk("template_content"); ok {
-			request.TemplateContent = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("template_content"); ok {
+		request.TemplateContent = helper.String(v.(string))
 	}
 
-	if d.HasChange("international") {
-		if v, _ := d.GetOk("international"); v != nil {
-			request.International = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("international"); v != nil {
+		request.International = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("sms_type") {
-		if v, _ := d.GetOk("sms_type"); v != nil {
-			request.SmsType = helper.IntUint64(v.(int))
-		}
+	if v, _ := d.GetOk("sms_type"); v != nil {
+		request.SmsType = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("remark") {
-		if v, ok := d.GetOk("remark"); ok {
-			request.Remark = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -236,7 +234,11 @@ func resourceTencentCloudSmsTemplateDelete(d *schema.ResourceData, meta interfac
 
 	service := SmsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	templateId := idSplit[0]
 
 	if err := service.DeleteSmsTemplateById(ctx, templateId); err != nil {
 		return err
