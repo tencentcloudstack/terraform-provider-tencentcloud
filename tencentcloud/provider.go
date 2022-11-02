@@ -708,6 +708,8 @@ Security Token Service(STS)
 dcdb
   Resource
 	tencentcloud_dcdb_account
+	tencentcloud_dcdb_hourdb_instance
+	tencentcloud_dcdb_security_group_attachment
 
 */
 package tencentcloud
@@ -1273,9 +1275,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcm_mesh":                         resourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":           resourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_dcdb_account":                     resourceTencentCloudDcdbAccount(),
-			// "tencentcloud_dcdb_db_instance":               resourceTencentCloudDcdbDbInstance(),
-			// "tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
-			// "tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_dcdb_hourdb_instance":             resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment":   resourceTencentCloudDcdbSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
