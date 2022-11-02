@@ -54,6 +54,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -416,13 +417,21 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	d.SetId(instanceId)
 
+	instanceEmptyRetries := 5
 	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if instance == nil || *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-			return resource.RetryableError(fmt.Errorf("elasticsearch instance status is processing, retry... status:%v", *instance.Status))
+		if instance == nil {
+			if instanceEmptyRetries > 0 {
+				instanceEmptyRetries -= 1
+				return resource.RetryableError(fmt.Errorf("cannot find instance %s, retrying", instanceId))
+			}
+			return resource.NonRetryableError(fmt.Errorf("instance %s not exists", instanceId))
+		}
+		if *instance.Status != ES_INSTANCE_STATUS_NORMAL {
+			return resource.RetryableError(fmt.Errorf("elasticsearch instance status is %v, retrying", *instance.Status))
 		}
 		return nil
 	})
@@ -575,7 +584,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("version") {
@@ -590,18 +598,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("version")
 
-		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-				return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
-			}
-			return nil
-		})
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 		if err != nil {
 			return err
 		}
@@ -609,7 +607,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 	if d.HasChange("license_type") {
 		licenseType := d.Get("license_type").(string)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstanceLicense(ctx, instanceId, licenseType)
 			if errRet != nil {
 				return retryError(errRet)
@@ -619,18 +617,8 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("license_type")
 
-		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-				return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
-			}
-			return nil
-		})
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 		if err != nil {
 			return err
 		}
@@ -638,17 +626,25 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 	if d.HasChange("basic_security_type") {
 		basicSecurityType := d.Get("basic_security_type").(int)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		licenseType := d.Get("license_type").(string)
+		licenseTypeUpgrading := licenseType != "oss"
+		err := resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", int64(basicSecurityType), nil, nil, nil)
 			if errRet != nil {
+				err := errRet.(*sdkErrors.TencentCloudSDKError)
+				if err.Code == es.INVALIDPARAMETER && licenseTypeUpgrading {
+					return resource.RetryableError(fmt.Errorf("waiting for licenseType update"))
+				}
 				return retryError(errRet)
 			}
+
 			return nil
 		})
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+
 		if err != nil {
 			return err
 		}
-		d.SetPartial("basic_security_type")
 	}
 
 	if d.HasChange("web_node_type_info") {
@@ -660,7 +656,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeNum:  helper.IntUint64(value["node_num"].(int)),
 				NodeType: helper.String(value["node_type"].(string)),
 			}
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
 				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, info, nil)
 				if errRet != nil {
 					return retryError(errRet)
@@ -669,6 +665,10 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			})
 			break
 		}
+		if err != nil {
+			return err
+		}
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 		if err != nil {
 			return err
 		}
@@ -695,7 +695,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 			nodeInfoList = append(nodeInfoList, &dataDisk)
 		}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nodeInfoList, nil, nil)
 			if errRet != nil {
 				return retryError(errRet)
@@ -705,17 +705,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("node_info_list")
-		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if instance != nil && *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
-				return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
-			}
-			return nil
-		})
+		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
 		if err != nil {
 			return err
 		}
@@ -732,7 +722,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 	if d.HasChange("es_acl") {
 		esAcl := es.EsAcl{}
@@ -751,7 +740,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
 			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, nil, &esAcl)
 			if errRet != nil {
 				return retryError(errRet)
@@ -761,7 +750,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("es_acl")
 	}
 
 	d.Partial(false)
@@ -804,4 +792,26 @@ func resourceTencentCloudElasticsearchInstanceDelete(d *schema.ResourceData, met
 	}
 
 	return nil
+}
+
+func tencentCloudElasticsearchInstanceUpgradeWaiting(ctx context.Context, service *ElasticsearchService, instanceId string) error {
+	statusChangeRetries := 5
+	return resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			return resource.NonRetryableError(fmt.Errorf("instance %s not exist", instanceId))
+		}
+		if *instance.Status == ES_INSTANCE_STATUS_NORMAL && statusChangeRetries > 0 {
+			statusChangeRetries -= 1
+			err := fmt.Errorf("instance %s waiting for upgrade status change, %d times remaining", instanceId, statusChangeRetries)
+			return resource.RetryableError(err)
+		}
+		if *instance.Status == ES_INSTANCE_STATUS_PROCESSING {
+			return resource.RetryableError(errors.New("elasticsearch instance status is processing, retry..."))
+		}
+		return nil
+	})
 }

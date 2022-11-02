@@ -43,7 +43,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudNeedFixElasticsearchInstance_basic(t *testing.T) {
+func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -212,13 +212,13 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	  disk_size         = 200
 	}
 
-	es_public_acl {
-	  white_list {
+	es_acl {
+	  white_list = [
 		"0.0.0.0"
-	  }
-	  black_list {
+	  ]
+	  black_list = [
 		"1.1.1.1"
-	  }
+	  ]
 	}
   
 	tags = {
