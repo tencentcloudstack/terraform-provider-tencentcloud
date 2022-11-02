@@ -83,9 +83,9 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM8"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.MEDIUM8"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.disk_size", "200"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_public_acl.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_public_acl.0.white_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_public_acl.0.black_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.white_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "es_acl.0.black_list.#", "1"),
 				),
 			},
 			{
