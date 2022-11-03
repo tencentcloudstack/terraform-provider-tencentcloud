@@ -30,6 +30,7 @@ const (
 	COMMON_PROVIDER_SECRET_KEY        = "TENCENTCLOUD_SECRET_KEY_COMMON"
 	SUB_ACCOUNT_PROVIDER_SECRET_ID    = "TENCENTCLOUD_SECRET_ID_SUB_ACCOUNT"
 	SUB_ACCOUNT_PROVIDER_SECRET_KEY   = "TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT"
+	PRIVATE_REGION_SES                = "PRIVATE_REGION_SES"
 )
 
 func init() {
@@ -141,5 +142,23 @@ func testAccCheckTencentCloudDataSourceID(n string) resource.TestCheckFunc {
 			return fmt.Errorf("data source ID not set")
 		}
 		return nil
+	}
+}
+
+func testAccPreCheckBusiness(t *testing.T, accountType string) {
+	testAccPreCheck(t)
+	switch accountType {
+	case PRIVATE_REGION_SES:
+		v := os.Getenv(PRIVATE_REGION_SES)
+		if v == "" {
+			t.Fatalf(" %v must be set for acceptance tests\n", PRIVATE_REGION_SES)
+		}
+		os.Setenv(PROVIDER_REGION, v)
+	default:
+		v := os.Getenv(PROVIDER_REGION)
+		if v == "" {
+			t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_REGION)
+		}
+		os.Setenv(PROVIDER_REGION, v)
 	}
 }

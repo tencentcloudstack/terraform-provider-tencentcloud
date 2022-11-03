@@ -15,7 +15,7 @@ Provides a resource to create a ses domain
 
 ```hcl
 resource "tencentcloud_ses_domain" "domain" {
-  email_identity = ""
+  email_identity = "iac.cloud"
 }
 ```
 
@@ -37,6 +37,6 @@ In addition to all arguments above, the following attributes are exported:
 
 ses domain can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_ses_domain.domain domain_id
+$ terraform import tencentcloud_ses_domain.domain iac.cloud
 ```
 

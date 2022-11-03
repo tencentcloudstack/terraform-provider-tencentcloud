@@ -5,8 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ses_template" "template" {
-  template_name = "smsTemplateName"
-  template_content = ""
+  template_name = "sesTemplateName"
+  template_content {
+    text = "This is the content of the test"
+  }
 }
 
 ```
