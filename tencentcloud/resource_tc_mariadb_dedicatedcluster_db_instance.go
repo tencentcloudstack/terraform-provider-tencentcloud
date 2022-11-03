@@ -20,7 +20,7 @@ Import
 
 mariadb dedicatedcluster_db_instance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_dedicatedcluster_db_instance.dedicatedcluster_db_instance dedicatedclusterDbInstance_id
+$ terraform import tencentcloud_mariadb_dedicatedcluster_db_instance.dedicatedcluster_db_instance tdsql-050g3fmv
 ```
 */
 package tencentcloud
@@ -219,11 +219,10 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	clusterId := d.Id()
+	instanceId := d.Id()
 
 	paramMap := make(map[string]interface{})
-	paramMap["excluster_ids"] = []*string{&clusterId}
-	paramMap["excluster_type"] = helper.IntInt64(2)
+	paramMap["instance_ids"] = []*string{&instanceId}
 
 	dbInstances, err := service.DescribeMariadbDbInstancesByFilter(ctx, paramMap)
 
@@ -233,7 +232,7 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 
 	if len(dbInstances) < 1 {
 		d.SetId("")
-		return fmt.Errorf("resource `dedicatedclusterDbInstance` %s does not exist", clusterId)
+		return fmt.Errorf("resource `dedicatedclusterDbInstance` %s does not exist", instanceId)
 	}
 
 	_ = d.Set("goods_num", len(dbInstances))
@@ -251,12 +250,12 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 		_ = d.Set("cluster_id", dbInstance.ExclusterId)
 	}
 
-	if dbInstance.VpcId != nil {
-		err = d.Set("vpc_id", dbInstance.VpcId)
+	if dbInstance.UniqueVpcId != nil {
+		err = d.Set("vpc_id", dbInstance.UniqueVpcId)
 	}
 
-	if dbInstance.SubnetId != nil {
-		_ = d.Set("subnet_id", dbInstance.SubnetId)
+	if dbInstance.UniqueSubnetId != nil {
+		_ = d.Set("subnet_id", dbInstance.UniqueSubnetId)
 	}
 
 	if dbInstance.DbVersionId != nil {

@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 
 mariadb dedicatedcluster_db_instance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_dedicatedcluster_db_instance.dedicatedcluster_db_instance dedicatedclusterDbInstance_id
+$ terraform import tencentcloud_mariadb_dedicatedcluster_db_instance.dedicatedcluster_db_instance tdsql-050g3fmv
 ```
 
