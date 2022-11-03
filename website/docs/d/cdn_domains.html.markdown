@@ -32,7 +32,7 @@ The following arguments are supported:
 * `https_switch` - (Optional, String) HTTPS configuration. Valid values: `on`, `off` and `processing`.
 * `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. Valid values: `http`, `https` and `follow`.
 * `result_output_file` - (Optional, String) Used to save results.
-* `service_type` - (Optional, String) Service type of acceleration domain name. The available value include `web`, `download` and `media`.
+* `service_type` - (Optional, String) Service type of acceleration domain name. The available value include `web`, `download`, `media`, `hybrid` and `dynamic`.
 
 ## Attributes Reference
 

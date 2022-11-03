@@ -37,7 +37,7 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Service type of acceleration domain name. The available value include `web`, `download` and `media`.",
+				Description:  "Service type of acceleration domain name. The available value include `web`, `download`, `media`, `hybrid` and `dynamic`.",
 			},
 			"full_url_cache": {
 				Type:        schema.TypeBool,
