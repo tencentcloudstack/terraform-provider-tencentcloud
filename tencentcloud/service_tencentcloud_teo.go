@@ -679,84 +679,6 @@ func (me *TeoService) DescribeTeoSecurityPolicy(ctx context.Context,
 	return
 }
 
-func (me *TeoService) DescribeTeoHostCertificate(ctx context.Context,
-	zoneId, host, certId string) (hostCertificate []*teo.HostsCertificate, errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		request = teo.NewDescribeHostCertificatesRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	request.Filters = append(
-		request.Filters,
-		&teo.AdvancedFilter{
-			Name:   helper.String("zone-id"),
-			Values: []*string{&zoneId},
-			Fuzzy:  helper.Bool(false),
-		},
-	)
-	request.Filters = append(
-		request.Filters,
-		&teo.AdvancedFilter{
-			Name:   helper.String("host"),
-			Values: []*string{&host},
-			Fuzzy:  helper.Bool(false),
-		},
-	)
-
-	request.Filters = append(
-		request.Filters,
-		&teo.AdvancedFilter{
-			Name:   helper.String("cert-id"),
-			Values: []*string{&certId},
-			Fuzzy:  helper.Bool(false),
-		},
-	)
-	ratelimit.Check(request.GetAction())
-
-	var offset int64 = 0
-	var pageSize int64 = 100
-	instances := make([]*teo.HostsCertificate, 0)
-
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTeoClient().DescribeHostCertificates(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.HostCertificates) < 1 {
-			break
-		}
-		instances = append(instances, response.Response.HostCertificates...)
-		if len(response.Response.HostCertificates) < int(pageSize) {
-			break
-		}
-		offset += pageSize
-	}
-
-	if len(instances) < 1 {
-		return
-	}
-	hostCertificate = instances
-
-	return
-
-}
-
 func (me *TeoService) DescribeTeoDnsSec(ctx context.Context, zoneId string) (dnsSec *teo.DescribeDnssecResponseParams,
 	errRet error) {
 	var (
@@ -996,7 +918,7 @@ func (me *TeoService) DescribeTeoBotManagedRulesByFilter(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 9999999
+	var pageSize int64 = 100
 
 	for {
 		request.Offset = &offset
@@ -1167,7 +1089,7 @@ func (me *TeoService) DescribeTeoWafRuleGroupsByFilter(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
-	var pageSize int64 = 9999999
+	var pageSize int64 = 100
 
 	for {
 		request.Offset = &offset

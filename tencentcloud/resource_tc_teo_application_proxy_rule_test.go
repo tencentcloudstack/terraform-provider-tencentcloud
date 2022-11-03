@@ -23,8 +23,14 @@ func TestAccTencentCloudTeoApplicationProxyRule_basic(t *testing.T) {
 				Config: testAccTeoApplicationProxyRule,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationProxyRuleExists("tencentcloud_teo_application_proxy_rule.basic"),
-					//resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "zone_name", "tf-teo.com"),
-					//resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "plan_type", "ent_with_bot"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "forward_client_ip", "TOA"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "origin_type", "custom"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "origin_port", "8083"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "origin_value.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "port.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "proto", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "session_persist", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy_rule.basic", "status", "online"),
 				),
 			},
 			{
@@ -99,23 +105,24 @@ variable "default_zone_id" {
   default = "` + defaultZoneId + `"
 }
 variable "proxy_id" {
-  default = "` + defaultPolicyId + `"
+  default = "` + applicationProxyId + `"
 }
 `
 
-const testAccTeoApplicationProxyRule = testAccTeoApplicationProxyRuleVar + testAccTeoApplicationProxy + `
+const testAccTeoApplicationProxyRule = testAccTeoApplicationProxyRuleVar + `
 
 resource "tencentcloud_teo_application_proxy_rule" "basic" {
   forward_client_ip = "TOA"
   origin_type       = "custom"
+  origin_port       = "8083"
   origin_value      = [
-    "127.0.0.1:8081",
+    "127.0.0.1",
   ]
   port              = [
     "8083",
   ]
   proto             = "TCP"
-  proxy_id          = tencentcloud_teo_application_proxy.basic.proxy_id
+  proxy_id          = var.proxy_id
   session_persist   = false
   status            = "online"
   zone_id           = var.default_zone_id

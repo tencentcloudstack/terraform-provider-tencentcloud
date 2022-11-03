@@ -35,6 +35,7 @@ resource "tencentcloud_teo_application_proxy_rule" "application_proxy_rule" {
 
 The following arguments are supported:
 
+* `origin_port` - (Required, String) Origin port, supported formats: single port: 80; Port segment: 81-90, 81 to 90 ports.
 * `origin_type` - (Required, String) Origin server type.- `custom`: Specified origins.- `origins`: An origin group.
 * `origin_value` - (Required, Set: [`String`]) Origin server information.When `OriginType` is custom, this field value indicates multiple origin servers in either of the following formats:- `IP`:Port- Domain name:Port.When `OriginType` is origins, it indicates the origin group ID.
 * `port` - (Required, Set: [`String`]) Valid values:- port number: `80` means port 80.- port range: `81-90` means port range 81-90.

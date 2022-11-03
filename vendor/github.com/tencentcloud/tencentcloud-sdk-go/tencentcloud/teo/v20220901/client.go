@@ -67,6 +67,7 @@ func NewCheckCertificateResponse() (response *CheckCertificateResponse) {
 // 校验证书
 //
 // 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INVALIDCERTINFO = "InvalidParameter.InvalidCertInfo"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CheckCertificate(request *CheckCertificateRequest) (response *CheckCertificateResponse, err error) {
@@ -77,6 +78,7 @@ func (c *Client) CheckCertificate(request *CheckCertificateRequest) (response *C
 // 校验证书
 //
 // 可能返回的错误码:
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INVALIDCERTINFO = "InvalidParameter.InvalidCertInfo"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CheckCertificateWithContext(ctx context.Context, request *CheckCertificateRequest) (response *CheckCertificateResponse, err error) {
@@ -464,6 +466,7 @@ func NewCreateLoadBalancingResponse() (response *CreateLoadBalancingResponse) {
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateLoadBalancing(request *CreateLoadBalancingRequest) (response *CreateLoadBalancingResponse, err error) {
     return c.CreateLoadBalancingWithContext(context.Background(), request)
 }
@@ -473,6 +476,7 @@ func (c *Client) CreateLoadBalancing(request *CreateLoadBalancingRequest) (respo
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateLoadBalancingWithContext(ctx context.Context, request *CreateLoadBalancingRequest) (response *CreateLoadBalancingResponse, err error) {
     if request == nil {
         request = NewCreateLoadBalancingRequest()
@@ -667,9 +671,7 @@ func NewCreatePlanForZoneResponse() (response *CreatePlanForZoneResponse) {
 // 为未购买套餐的站点购买套餐
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) CreatePlanForZone(request *CreatePlanForZoneRequest) (response *CreatePlanForZoneResponse, err error) {
     return c.CreatePlanForZoneWithContext(context.Background(), request)
 }
@@ -678,9 +680,7 @@ func (c *Client) CreatePlanForZone(request *CreatePlanForZoneRequest) (response 
 // 为未购买套餐的站点购买套餐
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) CreatePlanForZoneWithContext(ctx context.Context, request *CreatePlanForZoneRequest) (response *CreatePlanForZoneResponse, err error) {
     if request == nil {
         request = NewCreatePlanForZoneRequest()
@@ -855,17 +855,7 @@ func NewCreateReplayTaskResponse() (response *CreateReplayTaskResponse) {
 // 创建刷新/预热重放任务
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateReplayTask(request *CreateReplayTaskRequest) (response *CreateReplayTaskResponse, err error) {
     return c.CreateReplayTaskWithContext(context.Background(), request)
 }
@@ -874,17 +864,7 @@ func (c *Client) CreateReplayTask(request *CreateReplayTaskRequest) (response *C
 // 创建刷新/预热重放任务
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
 //  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateReplayTaskWithContext(ctx context.Context, request *CreateReplayTaskRequest) (response *CreateReplayTaskResponse, err error) {
     if request == nil {
         request = NewCreateReplayTaskRequest()
@@ -923,17 +903,24 @@ func NewCreateRuleResponse() (response *CreateRuleResponse) {
 // 规则引擎创建规则。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
-//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
     return c.CreateRuleWithContext(context.Background(), request)
 }
@@ -942,17 +929,24 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
 // 规则引擎创建规则。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
-//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateRuleWithContext(ctx context.Context, request *CreateRuleRequest) (response *CreateRuleResponse, err error) {
     if request == nil {
         request = NewCreateRuleRequest()
@@ -991,17 +985,24 @@ func NewCreateSecurityDropPageResponse() (response *CreateSecurityDropPageRespon
 // 创建自定义拦截页面。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
-//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateSecurityDropPage(request *CreateSecurityDropPageRequest) (response *CreateSecurityDropPageResponse, err error) {
     return c.CreateSecurityDropPageWithContext(context.Background(), request)
 }
@@ -1010,17 +1011,24 @@ func (c *Client) CreateSecurityDropPage(request *CreateSecurityDropPageRequest) 
 // 创建自定义拦截页面。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_BACKENDERROR = "InternalError.BackendError"
-//  INTERNALERROR_DOMAINCONFIG = "InternalError.DomainConfig"
-//  INTERNALERROR_QUOTASYSTEM = "InternalError.QuotaSystem"
-//  INVALIDPARAMETER_DOMAINNOTFOUND = "InvalidParameter.DomainNotFound"
-//  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
-//  INVALIDPARAMETER_TARGET = "InvalidParameter.Target"
-//  INVALIDPARAMETER_TASKNOTGENERATED = "InvalidParameter.TaskNotGenerated"
-//  INVALIDPARAMETER_UPLOADURL = "InvalidParameter.UploadUrl"
-//  LIMITEXCEEDED_BATCHQUOTA = "LimitExceeded.BatchQuota"
-//  LIMITEXCEEDED_DAILYQUOTA = "LimitExceeded.DailyQuota"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUETOOLONGVALUE = "InvalidParameter.ErrInvalidConditionValueTooLongValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDAUTHENTICATIONTYPESIGNPARAM = "InvalidParameter.InvalidAuthenticationTypeSignParam"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTHOST = "InvalidParameter.InvalidUrlRedirectHost"
+//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) CreateSecurityDropPageWithContext(ctx context.Context, request *CreateSecurityDropPageRequest) (response *CreateSecurityDropPageResponse, err error) {
     if request == nil {
         request = NewCreateSecurityDropPageRequest()
@@ -1115,8 +1123,19 @@ func NewCreateZoneResponse() (response *CreateZoneResponse) {
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIASDOMAIN = "ResourceInUse.AliasDomain"
+//  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_HOST = "ResourceInUse.Host"
+//  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
+//  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
+//  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
+//  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
+//  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneResponse, err error) {
     return c.CreateZoneWithContext(context.Background(), request)
@@ -1128,8 +1147,19 @@ func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneRes
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIASDOMAIN = "ResourceInUse.AliasDomain"
+//  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_HOST = "ResourceInUse.Host"
+//  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
+//  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
+//  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
+//  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
+//  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) CreateZoneWithContext(ctx context.Context, request *CreateZoneRequest) (response *CreateZoneResponse, err error) {
     if request == nil {
@@ -1171,8 +1201,19 @@ func NewDeleteApplicationProxyResponse() (response *DeleteApplicationProxyRespon
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIASDOMAIN = "ResourceInUse.AliasDomain"
+//  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_HOST = "ResourceInUse.Host"
+//  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
+//  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
+//  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
+//  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
+//  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteApplicationProxy(request *DeleteApplicationProxyRequest) (response *DeleteApplicationProxyResponse, err error) {
     return c.DeleteApplicationProxyWithContext(context.Background(), request)
@@ -1184,8 +1225,19 @@ func (c *Client) DeleteApplicationProxy(request *DeleteApplicationProxyRequest) 
 // 可能返回的错误码:
 //  DRYRUNOPERATION = "DryRunOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_DOMAINISBLOCKED = "OperationDenied.DomainIsBlocked"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_ALIASDOMAIN = "ResourceInUse.AliasDomain"
+//  RESOURCEINUSE_CNAME = "ResourceInUse.Cname"
+//  RESOURCEINUSE_DNS = "ResourceInUse.Dns"
+//  RESOURCEINUSE_HOST = "ResourceInUse.Host"
+//  RESOURCEINUSE_NS = "ResourceInUse.NS"
 //  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
+//  RESOURCEINUSE_OTHERSALIASDOMAIN = "ResourceInUse.OthersAliasDomain"
+//  RESOURCEINUSE_OTHERSCNAME = "ResourceInUse.OthersCname"
+//  RESOURCEINUSE_OTHERSHOST = "ResourceInUse.OthersHost"
+//  RESOURCEINUSE_OTHERSNS = "ResourceInUse.OthersNS"
+//  RESOURCEINUSE_SELFANDOTHERSCNAME = "ResourceInUse.SelfAndOthersCname"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DeleteApplicationProxyWithContext(ctx context.Context, request *DeleteApplicationProxyRequest) (response *DeleteApplicationProxyResponse, err error) {
     if request == nil {
@@ -1225,11 +1277,8 @@ func NewDeleteApplicationProxyRuleResponse() (response *DeleteApplicationProxyRu
 // 删除应用代理规则
 //
 // 可能返回的错误码:
-//  DRYRUNOPERATION = "DryRunOperation"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteApplicationProxyRule(request *DeleteApplicationProxyRuleRequest) (response *DeleteApplicationProxyRuleResponse, err error) {
     return c.DeleteApplicationProxyRuleWithContext(context.Background(), request)
 }
@@ -1238,11 +1287,8 @@ func (c *Client) DeleteApplicationProxyRule(request *DeleteApplicationProxyRuleR
 // 删除应用代理规则
 //
 // 可能返回的错误码:
-//  DRYRUNOPERATION = "DryRunOperation"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINUSE_OTHERS = "ResourceInUse.Others"
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteApplicationProxyRuleWithContext(ctx context.Context, request *DeleteApplicationProxyRuleRequest) (response *DeleteApplicationProxyRuleResponse, err error) {
     if request == nil {
         request = NewDeleteApplicationProxyRuleRequest()
@@ -1381,7 +1427,7 @@ func NewDeleteLogTopicTaskResponse() (response *DeleteLogTopicTaskResponse) {
 // 本接口（DeleteLogTopicTask）用于删除日志推送任务。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DeleteLogTopicTask(request *DeleteLogTopicTaskRequest) (response *DeleteLogTopicTaskResponse, err error) {
     return c.DeleteLogTopicTaskWithContext(context.Background(), request)
 }
@@ -1390,7 +1436,7 @@ func (c *Client) DeleteLogTopicTask(request *DeleteLogTopicTaskRequest) (respons
 // 本接口（DeleteLogTopicTask）用于删除日志推送任务。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) DeleteLogTopicTaskWithContext(ctx context.Context, request *DeleteLogTopicTaskRequest) (response *DeleteLogTopicTaskResponse, err error) {
     if request == nil {
         request = NewDeleteLogTopicTaskRequest()
@@ -1430,6 +1476,7 @@ func NewDeleteOriginGroupResponse() (response *DeleteOriginGroupResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteOriginGroup(request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
     return c.DeleteOriginGroupWithContext(context.Background(), request)
 }
@@ -1439,6 +1486,7 @@ func (c *Client) DeleteOriginGroup(request *DeleteOriginGroupRequest) (response 
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteOriginGroupWithContext(ctx context.Context, request *DeleteOriginGroupRequest) (response *DeleteOriginGroupResponse, err error) {
     if request == nil {
         request = NewDeleteOriginGroupRequest()
@@ -1477,7 +1525,7 @@ func NewDeleteRulesResponse() (response *DeleteRulesResponse) {
 // 批量删除规则引擎规则。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
 func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRulesResponse, err error) {
     return c.DeleteRulesWithContext(context.Background(), request)
 }
@@ -1486,7 +1534,7 @@ func (c *Client) DeleteRules(request *DeleteRulesRequest) (response *DeleteRules
 // 批量删除规则引擎规则。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
 func (c *Client) DeleteRulesWithContext(ctx context.Context, request *DeleteRulesRequest) (response *DeleteRulesResponse, err error) {
     if request == nil {
         request = NewDeleteRulesRequest()
@@ -1525,7 +1573,7 @@ func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
 // 删除站点。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
     return c.DeleteZoneWithContext(context.Background(), request)
 }
@@ -1534,7 +1582,7 @@ func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneRes
 // 删除站点。
 //
 // 可能返回的错误码:
-//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteZoneWithContext(ctx context.Context, request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
     if request == nil {
         request = NewDeleteZoneRequest()
@@ -1622,6 +1670,7 @@ func NewDescribeApplicationProxiesResponse() (response *DescribeApplicationProxi
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeApplicationProxies(request *DescribeApplicationProxiesRequest) (response *DescribeApplicationProxiesResponse, err error) {
     return c.DescribeApplicationProxiesWithContext(context.Background(), request)
@@ -1632,6 +1681,7 @@ func (c *Client) DescribeApplicationProxies(request *DescribeApplicationProxiesR
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeApplicationProxiesWithContext(ctx context.Context, request *DescribeApplicationProxiesRequest) (response *DescribeApplicationProxiesResponse, err error) {
     if request == nil {
@@ -1672,6 +1722,7 @@ func NewDescribeAvailablePlansResponse() (response *DescribeAvailablePlansRespon
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeAvailablePlans(request *DescribeAvailablePlansRequest) (response *DescribeAvailablePlansResponse, err error) {
     return c.DescribeAvailablePlansWithContext(context.Background(), request)
@@ -1682,6 +1733,7 @@ func (c *Client) DescribeAvailablePlans(request *DescribeAvailablePlansRequest) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeAvailablePlansWithContext(ctx context.Context, request *DescribeAvailablePlansRequest) (response *DescribeAvailablePlansResponse, err error) {
     if request == nil {
@@ -1722,6 +1774,7 @@ func NewDescribeBillingDataResponse() (response *DescribeBillingDataResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeBillingData(request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
     return c.DescribeBillingDataWithContext(context.Background(), request)
@@ -1732,6 +1785,7 @@ func (c *Client) DescribeBillingData(request *DescribeBillingDataRequest) (respo
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeBillingDataWithContext(ctx context.Context, request *DescribeBillingDataRequest) (response *DescribeBillingDataResponse, err error) {
     if request == nil {
@@ -1772,6 +1826,7 @@ func NewDescribeBotClientIpListResponse() (response *DescribeBotClientIpListResp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) DescribeBotClientIpList(request *DescribeBotClientIpListRequest) (response *DescribeBotClientIpListResponse, err error) {
     return c.DescribeBotClientIpListWithContext(context.Background(), request)
 }
@@ -1781,6 +1836,7 @@ func (c *Client) DescribeBotClientIpList(request *DescribeBotClientIpListRequest
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) DescribeBotClientIpListWithContext(ctx context.Context, request *DescribeBotClientIpListRequest) (response *DescribeBotClientIpListResponse, err error) {
     if request == nil {
         request = NewDescribeBotClientIpListRequest()
@@ -1820,6 +1876,7 @@ func NewDescribeBotDataResponse() (response *DescribeBotDataResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1832,6 +1889,7 @@ func (c *Client) DescribeBotData(request *DescribeBotDataRequest) (response *Des
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -1874,6 +1932,8 @@ func NewDescribeBotHitRuleDetailResponse() (response *DescribeBotHitRuleDetailRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeBotHitRuleDetail(request *DescribeBotHitRuleDetailRequest) (response *DescribeBotHitRuleDetailResponse, err error) {
     return c.DescribeBotHitRuleDetailWithContext(context.Background(), request)
 }
@@ -1883,6 +1943,8 @@ func (c *Client) DescribeBotHitRuleDetail(request *DescribeBotHitRuleDetailReque
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeBotHitRuleDetailWithContext(ctx context.Context, request *DescribeBotHitRuleDetailRequest) (response *DescribeBotHitRuleDetailResponse, err error) {
     if request == nil {
         request = NewDescribeBotHitRuleDetailRequest()
@@ -1922,6 +1984,8 @@ func NewDescribeBotLogResponse() (response *DescribeBotLogResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeBotLog(request *DescribeBotLogRequest) (response *DescribeBotLogResponse, err error) {
     return c.DescribeBotLogWithContext(context.Background(), request)
 }
@@ -1931,6 +1995,8 @@ func (c *Client) DescribeBotLog(request *DescribeBotLogRequest) (response *Descr
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeBotLogWithContext(ctx context.Context, request *DescribeBotLogRequest) (response *DescribeBotLogResponse, err error) {
     if request == nil {
         request = NewDescribeBotLogRequest()
@@ -2165,6 +2231,8 @@ func NewDescribeDDoSAttackDataResponse() (response *DescribeDDoSAttackDataRespon
 // 本接口（DescribeDDoSAttackData）用于查询DDoS攻击时序数据。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSAttackData(request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
     return c.DescribeDDoSAttackDataWithContext(context.Background(), request)
@@ -2174,6 +2242,8 @@ func (c *Client) DescribeDDoSAttackData(request *DescribeDDoSAttackDataRequest) 
 // 本接口（DescribeDDoSAttackData）用于查询DDoS攻击时序数据。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSAttackDataWithContext(ctx context.Context, request *DescribeDDoSAttackDataRequest) (response *DescribeDDoSAttackDataResponse, err error) {
     if request == nil {
@@ -2213,6 +2283,7 @@ func NewDescribeDDoSAttackEventResponse() (response *DescribeDDoSAttackEventResp
 // 本接口（DescribeDDoSAttackEvent）用于查询DDoS攻击事件列表。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2224,6 +2295,7 @@ func (c *Client) DescribeDDoSAttackEvent(request *DescribeDDoSAttackEventRequest
 // 本接口（DescribeDDoSAttackEvent）用于查询DDoS攻击事件列表。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2313,7 +2385,8 @@ func NewDescribeDDoSAttackSourceEventResponse() (response *DescribeDDoSAttackSou
 // 本接口（DescribeDDoSAttackSourceEvent）用于查询DDoS攻击源信息列表。
 //
 // 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeDDoSAttackSourceEvent(request *DescribeDDoSAttackSourceEventRequest) (response *DescribeDDoSAttackSourceEventResponse, err error) {
     return c.DescribeDDoSAttackSourceEventWithContext(context.Background(), request)
 }
@@ -2322,7 +2395,8 @@ func (c *Client) DescribeDDoSAttackSourceEvent(request *DescribeDDoSAttackSource
 // 本接口（DescribeDDoSAttackSourceEvent）用于查询DDoS攻击源信息列表。
 //
 // 可能返回的错误码:
-//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeDDoSAttackSourceEventWithContext(ctx context.Context, request *DescribeDDoSAttackSourceEventRequest) (response *DescribeDDoSAttackSourceEventResponse, err error) {
     if request == nil {
         request = NewDescribeDDoSAttackSourceEventRequest()
@@ -2361,6 +2435,7 @@ func NewDescribeDDoSAttackTopDataResponse() (response *DescribeDDoSAttackTopData
 // 本接口（DescribeDDoSAttackTopData）用于查询DDoS攻击Top数据。
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSAttackTopData(request *DescribeDDoSAttackTopDataRequest) (response *DescribeDDoSAttackTopDataResponse, err error) {
     return c.DescribeDDoSAttackTopDataWithContext(context.Background(), request)
@@ -2370,6 +2445,7 @@ func (c *Client) DescribeDDoSAttackTopData(request *DescribeDDoSAttackTopDataReq
 // 本接口（DescribeDDoSAttackTopData）用于查询DDoS攻击Top数据。
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSAttackTopDataWithContext(ctx context.Context, request *DescribeDDoSAttackTopDataRequest) (response *DescribeDDoSAttackTopDataResponse, err error) {
     if request == nil {
@@ -2409,6 +2485,7 @@ func NewDescribeDDoSBlockListResponse() (response *DescribeDDoSBlockListResponse
 // 本接口（DescribeDDoSBlockList）用于查询DDoS封禁解封列表。
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSBlockList(request *DescribeDDoSBlockListRequest) (response *DescribeDDoSBlockListResponse, err error) {
     return c.DescribeDDoSBlockListWithContext(context.Background(), request)
@@ -2418,6 +2495,7 @@ func (c *Client) DescribeDDoSBlockList(request *DescribeDDoSBlockListRequest) (r
 // 本接口（DescribeDDoSBlockList）用于查询DDoS封禁解封列表。
 //
 // 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSBlockListWithContext(ctx context.Context, request *DescribeDDoSBlockListRequest) (response *DescribeDDoSBlockListResponse, err error) {
     if request == nil {
@@ -2461,6 +2539,7 @@ func NewDescribeDDoSMajorAttackEventResponse() (response *DescribeDDoSMajorAttac
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSMajorAttackEvent(request *DescribeDDoSMajorAttackEventRequest) (response *DescribeDDoSMajorAttackEventResponse, err error) {
     return c.DescribeDDoSMajorAttackEventWithContext(context.Background(), request)
@@ -2474,6 +2553,7 @@ func (c *Client) DescribeDDoSMajorAttackEvent(request *DescribeDDoSMajorAttackEv
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSMajorAttackEventWithContext(ctx context.Context, request *DescribeDDoSMajorAttackEventRequest) (response *DescribeDDoSMajorAttackEventResponse, err error) {
     if request == nil {
@@ -2517,6 +2597,7 @@ func NewDescribeDDoSPolicyResponse() (response *DescribeDDoSPolicyResponse) {
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSPolicy(request *DescribeDDoSPolicyRequest) (response *DescribeDDoSPolicyResponse, err error) {
     return c.DescribeDDoSPolicyWithContext(context.Background(), request)
@@ -2530,6 +2611,7 @@ func (c *Client) DescribeDDoSPolicy(request *DescribeDDoSPolicyRequest) (respons
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeDDoSPolicyWithContext(ctx context.Context, request *DescribeDDoSPolicyRequest) (response *DescribeDDoSPolicyResponse, err error) {
     if request == nil {
@@ -2571,6 +2653,7 @@ func NewDescribeDefaultCertificatesResponse() (response *DescribeDefaultCertific
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_ZONENOTFOUND = "ResourceUnavailable.ZoneNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2585,6 +2668,7 @@ func (c *Client) DescribeDefaultCertificates(request *DescribeDefaultCertificate
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_ZONENOTFOUND = "ResourceUnavailable.ZoneNotFound"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2677,8 +2761,10 @@ func NewDescribeDnsRecordsResponse() (response *DescribeDnsRecordsResponse) {
 // 查询 DNS 记录列表，支持搜索、分页、排序、过滤。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDnsRecords(request *DescribeDnsRecordsRequest) (response *DescribeDnsRecordsResponse, err error) {
     return c.DescribeDnsRecordsWithContext(context.Background(), request)
 }
@@ -2687,8 +2773,10 @@ func (c *Client) DescribeDnsRecords(request *DescribeDnsRecordsRequest) (respons
 // 查询 DNS 记录列表，支持搜索、分页、排序、过滤。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDnsRecordsWithContext(ctx context.Context, request *DescribeDnsRecordsRequest) (response *DescribeDnsRecordsResponse, err error) {
     if request == nil {
         request = NewDescribeDnsRecordsRequest()
@@ -2727,8 +2815,10 @@ func NewDescribeDnssecResponse() (response *DescribeDnssecResponse) {
 // 用于查询 DNSSEC 相关信息
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDnssec(request *DescribeDnssecRequest) (response *DescribeDnssecResponse, err error) {
     return c.DescribeDnssecWithContext(context.Background(), request)
 }
@@ -2737,8 +2827,10 @@ func (c *Client) DescribeDnssec(request *DescribeDnssecRequest) (response *Descr
 // 用于查询 DNSSEC 相关信息
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_DOMAINONTRAFFICSCHEDULING = "InvalidParameter.DomainOnTrafficScheduling"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDnssecWithContext(ctx context.Context, request *DescribeDnssecRequest) (response *DescribeDnssecResponse, err error) {
     if request == nil {
         request = NewDescribeDnssecRequest()
@@ -2751,64 +2843,6 @@ func (c *Client) DescribeDnssecWithContext(ctx context.Context, request *Describ
     request.SetContext(ctx)
     
     response = NewDescribeDnssecResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeHostCertificatesRequest() (request *DescribeHostCertificatesRequest) {
-    request = &DescribeHostCertificatesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("teo", APIVersion, "DescribeHostCertificates")
-    
-    
-    return
-}
-
-func NewDescribeHostCertificatesResponse() (response *DescribeHostCertificatesResponse) {
-    response = &DescribeHostCertificatesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeHostCertificates
-// 查询域名证书列表，支持搜索、分页、排序、过滤。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) DescribeHostCertificates(request *DescribeHostCertificatesRequest) (response *DescribeHostCertificatesResponse, err error) {
-    return c.DescribeHostCertificatesWithContext(context.Background(), request)
-}
-
-// DescribeHostCertificates
-// 查询域名证书列表，支持搜索、分页、排序、过滤。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
-//  OPERATIONDENIED = "OperationDenied"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) DescribeHostCertificatesWithContext(ctx context.Context, request *DescribeHostCertificatesRequest) (response *DescribeHostCertificatesResponse, err error) {
-    if request == nil {
-        request = NewDescribeHostCertificatesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeHostCertificates require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeHostCertificatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2835,6 +2869,7 @@ func NewDescribeHostsSettingResponse() (response *DescribeHostsSettingResponse) 
 // 用于查询域名配置信息
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -2847,6 +2882,7 @@ func (c *Client) DescribeHostsSetting(request *DescribeHostsSettingRequest) (res
 // 用于查询域名配置信息
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
@@ -3182,6 +3218,7 @@ func NewDescribeOverviewL7DataResponse() (response *DescribeOverviewL7DataRespon
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeOverviewL7Data(request *DescribeOverviewL7DataRequest) (response *DescribeOverviewL7DataResponse, err error) {
@@ -3193,6 +3230,7 @@ func (c *Client) DescribeOverviewL7Data(request *DescribeOverviewL7DataRequest) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeOverviewL7DataWithContext(ctx context.Context, request *DescribeOverviewL7DataRequest) (response *DescribeOverviewL7DataResponse, err error) {
@@ -3903,6 +3941,7 @@ func NewDescribeSpeedTestingMetricDataResponse() (response *DescribeSpeedTesting
 // 查询站点拨测结果
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeSpeedTestingMetricData(request *DescribeSpeedTestingMetricDataRequest) (response *DescribeSpeedTestingMetricDataResponse, err error) {
     return c.DescribeSpeedTestingMetricDataWithContext(context.Background(), request)
@@ -3912,6 +3951,7 @@ func (c *Client) DescribeSpeedTestingMetricData(request *DescribeSpeedTestingMet
 // 查询站点拨测结果
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeSpeedTestingMetricDataWithContext(ctx context.Context, request *DescribeSpeedTestingMetricDataRequest) (response *DescribeSpeedTestingMetricDataResponse, err error) {
     if request == nil {
@@ -3951,6 +3991,7 @@ func NewDescribeSpeedTestingQuotaResponse() (response *DescribeSpeedTestingQuota
 // 查询站点拨测配额
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeSpeedTestingQuota(request *DescribeSpeedTestingQuotaRequest) (response *DescribeSpeedTestingQuotaResponse, err error) {
     return c.DescribeSpeedTestingQuotaWithContext(context.Background(), request)
@@ -3960,6 +4001,7 @@ func (c *Client) DescribeSpeedTestingQuota(request *DescribeSpeedTestingQuotaReq
 // 查询站点拨测配额
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeSpeedTestingQuotaWithContext(ctx context.Context, request *DescribeSpeedTestingQuotaRequest) (response *DescribeSpeedTestingQuotaResponse, err error) {
     if request == nil {
@@ -4002,6 +4044,7 @@ func NewDescribeTimingL4DataResponse() (response *DescribeTimingL4DataResponse) 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTimingL4Data(request *DescribeTimingL4DataRequest) (response *DescribeTimingL4DataResponse, err error) {
     return c.DescribeTimingL4DataWithContext(context.Background(), request)
@@ -4014,6 +4057,7 @@ func (c *Client) DescribeTimingL4Data(request *DescribeTimingL4DataRequest) (res
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) DescribeTimingL4DataWithContext(ctx context.Context, request *DescribeTimingL4DataRequest) (response *DescribeTimingL4DataResponse, err error) {
     if request == nil {
@@ -4266,6 +4310,7 @@ func NewDescribeWebManagedRulesDataResponse() (response *DescribeWebManagedRules
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesData(request *DescribeWebManagedRulesDataRequest) (response *DescribeWebManagedRulesDataResponse, err error) {
     return c.DescribeWebManagedRulesDataWithContext(context.Background(), request)
@@ -4276,6 +4321,7 @@ func (c *Client) DescribeWebManagedRulesData(request *DescribeWebManagedRulesDat
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesDataWithContext(ctx context.Context, request *DescribeWebManagedRulesDataRequest) (response *DescribeWebManagedRulesDataResponse, err error) {
     if request == nil {
@@ -4316,6 +4362,7 @@ func NewDescribeWebManagedRulesHitRuleDetailResponse() (response *DescribeWebMan
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesHitRuleDetail(request *DescribeWebManagedRulesHitRuleDetailRequest) (response *DescribeWebManagedRulesHitRuleDetailResponse, err error) {
     return c.DescribeWebManagedRulesHitRuleDetailWithContext(context.Background(), request)
@@ -4326,6 +4373,7 @@ func (c *Client) DescribeWebManagedRulesHitRuleDetail(request *DescribeWebManage
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebManagedRulesHitRuleDetailWithContext(ctx context.Context, request *DescribeWebManagedRulesHitRuleDetailRequest) (response *DescribeWebManagedRulesHitRuleDetailResponse, err error) {
     if request == nil {
@@ -4413,6 +4461,7 @@ func NewDescribeWebProtectionAttackEventsResponse() (response *DescribeWebProtec
 // 本接口（DescribeWebProtectionAttackEvents）用于查询CC相关攻击事件列表。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionAttackEvents(request *DescribeWebProtectionAttackEventsRequest) (response *DescribeWebProtectionAttackEventsResponse, err error) {
     return c.DescribeWebProtectionAttackEventsWithContext(context.Background(), request)
@@ -4422,6 +4471,7 @@ func (c *Client) DescribeWebProtectionAttackEvents(request *DescribeWebProtectio
 // 本接口（DescribeWebProtectionAttackEvents）用于查询CC相关攻击事件列表。
 //
 // 可能返回的错误码:
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionAttackEventsWithContext(ctx context.Context, request *DescribeWebProtectionAttackEventsRequest) (response *DescribeWebProtectionAttackEventsResponse, err error) {
     if request == nil {
@@ -4462,6 +4512,7 @@ func NewDescribeWebProtectionClientIpListResponse() (response *DescribeWebProtec
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) DescribeWebProtectionClientIpList(request *DescribeWebProtectionClientIpListRequest) (response *DescribeWebProtectionClientIpListResponse, err error) {
     return c.DescribeWebProtectionClientIpListWithContext(context.Background(), request)
 }
@@ -4471,6 +4522,7 @@ func (c *Client) DescribeWebProtectionClientIpList(request *DescribeWebProtectio
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) DescribeWebProtectionClientIpListWithContext(ctx context.Context, request *DescribeWebProtectionClientIpListRequest) (response *DescribeWebProtectionClientIpListResponse, err error) {
     if request == nil {
         request = NewDescribeWebProtectionClientIpListRequest()
@@ -4510,6 +4562,7 @@ func NewDescribeWebProtectionDataResponse() (response *DescribeWebProtectionData
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionData(request *DescribeWebProtectionDataRequest) (response *DescribeWebProtectionDataResponse, err error) {
     return c.DescribeWebProtectionDataWithContext(context.Background(), request)
@@ -4520,6 +4573,7 @@ func (c *Client) DescribeWebProtectionData(request *DescribeWebProtectionDataReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionDataWithContext(ctx context.Context, request *DescribeWebProtectionDataRequest) (response *DescribeWebProtectionDataResponse, err error) {
     if request == nil {
@@ -4560,6 +4614,7 @@ func NewDescribeWebProtectionHitRuleDetailResponse() (response *DescribeWebProte
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionHitRuleDetail(request *DescribeWebProtectionHitRuleDetailRequest) (response *DescribeWebProtectionHitRuleDetailResponse, err error) {
     return c.DescribeWebProtectionHitRuleDetailWithContext(context.Background(), request)
@@ -4570,6 +4625,7 @@ func (c *Client) DescribeWebProtectionHitRuleDetail(request *DescribeWebProtecti
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeWebProtectionHitRuleDetailWithContext(ctx context.Context, request *DescribeWebProtectionHitRuleDetailRequest) (response *DescribeWebProtectionHitRuleDetailResponse, err error) {
     if request == nil {
@@ -5069,6 +5125,7 @@ func NewModifyApplicationProxyResponse() (response *ModifyApplicationProxyRespon
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
     return c.ModifyApplicationProxyWithContext(context.Background(), request)
 }
@@ -5079,6 +5136,7 @@ func (c *Client) ModifyApplicationProxy(request *ModifyApplicationProxyRequest) 
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyWithContext(ctx context.Context, request *ModifyApplicationProxyRequest) (response *ModifyApplicationProxyResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRequest()
@@ -5120,6 +5178,7 @@ func NewModifyApplicationProxyRuleResponse() (response *ModifyApplicationProxyRu
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyRule(request *ModifyApplicationProxyRuleRequest) (response *ModifyApplicationProxyRuleResponse, err error) {
     return c.ModifyApplicationProxyRuleWithContext(context.Background(), request)
 }
@@ -5131,6 +5190,7 @@ func (c *Client) ModifyApplicationProxyRule(request *ModifyApplicationProxyRuleR
 //  INVALIDPARAMETER_PARAMETERERROR = "InvalidParameter.ParameterError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyRuleWithContext(ctx context.Context, request *ModifyApplicationProxyRuleRequest) (response *ModifyApplicationProxyRuleResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRuleRequest()
@@ -5171,6 +5231,7 @@ func NewModifyApplicationProxyRuleStatusResponse() (response *ModifyApplicationP
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyRuleStatus(request *ModifyApplicationProxyRuleStatusRequest) (response *ModifyApplicationProxyRuleStatusResponse, err error) {
     return c.ModifyApplicationProxyRuleStatusWithContext(context.Background(), request)
 }
@@ -5181,6 +5242,7 @@ func (c *Client) ModifyApplicationProxyRuleStatus(request *ModifyApplicationProx
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyRuleStatusWithContext(ctx context.Context, request *ModifyApplicationProxyRuleStatusRequest) (response *ModifyApplicationProxyRuleStatusResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyRuleStatusRequest()
@@ -5221,6 +5283,7 @@ func NewModifyApplicationProxyStatusResponse() (response *ModifyApplicationProxy
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyStatus(request *ModifyApplicationProxyStatusRequest) (response *ModifyApplicationProxyStatusResponse, err error) {
     return c.ModifyApplicationProxyStatusWithContext(context.Background(), request)
 }
@@ -5231,6 +5294,7 @@ func (c *Client) ModifyApplicationProxyStatus(request *ModifyApplicationProxySta
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_L4PROXYINBANNEDSTATUS = "OperationDenied.L4ProxyInBannedStatus"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyApplicationProxyStatusWithContext(ctx context.Context, request *ModifyApplicationProxyStatusRequest) (response *ModifyApplicationProxyStatusResponse, err error) {
     if request == nil {
         request = NewModifyApplicationProxyStatusRequest()
@@ -5367,6 +5431,7 @@ func NewModifyDefaultCertificateResponse() (response *ModifyDefaultCertificateRe
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDZONESTATUS = "FailedOperation.InvalidZoneStatus"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
 func (c *Client) ModifyDefaultCertificate(request *ModifyDefaultCertificateRequest) (response *ModifyDefaultCertificateResponse, err error) {
@@ -5379,6 +5444,7 @@ func (c *Client) ModifyDefaultCertificate(request *ModifyDefaultCertificateReque
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDZONESTATUS = "FailedOperation.InvalidZoneStatus"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
 func (c *Client) ModifyDefaultCertificateWithContext(ctx context.Context, request *ModifyDefaultCertificateRequest) (response *ModifyDefaultCertificateResponse, err error) {
@@ -5421,6 +5487,8 @@ func NewModifyDnsRecordResponse() (response *ModifyDnsRecordResponse) {
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDNSCONTENT = "InvalidParameterValue.InvalidDNSContent"
 //  INVALIDPARAMETERVALUE_INVALIDDNSNAME = "InvalidParameterValue.InvalidDNSName"
+//  INVALIDPARAMETERVALUE_INVALIDPROXYNAME = "InvalidParameterValue.InvalidProxyName"
+//  INVALIDPARAMETERVALUE_INVALIDPROXYORIGIN = "InvalidParameterValue.InvalidProxyOrigin"
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
@@ -5437,6 +5505,8 @@ func (c *Client) ModifyDnsRecord(request *ModifyDnsRecordRequest) (response *Mod
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDNSCONTENT = "InvalidParameterValue.InvalidDNSContent"
 //  INVALIDPARAMETERVALUE_INVALIDDNSNAME = "InvalidParameterValue.InvalidDNSName"
+//  INVALIDPARAMETERVALUE_INVALIDPROXYNAME = "InvalidParameterValue.InvalidProxyName"
+//  INVALIDPARAMETERVALUE_INVALIDPROXYORIGIN = "InvalidParameterValue.InvalidProxyOrigin"
 //  INVALIDPARAMETERVALUE_RECORDALREADYEXISTS = "InvalidParameterValue.RecordAlreadyExists"
 //  INVALIDPARAMETERVALUE_RECORDNOTALLOWED = "InvalidParameterValue.RecordNotAllowed"
 //  OPERATIONDENIED = "OperationDenied"
@@ -5686,6 +5756,7 @@ func NewModifyLogTopicTaskResponse() (response *ModifyLogTopicTaskResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) ModifyLogTopicTask(request *ModifyLogTopicTaskRequest) (response *ModifyLogTopicTaskResponse, err error) {
     return c.ModifyLogTopicTaskWithContext(context.Background(), request)
 }
@@ -5695,6 +5766,7 @@ func (c *Client) ModifyLogTopicTask(request *ModifyLogTopicTaskRequest) (respons
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) ModifyLogTopicTaskWithContext(ctx context.Context, request *ModifyLogTopicTaskRequest) (response *ModifyLogTopicTaskResponse, err error) {
     if request == nil {
         request = NewModifyLogTopicTaskRequest()
@@ -5734,6 +5806,7 @@ func NewModifyOriginGroupResponse() (response *ModifyOriginGroupResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyOriginGroup(request *ModifyOriginGroupRequest) (response *ModifyOriginGroupResponse, err error) {
     return c.ModifyOriginGroupWithContext(context.Background(), request)
 }
@@ -5743,6 +5816,7 @@ func (c *Client) ModifyOriginGroup(request *ModifyOriginGroupRequest) (response 
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyOriginGroupWithContext(ctx context.Context, request *ModifyOriginGroupRequest) (response *ModifyOriginGroupResponse, err error) {
     if request == nil {
         request = NewModifyOriginGroupRequest()
@@ -5781,7 +5855,23 @@ func NewModifyRuleResponse() (response *ModifyRuleResponse) {
 // 修改规则引擎规则。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMTOOMANYVALUES = "InvalidParameter.ErrInvalidActionParamTooManyValues"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleResponse, err error) {
     return c.ModifyRuleWithContext(context.Background(), request)
 }
@@ -5790,7 +5880,23 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
 // 修改规则引擎规则。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ERRINVALIDACTIONPARAMTOOMANYVALUES = "InvalidParameter.ErrInvalidActionParamTooManyValues"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONNAMETARGETNOTSUPPORTNAME = "InvalidParameter.ErrInvalidConditionNameTargetNotSupportName"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_HOSTNOTFOUND = "InvalidParameter.HostNotFound"
+//  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDERRORPAGEREDIRECTURL = "InvalidParameter.InvalidErrorPageRedirectUrl"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRULEENGINEACTION = "InvalidParameter.InvalidRuleEngineAction"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGET = "InvalidParameter.InvalidRuleEngineTarget"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSEXTENSION = "InvalidParameter.InvalidRuleEngineTargetsExtension"
+//  INVALIDPARAMETER_INVALIDRULEENGINETARGETSURL = "InvalidParameter.InvalidRuleEngineTargetsUrl"
 //  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  INVALIDPARAMETER_KEYRULESINVALIDQUERYSTRINGVALUE = "InvalidParameter.KeyRulesInvalidQueryStringValue"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ModifyRuleWithContext(ctx context.Context, request *ModifyRuleRequest) (response *ModifyRuleResponse, err error) {
     if request == nil {
         request = NewModifyRuleRequest()
@@ -5829,7 +5935,10 @@ func NewModifyRulePriorityResponse() (response *ModifyRulePriorityResponse) {
 // 修改规则引擎规则优先级
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_INVALIDRULEENGINE = "InvalidParameter.InvalidRuleEngine"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ModifyRulePriority(request *ModifyRulePriorityRequest) (response *ModifyRulePriorityResponse, err error) {
     return c.ModifyRulePriorityWithContext(context.Background(), request)
 }
@@ -5838,7 +5947,10 @@ func (c *Client) ModifyRulePriority(request *ModifyRulePriorityRequest) (respons
 // 修改规则引擎规则优先级
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INVALIDURLREDIRECTURL = "InvalidParameter.InvalidUrlRedirectUrl"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_INVALIDRULEENGINE = "InvalidParameter.InvalidRuleEngine"
+//  INVALIDPARAMETER_INVALIDRULEENGINENOTFOUND = "InvalidParameter.InvalidRuleEngineNotFound"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ModifyRulePriorityWithContext(ctx context.Context, request *ModifyRulePriorityRequest) (response *ModifyRulePriorityResponse, err error) {
     if request == nil {
         request = NewModifyRulePriorityRequest()
@@ -5878,6 +5990,7 @@ func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
@@ -5889,6 +6002,7 @@ func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER_SECURITY = "InvalidParameter.Security"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
 func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
@@ -5978,6 +6092,8 @@ func NewModifyZoneResponse() (response *ModifyZoneResponse) {
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_MULTIPLECNAMEZONE = "OperationDenied.MultipleCnameZone"
+//  OPERATIONDENIED_NSNOTALLOWTRAFFICSTRATEGY = "OperationDenied.NSNotAllowTrafficStrategy"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyZone(request *ModifyZoneRequest) (response *ModifyZoneResponse, err error) {
@@ -5989,6 +6105,8 @@ func (c *Client) ModifyZone(request *ModifyZoneRequest) (response *ModifyZoneRes
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_MULTIPLECNAMEZONE = "OperationDenied.MultipleCnameZone"
+//  OPERATIONDENIED_NSNOTALLOWTRAFFICSTRATEGY = "OperationDenied.NSNotAllowTrafficStrategy"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ModifyZoneWithContext(ctx context.Context, request *ModifyZoneRequest) (response *ModifyZoneResponse, err error) {
@@ -6079,10 +6197,14 @@ func NewModifyZoneSettingResponse() (response *ModifyZoneSettingResponse) {
 // 用于修改站点配置
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
+//  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
@@ -6099,10 +6221,14 @@ func (c *Client) ModifyZoneSetting(request *ModifyZoneSettingRequest) (response 
 // 用于修改站点配置
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
 //  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
 //  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
 //  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
 //  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
+//  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
 //  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
 //  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
 //  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
@@ -6177,6 +6303,58 @@ func (c *Client) ModifyZoneStatusWithContext(ctx context.Context, request *Modif
     return
 }
 
+func NewReclaimAliasDomainRequest() (request *ReclaimAliasDomainRequest) {
+    request = &ReclaimAliasDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ReclaimAliasDomain")
+    
+    
+    return
+}
+
+func NewReclaimAliasDomainResponse() (response *ReclaimAliasDomainResponse) {
+    response = &ReclaimAliasDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ReclaimAliasDomain
+// 当客户取回站定的同时会取回此站点下关联的别称域名，此时入参为ZoneId；当客户接入站点发现已被别称域名接入时通过验证之后可取回域名，此时入参为ZoneName。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReclaimAliasDomain(request *ReclaimAliasDomainRequest) (response *ReclaimAliasDomainResponse, err error) {
+    return c.ReclaimAliasDomainWithContext(context.Background(), request)
+}
+
+// ReclaimAliasDomain
+// 当客户取回站定的同时会取回此站点下关联的别称域名，此时入参为ZoneId；当客户接入站点发现已被别称域名接入时通过验证之后可取回域名，此时入参为ZoneName。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ReclaimAliasDomainWithContext(ctx context.Context, request *ReclaimAliasDomainRequest) (response *ReclaimAliasDomainResponse, err error) {
+    if request == nil {
+        request = NewReclaimAliasDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReclaimAliasDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReclaimAliasDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewReclaimZoneRequest() (request *ReclaimZoneRequest) {
     request = &ReclaimZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6199,8 +6377,7 @@ func NewReclaimZoneResponse() (response *ReclaimZoneResponse) {
 // 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ReclaimZone(request *ReclaimZoneRequest) (response *ReclaimZoneResponse, err error) {
     return c.ReclaimZoneWithContext(context.Background(), request)
 }
@@ -6209,8 +6386,7 @@ func (c *Client) ReclaimZone(request *ReclaimZoneRequest) (response *ReclaimZone
 // 站点被其他用户接入后，验证了站点所有权之后，可以找回该站点。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  OPERATIONDENIED = "OperationDenied"
 func (c *Client) ReclaimZoneWithContext(ctx context.Context, request *ReclaimZoneRequest) (response *ReclaimZoneResponse, err error) {
     if request == nil {
         request = NewReclaimZoneRequest()
@@ -6249,8 +6425,7 @@ func NewSwitchLogTopicTaskResponse() (response *SwitchLogTopicTaskResponse) {
 // 本接口（SwitchLogTopicTask）用于开启/关闭推送任务。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) SwitchLogTopicTask(request *SwitchLogTopicTaskRequest) (response *SwitchLogTopicTaskResponse, err error) {
     return c.SwitchLogTopicTaskWithContext(context.Background(), request)
 }
@@ -6259,8 +6434,7 @@ func (c *Client) SwitchLogTopicTask(request *SwitchLogTopicTaskRequest) (respons
 // 本接口（SwitchLogTopicTask）用于开启/关闭推送任务。
 //
 // 可能返回的错误码:
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) SwitchLogTopicTaskWithContext(ctx context.Context, request *SwitchLogTopicTaskRequest) (response *SwitchLogTopicTaskResponse, err error) {
     if request == nil {
         request = NewSwitchLogTopicTaskRequest()
