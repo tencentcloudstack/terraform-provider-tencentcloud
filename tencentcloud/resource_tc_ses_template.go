@@ -139,39 +139,27 @@ func resourceTencentCloudSesTemplateRead(d *schema.ResourceData, meta interface{
 		return ee
 	}
 
-	template, err := service.DescribeSesTemplate(ctx, uint64(templateId))
+	templateResponse, err := service.DescribeSesTemplate(ctx, uint64(templateId))
 	if err != nil {
 		return err
 	}
 
-	templatesMetadata, err := service.DescribeSesTemplateMetadata(ctx, uint64(templateId))
-	if err != nil {
-		return err
-	}
-
-	if template == nil {
+	if templateResponse == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `template` %v does not exist", templateId)
 	}
 
-	if v, ok := d.GetOk("template_name"); ok {
-		_ = d.Set("template_name", helper.String(v.(string)))
-	}
-
-	if templatesMetadata.TemplateName != nil {
-		_ = d.Set("template_name", templatesMetadata.TemplateName)
-	}
-
+	template := templateResponse.TemplateContent
 	if template != nil {
-		var templateContents []*ses.TemplateContent
-		templateContent := ses.TemplateContent{}
+		var templateContents []map[string]interface{}
+		templateContent := map[string]interface{}{}
 		if template.Html != nil {
 			html, err := base64.StdEncoding.DecodeString(*template.Html)
 			if err != nil {
 				return err
 			}
 			contentHtml := string(html)
-			templateContent.Html = &contentHtml
+			templateContent["html"] = &contentHtml
 		}
 		if template.Text != nil {
 			text, err := base64.StdEncoding.DecodeString(*template.Text)
@@ -179,11 +167,16 @@ func resourceTencentCloudSesTemplateRead(d *schema.ResourceData, meta interface{
 				return err
 			}
 			contentText := string(text)
-			templateContent.Text = &contentText
+			templateContent["text"] = &contentText
 		}
-		templateContents = append(templateContents, &templateContent)
-		_ = d.Set("template_content", templateContents)
+		templateContents = append(templateContents, templateContent)
+		err = d.Set("template_content", templateContents)
+		if ee != nil {
+			return fmt.Errorf("set template_content err: %v", err)
+		}
 	}
+
+	_ = d.Set("template_name", templateResponse.TemplateName)
 
 	return nil
 }

@@ -67,7 +67,7 @@ func (me *SesService) DescribeSesTemplateMetadata(ctx context.Context, templateI
 	return
 }
 
-func (me *SesService) DescribeSesTemplate(ctx context.Context, templateId uint64) (template *ses.TemplateContent, errRet error) {
+func (me *SesService) DescribeSesTemplate(ctx context.Context, templateId uint64) (templateResponse *ses.GetEmailTemplateResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = ses.NewGetEmailTemplateRequest()
@@ -90,10 +90,8 @@ func (me *SesService) DescribeSesTemplate(ctx context.Context, templateId uint64
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if response.Response.TemplateContent == nil {
-		return
-	}
-	template = response.Response.TemplateContent
+
+	templateResponse = response.Response
 	return
 }
 
