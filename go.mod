@@ -39,6 +39,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.488
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.527
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.294
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287
@@ -53,21 +54,23 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.490
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.406
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.503
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.268
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.472
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.527
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.515
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.38
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect

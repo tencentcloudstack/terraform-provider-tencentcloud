@@ -7,10 +7,20 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
-const ReqClient = "Terraform-v1.56.1"
+const REQUEST_CLIENT = "TENCENTCLOUD_API_REQUEST_CLIENT"
+
+var ReqClient = "Terraform-latest"
+
+func SetReqClient(name string) {
+	if name == "" {
+		return
+	}
+	ReqClient = name
+}
 
 type LogRoundTripper struct {
 }
@@ -28,6 +38,11 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 		return
 	}
 	var headName = "X-TC-Action"
+
+	if envReqClient := os.Getenv(REQUEST_CLIENT); envReqClient != "" {
+		ReqClient = envReqClient
+	}
+
 	request.Header.Set("X-TC-RequestClient", ReqClient)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
@@ -62,7 +77,7 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 	buf.WriteString("######")
 	tag := "[DEBUG]"
 	if err != nil {
-		tag = "[CRITAL]"
+		tag = "[CRITICAL]"
 	}
 	buf.WriteString(tag)
 	if len(in) > 0 {

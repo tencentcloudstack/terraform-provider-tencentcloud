@@ -610,6 +610,8 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_gateway_snat
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
+	tencentcloud_vpc_bandwidth_package
+	tencentcloud_vpc_bandwidth_package_attachment
 
 VPN
   Data Source
@@ -704,6 +706,21 @@ Simple Email Service(SES)
 	tencentcloud_ses_domain
 	tencentcloud_ses_template
 	tencentcloud_ses_email_address
+
+Security Token Service(STS)
+  Data Source
+	tencentcloud_sts_caller_identity
+
+dcdb
+  Resource
+	tencentcloud_dcdb_account
+	tencentcloud_dcdb_hourdb_instance
+	tencentcloud_dcdb_security_group_attachment
+
+Short Message Service(SMS)
+  Resource
+	tencentcloud_sms_sign
+	tencentcloud_sms_template
 
 */
 package tencentcloud
@@ -1005,6 +1022,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_security_policy_regions":              dataSourceTencentCloudTeoSecurityPolicyRegions(),
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
+			"tencentcloud_sts_caller_identity":                      dataSourceTencentCloudStsCallerIdentity(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1024,6 +1042,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc":                                      resourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                  resourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":                       resourceTencentCloudVpcAclAttachment(),
+			"tencentcloud_vpc_bandwidth_package":                    resourceTencentCloudVpcBandwidthPackage(),
+			"tencentcloud_vpc_bandwidth_package_attachment":         resourceTencentCloudVpcBandwidthPackageAttachment(),
 			"tencentcloud_subnet":                                   resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                              resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                        resourceTencentCloudVpcRouteEntry(),
@@ -1263,11 +1283,16 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_tcm_mesh":               resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment": resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_ses_domain":             resourceTencentCloudSesDomain(),
-			"tencentcloud_ses_template":           resourceTencentCloudSesTemplate(),
-			"tencentcloud_ses_email_address":      resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_tcm_mesh":                       resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":         resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_ses_domain":                     resourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                   resourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":              resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_sms_sign":                       resourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                   resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

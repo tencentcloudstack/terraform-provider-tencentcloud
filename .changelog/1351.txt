@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dcdb_account
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_hourdb_instance
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_security_group_attachment
+```

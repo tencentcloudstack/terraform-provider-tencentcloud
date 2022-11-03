@@ -12,7 +12,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTeoRuleEnginePriority_basic -v
 func TestAccTencentCloudTeoRuleEnginePriority_basic(t *testing.T) {
-	t.Parallel()
+	//t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers: testAccProviders,

@@ -17,6 +17,9 @@ package v20180813
 const (
 	// 此产品的特有错误码
 
+	// 密钥不合法。
+	AUTHFAILURE_ACCESSKEYILLEGAL = "AuthFailure.AccessKeyIllegal"
+
 	// DB错误。
 	INTERNALERROR_DBERROR = "InternalError.DbError"
 
@@ -29,7 +32,7 @@ const (
 	// 获取角色失败。
 	INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 
-	// 获取种子token失败。
+	// 获取token失败。
 	INTERNALERROR_GETSEEDTOKENERROR = "InternalError.GetSeedTokenError"
 
 	// 角色非法。
@@ -38,11 +41,14 @@ const (
 	// pb打包失败。
 	INTERNALERROR_PBSERIALIZEERROR = "InternalError.PbSerializeError"
 
-	// 内部错误。
+	// 系统内部错误，如网络错误。
 	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 
 	// 未知错误。
 	INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+
+	// 不支持该类型密钥。
+	INVALIDPARAMETER_ACCESSKEYNOTSUPPORT = "InvalidParameter.AccessKeyNotSupport"
 
 	// 账号不存在或不可用。
 	INVALIDPARAMETER_ACCOUNTNOTAVALIABLE = "InvalidParameter.AccountNotAvaliable"
@@ -65,7 +71,7 @@ const (
 	// 策略过长。
 	INVALIDPARAMETER_POLICYTOOLONG = "InvalidParameter.PolicyTooLong"
 
-	// 资源错误。
+	// 策略资源六段式错误。
 	INVALIDPARAMETER_RESOUCEERROR = "InvalidParameter.ResouceError"
 
 	// 策略语法错误。
@@ -74,12 +80,18 @@ const (
 	// 非法策略。
 	INVALIDPARAMETER_STRATEGYINVALID = "InvalidParameter.StrategyInvalid"
 
-	// TCB temp code 无效。
+	// 临时Code无效。
 	INVALIDPARAMETER_TEMPCODENOTAVALIABLE = "InvalidParameter.TempCodeNotAvaliable"
+
+	// WebIdentityToken参数错误。
+	INVALIDPARAMETER_WEBIDENTITYTOKENERROR = "InvalidParameter.WebIdentityTokenError"
 
 	// 账号对应的角色不存在。
 	RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )

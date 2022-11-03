@@ -231,6 +231,9 @@ type CreateApplicationRequestParams struct {
 
 	// 使用默认镜像服务额外参数
 	UseDefaultImageServiceParameters *UseDefaultRepoParameters `json:"UseDefaultImageServiceParameters,omitempty" name:"UseDefaultImageServiceParameters"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type CreateApplicationRequest struct {
@@ -279,6 +282,9 @@ type CreateApplicationRequest struct {
 
 	// 使用默认镜像服务额外参数
 	UseDefaultImageServiceParameters *UseDefaultRepoParameters `json:"UseDefaultImageServiceParameters,omitempty" name:"UseDefaultImageServiceParameters"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateApplicationRequest) ToJsonString() string {
@@ -306,6 +312,7 @@ func (r *CreateApplicationRequest) FromJsonString(s string) error {
 	delete(f, "DeployMode")
 	delete(f, "EnableTracing")
 	delete(f, "UseDefaultImageServiceParameters")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateApplicationRequest has unknown keys!", "")
 	}
@@ -334,6 +341,85 @@ func (r *CreateApplicationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateApplicationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateApplicationServiceRequestParams struct {
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 访问方式详情
+	Service *ServicePortMapping `json:"Service,omitempty" name:"Service"`
+}
+
+type CreateApplicationServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 访问方式详情
+	Service *ServicePortMapping `json:"Service,omitempty" name:"Service"`
+}
+
+func (r *CreateApplicationServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateApplicationServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApplicationId")
+	delete(f, "EnvironmentId")
+	delete(f, "SourceChannel")
+	delete(f, "Service")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateApplicationServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateApplicationServiceResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateApplicationServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateApplicationServiceResponseParams `json:"Response"`
+}
+
+func (r *CreateApplicationServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateApplicationServiceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -523,6 +609,9 @@ type CreateEnvironmentRequestParams struct {
 
 	// 是否开启tsw服务
 	EnableTswTraceService *bool `json:"EnableTswTraceService,omitempty" name:"EnableTswTraceService"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type CreateEnvironmentRequest struct {
@@ -548,6 +637,9 @@ type CreateEnvironmentRequest struct {
 
 	// 是否开启tsw服务
 	EnableTswTraceService *bool `json:"EnableTswTraceService,omitempty" name:"EnableTswTraceService"`
+
+	// 标签
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *CreateEnvironmentRequest) ToJsonString() string {
@@ -569,6 +661,7 @@ func (r *CreateEnvironmentRequest) FromJsonString(s string) error {
 	delete(f, "K8sVersion")
 	delete(f, "SourceChannel")
 	delete(f, "EnableTswTraceService")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateEnvironmentRequest has unknown keys!", "")
 	}
@@ -1005,6 +1098,85 @@ func (r *DeleteApplicationResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteApplicationServiceRequestParams struct {
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 访问方式服务名
+	ServiceName *string `json:"ServiceName,omitempty" name:"ServiceName"`
+}
+
+type DeleteApplicationServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 访问方式服务名
+	ServiceName *string `json:"ServiceName,omitempty" name:"ServiceName"`
+}
+
+func (r *DeleteApplicationServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteApplicationServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApplicationId")
+	delete(f, "SourceChannel")
+	delete(f, "EnvironmentId")
+	delete(f, "ServiceName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteApplicationServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteApplicationServiceResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteApplicationServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteApplicationServiceResponseParams `json:"Response"`
+}
+
+func (r *DeleteApplicationServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteApplicationServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteIngressRequestParams struct {
 	// 环境ID
 	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
@@ -1215,12 +1387,25 @@ type DeployApplicationRequestParams struct {
 	// - TENCENTOS
 	OsFlavour *string `json:"OsFlavour,omitempty" name:"OsFlavour"`
 
-	// 是否开启prometheus 业务指标监控
+	// metrics业务指标监控配置
 	EnablePrometheusConf *EnablePrometheusConf `json:"EnablePrometheusConf,omitempty" name:"EnablePrometheusConf"`
 
-	// 1：开始apm采集（skywalking）；
+	// 1：开始自动apm采集（skywalking）；
 	// 0：关闭apm采集；
 	EnableTracing *int64 `json:"EnableTracing,omitempty" name:"EnableTracing"`
+
+	// 1：开始自动metrics采集（open-telemetry）；
+	// 0：关闭metrics采集；
+	EnableMetrics *int64 `json:"EnableMetrics,omitempty" name:"EnableMetrics"`
+
+	// 镜像部署时，选择的tcr实例id
+	TcrInstanceId *string `json:"TcrInstanceId,omitempty" name:"TcrInstanceId"`
+
+	// 镜像部署时，选择的镜像服务器地址
+	RepoServer *string `json:"RepoServer,omitempty" name:"RepoServer"`
+
+	// 镜像部署时，仓库类型：0：个人仓库；1：企业版；2：公共仓库；3：tem托管仓库；4：demo仓库
+	RepoType *int64 `json:"RepoType,omitempty" name:"RepoType"`
 }
 
 type DeployApplicationRequest struct {
@@ -1357,12 +1542,25 @@ type DeployApplicationRequest struct {
 	// - TENCENTOS
 	OsFlavour *string `json:"OsFlavour,omitempty" name:"OsFlavour"`
 
-	// 是否开启prometheus 业务指标监控
+	// metrics业务指标监控配置
 	EnablePrometheusConf *EnablePrometheusConf `json:"EnablePrometheusConf,omitempty" name:"EnablePrometheusConf"`
 
-	// 1：开始apm采集（skywalking）；
+	// 1：开始自动apm采集（skywalking）；
 	// 0：关闭apm采集；
 	EnableTracing *int64 `json:"EnableTracing,omitempty" name:"EnableTracing"`
+
+	// 1：开始自动metrics采集（open-telemetry）；
+	// 0：关闭metrics采集；
+	EnableMetrics *int64 `json:"EnableMetrics,omitempty" name:"EnableMetrics"`
+
+	// 镜像部署时，选择的tcr实例id
+	TcrInstanceId *string `json:"TcrInstanceId,omitempty" name:"TcrInstanceId"`
+
+	// 镜像部署时，选择的镜像服务器地址
+	RepoServer *string `json:"RepoServer,omitempty" name:"RepoServer"`
+
+	// 镜像部署时，仓库类型：0：个人仓库；1：企业版；2：公共仓库；3：tem托管仓库；4：demo仓库
+	RepoType *int64 `json:"RepoType,omitempty" name:"RepoType"`
 }
 
 func (r *DeployApplicationRequest) ToJsonString() string {
@@ -1418,6 +1616,10 @@ func (r *DeployApplicationRequest) FromJsonString(s string) error {
 	delete(f, "OsFlavour")
 	delete(f, "EnablePrometheusConf")
 	delete(f, "EnableTracing")
+	delete(f, "EnableMetrics")
+	delete(f, "TcrInstanceId")
+	delete(f, "RepoServer")
+	delete(f, "RepoType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeployApplicationRequest has unknown keys!", "")
 	}
@@ -1507,6 +1709,10 @@ type DeployServicePodDetail struct {
 	// webshell地址
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Webshell *string `json:"Webshell,omitempty" name:"Webshell"`
+
+	// 状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
 type DeployStrategyConf struct {
@@ -1778,6 +1984,77 @@ func (r *DescribeApplicationPodsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeApplicationServiceListRequestParams struct {
+	// namespace id
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 服务ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// xx
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+}
+
+type DescribeApplicationServiceListRequest struct {
+	*tchttp.BaseRequest
+	
+	// namespace id
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 服务ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// xx
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+}
+
+func (r *DescribeApplicationServiceListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApplicationServiceListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EnvironmentId")
+	delete(f, "ApplicationId")
+	delete(f, "SourceChannel")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApplicationServiceListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApplicationServiceListResponseParams struct {
+	// 应用 EKS Service 列表
+	Result *EksService `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeApplicationServiceListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeApplicationServiceListResponseParams `json:"Response"`
+}
+
+func (r *DescribeApplicationServiceListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApplicationServiceListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeApplicationsRequestParams struct {
 	// 命名空间ID
 	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
@@ -1796,6 +2073,9 @@ type DescribeApplicationsRequestParams struct {
 
 	// 搜索关键字
 	Keyword *string `json:"Keyword,omitempty" name:"Keyword"`
+
+	// 查询过滤器
+	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
 type DescribeApplicationsRequest struct {
@@ -1818,6 +2098,9 @@ type DescribeApplicationsRequest struct {
 
 	// 搜索关键字
 	Keyword *string `json:"Keyword,omitempty" name:"Keyword"`
+
+	// 查询过滤器
+	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribeApplicationsRequest) ToJsonString() string {
@@ -1838,6 +2121,7 @@ func (r *DescribeApplicationsRequest) FromJsonString(s string) error {
 	delete(f, "SourceChannel")
 	delete(f, "ApplicationId")
 	delete(f, "Keyword")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApplicationsRequest has unknown keys!", "")
 	}
@@ -2304,6 +2588,9 @@ type DescribeEnvironmentsRequestParams struct {
 
 	// 来源source
 	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 查询过滤器
+	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
 type DescribeEnvironmentsRequest struct {
@@ -2317,6 +2604,9 @@ type DescribeEnvironmentsRequest struct {
 
 	// 来源source
 	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 查询过滤器
+	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribeEnvironmentsRequest) ToJsonString() string {
@@ -2334,6 +2624,7 @@ func (r *DescribeEnvironmentsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "SourceChannel")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEnvironmentsRequest has unknown keys!", "")
 	}
@@ -3743,6 +4034,10 @@ func (r *ModifyApplicationReplicasRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyApplicationReplicasResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -3760,6 +4055,92 @@ func (r *ModifyApplicationReplicasResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyApplicationReplicasResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyApplicationServiceRequestParams struct {
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 全量访问方式设置
+	Service *EksService `json:"Service,omitempty" name:"Service"`
+
+	// 单条访问方式设置
+	Data *ServicePortMapping `json:"Data,omitempty" name:"Data"`
+}
+
+type ModifyApplicationServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 服务id
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 环境ID
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
+
+	// 来源渠道
+	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 全量访问方式设置
+	Service *EksService `json:"Service,omitempty" name:"Service"`
+
+	// 单条访问方式设置
+	Data *ServicePortMapping `json:"Data,omitempty" name:"Data"`
+}
+
+func (r *ModifyApplicationServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyApplicationServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApplicationId")
+	delete(f, "EnvironmentId")
+	delete(f, "SourceChannel")
+	delete(f, "Service")
+	delete(f, "Data")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApplicationServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyApplicationServiceResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyApplicationServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyApplicationServiceResponseParams `json:"Response"`
+}
+
+func (r *ModifyApplicationServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyApplicationServiceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4124,6 +4505,10 @@ type NamespaceInfo struct {
 	// 环境是否上锁，1为上锁，0则未上锁
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Locked *int64 `json:"Locked,omitempty" name:"Locked"`
+
+	// 标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type NamespacePage struct {
@@ -4138,6 +4523,10 @@ type NamespacePage struct {
 
 	// 页数
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
+
+	// 当前条目
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Current *int64 `json:"Current,omitempty" name:"Current"`
 }
 
 type NamespaceStatusInfo struct {
@@ -4215,6 +4604,14 @@ type PortMapping struct {
 
 	// k8s service名称
 	ServiceName *string `json:"ServiceName,omitempty" name:"ServiceName"`
+}
+
+type QueryFilter struct {
+	// 查询字段名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 查询字段值
+	Value []*string `json:"Value,omitempty" name:"Value"`
 }
 
 // Predefined struct for user
@@ -4671,6 +5068,30 @@ type RunVersionPod struct {
 	// 容器状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ContainerState *string `json:"ContainerState,omitempty" name:"ContainerState"`
+
+	// 实例所在节点信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeInfo *NodeInfo `json:"NodeInfo,omitempty" name:"NodeInfo"`
+
+	// 启动时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 是否健康
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Unhealthy *bool `json:"Unhealthy,omitempty" name:"Unhealthy"`
+
+	// 不健康时的提示信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnhealthyWarningMsg *string `json:"UnhealthyWarningMsg,omitempty" name:"UnhealthyWarningMsg"`
+
+	// 版本ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VersionId *string `json:"VersionId,omitempty" name:"VersionId"`
+
+	// 应用名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApplicationName *string `json:"ApplicationName,omitempty" name:"ApplicationName"`
 }
 
 type ServicePage struct {
@@ -4685,6 +5106,10 @@ type ServicePage struct {
 
 	// 页数
 	Pages *int64 `json:"Pages,omitempty" name:"Pages"`
+
+	// 当前条数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Current *int64 `json:"Current,omitempty" name:"Current"`
 }
 
 type ServicePortMapping struct {
@@ -4794,6 +5219,30 @@ type ServiceVersionBrief struct {
 	// 是否正在发布中
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnderDeploying *bool `json:"UnderDeploying,omitempty" name:"UnderDeploying"`
+
+	// 分批次部署状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BatchDeployStatus *string `json:"BatchDeployStatus,omitempty" name:"BatchDeployStatus"`
+
+	// 可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zones []*string `json:"Zones,omitempty" name:"Zones"`
+
+	// 节点信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeInfos []*NodeInfo `json:"NodeInfos,omitempty" name:"NodeInfos"`
+
+	// 实例信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PodList *DescribeRunPodPage `json:"PodList,omitempty" name:"PodList"`
+
+	// 工作负载信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkloadInfo *WorkloadInfo `json:"WorkloadInfo,omitempty" name:"WorkloadInfo"`
+
+	// 创建日期
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateDate *string `json:"CreateDate,omitempty" name:"CreateDate"`
 }
 
 // Predefined struct for user
@@ -4885,6 +5334,16 @@ type StorageMountConf struct {
 
 	// 数据卷绑定路径
 	MountPath *string `json:"MountPath,omitempty" name:"MountPath"`
+}
+
+type Tag struct {
+	// 标签键
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
+
+	// 标签值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagValue *string `json:"TagValue,omitempty" name:"TagValue"`
 }
 
 type TemDeployApplicationDetailInfo struct {
@@ -5017,6 +5476,26 @@ type TemNamespaceInfo struct {
 
 	// 环境锁，1为上锁，0则为上锁
 	Locked *int64 `json:"Locked,omitempty" name:"Locked"`
+
+	// 用户AppId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AppId *string `json:"AppId,omitempty" name:"AppId"`
+
+	// 用户Uin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Uin *string `json:"Uin,omitempty" name:"Uin"`
+
+	// 用户SubAccountUin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubAccountUin *string `json:"SubAccountUin,omitempty" name:"SubAccountUin"`
+
+	// 集群ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type TemService struct {
@@ -5083,6 +5562,10 @@ type TemService struct {
 	// 是否启用链路追踪
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableTracing *uint64 `json:"EnableTracing,omitempty" name:"EnableTracing"`
+
+	// 标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type TemServiceVersionInfo struct {
@@ -5359,6 +5842,58 @@ type TemServiceVersionInfo struct {
 	// 0：关闭metrics采集；
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableMetrics *int64 `json:"EnableMetrics,omitempty" name:"EnableMetrics"`
+
+	// 用户AppId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AppId *string `json:"AppId,omitempty" name:"AppId"`
+
+	// 用户SubAccountUin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubAccountUin *string `json:"SubAccountUin,omitempty" name:"SubAccountUin"`
+
+	// 用户Uin
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Uin *string `json:"Uin,omitempty" name:"Uin"`
+
+	// 地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 应用分组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 是否启用注册中心
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableRegistry *int64 `json:"EnableRegistry,omitempty" name:"EnableRegistry"`
+
+	// 弹性伸缩数组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoscalerList []*Autoscaler `json:"AutoscalerList,omitempty" name:"AutoscalerList"`
+
+	// 修改人
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Modifier *string `json:"Modifier,omitempty" name:"Modifier"`
+
+	// 创建人
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Creator *string `json:"Creator,omitempty" name:"Creator"`
+
+	// 部署策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeployStrategyConf *DeployStrategyConf `json:"DeployStrategyConf,omitempty" name:"DeployStrategyConf"`
+
+	// 实例列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PodList *DescribeRunPodPage `json:"PodList,omitempty" name:"PodList"`
+
+	// 发布时配置是否有修改
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConfEdited *bool `json:"ConfEdited,omitempty" name:"ConfEdited"`
+
+	// 标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
 }
 
 type UseDefaultRepoParameters struct {
@@ -5383,4 +5918,32 @@ type WorkloadInfo struct {
 	// 应用名
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApplicationName *string `json:"ApplicationName,omitempty" name:"ApplicationName"`
+
+	// 版本名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VersionName *string `json:"VersionName,omitempty" name:"VersionName"`
+
+	// Ready实例数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadyReplicas *int64 `json:"ReadyReplicas,omitempty" name:"ReadyReplicas"`
+
+	// 实例数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Replicas *int64 `json:"Replicas,omitempty" name:"Replicas"`
+
+	// Updated实例数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedReplicas *int64 `json:"UpdatedReplicas,omitempty" name:"UpdatedReplicas"`
+
+	// UpdatedReady实例数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedReadyReplicas *int64 `json:"UpdatedReadyReplicas,omitempty" name:"UpdatedReadyReplicas"`
+
+	// 更新版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateRevision *string `json:"UpdateRevision,omitempty" name:"UpdateRevision"`
+
+	// 当前版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentRevision *string `json:"CurrentRevision,omitempty" name:"CurrentRevision"`
 }

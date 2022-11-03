@@ -35,7 +35,7 @@ The following arguments are supported:
 * `instance_id` - (Optional, String) tcr instance id.
 * `repo_name` - (Optional, String) repository name.
 * `repo_server` - (Optional, String) registry address.
-* `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 4: demo image.
+* `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.
 * `use_default_image_service` - (Optional, Int) create image repo or not.
 
 ## Attributes Reference

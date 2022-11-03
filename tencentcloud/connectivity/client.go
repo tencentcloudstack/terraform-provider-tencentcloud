@@ -38,6 +38,7 @@ import (
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
@@ -51,6 +52,7 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
@@ -127,6 +129,8 @@ type TencentCloudClient struct {
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
 	sesConn            *ses.Client
+	dcdbConn           *dcdb.Client
+	smsConn            *sms.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -767,7 +771,7 @@ func (me *TencentCloudClient) UseTeoClient() *teo.Client {
 	return me.teoConn
 }
 
-// UseTcmClient returns teo client for service
+// UseTcmClient returns Tcm client for service
 func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	if me.tcmConn != nil {
 		return me.tcmConn
@@ -780,7 +784,7 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	return me.tcmConn
 }
 
-// UseSesClient returns teo client for service
+// UseSesClient returns Ses client for service
 func (me *TencentCloudClient) UseSesClient() *ses.Client {
 	if me.sesConn != nil {
 		return me.sesConn
@@ -791,6 +795,32 @@ func (me *TencentCloudClient) UseSesClient() *ses.Client {
 	me.sesConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sesConn
+}
+
+// UseDcdbClient returns dcdb client for service
+func (me *TencentCloudClient) UseDcdbClient() *dcdb.Client {
+	if me.dcdbConn != nil {
+		return me.dcdbConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.dcdbConn, _ = dcdb.NewClient(me.Credential, me.Region, cpf)
+	me.dcdbConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dcdbConn
+}
+
+// UseSmsClient returns Sms client for service
+func (me *TencentCloudClient) UseSmsClient() *sms.Client {
+	if me.smsConn != nil {
+		return me.smsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.smsConn, _ = sms.NewClient(me.Credential, me.Region, cpf)
+	me.smsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.smsConn
 }
 
 func getEnvDefault(key string, defVal int) int {

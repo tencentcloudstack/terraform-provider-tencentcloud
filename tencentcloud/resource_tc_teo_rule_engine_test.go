@@ -14,6 +14,7 @@ import (
 // go test -i; go test -test.run TestAccTencentCloudTeoRuleEngine_basic -v
 func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
