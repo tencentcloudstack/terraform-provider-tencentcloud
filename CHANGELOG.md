@@ -1,3 +1,22 @@
+## 1.78.7 (November 3, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_sms_sign` ([#1352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1352))
+* **New Resource:** `tencentcloud_sms_template` ([#1352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1352))
+* **New Resource:** `tencentcloud_sts_caller_identity` ([#1340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1340))
+* **New Resource:** `tencentcloud_vpc_bandwidth_package` ([#1343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1343))
+* **New Resource:** `tencentcloud_vpc_bandwidth_package_attachment` ([#1343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1343))
+
+ENHANCEMENTS:
+
+* provider: Specify req client header with -ldflag ([#1318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1318))
+* resource/tencentcloud_tem_workload: support set tcr repo ([#1350](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1350))
+
+BUG FIXES:
+
+* resource/tencentcloud_elasticsearch_instance: status polling fix ([#1353](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1353))
+
 ## 1.78.6 (October 27, 2022)
 
 FEATURES:
