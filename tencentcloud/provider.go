@@ -708,6 +708,7 @@ Security Token Service(STS)
 Short Message Service(SMS)
   Resource
 	tencentcloud_sms_sign
+	tencentcloud_sms_template
 
 */
 package tencentcloud
