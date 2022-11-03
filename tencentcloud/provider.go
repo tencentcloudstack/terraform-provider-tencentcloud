@@ -705,6 +705,12 @@ Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
 
+dcdb
+  Resource
+	tencentcloud_dcdb_account
+	tencentcloud_dcdb_hourdb_instance
+	tencentcloud_dcdb_security_group_attachment
+
 Short Message Service(SMS)
   Resource
 	tencentcloud_sms_sign
@@ -1273,6 +1279,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcm_cluster_attachment":                   resourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_sms_sign":                                 resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                             resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                             resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":                     resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment":           resourceTencentCloudDcdbSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
