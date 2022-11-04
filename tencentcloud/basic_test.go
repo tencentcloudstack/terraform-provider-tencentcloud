@@ -760,3 +760,10 @@ const (
 )
 
 // End of TCM
+
+// SES
+const (
+	defaultRegionSes = "ap-hongkong"
+)
+
+// End of SES

@@ -696,6 +696,12 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
 
+Simple Email Service(SES)
+  Resource
+	tencentcloud_ses_domain
+	tencentcloud_ses_template
+	tencentcloud_ses_email_address
+
 Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
@@ -1270,13 +1276,18 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
 			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
-			"tencentcloud_tcm_mesh":                                 resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":                   resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_sms_sign":                                 resourceTencentCloudSmsSign(),
-			"tencentcloud_sms_template":                             resourceTencentCloudSmsTemplate(),
-			"tencentcloud_dcdb_account":                             resourceTencentCloudDcdbAccount(),
-			"tencentcloud_dcdb_hourdb_instance":                     resourceTencentCloudDcdbHourdbInstance(),
-			"tencentcloud_dcdb_security_group_attachment":           resourceTencentCloudDcdbSecurityGroupAttachment(),
+			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
+			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_tcm_mesh":                       resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":         resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_ses_domain":                     resourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                   resourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":              resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_sms_sign":                       resourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                   resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

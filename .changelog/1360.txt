@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_ses_domain
+```
+
+```release-note:new-resource
+tencentcloud_ses_email_address
+```
+
+```release-note:new-resource
+tencentcloud_ses_template
+```

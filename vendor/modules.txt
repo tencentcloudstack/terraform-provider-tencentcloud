@@ -599,6 +599,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.406
