@@ -1,5 +1,7 @@
 /*
-Provide a datasource to query EKS cluster credential info.
+Provide a datasource to query EKS cluster credential info (offlined).
+
+~> **NOTE:**  This resource was offline no longer supported.
 
 Example Usage
 
@@ -42,7 +44,8 @@ import (
 
 func datasourceTencentCloudEksClusterCredential() *schema.Resource {
 	return &schema.Resource{
-		Read: datasourceTencentCloudEksClusterCredentialRead,
+		DeprecationMessage: "This resource was offline no longer supported.",
+		Read:               datasourceTencentCloudEksClusterCredentialRead,
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,

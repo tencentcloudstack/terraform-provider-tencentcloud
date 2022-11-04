@@ -360,8 +360,6 @@ KMS
 Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
-    tencentcloud_eks_clusters
-    tencentcloud_eks_cluster_credential
     tencentcloud_kubernetes_cluster_levels
     tencentcloud_kubernetes_charts
     tencentcloud_kubernetes_cluster_common_names
@@ -369,11 +367,8 @@ Tencent Kubernetes Engine(TKE)
   Resource
     tencentcloud_kubernetes_cluster
     tencentcloud_kubernetes_scale_worker
-    tencentcloud_kubernetes_as_scaling_group
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
-    tencentcloud_eks_cluster
-    tencentcloud_eks_container_instance
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint

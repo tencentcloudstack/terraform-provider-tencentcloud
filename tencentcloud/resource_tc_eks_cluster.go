@@ -1,5 +1,7 @@
 /*
-Provides an elastic kubernetes cluster resource.
+Provides an elastic kubernetes cluster resource (offlined).
+
+~> **NOTE:**  This resource was offline and no longer supported.
 
 Example Usage
 
@@ -67,10 +69,11 @@ import (
 
 func resourceTencentCloudEksCluster() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentcloudEKSClusterRead,
-		Create: resourceTencentcloudEKSClusterCreate,
-		Update: resourceTencentcloudEKSClusterUpdate,
-		Delete: resourceTencentcloudEKSClusterDelete,
+		DeprecationMessage: "This resource was offline and no longer supported.",
+		Read:               resourceTencentcloudEKSClusterRead,
+		Create:             resourceTencentcloudEKSClusterCreate,
+		Update:             resourceTencentcloudEKSClusterUpdate,
+		Delete:             resourceTencentcloudEKSClusterDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
