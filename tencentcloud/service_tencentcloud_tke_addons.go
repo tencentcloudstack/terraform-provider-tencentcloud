@@ -233,7 +233,7 @@ func (me *TkeService) GetAddonNameFromJson(reqJson string) (name string, err err
 	reqBody := &AddonRequestBody{}
 	err = json.Unmarshal([]byte(reqJson), reqBody)
 	if err != nil {
-		return
+		err = fmt.Errorf("error when reading chart name in addon param: %s", err.Error())
 	}
 	if reqBody.Spec != nil && reqBody.Spec.Chart != nil && reqBody.Spec.Chart.ChartName != nil {
 		name = *reqBody.Spec.Chart.ChartName

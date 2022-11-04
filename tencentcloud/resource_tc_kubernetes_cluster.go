@@ -2918,8 +2918,11 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		for i := range updates {
 			var err error
 			addon := updates[i].(map[string]interface{})
-			name := strings.ToLower(addon["name"].(string))
 			param := addon["param"].(string)
+			name, err := tkeService.GetAddonNameFromJson(param)
+			if err != nil {
+				return err
+			}
 			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
 			if has {
 				err = tkeService.UpdateExtensionAddon(ctx, id, name, param)
@@ -2935,12 +2938,16 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 		for i := range removes {
 			addon := removes[i].(map[string]interface{})
-			name := strings.ToLower(addon["name"].(string))
+			param := addon["param"].(string)
+			name, err := tkeService.GetAddonNameFromJson(param)
+			if err != nil {
+				return err
+			}
 			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
 			if !has {
 				continue
 			}
-			err := tkeService.DeleteExtensionAddon(ctx, id, name)
+			err = tkeService.DeleteExtensionAddon(ctx, id, name)
 			if err != nil {
 				return err
 			}
