@@ -1,7 +1,7 @@
 /*
 Provides an elastic kubernetes service container instance (offlined).
 
-~> **NOTE:**  This resource was offline no longer suppored.
+~> **NOTE:**  This resource was offline and no longer supported.
 
 Example Usage
 
@@ -709,10 +709,11 @@ func resourceEksCiContainerSchema(isInitContainer bool) map[string]*schema.Schem
 
 func resourceTencentCloudEksContainerInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentcloudEKSContainerInstanceRead,
-		Create: resourceTencentcloudEKSContainerInstanceCreate,
-		Update: resourceTencentcloudEKSContainerInstanceUpdate,
-		Delete: resourceTencentcloudEKSContainerInstanceDelete,
+		DeprecationMessage: "This resource was offline and no longer supported.",
+		Read:               resourceTencentcloudEKSContainerInstanceRead,
+		Create:             resourceTencentcloudEKSContainerInstanceCreate,
+		Update:             resourceTencentcloudEKSContainerInstanceUpdate,
+		Delete:             resourceTencentcloudEKSContainerInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
