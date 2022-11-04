@@ -763,7 +763,7 @@ const (
 
 // SES
 const (
-	defaultRegionSes = "ap-guangzhou"
+	defaultRegionSes = "ap-hongkong"
 )
 
 // End of SES

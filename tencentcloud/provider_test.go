@@ -157,15 +157,17 @@ func testAccCheckTencentCloudDataSourceID(n string) resource.TestCheckFunc {
 }
 
 func testAccPreCheckBusiness(t *testing.T, accountType string) {
-	testAccPreCheck(t)
+
 	switch accountType {
 	case PRIVATE_REGION_SES:
+		if v := os.Getenv(PROVIDER_SECRET_ID); v == "" {
+			t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_SECRET_ID)
+		}
+		if v := os.Getenv(PROVIDER_SECRET_KEY); v == "" {
+			t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_SECRET_KEY)
+		}
 		os.Setenv(PROVIDER_REGION, defaultRegionSes)
 	default:
-		v := os.Getenv(PROVIDER_REGION)
-		if v == "" {
-			t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_REGION)
-		}
-		os.Setenv(PROVIDER_REGION, v)
+		testAccPreCheck(t)
 	}
 }
