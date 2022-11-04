@@ -1,3 +1,18 @@
+## 1.78.8 (November 4, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dcdb_account` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_dcdb_hourdb_instance` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_dcdb_security_group_attachment` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_ses_domain` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+* **New Resource:** `tencentcloud_ses_email_address` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+* **New Resource:** `tencentcloud_ses_template` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_application_proxy_rule: Add origin_port filed ([#1358](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1358))
+
 ## 1.78.7 (November 3, 2022)
 
 FEATURES:
