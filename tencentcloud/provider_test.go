@@ -160,11 +160,7 @@ func testAccPreCheckBusiness(t *testing.T, accountType string) {
 	testAccPreCheck(t)
 	switch accountType {
 	case PRIVATE_REGION_SES:
-		v := os.Getenv(PRIVATE_REGION_SES)
-		if v == "" {
-			t.Fatalf(" %v must be set for acceptance tests\n", PRIVATE_REGION_SES)
-		}
-		os.Setenv(PROVIDER_REGION, v)
+		os.Setenv(PROVIDER_REGION, defaultRegionSes)
 	default:
 		v := os.Getenv(PROVIDER_REGION)
 		if v == "" {
