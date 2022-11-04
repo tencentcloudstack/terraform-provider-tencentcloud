@@ -228,3 +228,15 @@ func (me *TkeService) GetAddonsPath(cluster, addon string) string {
 	}
 	return fmt.Sprintf("/apis/application.tkestack.io/v1/namespaces/%s/apps%s", cluster, addonPath)
 }
+
+func (me *TkeService) GetAddonNameFromJson(reqJson string) (name string, err error) {
+	reqBody := &AddonRequestBody{}
+	err = json.Unmarshal([]byte(reqJson), reqBody)
+	if err != nil {
+		return
+	}
+	if reqBody.Spec != nil && reqBody.Spec.Chart != nil && reqBody.Spec.Chart.ChartName != nil {
+		name = *reqBody.Spec.Chart.ChartName
+	}
+	return
+}

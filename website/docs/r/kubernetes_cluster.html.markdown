@@ -252,22 +252,31 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "OOMGuard"
-    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"oomguard\",\"chartVersion\":\"1.0.1\"}}}"
+    name = "CBS",
+    param = jsonencode({
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    })
   }
   extension_addon {
-    name  = "SecuritPolicy",
-    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"securitygrouppolicy\",\"chartVersion\":\"0.1.0\"}}}"
-  }
-  # param now can be ignored because we will auto fill if empty
-  extension_addon {
-    name = "COS"
+    name = "SecurityGroupPolicy",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
+    })
   }
   extension_addon {
-    name = "CFS"
+    name = "OOMGuard",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+    })
   }
   extension_addon {
-    name = "CBS"
+    name = "OLM",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
+    })
   }
 }
 ```
@@ -529,7 +538,7 @@ The `exist_instance` object supports the following:
 The `extension_addon` object supports the following:
 
 * `name` - (Required, String) Add-on name.
-* `param` - (Optional, String) Description of the add-on resource object in JSON string format.
+* `param` - (Required, String) Parameter of the add-on resource object in JSON string format, please check the example at the top of page for reference.
 
 The `instances_para` object supports the following:
 

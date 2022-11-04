@@ -242,22 +242,31 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "OOMGuard"
-    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"oomguard\",\"chartVersion\":\"1.0.1\"}}}"
+    name  = "CBS",
+    param = jsonencode({
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    })
   }
   extension_addon {
-    name  = "SecuritPolicy",
-    param = "{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"securitygrouppolicy\",\"chartVersion\":\"0.1.0\"}}}"
-  }
-  # param now can be ignored because we will auto fill if empty
-  extension_addon {
-    name  = "COS"
+    name  = "SecurityGroupPolicy",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
+    })
   }
   extension_addon {
-    name  = "CFS"
+    name  = "OOMGuard",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+    })
   }
   extension_addon {
-    name  = "CBS"
+    name  = "OLM",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
+    })
   }
 }
 ```
@@ -1266,10 +1275,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					},
 					"param": {
 						Type:             schema.TypeString,
-						Optional:         true,
-						Computed:         true,
+						Required:         true,
 						DiffSuppressFunc: helper.DiffSupressJSON,
-						Description:      "Description of the add-on resource object in JSON string format.",
+						Description:      "Parameter of the add-on resource object in JSON string format, please check the example at the top of page for reference.",
 					},
 				},
 			},
@@ -2143,9 +2151,17 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("master_config+worker_config and exist_instance can not exist at the same time")
 	}
 
-	extensionAddons, err := getExtensionAddons(d, meta)
-	if err != nil {
-		return err
+	if v, ok := d.GetOk("extension_addon"); ok {
+		for _, i := range v.([]interface{}) {
+			dMap := i.(map[string]interface{})
+			name := dMap["name"].(string)
+			param := dMap["param"].(string)
+			addon := &tke.ExtensionAddon{
+				AddonName:  helper.String(name),
+				AddonParam: helper.String(param),
+			}
+			extensionAddons = append(extensionAddons, addon)
+		}
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -2895,6 +2911,47 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if d.HasChange("extension_addon") {
+		o, n := d.GetChange("extension_addon")
+		adds, removes, changes := resourceTkeGetAddonsDiffs(o.([]interface{}), n.([]interface{}))
+		updates := append(adds, changes...)
+		for i := range updates {
+			var err error
+			addon := updates[i].(map[string]interface{})
+			name := strings.ToLower(addon["name"].(string))
+			param := addon["param"].(string)
+			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if has {
+				err = tkeService.UpdateExtensionAddon(ctx, id, name, param)
+			} else {
+				err = tkeService.CreateExtensionAddon(ctx, id, param)
+			}
+
+			_, _, err = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if err != nil {
+				return err
+			}
+		}
+
+		for i := range removes {
+			addon := removes[i].(map[string]interface{})
+			name := strings.ToLower(addon["name"].(string))
+			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if !has {
+				continue
+			}
+			err := tkeService.DeleteExtensionAddon(ctx, id, name)
+			if err != nil {
+				return err
+			}
+			_, has, _ = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if has {
+				return fmt.Errorf("addon %s still exists", name)
+			}
+		}
+
+	}
+
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
@@ -2980,46 +3037,27 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 
 }
 
-func getExtensionAddons(d *schema.ResourceData, meta interface{}) (result []*tke.ExtensionAddon, err error) {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	addons, ok := d.Get("extension_addon").([]interface{})
-	if !ok {
-		return
+func resourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []interface{}) {
+	indexByName := func(i interface{}) int {
+		v := i.(map[string]interface{})
+		return helper.HashString(v["name"].(string))
+	}
+	indexAll := func(i interface{}) int {
+		v := i.(map[string]interface{})
+		name := v["name"].(string)
+		param := v["param"].(string)
+		return helper.HashString(fmt.Sprintf("%s#%s", name, param))
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
-	service := TkeService{client}
-	request := tke.NewGetTkeAppChartListRequest()
+	os := schema.NewSet(indexByName, o)
+	ns := schema.NewSet(indexByName, n)
 
-	latestChartVersions := make(map[string]string)
-	chartList, getErr := service.GetTkeAppChartList(ctx, request)
-	if getErr != nil {
-		err = getErr
-		return
-	}
-	for i := range chartList {
-		chart := chartList[i]
-		latestChartVersions[*chart.Name] = *chart.LatestVersion
-	}
+	adds = ns.Difference(os).List()
+	removes = os.Difference(ns).List()
 
-	for i := range addons {
-		item := addons[i].(map[string]interface{})
-		name := item["name"].(string)
-		param, ok := item["param"].(string)
-		if _, ok := latestChartVersions[name]; !ok {
-			err = fmt.Errorf("extension addon %s not exist or unsupported", name)
-			return
-		}
-		addon := &tke.ExtensionAddon{
-			AddonName: &name,
-		}
-		if !ok || param == "" {
-			param = fmt.Sprintf("{\"kind\":\"App\",\"spec\":{\"chart\":{\"chartName\":\"%s\",\"chartVersion\":\"%s\"}}}", name, latestChartVersions[name])
-		}
-		addon.AddonParam = &param
-		result = append(result, addon)
-	}
+	fullIndexedKeeps := schema.NewSet(indexAll, ns.Intersection(os).List())
+	fullIndexedOlds := schema.NewSet(indexAll, o)
+
+	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
 	return
 }

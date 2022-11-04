@@ -71,28 +71,31 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "NodeProblemDetectorPlus"
-    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
+    name  = "CBS",
+    param = jsonencode({
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    })
   }
   extension_addon {
-    name  = "OOMGuard"
-    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+    name  = "SecurityGroupPolicy",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
+    })
   }
   extension_addon {
-    name  = "DNSAutoscaler"
-    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
+    name  = "OOMGuard",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+    })
   }
   extension_addon {
-    name  = "COS"
-    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
-  }
-  extension_addon {
-    name  = "CFS"
-    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
-  }
-  extension_addon {
-    name  = "CBS"
-    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
+    name  = "OLM",
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
+    })
   }
 }
 
