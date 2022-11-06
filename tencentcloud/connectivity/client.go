@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -126,6 +128,10 @@ type TencentCloudClient struct {
 	temConn            *tem.Client
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
+<<<<<<< HEAD
+=======
+	sesConn            *ses.Client
+>>>>>>> fc1a4bb5b051b3d7a3cc1fa22c85f6e3a8d1c617
 	dcdbConn           *dcdb.Client
 	smsConn            *sms.Client
 }
@@ -768,7 +774,7 @@ func (me *TencentCloudClient) UseTeoClient() *teo.Client {
 	return me.teoConn
 }
 
-// UseTcmClient returns teo client for service
+// UseTcmClient returns Tcm client for service
 func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	if me.tcmConn != nil {
 		return me.tcmConn
@@ -779,6 +785,19 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	me.tcmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcmConn
+}
+
+// UseSesClient returns Ses client for service
+func (me *TencentCloudClient) UseSesClient() *ses.Client {
+	if me.sesConn != nil {
+		return me.sesConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.sesConn, _ = ses.NewClient(me.Credential, me.Region, cpf)
+	me.sesConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sesConn
 }
 
 // UseDcdbClient returns dcdb client for service
@@ -794,7 +813,11 @@ func (me *TencentCloudClient) UseDcdbClient() *dcdb.Client {
 	return me.dcdbConn
 }
 
+<<<<<<< HEAD
 // UseSmsClient returns teo client for service
+=======
+// UseSmsClient returns Sms client for service
+>>>>>>> fc1a4bb5b051b3d7a3cc1fa22c85f6e3a8d1c617
 func (me *TencentCloudClient) UseSmsClient() *sms.Client {
 	if me.smsConn != nil {
 		return me.smsConn
