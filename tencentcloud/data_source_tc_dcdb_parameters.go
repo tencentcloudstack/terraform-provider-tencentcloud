@@ -53,8 +53,7 @@ func dataSourceTencentCloudDcdbParameters() *schema.Resource {
 							Description: "default value.",
 						},
 						"constraint": {
-							Type:        schema.TypeList,
-							MaxItems:    1,
+							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "params constraint.",
 							Elem: &schema.Resource{
@@ -70,8 +69,7 @@ func dataSourceTencentCloudDcdbParameters() *schema.Resource {
 										Description: "a list of optional values of type num.",
 									},
 									"range": {
-										Type:        schema.TypeList,
-										MaxItems:    1,
+										Type:        schema.TypeSet,
 										Computed:    true,
 										Description: "range constraint.",
 										Elem: &schema.Resource{
