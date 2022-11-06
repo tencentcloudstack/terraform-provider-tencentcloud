@@ -1,7 +1,7 @@
 /*
 Auto scaling group for kubernetes cluster (offlined).
 
-~> **NOTE:**  This resource was offline no longer suppored.
+~> **NOTE:**  This resource was offline and no longer supported.
 
 Example Usage
 
@@ -65,10 +65,11 @@ import (
 
 func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceKubernetesAsScalingGroupCreate,
-		Read:   resourceKubernetesAsScalingGroupRead,
-		Delete: resourceKubernetesAsScalingGroupDelete,
-		Update: resourceKubernetesAsScalingGroupUpdate,
+		DeprecationMessage: "This resource was offline and no longer supported.",
+		Create:             resourceKubernetesAsScalingGroupCreate,
+		Read:               resourceKubernetesAsScalingGroupRead,
+		Delete:             resourceKubernetesAsScalingGroupDelete,
+		Update:             resourceKubernetesAsScalingGroupUpdate,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,

@@ -7,8 +7,9 @@ Example Usage
 resource "tencentcloud_teo_application_proxy_rule" "application_proxy_rule" {
   forward_client_ip = "TOA"
   origin_type       = "custom"
+  origin_port       = "8083"
   origin_value      = [
-    "127.0.0.1:8081",
+    "127.0.0.1",
   ]
   port              = [
     "8083",
@@ -91,6 +92,12 @@ func resourceTencentCloudTeoApplicationProxyRule() *schema.Resource {
 				Description: "Origin server type.- `custom`: Specified origins.- `origins`: An origin group.",
 			},
 
+			"origin_port": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Origin port, supported formats: single port: 80; Port segment: 81-90, 81 to 90 ports.",
+			},
+
 			"origin_value": {
 				Type: schema.TypeSet,
 				Elem: &schema.Schema{
@@ -162,6 +169,10 @@ func resourceTencentCloudTeoApplicationProxyRuleCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOk("origin_type"); ok {
 		request.OriginType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("origin_port"); ok {
+		request.OriginPort = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_value"); ok {
@@ -268,6 +279,10 @@ func resourceTencentCloudTeoApplicationProxyRuleRead(d *schema.ResourceData, met
 		_ = d.Set("origin_type", proxyRule.OriginType)
 	}
 
+	if proxyRule.OriginPort != nil {
+		_ = d.Set("origin_port", proxyRule.OriginPort)
+	}
+
 	if proxyRule.OriginValue != nil {
 		_ = d.Set("origin_value", proxyRule.OriginValue)
 	}
@@ -319,10 +334,8 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 
 	}
 
-	if d.HasChange("proto") {
-		if v, ok := d.GetOk("proto"); ok {
-			request.Proto = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("proto"); ok {
+		request.Proto = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("port"); ok {
@@ -337,26 +350,24 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 		request.OriginType = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_value") {
-		if v, ok := d.GetOk("origin_value"); ok {
-			originValueSet := v.(*schema.Set).List()
-			for i := range originValueSet {
-				originValue := originValueSet[i].(string)
-				request.OriginValue = append(request.OriginValue, &originValue)
-			}
+	if v, ok := d.GetOk("origin_port"); ok {
+		request.OriginPort = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("origin_value"); ok {
+		originValueSet := v.(*schema.Set).List()
+		for i := range originValueSet {
+			originValue := originValueSet[i].(string)
+			request.OriginValue = append(request.OriginValue, &originValue)
 		}
 	}
 
-	if d.HasChange("forward_client_ip") {
-		if v, ok := d.GetOk("forward_client_ip"); ok {
-			request.ForwardClientIp = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("forward_client_ip"); ok {
+		request.ForwardClientIp = helper.String(v.(string))
 	}
 
-	if d.HasChange("session_persist") {
-		if v, ok := d.GetOk("session_persist"); ok {
-			request.SessionPersist = helper.Bool(v.(bool))
-		}
+	if v, ok := d.GetOk("session_persist"); ok {
+		request.SessionPersist = helper.Bool(v.(bool))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -401,6 +412,25 @@ func resourceTencentCloudTeoApplicationProxyRuleUpdate(d *schema.ResourceData, m
 			}
 			_ = d.Set("status", v.(string))
 		}
+	}
+
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	err = resource.Retry(60*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoApplicationProxyRule(ctx, zoneId, proxyId, ruleId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "online" {
+			return nil
+		}
+		if *instance.Status == "fail" {
+			return resource.NonRetryableError(fmt.Errorf("applicationProxyRule status is %v, operate failed.", *instance.Status))
+		}
+		return resource.RetryableError(fmt.Errorf("applicationProxyRule status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
 	}
 
 	return resourceTencentCloudTeoApplicationProxyRuleRead(d, meta)

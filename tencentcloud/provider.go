@@ -360,8 +360,6 @@ KMS
 Tencent Kubernetes Engine(TKE)
   Data Source
     tencentcloud_kubernetes_clusters
-    tencentcloud_eks_clusters
-    tencentcloud_eks_cluster_credential
     tencentcloud_kubernetes_cluster_levels
     tencentcloud_kubernetes_charts
     tencentcloud_kubernetes_cluster_common_names
@@ -369,11 +367,8 @@ Tencent Kubernetes Engine(TKE)
   Resource
     tencentcloud_kubernetes_cluster
     tencentcloud_kubernetes_scale_worker
-    tencentcloud_kubernetes_as_scaling_group
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
-    tencentcloud_eks_cluster
-    tencentcloud_eks_container_instance
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
@@ -701,6 +696,12 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
 
+Simple Email Service(SES)
+  Resource
+	tencentcloud_ses_domain
+	tencentcloud_ses_template
+	tencentcloud_ses_email_address
+
 Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
@@ -722,6 +723,7 @@ dcdb
 Short Message Service(SMS)
   Resource
 	tencentcloud_sms_sign
+	tencentcloud_sms_template
 
 */
 package tencentcloud
@@ -1288,13 +1290,18 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_ddos_policy":                          resourceTencentCloudTeoDdosPolicy(),
 			"tencentcloud_teo_security_policy":                      resourceTencentCloudTeoSecurityPolicy(),
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
-			"tencentcloud_tcm_mesh":                                 resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":                   resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_sms_sign":                                 resourceTencentCloudSmsSign(),
-			"tencentcloud_sms_template":                             resourceTencentCloudSmsTemplate(),
-			"tencentcloud_dcdb_account":                             resourceTencentCloudDcdbAccount(),
-			"tencentcloud_dcdb_hourdb_instance":                     resourceTencentCloudDcdbHourdbInstance(),
-			"tencentcloud_dcdb_security_group_attachment":           resourceTencentCloudDcdbSecurityGroupAttachment(),
+			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
+			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
+			"tencentcloud_tcm_mesh":                       resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":         resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_ses_domain":                     resourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                   resourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":              resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_sms_sign":                       resourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                   resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
