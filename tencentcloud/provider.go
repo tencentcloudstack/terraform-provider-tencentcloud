@@ -725,6 +725,10 @@ Short Message Service(SMS)
 	tencentcloud_sms_sign
 	tencentcloud_sms_template
 
+Cloud Automated Testing(CAT)
+  Resource
+ 	tencentcloud_cat_task_set
+
 */
 package tencentcloud
 

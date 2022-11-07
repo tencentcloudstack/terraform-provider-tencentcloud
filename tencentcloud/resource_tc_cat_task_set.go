@@ -6,20 +6,41 @@ Example Usage
 ```hcl
 resource "tencentcloud_cat_task_set" "task_set" {
   batch_tasks {
-			name = "demo"
-			target_address = "http://www.baidu.com"
-
+    name           = "demo"
+    target_address = "http://www.baidu.com"
   }
-  task_type = 1
-  nodes =
-    interval = 5
-  parameters = "{&quot;ipType&quot;:0,&quot;netIcmpOn&quot;:1,&quot;netIcmpActivex&quot;:0,&quot;netIcmpTimeout&quot;:20,&quot;netIcmpInterval&quot;:0.5,&quot;netIcmpNum&quot;:4,&quot;netIcmpSize&quot;:32,&quot;netIcmpDataCut&quot;:1,&quot;netDnsOn&quot;:1,&quot;netDnsTimeout&quot;:20,&quot;netDnsQuerymethod&quot;:1,&quot;netDnsNs&quot;:&quot;&quot;,&quot;netDigOn&quot;:0,&quot;netDnsServer&quot;:0,&quot;netTracertOn&quot;:1,&quot;netTracertTimeout&quot;:20,&quot;netTracertNum&quot;:20,&quot;whiteList&quot;:&quot;&quot;,&quot;blackList&quot;:&quot;&quot;,&quot;netIcmpActivexStr&quot;:&quot;&quot;}"
+  task_type     = 5
+  nodes         = ["12136", "12137", "12138", "12141", "12144"]
+  interval      = 6
+  parameters    = jsonencode(
+  {
+    "ipType"            = 0,
+    "grabBag"           = 0,
+    "filterIp"          = 0,
+    "netIcmpOn"         = 1,
+    "netIcmpActivex"    = 0,
+    "netIcmpTimeout"    = 20,
+    "netIcmpInterval"   = 0.5,
+    "netIcmpNum"        = 20,
+    "netIcmpSize"       = 32,
+    "netIcmpDataCut"    = 1,
+    "netDnsOn"          = 1,
+    "netDnsTimeout"     = 5,
+    "netDnsQuerymethod" = 1,
+    "netDnsNs"          = "",
+    "netDigOn"          = 1,
+    "netDnsServer"      = 2,
+    "netTracertOn"      = 1,
+    "netTracertTimeout" = 60,
+    "netTracertNum"     = 30,
+    "whiteList"         = "",
+    "blackList"         = "",
+    "netIcmpActivexStr" = ""
+  }
+  )
   task_category = 1
-  probe_type = 1
-  plugin_source = "CDN"
-  cron = "* 0-5 * * *"
-  client_num = "3198058"
-    tags = {
+  cron          = "* 0-6 * * *"
+  tags          = {
     "createdBy" = "terraform"
   }
 }
@@ -112,31 +133,13 @@ func resourceTencentCloudCatTaskSet() *schema.Resource {
 			"task_category": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Task category ,1:PC,2:Mobile.",
-			},
-
-			"probe_type": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Task probe type ,1:Timing test,2: instant test.",
-			},
-
-			"plugin_source": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "task create source.",
+				Description: "Task category,1:PC,2:Mobile.",
 			},
 
 			"cron": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Timer task cron expression.",
-			},
-
-			"client_num": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "client ID.",
 			},
 
 			"status": {
@@ -204,20 +207,8 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 		request.TaskCategory = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("probe_type"); ok {
-		request.ProbeType = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("plugin_source"); ok {
-		request.PluginSource = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("cron"); ok {
 		request.Cron = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("client_num"); ok {
-		request.ClientNum = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -237,7 +228,7 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	taskSetId := *response.Response.TaskIDs[0]
+	taskId = *response.Response.TaskIDs[0]
 
 	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -245,18 +236,18 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cat:%s:uin/:TaskId/%s", region, taskSetId)
+		resourceName := fmt.Sprintf("qcs::cat:%s:uin/:TaskId/%s", region, taskId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
 
 	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeCatTaskSet(ctx, taskSetId)
+		instance, errRet := service.DescribeCatTaskSet(ctx, taskId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *instance.Status == 2 {
+		if *instance.Status == 2 || *instance.Status == 10 {
 			return nil
 		}
 		if *instance.Status == 3 {
@@ -366,71 +357,38 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 
 	request.TaskIds = []*string{helper.String(taskId)}
 
-	if d.HasChange("batch_tasks") {
-
-		return fmt.Errorf("`batch_tasks` do not support change now.")
-
-	}
-
-	if d.HasChange("task_type") {
-
-		return fmt.Errorf("`task_type` do not support change now.")
-
-	}
-
-	if d.HasChange("nodes") {
-		if v, ok := d.GetOk("nodes"); ok {
-			nodesSet := v.(*schema.Set).List()
-			for i := range nodesSet {
-				nodes := nodesSet[i].(string)
-				request.Nodes = append(request.Nodes, &nodes)
-			}
+	if v, ok := d.GetOk("nodes"); ok {
+		nodesSet := v.(*schema.Set).List()
+		for i := range nodesSet {
+			nodes := nodesSet[i].(string)
+			request.Nodes = append(request.Nodes, &nodes)
 		}
-
 	}
 
-	if d.HasChange("interval") {
-		if v, ok := d.GetOk("interval"); ok {
-			request.Interval = helper.IntInt64(v.(int))
-		}
-
+	if v, ok := d.GetOk("interval"); ok {
+		request.Interval = helper.IntInt64(v.(int))
 	}
 
-	if d.HasChange("parameters") {
-		if v, ok := d.GetOk("parameters"); ok {
-			request.Parameters = helper.String(v.(string))
-		}
-
-	}
-
-	if d.HasChange("task_category") {
-
-		return fmt.Errorf("`task_category` do not support change now.")
-
-	}
-
-	if d.HasChange("probe_type") {
-
-		return fmt.Errorf("`probe_type` do not support change now.")
-
-	}
-
-	if d.HasChange("plugin_source") {
-
-		return fmt.Errorf("`plugin_source` do not support change now.")
-
+	if v, ok := d.GetOk("parameters"); ok {
+		request.Parameters = helper.String(v.(string))
 	}
 
 	if d.HasChange("cron") {
-
-		return fmt.Errorf("`cron` do not support change now.")
-
+		if v, ok := d.GetOk("cron"); ok {
+			request.Cron = helper.String(v.(string))
+		}
 	}
 
-	if d.HasChange("client_num") {
+	if d.HasChange("batch_tasks") {
+		return fmt.Errorf("`batch_tasks` do not support change now.")
+	}
 
-		return fmt.Errorf("`client_num` do not support change now.")
+	if d.HasChange("task_type") {
+		return fmt.Errorf("`task_type` do not support change now.")
+	}
 
+	if d.HasChange("task_category") {
+		return fmt.Errorf("`task_category` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -482,6 +440,9 @@ func resourceTencentCloudCatTaskSetDelete(d *schema.ResourceData, meta interface
 		instance, errRet := service.DescribeCatTaskSet(ctx, taskId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			return nil
 		}
 		if *instance.Status == 9 {
 			return nil

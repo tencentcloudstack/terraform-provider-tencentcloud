@@ -20,7 +20,7 @@ func TestAccTencentCloudCatTaskSet_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cat_task_set.taskSet",
+				ResourceName:      "tencentcloud_cat_task_set.task_set",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -32,20 +32,41 @@ const testAccCatTaskSet = `
 
 resource "tencentcloud_cat_task_set" "task_set" {
   batch_tasks {
-			name = "demo"
-			target_address = "http://www.baidu.com"
-
+    name           = "demo"
+    target_address = "http://www.baidu.com"
   }
-  task_type = 1
-  nodes = 
-    interval = 5
-  parameters = "{&quot;ipType&quot;:0,&quot;netIcmpOn&quot;:1,&quot;netIcmpActivex&quot;:0,&quot;netIcmpTimeout&quot;:20,&quot;netIcmpInterval&quot;:0.5,&quot;netIcmpNum&quot;:4,&quot;netIcmpSize&quot;:32,&quot;netIcmpDataCut&quot;:1,&quot;netDnsOn&quot;:1,&quot;netDnsTimeout&quot;:20,&quot;netDnsQuerymethod&quot;:1,&quot;netDnsNs&quot;:&quot;&quot;,&quot;netDigOn&quot;:0,&quot;netDnsServer&quot;:0,&quot;netTracertOn&quot;:1,&quot;netTracertTimeout&quot;:20,&quot;netTracertNum&quot;:20,&quot;whiteList&quot;:&quot;&quot;,&quot;blackList&quot;:&quot;&quot;,&quot;netIcmpActivexStr&quot;:&quot;&quot;}"
+  task_type     = 5
+  nodes         = ["12136", "12137", "12138", "12141", "12144"]
+  interval      = 6
+  parameters    = jsonencode(
+  {
+    "ipType"            = 0,
+    "grabBag"           = 0,
+    "filterIp"          = 0,
+    "netIcmpOn"         = 1,
+    "netIcmpActivex"    = 0,
+    "netIcmpTimeout"    = 20,
+    "netIcmpInterval"   = 0.5,
+    "netIcmpNum"        = 20,
+    "netIcmpSize"       = 32,
+    "netIcmpDataCut"    = 1,
+    "netDnsOn"          = 1,
+    "netDnsTimeout"     = 5,
+    "netDnsQuerymethod" = 1,
+    "netDnsNs"          = "",
+    "netDigOn"          = 1,
+    "netDnsServer"      = 2,
+    "netTracertOn"      = 1,
+    "netTracertTimeout" = 60,
+    "netTracertNum"     = 30,
+    "whiteList"         = "",
+    "blackList"         = "",
+    "netIcmpActivexStr" = ""
+  }
+  )
   task_category = 1
-  probe_type = 1
-  plugin_source = "CDN"
-  cron = "* 0-5 * * *"
-  client_num = "3198058"
-    tags = {
+  cron          = "* 0-6 * * *"
+  tags          = {
     "createdBy" = "terraform"
   }
 }
