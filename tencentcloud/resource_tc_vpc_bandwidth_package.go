@@ -126,20 +126,6 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 	d.SetId(bandwidthPackageId)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeVpcBandwidthPackage(ctx, bandwidthPackageId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.Status == "CREATED" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.Status))
-	})
-	if err != nil {
-		return err
-	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -149,6 +135,22 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 			return err
 		}
 	}
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeVpcBandwidthPackage(ctx, bandwidthPackageId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance != nil && *instance.Status == "CREATED" {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
+	}
+
 	return resourceTencentCloudVpcBandwidthPackageRead(d, meta)
 }
 
@@ -211,27 +213,19 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 	request.BandwidthPackageId = &bandwidthPackageId
 
 	if d.HasChange("network_type") {
-
 		return fmt.Errorf("`network_type` do not support change now.")
-
 	}
 
 	if d.HasChange("bandwidth_package_count") {
-
 		return fmt.Errorf("`bandwidth_package_count` do not support change now.")
-
 	}
 
 	if d.HasChange("internet_max_bandwidth") {
-
 		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
-
 	}
 
 	if d.HasChange("protocol") {
-
 		return fmt.Errorf("`protocol` do not support change now.")
-
 	}
 
 	if d.HasChange("charge_type") {
