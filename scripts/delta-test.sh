@@ -21,7 +21,7 @@ for source_name in $source_names; do
 done
 echo "test files:" $test_files
 
-for test_file in test_files; do
+for test_file in $test_files; do
     test_case_type=${test_file%_tc*}
     test_case_name=${test_file#*tc_}
     test_case_name=${test_case_name%.*}
