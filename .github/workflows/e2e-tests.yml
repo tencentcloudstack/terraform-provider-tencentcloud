@@ -13,6 +13,7 @@ on:
 env:
   BASE_SHA: ${{ github.event.pull_request.base.sha }}
   HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  PR_ID: ${{ github.event.pull_request.number }}
   TF_ACC: true
   TENCENTCLOUD_REGION: ap-guangzhou
   TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}

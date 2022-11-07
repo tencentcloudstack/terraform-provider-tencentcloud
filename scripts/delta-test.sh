@@ -1,8 +1,18 @@
 #!/bin/bash
 
-# pr_id=${PR_ID}
-pr_id=1329
+range_sha=${BASE_SHA}
+pr_id=${PR_ID}
 
+update_source_count=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | wc -l'`
+if [ $update_source_count -eq 0 ]; then
+    printf "No resource change, skip deleta-test!"
+    exit 0
+fi
+
+if [ ! -f ".changelog/${pr_id}.txt" ]; then
+    printf "Not find changelog file!"
+    exit 1
+fi
 source_names=`cat .changelog/${pr_id}.txt| grep -E "^(resource|datasource)\/(\w+)" | awk -F ":" '{print $1}' | sort | uniq`
 
 test_files=""
@@ -25,14 +35,13 @@ for test_file in $test_files; do
     test_case_type=${test_file%_tc*}
     test_case_name=${test_file#*tc_}
     test_case_name=${test_case_name%.*}
-    echo $test_case_name $test_case_type
 
     test_case_type=`echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'`
     test_case_name=`echo $test_case_name | sed -r 's/(^|_)(\w)/\U\2/g'`
-    echo $test_case_name $test_case_type
    
     go_test_cmd="go test -v -run TestAccTencentCloud${test_case_name}${test_case_type} -timeout=0 ./tencentcloud/"
     echo $go_test_cmd
+    # $go_test_cmd
     # if [ $? -ne 0 ]; then
     #     printf "[GO TEST FILED] ${go_test_cmd}"
     #     exit 1
