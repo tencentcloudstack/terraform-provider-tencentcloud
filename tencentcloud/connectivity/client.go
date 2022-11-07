@@ -24,6 +24,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
@@ -131,6 +132,7 @@ type TencentCloudClient struct {
 	sesConn            *ses.Client
 	dcdbConn           *dcdb.Client
 	smsConn            *sms.Client
+	catConn            *cat.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -821,6 +823,19 @@ func (me *TencentCloudClient) UseSmsClient() *sms.Client {
 	me.smsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.smsConn
+}
+
+// UseCatClient returns Cat client for service
+func (me *TencentCloudClient) UseCatClient() *cat.Client {
+	if me.catConn != nil {
+		return me.catConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.catConn, _ = cat.NewClient(me.Credential, me.Region, cpf)
+	me.catConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.catConn
 }
 
 func getEnvDefault(key string, defVal int) int {

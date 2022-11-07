@@ -462,6 +462,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466 h1:JnE62AvM
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466/go.mod h1:NBTNnh4SpOTGvr69Ttt4ABQplvwt6eEZXSmO5f9Anf0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409 h1:ToZpNh78SVdKakkeR9YV1a65tjtC4NJl+hrJqTuhO3g=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409/go.mod h1:U24yUxCDruJLayOsP/onO2E/7+9ljeNsNO+phu+PeiM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520 h1:n4FN0PI+1MVWi+RGQbD/cElXjquZQK0K1h1Z1nNWNWw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520/go.mod h1:gzI+2Qd/iUfPPQQjW30k0G3mJ3m7tXeXrydJMm8jsOo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493 h1:CDH65MOmHZnvHlcPAcpo2lceQ8AT1kU6ONlabGJjm/Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493/go.mod h1:Dzo3Z7Ln3bJ9jsgTIH1GslwuW+D6hbEJ1f1Ju4x/dcU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409 h1:fKFSxvMzS8T+z2z2qm67dgTClnkryeVTykclVkHh3qE=
@@ -499,6 +501,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.514/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.515/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.518/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.519/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.520/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.524/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.527/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.529 h1:B26Pn9N5O3Mmbh8icZSpZ8kkhcfnapUdU/TBxPDWggA=
