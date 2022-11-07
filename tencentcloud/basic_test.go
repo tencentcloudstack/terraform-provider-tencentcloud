@@ -761,6 +761,17 @@ const (
 
 // End of TCM
 
+// DCDB
+const (
+	defaultDcdbInstanceId    = "tdsqlshard-lgz66iqr"
+	defaultDcdbInstanceName  = "keep-dcdb-test"
+	defaultDcdbInsVpcId      = "vpc-4owdpnwr"
+	defaultDcdbInsIdSubnetId = "subnet-qylstu34"
+	defaultDcdbSGId          = "sg-ijato2x1"
+	defaultDcdbSGName        = "default"
+)
+
+// End of DCDB
 // SES
 const (
 	defaultRegionSes = "ap-hongkong"

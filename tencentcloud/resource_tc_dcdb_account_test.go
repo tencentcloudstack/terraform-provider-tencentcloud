@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDcdbAccount_basic(t *testing.T) {
+func TestAccTencentCloudDcdbAccountResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -19,7 +19,7 @@ func TestAccTencentCloudDcdbAccount_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDcdbAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDcdbAccount_basic,
+				Config: fmt.Sprintf(testAccDcdbAccount_basic, defaultDcdbInstanceId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcdbAccountExists("tencentcloud_dcdb_account.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "instance_id"),
@@ -32,7 +32,7 @@ func TestAccTencentCloudDcdbAccount_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDcdbAccount_update,
+				Config: fmt.Sprintf(testAccDcdbAccount_update, defaultDcdbInstanceId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcdbAccountExists("tencentcloud_dcdb_account.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "instance_id"),
@@ -105,7 +105,7 @@ func testAccCheckDcdbAccountExists(re string) resource.TestCheckFunc {
 const testAccDcdbAccount_basic = `
 
 resource "tencentcloud_dcdb_account" "basic" {
-	instance_id = "tdsqlshard-lgz66iqr" # use the hard code before the dcdb_instance resource is ready.
+	instance_id = "%s"
 	user_name = "mysql"
 	host = "127.0.0.1"
 	password = "===password==="
@@ -118,7 +118,7 @@ resource "tencentcloud_dcdb_account" "basic" {
 const testAccDcdbAccount_update = `
 
 resource "tencentcloud_dcdb_account" "basic" {
-  instance_id = "tdsqlshard-lgz66iqr" # use the hard code before the dcdb_instance resource is ready.
+  instance_id = "%s"
   user_name = "mysql"
   host = "127.0.0.1"
   password = "===password==="

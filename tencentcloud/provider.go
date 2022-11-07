@@ -707,6 +707,14 @@ Security Token Service(STS)
 	tencentcloud_sts_caller_identity
 
 dcdb
+  Data Source
+	tencentcloud_dcdb_instances
+	tencentcloud_dcdb_accounts
+	tencentcloud_dcdb_databases
+	tencentcloud_dcdb_parameters
+	tencentcloud_dcdb_shards
+	tencentcloud_dcdb_security_groups
+
   Resource
 	tencentcloud_dcdb_account
 	tencentcloud_dcdb_hourdb_instance
@@ -1018,6 +1026,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
 			"tencentcloud_sts_caller_identity":                      dataSourceTencentCloudStsCallerIdentity(),
+			"tencentcloud_dcdb_instances":                           dataSourceTencentCloudDcdbInstances(),
+			"tencentcloud_dcdb_accounts":                            dataSourceTencentCloudDcdbAccounts(),
+			"tencentcloud_dcdb_databases":                           dataSourceTencentCloudDcdbDatabases(),
+			"tencentcloud_dcdb_parameters":                          dataSourceTencentCloudDcdbParameters(),
+			"tencentcloud_dcdb_shards":                              dataSourceTencentCloudDcdbShards(),
+			"tencentcloud_dcdb_security_groups":                     dataSourceTencentCloudDcdbSecurityGroups(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
