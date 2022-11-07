@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDcdbSecurityGroupAttachment_basic(t *testing.T) {
+func TestAccTencentCloudDcdbSecurityGroupAttachmentResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -19,7 +19,7 @@ func TestAccTencentCloudDcdbSecurityGroupAttachment_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDcdbSecurityGroupAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDcdbSecurityGroupAttachment,
+				Config: fmt.Sprintf(testAccDcdbSecurityGroupAttachment, defaultDcdbSGName, defaultDcdbInstanceId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcdbSecurityGroupAttachmentExists("tencentcloud_dcdb_security_group_attachment.security_group_attachment"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_security_group_attachment.security_group_attachment", "security_group_id"),
@@ -97,7 +97,7 @@ func testAccCheckDcdbSecurityGroupAttachmentExists(re string) resource.TestCheck
 
 const testAcc_sg_vpc_config = `
 data "tencentcloud_security_groups" "internal" {
-	name = "default"
+	name = "%s"
 }
 	
 locals {
@@ -109,7 +109,7 @@ const testAccDcdbSecurityGroupAttachment = testAcc_sg_vpc_config + `
 
 resource "tencentcloud_dcdb_security_group_attachment" "security_group_attachment" {
   security_group_id = local.sg_id
-  instance_id = "tdsqlshard-lgz66iqr" # use the hard code before the dcdb_instance datasource is ready.
+  instance_id = "%s"
 }
 
 `
