@@ -1302,6 +1302,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
 			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
 			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_cat_task_set":                   resourceTencentCloudCatTaskSet(),
 		},
 
 		ConfigureFunc: providerConfigure,
