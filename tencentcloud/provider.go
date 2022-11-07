@@ -717,6 +717,11 @@ Short Message Service(SMS)
 	tencentcloud_sms_sign
 	tencentcloud_sms_template
 
+TDMQ for RabbitMQ(RabbitMQ)
+  Resource
+	tencentcloud_tdmq_rabbitmq_cluster
+
+
 */
 package tencentcloud
 
@@ -1288,6 +1293,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
 			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
 			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_tdmq_rabbitmq_cluster":          resourceTencentCloudTdmqRabbitmqCluster(),
 		},
 
 		ConfigureFunc: providerConfigure,
