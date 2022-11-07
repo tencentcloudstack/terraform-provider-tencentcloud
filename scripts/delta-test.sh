@@ -5,7 +5,7 @@ pr_id=${PR_ID}
 
 update_source_count=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | wc -l`
 if [ $update_source_count -eq 0 ]; then
-    printf "No resource change, skip deleta-test!"
+    printf "No source change, skip delta-test!"
     exit 0
 fi
 
