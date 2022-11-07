@@ -1,0 +1,8 @@
+```release-note:new-data-source
+	tencentcloud_dcdb_instances
+	tencentcloud_dcdb_accounts
+	tencentcloud_dcdb_databases
+	tencentcloud_dcdb_parameters
+	tencentcloud_dcdb_shards
+	tencentcloud_dcdb_security_groups
+```
