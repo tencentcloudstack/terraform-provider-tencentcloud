@@ -22,6 +22,7 @@ import (
 )
 
 func dataSourceTencentCloudAddressTemplateGroups() *schema.Resource {
+	// test1
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAddressTemplateGroupsRead,
 
