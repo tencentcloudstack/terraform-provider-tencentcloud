@@ -26,8 +26,8 @@ for test_file in test_files; do
     test_case_name=${test_file#*tc_}
     test_case_name=${test_case_name%_test*}
 
-    test_case_type=echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'
-    test_case_name=echo $test_case_name | sed -r 's/(^|_)(\w)/\U\2/g'
+    test_case_type=`echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'`
+    test_case_name=`echo $test_case_name | sed -r 's/(^|_)(\w)/\U\2/g'`
     go_test_cmd="go test -v -run TestAccTencentCloud${test_case_name}${test_cast_type} -timeout=0 ./tencentcloud/"
     echo $go_test_cmd
     # if [ $? -ne 0 ]; then
