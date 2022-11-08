@@ -97,3 +97,14 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 	alias = "my_free_cert"
 }
 `
+
+/* Free certificate application cannot be deleted within 1 hour
+resource "tencentcloud_ssl_free_certificate" "ssl_free_certificate_dns" {
+	dv_auth_method = "DNS"
+	domain = "tencentiac.com"
+	package_type = "2"
+	contact_email = "foo@tencent.com"
+	validity_period = 12
+	alias = "my_free_cert_dns"
+}
+*/
