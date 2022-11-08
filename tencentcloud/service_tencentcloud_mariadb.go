@@ -431,3 +431,40 @@ func (me *MariadbService) DeleteMariadbSecurityGroupsById(ctx context.Context, i
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbAccountsByFilter(ctx context.Context, param map[string]interface{}) (accounts []*mariadb.DBAccount, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DescribeAccounts(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Users) > 0 {
+		accounts = response.Response.Users
+	}
+
+	return
+}
