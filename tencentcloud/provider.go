@@ -1317,6 +1317,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cat_task_set":                         resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance": resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":             resourceTencentCloudMariadbHourDbInstance(),
+			"tencentcloud_mariadb_account":                      resourceTencentCloudMariadbAccount(),
 		},
 
 		ConfigureFunc: providerConfigure,

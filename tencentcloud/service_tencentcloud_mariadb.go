@@ -249,3 +249,67 @@ func (me *MariadbService) DeleteMariadbDbInstance(ctx context.Context, instanceI
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbAccount(ctx context.Context, instanceId, userName, host string) (account *mariadb.DBAccount, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	// request.UserName = &userName
+
+	response, err := me.client.UseMariadbClient().DescribeAccounts(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && len(response.Response.Users) > 0 {
+		for _, v := range response.Response.Users {
+			if *v.UserName == userName && *v.Host == host {
+				account = v
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *MariadbService) DeleteMariadbAccountById(ctx context.Context, instanceId, userName, host string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDeleteAccountRequest()
+
+	request.InstanceId = &instanceId
+	request.UserName = &userName
+	request.Host = &host
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DeleteAccount(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
