@@ -1,40 +1,52 @@
 #!/bin/bash
 
 range_sha=${BASE_SHA}
-echo $(git diff --name-status ${range_sha} | awk '{print $2}')
-#service files
-update_service_functions=""
-service_files=`git diff --name-status ${range_sha} | awk '{print $2}' | grep "^tencentcloud/service*"`
-if [ $service_files ] ; then
-    update_service_functions=`echo $service_files | xargs git diff ${range_sha} | grep "@@" | grep "func" | awk -F ")" '{print $2}' | awk -F "(" '{print $1}' | tr -d ' '`
-fi
-echo "update_service_functions: $update_service_functions"
-need_test_files=""
-for update_service_function in $update_service_functions; do
-    tmp_files=`grep -r --with-filename $update_service_function ./tencentcloud | awk -F ":" '{print $1}' | grep -v "service_tencent*" | awk -F "/" '{print $3}' | sort | uniq | egrep "^resource_tc_|^data_source_tc" | awk -F "." '{print $1}' | awk '/_test$/{print "tencentcloud/"$0".go"} !/_test$/{print "tencentcloud/"$0"_test.go"}'`
-    need_test_files="$need_test_files $tmp_files"
-done
-echo "need_test_files: $need_test_files"
+pr_id=${PR_ID}
 
-# resource&&data_source files
-update_sources=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | awk -F "." '{print $1"_test.go"}'`
-echo "update_sources: $update_sources"
-# test files
-delta_test_files=`git diff --name-status ${range_sha} | egrep "_test\.go$" | awk '{print $2}'`
-echo "delta_test_files: $delta_test_files"
-# all test files
-delta_test_files="$delta_test_files $need_test_files $update_sources"
-delta_test_files=`echo $delta_test_files | xargs -n1 | sort | uniq`
-echo "all delta_test_files: $delta_test_files"
-for delta_test_file in ${delta_test_files}; do
-    test_casts=`egrep "func TestAcc.+\(" ${delta_test_file} | awk -F "(" '{print $1}' | awk '{print $2}' | grep -v "NeedFix"`
-    echo "[$delta_test_file] \n$test_casts"
-    for test_cast in ${test_casts}; do
-        go_test_cmd="go test -v -run ${test_cast} -timeout=0 ./tencentcloud/"
-        $go_test_cmd
-        if [ $? -ne 0 ]; then
-            printf "[GO TEST FILED] ${go_test_cmd}"
-            exit 1
-        fi
-    done
+update_source_count=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | wc -l`
+if [ $update_source_count -eq 0 ]; then
+    printf "No source change, skip delta-test!"
+    exit 0
+fi
+
+if [ ! -f ".changelog/${pr_id}.txt" ]; then
+    printf "Not find changelog file!"
+    exit 1
+fi
+source_names=`cat .changelog/${pr_id}.txt| grep -E "^(resource|datasource)\/(\w+)" | awk -F ":" '{print $1}' | sort | uniq`
+
+test_files=""
+for source_name in $source_names; do
+    name=${source_name#*/}
+    type=${source_name%/*}
+    if [ $type == "datasource" ]; then
+        type=dataSource
+    fi 
+    # echo $source_name $type $name
+    function_name=$(cat tencentcloud/provider.go | grep "\"${name}\"" | grep "${type}")
+    function_name=${function_name#*:}
+    function_name=$(echo $(echo ${function_name%,*}))
+
+    test_file=$(grep -r "func $function_name \*schema\.Resource" tencentcloud)
+    test_file=${test_file#*/}
+    test_file=${test_file%:*}
+    test_files="$test_files $test_file"
+done
+echo "test files:" $test_files
+
+for test_file in $test_files; do
+    test_case_type=${test_file%_tc*}
+    test_case_name=${test_file#*tc_}
+    test_case_name=${test_case_name%.*}
+
+    test_case_type=`echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'`
+    test_case_name=`echo $test_case_name | sed -r 's/(^|_)(\w)/\U\2/g'`
+   
+    go_test_cmd="go test -v -run TestAccTencentCloud${test_case_name}${test_case_type} -timeout=0 ./tencentcloud/"
+    echo $go_test_cmd
+    $go_test_cmd
+    if [ $? -ne 0 ]; then
+        printf "[GO TEST FILED] ${go_test_cmd}"
+        exit 1
+    fi
 done
