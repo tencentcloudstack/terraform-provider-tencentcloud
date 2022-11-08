@@ -90,7 +90,7 @@ func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonNa
 		addonResponseData = &AddonResponseData{}
 	}
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
 		response, has, err = me.DescribeExtensionAddon(ctx, clusterId, addonName)
 		if err != nil {
 			return resource.NonRetryableError(err)

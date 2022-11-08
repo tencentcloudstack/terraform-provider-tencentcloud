@@ -2929,7 +2929,9 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			} else {
 				err = tkeService.CreateExtensionAddon(ctx, id, param)
 			}
-
+			if err != nil {
+				return err
+			}
 			_, _, err = tkeService.PollingAddonsPhase(ctx, id, name, nil)
 			if err != nil {
 				return err
