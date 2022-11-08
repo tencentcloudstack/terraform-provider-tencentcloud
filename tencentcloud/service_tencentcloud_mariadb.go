@@ -340,3 +340,30 @@ func (me *MariadbService) DescribeMariadbParameters(ctx context.Context, instanc
 	parameters = response.Response
 	return
 }
+
+func (me *MariadbService) DescribeMariadbLogFileRetentionPeriod(ctx context.Context, instanceId string) (logFileRetentionPeriod *mariadb.DescribeLogFileRetentionPeriodResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeLogFileRetentionPeriodRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeLogFileRetentionPeriod(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	logFileRetentionPeriod = response.Response
+	return
+}
