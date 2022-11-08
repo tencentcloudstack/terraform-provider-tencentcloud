@@ -273,7 +273,7 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 	}
 
 	if hourDbInstance.UniqueVpcId != nil {
-		err = d.Set("vpc_id", hourDbInstance.UniqueVpcId)
+		_ = d.Set("vpc_id", hourDbInstance.UniqueVpcId)
 	}
 
 	if hourDbInstance.UniqueSubnetId != nil {

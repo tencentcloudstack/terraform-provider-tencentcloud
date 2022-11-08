@@ -251,7 +251,7 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 	}
 
 	if dbInstance.UniqueVpcId != nil {
-		err = d.Set("vpc_id", dbInstance.UniqueVpcId)
+		_ = d.Set("vpc_id", dbInstance.UniqueVpcId)
 	}
 
 	if dbInstance.UniqueSubnetId != nil {
