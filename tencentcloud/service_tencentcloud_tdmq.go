@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -663,5 +664,346 @@ func (me *TdmqService) DeleteTdmqRabbitmqClusterById(ctx context.Context, cluste
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqRole(ctx context.Context, clusterId, roleName string) (rabbitmqRole *tdmq.Role, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.RoleName = &roleName
+
+	response, err := me.client.UseTdmqClient().DescribeRoles(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	rabbitmqRole = response.Response.RoleSets[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqRoleById(ctx context.Context, clusterId, roleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteRolesRequest()
+
+	request.ClusterId = &clusterId
+	request.RoleNames = []*string{&roleName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteRoles(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqVhost(ctx context.Context, clusterId, vHostId string) (rabbitmqVhost *tdmq.AMQPVHost, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeAMQPVHostsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.VHostIdList = []*string{&vHostId}
+	request.Limit = helper.Uint64(uint64(10))
+	request.Offset = helper.Uint64(uint64(0))
+
+	response, err := me.client.UseTdmqClient().DescribeAMQPVHosts(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	rabbitmqVhost = response.Response.VHosts[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqVhostById(ctx context.Context, clusterId, vHostId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteAMQPVHostRequest()
+
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteAMQPVHost(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqRouteRelationAttachment(ctx context.Context, clusterId, vHostId, routeRelationId string) (rabbitmqRouteRelationAttachment *tdmq.AMQPRouteRelation, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeAMQPRouteRelationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	// request.RouteRelationId = &routeRelationId
+
+	response, err := me.client.UseTdmqClient().DescribeAMQPRouteRelations(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	rabbitmqRouteRelationAttachment = response.Response.RouteRelations[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqRouteRelationAttachmentById(ctx context.Context, clusterId, vHostId, routeRelationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteAMQPRouteRelationRequest()
+
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	request.RouteRelationId = &routeRelationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteAMQPRouteRelation(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqQueue(ctx context.Context, clusterId, vHostId, queue string) (rabbitmqQueue *tdmq.AMQPQueueDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeAMQPQueuesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	request.NameKeyword = &queue
+
+	response, err := me.client.UseTdmqClient().DescribeAMQPQueues(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	rabbitmqQueue = response.Response.Queues[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqQueueById(ctx context.Context, clusterId, vHostId, queue string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteAMQPQueueRequest()
+
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	request.Queue = &queue
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteAMQPQueue(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqExchange(ctx context.Context, clusterId, vHostId, exchange string) (rabbitmqExchange *tdmq.AMQPExchange, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeAMQPExchangesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	request.FilterName = &exchange
+
+	response, err := me.client.UseTdmqClient().DescribeAMQPExchanges(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	rabbitmqExchange = response.Response.Exchanges[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqExchangeById(ctx context.Context, clusterId, vHostId, exchange string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteAMQPExchangeRequest()
+
+	request.ClusterId = &clusterId
+	request.VHostId = &vHostId
+	request.Exchange = &exchange
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteAMQPExchange(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqClustersByFilter(ctx context.Context, param map[string]interface{}) (rabbitmqClusters []*tdmq.AMQPClusterDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeAMQPClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "id_keyword" {
+			request.IdKeyword = v.(*string)
+		}
+
+		if k == "name_keyword" {
+			request.NameKeyword = v.(*string)
+		}
+
+		if k == "cluster_id_list" {
+			request.ClusterIdList = v.([]*string)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeAMQPClusters(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterList) < 1 {
+			break
+		}
+		rabbitmqClusters = append(rabbitmqClusters, response.Response.ClusterList...)
+		if len(response.Response.ClusterList) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
 	return
 }

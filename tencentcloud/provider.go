@@ -718,8 +718,16 @@ Short Message Service(SMS)
 	tencentcloud_sms_template
 
 TDMQ for RabbitMQ(RabbitMQ)
+  Data Source
+	tencentcloud_tdmq_rabbitmq_clusters
+
   Resource
 	tencentcloud_tdmq_rabbitmq_cluster
+	tencentcloud_tdmq_rabbitmq_exchange
+	tencentcloud_tdmq_rabbitmq_queue
+	tencentcloud_tdmq_rabbitmq_role
+	tencentcloud_tdmq_rabbitmq_route_relation_attachment
+	tencentcloud_tdmq_rabbitmq_vhost
 
 
 */
@@ -1023,6 +1031,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_waf_rule_groups":                      dataSourceTencentCloudTeoWafRuleGroups(),
 			"tencentcloud_teo_zone_ddos_policy":                     dataSourceTencentCloudTeoZoneDDoSPolicy(),
 			"tencentcloud_sts_caller_identity":                      dataSourceTencentCloudStsCallerIdentity(),
+			"tencentcloud_tdmq_rabbitmq_clusters":                   dataSourceTencentCloudTdmqRabbitmqClusters(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1283,17 +1292,22 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_tcm_mesh":                       resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":         resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_ses_domain":                     resourceTencentCloudSesDomain(),
-			"tencentcloud_ses_template":                   resourceTencentCloudSesTemplate(),
-			"tencentcloud_ses_email_address":              resourceTencentCloudSesEmailAddress(),
-			"tencentcloud_sms_sign":                       resourceTencentCloudSmsSign(),
-			"tencentcloud_sms_template":                   resourceTencentCloudSmsTemplate(),
-			"tencentcloud_dcdb_account":                   resourceTencentCloudDcdbAccount(),
-			"tencentcloud_dcdb_hourdb_instance":           resourceTencentCloudDcdbHourdbInstance(),
-			"tencentcloud_dcdb_security_group_attachment": resourceTencentCloudDcdbSecurityGroupAttachment(),
-			"tencentcloud_tdmq_rabbitmq_cluster":          resourceTencentCloudTdmqRabbitmqCluster(),
+			"tencentcloud_tcm_mesh":                                resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":                  resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_ses_domain":                              resourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                            resourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":                       resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_sms_sign":                                resourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                            resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                            resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":                    resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment":          resourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_tdmq_rabbitmq_cluster":                   resourceTencentCloudTdmqRabbitmqCluster(),
+			"tencentcloud_tdmq_rabbitmq_exchange":                  resourceTencentCloudTdmqRabbitmqExchange(),
+			"tencentcloud_tdmq_rabbitmq_queue":                     resourceTencentCloudTdmqRabbitmqQueue(),
+			"tencentcloud_tdmq_rabbitmq_role":                      resourceTencentCloudTdmqRabbitmqRole(),
+			"tencentcloud_tdmq_rabbitmq_route_relation_attachment": resourceTencentCloudTdmqRabbitmqRouteRelationAttachment(),
+			"tencentcloud_tdmq_rabbitmq_vhost":                     resourceTencentCloudTdmqRabbitmqVhost(),
 		},
 
 		ConfigureFunc: providerConfigure,

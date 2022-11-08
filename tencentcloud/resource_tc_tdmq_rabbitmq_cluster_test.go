@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRabbitmqCluster_basic -v
 func TestAccTencentCloudTdmqRabbitmqCluster_basic(t *testing.T) {
 	t.Parallel()
 
@@ -17,6 +18,8 @@ func TestAccTencentCloudTdmqRabbitmqCluster_basic(t *testing.T) {
 				Config: testAccTdmqRabbitmqCluster,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rabbitmq_cluster.rabbitmq_cluster", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_cluster.rabbitmq_cluster", "name", "rabbit-test-123"),
+					resource.TestCheckResourceAttr("tencentcloud_tdmq_rabbitmq_cluster.rabbitmq_cluster", "remark", "Description"),
 				),
 			},
 			{
@@ -31,8 +34,8 @@ func TestAccTencentCloudTdmqRabbitmqCluster_basic(t *testing.T) {
 const testAccTdmqRabbitmqCluster = `
 
 resource "tencentcloud_tdmq_rabbitmq_cluster" "rabbitmq_cluster" {
-  name = ""
-  remark = ""
+  name = "iac-rabbit-test"
+  remark = "Description"
 }
 
 `
