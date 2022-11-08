@@ -50,6 +50,6 @@ In addition to all arguments above, the following attributes are exported:
   * `storage` - storage of instance.
   * `subnet_id` - subnet id.
   * `vpc_id` - vpc id.
-  * `zone` - avaliable zone.
+  * `zone` - available zone.
 
 

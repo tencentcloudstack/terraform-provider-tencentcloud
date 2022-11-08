@@ -94,7 +94,7 @@ func dataSourceTencentCloudMariadbDbInstances() *schema.Resource {
 						"zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "avaliable zone.",
+							Description: "available zone.",
 						},
 						"memory": {
 							Type:        schema.TypeInt,
