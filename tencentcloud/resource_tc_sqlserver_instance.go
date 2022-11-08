@@ -365,6 +365,21 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 	instanceId := d.Id()
 
 	var outErr, inErr error
+
+	//upgrade storage and memory size
+	if d.HasChange("memory") || d.HasChange("storage") || d.HasChange("auto_voucher") || d.HasChange("voucher_ids") {
+		memory := d.Get("memory").(int)
+		storage := d.Get("storage").(int)
+		autoVoucher := d.Get("auto_voucher").(int)
+		voucherIds := d.Get("voucher_ids").(*schema.Set).List()
+		outErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds))
+
+		if outErr != nil {
+			return outErr
+		}
+
+	}
+
 	//update name
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
@@ -378,29 +393,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
-	}
-
-	//upgrade storage and memory size
-	if d.HasChange("memory") || d.HasChange("storage") || d.HasChange("auto_voucher") || d.HasChange("voucher_ids") {
-		memory := d.Get("memory").(int)
-		storage := d.Get("storage").(int)
-		autoVoucher := d.Get("auto_voucher").(int)
-		voucherIds := d.Get("voucher_ids").(*schema.Set).List()
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds))
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			return nil
-		})
-
-		if outErr != nil {
-			return outErr
-		}
-
-		d.SetPartial("memory")
-		d.SetPartial("storage")
 	}
 
 	if d.HasChange("security_groups") {
@@ -436,8 +428,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 				return outErr
 			}
 		}
-
-		d.SetPartial("security_groups")
 	}
 
 	if d.HasChange("tags") {
@@ -448,8 +438,6 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-
-		d.SetPartial("tags")
 	}
 
 	return nil
