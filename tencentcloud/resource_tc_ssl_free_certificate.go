@@ -174,6 +174,30 @@ func resourceTencentCloudSSLFreeCertificate() *schema.Resource {
 				Computed:    true,
 				Description: "Indicates whether the certificate deployable.",
 			},
+			"dv_auths": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "DV certification information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dv_auth_key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication key.",
+						},
+						"dv_auth_value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication value.",
+						},
+						"dv_auth_verify_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication type.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -262,6 +286,18 @@ func resourceTencentCloudFreeCertificateRead(d *schema.ResourceData, meta interf
 			return err
 		}
 		_ = d.Set("project_id", pid)
+	}
+	if detail.DvAuthDetail != nil && len(detail.DvAuthDetail.DvAuths) != 0 {
+		dvAuths := make([]map[string]string, 0)
+		for _, item := range detail.DvAuthDetail.DvAuths {
+			dvAuth := make(map[string]string)
+			dvAuth["dv_auth_key"] = *item.DvAuthKey
+			dvAuth["dv_auth_value"] = *item.DvAuthValue
+			dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
+			dvAuths = append(dvAuths, dvAuth)
+		}
+
+		_ = d.Set("dv_auths", dvAuths)
 	}
 
 	return nil
