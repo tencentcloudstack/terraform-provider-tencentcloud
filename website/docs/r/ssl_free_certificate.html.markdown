@@ -57,6 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 * `certificate_private_key` - Certificate private key.
 * `certificate_public_key` - Certificate public key.
 * `deployable` - Indicates whether the certificate deployable.
+* `dv_auths` - DV certification information.
+  * `dv_auth_key` - DV authentication key.
+  * `dv_auth_value` - DV authentication value.
+  * `dv_auth_verify_type` - DV authentication type.
 * `insert_time` - Certificate insert time.
 * `product_zh_name` - Product zh name.
 * `renewable` - Indicates whether the certificate renewable.
