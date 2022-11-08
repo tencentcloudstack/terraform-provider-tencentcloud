@@ -13,7 +13,7 @@ func TestAccTencentCloudNeedFixMariadbDedicatedclusterDbInstance_basic(t *testin
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		Steps:     []resource.TestStep{
+		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbDedicatedclusterDbInstance,
 				Check: resource.ComposeTestCheckFunc(
