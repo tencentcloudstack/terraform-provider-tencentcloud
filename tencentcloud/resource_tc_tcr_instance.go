@@ -770,6 +770,10 @@ func resourceTencentCloudTcrReplicationSet(ctx context.Context, d *schema.Resour
 					if ok {
 						code := sdkErr.GetCode()
 						message := sdkErr.GetMessage()
+						// Skip fail operation capture while add same region replica
+						if code == tcr.FAILEDOPERATION {
+							return resource.NonRetryableError(sdkErr)
+						}
 						if code == tcr.INTERNALERROR_ERRORCONFLICT {
 							return resource.RetryableError(err)
 						}
