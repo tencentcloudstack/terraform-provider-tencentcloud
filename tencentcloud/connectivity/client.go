@@ -47,6 +47,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -133,6 +134,7 @@ type TencentCloudClient struct {
 	dcdbConn           *dcdb.Client
 	smsConn            *sms.Client
 	catConn            *cat.Client
+	mariadbConn        *mariadb.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -836,6 +838,19 @@ func (me *TencentCloudClient) UseCatClient() *cat.Client {
 	me.catConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.catConn
+}
+
+// UseMariadbClient returns mariadb client for service
+func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
+	if me.mariadbConn != nil {
+		return me.mariadbConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.mariadbConn, _ = mariadb.NewClient(me.Credential, me.Region, cpf)
+	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mariadbConn
 }
 
 func getEnvDefault(key string, defVal int) int {

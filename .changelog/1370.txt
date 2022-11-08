@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_mariadb_db_instances
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_hour_db_instance
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_dedicatedcluster_db_instance
+```

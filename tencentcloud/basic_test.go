@@ -778,3 +778,10 @@ const (
 )
 
 // End of SES
+// MARIADB
+const (
+	defaultMariadbSubnetId = "subnet-ob6clqwk"
+	defaultMariadbVpcId    = "vpc-68vi2d3h"
+)
+
+// End of MARIADB
