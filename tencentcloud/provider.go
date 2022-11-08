@@ -735,6 +735,8 @@ TencentDB for MariaDB(MariaDB)
   Resource
     tencentcloud_mariadb_dedicatedcluster_db_instance
     tencentcloud_mariadb_hour_db_instance
+	tencentcloud_mariadb_account
+	tencentcloud_mariadb_parameters
 
 */
 package tencentcloud
@@ -1318,6 +1320,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_dedicatedcluster_db_instance": resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":             resourceTencentCloudMariadbHourDbInstance(),
 			"tencentcloud_mariadb_account":                      resourceTencentCloudMariadbAccount(),
+			"tencentcloud_mariadb_parameters":                   resourceTencentCloudMariadbParameters(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -313,3 +313,30 @@ func (me *MariadbService) DeleteMariadbAccountById(ctx context.Context, instance
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbParameters(ctx context.Context, instanceId string) (parameters *mariadb.DescribeDBParametersResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBParametersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeDBParameters(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	parameters = response.Response
+	return
+}
