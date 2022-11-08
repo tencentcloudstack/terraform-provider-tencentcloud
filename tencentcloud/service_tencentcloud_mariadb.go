@@ -468,3 +468,43 @@ func (me *MariadbService) DescribeMariadbAccountsByFilter(ctx context.Context, p
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbSecurityGroupsByFilter(ctx context.Context, param map[string]interface{}) (securityGroups []*mariadb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "product" {
+			request.Product = v.(*string)
+		}
+
+	}
+	response, err := me.client.UseMariadbClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Groups) > 0 {
+		securityGroups = response.Response.Groups
+	}
+
+	return
+}
