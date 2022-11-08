@@ -3911,6 +3911,120 @@ type InstanceSpec struct {
 }
 
 // Predefined struct for user
+type IsolateDBInstanceRequestParams struct {
+	// 实例 ID，格式如：tdsql-dasjkhd，与云数据库控制台页面中显示的实例 ID 相同，可使用 查询实例列表 接口获取，其值为输出参数中字段 InstanceId 的值。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+}
+
+type IsolateDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：tdsql-dasjkhd，与云数据库控制台页面中显示的实例 ID 相同，可使用 查询实例列表 接口获取，其值为输出参数中字段 InstanceId 的值。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+}
+
+func (r *IsolateDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "IsolateDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type IsolateDBInstanceResponseParams struct {
+	// 隔离成功实例ID列表。
+	SuccessInstanceIds []*string `json:"SuccessInstanceIds,omitempty" name:"SuccessInstanceIds"`
+
+	// 隔离失败实例ID列表。
+	FailedInstanceIds []*string `json:"FailedInstanceIds,omitempty" name:"FailedInstanceIds"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type IsolateDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *IsolateDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *IsolateDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type IsolateDedicatedDBInstanceRequestParams struct {
+	// 实例 Id，形如：tdsql-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type IsolateDedicatedDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 Id，形如：tdsql-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *IsolateDedicatedDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDedicatedDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "IsolateDedicatedDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type IsolateDedicatedDBInstanceResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type IsolateDedicatedDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *IsolateDedicatedDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *IsolateDedicatedDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDedicatedDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type IsolateHourDBInstanceRequestParams struct {
 	// 实例ID列表
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
@@ -5646,6 +5760,63 @@ type TablePrivilege struct {
 }
 
 // Predefined struct for user
+type TerminateDedicatedDBInstanceRequestParams struct {
+	// 实例 Id，形如：tdsql-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type TerminateDedicatedDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 Id，形如：tdsql-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *TerminateDedicatedDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateDedicatedDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TerminateDedicatedDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TerminateDedicatedDBInstanceResponseParams struct {
+	// 异步流程Id
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type TerminateDedicatedDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *TerminateDedicatedDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *TerminateDedicatedDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TerminateDedicatedDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type UpgradeDBInstanceRequestParams struct {
 	// 待升级的实例ID。形如：tdsql-ow728lmc，可以通过 DescribeDBInstances 查询实例详情获得。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -5770,4 +5941,7 @@ type ZonesInfo struct {
 
 	// 可用区中文名
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
+
+	// 是否在售
+	OnSale *bool `json:"OnSale,omitempty" name:"OnSale"`
 }

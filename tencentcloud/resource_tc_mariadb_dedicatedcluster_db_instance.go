@@ -379,7 +379,47 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceDelete(d *schema.Resou
 
 	instanceId := d.Id()
 
-	if err := service.DeleteMariadbDbInstanceById(ctx, instanceId); err != nil {
+	paramMap := make(map[string]interface{})
+	paramMap["instance_ids"] = []*string{&instanceId}
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		dbInstances, errRet := service.DescribeMariadbDbInstancesByFilter(ctx, paramMap)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if dbInstances == nil || len(dbInstances) < 1 {
+			return nil
+		}
+
+		if *dbInstances[0].Status == 2 {
+			isolateRequest := mariadb.NewIsolateDedicatedDBInstanceRequest()
+			isolateRequest.InstanceId = &instanceId
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				if _, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().IsolateDedicatedDBInstance(isolateRequest); e != nil {
+					return resource.NonRetryableError(fmt.Errorf("delete db instance failed, err: %v", e))
+				}
+				return nil
+			})
+			if err != nil {
+				return resource.NonRetryableError(fmt.Errorf("db instance error %v, operate failed", err))
+			}
+			return resource.RetryableError(fmt.Errorf("db instance initializing, retry..."))
+		}
+
+		if *dbInstances[0].Status < 0 {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				if e := service.DeleteMariadbDbInstance(ctx, instanceId); e != nil {
+					return resource.NonRetryableError(fmt.Errorf("delete db instance failed, err: %v", e))
+				}
+				return nil
+			})
+			if err != nil {
+				return resource.NonRetryableError(fmt.Errorf("db instance error %v, operate failed", err))
+			}
+			return resource.RetryableError(fmt.Errorf("db instance initializing, retry..."))
+		}
+		return resource.RetryableError(fmt.Errorf("db instance status is %v, retry...", *dbInstances[0].Status))
+	})
+	if err != nil {
 		return err
 	}
 
