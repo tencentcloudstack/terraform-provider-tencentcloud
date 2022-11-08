@@ -1,5 +1,7 @@
 /*
-Use this data source to query elastic kubernetes cluster resource.
+Use this data source to query elastic kubernetes cluster resource (offlined).
+
+~> **NOTE:**  This resource was offline and no longer supported.
 
 Example Usage
 
@@ -22,7 +24,8 @@ import (
 
 func dataSourceTencentCloudEKSClusters() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudEKSClustersRead,
+		DeprecationMessage: "This resource was offline and no longer supported.",
+		Read:               dataSourceTencentCloudEKSClustersRead,
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {

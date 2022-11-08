@@ -742,9 +742,10 @@ locals {
 // TEO
 
 const (
-	defaultZoneName = "tf-teo-t.xyz"
-	defaultZoneId   = "zone-2a1u0y616jz6"
-	defaultPolicyId = "11587"
+	defaultZoneName    = "tf-teo-t.xyz"
+	defaultZoneId      = "zone-2a1u0y616jz6"
+	defaultPolicyId    = "11587"
+	applicationProxyId = "proxy-f2c15f4f-5b34-11ed-aa27-525400b35dd9"
 )
 
 // End of TEO
@@ -759,3 +760,21 @@ const (
 )
 
 // End of TCM
+
+// DCDB
+const (
+	defaultDcdbInstanceId    = "tdsqlshard-lgz66iqr"
+	defaultDcdbInstanceName  = "keep-dcdb-test"
+	defaultDcdbInsVpcId      = "vpc-4owdpnwr"
+	defaultDcdbInsIdSubnetId = "subnet-qylstu34"
+	defaultDcdbSGId          = "sg-ijato2x1"
+	defaultDcdbSGName        = "default"
+)
+
+// End of DCDB
+// SES
+const (
+	defaultRegionSes = "ap-hongkong"
+)
+
+// End of SES

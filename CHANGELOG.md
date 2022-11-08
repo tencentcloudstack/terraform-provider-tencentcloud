@@ -1,12 +1,36 @@
-## 1.78.6 (October 27, 2022)
+## 1.78.8 (November 4, 2022)
 
 FEATURES:
 
+* **New Resource:** `tencentcloud_dcdb_account` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_dcdb_hourdb_instance` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_dcdb_security_group_attachment` ([#1351](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1351))
+* **New Resource:** `tencentcloud_ses_domain` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+* **New Resource:** `tencentcloud_ses_email_address` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+* **New Resource:** `tencentcloud_ses_template` ([#1360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1360))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_teo_application_proxy_rule: Add origin_port filed ([#1358](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1358))
+
+## 1.78.7 (November 3, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_sms_sign` ([#1352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1352))
+* **New Resource:** `tencentcloud_sms_template` ([#1352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1352))
 * **New Resource:** `tencentcloud_sts_caller_identity` ([#1340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1340))
+* **New Resource:** `tencentcloud_vpc_bandwidth_package` ([#1343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1343))
+* **New Resource:** `tencentcloud_vpc_bandwidth_package_attachment` ([#1343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1343))
 
 ENHANCEMENTS:
 
 * provider: Specify req client header with -ldflag ([#1318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1318))
+* resource/tencentcloud_tem_workload: support set tcr repo ([#1350](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1350))
+
+BUG FIXES:
+
+* resource/tencentcloud_elasticsearch_instance: status polling fix ([#1353](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1353))
 
 ## 1.78.6 (October 27, 2022)
 

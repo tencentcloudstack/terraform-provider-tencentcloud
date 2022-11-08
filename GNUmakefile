@@ -164,7 +164,6 @@ endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 changelog:
-	cd .ci/tools && $(GO_VER) install github.com/hashicorp/go-changelog/cmd/changelog-build
 	./scripts/generate-changelog.sh
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test

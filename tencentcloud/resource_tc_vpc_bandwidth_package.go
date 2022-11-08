@@ -53,7 +53,7 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 			"charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Bandwidth package billing type, default: TOP5_POSTPAID_BY_MONTH, optional value:- `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid- `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid- `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing.",
+				Description: "Bandwidth package billing type, default: TOP5_POSTPAID_BY_MONTH, optional value:- `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid- `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid- `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing (Type FIXED_PREPAID_BY_MONTH product API capability is under construction).",
 			},
 
 			"bandwidth_package_name": {
@@ -94,6 +94,16 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateBandwidthPackage(request)
 		if e != nil {
@@ -116,13 +126,23 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 	d.SetId(bandwidthPackageId)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:bandwidthPackage/%s", region, bandwidthPackageId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeVpcBandwidthPackage(ctx, bandwidthPackageId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *instance.Status == "CREATED" {
+		if instance != nil && *instance.Status == "CREATED" {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.Status))
@@ -131,14 +151,6 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cam:%s:uin/:bandwidthPackage/%s", region, bandwidthPackageId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return resourceTencentCloudVpcBandwidthPackageRead(d, meta)
 }
 
@@ -178,7 +190,7 @@ func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta in
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "cam", "bandwidthPackage", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "bandwidthPackage", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -201,27 +213,19 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 	request.BandwidthPackageId = &bandwidthPackageId
 
 	if d.HasChange("network_type") {
-
 		return fmt.Errorf("`network_type` do not support change now.")
-
 	}
 
 	if d.HasChange("bandwidth_package_count") {
-
 		return fmt.Errorf("`bandwidth_package_count` do not support change now.")
-
 	}
 
 	if d.HasChange("internet_max_bandwidth") {
-
 		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
-
 	}
 
 	if d.HasChange("protocol") {
-
 		return fmt.Errorf("`protocol` do not support change now.")
-
 	}
 
 	if d.HasChange("charge_type") {
@@ -230,10 +234,8 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	if d.HasChange("bandwidth_package_name") {
-		if v, ok := d.GetOk("bandwidth_package_name"); ok {
-			request.BandwidthPackageName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("bandwidth_package_name"); ok {
+		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -257,7 +259,7 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cam", "bandwidthPackage", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("vpc", "bandwidthPackage", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

@@ -541,6 +541,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.409
@@ -571,6 +573,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.527
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.294
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
@@ -599,6 +603,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.406
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199
@@ -619,7 +627,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.527
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.500
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
