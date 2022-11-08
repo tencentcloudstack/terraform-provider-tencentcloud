@@ -78,7 +78,7 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 	}
 	var instanceIds []string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId, false)
 		if errRet != nil {
 			return retryError(errRet)
 		}
@@ -142,7 +142,7 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	}
 	var instanceIds []string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId, false)
 		if errRet != nil {
 			return retryError(errRet)
 		}
