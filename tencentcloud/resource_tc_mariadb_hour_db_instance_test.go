@@ -15,7 +15,7 @@ func TestAccTencentCloudMariadbHourDbInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMariadbHourDbInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -28,8 +28,8 @@ func TestAccTencentCloudMariadbHourDbInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "memory", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "node_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "storage", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "subnet_id", "subnet-ob6clqwk"),
-					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "vpc_id", "vpc-68vi2d3h"),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "subnet_id", defaultMariadbSubnetId),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_hour_db_instance.basic", "vpc_id", defaultMariadbVpcId),
 					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_hour_db_instance.basic", "zones.#"),
 				),
 			},
@@ -93,7 +93,17 @@ func testAccCheckMariadbHourDbInstanceExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMariadbHourDbInstance = `
+const testAccMariadbHourDbInstanceVar = `
+variable "subnet_id" {
+  default = "` + defaultMariadbSubnetId + `"
+}
+
+variable "vpc_id" {
+  default = "` + defaultMariadbVpcId + `"
+}
+`
+
+const testAccMariadbHourDbInstance = testAccMariadbHourDbInstanceVar + `
 
 resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   db_version_id = "8.0"
@@ -101,8 +111,8 @@ resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   memory        = 2
   node_count    = 2
   storage       = 10
-  subnet_id     = "subnet-ob6clqwk"
-  vpc_id        = "vpc-68vi2d3h"
+  subnet_id     = var.subnet_id
+  vpc_id        = var.vpc_id
   zones         = ["ap-guangzhou-7","ap-guangzhou-7"]
   tags          = {
 	createdBy   = "terraform"
