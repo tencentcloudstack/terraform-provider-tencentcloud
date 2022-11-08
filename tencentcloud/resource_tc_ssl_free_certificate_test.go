@@ -98,8 +98,7 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 }
 `
 
-// Free certificate application cannot be deleted within 1 hour
-const testAccSSLFreeCertificateDNS = `
+/* Free certificate application cannot be deleted within 1 hour
 resource "tencentcloud_ssl_free_certificate" "ssl_free_certificate_dns" {
 	dv_auth_method = "DNS"
 	domain = "tencentiac.com"
@@ -108,4 +107,4 @@ resource "tencentcloud_ssl_free_certificate" "ssl_free_certificate_dns" {
 	validity_period = 12
 	alias = "my_free_cert_dns"
 }
-`
+*/
