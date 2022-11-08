@@ -738,6 +738,7 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_account
 	tencentcloud_mariadb_parameters
 	tencentcloud_mariadb_log_file_retention_period
+	tencentcloud_mariadb_security_groups
 
 */
 package tencentcloud
@@ -1323,6 +1324,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_account":                      resourceTencentCloudMariadbAccount(),
 			"tencentcloud_mariadb_parameters":                   resourceTencentCloudMariadbParameters(),
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
+			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -367,3 +367,67 @@ func (me *MariadbService) DescribeMariadbLogFileRetentionPeriod(ctx context.Cont
 	logFileRetentionPeriod = response.Response
 	return
 }
+
+func (me *MariadbService) DescribeMariadbSecurityGroup(ctx context.Context, instanceId, securityGroupId, product string) (securityGroup *mariadb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.Product = &product
+
+	response, err := me.client.UseMariadbClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && len(response.Response.Groups) > 0 {
+		for _, v := range response.Response.Groups {
+			if *v.SecurityGroupId == securityGroupId {
+				securityGroup = v
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *MariadbService) DeleteMariadbSecurityGroupsById(ctx context.Context, instanceId, securityGroupId, product string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDisassociateSecurityGroupsRequest()
+
+	request.InstanceIds = []*string{&instanceId}
+	request.SecurityGroupId = &securityGroupId
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
