@@ -62,6 +62,7 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -135,6 +136,7 @@ type TencentCloudClient struct {
 	smsConn            *sms.Client
 	catConn            *cat.Client
 	mariadbConn        *mariadb.Client
+	tdcpgConn          *tdcpg.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -851,6 +853,19 @@ func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
 	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mariadbConn
+}
+
+// UseTdcpgClient returns tdcpg client for service
+func (me *TencentCloudClient) UseTdcpgClient() *tdcpg.Client {
+	if me.tdcpgConn != nil {
+		return me.tdcpgConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tdcpgConn, _ = tdcpg.NewClient(me.Credential, me.Region, cpf)
+	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tdcpgConn
 }
 
 func getEnvDefault(key string, defVal int) int {

@@ -742,6 +742,15 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
+tdcpg
+  Data Source
+	tencentcloud_tdcpg_clusters
+	tencentcloud_tdcpg_instances
+
+  Resource
+	tencentcloud_tdcpg_cluster
+	tencentcloud_tdcpg_instance
+
 */
 package tencentcloud
 
@@ -1052,6 +1061,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                         dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
+			// "tencentcloud_tdcpg_clusters": dataSourceTencentCloudTdcpgClusters(),
+			// "tencentcloud_tdcpg_instances": dataSourceTencentCloudTdcpgInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1329,6 +1340,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_parameters":                   resourceTencentCloudMariadbParameters(),
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_tdcpg_cluster":                        resourceTencentCloudTdcpgCluster(),
+			// "tencentcloud_tdcpg_instance":                       resourceTencentCloudTdcpgInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

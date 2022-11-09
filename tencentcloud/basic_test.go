@@ -786,3 +786,15 @@ const (
 )
 
 // End of MARIADB
+
+// DCDB
+const (
+	defaultTdcpgClusterId    = "tdsqlshard-lgz66iqr"
+	defaultTdcpgClusterName  = "keep-tdcpg-cluster-test"
+  defaultTdcpgZone  = "ap-guangzhou-3"
+  defaultTdcpgTestNamePrefix = "tf-tdcpg-"
+	defaultTdcpgVpcId      = "vpc-4owdpnwr"
+	defaultTdcpgSubnetId = "subnet-qylstu34"
+)
+
+// End of DCDB
