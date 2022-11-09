@@ -52,6 +52,7 @@ import (
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
@@ -135,6 +136,7 @@ type TencentCloudClient struct {
 	smsConn            *sms.Client
 	catConn            *cat.Client
 	mariadbConn        *mariadb.Client
+	ptsConn            *pts.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -851,6 +853,19 @@ func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
 	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mariadbConn
+}
+
+// UsePtsClient returns pts client for service
+func (me *TencentCloudClient) UsePtsClient() *pts.Client {
+	if me.ptsConn != nil {
+		return me.ptsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.ptsConn, _ = pts.NewClient(me.Credential, me.Region, cpf)
+	me.ptsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ptsConn
 }
 
 func getEnvDefault(key string, defVal int) int {
