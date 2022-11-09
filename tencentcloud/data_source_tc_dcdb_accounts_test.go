@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudDcdbAccountsDataSource(t *testing.T) {
+func TestAccTencentCloudDCDBAccountsDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccTencentCloudDcdbAccountsDataSource(t *testing.T) {
 
 const testAccDataSourceDcdbAccounts = `
 resource "tencentcloud_dcdb_account" "basic" {
-	instance_id = "%s" # use the hard code before the dcdb_instance resource is ready.
+	instance_id = "%s"
 	user_name = "mysql_ds"
 	host = "127.0.0.1"
 	password = "===password==="

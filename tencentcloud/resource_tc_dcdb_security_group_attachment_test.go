@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDcdbSecurityGroupAttachmentResource(t *testing.T) {
+func TestAccTencentCloudDCDBSecurityGroupAttachmentResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

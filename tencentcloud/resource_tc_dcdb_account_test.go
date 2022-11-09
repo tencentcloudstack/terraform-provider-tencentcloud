@@ -10,7 +10,44 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDcdbAccountResource(t *testing.T) {
+func init() {
+	resource.AddTestSweepers("tencentcloud_dcdb_account", &resource.Sweeper{
+		Name: "tencentcloud_dcdb_account",
+		F:    testSweepDCDBAccount,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dcdb_account
+func testSweepDCDBAccount(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	dcdbService := DcdbService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+	account, err := dcdbService.DescribeDcdbAccount(ctx, defaultDcdbInstanceId, "")
+	if err != nil {
+		return err
+	}
+	if account == nil {
+		return fmt.Errorf("dcdb account not exists. instanceId:[%s]", defaultDcdbInstanceId)
+	}
+
+	for _, v := range account.Users {
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err := dcdbService.DeleteDcdbAccountById(ctx, defaultDcdbInstanceId, *v.UserName, *v.Host)
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+		if err != nil {
+			return fmt.Errorf("[ERROR] delete dcdb account %s reason:[%s]", *v.UserName, err.Error())
+		}
+	}
+	return nil
+}
+
+func TestAccTencentCloudDCDBAccountResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

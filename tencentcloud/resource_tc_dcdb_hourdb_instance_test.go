@@ -3,13 +3,56 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDcdbHourdbInstance_basic(t *testing.T) {
+func init() {
+	resource.AddTestSweepers("tencentcloud_dcdb_hourdb_instance", &resource.Sweeper{
+		Name: "tencentcloud_dcdb_hourdb_instance",
+		F:    testSweepDCDBHourdbInstance,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dcdb_hourdb_instance
+func testSweepDCDBHourdbInstance(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	dcdbService := DcdbService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+	instances, err := dcdbService.DescribeDcdbInstancesByFilter(ctx, nil)
+	if err != nil {
+		return err
+	}
+	if instances == nil {
+		return fmt.Errorf("dcdb hourdb instance not exists.")
+	}
+
+	for _, v := range instances {
+		delId := *v.InstanceId
+		delName := *v.InstanceName
+
+		if strings.HasPrefix(delName, "test_dcdc_") {
+			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				err := dcdbService.DeleteDcdbHourdbInstanceById(ctx, delId)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+			if err != nil {
+				return fmt.Errorf("[ERROR] delete dcdb hourdb instance %s failed! reason:[%s]", delId, err.Error())
+			}
+		}
+	}
+	return nil
+}
+
+func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
