@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 mariadb security_groups can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_security_groups.security_groups securityGroups_id
+$ terraform import tencentcloud_mariadb_security_groups.security_groups tdsql-4pzs5b67#sg-7kpsbxdb#mariadb
 ```
 

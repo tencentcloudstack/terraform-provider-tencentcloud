@@ -15,7 +15,6 @@ Provides a resource to create a mariadb parameters
 
 ```hcl
 resource "tencentcloud_mariadb_parameters" "parameters" {
-  id          = "tdsql-4pzs5b67"
   instance_id = "tdsql-4pzs5b67"
 
   params {
@@ -305,6 +304,6 @@ In addition to all arguments above, the following attributes are exported:
 
 mariadb parameters can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_parameters.parameters parameters_id
+$ terraform import tencentcloud_mariadb_parameters.parameters tdsql-4pzs5b67
 ```
 

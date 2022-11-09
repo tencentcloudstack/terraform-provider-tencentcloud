@@ -14,7 +14,7 @@ Import
 
 mariadb log_file_retention_period can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_log_file_retention_period.log_file_retention_period logFileRetentionPeriod_id
+$ terraform import tencentcloud_mariadb_log_file_retention_period.log_file_retention_period tdsql-4pzs5b67
 ```
 */
 package tencentcloud
