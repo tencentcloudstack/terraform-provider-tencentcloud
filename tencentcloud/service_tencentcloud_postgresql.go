@@ -261,32 +261,40 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
 
+		// Retry if status still persist after API invoked.
+		startProgressRetries := 5
+
 		// check open or not
 		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
 				return retryError(err)
-			} else if has {
-				if len(instance.DBInstanceNetInfo) > 0 {
-					for _, v := range instance.DBInstanceNetInfo {
-						if *v.NetType == "public" {
-							if *v.Status == "opened" || *v.Status == "1" {
-								return nil
-							} else if *v.Status == "opening" || *v.Status == "initing" || *v.Status == "3" || *v.Status == "0" {
-								return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
-							} else {
-								return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
-							}
-						}
-					}
-					// there is no public service yet
-					return resource.RetryableError(fmt.Errorf("cannot find public status, postgresql instance %s watiting", instanceId))
-				} else {
-					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
-				}
-			} else {
+			}
+			if !has {
 				return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail, instance is not exist", instanceId))
 			}
+			if len(instance.DBInstanceNetInfo) == 0 {
+				return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
+			}
+			for _, v := range instance.DBInstanceNetInfo {
+				if *v.NetType == "public" {
+					if *v.Status == "opened" || *v.Status == "1" {
+						return nil
+					}
+					if *v.Status == "opening" || *v.Status == "initing" || *v.Status == "3" || *v.Status == "0" {
+						startProgressRetries = 0
+						return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+					}
+					if startProgressRetries > 0 && *v.Status == "closed" {
+						startProgressRetries -= 1
+						return resource.RetryableError(fmt.Errorf("status still closed, retry remaining count: %d", startProgressRetries))
+					}
+					return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
+
+				}
+			}
+			// there is no public service yet
+			return resource.RetryableError(fmt.Errorf("cannot find public status, postgresql instance %s watiting", instanceId))
 		})
 		if err != nil {
 			return err
@@ -313,32 +321,35 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
+		startProgressRetries := 5
 		// check close or not
 		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
 				return retryError(err)
-			} else if has {
-				if len(instance.DBInstanceNetInfo) > 0 {
-					for _, v := range instance.DBInstanceNetInfo {
-						if *v.NetType == "public" {
-							if *v.Status == "closed" || *v.Status == "2" {
-								return nil
-							} else if *v.Status == "closing" || *v.Status == "4" {
-								return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
-							} else {
-								return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
-							}
-						}
-					}
-					// there is no public service
-					return nil
-				} else {
-					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
-				}
-			} else {
+			}
+			if !has {
 				return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail, instance is not exist", instanceId))
 			}
+			if len(instance.DBInstanceNetInfo) == 0 {
+				return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
+			}
+			for _, v := range instance.DBInstanceNetInfo {
+				if *v.NetType == "public" {
+					if *v.Status == "closed" || *v.Status == "2" {
+						return nil
+					}
+					if *v.Status == "closing" || *v.Status == "4" {
+						return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+					}
+					if startProgressRetries > 0 && *v.Status == "opened" {
+						startProgressRetries -= 1
+						return resource.RetryableError(fmt.Errorf("status still opened, retry remaining count: %d", startProgressRetries))
+					}
+					return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
+				}
+			}
+			return nil
 		})
 		if err != nil {
 			return err
