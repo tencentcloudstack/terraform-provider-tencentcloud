@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_cat_probe_data
+```
+
+```release-note:new-data-source
+tencentcloud_cat_node
+```
