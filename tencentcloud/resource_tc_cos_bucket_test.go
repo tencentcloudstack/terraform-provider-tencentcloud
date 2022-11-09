@@ -463,7 +463,7 @@ func TestAccTencentCloudCosBucket_replication(t *testing.T) {
 				Config: testAccBucketReplication(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.with_replication"),
-					resource.TestMatchResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", regexp.MustCompile(`^qcs::cam::uin/\\d+:uin/\\d+$`)),
+					resource.TestMatchResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_role", regexp.MustCompile(`^qcs::cam::uin/\d+:uin/\d+$`)),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.id", "test-rep1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.with_replication", "replica_rules.0.status", "Enabled"),
