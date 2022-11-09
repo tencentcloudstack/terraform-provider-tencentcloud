@@ -15,7 +15,7 @@ func TestAccTencentCloudMariadbHourDbInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMariadbHourDbInstanceDestroy,
 		Steps: []resource.TestStep{

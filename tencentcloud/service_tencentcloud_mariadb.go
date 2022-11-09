@@ -249,3 +249,262 @@ func (me *MariadbService) DeleteMariadbDbInstance(ctx context.Context, instanceI
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbAccount(ctx context.Context, instanceId, userName, host string) (account *mariadb.DBAccount, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	// request.UserName = &userName
+
+	response, err := me.client.UseMariadbClient().DescribeAccounts(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && len(response.Response.Users) > 0 {
+		for _, v := range response.Response.Users {
+			if *v.UserName == userName && *v.Host == host {
+				account = v
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *MariadbService) DeleteMariadbAccountById(ctx context.Context, instanceId, userName, host string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDeleteAccountRequest()
+
+	request.InstanceId = &instanceId
+	request.UserName = &userName
+	request.Host = &host
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DeleteAccount(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbParameters(ctx context.Context, instanceId string) (parameters *mariadb.DescribeDBParametersResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBParametersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeDBParameters(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	parameters = response.Response
+	return
+}
+
+func (me *MariadbService) DescribeMariadbLogFileRetentionPeriod(ctx context.Context, instanceId string) (logFileRetentionPeriod *mariadb.DescribeLogFileRetentionPeriodResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeLogFileRetentionPeriodRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeLogFileRetentionPeriod(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	logFileRetentionPeriod = response.Response
+	return
+}
+
+func (me *MariadbService) DescribeMariadbSecurityGroup(ctx context.Context, instanceId, securityGroupId, product string) (securityGroup *mariadb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.Product = &product
+
+	response, err := me.client.UseMariadbClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && len(response.Response.Groups) > 0 {
+		for _, v := range response.Response.Groups {
+			if *v.SecurityGroupId == securityGroupId {
+				securityGroup = v
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *MariadbService) DeleteMariadbSecurityGroupsById(ctx context.Context, instanceId, securityGroupId, product string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDisassociateSecurityGroupsRequest()
+
+	request.InstanceIds = []*string{&instanceId}
+	request.SecurityGroupId = &securityGroupId
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbAccountsByFilter(ctx context.Context, param map[string]interface{}) (accounts []*mariadb.DBAccount, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DescribeAccounts(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Users) > 0 {
+		accounts = response.Response.Users
+	}
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbSecurityGroupsByFilter(ctx context.Context, param map[string]interface{}) (securityGroups []*mariadb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "product" {
+			request.Product = v.(*string)
+		}
+
+	}
+	response, err := me.client.UseMariadbClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Groups) > 0 {
+		securityGroups = response.Response.Groups
+	}
+
+	return
+}

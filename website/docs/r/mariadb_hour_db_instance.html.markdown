@@ -14,30 +14,17 @@ Provides a resource to create a mariadb hour_db_instance
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_hour_db_instance" "hour_db_instance" {
-  zones         = ["ap-guangzhou-7", "ap-guangzhou-7"]
-  node_count    = 2
-  memory        = 2
-  storage       = 10
-  vpc_id        = "vpc-68vi2d3h"
-  subnet_id     = "subnet-ob6clqwk"
+resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   db_version_id = "8.0"
   instance_name = "db-test-2"
-  init_params {
-    param = "character_set_server"
-    value = "utf8mb4"
-  }
-  init_params {
-    param = "lower_case_table_names"
-    value = "1"
-  }
-  init_params {
-    param = "sync_mode"
-    value = "2"
-  }
-  init_params {
-    param = "innodb_page_size"
-    value = "16384"
+  memory        = 2
+  node_count    = 2
+  storage       = 10
+  subnet_id     = "subnet-jdi5xn22"
+  vpc_id        = "vpc-k1t8ickr"
+  zones         = ["ap-guangzhou-7", "ap-guangzhou-7"]
+  tags = {
+    createdBy = "terraform"
   }
 }
 ```
@@ -68,6 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 
 mariadb hour_db_instance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_hour_db_instance.hour_db_instance hourDbInstance_id
+$ terraform import tencentcloud_mariadb_hour_db_instance.hour_db_instance tdsql-kjqih9nn
 ```
 

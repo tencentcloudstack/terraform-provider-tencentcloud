@@ -780,8 +780,9 @@ const (
 // End of SES
 // MARIADB
 const (
-	defaultMariadbSubnetId = "subnet-ob6clqwk"
-	defaultMariadbVpcId    = "vpc-68vi2d3h"
+	defaultMariadbSubnetId        = "subnet-jdi5xn22"
+	defaultMariadbVpcId           = "vpc-k1t8ickr"
+	defaultMariadbSecurityGroupId = "sg-7kpsbxdb"
 )
 
 // End of MARIADB
