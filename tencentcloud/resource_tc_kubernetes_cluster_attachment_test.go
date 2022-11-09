@@ -167,7 +167,7 @@ data "tencentcloud_vpc_subnets" "sub" {
   vpc_id        = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
 }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "foo_attachment" {
   instance_name     = "tf-auto-test-1-1"
   availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
   image_id          = var.default_img_id
@@ -181,7 +181,7 @@ resource "tencentcloud_instance" "foo" {
 
 resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = local.cluster_id
-  instance_id = tencentcloud_instance.foo.id
+  instance_id = tencentcloud_instance.foo_attachment.id
   password    = "Lo4wbdit"
   unschedulable = 0
 
