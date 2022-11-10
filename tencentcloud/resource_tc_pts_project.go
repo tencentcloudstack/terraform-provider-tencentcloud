@@ -268,24 +268,21 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 		request.Description = helper.String(v.(string))
 	}
 
-	if d.HasChange("tags") {
-		if v, ok := d.GetOk("tags"); ok {
-			for _, item := range v.([]interface{}) {
-				if item != nil {
-					dMap := item.(map[string]interface{})
-					tagSpec := pts.TagSpec{}
-					if v, ok := dMap["tag_key"]; ok {
-						tagSpec.TagKey = helper.String(v.(string))
-					}
-					if v, ok := dMap["tag_value"]; ok {
-						tagSpec.TagValue = helper.String(v.(string))
-					}
-
-					request.Tags = append(request.Tags, &tagSpec)
+	if v, ok := d.GetOk("tags"); ok {
+		for _, item := range v.([]interface{}) {
+			if item != nil {
+				dMap := item.(map[string]interface{})
+				tagSpec := pts.TagSpec{}
+				if v, ok := dMap["tag_key"]; ok {
+					tagSpec.TagKey = helper.String(v.(string))
 				}
+				if v, ok := dMap["tag_value"]; ok {
+					tagSpec.TagValue = helper.String(v.(string))
+				}
+
+				request.Tags = append(request.Tags, &tagSpec)
 			}
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

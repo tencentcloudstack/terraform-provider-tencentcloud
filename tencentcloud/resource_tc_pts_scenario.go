@@ -141,6 +141,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -819,26 +820,24 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 	var (
 		request    = pts.NewCreateScenarioRequest()
 		response   *pts.CreateScenarioResponse
+		projectId  string
 		scenarioId string
 	)
 
 	if v, ok := d.GetOk("name"); ok {
-
 		request.Name = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("type"); ok {
-
 		request.Type = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
-
+		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
-
 		request.Description = helper.String(v.(string))
 	}
 
@@ -1032,10 +1031,10 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 				scriptInfo.UpdatedAt = helper.String(v.(string))
 			}
 			if v, ok := dMap["encoded_content"]; ok {
-				scriptInfo.EncodedContent = helper.String(v.(string))
+				scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["encoded_http_archive"]; ok {
-				scriptInfo.EncodedHttpArchive = helper.String(v.(string))
+				scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["load_weight"]; ok {
 				scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
@@ -1224,7 +1223,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 
 	scenarioId = *response.Response.ScenarioId
 
-	d.SetId(scenarioId)
+	d.SetId(projectId + FILED_SP + scenarioId)
 	return resourceTencentCloudPtsScenarioRead(d, meta)
 }
 
@@ -1237,9 +1236,14 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	scenarioId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
 
-	scenario, err := service.DescribePtsScenario(ctx, scenarioId)
+	scenario, err := service.DescribePtsScenario(ctx, projectId, scenarioId)
 
 	if err != nil {
 		return err
@@ -1446,10 +1450,18 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 				testScriptsMap["updated_at"] = testScripts.UpdatedAt
 			}
 			if testScripts.EncodedContent != nil {
-				testScriptsMap["encoded_content"] = testScripts.EncodedContent
+				content, err := Base64ToString(*testScripts.EncodedContent)
+				if err != nil {
+					return fmt.Errorf("`testScripts.EncodedContent` %s does not be decoded to string", *testScripts.EncodedContent)
+				}
+				testScriptsMap["encoded_content"] = content
 			}
 			if testScripts.EncodedHttpArchive != nil {
-				testScriptsMap["encoded_http_archive"] = testScripts.EncodedHttpArchive
+				archive, err := Base64ToString(*testScripts.EncodedHttpArchive)
+				if err != nil {
+					return fmt.Errorf("`testScripts.EncodedHttpArchive` %s does not be decoded to string", *testScripts.EncodedHttpArchive)
+				}
+				testScriptsMap["encoded_http_archive"] = archive
 			}
 			if testScripts.LoadWeight != nil {
 				testScriptsMap["load_weight"] = testScripts.LoadWeight
@@ -1674,26 +1686,26 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 
 	request := pts.NewUpdateScenarioRequest()
 
-	scenarioId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
 
+	request.ProjectId = &projectId
 	request.ScenarioId = &scenarioId
 
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("type") {
-		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
-		}
-	}
-
 	if d.HasChange("project_id") {
-		if v, ok := d.GetOk("project_id"); ok {
-			request.ProjectId = helper.String(v.(string))
-		}
+		return fmt.Errorf("`project_id` do not support change now.")
+	}
+
+	if v, ok := d.GetOk("name"); ok {
+		request.Name = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
 	}
 
 	if d.HasChange("description") {
@@ -1904,10 +1916,10 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 					scriptInfo.UpdatedAt = helper.String(v.(string))
 				}
 				if v, ok := dMap["encoded_content"]; ok {
-					scriptInfo.EncodedContent = helper.String(v.(string))
+					scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
 				}
 				if v, ok := dMap["encoded_http_archive"]; ok {
-					scriptInfo.EncodedHttpArchive = helper.String(v.(string))
+					scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
 				}
 				if v, ok := dMap["load_weight"]; ok {
 					scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
@@ -2122,9 +2134,14 @@ func resourceTencentCloudPtsScenarioDelete(d *schema.ResourceData, meta interfac
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	scenarioId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
 
-	if err := service.DeletePtsScenarioById(ctx, scenarioId); err != nil {
+	if err := service.DeletePtsScenarioById(ctx, projectId, scenarioId); err != nil {
 		return err
 	}
 

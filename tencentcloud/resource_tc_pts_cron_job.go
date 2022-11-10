@@ -5,24 +5,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_cron_job" "cron_job" {
-  name = ""
-  project_id = ""
-  scenario_id = ""
-  scenario_name = ""
-  frequency_type = ""
-  cron_expression = ""
-  job_owner = ""
-  end_time = ""
-  notice_id = ""
-  note = ""
+  name = "iac-cron_job-update"
+  project_id = "project-7qkzxhea"
+  scenario_id = "scenario-c22lqb1w"
+  scenario_name = "pts-js(2022-11-10 21:53:53)"
+  frequency_type = 1
+  cron_expression = "4 22 10 11 ? 2022"
+  job_owner = "userName"
+  # end_time = ""
+  notice_id = "notice-vp6i38jt"
+  note = "desc"
 }
 
 ```
 Import
 
-pts cron_job can be imported using the id, e.g.
+pts cron_job can be imported using the projectId#cronJobId, e.g.
 ```
-$ terraform import tencentcloud_pts_cron_job.cron_job cronJob_id
+$ terraform import tencentcloud_pts_cron_job.cron_job project-7qkzxhea#scenario-c22lqb1w
 ```
 */
 package tencentcloud
@@ -227,7 +227,7 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 
 	cronJobId = *response.Response.CronJobId
 
-	d.SetId(cronJobId + FILED_SP + projectId)
+	d.SetId(projectId + FILED_SP + cronJobId)
 	return resourceTencentCloudPtsCronJobRead(d, meta)
 }
 
@@ -244,8 +244,8 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	cronJobId := idSplit[0]
-	projectId := idSplit[1]
+	projectId := idSplit[0]
+	cronJobId := idSplit[1]
 
 	cronJob, err := service.DescribePtsCronJob(ctx, cronJobId, projectId)
 
@@ -341,70 +341,46 @@ func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	cronJobId := idSplit[0]
-	projectId := idSplit[1]
+	projectId := idSplit[0]
+	cronJobId := idSplit[1]
 
 	request.CronJobId = &cronJobId
 	request.ProjectId = &projectId
 
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("name"); ok {
+		request.Name = helper.String(v.(string))
 	}
 
-	if d.HasChange("project_id") {
-		if v, ok := d.GetOk("project_id"); ok {
-			request.ProjectId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("scenario_id"); ok {
+		request.ScenarioId = helper.String(v.(string))
 	}
 
-	if d.HasChange("scenario_id") {
-		if v, ok := d.GetOk("scenario_id"); ok {
-			request.ScenarioId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("scenario_name"); ok {
+		request.ScenarioName = helper.String(v.(string))
 	}
 
-	if d.HasChange("scenario_name") {
-		if v, ok := d.GetOk("scenario_name"); ok {
-			request.ScenarioName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("frequency_type"); ok {
+		request.FrequencyType = helper.Int64(int64(v.(int)))
 	}
 
-	if d.HasChange("frequency_type") {
-		if v, ok := d.GetOk("frequency_type"); ok {
-			request.FrequencyType = helper.Int64(int64(v.(int)))
-		}
+	if v, ok := d.GetOk("cron_expression"); ok {
+		request.CronExpression = helper.String(v.(string))
 	}
 
-	if d.HasChange("cron_expression") {
-		if v, ok := d.GetOk("cron_expression"); ok {
-			request.CronExpression = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("job_owner"); ok {
+		request.JobOwner = helper.String(v.(string))
 	}
 
-	if d.HasChange("job_owner") {
-		if v, ok := d.GetOk("job_owner"); ok {
-			request.JobOwner = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("end_time"); ok {
+		request.EndTime = helper.String(v.(string))
 	}
 
-	if d.HasChange("end_time") {
-		if v, ok := d.GetOk("end_time"); ok {
-			request.EndTime = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("notice_id"); ok {
+		request.NoticeId = helper.String(v.(string))
 	}
 
-	if d.HasChange("notice_id") {
-		if v, ok := d.GetOk("notice_id"); ok {
-			request.NoticeId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("note") {
-		if v, ok := d.GetOk("note"); ok {
-			request.Note = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("note"); ok {
+		request.Note = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -439,8 +415,8 @@ func resourceTencentCloudPtsCronJobDelete(d *schema.ResourceData, meta interface
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	cronJobId := idSplit[0]
-	projectId := idSplit[1]
+	projectId := idSplit[0]
+	cronJobId := idSplit[1]
 
 	if err := service.DeletePtsCronJobById(ctx, cronJobId, projectId); err != nil {
 		return err

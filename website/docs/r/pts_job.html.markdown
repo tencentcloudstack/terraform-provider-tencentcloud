@@ -15,11 +15,11 @@ Provides a resource to create a pts job
 
 ```hcl
 resource "tencentcloud_pts_job" "job" {
-  scenario_id = ""
-  job_owner   = ""
-  project_id  = ""
-  debug       = ""
-  note        = ""
+  scenario_id = "scenario-22q19f3k"
+  job_owner   = "username"
+  project_id  = "project-45vw7v82"
+  # debug = ""
+  note = "desc"
 }
 ```
 
@@ -46,11 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 * `duration` - Job duration.
 * `end_time` - End time of the job.
 * `error_rate` - Percentage of error rate.
-* `load_source_infos` - Host message of generating voltage.
 * `load` - Pressure configuration of job.
 * `max_requests_per_second` - Maximum requests per second.
 * `max_virtual_user_count` - Maximum number of VU for the job.
-* `notification_hooks` - Notification event callback.
 * `plugins` - Expansion package file information.
 * `protocols` - Protocol script information.
 * `request_files` - Request file information.
@@ -70,8 +68,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-pts job can be imported using the id, e.g.
+pts job can be imported using the projectId#scenarioId#jobId, e.g.
 ```
-$ terraform import tencentcloud_pts_job.job job_id
+$ terraform import tencentcloud_pts_job.job project-45vw7v82#scenario-22q19f3k#job-dtm93vx0
 ```
 

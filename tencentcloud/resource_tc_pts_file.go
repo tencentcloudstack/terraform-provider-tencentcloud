@@ -7,32 +7,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_file" "file" {
-  file_id = ""
-  project_id = ""
-  kind = ""
-  name = ""
-  size = ""
-  type = ""
-  line_count = ""
-  head_lines = ""
-  tail_lines = ""
-  header_in_file = ""
-  header_columns = ""
-  file_infos {
-	name = ""
-	size = ""
-	type = ""
-	updated_at = ""
-	file_id = ""
-  }
+    file_id        = "file-de2dbaf8"
+    header_in_file = false
+    kind           = 3
+    line_count     = 0
+    name           = "iac.txt"
+    project_id     = "project-45vw7v82"
+    size           = 10799
+    type           = "text/plain"
+    # header_columns = ""
+    # file_infos {
+    # name = ""
+    # size = ""
+    # type = ""
+    # updated_at = ""
+    # }
 }
 
 ```
 Import
 
-pts file can be imported using the id, e.g.
+pts file can be imported using the project_id#file_id, e.g.
 ```
-$ terraform import tencentcloud_pts_file.file file_id
+$ terraform import tencentcloud_pts_file.file project-45vw7v82#file-de2dbaf8
 ```
 */
 package tencentcloud
@@ -45,6 +42,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -199,7 +197,6 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	if v, ok := d.GetOk("name"); ok {
-
 		request.Name = helper.String(v.(string))
 	}
 
@@ -208,7 +205,6 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	if v, ok := d.GetOk("type"); ok {
-
 		request.Type = helper.String(v.(string))
 	}
 
@@ -271,6 +267,11 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateFile(request)
 		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

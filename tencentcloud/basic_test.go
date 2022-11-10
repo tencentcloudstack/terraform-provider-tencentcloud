@@ -786,3 +786,12 @@ const (
 )
 
 // End of MARIADB
+// PTS
+const (
+	defaultPtsProjectId  = "project-45vw7v82"
+	defaultScenarioId    = "scenario-gb5ix8m2"
+	defaultScenarioIdJob = "scenario-22q19f3k"
+	defaultPtsNoticeId   = "notice-tj75hgqj"
+)
+
+// End of PTS

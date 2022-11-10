@@ -5,19 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_job" "job" {
-  scenario_id = ""
-  job_owner = ""
-  project_id = ""
-  debug = ""
-  note = ""
+  scenario_id = "scenario-22q19f3k"
+  job_owner = "username"
+  project_id = "project-45vw7v82"
+  # debug = ""
+  note = "desc"
 }
 
 ```
 Import
 
-pts job can be imported using the id, e.g.
+pts job can be imported using the projectId#scenarioId#jobId, e.g.
 ```
-$ terraform import tencentcloud_pts_job.job job_id
+$ terraform import tencentcloud_pts_job.job project-45vw7v82#scenario-22q19f3k#job-dtm93vx0
 ```
 */
 package tencentcloud
@@ -26,6 +26,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -424,30 +425,30 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 				Description: "Minimum response time.",
 			},
 
-			"load_source_infos": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Host message of generating voltage.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"i_p": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "IP of host.",
-						},
-						"pod_name": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Pod of host.",
-						},
-						"region": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Region to which it belongs.",
-						},
-					},
-				},
-			},
+			// "load_source_infos": {
+			// 	Type:        schema.TypeList,
+			// 	Computed:    true,
+			// 	Description: "Host message of generating voltage.",
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"ip": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "IP of host.",
+			// 			},
+			// 			"pod_name": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "Pod of host.",
+			// 			},
+			// 			"region": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "Region to which it belongs.",
+			// 			},
+			// 		},
+			// 	},
+			// },
 
 			"test_scripts": {
 				Type:        schema.TypeList,
@@ -632,7 +633,7 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 										Optional:    true,
 										Description: "List of domain names to be bound.",
 									},
-									"i_p": {
+									"ip": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "The IP address to be bound.",
@@ -640,7 +641,7 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 								},
 							},
 						},
-						"d_n_s_config": {
+						"dns_config": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
@@ -674,28 +675,28 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 				Description: "Creation time of the job.",
 			},
 
-			"notification_hooks": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Notification event callback.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"events": {
-							Type: schema.TypeSet,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-							Optional:    true,
-							Description: "Notification event.",
-						},
-						"u_r_l": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Callback URL.",
-						},
-					},
-				},
-			},
+			// "notification_hooks": {
+			// 	Type:        schema.TypeList,
+			// 	Computed:    true,
+			// 	Description: "Notification event callback.",
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"events": {
+			// 				Type: schema.TypeSet,
+			// 				Elem: &schema.Schema{
+			// 					Type: schema.TypeString,
+			// 				},
+			// 				Optional:    true,
+			// 				Description: "Notification event.",
+			// 			},
+			// 			"url": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "Callback URL.",
+			// 			},
+			// 		},
+			// 	},
+			// },
 		},
 	}
 }
@@ -707,23 +708,24 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 	logId := getLogId(contextNil)
 
 	var (
-		request  = pts.NewStartJobRequest()
-		response *pts.StartJobResponse
-		jobId    string
+		request    = pts.NewStartJobRequest()
+		response   *pts.StartJobResponse
+		projectId  string
+		jobId      string
+		scenarioId string
 	)
 
 	if v, ok := d.GetOk("scenario_id"); ok {
-
+		scenarioId = v.(string)
 		request.ScenarioId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("job_owner"); ok {
-
 		request.JobOwner = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
-
+		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
 	}
 
@@ -732,7 +734,6 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if v, ok := d.GetOk("note"); ok {
-
 		request.Note = helper.String(v.(string))
 	}
 
@@ -755,7 +756,7 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 
 	jobId = *response.Response.JobId
 
-	d.SetId(jobId)
+	d.SetId(projectId + FILED_SP + scenarioId + FILED_SP + jobId)
 	return resourceTencentCloudPtsJobRead(d, meta)
 }
 
@@ -768,9 +769,15 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	jobId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
+	jobId := idSplit[2]
 
-	job, err := service.DescribePtsJob(ctx, jobId)
+	job, err := service.DescribePtsJob(ctx, projectId, scenarioId, jobId)
 
 	if err != nil {
 		return err
@@ -980,9 +987,9 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("duration", job.Duration)
 	}
 
-	if job.MaxRequestsPerSecond != nil {
-		_ = d.Set("max_requests_per_second", job.MaxRequestsPerSecond)
-	}
+	// if job.MaxRequestsPerSecond != nil {
+	// 	_ = d.Set("max_requests_per_second", job.MaxRequestsPerSecond)
+	// }
 
 	if job.RequestTotal != nil {
 		_ = d.Set("request_total", job.RequestTotal)
@@ -1016,24 +1023,24 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("response_time_min", job.ResponseTimeMin)
 	}
 
-	if job.LoadSourceInfos != nil {
-		loadSourceInfosList := []interface{}{}
-		for _, loadSourceInfos := range job.LoadSourceInfos {
-			loadSourceInfosMap := map[string]interface{}{}
-			if loadSourceInfos.IP != nil {
-				loadSourceInfosMap["i_p"] = loadSourceInfos.IP
-			}
-			if loadSourceInfos.PodName != nil {
-				loadSourceInfosMap["pod_name"] = loadSourceInfos.PodName
-			}
-			if loadSourceInfos.Region != nil {
-				loadSourceInfosMap["region"] = loadSourceInfos.Region
-			}
+	// if job.LoadSourceInfos != nil {
+	// 	loadSourceInfosList := []interface{}{}
+	// 	for _, loadSourceInfos := range job.LoadSourceInfos {
+	// 		loadSourceInfosMap := map[string]interface{}{}
+	// 		if loadSourceInfos.IP != nil {
+	// 			loadSourceInfosMap["ip"] = loadSourceInfos.IP
+	// 		}
+	// 		if loadSourceInfos.PodName != nil {
+	// 			loadSourceInfosMap["pod_name"] = loadSourceInfos.PodName
+	// 		}
+	// 		if loadSourceInfos.Region != nil {
+	// 			loadSourceInfosMap["region"] = loadSourceInfos.Region
+	// 		}
 
-			loadSourceInfosList = append(loadSourceInfosList, loadSourceInfosMap)
-		}
-		_ = d.Set("load_source_infos", loadSourceInfosList)
-	}
+	// 		loadSourceInfosList = append(loadSourceInfosList, loadSourceInfosMap)
+	// 	}
+	// 	_ = d.Set("load_source_infos", loadSourceInfosList)
+	// }
 
 	if job.TestScripts != nil {
 		testScriptsList := []interface{}{}
@@ -1052,7 +1059,11 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 				testScriptsMap["updated_at"] = testScripts.UpdatedAt
 			}
 			if testScripts.EncodedContent != nil {
-				testScriptsMap["encoded_content"] = testScripts.EncodedContent
+				content, err := Base64ToString(*testScripts.EncodedContent)
+				if err != nil {
+					return fmt.Errorf("`testScripts.EncodedContent` %s does not be decoded to string", *testScripts.EncodedContent)
+				}
+				testScriptsMap["encoded_content"] = content
 			}
 			if testScripts.EncodedHttpArchive != nil {
 				testScriptsMap["encoded_http_archive"] = testScripts.EncodedHttpArchive
@@ -1159,7 +1170,7 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 					hostAliasesMap["host_names"] = hostAliases.HostNames
 				}
 				if hostAliases.IP != nil {
-					hostAliasesMap["i_p"] = hostAliases.IP
+					hostAliasesMap["ip"] = hostAliases.IP
 				}
 
 				hostAliasesList = append(hostAliasesList, hostAliasesMap)
@@ -1172,7 +1183,7 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 				dNSConfigMap["nameservers"] = job.DomainNameConfig.DNSConfig.Nameservers
 			}
 
-			domainNameConfigMap["d_n_s_config"] = []interface{}{dNSConfigMap}
+			domainNameConfigMap["dns_config"] = []interface{}{dNSConfigMap}
 		}
 
 		_ = d.Set("domain_name_config", []interface{}{domainNameConfigMap})
@@ -1186,21 +1197,21 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("created_at", job.CreatedAt)
 	}
 
-	if job.NotificationHooks != nil {
-		notificationHooksList := []interface{}{}
-		for _, notificationHooks := range job.NotificationHooks {
-			notificationHooksMap := map[string]interface{}{}
-			if notificationHooks.Events != nil {
-				notificationHooksMap["events"] = notificationHooks.Events
-			}
-			if notificationHooks.URL != nil {
-				notificationHooksMap["u_r_l"] = notificationHooks.URL
-			}
+	// if job.NotificationHooks != nil {
+	// 	notificationHooksList := []interface{}{}
+	// 	for _, notificationHooks := range job.NotificationHooks {
+	// 		notificationHooksMap := map[string]interface{}{}
+	// 		if notificationHooks.Events != nil {
+	// 			notificationHooksMap["events"] = notificationHooks.Events
+	// 		}
+	// 		if notificationHooks.URL != nil {
+	// 			notificationHooksMap["url"] = notificationHooks.URL
+	// 		}
 
-			notificationHooksList = append(notificationHooksList, notificationHooksMap)
-		}
-		_ = d.Set("notification_hooks", notificationHooksList)
-	}
+	// 		notificationHooksList = append(notificationHooksList, notificationHooksMap)
+	// 	}
+	// 	_ = d.Set("notification_hooks", notificationHooksList)
+	// }
 
 	return nil
 }
@@ -1213,24 +1224,20 @@ func resourceTencentCloudPtsJobUpdate(d *schema.ResourceData, meta interface{}) 
 
 	request := pts.NewUpdateJobRequest()
 
-	jobId := d.Id()
-
-	request.JobId = &jobId
-
-	if d.HasChange("scenario_id") {
-		if v, ok := d.GetOk("scenario_id"); ok {
-			request.ScenarioId = helper.String(v.(string))
-		}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
+	jobId := idSplit[2]
+
+	request.ProjectId = &projectId
+	request.ScenarioId = &scenarioId
+	request.JobId = &jobId
 
 	if d.HasChange("job_owner") {
 		return fmt.Errorf("`job_owner` do not support change now.")
-	}
-
-	if d.HasChange("project_id") {
-		if v, ok := d.GetOk("project_id"); ok {
-			request.ProjectId = helper.String(v.(string))
-		}
 	}
 
 	if d.HasChange("debug") {
@@ -1271,9 +1278,15 @@ func resourceTencentCloudPtsJobDelete(d *schema.ResourceData, meta interface{}) 
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	jobId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	scenarioId := idSplit[1]
+	jobId := idSplit[2]
 
-	if err := service.DeletePtsJobById(ctx, jobId); err != nil {
+	if err := service.DeletePtsJobById(ctx, projectId, scenarioId, jobId); err != nil {
 		return err
 	}
 

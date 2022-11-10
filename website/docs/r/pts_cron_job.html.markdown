@@ -15,16 +15,16 @@ Provides a resource to create a pts cron_job
 
 ```hcl
 resource "tencentcloud_pts_cron_job" "cron_job" {
-  name            = ""
-  project_id      = ""
-  scenario_id     = ""
-  scenario_name   = ""
-  frequency_type  = ""
-  cron_expression = ""
-  job_owner       = ""
-  end_time        = ""
-  notice_id       = ""
-  note            = ""
+  name            = "iac-cron_job-update"
+  project_id      = "project-7qkzxhea"
+  scenario_id     = "scenario-c22lqb1w"
+  scenario_name   = "pts-js(2022-11-10 21:53:53)"
+  frequency_type  = 1
+  cron_expression = "4 22 10 11 ? 2022"
+  job_owner       = "userName"
+  # end_time = ""
+  notice_id = "notice-vp6i38jt"
+  note      = "desc"
 }
 ```
 
@@ -59,8 +59,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-pts cron_job can be imported using the id, e.g.
+pts cron_job can be imported using the projectId#cronJobId, e.g.
 ```
-$ terraform import tencentcloud_pts_cron_job.cron_job cronJob_id
+$ terraform import tencentcloud_pts_cron_job.cron_job project-7qkzxhea#scenario-c22lqb1w
 ```
 

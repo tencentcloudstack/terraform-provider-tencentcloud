@@ -397,3 +397,17 @@ func Base64ToYaml(config string) (string, error) {
 	}
 	return string(yamlConfig), nil
 }
+
+func StringToBase64(config string) string {
+	m := []byte(config)
+	encodedStr := base64.StdEncoding.EncodeToString(m)
+	return encodedStr
+}
+
+func Base64ToString(config string) (string, error) {
+	strConfig, err := base64.StdEncoding.DecodeString(config)
+	if err != nil {
+		return "", err
+	}
+	return string(strConfig), nil
+}

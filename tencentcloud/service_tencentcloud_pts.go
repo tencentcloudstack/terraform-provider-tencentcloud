@@ -127,7 +127,7 @@ func (me *PtsService) DeletePtsAlertChannelById(ctx context.Context, noticeId, p
 	return
 }
 
-func (me *PtsService) DescribePtsScenario(ctx context.Context, scenarioId string) (scenario *pts.Scenario, errRet error) {
+func (me *PtsService) DescribePtsScenario(ctx context.Context, projectId, scenarioId string) (scenario *pts.Scenario, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = pts.NewDescribeScenariosRequest()
@@ -139,6 +139,7 @@ func (me *PtsService) DescribePtsScenario(ctx context.Context, scenarioId string
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
+	request.ProjectIds = []*string{&projectId}
 	request.ScenarioIds = []*string{&scenarioId}
 
 	response, err := me.client.UsePtsClient().DescribeScenarios(request)
@@ -157,11 +158,12 @@ func (me *PtsService) DescribePtsScenario(ctx context.Context, scenarioId string
 	return
 }
 
-func (me *PtsService) DeletePtsScenarioById(ctx context.Context, scenarioId string) (errRet error) {
+func (me *PtsService) DeletePtsScenarioById(ctx context.Context, projectId, scenarioId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := pts.NewDeleteScenariosRequest()
 
+	request.ProjectId = &projectId
 	request.ScenarioIds = []*string{&scenarioId}
 
 	defer func() {
@@ -241,7 +243,7 @@ func (me *PtsService) DeletePtsFileById(ctx context.Context, projectId, fileIds 
 	return
 }
 
-func (me *PtsService) DescribePtsJob(ctx context.Context, jobId string) (job *pts.Job, errRet error) {
+func (me *PtsService) DescribePtsJob(ctx context.Context, projectId, scenarioId, jobId string) (job *pts.Job, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = pts.NewDescribeJobsRequest()
@@ -253,6 +255,8 @@ func (me *PtsService) DescribePtsJob(ctx context.Context, jobId string) (job *pt
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
+	request.ProjectIds = []*string{&projectId}
+	request.ScenarioIds = []*string{&scenarioId}
 	request.JobIds = []*string{&jobId}
 
 	response, err := me.client.UsePtsClient().DescribeJobs(request)
@@ -271,11 +275,13 @@ func (me *PtsService) DescribePtsJob(ctx context.Context, jobId string) (job *pt
 	return
 }
 
-func (me *PtsService) DeletePtsJobById(ctx context.Context, jobId string) (errRet error) {
+func (me *PtsService) DeletePtsJobById(ctx context.Context, projectId, scenarioId, jobId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := pts.NewDeleteJobsRequest()
 
+	request.ProjectId = &projectId
+	request.ScenarioIds = []*string{&scenarioId}
 	request.JobIds = []*string{&jobId}
 
 	defer func() {
