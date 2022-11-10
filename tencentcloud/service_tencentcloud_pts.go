@@ -126,3 +126,59 @@ func (me *PtsService) DeletePtsAlertChannelById(ctx context.Context, noticeId, p
 
 	return
 }
+
+func (me *PtsService) DescribePtsScenario(ctx context.Context, scenarioId string) (scenario *pts.Scenario, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeScenariosRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ScenarioIds = []*string{&scenarioId}
+
+	response, err := me.client.UsePtsClient().DescribeScenarios(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.ScenarioSet) < 1 {
+		return
+	}
+	scenario = response.Response.ScenarioSet[0]
+	return
+}
+
+func (me *PtsService) DeletePtsScenarioById(ctx context.Context, scenarioId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := pts.NewDeleteScenariosRequest()
+
+	request.ScenarioIds = []*string{&scenarioId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePtsClient().DeleteScenarios(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

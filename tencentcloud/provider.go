@@ -750,6 +750,7 @@ Performance Testing Service(PTS)
   Resource
 	tencentcloud_pts_project
 	tencentcloud_pts_alert_channel
+	tencentcloud_pts_scenario
 
 */
 package tencentcloud
@@ -1342,6 +1343,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_pts_project":                          resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                    resourceTencentCloudPtsAlertChannel(),
+			"tencentcloud_pts_scenario":                         resourceTencentCloudPtsScenario(),
 		},
 
 		ConfigureFunc: providerConfigure,
