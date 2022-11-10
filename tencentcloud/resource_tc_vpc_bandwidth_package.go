@@ -142,10 +142,13 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if instance != nil && *instance.Status == "CREATED" {
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("vpc bandwidthPackage instance is being created, retry..."))
+		}
+		if *instance.Status == "CREATED" {
 			return nil
 		}
-		return resource.RetryableError(fmt.Errorf("tmpInstance status is %v, retry...", *instance.Status))
+		return resource.RetryableError(fmt.Errorf("vpc bandwidthPackage instance status is %v, retry...", *instance.Status))
 	})
 	if err != nil {
 		return err
