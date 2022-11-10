@@ -753,6 +753,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_scenario
 	tencentcloud_pts_file
 	tencentcloud_pts_job
+	tencentcloud_pts_cron_job
 
 */
 package tencentcloud
@@ -1348,6 +1349,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_scenario":                         resourceTencentCloudPtsScenario(),
 			"tencentcloud_pts_file":                             resourceTencentCloudPtsFile(),
 			"tencentcloud_pts_job":                              resourceTencentCloudPtsJob(),
+			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
 		},
 
 		ConfigureFunc: providerConfigure,

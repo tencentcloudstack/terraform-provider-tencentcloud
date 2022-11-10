@@ -296,3 +296,61 @@ func (me *PtsService) DeletePtsJobById(ctx context.Context, jobId string) (errRe
 
 	return
 }
+
+func (me *PtsService) DescribePtsCronJob(ctx context.Context, cronJobId, projectId string) (cronJob *pts.CronJob, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeCronJobsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.CronJobIds = []*string{&cronJobId}
+	request.ProjectIds = []*string{&projectId}
+
+	response, err := me.client.UsePtsClient().DescribeCronJobs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.CronJobSet) < 1 {
+		return
+	}
+	cronJob = response.Response.CronJobSet[0]
+	return
+}
+
+func (me *PtsService) DeletePtsCronJobById(ctx context.Context, cronJobId, projectId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := pts.NewDeleteCronJobsRequest()
+
+	request.CronJobIds = []*string{&cronJobId}
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePtsClient().DeleteCronJobs(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
