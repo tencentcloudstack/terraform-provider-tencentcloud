@@ -27,7 +27,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -144,8 +143,7 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 			return retryError(errRet, InternalError)
 		}
 		if instance == nil {
-			time.Sleep(time.Second * 5)
-			return retryError(errRet, InternalError)
+			return resource.RetryableError(fmt.Errorf("vpc bandwidthPackage instance is being created, retry..."))
 		}
 		if *instance.Status == "CREATED" {
 			return nil
