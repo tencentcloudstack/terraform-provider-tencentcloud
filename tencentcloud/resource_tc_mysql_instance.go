@@ -590,16 +590,19 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 	var response *cdb.CreateDBInstanceResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
-		if err != nil {
+		// shadowed response will not pass to outside
+		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
+		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
+				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
+			return retryError(inErr)
 		}
 
 		if response.Response.InstanceIds == nil && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
+
+		response = r
 
 		return nil
 	})
@@ -637,13 +640,15 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 
 	var response *cdb.CreateDBInstanceHourResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
-		if err != nil {
-			return retryError(err)
+		// shadowed response will not pass to outside
+		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
+		if inErr != nil {
+			return retryError(inErr)
 		}
-		if response.Response.InstanceIds == nil && clientToken != "" {
+		if r.Response.InstanceIds == nil && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
+		response = r
 		return nil
 	})
 	if err != nil {

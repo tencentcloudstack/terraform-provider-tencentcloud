@@ -112,7 +112,7 @@ func TestAccTencentCloudMysqlDeviceType(t *testing.T) {
 				ResourceName:            "tencentcloud_mysql_instance.mysql_exclusive",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade", "retry_creating"},
 			},
 			{
 				Config: testAccMySQLDeviceTypeUpdate,
@@ -179,7 +179,7 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 				ResourceName:            "tencentcloud_mysql_instance.mysql_master",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "retry_creating"},
 			},
 			// add tag
 			{
