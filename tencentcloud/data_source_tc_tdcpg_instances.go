@@ -13,7 +13,6 @@ data "tencentcloud_tdcpg_instances" "instances" {
   }
 ```
 */
-
 package tencentcloud
 
 import (
@@ -207,7 +206,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read Tdcpg instanceSet failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s read Tdcpg instanceSet failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -273,7 +272,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 		d.SetId(helper.DataResourceIdsHash(ids))
 		err := d.Set("list", instanceList)
 		if err != nil {
-			log.Printf("[CRITAL]%s set tdcpg instanceList failed, reason:%+v", logId, err)
+			log.Printf("[CRITICAL]%s set tdcpg instanceList failed, reason:%+v", logId, err)
 			return err
 		}
 	}

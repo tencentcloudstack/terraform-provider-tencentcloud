@@ -31,7 +31,7 @@ type TdcpgService struct {
 }
 
 // tdcpg resource
-func (me *TdcpgService) DescribeTdcpgCluster(ctx context.Context, clusterId string) (cluster *tdcpg.DescribeClustersResponseParams, errRet error) {
+func (me *TdcpgService) DescribeTdcpgCluster(ctx context.Context, clusterId *string) (cluster *tdcpg.DescribeClustersResponseParams, errRet error) {
 	var (
 		logId = getLogId(ctx)
 	)
@@ -41,43 +41,27 @@ func (me *TdcpgService) DescribeTdcpgCluster(ctx context.Context, clusterId stri
 			log.Printf("[CRITICAL]%s api[%s] fail, reason[%s]\n", logId, "DescribeTdcpgCluster", errRet.Error())
 		}
 	}()
-	// request.Filters = []*tdcpg.Filter{
-	// 	{
-	// 		Name:   helper.String(TDCPG_CLUSTER_FILTER_ID),
-	// 		Values: []*string{&clusterId},
-	// 	},
-	// }
 
-	// response, err := me.client.UseTdcpgClient().DescribeClusters(request)
-	// if err != nil {
-	// 	log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-	// 		logId, request.GetAction(), request.ToJsonString(), err.Error())
-	// 	errRet = err
-	// 	return
-	// }
-	// log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-	// 	logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	paramMap := make(map[string]interface{})
-	paramMap["cluster_id"] = &clusterId
+	paramMap["cluster_id"] = clusterId
 
 	result, err := me.DescribeTdcpgClustersByFilter(ctx, paramMap)
-
 	if err != nil {
 		errRet = err
 		return
 	}
-
 	cluster = &tdcpg.DescribeClustersResponseParams{
 		ClusterSet: result,
 	}
 	return
 }
 
-func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId string) (errRet error) {
+func (me *TdcpgService) IsolateTdcpgInstanceById(ctx context.Context, clusterId, instanceId *string) (errRet error) {
 	logId := getLogId(ctx)
 
-	request := tdcpg.NewIsolateClusterRequest()
-	request.ClusterId = &clusterId
+	request := tdcpg.NewIsolateClusterInstancesRequest()
+	request.ClusterId = clusterId
+	request.InstanceIdSet = []*string{instanceId}
 
 	defer func() {
 		if errRet != nil {
@@ -87,7 +71,7 @@ func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId s
 	}()
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTdcpgClient().IsolateCluster(request)
+	response, err := me.client.UseTdcpgClient().IsolateClusterInstances(request)
 	if err != nil {
 		errRet = err
 		return err
@@ -98,34 +82,39 @@ func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId s
 	return
 }
 
-func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId string) (errRet error) {
+func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *string) (errRet error) {
 	logId := getLogId(ctx)
+	var status string
 
 	if err := me.IsolateTdcpgClusterById(ctx, clusterId); err != nil {
 		return err
 	}
 
 	// query the cluster's status
-	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgCluster(ctx, clusterId)
 		if err != nil {
 			return retryError(err)
 		}
 		if result.ClusterSet[0] != nil {
-			status := result.ClusterSet[0].Status
-			if *status == "isolated" {
+			status = *result.ClusterSet[0].Status
+			if status == "isolated" || status == "deleted"{
 				return nil
 			}
 		}
-		return resource.RetryableError(fmt.Errorf("can not get cluster[%s] status, retry...", clusterId))
+		return resource.RetryableError(fmt.Errorf("can not get cluster[%s] status, retry...", *clusterId))
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s query tdcpg cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s query tdcpg cluster failed, reason:%+v", logId, err)
 		return err
+	}
+	if status == "deleted"{
+		// do not need delete
+		return nil
 	}
 
 	request := tdcpg.NewDeleteClusterRequest()
-	request.ClusterId = &clusterId
+	request.ClusterId = clusterId
 
 	defer func() {
 		if errRet != nil {
@@ -149,7 +138,6 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId st
 func (me *TdcpgService) DescribeTdcpgInstance(ctx context.Context, clusterId, instanceId *string) (instance *tdcpg.DescribeClusterInstancesResponseParams, errRet error) {
 	var (
 		logId = getLogId(ctx)
-		// request = tdcpg.NewDescribeClusterInstancesRequest()
 	)
 
 	defer func() {
@@ -158,27 +146,14 @@ func (me *TdcpgService) DescribeTdcpgInstance(ctx context.Context, clusterId, in
 		}
 	}()
 
-	// request.ClusterId = clusterId
-	// request.Filters = []*tdcpg.Filter{
-	// 	{
-	// 		Name:   helper.String(TDCPG_INSTANCE_FILTER_ID),
-	// 		Values: []*string{instanceId},
-	// 	},
-	// }
-
 	paramMap := make(map[string]interface{})
 	paramMap["instance_id"] = instanceId
 
 	result, err := me.DescribeTdcpgInstancesByFilter(ctx, clusterId, paramMap)
-
-	// response, err := me.client.UseTdcpgClient().DescribeClusterInstances(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	// log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-	// 	logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	// instance = response.Response
 	instance = &tdcpg.DescribeClusterInstancesResponseParams{
 		InstanceSet: result,
 	}
@@ -218,13 +193,61 @@ func (me *TdcpgService) DescribeTdcpgResourceByDealName(ctx context.Context, dea
 	return
 }
 
+func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId *string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdcpg.NewIsolateClusterRequest()
+	request.ClusterId = clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdcpgClient().IsolateCluster(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, instanceId *string) (errRet error) {
 	logId := getLogId(ctx)
+
+	if err := me.IsolateTdcpgInstanceById(ctx, clusterId, instanceId); err != nil {
+		return err
+	}
+
+	// query the instance's status
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		result, err := me.DescribeTdcpgInstance(ctx, clusterId, instanceId)
+		if err != nil {
+			return retryError(err)
+		}
+		if result != nil {
+			status := result.InstanceSet[0].Status
+			if *status == "isolated" {
+				return nil
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("can not get tdcpg instance[%s] status, retry...", *clusterId))
+	})
+	if err != nil {
+		log.Printf("[CRITICAL]%s query tdcpg instance failed, reason:%+v", logId, err)
+		return err
+	}
 
 	request := tdcpg.NewDeleteClusterInstancesRequest()
 
 	request.ClusterId = clusterId
-	request.InstanceIdSet[0] = instanceId
+	request.InstanceIdSet = []*string{instanceId}
 
 	defer func() {
 		if errRet != nil {

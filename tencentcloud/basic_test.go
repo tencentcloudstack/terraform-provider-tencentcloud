@@ -789,11 +789,11 @@ const (
 
 // TDCPG
 const (
-	defaultTdcpgClusterId      = "tdcpg-9km4typ8"
+	defaultTdcpgClusterId      = "tdcpg-m5e26fi8"
 	defaultTdcpgClusterName    = "keep-tdcpg-test"
 	defaultTdcpgPayMode        = "POSTPAID_BY_HOUR"
-	defaultTdcpgInstanceId     = "tdcpg-ins-qqmhu1j2"
-	defaultTdcpgInstanceName   = "keep-tdcpg-ins-test"
+	defaultTdcpgInstanceId     = "tdcpg-ins-fc0e5kes"
+	defaultTdcpgInstanceName   = "keep-tdcpg-instance-test"
 	defaultTdcpgZone           = "ap-guangzhou-3"
 	defaultTdcpgTestNamePrefix = "tf-tdcpg-"
 )

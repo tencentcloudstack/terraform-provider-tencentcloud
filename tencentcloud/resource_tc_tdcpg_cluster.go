@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tdcpg_cluster" "cluster" {
-  zone = ""
+  zone = "ap-guangzhou-3"
   master_user_password = ""
-  cpu = ""
-  memory = ""
-  vpc_id = ""
-  subnet_id = ""
-  pay_mode = ""
-  cluster_name = ""
-  db_version = ""
-  instance_count = ""
-  period = ""
-  storage = ""
-  project_id = ""
+  cpu = 1
+  memory = 1
+  vpc_id = "vpc_id"
+  subnet_id = "subnet_id"
+  pay_mode = "POSTPAID_BY_HOUR"
+  cluster_name = "cluster_name"
+  db_version = "10.17"
+  instance_count = 1
+  period = 1
+  project_id = 0
 }
 
 ```
@@ -215,7 +214,7 @@ func resourceTencentCloudTdcpgClusterCreate(d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdcpg cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s create tdcpg cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -234,7 +233,7 @@ func resourceTencentCloudTdcpgClusterCreate(d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s query tdcpg cluster resource by deal name:[%v] failed, reason:%+v", logId, dealNames, err)
+		log.Printf("[CRITICAL]%s query tdcpg cluster resource by deal name:[%v] failed, reason:%+v", logId, dealNames, err)
 		return err
 	}
 
@@ -258,12 +257,12 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 	clusterId := d.Id()
 	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 
-		result, err := service.DescribeTdcpgCluster(ctx, clusterId)
+		result, err := service.DescribeTdcpgCluster(ctx, &clusterId)
 		if err != nil {
 			return retryError(err)
 		}
 
-		if result.ClusterSet[0] != nil {
+		if result !=nil &&result.ClusterSet[0] != nil {
 			currStatus := *result.ClusterSet[0].Status
 
 			if currStatus == "running" {
@@ -454,7 +453,7 @@ func resourceTencentCloudTdcpgClusterDelete(d *schema.ResourceData, meta interfa
 
 	clusterId := d.Id()
 
-	if err := service.DeleteTdcpgClusterById(ctx, clusterId); err != nil {
+	if err := service.DeleteTdcpgClusterById(ctx, &clusterId); err != nil {
 		return err
 	}
 

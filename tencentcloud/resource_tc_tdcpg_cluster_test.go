@@ -4,11 +4,55 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_tdcpg_cluster", &resource.Sweeper{
+		Name: "tencentcloud_tdcpg_cluster",
+		F:    testSweepTdcpgCluster,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tdcpg_cluster
+func testSweepTdcpgCluster(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	tdcpgService := TdcpgService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+	clusters, err := tdcpgService.DescribeTdcpgClustersByFilter(ctx, nil)
+	if err != nil {
+		return err
+	}
+	if clusters == nil {
+		return fmt.Errorf("No any tdcpg clusters exists.")
+	}
+
+	// delete all cluster with specified prefix
+	for _, v := range clusters {
+		delId := v.ClusterId
+		delName := v.ClusterName
+
+		if strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {
+			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				err := tdcpgService.DeleteTdcpgClusterById(ctx, delId)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+			if err != nil {
+				return fmt.Errorf("[ERROR] delete tdcpg instance %s failed. reason:[%s]", *delId, err.Error())
+			}
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudTdcpgClusterResource_basic(t *testing.T) {
 	t.Parallel()
@@ -57,7 +101,7 @@ func testAccCheckTdcpgClusterDestroy(s *terraform.State) error {
 			continue
 		}
 
-		ret, err := tdcpgService.DescribeTdcpgCluster(ctx, rs.Primary.ID)
+		ret, err := tdcpgService.DescribeTdcpgCluster(ctx, &rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -87,7 +131,7 @@ func testAccCheckTdcpgClusterExists(re string) resource.TestCheckFunc {
 		}
 
 		tdcpgService := TdcpgService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		ret, err := tdcpgService.DescribeTdcpgCluster(ctx, rs.Primary.ID)
+		ret, err := tdcpgService.DescribeTdcpgCluster(ctx, &rs.Primary.ID)
 		if err != nil {
 			return err
 		}

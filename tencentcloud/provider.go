@@ -1341,7 +1341,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_tdcpg_cluster":                        resourceTencentCloudTdcpgCluster(),
-			// "tencentcloud_tdcpg_instance":                       resourceTencentCloudTdcpgInstance(),
+			"tencentcloud_tdcpg_instance":                       resourceTencentCloudTdcpgInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
