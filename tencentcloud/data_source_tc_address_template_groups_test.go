@@ -9,6 +9,7 @@ import (
 var testDataAddressTemplateGroupsNameAll = "data.tencentcloud_address_template_groups.all_test"
 
 func TestAccTencentCloudDataAddressTemplateGroups(t *testing.T) {
+	// t1
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
