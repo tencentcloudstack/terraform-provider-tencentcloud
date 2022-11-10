@@ -1,0 +1,3 @@
+```release-note:bug fixes
+resource/tencentcloud_vpc_bandwidth_package: Handling api interface return delay problem
+```

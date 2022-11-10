@@ -1,3 +1,36 @@
+## 1.78.9 (November 9, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cat_node` ([#1378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1378))
+* **New Data Source:** `tencentcloud_cat_probe_data` ([#1378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1378))
+* **New Data Source:** `tencentcloud_dcdb_accounts` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_dcdb_databases` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_dcdb_instances` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_dcdb_parameters` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_dcdb_security_groups` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_dcdb_shards` ([#1365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1365))
+* **New Data Source:** `tencentcloud_mariadb_accounts` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+* **New Data Source:** `tencentcloud_mariadb_security_groups` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+* **New Resource:** `tencentcloud_cat_task_set` ([#1369](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1369))
+* **New Resource:** `tencentcloud_mariadb_account` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+* **New Resource:** `tencentcloud_mariadb_db_instances` ([#1370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1370))
+* **New Resource:** `tencentcloud_mariadb_dedicatedcluster_db_instance` ([#1370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1370))
+* **New Resource:** `tencentcloud_mariadb_hour_db_instance` ([#1370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1370))
+* **New Resource:** `tencentcloud_mariadb_log_file_retention_period` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+* **New Resource:** `tencentcloud_mariadb_parameters` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+* **New Resource:** `tencentcloud_mariadb_security_groups` ([#1375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1375))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ssl_free_certificate: support computed param dv_auths ([#1371](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1371))
+* resource/tencentcloud_tcr_instance: fix: skip fail operation capture while add same region replica ([#1374](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1374))
+* resource/tencentcloud_vpc_bandwidth_package: Handling api interface return is incorrect ([#1367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1367))
+
+BUG FIXES:
+
+* resource/tencentcloud_postgresql_instance: network switching polling status check ([#1338](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1338))
+
 ## 1.78.8 (November 4, 2022)
 
 FEATURES:

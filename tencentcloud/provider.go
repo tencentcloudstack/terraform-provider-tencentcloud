@@ -726,6 +726,10 @@ Short Message Service(SMS)
 	tencentcloud_sms_template
 
 Cloud Automated Testing(CAT)
+  Data Source
+	tencentcloud_cat_probe_data
+	tencentcloud_cat_node
+
   Resource
  	tencentcloud_cat_task_set
 
@@ -1063,6 +1067,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_tdcpg_clusters":                           dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                          dataSourceTencentCloudTdcpgInstances(),
+			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
+			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

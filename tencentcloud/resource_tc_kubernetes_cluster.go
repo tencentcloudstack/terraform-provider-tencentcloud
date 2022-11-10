@@ -1975,7 +1975,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	} else {
 		// GR cluster
 		if cidrSet.ClusterCidr == "" {
-			return fmt.Errorf("`service_cidr` must be set when cluster `network_type` is GR")
+			return fmt.Errorf("`cluster_cidr` must be set when cluster `network_type` is GR")
 		}
 		items := strings.Split(cidrSet.ClusterCidr, "/")
 		if len(items) != 2 {
