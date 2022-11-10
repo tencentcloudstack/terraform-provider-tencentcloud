@@ -749,6 +749,7 @@ TencentDB for MariaDB(MariaDB)
 Performance Testing Service(PTS)
   Resource
 	tencentcloud_pts_project
+	tencentcloud_pts_alert_channel
 
 */
 package tencentcloud
@@ -1340,6 +1341,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_pts_project":                          resourceTencentCloudPtsProject(),
+			"tencentcloud_pts_alert_channel":                    resourceTencentCloudPtsAlertChannel(),
 		},
 
 		ConfigureFunc: providerConfigure,

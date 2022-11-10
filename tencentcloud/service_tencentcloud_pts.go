@@ -68,3 +68,61 @@ func (me *PtsService) DeletePtsProjectById(ctx context.Context, projectId string
 
 	return
 }
+
+func (me *PtsService) DescribePtsAlertChannel(ctx context.Context, noticeId, projectId string) (alertChannel *pts.AlertChannelRecord, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeAlertChannelsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.NoticeIds = []*string{&noticeId}
+	request.ProjectIds = []*string{&projectId}
+
+	response, err := me.client.UsePtsClient().DescribeAlertChannels(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.AlertChannelSet) < 1 {
+		return
+	}
+	alertChannel = response.Response.AlertChannelSet[0]
+	return
+}
+
+func (me *PtsService) DeletePtsAlertChannelById(ctx context.Context, noticeId, projectId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := pts.NewDeleteAlertChannelRequest()
+
+	request.NoticeId = &noticeId
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePtsClient().DeleteAlertChannel(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
