@@ -49,7 +49,7 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 			},
 
 			"pay_mode": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "pay mode.",
 			},
@@ -86,7 +86,7 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 							Computed:    true,
 							Description: "zone.",
 						},
-						"d_b_version": {
+						"db_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db version.",
@@ -112,7 +112,7 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 							Description: "create time.",
 						},
 						"storage_used": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeFloat,
 							Computed:    true,
 							Description: "storage used, unit is GB.",
 						},
@@ -136,7 +136,7 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 							Computed:    true,
 							Description: "auto renew flag.",
 						},
-						"d_b_charset": {
+						"db_charset": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db charset.",
@@ -210,12 +210,12 @@ func dataSourceTencentCloudTdcpgClusters() *schema.Resource {
 								},
 							},
 						},
-						"d_b_major_version": {
+						"db_major_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db major version.",
 						},
-						"d_b_kernel_version": {
+						"db_kernel_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db kernel version.",
@@ -259,7 +259,7 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 	}
 
 	if v, ok := d.GetOk("pay_mode"); ok {
-		paramMap["pay_mode"] = helper.IntInt64(v.(int))
+		paramMap["pay_mode"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
@@ -300,7 +300,7 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 				clusterSetMap["zone"] = cluster.Zone
 			}
 			if cluster.DBVersion != nil {
-				clusterSetMap["d_b_version"] = cluster.DBVersion
+				clusterSetMap["db_version"] = cluster.DBVersion
 			}
 			if cluster.ProjectId != nil {
 				clusterSetMap["project_id"] = cluster.ProjectId
@@ -330,7 +330,7 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 				clusterSetMap["auto_renew_flag"] = cluster.AutoRenewFlag
 			}
 			if cluster.DBCharset != nil {
-				clusterSetMap["d_b_charset"] = cluster.DBCharset
+				clusterSetMap["db_charset"] = cluster.DBCharset
 			}
 			if cluster.InstanceCount != nil {
 				clusterSetMap["instance_count"] = cluster.InstanceCount
@@ -378,10 +378,10 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 				clusterSetMap["endpoint_set"] = endpointSetList
 			}
 			if cluster.DBMajorVersion != nil {
-				clusterSetMap["d_b_major_version"] = cluster.DBMajorVersion
+				clusterSetMap["db_major_version"] = cluster.DBMajorVersion
 			}
 			if cluster.DBKernelVersion != nil {
-				clusterSetMap["d_b_kernel_version"] = cluster.DBKernelVersion
+				clusterSetMap["db_kernel_version"] = cluster.DBKernelVersion
 			}
 			if cluster.StoragePayMode != nil {
 				clusterSetMap["storage_pay_mode"] = cluster.StoragePayMode
@@ -390,7 +390,11 @@ func dataSourceTencentCloudTdcpgClustersRead(d *schema.ResourceData, meta interf
 			clusterList = append(clusterList, clusterSetMap)
 		}
 		d.SetId(helper.DataResourceIdsHash(ids))
-		_ = d.Set("list", clusterList)
+		err := d.Set("list", clusterList)
+		if err != nil {
+			log.Printf("[CRITAL]%s set tdcpg clusterList failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	output, ok := d.GetOk("result_output_file")

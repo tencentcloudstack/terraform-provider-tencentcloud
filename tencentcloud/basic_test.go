@@ -787,14 +787,15 @@ const (
 
 // End of MARIADB
 
-// DCDB
+// TDCPG
 const (
-	defaultTdcpgClusterId    = "tdsqlshard-lgz66iqr"
-	defaultTdcpgClusterName  = "keep-tdcpg-cluster-test"
-  defaultTdcpgZone  = "ap-guangzhou-3"
-  defaultTdcpgTestNamePrefix = "tf-tdcpg-"
-	defaultTdcpgVpcId      = "vpc-4owdpnwr"
-	defaultTdcpgSubnetId = "subnet-qylstu34"
+	defaultTdcpgClusterId      = "tdcpg-9km4typ8"
+	defaultTdcpgClusterName    = "keep-tdcpg-test"
+	defaultTdcpgPayMode        = "POSTPAID_BY_HOUR"
+	defaultTdcpgInstanceId     = "tdcpg-ins-qqmhu1j2"
+	defaultTdcpgInstanceName   = "keep-tdcpg-ins-test"
+	defaultTdcpgZone           = "ap-guangzhou-3"
+	defaultTdcpgTestNamePrefix = "tf-tdcpg-"
 )
 
-// End of DCDB
+// End of TDCPG

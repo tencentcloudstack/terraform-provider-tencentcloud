@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
@@ -110,7 +109,6 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId st
 	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgCluster(ctx, clusterId)
 		if err != nil {
-			time.Sleep(10 * time.Second)
 			return retryError(err)
 		}
 		if result.ClusterSet[0] != nil {
@@ -119,7 +117,6 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId st
 				return nil
 			}
 		}
-		time.Sleep(10 * time.Second)
 		return resource.RetryableError(fmt.Errorf("can not get cluster[%s] status, retry...", clusterId))
 	})
 	if err != nil {
@@ -357,6 +354,7 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 		}
 	}()
 
+	request.Filters = make([]*tdcpg.Filter, len(param))
 	for k, v := range param {
 		if k == "instance_id" {
 			request.Filters[indx] = &tdcpg.Filter{

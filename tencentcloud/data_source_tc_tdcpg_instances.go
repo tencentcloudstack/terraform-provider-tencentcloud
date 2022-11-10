@@ -32,7 +32,7 @@ func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "instance id.",
 			},
 
@@ -55,7 +55,7 @@ func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
 			},
 
 			"instance_type": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "instance type.",
 			},
@@ -96,7 +96,7 @@ func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
 							Computed:    true,
 							Description: "zone.",
 						},
-						"d_b_version": {
+						"db_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db version.",
@@ -141,12 +141,12 @@ func dataSourceTencentCloudTdcpgInstances() *schema.Resource {
 							Computed:    true,
 							Description: "instance type.",
 						},
-						"d_b_major_version": {
+						"db_major_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db major version.",
 						},
-						"d_b_kernel_version": {
+						"db_kernel_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "db kernel version.",
@@ -177,7 +177,6 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = helper.String(v.(string))
-		paramMap["cluster_id"] = clusterId
 	}
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -193,7 +192,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("instance_type"); ok {
-		paramMap["instance_type"] = helper.IntInt64(v.(int))
+		paramMap["instance_type"] = helper.String(v.(string))
 	}
 
 	tdcpgService := TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -236,7 +235,7 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 				instanceSetMap["zone"] = instance.Zone
 			}
 			if instance.DBVersion != nil {
-				instanceSetMap["d_b_version"] = instance.DBVersion
+				instanceSetMap["db_version"] = instance.DBVersion
 			}
 			if instance.Status != nil {
 				instanceSetMap["status"] = instance.Status
@@ -263,16 +262,20 @@ func dataSourceTencentCloudTdcpgInstancesRead(d *schema.ResourceData, meta inter
 				instanceSetMap["instance_type"] = instance.InstanceType
 			}
 			if instance.DBMajorVersion != nil {
-				instanceSetMap["d_b_major_version"] = instance.DBMajorVersion
+				instanceSetMap["db_major_version"] = instance.DBMajorVersion
 			}
 			if instance.DBKernelVersion != nil {
-				instanceSetMap["d_b_kernel_version"] = instance.DBKernelVersion
+				instanceSetMap["db_kernel_version"] = instance.DBKernelVersion
 			}
 			ids = append(ids, *instance.ClusterId+FILED_SP+*instance.InstanceId)
 			instanceList = append(instanceList, instanceSetMap)
 		}
 		d.SetId(helper.DataResourceIdsHash(ids))
-		_ = d.Set("list", instanceList)
+		err := d.Set("list", instanceList)
+		if err != nil {
+			log.Printf("[CRITAL]%s set tdcpg instanceList failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	output, ok := d.GetOk("result_output_file")

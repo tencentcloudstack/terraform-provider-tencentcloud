@@ -34,7 +34,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -225,7 +224,6 @@ func resourceTencentCloudTdcpgClusterCreate(d *schema.ResourceData, meta interfa
 		resources, e := service.DescribeTdcpgResourceByDealName(ctx, dealNames)
 
 		if e != nil {
-			time.Sleep(10 * time.Second)
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s call api[%s] success, request body [%s], resources [%v]\n",
@@ -274,12 +272,10 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 			}
 
 			if currStatus == "creating" || currStatus == "recovering" {
-				time.Sleep(10 * time.Second)
 				return resource.RetryableError(fmt.Errorf("cluster[%s] status is still creating or recovering, retry...", clusterId))
 			}
 			return resource.NonRetryableError(fmt.Errorf("cluster[%s] status is invalid, exit!", clusterId))
 		}
-		time.Sleep(10 * time.Second)
 		return resource.RetryableError(fmt.Errorf("can not get cluster[%s] status, retry...", clusterId))
 	})
 	if err != nil {
@@ -291,7 +287,6 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instances, e := service.DescribeTdcpgInstancesByFilter(ctx, &clusterId, nil)
 		if e != nil {
-			time.Sleep(10 * time.Second)
 			return retryError(e)
 		}
 
