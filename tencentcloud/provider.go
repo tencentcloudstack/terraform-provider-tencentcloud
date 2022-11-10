@@ -751,6 +751,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_project
 	tencentcloud_pts_alert_channel
 	tencentcloud_pts_scenario
+	tencentcloud_pts_file
 
 */
 package tencentcloud
@@ -1344,6 +1345,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_project":                          resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                    resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                         resourceTencentCloudPtsScenario(),
+			"tencentcloud_pts_file":                             resourceTencentCloudPtsFile(),
 		},
 
 		ConfigureFunc: providerConfigure,

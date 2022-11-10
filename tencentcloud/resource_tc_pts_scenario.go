@@ -23,7 +23,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
 			requests_per_second {
 					max_requests_per_second = ""
 					duration_seconds = ""
-					target_virtual_users = ""
 					resources = ""
 					start_requests_per_second = ""
 					target_requests_per_second = ""
@@ -48,7 +47,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
 		}
 
   }
-  configs = ""
   datasets {
 			name = ""
 			split = ""
@@ -64,7 +62,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
 
   }
   extensions = ""
-  sla_id = ""
   cron_id = ""
   test_scripts {
 			name = ""
@@ -260,11 +257,6 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 													Optional:    true,
 													Description: "Pressure time.",
 												},
-												"target_virtual_users": {
-													Type:        schema.TypeInt,
-													Optional:    true,
-													Description: "deprecated.",
-												},
 												"resources": {
 													Type:        schema.TypeInt,
 													Optional:    true,
@@ -377,15 +369,6 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 				},
 			},
 
-			"configs": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Optional:    true,
-				Description: "deprecated.",
-			},
-
 			"datasets": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -465,12 +448,6 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
-				Description: "deprecated.",
-			},
-
-			"sla_id": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "deprecated.",
 			},
@@ -777,12 +754,6 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 				Description: "Scene statu Note: this field may return null, indicating that a valid value cannot be obtained.",
 			},
 
-			"encoded_scripts": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "deprecated Note: this field may return null, indicating that a valid value cannot be obtained.",
-			},
-
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -909,9 +880,6 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 				if v, ok := RequestsPerSecondMap["duration_seconds"]; ok {
 					requestsPerSecond.DurationSeconds = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := RequestsPerSecondMap["target_virtual_users"]; ok {
-					requestsPerSecond.TargetVirtualUsers = helper.Int64(int64(v.(int)))
-				}
 				if v, ok := RequestsPerSecondMap["resources"]; ok {
 					requestsPerSecond.Resources = helper.Int64(int64(v.(int)))
 				}
@@ -981,14 +949,6 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		request.Load = &load
 	}
 
-	if v, ok := d.GetOk("configs"); ok {
-		configsSet := v.(*schema.Set).List()
-		for i := range configsSet {
-			configs := configsSet[i].(string)
-			request.Configs = append(request.Configs, &configs)
-		}
-	}
-
 	if v, ok := d.GetOk("datasets"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -1049,10 +1009,6 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			extensions := extensionsSet[i].(string)
 			request.Extensions = append(request.Extensions, &extensions)
 		}
-	}
-
-	if v, ok := d.GetOk("sla_id"); ok {
-		request.SLAId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("cron_id"); ok {
@@ -1351,9 +1307,6 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 				if scenario.Load.LoadSpec.RequestsPerSecond.DurationSeconds != nil {
 					requestsPerSecondMap["duration_seconds"] = scenario.Load.LoadSpec.RequestsPerSecond.DurationSeconds
 				}
-				if scenario.Load.LoadSpec.RequestsPerSecond.TargetVirtualUsers != nil {
-					requestsPerSecondMap["target_virtual_users"] = scenario.Load.LoadSpec.RequestsPerSecond.TargetVirtualUsers
-				}
 				if scenario.Load.LoadSpec.RequestsPerSecond.Resources != nil {
 					requestsPerSecondMap["resources"] = scenario.Load.LoadSpec.RequestsPerSecond.Resources
 				}
@@ -1425,10 +1378,6 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("load", []interface{}{loadMap})
 	}
 
-	if scenario.Configs != nil {
-		_ = d.Set("configs", scenario.Configs)
-	}
-
 	if scenario.Datasets != nil {
 		datasetsList := []interface{}{}
 		for _, datasets := range scenario.Datasets {
@@ -1474,10 +1423,6 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 
 	if scenario.Extensions != nil {
 		_ = d.Set("extensions", scenario.Extensions)
-	}
-
-	if scenario.SLAId != nil {
-		_ = d.Set("sla_id", scenario.SLAId)
 	}
 
 	if scenario.CronId != nil {
@@ -1682,10 +1627,6 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("status", scenario.Status)
 	}
 
-	if scenario.EncodedScripts != nil {
-		_ = d.Set("encoded_scripts", scenario.EncodedScripts)
-	}
-
 	if scenario.CreatedAt != nil {
 		_ = d.Set("created_at", scenario.CreatedAt)
 	}
@@ -1800,9 +1741,6 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 					if v, ok := RequestsPerSecondMap["duration_seconds"]; ok {
 						requestsPerSecond.DurationSeconds = helper.Int64(int64(v.(int)))
 					}
-					if v, ok := RequestsPerSecondMap["target_virtual_users"]; ok {
-						requestsPerSecond.TargetVirtualUsers = helper.Int64(int64(v.(int)))
-					}
 					if v, ok := RequestsPerSecondMap["resources"]; ok {
 						requestsPerSecond.Resources = helper.Int64(int64(v.(int)))
 					}
@@ -1874,16 +1812,6 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 
 	}
 
-	if d.HasChange("configs") {
-		if v, ok := d.GetOk("configs"); ok {
-			configsSet := v.(*schema.Set).List()
-			for i := range configsSet {
-				configs := configsSet[i].(string)
-				request.Configs = append(request.Configs, &configs)
-			}
-		}
-	}
-
 	if d.HasChange("datasets") {
 		if v, ok := d.GetOk("datasets"); ok {
 			for _, item := range v.([]interface{}) {
@@ -1948,12 +1876,6 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 				extensions := extensionsSet[i].(string)
 				request.Extensions = append(request.Extensions, &extensions)
 			}
-		}
-	}
-
-	if d.HasChange("sla_id") {
-		if v, ok := d.GetOk("sla_id"); ok {
-			request.SLAId = helper.String(v.(string))
 		}
 	}
 

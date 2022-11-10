@@ -33,7 +33,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
       requests_per_second {
         max_requests_per_second    = ""
         duration_seconds           = ""
-        target_virtual_users       = ""
         resources                  = ""
         start_requests_per_second  = ""
         target_requests_per_second = ""
@@ -58,7 +57,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
     }
 
   }
-  configs = ""
   datasets {
     name           = ""
     split          = ""
@@ -74,7 +72,6 @@ resource "tencentcloud_pts_scenario" "scenario" {
 
   }
   extensions = ""
-  sla_id     = ""
   cron_id    = ""
   test_scripts {
     name                 = ""
@@ -148,7 +145,6 @@ The following arguments are supported:
 * `name` - (Required, String) Pts Scenario name.
 * `project_id` - (Required, String) Project id.
 * `type` - (Required, String) Pressure test engine type.
-* `configs` - (Optional, Set: [`String`]) deprecated.
 * `cron_id` - (Optional, String) cron job ID.
 * `datasets` - (Optional, List) Test data set.
 * `description` - (Optional, String) Pts Scenario Description.
@@ -158,7 +154,6 @@ The following arguments are supported:
 * `plugins` - (Optional, List) SLA strategy.
 * `protocols` - (Optional, List) Protocol file path.
 * `request_files` - (Optional, List) Request file path.
-* `sla_id` - (Optional, String) deprecated.
 * `sla_policy` - (Optional, List) SLA strategy.
 * `test_scripts` - (Optional, List) Test script file information.
 
@@ -257,7 +252,6 @@ The `requests_per_second` object supports the following:
 * `resources` - (Optional, Int) Number of resources.
 * `start_requests_per_second` - (Optional, Int) Initial RPS.
 * `target_requests_per_second` - (Optional, Int) Target RPS, invalid input parameter.
-* `target_virtual_users` - (Optional, Int) deprecated.
 
 The `script_origin` object supports the following:
 
@@ -309,7 +303,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `app_id` - App ID Note: this field may return null, indicating that a valid value cannot be obtained.
 * `created_at` - Scene creation time.
-* `encoded_scripts` - deprecated Note: this field may return null, indicating that a valid value cannot be obtained.
 * `notification_hooks` - Notification event callback Note: this field may return null, indicating that a valid value cannot be obtained.
 * `status` - Scene statu Note: this field may return null, indicating that a valid value cannot be obtained.
 * `sub_account_uin` - Sub-user ID Note: this field may return null, indicating that a valid value cannot be obtained.

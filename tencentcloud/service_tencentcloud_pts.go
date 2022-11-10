@@ -182,3 +182,61 @@ func (me *PtsService) DeletePtsScenarioById(ctx context.Context, scenarioId stri
 
 	return
 }
+
+func (me *PtsService) DescribePtsFile(ctx context.Context, projectId, fileIds string) (file *pts.File, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeFilesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ProjectIds = []*string{&projectId}
+	request.FileIds = []*string{&fileIds}
+
+	response, err := me.client.UsePtsClient().DescribeFiles(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.FileSet) < 1 {
+		return
+	}
+	file = response.Response.FileSet[0]
+	return
+}
+
+func (me *PtsService) DeletePtsFileById(ctx context.Context, projectId, fileIds string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := pts.NewDeleteFilesRequest()
+
+	request.ProjectId = &projectId
+	request.FileIds = []*string{&fileIds}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePtsClient().DeleteFiles(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
