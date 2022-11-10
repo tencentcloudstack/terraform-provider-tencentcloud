@@ -240,3 +240,59 @@ func (me *PtsService) DeletePtsFileById(ctx context.Context, projectId, fileIds 
 
 	return
 }
+
+func (me *PtsService) DescribePtsJob(ctx context.Context, jobId string) (job *pts.Job, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeJobsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.JobIds = []*string{&jobId}
+
+	response, err := me.client.UsePtsClient().DescribeJobs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.JobSet) < 1 {
+		return
+	}
+	job = response.Response.JobSet[0]
+	return
+}
+
+func (me *PtsService) DeletePtsJobById(ctx context.Context, jobId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := pts.NewDeleteJobsRequest()
+
+	request.JobIds = []*string{&jobId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePtsClient().DeleteJobs(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
