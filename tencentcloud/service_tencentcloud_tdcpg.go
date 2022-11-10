@@ -98,7 +98,7 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 		}
 		if result.ClusterSet[0] != nil {
 			status = *result.ClusterSet[0].Status
-			if status == "isolated" || status == "deleted"{
+			if status == "isolated" || status == "deleted" {
 				return nil
 			}
 		}
@@ -108,7 +108,7 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 		log.Printf("[CRITICAL]%s query tdcpg cluster failed, reason:%+v", logId, err)
 		return err
 	}
-	if status == "deleted"{
+	if status == "deleted" {
 		// do not need delete
 		return nil
 	}
@@ -353,7 +353,7 @@ func (me *TdcpgService) DescribeTdcpgClustersByFilter(ctx context.Context, param
 		}
 
 		clusters = append(clusters, response.Response.ClusterSet...)
-		if len(response.Response.ClusterSet) < int(pageSize) {
+		if len(response.Response.ClusterSet) < pageSize {
 			break
 		}
 		currNumber++
@@ -436,7 +436,7 @@ func (me *TdcpgService) DescribeTdcpgInstancesByFilter(ctx context.Context, clus
 			break
 		}
 		instances = append(instances, response.Response.InstanceSet...)
-		if len(response.Response.InstanceSet) < int(pageSize) {
+		if len(response.Response.InstanceSet) < pageSize {
 			break
 		}
 		currNumber++

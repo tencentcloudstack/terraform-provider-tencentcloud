@@ -174,7 +174,7 @@ func resourceTencentCloudTdcpgInstanceRead(d *schema.ResourceData, meta interfac
 	)
 
 	// query the instance of cluster
-	err := resource.Retry(3* readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		instances, e := service.DescribeTdcpgInstance(ctx, &clusterId, &instanceId)
 		if e != nil {
 			return retryError(e)

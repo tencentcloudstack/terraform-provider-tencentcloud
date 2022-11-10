@@ -38,6 +38,9 @@ func testSweepTdcpgCluster(r string) error {
 		delId := v.ClusterId
 		delName := v.ClusterName
 
+		if *v.Status == "deleted" {
+			continue
+		}
 		if strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				err := tdcpgService.DeleteTdcpgClusterById(ctx, delId)
@@ -47,7 +50,7 @@ func testSweepTdcpgCluster(r string) error {
 				return nil
 			})
 			if err != nil {
-				return fmt.Errorf("[ERROR] delete tdcpg instance %s failed. reason:[%s]", *delId, err.Error())
+				return fmt.Errorf("[ERROR] delete tdcpg cluster %s failed. reason:[%s]", *delId, err.Error())
 			}
 		}
 	}

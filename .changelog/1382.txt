@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_tdcpg_clusters
+```
+
+```release-note:new-data-source
+tencentcloud_tdcpg_instances
+```
+
+```release-note:new-resource
+tencentcloud_tdcpg_cluster
+```
+
+```release-note:new-resource
+tencentcloud_tdcpg_instance
+```

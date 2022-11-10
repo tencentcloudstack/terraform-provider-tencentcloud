@@ -40,7 +40,7 @@ The following arguments are supported:
 * `pay_mode` - (Required, String) pay mode, the value is either PREPAID or POSTPAID_BY_HOUR.
 * `subnet_id` - (Required, String) subnet id.
 * `vpc_id` - (Required, String) vpc id.
-* `zone` - (Required, String) avaliable zone.
+* `zone` - (Required, String) available zone.
 * `cluster_name` - (Optional, String) cluster name.
 * `db_version` - (Optional, String) community version number, default to 10.17.
 * `instance_count` - (Optional, Int) instance count.

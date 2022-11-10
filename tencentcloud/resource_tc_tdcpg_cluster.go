@@ -53,7 +53,7 @@ func resourceTencentCloudTdcpgCluster() *schema.Resource {
 			"zone": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "avaliable zone.",
+				Description: "available zone.",
 			},
 
 			"master_user_password": {
@@ -262,7 +262,7 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 			return retryError(err)
 		}
 
-		if result !=nil &&result.ClusterSet[0] != nil {
+		if result != nil && result.ClusterSet[0] != nil {
 			currStatus := *result.ClusterSet[0].Status
 
 			if currStatus == "running" {
