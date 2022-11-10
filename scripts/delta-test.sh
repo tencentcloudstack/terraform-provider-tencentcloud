@@ -1,20 +1,12 @@
 #!/bin/bash
 
-range_sha=${BASE_SHA}
 pr_id=${PR_ID}
 
-update_source_count=`git diff --name-status ${range_sha}| awk '{print $2}' | egrep "^tencentcloud/resource_tc|^tencentcloud/data_source" | egrep -v "_test.go" | wc -l`
-if [ $update_source_count -eq 0 ]; then
-    printf "No source change, skip delta-test!"
-    exit 0
-fi
-
-if [ ! -f ".changelog/${pr_id}.txt" ]; then
-    printf "Not find changelog file!"
-    exit 1
-fi
-source_names=`cat .changelog/${pr_id}.txt| grep -E "^(resource|datasource)\/(\w+)" | awk -F ":" '{print $1}' | sort | uniq`
-
+new_resources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-resource\n)\w+" | awk '{print "resource/"$0}'`
+new_data_sources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-data-source\n)\w+" | awk '{print "datasource/"$0}'`
+source_names=`cat .changelog/${pr_id}.txt| grep -E "^(resource|datasource)\/(\w+)" | awk -F ":" '{print $1}'`
+source_names="$source_names $new_resources $new_data_sources"
+source_names=`echo $source_names | xargs -n1 | sort | uniq`
 test_files=""
 for source_name in $source_names; do
     name=${source_name#*/}
