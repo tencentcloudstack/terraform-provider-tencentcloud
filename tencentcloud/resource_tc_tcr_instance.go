@@ -234,6 +234,18 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("`open_public_operation` must be `true` if `security_policy` set")
 	}
 
+	// Check if replicas region same with current
+	if v, ok := d.Get("replications").([]interface{}); ok {
+		providerRegionId := RegionIdMap[client.Region]
+		for i := range v {
+			rep := v[i].(map[string]interface{})
+			repRegion := fmt.Sprintf("%d", rep["region_id"].(int))
+			if repRegion == providerRegionId {
+				return fmt.Errorf("replication %s region is same with instance region %s (%s)", repRegion, providerRegionId, client.Region)
+			}
+		}
+	}
+
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = tcrService.CreateTCRInstance(ctx, name, insType, map[string]string{})
 		if inErr != nil {
