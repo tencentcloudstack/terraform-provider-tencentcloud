@@ -76,7 +76,6 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 
 			"load": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Pressure configuration of job.",
 				Elem: &schema.Resource{
@@ -614,7 +613,6 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 
 			"domain_name_config": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Domain name binding configuration.",
 				Elem: &schema.Resource{
