@@ -63,12 +63,12 @@ func TestAccTencentCloudTkeClusterEndpoint(t *testing.T) {
 }
 
 const testAccTkeClusterEndpointNewSG = `
-resource "tencentcloud_security_group" "new_sg" {
-  name = "test-endpoint"
+data "tencentcloud_security_groups" "new_sg" {
+  name = "keep-tke-ep-sg-fwf8zdkx"
 }
 
 locals {
-  new_sg = tencentcloud_security_group.new_sg.id
+  new_sg = data.tencentcloud_security_groups.new_sg.security_groups.0.security_group_id
 }
 
 `
