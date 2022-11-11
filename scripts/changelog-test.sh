@@ -2,9 +2,12 @@
 
 pr_id=${PR_ID}
 
-new_resources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-resource\n)\w+" | awk '{print "resource/"$0}'`
-new_data_sources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-data-source\n)\w+" | awk '{print "datasource/"$0}'`
+new_resources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-resource\n)\w+\n" | awk '{print "resource/"$1}'`
+echo new_resources: $new_resources
+new_data_sources=`cat .changelog/${pr_id}.txt| grep -Poz "(?<=release-note:new-data-source\n)\w+\n" | awk '{print "datasource/"$1}'`
+echo new_data_sources: $new_data_sources
 source_names=`cat .changelog/${pr_id}.txt| grep -E "^(resource|datasource)\/(\w+)" | awk -F ":" '{print $1}'`
+echo source_names: $source_names
 source_names="$source_names $new_resources $new_data_sources"
 source_names=`echo $source_names | xargs -n1 | sort | uniq`
 test_files=""
