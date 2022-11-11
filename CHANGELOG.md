@@ -1,3 +1,10 @@
+## 1.78.10 (November 11, 2022)
+
+BUG FIXES:
+
+* resource/tencentcloud_tcr_instance: fix: tcr - block creating while replication region same with current ([#1385](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1385))
+* resource/tencentcloud_vpc_bandwidth_package: Handling api interface return delay problem ([#1379](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1379))
+
 ## 1.78.9 (November 9, 2022)
 
 FEATURES:
