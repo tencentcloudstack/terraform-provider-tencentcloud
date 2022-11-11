@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudPtsAlertChannel_basic -v
-func TestAccTencentCloudPtsAlertChannel_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudPtsAlertChannelResource_basic -v
+func TestAccTencentCloudPtsAlertChannelResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

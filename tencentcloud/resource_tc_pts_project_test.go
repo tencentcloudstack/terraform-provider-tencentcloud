@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudPtsProject_basic -v
-func TestAccTencentCloudPtsProject_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudPtsProjectResource_basic -v
+func TestAccTencentCloudPtsProjectResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
