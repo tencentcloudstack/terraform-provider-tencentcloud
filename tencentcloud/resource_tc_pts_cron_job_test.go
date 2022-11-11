@@ -23,7 +23,7 @@ func TestAccTencentCloudPtsCronJobResource_basic(t *testing.T) {
 				Config: testAccPtsCronJob,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPtsCronJobExists("tencentcloud_pts_cron_job.cron_job"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "name", "desc"),
+					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "name", "iac-cron_job-update"),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "project_id", defaultPtsProjectId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "scenario_id", defaultScenarioId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "scenario_name", "keep-pts-js"),
