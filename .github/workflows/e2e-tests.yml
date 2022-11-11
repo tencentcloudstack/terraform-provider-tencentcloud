@@ -51,7 +51,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: e2e tests
         run: |
-          make deltatest
+          make dispachertest
           if [ $? -ne 0 ]; then
               printf "COMMIT FAILED\n"
               exit 1

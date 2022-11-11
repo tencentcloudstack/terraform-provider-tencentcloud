@@ -32,6 +32,12 @@ fmtcheck:
 deltatest:
 	@sh -c "'$(CURDIR)/scripts/delta-test.sh'"
 
+changelogtest:
+	@sh -c "'$(CURDIR)/scripts/changelog-test.sh'"
+
+dispachertest:
+	@sh -c "'$(CURDIR)/scripts/dispacher-test.sh'"
+
 lint:
 	@echo "==> Checking source code against linters..."
 	@GOGC=30 GOPACKAGESPRINTGOLISTERRORS=1 golangci-lint run --timeout=30m ./$(PKG_NAME)

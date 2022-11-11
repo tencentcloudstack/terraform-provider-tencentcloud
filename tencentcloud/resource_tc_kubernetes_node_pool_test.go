@@ -94,7 +94,7 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepool"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "asg_np_test"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "400"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "OLDEST_INSTANCE"),
@@ -129,7 +129,7 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_os", defaultTkeOSImageName),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "basic_group_test"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "asg_np_test_changed"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "350"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.0", "NEWEST_INSTANCE"),
@@ -264,7 +264,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 1
   enable_auto_scale    = true
-  scaling_group_name	   = "basic_group"
+  scaling_group_name	   = "asg_np_test"
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
   scaling_group_project_id = var.default_project
@@ -329,7 +329,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   node_os = var.default_img
   scaling_group_project_id = var.default_project
   delete_keep_instance = false
-  scaling_group_name 	   = "basic_group_test"
+  scaling_group_name 	   = "asg_np_test_changed"
   default_cooldown 		   = 350
   termination_policies 	   = ["NEWEST_INSTANCE"]
   multi_zone_subnet_policy = "EQUALITY"
