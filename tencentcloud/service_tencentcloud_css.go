@@ -71,7 +71,7 @@ func (me *CssService) DeleteCssWatermarkById(ctx context.Context, watermarkId st
 	return
 }
 
-func (me *CssService) DescribeCssWatermarkRule(ctx context.Context, domainName, appName, streamName, watermarkId string) (watermarkRule *css.RuleInfo, errRet error) {
+func (me *CssService) DescribeCssWatermarkRuleAttachment(ctx context.Context, domainName, appName, streamName, watermarkId string) (watermarkRuleAttachment *css.RuleInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = css.NewDescribeLiveWatermarkRulesRequest()
@@ -100,11 +100,11 @@ func (me *CssService) DescribeCssWatermarkRule(ctx context.Context, domainName, 
 	if len(response.Response.Rules) < 1 {
 		return
 	}
-	watermarkRule = response.Response.Rules[0]
+	watermarkRuleAttachment = response.Response.Rules[0]
 	return
 }
 
-func (me *CssService) DeleteCssWatermarkRuleById(ctx context.Context, domainName, appName, streamName, watermarkId string) (errRet error) {
+func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, domainName, appName, streamName string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := css.NewDeleteLiveWatermarkRuleRequest()
@@ -112,7 +112,6 @@ func (me *CssService) DeleteCssWatermarkRuleById(ctx context.Context, domainName
 	request.DomainName = &domainName
 	request.AppName = &appName
 	request.StreamName = &streamName
-	// request.WatermarkId = &watermarkId
 
 	defer func() {
 		if errRet != nil {

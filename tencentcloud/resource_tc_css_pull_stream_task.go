@@ -286,7 +286,6 @@ func resourceTencentCloudCssPullStreamTaskCreate(d *schema.ResourceData, meta in
 	)
 
 	if v, ok := d.GetOk("source_type"); ok {
-
 		request.SourceType = helper.String(v.(string))
 	}
 
@@ -299,37 +298,30 @@ func resourceTencentCloudCssPullStreamTaskCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("domain_name"); ok {
-
 		request.DomainName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("app_name"); ok {
-
 		request.AppName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("stream_name"); ok {
-
 		request.StreamName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
-
 		request.StartTime = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_time"); ok {
-
 		request.EndTime = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("operator"); ok {
-
 		request.Operator = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("push_args"); ok {
-
 		request.PushArgs = helper.String(v.(string))
 	}
 
@@ -497,9 +489,17 @@ func resourceTencentCloudCssPullStreamTaskRead(d *schema.ResourceData, meta inte
 		_ = d.Set("callback_url", pullStreamTask.CallbackUrl)
 	}
 
+	// if pullStreamTask.ExtraCmd != nil {
+	// 	_ = d.Set("extra_cmd", pullStreamTask.ExtraCmd)
+	// }
+
 	if pullStreamTask.Comment != nil {
 		_ = d.Set("comment", pullStreamTask.Comment)
 	}
+
+	// if pullStreamTask.ToUrl != nil {
+	// 	_ = d.Set("to_url", pullStreamTask.ToUrl)
+	// }
 
 	if pullStreamTask.BackupSourceType != nil {
 		_ = d.Set("backup_source_type", pullStreamTask.BackupSourceType)
@@ -581,7 +581,9 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 
 	request := css.NewModifyLivePullStreamTaskRequest()
 
-	request.TaskId = helper.String(d.Id())
+	taskId := d.Id()
+
+	request.TaskId = &taskId
 
 	if d.HasChange("source_type") {
 
@@ -605,7 +607,6 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("app_name") {
 		return fmt.Errorf("`app_name` do not support change now.")
-
 	}
 
 	if d.HasChange("stream_name") {
@@ -724,32 +725,27 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 				if v, ok := dMap["location"]; ok {
 					pullPushWatermarkInfo.Location = helper.IntInt64(v.(int))
 				}
-
 				request.WatermarkList = append(request.WatermarkList, &pullPushWatermarkInfo)
 			}
 		}
-
 	}
 
 	if d.HasChange("status") {
 		if v, ok := d.GetOk("status"); ok {
 			request.Status = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("file_index") {
 		if v, ok := d.GetOk("file_index"); ok {
 			request.FileIndex = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("offset_time") {
 		if v, ok := d.GetOk("offset_time"); ok {
 			request.OffsetTime = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -775,16 +771,16 @@ func resourceTencentCloudCssPullStreamTaskDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_css_pull_stream_task.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	// logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	// service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	// pullStreamTaskId := d.Id()
+	taskId := d.Id()
 
-	// if err := service.DeleteCssPullStreamTaskById(ctx, taskId); err != nil {
-	// 	return err
-	// }
+	if err := service.DeleteCssPullStreamTaskById(ctx, taskId); err != nil {
+		return err
+	}
 
 	return nil
 }

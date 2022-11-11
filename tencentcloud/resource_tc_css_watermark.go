@@ -6,8 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_css_watermark" "watermark" {
   picture_url = ""
-  watermark_name = ""-+
-
+  watermark_name = ""
   x_position = ""
   y_position = ""
   width = ""
@@ -93,7 +92,7 @@ func resourceTencentCloudCssWatermarkCreate(d *schema.ResourceData, meta interfa
 	var (
 		request     = css.NewAddLiveWatermarkRequest()
 		response    *css.AddLiveWatermarkResponse
-		watermarkId uint64
+		watermarkId string
 	)
 
 	if v, ok := d.GetOk("picture_url"); ok {
@@ -139,9 +138,9 @@ func resourceTencentCloudCssWatermarkCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	watermarkId = *response.Response.WatermarkId
+	watermarkId = helper.UInt64ToStr(*response.Response.WatermarkId)
 
-	d.SetId(helper.UInt64ToStr(watermarkId))
+	d.SetId(watermarkId)
 	return resourceTencentCloudCssWatermarkRead(d, meta)
 }
 
@@ -203,50 +202,44 @@ func resourceTencentCloudCssWatermarkUpdate(d *schema.ResourceData, meta interfa
 
 	request := css.NewUpdateLiveWatermarkRequest()
 
-	watermarkId := helper.StrToInt64(d.Id())
+	watermarkId := d.Id()
 
-	request.WatermarkId = helper.Int64(watermarkId)
+	request.WatermarkId = helper.Int64(helper.StrToInt64(watermarkId))
 
 	if d.HasChange("picture_url") {
 		if v, ok := d.GetOk("picture_url"); ok {
 			request.PictureUrl = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("watermark_name") {
 		if v, ok := d.GetOk("watermark_name"); ok {
 			request.WatermarkName = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("x_position") {
 		if v, ok := d.GetOk("x_position"); ok {
 			request.XPosition = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("y_position") {
 		if v, ok := d.GetOk("y_position"); ok {
 			request.YPosition = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("width") {
 		if v, ok := d.GetOk("width"); ok {
 			request.Width = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("height") {
 		if v, ok := d.GetOk("height"); ok {
 			request.Height = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

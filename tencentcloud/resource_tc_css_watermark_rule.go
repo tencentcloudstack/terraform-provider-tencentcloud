@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a css watermark_rule
+Provides a resource to create a css watermark_rule_attachment
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_css_watermark_rule" "watermark_rule" {
+resource "tencentcloud_css_watermark_rule_attachment" "watermark_rule_attachment" {
   domain_name = ""
   app_name = ""
   stream_name = ""
@@ -14,9 +14,9 @@ resource "tencentcloud_css_watermark_rule" "watermark_rule" {
 ```
 Import
 
-css watermark_rule can be imported using the id, e.g.
+css watermark_rule_attachment can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_css_watermark_rule.watermark_rule watermarkRule_id
+$ terraform import tencentcloud_css_watermark_rule_attachment.watermark_rule_attachment watermarkRuleAttachment_id
 ```
 */
 package tencentcloud
@@ -33,12 +33,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCssWatermarkRule() *schema.Resource {
+func resourceTencentCloudCssWatermarkRuleAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCssWatermarkRuleRead,
-		Create: resourceTencentCloudCssWatermarkRuleCreate,
-		// Update: resourceTencentCloudCssWatermarkRuleUpdate,
-		Delete: resourceTencentCloudCssWatermarkRuleDelete,
+		Read:   resourceTencentCloudCssWatermarkRuleAttachmentRead,
+		Create: resourceTencentCloudCssWatermarkRuleAttachmentCreate,
+		Delete: resourceTencentCloudCssWatermarkRuleAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -82,8 +81,8 @@ func resourceTencentCloudCssWatermarkRule() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCssWatermarkRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_watermark_rule.create")()
+func resourceTencentCloudCssWatermarkRuleAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_watermark_rule_attachment.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -112,9 +111,10 @@ func resourceTencentCloudCssWatermarkRuleCreate(d *schema.ResourceData, meta int
 		request.StreamName = helper.String(v.(string))
 	}
 
-	// if v, ok := d.GetOk("watermark_id"); ok {
-	// 	request.WatermarkId = helper.IntInt64(v.(int))
-	// }
+	if v, ok := d.GetOk("watermark_id"); ok {
+		watermarkId = v.(string)
+		request.TemplateId = helper.IntInt64(v.(int))
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCssClient().CreateLiveWatermarkRule(request)
@@ -124,23 +124,20 @@ func resourceTencentCloudCssWatermarkRuleCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create css watermarkRule failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create css watermarkRuleAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	watermarkId = "" //*response.Response.DomainName
-
 	d.SetId(domainName + FILED_SP + appName + FILED_SP + streamName + FILED_SP + watermarkId)
-	return resourceTencentCloudCssWatermarkRuleRead(d, meta)
+	return resourceTencentCloudCssWatermarkRuleAttachmentRead(d, meta)
 }
 
-func resourceTencentCloudCssWatermarkRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_watermark_rule.read")()
+func resourceTencentCloudCssWatermarkRuleAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_watermark_rule_attachment.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -157,46 +154,46 @@ func resourceTencentCloudCssWatermarkRuleRead(d *schema.ResourceData, meta inter
 	streamName := idSplit[2]
 	watermarkId := idSplit[3]
 
-	watermarkRule, err := service.DescribeCssWatermarkRule(ctx, domainName, appName, streamName, watermarkId)
+	watermarkRuleAttachment, err := service.DescribeCssWatermarkRuleAttachment(ctx, domainName, appName, streamName, watermarkId)
 
 	if err != nil {
 		return err
 	}
 
-	if watermarkRule == nil {
+	if watermarkRuleAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `watermarkRule` %s does not exist", d.Id())
+		return fmt.Errorf("resource `watermarkRuleAttachment` %s does not exist", d.Id())
 	}
 
-	if watermarkRule.DomainName != nil {
-		_ = d.Set("domain_name", watermarkRule.DomainName)
+	if watermarkRuleAttachment.DomainName != nil {
+		_ = d.Set("domain_name", watermarkRuleAttachment.DomainName)
 	}
 
-	if watermarkRule.AppName != nil {
-		_ = d.Set("app_name", watermarkRule.AppName)
+	if watermarkRuleAttachment.AppName != nil {
+		_ = d.Set("app_name", watermarkRuleAttachment.AppName)
 	}
 
-	if watermarkRule.StreamName != nil {
-		_ = d.Set("stream_name", watermarkRule.StreamName)
+	if watermarkRuleAttachment.StreamName != nil {
+		_ = d.Set("stream_name", watermarkRuleAttachment.StreamName)
 	}
 
-	// if watermarkRule.WatermarkId != nil {
-	// 	_ = d.Set("watermark_id", watermarkRule.WatermarkId)
-	// }
-
-	if watermarkRule.CreateTime != nil {
-		_ = d.Set("create_time", watermarkRule.CreateTime)
+	if watermarkRuleAttachment.TemplateId != nil {
+		_ = d.Set("watermark_id", watermarkRuleAttachment.TemplateId)
 	}
 
-	if watermarkRule.UpdateTime != nil {
-		_ = d.Set("update_time", watermarkRule.UpdateTime)
+	if watermarkRuleAttachment.CreateTime != nil {
+		_ = d.Set("create_time", watermarkRuleAttachment.CreateTime)
+	}
+
+	if watermarkRuleAttachment.UpdateTime != nil {
+		_ = d.Set("update_time", watermarkRuleAttachment.UpdateTime)
 	}
 
 	return nil
 }
 
-func resourceTencentCloudCssWatermarkRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_watermark_rule.delete")()
+func resourceTencentCloudCssWatermarkRuleAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_watermark_rule_attachment.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -211,9 +208,8 @@ func resourceTencentCloudCssWatermarkRuleDelete(d *schema.ResourceData, meta int
 	domainName := idSplit[0]
 	appName := idSplit[1]
 	streamName := idSplit[2]
-	watermarkId := idSplit[3]
 
-	if err := service.DeleteCssWatermarkRuleById(ctx, domainName, appName, streamName, watermarkId); err != nil {
+	if err := service.DetachCssWatermarkRuleAttachment(ctx, domainName, appName, streamName); err != nil {
 		return err
 	}
 

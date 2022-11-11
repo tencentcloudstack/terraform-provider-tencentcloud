@@ -746,6 +746,14 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
+css
+  Resource
+    tencentcloud_css_watermark
+	tencentcloud_css_watermark_rule_attachment
+	tencentcloud_css_pull_stream_task
+	tencentcloud_css_live_transcode_template
+	tencentcloud_css_live_transcode_rule_attachment
+
 */
 package tencentcloud
 
@@ -1336,8 +1344,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_css_watermark":                        resourceTencentCloudCssWatermark(),
-			"tencentcloud_css_watermark_rule":                   resourceTencentCloudCssWatermarkRule(),
+			"tencentcloud_css_watermark_rule_attachment":        resourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                 resourceTencentCloudCssPullStreamTask(),
+			// "tencentcloud_css_live_transcode_template":          resourceTencentCloudCssLiveTranscodeTemplate(),
+			// "tencentcloud_css_live_transcode_rule_attachment":   resourceTencentCloudCssLiveTranscodeRuleAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
