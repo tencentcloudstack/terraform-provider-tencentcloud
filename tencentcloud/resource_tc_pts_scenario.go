@@ -5,126 +5,88 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_scenario" "scenario" {
-  name = "pts"
-  type = ""
-  project_id = ""
-  description = ""
-  load {
-		load_spec {
-			concurrency {
-				stages {
-						duration_seconds = ""
-						target_virtual_users = ""
-				}
-					iteration_count = ""
-					max_requests_per_second = ""
-					graceful_stop_seconds = ""
-			}
-			requests_per_second {
-					max_requests_per_second = ""
-					duration_seconds = ""
-					resources = ""
-					start_requests_per_second = ""
-					target_requests_per_second = ""
-					graceful_stop_seconds = ""
-			}
-			script_origin {
-					machine_number = ""
-					machine_specification = ""
-					duration_seconds = ""
-			}
-		}
-		vpc_load_distribution {
-				region_id = ""
-				region = ""
-				vpc_id = ""
-				subnet_ids = ""
-		}
-		geo_regions_load_distribution {
-				region_id = ""
-				region = ""
-				percentage = ""
-		}
+    name            = "pts-js"
+    project_id      = "project-45vw7v82"
+    type            = "pts-js"
 
-  }
-  datasets {
-			name = ""
-			split = ""
-			header_in_file = ""
-			header_columns = ""
-			line_count = ""
-			updated_at = ""
-			size = ""
-			head_lines = ""
-			tail_lines = ""
-			type = ""
-			file_id = ""
+    domain_name_config {
+    }
 
-  }
-  extensions = ""
-  cron_id = ""
-  test_scripts {
-			name = ""
-			size = ""
-			type = ""
-			updated_at = ""
-			encoded_content = ""
-			encoded_http_archive = ""
-			load_weight = ""
+    load {
+        geo_regions_load_distribution {
+            percentage = 100
+            region     = "ap-guangzhou"
+            region_id  = 1
+        }
 
-  }
-  protocols {
-			name = ""
-			size = ""
-			type = ""
-			updated_at = ""
-			file_id = ""
+        load_spec {
+            concurrency {
+                graceful_stop_seconds   = 3
+                iteration_count         = 0
+                max_requests_per_second = 0
 
-  }
-  request_files {
-			name = ""
-			size = ""
-			type = ""
-			updated_at = ""
-			file_id = ""
+                stages {
+                    duration_seconds     = 120
+                    target_virtual_users = 2
+                }
+                stages {
+                    duration_seconds     = 120
+                    target_virtual_users = 4
+                }
+                stages {
+                    duration_seconds     = 120
+                    target_virtual_users = 5
+                }
+                stages {
+                    duration_seconds     = 240
+                    target_virtual_users = 5
+                }
+            }
+        }
+    }
 
-  }
-  sla_policy {
-		sla_rules {
-				metric = ""
-				aggregation = ""
-				condition = ""
-				value = ""
-			label_filter {
-					label_name = ""
-					label_value = ""
-			}
-				abort_flag = ""
-				for = ""
-		}
-		alert_channel {
-				notice_id = ""
-				amp_consumer_id = ""
-		}
+    sla_policy {
+    }
 
-  }
-  plugins {
-			name = ""
-			size = ""
-			type = ""
-			updated_at = ""
-			file_id = ""
+    test_scripts {
+        encoded_content = <<-EOT
+            // Send a http get request
+            import http from 'pts/http';
+            import { check, sleep } from 'pts';
 
-  }
-  domain_name_config {
-		host_aliases {
-				host_names = ""
-				ip = ""
-		}
-		dns_config {
-				nameservers = ""
-		}
-  }
+            export default function () {
+              // simple get request
+              const resp1 = http.get('http://httpbin.org/get');
+              console.log(resp1.body);
+              // if resp1.body is a json string, resp1.json() transfer json format body to a json object
+              console.log(resp1.json());
+              check('status is 200', () => resp1.statusCode === 200);
+
+              // sleep 1 second
+              sleep(1);
+
+              // get request with headers and parameters
+              const resp2 = http.get('http://httpbin.org/get', {
+                headers: {
+                  Connection: 'keep-alive',
+                  'User-Agent': 'pts-engine',
+                },
+                query: {
+                  name1: 'value1',
+                  name2: 'value2',
+                },
+              });
+
+              console.log(resp2.json().args.name1); // 'value1'
+              check('body.args.name1 equals value1', () => resp2.json().args.name1 === 'value1');
+            }
+        EOT
+        load_weight     = 100
+        name            = "script.js"
+        size            = 838
+        type            = "js"
+        updated_at      = "2022-11-11T16:18:37+08:00"
+    }
 }
 
 ```
@@ -785,28 +747,28 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 				Description: "Sub-user ID Note: this field may return null, indicating that a valid value cannot be obtained.",
 			},
 
-			"notification_hooks": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Notification event callback Note: this field may return null, indicating that a valid value cannot be obtained.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"events": {
-							Type: schema.TypeSet,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-							Optional:    true,
-							Description: "Notification event Note: this field may return null, indicating that a valid value cannot be obtained.",
-						},
-						"u_r_l": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Callback URL Note: this field may return null, indicating that a valid value cannot be obtained.",
-						},
-					},
-				},
-			},
+			// "notification_hooks": {
+			// 	Type:        schema.TypeList,
+			// 	Computed:    true,
+			// 	Description: "Notification event callback Note: this field may return null, indicating that a valid value cannot be obtained.",
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"events": {
+			// 				Type: schema.TypeSet,
+			// 				Elem: &schema.Schema{
+			// 					Type: schema.TypeString,
+			// 				},
+			// 				Optional:    true,
+			// 				Description: "Notification event Note: this field may return null, indicating that a valid value cannot be obtained.",
+			// 			},
+			// 			"url": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "Callback URL Note: this field may return null, indicating that a valid value cannot be obtained.",
+			// 			},
+			// 		},
+			// 	},
+			// },
 		},
 	}
 }
@@ -819,6 +781,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request    = pts.NewCreateScenarioRequest()
+		requestUp  = pts.NewUpdateScenarioRequest()
 		response   *pts.CreateScenarioResponse
 		projectId  string
 		scenarioId string
@@ -826,19 +789,23 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
+		requestUp.Name = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
+		requestUp.Type = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
+		requestUp.ProjectId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
 		request.Description = helper.String(v.(string))
+		requestUp.Description = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "load"); ok {
@@ -946,6 +913,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		}
 
 		request.Load = &load
+		requestUp.Load = &load
 	}
 
 	if v, ok := d.GetOk("datasets"); ok {
@@ -999,6 +967,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			}
 
 			request.Datasets = append(request.Datasets, &testData)
+			requestUp.Datasets = append(requestUp.Datasets, &testData)
 		}
 	}
 
@@ -1007,11 +976,13 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		for i := range extensionsSet {
 			extensions := extensionsSet[i].(string)
 			request.Extensions = append(request.Extensions, &extensions)
+			requestUp.Extensions = append(requestUp.Extensions, &extensions)
 		}
 	}
 
 	if v, ok := d.GetOk("cron_id"); ok {
 		request.CronId = helper.String(v.(string))
+		requestUp.CronId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("test_scripts"); ok {
@@ -1041,6 +1012,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			}
 
 			request.TestScripts = append(request.TestScripts, &scriptInfo)
+			requestUp.TestScripts = append(requestUp.TestScripts, &scriptInfo)
 		}
 	}
 
@@ -1065,6 +1037,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			}
 
 			request.Protocols = append(request.Protocols, &protocolInfo)
+			requestUp.Protocols = append(requestUp.Protocols, &protocolInfo)
 		}
 	}
 
@@ -1089,6 +1062,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			}
 
 			request.RequestFiles = append(request.RequestFiles, &fileInfo)
+			requestUp.RequestFiles = append(requestUp.RequestFiles, &fileInfo)
 		}
 	}
 
@@ -1144,6 +1118,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		}
 
 		request.SLAPolicy = &sLAPolicy
+		requestUp.SLAPolicy = &sLAPolicy
 	}
 
 	if v, ok := d.GetOk("plugins"); ok {
@@ -1167,6 +1142,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 			}
 
 			request.Plugins = append(request.Plugins, &fileInfo)
+			requestUp.Plugins = append(requestUp.Plugins, &fileInfo)
 		}
 	}
 
@@ -1202,6 +1178,7 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		}
 
 		request.DomainNameConfig = &domainNameConfig
+		requestUp.DomainNameConfig = &domainNameConfig
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1222,6 +1199,23 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 	}
 
 	scenarioId = *response.Response.ScenarioId
+
+	requestUp.ScenarioId = &scenarioId
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().UpdateScenario(requestUp)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create pts scenario failed, reason:%+v", logId, err)
+		return err
+	}
 
 	d.SetId(projectId + FILED_SP + scenarioId)
 	return resourceTencentCloudPtsScenarioRead(d, meta)
@@ -1659,21 +1653,24 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("sub_account_uin", scenario.SubAccountUin)
 	}
 
-	if scenario.NotificationHooks != nil {
-		notificationHooksList := []interface{}{}
-		for _, notificationHooks := range scenario.NotificationHooks {
-			notificationHooksMap := map[string]interface{}{}
-			if notificationHooks.Events != nil {
-				notificationHooksMap["events"] = notificationHooks.Events
-			}
-			if notificationHooks.URL != nil {
-				notificationHooksMap["u_r_l"] = notificationHooks.URL
-			}
+	// if scenario.NotificationHooks != nil {
+	// 	notificationHooksList := []interface{}{}
+	// 	for _, notificationHooks := range scenario.NotificationHooks {
+	// 		notificationHooksMap := map[string]interface{}{}
+	// 		if notificationHooks.Events != nil {
+	// 			notificationHooksMap["events"] = notificationHooks.Events
+	// 		}
+	// 		if notificationHooks.URL != nil {
+	// 			notificationHooksMap["url"] = notificationHooks.URL
+	// 		}
 
-			notificationHooksList = append(notificationHooksList, notificationHooksMap)
-		}
-		_ = d.Set("notification_hooks", notificationHooksList)
-	}
+	// 		notificationHooksList = append(notificationHooksList, notificationHooksMap)
+	// 	}
+	// 	err = d.Set("notification_hooks", notificationHooksList)
+	// 	if err != nil {
+	// 		return fmt.Errorf("set error")
+	// 	}
+	// }
 
 	return nil
 }
@@ -1708,284 +1705,262 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 		request.Type = helper.String(v.(string))
 	}
 
-	if d.HasChange("description") {
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
 	}
 
-	if d.HasChange("load") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "load"); ok {
-			load := pts.Load{}
-			if LoadSpecMap, ok := helper.InterfaceToMap(dMap, "load_spec"); ok {
-				loadSpec := pts.LoadSpec{}
-				if ConcurrencyMap, ok := helper.InterfaceToMap(LoadSpecMap, "concurrency"); ok {
-					concurrency := pts.Concurrency{}
-					if v, ok := ConcurrencyMap["stages"]; ok {
-						for _, item := range v.([]interface{}) {
-							StagesMap := item.(map[string]interface{})
-							stage := pts.Stage{}
-							if v, ok := StagesMap["duration_seconds"]; ok {
-								stage.DurationSeconds = helper.Int64(int64(v.(int)))
-							}
-							if v, ok := StagesMap["target_virtual_users"]; ok {
-								stage.TargetVirtualUsers = helper.Int64(int64(v.(int)))
-							}
-							concurrency.Stages = append(concurrency.Stages, &stage)
+	if dMap, ok := helper.InterfacesHeadMap(d, "load"); ok {
+		load := pts.Load{}
+		if LoadSpecMap, ok := helper.InterfaceToMap(dMap, "load_spec"); ok {
+			loadSpec := pts.LoadSpec{}
+			if ConcurrencyMap, ok := helper.InterfaceToMap(LoadSpecMap, "concurrency"); ok {
+				concurrency := pts.Concurrency{}
+				if v, ok := ConcurrencyMap["stages"]; ok {
+					for _, item := range v.([]interface{}) {
+						StagesMap := item.(map[string]interface{})
+						stage := pts.Stage{}
+						if v, ok := StagesMap["duration_seconds"]; ok {
+							stage.DurationSeconds = helper.Int64(int64(v.(int)))
 						}
+						if v, ok := StagesMap["target_virtual_users"]; ok {
+							stage.TargetVirtualUsers = helper.Int64(int64(v.(int)))
+						}
+						concurrency.Stages = append(concurrency.Stages, &stage)
 					}
-					if v, ok := ConcurrencyMap["iteration_count"]; ok {
-						concurrency.IterationCount = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := ConcurrencyMap["max_requests_per_second"]; ok {
-						concurrency.MaxRequestsPerSecond = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := ConcurrencyMap["graceful_stop_seconds"]; ok {
-						concurrency.GracefulStopSeconds = helper.Int64(int64(v.(int)))
-					}
-					loadSpec.Concurrency = &concurrency
 				}
-				if RequestsPerSecondMap, ok := helper.InterfaceToMap(LoadSpecMap, "requests_per_second"); ok {
-					requestsPerSecond := pts.RequestsPerSecond{}
-					if v, ok := RequestsPerSecondMap["max_requests_per_second"]; ok {
-						requestsPerSecond.MaxRequestsPerSecond = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := RequestsPerSecondMap["duration_seconds"]; ok {
-						requestsPerSecond.DurationSeconds = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := RequestsPerSecondMap["resources"]; ok {
-						requestsPerSecond.Resources = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := RequestsPerSecondMap["start_requests_per_second"]; ok {
-						requestsPerSecond.StartRequestsPerSecond = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := RequestsPerSecondMap["target_requests_per_second"]; ok {
-						requestsPerSecond.TargetRequestsPerSecond = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := RequestsPerSecondMap["graceful_stop_seconds"]; ok {
-						requestsPerSecond.GracefulStopSeconds = helper.Int64(int64(v.(int)))
-					}
-					loadSpec.RequestsPerSecond = &requestsPerSecond
+				if v, ok := ConcurrencyMap["iteration_count"]; ok {
+					concurrency.IterationCount = helper.Int64(int64(v.(int)))
 				}
-				if ScriptOriginMap, ok := helper.InterfaceToMap(LoadSpecMap, "script_origin"); ok {
-					scriptOrigin := pts.ScriptOrigin{}
-					if v, ok := ScriptOriginMap["machine_number"]; ok {
-						scriptOrigin.MachineNumber = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := ScriptOriginMap["machine_specification"]; ok {
-						scriptOrigin.MachineSpecification = helper.String(v.(string))
-					}
-					if v, ok := ScriptOriginMap["duration_seconds"]; ok {
-						scriptOrigin.DurationSeconds = helper.Int64(int64(v.(int)))
-					}
-					loadSpec.ScriptOrigin = &scriptOrigin
+				if v, ok := ConcurrencyMap["max_requests_per_second"]; ok {
+					concurrency.MaxRequestsPerSecond = helper.Int64(int64(v.(int)))
 				}
-				load.LoadSpec = &loadSpec
+				if v, ok := ConcurrencyMap["graceful_stop_seconds"]; ok {
+					concurrency.GracefulStopSeconds = helper.Int64(int64(v.(int)))
+				}
+				loadSpec.Concurrency = &concurrency
 			}
-			if VpcLoadDistributionMap, ok := helper.InterfaceToMap(dMap, "vpc_load_distribution"); ok {
-				vpcLoadDistribution := pts.VpcLoadDistribution{}
-				if v, ok := VpcLoadDistributionMap["region_id"]; ok {
-					vpcLoadDistribution.RegionId = helper.Int64(int64(v.(int)))
+			if RequestsPerSecondMap, ok := helper.InterfaceToMap(LoadSpecMap, "requests_per_second"); ok {
+				requestsPerSecond := pts.RequestsPerSecond{}
+				if v, ok := RequestsPerSecondMap["max_requests_per_second"]; ok {
+					requestsPerSecond.MaxRequestsPerSecond = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := VpcLoadDistributionMap["region"]; ok {
-					vpcLoadDistribution.Region = helper.String(v.(string))
+				if v, ok := RequestsPerSecondMap["duration_seconds"]; ok {
+					requestsPerSecond.DurationSeconds = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := VpcLoadDistributionMap["vpc_id"]; ok {
-					vpcLoadDistribution.VpcId = helper.String(v.(string))
+				if v, ok := RequestsPerSecondMap["resources"]; ok {
+					requestsPerSecond.Resources = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := VpcLoadDistributionMap["subnet_ids"]; ok {
-					subnetIdsSet := v.(*schema.Set).List()
-					for i := range subnetIdsSet {
-						subnetIds := subnetIdsSet[i].(string)
-						vpcLoadDistribution.SubnetIds = append(vpcLoadDistribution.SubnetIds, &subnetIds)
-					}
+				if v, ok := RequestsPerSecondMap["start_requests_per_second"]; ok {
+					requestsPerSecond.StartRequestsPerSecond = helper.Int64(int64(v.(int)))
 				}
-				load.VpcLoadDistribution = &vpcLoadDistribution
+				if v, ok := RequestsPerSecondMap["target_requests_per_second"]; ok {
+					requestsPerSecond.TargetRequestsPerSecond = helper.Int64(int64(v.(int)))
+				}
+				if v, ok := RequestsPerSecondMap["graceful_stop_seconds"]; ok {
+					requestsPerSecond.GracefulStopSeconds = helper.Int64(int64(v.(int)))
+				}
+				loadSpec.RequestsPerSecond = &requestsPerSecond
 			}
-			if v, ok := dMap["geo_regions_load_distribution"]; ok {
-				for _, item := range v.([]interface{}) {
-					GeoRegionsLoadDistributionMap := item.(map[string]interface{})
-					geoRegionsLoadItem := pts.GeoRegionsLoadItem{}
-					if v, ok := GeoRegionsLoadDistributionMap["region_id"]; ok {
-						geoRegionsLoadItem.RegionId = helper.Int64(int64(v.(int)))
-					}
-					if v, ok := GeoRegionsLoadDistributionMap["region"]; ok {
-						geoRegionsLoadItem.Region = helper.String(v.(string))
-					}
-					if v, ok := GeoRegionsLoadDistributionMap["percentage"]; ok {
-						geoRegionsLoadItem.Percentage = helper.Int64(int64(v.(int)))
-					}
-					load.GeoRegionsLoadDistribution = append(load.GeoRegionsLoadDistribution, &geoRegionsLoadItem)
+			if ScriptOriginMap, ok := helper.InterfaceToMap(LoadSpecMap, "script_origin"); ok {
+				scriptOrigin := pts.ScriptOrigin{}
+				if v, ok := ScriptOriginMap["machine_number"]; ok {
+					scriptOrigin.MachineNumber = helper.Int64(int64(v.(int)))
 				}
+				if v, ok := ScriptOriginMap["machine_specification"]; ok {
+					scriptOrigin.MachineSpecification = helper.String(v.(string))
+				}
+				if v, ok := ScriptOriginMap["duration_seconds"]; ok {
+					scriptOrigin.DurationSeconds = helper.Int64(int64(v.(int)))
+				}
+				loadSpec.ScriptOrigin = &scriptOrigin
 			}
-
-			request.Load = &load
+			load.LoadSpec = &loadSpec
 		}
-
-	}
-
-	if d.HasChange("datasets") {
-		if v, ok := d.GetOk("datasets"); ok {
+		if VpcLoadDistributionMap, ok := helper.InterfaceToMap(dMap, "vpc_load_distribution"); ok {
+			vpcLoadDistribution := pts.VpcLoadDistribution{}
+			if v, ok := VpcLoadDistributionMap["region_id"]; ok {
+				vpcLoadDistribution.RegionId = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := VpcLoadDistributionMap["region"]; ok {
+				vpcLoadDistribution.Region = helper.String(v.(string))
+			}
+			if v, ok := VpcLoadDistributionMap["vpc_id"]; ok {
+				vpcLoadDistribution.VpcId = helper.String(v.(string))
+			}
+			if v, ok := VpcLoadDistributionMap["subnet_ids"]; ok {
+				subnetIdsSet := v.(*schema.Set).List()
+				for i := range subnetIdsSet {
+					subnetIds := subnetIdsSet[i].(string)
+					vpcLoadDistribution.SubnetIds = append(vpcLoadDistribution.SubnetIds, &subnetIds)
+				}
+			}
+			load.VpcLoadDistribution = &vpcLoadDistribution
+		}
+		if v, ok := dMap["geo_regions_load_distribution"]; ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				testData := pts.TestData{}
-				if v, ok := dMap["name"]; ok {
-					testData.Name = helper.String(v.(string))
+				GeoRegionsLoadDistributionMap := item.(map[string]interface{})
+				geoRegionsLoadItem := pts.GeoRegionsLoadItem{}
+				if v, ok := GeoRegionsLoadDistributionMap["region_id"]; ok {
+					geoRegionsLoadItem.RegionId = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := dMap["split"]; ok {
-					testData.Split = helper.Bool(v.(bool))
+				if v, ok := GeoRegionsLoadDistributionMap["region"]; ok {
+					geoRegionsLoadItem.Region = helper.String(v.(string))
 				}
-				if v, ok := dMap["header_in_file"]; ok {
-					testData.HeaderInFile = helper.Bool(v.(bool))
+				if v, ok := GeoRegionsLoadDistributionMap["percentage"]; ok {
+					geoRegionsLoadItem.Percentage = helper.Int64(int64(v.(int)))
 				}
-				if v, ok := dMap["header_columns"]; ok {
-					headerColumnsSet := v.(*schema.Set).List()
-					for i := range headerColumnsSet {
-						headerColumns := headerColumnsSet[i].(string)
-						testData.HeaderColumns = append(testData.HeaderColumns, &headerColumns)
-					}
-				}
-				if v, ok := dMap["line_count"]; ok {
-					testData.LineCount = helper.Int64(int64(v.(int)))
-				}
-				if v, ok := dMap["updated_at"]; ok {
-					testData.UpdatedAt = helper.String(v.(string))
-				}
-				if v, ok := dMap["size"]; ok {
-					testData.Size = helper.Int64(int64(v.(int)))
-				}
-				if v, ok := dMap["head_lines"]; ok {
-					headLinesSet := v.(*schema.Set).List()
-					for i := range headLinesSet {
-						headLines := headLinesSet[i].(string)
-						testData.HeadLines = append(testData.HeadLines, &headLines)
-					}
-				}
-				if v, ok := dMap["tail_lines"]; ok {
-					tailLinesSet := v.(*schema.Set).List()
-					for i := range tailLinesSet {
-						tailLines := tailLinesSet[i].(string)
-						testData.TailLines = append(testData.TailLines, &tailLines)
-					}
-				}
-				if v, ok := dMap["type"]; ok {
-					testData.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["file_id"]; ok {
-					testData.FileId = helper.String(v.(string))
-				}
-
-				request.Datasets = append(request.Datasets, &testData)
+				load.GeoRegionsLoadDistribution = append(load.GeoRegionsLoadDistribution, &geoRegionsLoadItem)
 			}
 		}
 
+		request.Load = &load
 	}
 
-	if d.HasChange("extensions") {
-		if v, ok := d.GetOk("extensions"); ok {
-			extensionsSet := v.(*schema.Set).List()
-			for i := range extensionsSet {
-				extensions := extensionsSet[i].(string)
-				request.Extensions = append(request.Extensions, &extensions)
+	if v, ok := d.GetOk("datasets"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			testData := pts.TestData{}
+			if v, ok := dMap["name"]; ok {
+				testData.Name = helper.String(v.(string))
 			}
-		}
-	}
-
-	if d.HasChange("cron_id") {
-		if v, ok := d.GetOk("cron_id"); ok {
-			request.CronId = helper.String(v.(string))
-		}
-
-	}
-
-	if d.HasChange("test_scripts") {
-		if v, ok := d.GetOk("test_scripts"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				scriptInfo := pts.ScriptInfo{}
-				if v, ok := dMap["name"]; ok {
-					scriptInfo.Name = helper.String(v.(string))
-				}
-				if v, ok := dMap["size"]; ok {
-					scriptInfo.Size = helper.Int64(int64(v.(int)))
-				}
-				if v, ok := dMap["type"]; ok {
-					scriptInfo.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["updated_at"]; ok {
-					scriptInfo.UpdatedAt = helper.String(v.(string))
-				}
-				if v, ok := dMap["encoded_content"]; ok {
-					scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
-				}
-				if v, ok := dMap["encoded_http_archive"]; ok {
-					scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
-				}
-				if v, ok := dMap["load_weight"]; ok {
-					scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
-				}
-
-				request.TestScripts = append(request.TestScripts, &scriptInfo)
+			if v, ok := dMap["split"]; ok {
+				testData.Split = helper.Bool(v.(bool))
 			}
-		}
-
-	}
-
-	if d.HasChange("protocols") {
-		if v, ok := d.GetOk("protocols"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				protocolInfo := pts.ProtocolInfo{}
-				if v, ok := dMap["name"]; ok {
-					protocolInfo.Name = helper.String(v.(string))
-				}
-				if v, ok := dMap["size"]; ok {
-					protocolInfo.Size = helper.Int64(int64(v.(int)))
-				}
-				if v, ok := dMap["type"]; ok {
-					protocolInfo.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["updated_at"]; ok {
-					protocolInfo.UpdatedAt = helper.String(v.(string))
-				}
-				if v, ok := dMap["file_id"]; ok {
-					protocolInfo.FileId = helper.String(v.(string))
-				}
-
-				request.Protocols = append(request.Protocols, &protocolInfo)
+			if v, ok := dMap["header_in_file"]; ok {
+				testData.HeaderInFile = helper.Bool(v.(bool))
 			}
-		}
-
-	}
-
-	if d.HasChange("request_files") {
-		if v, ok := d.GetOk("request_files"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				fileInfo := pts.FileInfo{}
-				if v, ok := dMap["name"]; ok {
-					fileInfo.Name = helper.String(v.(string))
+			if v, ok := dMap["header_columns"]; ok {
+				headerColumnsSet := v.(*schema.Set).List()
+				for i := range headerColumnsSet {
+					headerColumns := headerColumnsSet[i].(string)
+					testData.HeaderColumns = append(testData.HeaderColumns, &headerColumns)
 				}
-				if v, ok := dMap["size"]; ok {
-					fileInfo.Size = helper.Int64(int64(v.(int)))
-				}
-				if v, ok := dMap["type"]; ok {
-					fileInfo.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["updated_at"]; ok {
-					fileInfo.UpdatedAt = helper.String(v.(string))
-				}
-				if v, ok := dMap["file_id"]; ok {
-					fileInfo.FileId = helper.String(v.(string))
-				}
-
-				request.RequestFiles = append(request.RequestFiles, &fileInfo)
 			}
-		}
+			if v, ok := dMap["line_count"]; ok {
+				testData.LineCount = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["updated_at"]; ok {
+				testData.UpdatedAt = helper.String(v.(string))
+			}
+			if v, ok := dMap["size"]; ok {
+				testData.Size = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["head_lines"]; ok {
+				headLinesSet := v.(*schema.Set).List()
+				for i := range headLinesSet {
+					headLines := headLinesSet[i].(string)
+					testData.HeadLines = append(testData.HeadLines, &headLines)
+				}
+			}
+			if v, ok := dMap["tail_lines"]; ok {
+				tailLinesSet := v.(*schema.Set).List()
+				for i := range tailLinesSet {
+					tailLines := tailLinesSet[i].(string)
+					testData.TailLines = append(testData.TailLines, &tailLines)
+				}
+			}
+			if v, ok := dMap["type"]; ok {
+				testData.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["file_id"]; ok {
+				testData.FileId = helper.String(v.(string))
+			}
 
+			request.Datasets = append(request.Datasets, &testData)
+		}
 	}
 
-	if d.HasChange("sla_policy") {
+	if v, ok := d.GetOk("extensions"); ok {
+		extensionsSet := v.(*schema.Set).List()
+		for i := range extensionsSet {
+			extensions := extensionsSet[i].(string)
+			request.Extensions = append(request.Extensions, &extensions)
+		}
+	}
+
+	if v, ok := d.GetOk("cron_id"); ok {
+		request.CronId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("test_scripts"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			scriptInfo := pts.ScriptInfo{}
+			if v, ok := dMap["name"]; ok {
+				scriptInfo.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["size"]; ok {
+				scriptInfo.Size = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["type"]; ok {
+				scriptInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["updated_at"]; ok {
+				scriptInfo.UpdatedAt = helper.String(v.(string))
+			}
+			if v, ok := dMap["encoded_content"]; ok {
+				scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
+			}
+			if v, ok := dMap["encoded_http_archive"]; ok {
+				scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
+			}
+			if v, ok := dMap["load_weight"]; ok {
+				scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
+			}
+
+			request.TestScripts = append(request.TestScripts, &scriptInfo)
+		}
+	}
+
+	if v, ok := d.GetOk("protocols"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			protocolInfo := pts.ProtocolInfo{}
+			if v, ok := dMap["name"]; ok {
+				protocolInfo.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["size"]; ok {
+				protocolInfo.Size = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["type"]; ok {
+				protocolInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["updated_at"]; ok {
+				protocolInfo.UpdatedAt = helper.String(v.(string))
+			}
+			if v, ok := dMap["file_id"]; ok {
+				protocolInfo.FileId = helper.String(v.(string))
+			}
+
+			request.Protocols = append(request.Protocols, &protocolInfo)
+		}
+	}
+
+	if v, ok := d.GetOk("request_files"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			fileInfo := pts.FileInfo{}
+			if v, ok := dMap["name"]; ok {
+				fileInfo.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["size"]; ok {
+				fileInfo.Size = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["type"]; ok {
+				fileInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["updated_at"]; ok {
+				fileInfo.UpdatedAt = helper.String(v.(string))
+			}
+			if v, ok := dMap["file_id"]; ok {
+				fileInfo.FileId = helper.String(v.(string))
+			}
+
+			request.RequestFiles = append(request.RequestFiles, &fileInfo)
+		}
+	}
+
+	if _, ok := d.GetOk("sla_policy"); ok {
 		if dMap, ok := helper.InterfacesHeadMap(d, "sla_policy"); ok {
 			sLAPolicy := pts.SLAPolicy{}
 			if v, ok := dMap["sla_rules"]; ok {
@@ -2039,71 +2014,64 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 
 			request.SLAPolicy = &sLAPolicy
 		}
-
 	}
 
-	if d.HasChange("plugins") {
-		if v, ok := d.GetOk("plugins"); ok {
+	if v, ok := d.GetOk("plugins"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			fileInfo := pts.FileInfo{}
+			if v, ok := dMap["name"]; ok {
+				fileInfo.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["size"]; ok {
+				fileInfo.Size = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := dMap["type"]; ok {
+				fileInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["updated_at"]; ok {
+				fileInfo.UpdatedAt = helper.String(v.(string))
+			}
+			if v, ok := dMap["file_id"]; ok {
+				fileInfo.FileId = helper.String(v.(string))
+			}
+
+			request.Plugins = append(request.Plugins, &fileInfo)
+		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "domain_name_config"); ok {
+		domainNameConfig := pts.DomainNameConfig{}
+		if v, ok := dMap["host_aliases"]; ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				fileInfo := pts.FileInfo{}
-				if v, ok := dMap["name"]; ok {
-					fileInfo.Name = helper.String(v.(string))
+				HostAliasesMap := item.(map[string]interface{})
+				hostAlias := pts.HostAlias{}
+				if v, ok := HostAliasesMap["host_names"]; ok {
+					hostNamesSet := v.(*schema.Set).List()
+					for i := range hostNamesSet {
+						hostNames := hostNamesSet[i].(string)
+						hostAlias.HostNames = append(hostAlias.HostNames, &hostNames)
+					}
 				}
-				if v, ok := dMap["size"]; ok {
-					fileInfo.Size = helper.Int64(int64(v.(int)))
+				if v, ok := HostAliasesMap["ip"]; ok {
+					hostAlias.IP = helper.String(v.(string))
 				}
-				if v, ok := dMap["type"]; ok {
-					fileInfo.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["updated_at"]; ok {
-					fileInfo.UpdatedAt = helper.String(v.(string))
-				}
-				if v, ok := dMap["file_id"]; ok {
-					fileInfo.FileId = helper.String(v.(string))
-				}
-
-				request.Plugins = append(request.Plugins, &fileInfo)
+				domainNameConfig.HostAliases = append(domainNameConfig.HostAliases, &hostAlias)
 			}
 		}
-
-	}
-
-	if d.HasChange("domain_name_config") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "domain_name_config"); ok {
-			domainNameConfig := pts.DomainNameConfig{}
-			if v, ok := dMap["host_aliases"]; ok {
-				for _, item := range v.([]interface{}) {
-					HostAliasesMap := item.(map[string]interface{})
-					hostAlias := pts.HostAlias{}
-					if v, ok := HostAliasesMap["host_names"]; ok {
-						hostNamesSet := v.(*schema.Set).List()
-						for i := range hostNamesSet {
-							hostNames := hostNamesSet[i].(string)
-							hostAlias.HostNames = append(hostAlias.HostNames, &hostNames)
-						}
-					}
-					if v, ok := HostAliasesMap["ip"]; ok {
-						hostAlias.IP = helper.String(v.(string))
-					}
-					domainNameConfig.HostAliases = append(domainNameConfig.HostAliases, &hostAlias)
+		if DNSConfigMap, ok := helper.InterfaceToMap(dMap, "dns_config"); ok {
+			dNSConfig := pts.DNSConfig{}
+			if v, ok := DNSConfigMap["nameservers"]; ok {
+				nameserversSet := v.(*schema.Set).List()
+				for i := range nameserversSet {
+					nameservers := nameserversSet[i].(string)
+					dNSConfig.Nameservers = append(dNSConfig.Nameservers, &nameservers)
 				}
 			}
-			if DNSConfigMap, ok := helper.InterfaceToMap(dMap, "dns_config"); ok {
-				dNSConfig := pts.DNSConfig{}
-				if v, ok := DNSConfigMap["nameservers"]; ok {
-					nameserversSet := v.(*schema.Set).List()
-					for i := range nameserversSet {
-						nameservers := nameserversSet[i].(string)
-						dNSConfig.Nameservers = append(dNSConfig.Nameservers, &nameservers)
-					}
-				}
-				domainNameConfig.DNSConfig = &dNSConfig
-			}
-
-			request.DomainNameConfig = &domainNameConfig
+			domainNameConfig.DNSConfig = &dNSConfig
 		}
 
+		request.DomainNameConfig = &domainNameConfig
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
