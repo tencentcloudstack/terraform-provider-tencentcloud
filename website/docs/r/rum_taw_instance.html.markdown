@@ -1,0 +1,71 @@
+---
+subcategory: "Real User Monitoring(RUM)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_rum_taw_instance"
+sidebar_current: "docs-tencentcloud-resource-rum_taw_instance"
+description: |-
+  Provides a resource to create a rum taw_instance
+---
+
+# tencentcloud_rum_taw_instance
+
+Provides a resource to create a rum taw_instance
+
+## Example Usage
+
+```hcl
+resource "tencentcloud_rum_taw_instance" "taw_instance" {
+  area_id             = ""
+  charge_type         = ""
+  data_retention_days = ""
+  instance_name       = ""
+  tags {
+    key   = ""
+    value = ""
+
+  }
+  instance_desc  = ""
+  count_num      = ""
+  period_retain  = ""
+  buying_channel = ""
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `area_id` - (Required, Int) Region ID (at least greater than 0).
+* `charge_type` - (Required, Int) Billing type (1: Pay-as-you-go).
+* `data_retention_days` - (Required, Int) Data retention period (at least greater than 0).
+* `instance_name` - (Required, String) Instance name (up to 255 bytes).
+* `buying_channel` - (Optional, String) Instance purchase channel. Valid value: cdn.
+* `count_num` - (Optional, String) Number of data entries reported per day.
+* `instance_desc` - (Optional, String) Instance description (up to 1,024 bytes).
+* `period_retain` - (Optional, String) Billing for data storage.
+* `tags` - (Optional, List) Tag list.
+
+The `tags` object supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Required, String) Tag value.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `charge_status` - Billing status (`1` = in use, `2` = expired, `3` = destroyed, `4` = assigning, `5` = failed).
+* `cluster_id` - Cluster ID.
+* `created_at` - Create time.
+* `instance_status` - Instance status (`1` = creating, `2` = running, `3` = exception, `4` = restarting, `5` = stopping, `6` = stopped, `7` = deleted).
+* `updated_at` - Update time.
+
+
+## Import
+
+rum taw_instance can be imported using the id, e.g.
+```
+$ terraform import tencentcloud_rum_taw_instance.taw_instance tawInstance_id
+```
+

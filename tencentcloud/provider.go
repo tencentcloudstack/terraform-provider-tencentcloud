@@ -746,6 +746,13 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
+Real User Monitoring(RUM)
+  Resource
+	tencentcloud_rum_project
+	tencentcloud_rum_taw_instance
+	tencentcloud_rum_whitelist
+	tencentcloud_rum_offline_log_config_attachment
+
 */
 package tencentcloud
 
@@ -1335,6 +1342,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_parameters":                   resourceTencentCloudMariadbParameters(),
 			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_rum_project":                          resourceTencentCloudRumProject(),
+			"tencentcloud_rum_taw_instance":                     resourceTencentCloudRumTawInstance(),
+			"tencentcloud_rum_whitelist":                        resourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_offline_log_config_attachment":    resourceTencentCloudRumOfflineLogConfigAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
