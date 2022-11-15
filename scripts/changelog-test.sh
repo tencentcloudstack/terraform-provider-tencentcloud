@@ -30,8 +30,8 @@ done
 echo "test files:" $test_files
 
 for test_file in $test_files; do
-    test_case_type=${test_file%_tc*}
-    test_case_name=${test_file#*tc_}
+    test_case_type=${test_file%_tc_*}
+    test_case_name=${test_file#*_tc_}
     test_case_name=${test_case_name%.*}
 
     test_case_type=`echo $test_case_type | sed -r 's/(^|_)(\w)/\U\2/g'`

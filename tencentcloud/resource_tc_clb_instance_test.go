@@ -367,7 +367,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
+  name       = "clb-instance-internal-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -398,7 +398,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-guagua-ci-temp-test"
+  name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -423,7 +423,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-clb-temp-test"
+  name       = "clb-instance-internal-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -454,7 +454,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-clb-temp-test"
+  name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -493,7 +493,7 @@ resource "tencentcloud_security_group" "sglab" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "keep-for-my-open-clb"
+  name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
 
   tags = {
@@ -538,7 +538,7 @@ resource "tencentcloud_security_group" "sglab" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "keep-for-my-open-clb"
+  name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
 
   tags = {
