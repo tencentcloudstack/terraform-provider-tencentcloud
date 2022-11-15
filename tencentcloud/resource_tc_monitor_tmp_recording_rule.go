@@ -89,7 +89,7 @@ func resourceTencentCloudMonitorTmpRecordingRuleCreate(d *schema.ResourceData, m
 		request.Name = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("group"); ok {
-		request.Group = helper.String(YamlToBase64(v.(string)))
+		request.Group = helper.String(StringToBase64(v.(string)))
 	}
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -152,7 +152,7 @@ func resourceTencentCloudMonitorTmpRecordingRuleRead(d *schema.ResourceData, met
 		_ = d.Set("name", recordingRule.Name)
 	}
 	if recordingRule.Group != nil {
-		group, err := Base64ToYaml(*recordingRule.Group)
+		group, err := Base64ToString(*recordingRule.Group)
 		if err != nil {
 			return fmt.Errorf("`recordingRule.Group` %s does not be decoded to yaml", *recordingRule.Group)
 		}
