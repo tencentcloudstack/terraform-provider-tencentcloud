@@ -102,7 +102,6 @@ func resourceTencentCloudTdcpgInstanceCreate(d *schema.ResourceData, meta interf
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
 		request.ClusterId = helper.String(v.(string))
 	}
 
@@ -228,8 +227,9 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId = getLogId(contextNil)
-		// ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = TdcpgService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = tdcpg.NewModifyClusterInstancesSpecRequest()
 		ids        = strings.Split(d.Id(), FILED_SP)
 		clusterId  = ids[0]
@@ -239,22 +239,16 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 	request.ClusterId = &clusterId
 	request.InstanceIdSet = []*string{helper.String(instanceId)}
 
-	if d.HasChange("cpu") {
-		if v, ok := d.GetOk("cpu"); ok {
-			request.CPU = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOk("cpu"); ok {
+		request.CPU = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("memory") {
-		if v, ok := d.GetOk("memory"); ok {
-			request.Memory = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOk("memory"); ok {
+		request.Memory = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("operation_timing") {
-		if v, ok := d.GetOk("operation_timing"); ok {
-			request.OperationTiming = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("operation_timing"); ok {
+		request.OperationTiming = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -269,7 +263,32 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		log.Printf("[CRITICAL]%s create tdcpg instance failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s modify tdcpg instance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// check the instance value to make sure modify successfully.
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		instances, e := service.DescribeTdcpgInstance(ctx, &clusterId, &instanceId)
+		if e != nil {
+			return retryError(e)
+		}
+
+		if instances != nil && instances.InstanceSet != nil {
+			instance:=*instances.InstanceSet[0]
+
+			if *instance.Status == "running" {
+				if int(*instance.CPU) != d.Get("cpu").(int) || int(*instance.Memory) != d.Get("memory").(int) {
+					return resource.RetryableError(fmt.Errorf("the modify instance[%s] operation still on going, retry...", d.Id()))
+				}
+				return nil
+			}
+			return resource.NonRetryableError(fmt.Errorf("tdcpg instance[%s] status is invalid, exit!", d.Id()))
+		}
+		return resource.RetryableError(fmt.Errorf("can not get tdcpg instance[%s] status, retry...", d.Id()))
+	})
+
+	if err != nil {
 		return err
 	}
 

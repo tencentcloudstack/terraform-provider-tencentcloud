@@ -79,7 +79,7 @@ func TestAccTencentCloudTdcpgInstanceResource_basic(t *testing.T) {
 					testAccCheckTdcpgInstanceExists("tencentcloud_tdcpg_instance.instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "cluster_id", defaultTdcpgClusterId),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "cpu", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "memory", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "memory", "4"),
 					resource.TestMatchResourceAttr("tencentcloud_tdcpg_instance.instance", "instance_name", regexp.MustCompile(defaultTdcpgTestNamePrefix)),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "operation_timing", "IMMEDIATE"),
 				),
@@ -164,7 +164,7 @@ const testAccTdcpgInstance_update = `
 resource "tencentcloud_tdcpg_instance" "instance" {
   cluster_id = "%s"
   cpu = 2
-  memory = 2
+  memory = 4
   operation_timing = "IMMEDIATE"
 }
 

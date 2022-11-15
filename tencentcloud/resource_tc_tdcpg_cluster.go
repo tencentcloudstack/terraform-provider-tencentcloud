@@ -397,10 +397,8 @@ func resourceTencentCloudTdcpgClusterUpdate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("`pay_mode` do not support change now.")
 	}
 
-	if d.HasChange("cluster_name") {
-		if v, ok := d.GetOk("cluster_name"); ok {
-			request.ClusterName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("cluster_name"); ok {
+		request.ClusterName = helper.String(v.(string))
 	}
 
 	if d.HasChange("db_version") {
