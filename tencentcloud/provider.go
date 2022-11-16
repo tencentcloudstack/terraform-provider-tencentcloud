@@ -758,6 +758,7 @@ Performance Testing Service(PTS)
 TencentCloud Automation Tools(TAT)
   Data Source
 	tencentcloud_tat_command
+	tencentcloud_tat_invoker
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
@@ -1074,6 +1075,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
