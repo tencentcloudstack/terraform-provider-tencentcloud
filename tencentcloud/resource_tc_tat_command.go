@@ -23,7 +23,7 @@ Import
 
 tat command can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_tat_command.command command_id
+$ terraform import tencentcloud_tat_command.command cmd-6fydo27j
 ```
 */
 package tencentcloud

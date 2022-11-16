@@ -758,6 +758,7 @@ Performance Testing Service(PTS)
 TencentCloud Automation Tools(TAT)
   Resource
 	tencentcloud_tat_command
+	tencentcloud_tat_invoker
 */
 package tencentcloud
 
@@ -1354,6 +1355,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_job":                              resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
 			"tencentcloud_tat_command":                          resourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                          resourceTencentCloudTatInvoker(),
 		},
 
 		ConfigureFunc: providerConfigure,
