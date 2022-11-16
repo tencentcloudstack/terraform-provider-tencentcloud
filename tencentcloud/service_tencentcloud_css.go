@@ -26,7 +26,7 @@ func (me *CssService) DescribeCssWatermark(ctx context.Context, watermarkId stri
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	
+
 	request.WatermarkId = helper.Int64Uint64(helper.StrToInt64(watermarkId))
 
 	response, err := me.client.UseCssClient().DescribeLiveWatermark(request)
@@ -109,9 +109,9 @@ func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, doma
 
 	request := css.NewDeleteLiveWatermarkRuleRequest()
 
-	request.DomainName = &domainName
-	request.AppName = &appName
-	request.StreamName = &streamName
+	request.DomainName = helper.String(domainName)
+	request.AppName = helper.String(appName)
+	request.StreamName = helper.String(streamName)
 
 	defer func() {
 		if errRet != nil {
@@ -132,7 +132,7 @@ func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, doma
 	return
 }
 
-func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId string) (pullStreamTask *css.PullStreamTaskInfo, errRet error) {
+func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId string) (tasks []*css.PullStreamTaskInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = css.NewDescribeLivePullStreamTasksRequest()
@@ -144,7 +144,10 @@ func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId stri
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.TaskId = &taskId
+
+	if taskId != "" {
+		request.TaskId = &taskId
+	}
 
 	response, err := me.client.UseCssClient().DescribeLivePullStreamTasks(request)
 	if err != nil {
@@ -155,10 +158,10 @@ func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId stri
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.TaskInfos) < 1 {
+	if response.Response.TaskInfos != nil || len(response.Response.TaskInfos) < 1 {
 		return
 	}
-	pullStreamTask = response.Response.TaskInfos[0]
+	tasks = response.Response.TaskInfos
 	return
 }
 
@@ -178,6 +181,157 @@ func (me *CssService) DeleteCssPullStreamTaskById(ctx context.Context, taskId st
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCssClient().DeleteLivePullStreamTask(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CssService) DescribeCssLiveTranscodeTemplate(ctx context.Context, templateId *int64) (liveTranscodeTemplate *css.TemplateInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeLiveTranscodeTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.TemplateId = templateId
+
+	response, err := me.client.UseCssClient().DescribeLiveTranscodeTemplate(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response.Template == nil {
+		return
+	}
+	liveTranscodeTemplate = response.Response.Template
+	return
+}
+
+func (me *CssService) DescribeCssLiveTranscodeTemplates(ctx context.Context) (temps []*css.TemplateInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeLiveTranscodeTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseCssClient().DescribeLiveTranscodeTemplates(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response.Templates == nil || len(response.Response.Templates) < 1 {
+		return
+	}
+	temps = response.Response.Templates
+	return
+}
+
+func (me *CssService) DeleteCssLiveTranscodeTemplateById(ctx context.Context, templateId *int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDeleteLiveTranscodeTemplateRequest()
+
+	request.TemplateId = templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCssClient().DeleteLiveTranscodeTemplate(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context, domainName, templateId *string) (liveTranscodeRuleAttachment *css.RuleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeLiveTranscodeRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if domainName != nil {
+		request.DomainNames = []*string{domainName}
+	}
+
+	if templateId != nil {
+		request.TemplateIds = []*int64{helper.Int64(helper.StrToInt64(*templateId))}
+	}
+
+	response, err := me.client.UseCssClient().DescribeLiveTranscodeRules(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.Rules) < 1 {
+		return
+	}
+	liveTranscodeRuleAttachment = response.Response.Rules[0]
+	return
+}
+
+func (me *CssService) DeleteCssLiveTranscodeRuleAttachmentById(ctx context.Context, domainName, appName, streamName, templateId *string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDeleteLiveTranscodeRuleRequest()
+
+	request.DomainName = domainName
+	request.AppName = appName
+	request.StreamName = streamName
+	request.TemplateId = helper.Int64(helper.StrToInt64(*templateId))
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCssClient().DeleteLiveTranscodeRule(request)
 	if err != nil {
 		errRet = err
 		return err

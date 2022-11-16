@@ -8,7 +8,7 @@ resource "tencentcloud_css_pull_stream_task" "pull_stream_task" {
   source_type = "PullLivePushLive"
   source_urls = ""
   domain_name = ""
-  app_name = ""
+  app_name = "live"
   stream_name = ""
   start_time = ""
   end_time = ""
@@ -426,17 +426,18 @@ func resourceTencentCloudCssPullStreamTaskRead(d *schema.ResourceData, meta inte
 
 	taskId := d.Id()
 
-	pullStreamTask, err := service.DescribeCssPullStreamTask(ctx, taskId)
+	result, err := service.DescribeCssPullStreamTask(ctx, taskId)
 
 	if err != nil {
 		return err
 	}
 
-	if pullStreamTask == nil {
+	if result == nil || len(result) < 1 {
 		d.SetId("")
 		return fmt.Errorf("resource `pullStreamTask` %s does not exist", taskId)
 	}
 
+	pullStreamTask := result[0]
 	if pullStreamTask.SourceType != nil {
 		_ = d.Set("source_type", pullStreamTask.SourceType)
 	}
