@@ -5,22 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tat_command" "command" {
-  command_name = ""
-  content = ""
-  description = ""
-  command_type = ""
-  working_directory = ""
-  timeout = ""
-  enable_parameter = ""
-  default_parameters = ""
+  username          = "root"
+  command_name      = "ls"
+  content           = "bHM="
+  description       = "xxx"
+  command_type      = "SHELL"
+  working_directory = "/root"
+  timeout = 50
   tags {
-			key = ""
-			value = ""
-
+	key = ""
+	value = ""
   }
-  username = ""
-  output_cos_bucket_url = ""
-  output_cos_key_prefix = ""
 }
 
 ```
