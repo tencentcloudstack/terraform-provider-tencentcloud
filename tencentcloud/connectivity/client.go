@@ -61,6 +61,7 @@ import (
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -137,6 +138,7 @@ type TencentCloudClient struct {
 	catConn            *cat.Client
 	mariadbConn        *mariadb.Client
 	ptsConn            *pts.Client
+	tatConn            *tat.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -866,6 +868,19 @@ func (me *TencentCloudClient) UsePtsClient() *pts.Client {
 	me.ptsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ptsConn
+}
+
+// UseTatClient returns tat client for service
+func (me *TencentCloudClient) UseTatClient() *tat.Client {
+	if me.tatConn != nil {
+		return me.tatConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tatConn, _ = tat.NewClient(me.Credential, me.Region, cpf)
+	me.tatConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tatConn
 }
 
 func getEnvDefault(key string, defVal int) int {
