@@ -49,7 +49,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 }
 ```
 
-Use Kubelet
+Adding three worker nodes to the cluster
 
 ```hcl
 variable "availability_zone" {
