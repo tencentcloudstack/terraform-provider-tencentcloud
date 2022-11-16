@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func init() {
@@ -34,19 +35,19 @@ func testSweepCSSPullStreamTask(r string) error {
 	}
 
 	for _, v := range info {
-		delName :=*v.StreamName
-		delId:=*v.TaskId
+		delName := v.StreamName
+		delId := v.TaskId
 
-		if strings.HasPrefix(delName, "test_") {
+		if strings.HasPrefix(*delName, "test_") {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				err := cssService.DeleteCssPullStreamTaskById(ctx, delId)
+				err := cssService.DeleteCssPullStreamTaskById(ctx, delId, helper.String(defaultCSSOperator))
 				if err != nil {
 					return retryError(err)
 				}
 				return nil
 			})
 			if err != nil {
-				return fmt.Errorf("[ERROR] instance %s:%s failed! reason:[%s]", delName,delId, err.Error())
+				return fmt.Errorf("[ERROR] instance %s:%s failed! reason:[%s]", *delName, *delId, err.Error())
 			}
 		}
 	}
@@ -55,39 +56,64 @@ func testSweepCSSPullStreamTask(r string) error {
 
 func TestAccTencentCloudCSSPullStreamTaskResource_basic(t *testing.T) {
 	t.Parallel()
-	startTime := time.Now().Add(2*time.Hour).Format("2006-01-02T15:04:05+08:00")
-	endTime := time.Now().Add(4*time.Hour).Format("2006-01-02T15:04:05+08:00")
+	baseTime := time.Now().UTC().Add(10 * time.Hour)
+	startTime := baseTime.Format(time.RFC3339)
+	endTime := baseTime.Add(1 * time.Hour).Format(time.RFC3339)
+	startTimeNew := baseTime.Add(30 * time.Minute).Format(time.RFC3339)
+	endTimeNew := baseTime.Add(2 * time.Hour).Format(time.RFC3339)
+	liveUrl := "rtmp://5000.liveplay.myqcloud.com/live/stream1"
+	// vodUrl := "https://main.qcloudimg.com/video/TVP_HOME.mp4"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCssPullStreamTaskDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreventDiskCleanup: false,
-				Config: fmt.Sprintf(testAccCssPullStreamTask, startTime, endTime),
-				Check: resource.ComposeTestCheckFunc(
+				// PreventDiskCleanup: false,
+				Config: fmt.Sprintf(testAccCssPullStreamTask, defaultCSSLiveType, liveUrl, defaultCSSDomainName, defaultCSSAppName, defaultCSSStreamName, startTime, endTime, defaultCSSOperator),
+				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCssPullStreamTaskExists("tencentcloud_css_pull_stream_task.pull_stream_task"),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "app_name", "live"),
-					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "stream_name", "test_stream_name"),
-					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "domain_name", "177154.push.tlivecloud.com"),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "app_name", defaultCSSAppName),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "stream_name", defaultCSSStreamName),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "domain_name", defaultCSSDomainName),
 					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "comment", "This is a e2e test case."),
-					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "source_type", "PullLivePushLive"),
-					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "start_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "end_time"),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "source_type", defaultCSSLiveType),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "start_time", startTime),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "end_time", endTime),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "update_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "callback_events.#"),
-					
 					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "source_urls.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "create_by"),
-					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "push_args"),
-
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_css_pull_stream_task.pullStreamTask",
-				ImportState:       true,
-				ImportStateVerify: true,
+				// update
+				Config: fmt.Sprintf(testAccCssPullStreamTask_update, defaultCSSLiveType, liveUrl, defaultCSSDomainName, defaultCSSAppName, defaultCSSStreamName, startTimeNew, endTimeNew, defaultCSSOperator),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCssPullStreamTaskExists("tencentcloud_css_pull_stream_task.pull_stream_task"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "app_name", defaultCSSAppName),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "stream_name", defaultCSSStreamName),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "domain_name", defaultCSSDomainName),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "comment", "This is a e2e test case_changed."),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "source_type", defaultCSSLiveType),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "start_time", startTimeNew),
+					resource.TestCheckResourceAttr("tencentcloud_css_pull_stream_task.pull_stream_task", "end_time", endTimeNew),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "update_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "callback_events.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "source_urls.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_pull_stream_task.pull_stream_task", "create_by"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_css_pull_stream_task.pull_stream_task",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"operator"},
 			},
 		},
 	})
@@ -144,14 +170,29 @@ func testAccCheckCssPullStreamTaskExists(re string) resource.TestCheckFunc {
 const testAccCssPullStreamTask = `
 
 resource "tencentcloud_css_pull_stream_task" "pull_stream_task" {
-  source_type = "PullLivePushLive"
-  source_urls = ["rtmp://5000.liveplay.myqcloud.com/live/stream1"]
-  domain_name = "177154.push.tlivecloud.com"
-  app_name = "live"
-  stream_name = "test_stream_name"
+  source_type = "%s"
+  source_urls = ["%s"]
+  domain_name = "%s"
+  app_name = "%s"
+  stream_name = "%s"
   start_time = "%s"
   end_time = "%s"
-  operator = "tf_admin"
+  operator = "%s"
   comment = "This is a e2e test case."
+}
+`
+
+const testAccCssPullStreamTask_update = `
+
+resource "tencentcloud_css_pull_stream_task" "pull_stream_task" {
+  source_type = "%s"
+  source_urls = ["%s"]
+  domain_name = "%s"
+  app_name = "%s"
+  stream_name = "%s"
+  start_time = "%s"
+  end_time = "%s"
+  operator = "%s_changed"
+  comment = "This is a e2e test case_changed."
 }
 `

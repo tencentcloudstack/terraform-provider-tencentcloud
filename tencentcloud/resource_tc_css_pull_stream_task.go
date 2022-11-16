@@ -115,7 +115,7 @@ func resourceTencentCloudCssPullStreamTask() *schema.Resource {
 
 			"operator": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "desc operator user name.",
 			},
 
@@ -131,18 +131,21 @@ func resourceTencentCloudCssPullStreamTask() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Optional:    true,
+				Computed:    true,
 				Description: "defind the callback event you need, null for all. TaskStart, TaskExit, VodSourceFileStart, VodSourceFileFinish, ResetTaskConfig, PullFileUnstable, PushStreamUnstable, PullFileFailed, PushStreamFailed, FileEndEarly.",
 			},
 
 			"vod_loop_times": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "loop time for vod.",
 			},
 
 			"vod_refresh_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "vod refresh method. &amp;#39;ImmediateNewSource&amp;#39;: switch to new source at once, &amp;#39;ContinueBreakPoint&amp;#39;: switch to new source while old source finish.",
 			},
 
@@ -225,6 +228,7 @@ func resourceTencentCloudCssPullStreamTask() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "task enable or disable.",
 			},
 
@@ -405,7 +409,7 @@ func resourceTencentCloudCssPullStreamTaskCreate(d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create css pullStreamTask failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s create css pullStreamTask failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -431,7 +435,7 @@ func resourceTencentCloudCssPullStreamTaskRead(d *schema.ResourceData, meta inte
 	if err != nil {
 		return err
 	}
-
+	log.Printf("[CRITICAL]##########%v ", len(result))
 	if result == nil || len(result) < 1 {
 		d.SetId("")
 		return fmt.Errorf("resource `pullStreamTask` %s does not exist", taskId)
@@ -587,9 +591,7 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 	request.TaskId = &taskId
 
 	if d.HasChange("source_type") {
-
 		return fmt.Errorf("`source_type` do not support change now.")
-
 	}
 
 	if d.HasChange("source_urls") {
@@ -633,9 +635,7 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 	}
 
 	if d.HasChange("push_args") {
-
 		return fmt.Errorf("`push_args` do not support change now.")
-
 	}
 
 	if d.HasChange("callback_events") {
@@ -646,61 +646,50 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 				request.CallbackEvents = append(request.CallbackEvents, &callbackEvents)
 			}
 		}
-
 	}
 
 	if d.HasChange("vod_loop_times") {
 		if v, ok := d.GetOk("vod_loop_times"); ok {
 			request.VodLoopTimes = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("vod_refresh_type") {
 		if v, ok := d.GetOk("vod_refresh_type"); ok {
 			request.VodRefreshType = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("callback_url") {
 		if v, ok := d.GetOk("callback_url"); ok {
 			request.CallbackUrl = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("extra_cmd") {
-
 		return fmt.Errorf("`extra_cmd` do not support change now.")
-
 	}
 
 	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("to_url") {
-
 		return fmt.Errorf("`to_url` do not support change now.")
-
 	}
 
 	if d.HasChange("backup_source_type") {
 		if v, ok := d.GetOk("backup_source_type"); ok {
 			request.BackupSourceType = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("backup_source_url") {
 		if v, ok := d.GetOk("backup_source_url"); ok {
 			request.BackupSourceUrl = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("watermark_list") {
@@ -761,7 +750,7 @@ func resourceTencentCloudCssPullStreamTaskUpdate(d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create css pullStreamTask failed, reason:%+v", logId, err)
+		log.Printf("[CRITICAL]%s create css pullStreamTask failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -772,14 +761,18 @@ func resourceTencentCloudCssPullStreamTaskDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_css_pull_stream_task.delete")()
 	defer inconsistentCheck(d, meta)()
 
+	var operator *string
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	taskId := d.Id()
+	if v, ok := d.GetOk("operator"); ok {
+		operator = helper.String(v.(string))
+	}
 
-	if err := service.DeleteCssPullStreamTaskById(ctx, taskId); err != nil {
+	if err := service.DeleteCssPullStreamTaskById(ctx, helper.String(taskId), operator); err != nil {
 		return err
 	}
 

@@ -795,3 +795,16 @@ const (
 )
 
 // End of PTS
+
+// CSS
+const (
+  defaultCSSLiveType  = "PullLivePushLive"
+  defaultCSSVodType  = "PullVodPushLive"
+	defaultCSSDomainName  = "177154.push.tlivecloud.com"
+	defaultCSSStreamName    = "test_stream_name"
+  defaultCSSAppName    = "live"
+  defaultCSSOperator    = "tf_admin"
+
+)
+
+// End of CSS

@@ -22,7 +22,7 @@ func (me *CssService) DescribeCssWatermark(ctx context.Context, watermarkId stri
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -31,7 +31,7 @@ func (me *CssService) DescribeCssWatermark(ctx context.Context, watermarkId stri
 
 	response, err := me.client.UseCssClient().DescribeLiveWatermark(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
@@ -54,7 +54,7 @@ func (me *CssService) DeleteCssWatermarkById(ctx context.Context, watermarkId st
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -79,7 +79,7 @@ func (me *CssService) DescribeCssWatermarkRuleAttachment(ctx context.Context, do
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -90,7 +90,7 @@ func (me *CssService) DescribeCssWatermarkRuleAttachment(ctx context.Context, do
 
 	response, err := me.client.UseCssClient().DescribeLiveWatermarkRules(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
@@ -115,7 +115,7 @@ func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, doma
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -140,7 +140,7 @@ func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId stri
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -151,30 +151,31 @@ func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId stri
 
 	response, err := me.client.UseCssClient().DescribeLivePullStreamTasks(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if response.Response.TaskInfos != nil || len(response.Response.TaskInfos) < 1 {
+	if response.Response == nil || *response.Response.TotalNum < 1 {
 		return
 	}
 	tasks = response.Response.TaskInfos
 	return
 }
 
-func (me *CssService) DeleteCssPullStreamTaskById(ctx context.Context, taskId string) (errRet error) {
+func (me *CssService) DeleteCssPullStreamTaskById(ctx context.Context, taskId, operator *string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := css.NewDeleteLivePullStreamTaskRequest()
 
-	request.TaskId = &taskId
+	request.TaskId = taskId
+	request.Operator = operator
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -199,7 +200,7 @@ func (me *CssService) DescribeCssLiveTranscodeTemplate(ctx context.Context, temp
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -207,7 +208,7 @@ func (me *CssService) DescribeCssLiveTranscodeTemplate(ctx context.Context, temp
 
 	response, err := me.client.UseCssClient().DescribeLiveTranscodeTemplate(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
@@ -229,14 +230,14 @@ func (me *CssService) DescribeCssLiveTranscodeTemplates(ctx context.Context) (te
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
 	response, err := me.client.UseCssClient().DescribeLiveTranscodeTemplates(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
@@ -259,7 +260,7 @@ func (me *CssService) DeleteCssLiveTranscodeTemplateById(ctx context.Context, te
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -284,7 +285,7 @@ func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
@@ -299,7 +300,7 @@ func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context
 
 	response, err := me.client.UseCssClient().DescribeLiveTranscodeRules(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
@@ -325,7 +326,7 @@ func (me *CssService) DeleteCssLiveTranscodeRuleAttachmentById(ctx context.Conte
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
