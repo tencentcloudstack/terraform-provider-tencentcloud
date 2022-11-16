@@ -756,6 +756,8 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_cron_job
 
 TencentCloud Automation Tools(TAT)
+  Data Source
+	tencentcloud_tat_command
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
@@ -1071,6 +1073,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

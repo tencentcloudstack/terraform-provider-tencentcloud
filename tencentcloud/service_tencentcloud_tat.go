@@ -183,3 +183,89 @@ func (me *TatService) DeleteTatInvokerById(ctx context.Context, invokerId string
 
 	return
 }
+
+func (me *TatService) DescribeTatCommandByFilter(ctx context.Context, param map[string]interface{}) (command []*tat.Command, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tat.NewDescribeCommandsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "command_id" {
+			request.Filters = append(
+				request.Filters,
+				&tat.Filter{
+					Name:   helper.String("command-id"),
+					Values: []*string{v.(*string)},
+				},
+			)
+		}
+
+		if k == "command_name" {
+			request.Filters = append(
+				request.Filters,
+				&tat.Filter{
+					Name:   helper.String("command-name"),
+					Values: []*string{v.(*string)},
+				},
+			)
+		}
+
+		if k == "command_type" {
+			request.Filters = append(
+				request.Filters,
+				&tat.Filter{
+					Name:   helper.String("command-type"),
+					Values: []*string{v.(*string)},
+				},
+			)
+		}
+
+		if k == "created_by" {
+			request.Filters = append(
+				request.Filters,
+				&tat.Filter{
+					Name:   helper.String("created-by"),
+					Values: []*string{v.(*string)},
+				},
+			)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTatClient().DescribeCommands(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CommandSet) < 1 {
+			break
+		}
+		command = append(command, response.Response.CommandSet...)
+		if len(response.Response.CommandSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
