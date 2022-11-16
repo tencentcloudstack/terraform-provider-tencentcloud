@@ -79,6 +79,12 @@ func resourceTencentCloudCssWatermark() *schema.Resource {
 				Optional:    true,
 				Description: "height of the picture.",
 			},
+
+			"status": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "status. 0: not used, 1: used.",
+			},
 		},
 	}
 }
@@ -190,6 +196,10 @@ func resourceTencentCloudCssWatermarkRead(d *schema.ResourceData, meta interface
 		_ = d.Set("height", watermark.Height)
 	}
 
+	if watermark.Status != nil {
+		_ = d.Set("status", watermark.Status)
+	}
+
 	return nil
 }
 
@@ -272,7 +282,7 @@ func resourceTencentCloudCssWatermarkDelete(d *schema.ResourceData, meta interfa
 
 	watermarkId := d.Id()
 
-	if err := service.DeleteCssWatermarkById(ctx, watermarkId); err != nil {
+	if err := service.DeleteCssWatermarkById(ctx, helper.Int64(helper.StrToInt64(watermarkId))); err != nil {
 		return err
 	}
 

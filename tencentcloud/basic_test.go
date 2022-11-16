@@ -798,13 +798,13 @@ const (
 
 // CSS
 const (
-  defaultCSSLiveType  = "PullLivePushLive"
-  defaultCSSVodType  = "PullVodPushLive"
-	defaultCSSDomainName  = "177154.push.tlivecloud.com"
-	defaultCSSStreamName    = "test_stream_name"
-  defaultCSSAppName    = "live"
-  defaultCSSOperator    = "tf_admin"
-
+	defaultCSSLiveType   = "PullLivePushLive"
+	defaultCSSVodType    = "PullVodPushLive"
+	defaultCSSDomainName = "177154.push.tlivecloud.com"
+	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName    = "live"
+	defaultCSSOperator   = "tf_admin"
+	defaultCSSPrefix     = "tf_css_"
 )
 
 // End of CSS

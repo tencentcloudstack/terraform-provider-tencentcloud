@@ -38,7 +38,7 @@ func testSweepCSSPullStreamTask(r string) error {
 		delName := v.StreamName
 		delId := v.TaskId
 
-		if strings.HasPrefix(*delName, "test_") {
+		if strings.HasPrefix(*delName, defaultCSSPrefix) {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				err := cssService.DeleteCssPullStreamTaskById(ctx, delId, helper.String(defaultCSSOperator))
 				if err != nil {
@@ -47,7 +47,7 @@ func testSweepCSSPullStreamTask(r string) error {
 				return nil
 			})
 			if err != nil {
-				return fmt.Errorf("[ERROR] instance %s:%s failed! reason:[%s]", *delName, *delId, err.Error())
+				return fmt.Errorf("[ERROR] sweeper instance %s:%s failed! reason:[%s]", *delName, *delId, err.Error())
 			}
 		}
 	}

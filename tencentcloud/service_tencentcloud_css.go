@@ -45,12 +45,41 @@ func (me *CssService) DescribeCssWatermark(ctx context.Context, watermarkId stri
 	return
 }
 
-func (me *CssService) DeleteCssWatermarkById(ctx context.Context, watermarkId string) (errRet error) {
+func (me *CssService) DescribeCssWatermarks(ctx context.Context) (marks []*css.WatermarkInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeLiveWatermarksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query objects", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseCssClient().DescribeLiveWatermarks(request)
+	if err != nil {
+		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response == nil || *response.Response.TotalNum < 1{
+		return
+	}
+	marks = response.Response.WatermarkList
+	return
+}
+
+func (me *CssService) DeleteCssWatermarkById(ctx context.Context, watermarkId *int64) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := css.NewDeleteLiveWatermarkRequest()
 
-	request.WatermarkId = helper.Int64(helper.StrToInt64(watermarkId))
+	request.WatermarkId = watermarkId
 
 	defer func() {
 		if errRet != nil {
@@ -231,7 +260,7 @@ func (me *CssService) DescribeCssLiveTranscodeTemplates(ctx context.Context) (te
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
+				logId, "query objects", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
@@ -244,7 +273,7 @@ func (me *CssService) DescribeCssLiveTranscodeTemplates(ctx context.Context) (te
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if response.Response.Templates == nil || len(response.Response.Templates) < 1 {
+	if response.Response == nil || len(response.Response.Templates) < 1 {
 		return
 	}
 	temps = response.Response.Templates
