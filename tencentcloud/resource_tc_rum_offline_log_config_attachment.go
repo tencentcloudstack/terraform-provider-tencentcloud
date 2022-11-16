@@ -43,12 +43,14 @@ func resourceTencentCloudRumOfflineLogConfigAttachment() *schema.Resource {
 			"project_key": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Unique project key for reporting.",
 			},
 
 			"unique_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Unique identifier of the user to be listened on(aid or uin).",
 			},
 

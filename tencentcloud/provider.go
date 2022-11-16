@@ -747,6 +747,10 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_security_groups
 
 Real User Monitoring(RUM)
+  Data Source
+	tencentcloud_rum_project
+	tencentcloud_rum_offline_log_config
+	tencentcloud_rum_whitelist
   Resource
 	tencentcloud_rum_project
 	tencentcloud_rum_taw_instance
@@ -1065,6 +1069,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_rum_project":                              dataSourceTencentCloudRumProject(),
+			"tencentcloud_rum_offline_log_config":                   dataSourceTencentCloudRumOfflineLogConfig(),
+			"tencentcloud_rum_whitelist":                            dataSourceTencentCloudRumWhitelist(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

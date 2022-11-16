@@ -73,7 +73,7 @@ func resourceTencentCloudRumWhitelist() *schema.Resource {
 				Description: "End time.",
 			},
 
-			"id": {
+			"wid": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Auto-Increment allowlist ID.",
@@ -103,7 +103,7 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 	var (
 		request    = rum.NewCreateWhitelistRequest()
 		instanceID string
-		id         string
+		wid        string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -142,7 +142,7 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 
 	// whitelistId = *response.Response.Msg
 
-	d.SetId(instanceID + FILED_SP + id)
+	d.SetId(instanceID + FILED_SP + wid)
 	return resourceTencentCloudRumWhitelistRead(d, meta)
 }
 
@@ -160,9 +160,9 @@ func resourceTencentCloudRumWhitelistRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceID := idSplit[0]
-	id := idSplit[1]
+	wid := idSplit[1]
 
-	whitelist, err := service.DescribeRumWhitelist(ctx, instanceID, id)
+	whitelist, err := service.DescribeRumWhitelist(ctx, instanceID, wid)
 
 	if err != nil {
 		return err
@@ -170,7 +170,7 @@ func resourceTencentCloudRumWhitelistRead(d *schema.ResourceData, meta interface
 
 	if whitelist == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `whitelist` %s does not exist", id)
+		return fmt.Errorf("resource `whitelist` %s does not exist", wid)
 	}
 
 	if whitelist.InstanceID != nil {
@@ -194,7 +194,7 @@ func resourceTencentCloudRumWhitelistRead(d *schema.ResourceData, meta interface
 	}
 
 	if whitelist.ID != nil {
-		_ = d.Set("id", whitelist.ID)
+		_ = d.Set("wid", whitelist.ID)
 	}
 
 	if whitelist.CreateUser != nil {
@@ -245,9 +245,9 @@ func resourceTencentCloudRumWhitelistDelete(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceID := idSplit[0]
-	id := idSplit[1]
+	wid := idSplit[1]
 
-	if err := service.DeleteRumWhitelistById(ctx, instanceID, id); err != nil {
+	if err := service.DeleteRumWhitelistById(ctx, instanceID, wid); err != nil {
 		return err
 	}
 

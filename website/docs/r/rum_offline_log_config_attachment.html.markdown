@@ -24,8 +24,8 @@ resource "tencentcloud_rum_offline_log_config_attachment" "offline_log_config_at
 
 The following arguments are supported:
 
-* `project_key` - (Required, String) Unique project key for reporting.
-* `unique_id` - (Required, String) Unique identifier of the user to be listened on(aid or uin).
+* `project_key` - (Required, String, ForceNew) Unique project key for reporting.
+* `unique_id` - (Required, String, ForceNew) Unique identifier of the user to be listened on(aid or uin).
 
 ## Attributes Reference
 

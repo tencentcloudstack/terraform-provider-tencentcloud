@@ -280,3 +280,131 @@ func (me *RumService) DeleteRumOfflineLogConfigAttachmentById(ctx context.Contex
 
 	return
 }
+
+func (me *RumService) DescribeRumOfflineLogConfigByFilter(ctx context.Context, param map[string]interface{}) (configs *rum.DescribeOfflineLogConfigsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeOfflineLogConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "project_key" {
+			request.ProjectKey = v.(*string)
+		}
+	}
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeOfflineLogConfigs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		configs = response.Response
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumProjectByFilter(ctx context.Context, param map[string]interface{}) (project []*rum.RumProject, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeProjectsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.Filters = append(
+				request.Filters,
+				&rum.Filter{
+					Name:   helper.String("InstanceID"),
+					Values: []*string{v.(*string)},
+				},
+			)
+		}
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseRumClient().DescribeProjects(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ProjectSet) < 1 {
+			break
+		}
+		project = append(project, response.Response.ProjectSet...)
+		if len(response.Response.ProjectSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *RumService) DescribeRumWhitelistByFilter(ctx context.Context, param map[string]interface{}) (whitelist []*rum.Whitelist, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeWhitelistsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceID = v.(*string)
+		}
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRumClient().DescribeWhitelists(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.WhitelistSet) > 0 {
+		whitelist = response.Response.WhitelistSet
+	}
+
+	return
+}

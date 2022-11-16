@@ -38,8 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time.
 * `create_user` - Creator ID.
-* `id` - Auto-Increment allowlist ID.
 * `ttl` - End time.
+* `wid` - Auto-Increment allowlist ID.
 
 
 ## Import
