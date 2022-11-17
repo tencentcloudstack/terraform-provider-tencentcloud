@@ -54,7 +54,7 @@ func testSweepCSSPullStreamTask(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudCSSPullStreamTaskResource_basic(t *testing.T) {
+func TestAccTencentCloudCssPullStreamTaskResource_basic(t *testing.T) {
 	t.Parallel()
 	baseTime := time.Now().UTC().Add(10 * time.Hour)
 	startTime := baseTime.Format(time.RFC3339)
