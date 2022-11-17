@@ -1016,13 +1016,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
-		if _, ok := d.GetOk("key_name"); ok {
-			_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
-		} else {
-			_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
-		}
+		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
+		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	} else {
 		_ = d.Set("key_name", "")
+		_ = d.Set("key_ids", []*string{helper.String("")})
 	}
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
