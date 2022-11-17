@@ -127,3 +127,29 @@ func (me *DnspodService) DeleteDomain(ctx context.Context, domain string) (errRe
 	errRet = err
 	return
 }
+
+func (me *DnspodService) DescribeRecordList(ctx context.Context, request *dnspod.DescribeRecordListRequest) (list []*dnspod.RecordListItem, info *dnspod.RecordCountInfo, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDnsPodClient().DescribeRecordList(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	list = response.Response.RecordList
+	info = response.Response.RecordCountInfo
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
