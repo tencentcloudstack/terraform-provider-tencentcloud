@@ -1,5 +1,5 @@
 ---
-subcategory: "css"
+subcategory: "Cloud Streaming Services(CSS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_css_watermark"
 sidebar_current: "docs-tencentcloud-resource-css_watermark"
@@ -15,12 +15,12 @@ Provides a resource to create a css watermark
 
 ```hcl
 resource "tencentcloud_css_watermark" "watermark" {
-  picture_url    = ""
-  watermark_name = ""
-  x_position     = ""
-  y_position     = ""
-  width          = ""
-  height         = ""
+  picture_url    = "picture_url"
+  watermark_name = "watermark_name"
+  x_position     = 0
+  y_position     = 0
+  width          = 0
+  height         = 0
 }
 ```
 
@@ -40,7 +40,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `status` - status. 0: not used, 1: used.
 
 
 ## Import

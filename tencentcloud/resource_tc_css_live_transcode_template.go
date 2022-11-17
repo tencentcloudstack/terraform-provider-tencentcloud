@@ -259,7 +259,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 		request.Rotate = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("profile"); v != nil {
+	if v, ok := d.GetOk("profile"); ok {
 		request.Profile = helper.String(v.(string))
 	}
 

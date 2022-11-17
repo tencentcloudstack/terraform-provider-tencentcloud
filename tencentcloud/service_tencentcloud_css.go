@@ -67,7 +67,7 @@ func (me *CssService) DescribeCssWatermarks(ctx context.Context) (marks []*css.W
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if response.Response == nil || *response.Response.TotalNum < 1{
+	if response.Response == nil || *response.Response.TotalNum < 1 {
 		return
 	}
 	marks = response.Response.WatermarkList
@@ -306,7 +306,7 @@ func (me *CssService) DeleteCssLiveTranscodeTemplateById(ctx context.Context, te
 	return
 }
 
-func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context, domainName, templateId *string) (liveTranscodeRuleAttachment *css.RuleInfo, errRet error) {
+func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context, domainName, templateId *string) (rules []*css.RuleInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = css.NewDescribeLiveTranscodeRulesRequest()
@@ -339,7 +339,7 @@ func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context
 	if len(response.Response.Rules) < 1 {
 		return
 	}
-	liveTranscodeRuleAttachment = response.Response.Rules[0]
+	rules = response.Response.Rules
 	return
 }
 

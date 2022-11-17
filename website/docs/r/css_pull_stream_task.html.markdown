@@ -1,5 +1,5 @@
 ---
-subcategory: "css"
+subcategory: "Cloud Streaming Services(CSS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_css_pull_stream_task"
 sidebar_current: "docs-tencentcloud-resource-css_pull_stream_task"
@@ -15,36 +15,15 @@ Provides a resource to create a css pull_stream_task
 
 ```hcl
 resource "tencentcloud_css_pull_stream_task" "pull_stream_task" {
-  source_type        = "PullLivePushLive"
-  source_urls        = ""
-  domain_name        = ""
-  app_name           = ""
-  stream_name        = ""
-  start_time         = ""
-  end_time           = ""
-  operator           = ""
-  push_args          = ""
-  callback_events    = ""
-  vod_loop_times     = ""
-  vod_refresh_type   = ""
-  callback_url       = ""
-  extra_cmd          = ""
-  comment            = ""
-  to_url             = ""
-  backup_source_type = ""
-  backup_source_url  = ""
-  watermark_list {
-    picture_url = ""
-    x_position  = ""
-    y_position  = ""
-    width       = ""
-    height      = ""
-    location    = ""
-
-  }
-  status      = ""
-  file_index  = ""
-  offset_time = ""
+  source_type = "source_type"
+  source_urls = ["source_urls"]
+  domain_name = "domain_name"
+  app_name    = "app_name"
+  stream_name = "stream_name"
+  start_time  = "2022-11-16T22:09:28Z"
+  end_time    = "2022-11-16T22:09:28Z"
+  operator    = "admin"
+  comment     = "comment."
 }
 ```
 
@@ -55,7 +34,6 @@ The following arguments are supported:
 * `app_name` - (Required, String) push app name.
 * `domain_name` - (Required, String) push domain name.
 * `end_time` - (Required, String) task end time.
-* `operator` - (Required, String) desc operator user name.
 * `source_type` - (Required, String) &amp;#39;PullLivePushLive&amp;#39;: SourceUrls live type, &amp;#39;PullVodPushLive&amp;#39;: SourceUrls vod type.
 * `source_urls` - (Required, Set: [`String`]) Pull Source media, SourceType=PullLivePushLive only 1 value, SourceType=PullLivePushLive can input multi values.
 * `start_time` - (Required, String) task begin time.
@@ -68,6 +46,7 @@ The following arguments are supported:
 * `extra_cmd` - (Optional, String) ignore_region for ignore the input region and reblance inside the server.
 * `file_index` - (Optional, Int) task enable or disable.
 * `offset_time` - (Optional, Int) task enable or disable.
+* `operator` - (Optional, String) desc operator user name.
 * `push_args` - (Optional, String) other pushing args.
 * `status` - (Optional, String) task enable or disable.
 * `to_url` - (Optional, String) full target push url, DomainName, AppName, StreamName field must be empty.

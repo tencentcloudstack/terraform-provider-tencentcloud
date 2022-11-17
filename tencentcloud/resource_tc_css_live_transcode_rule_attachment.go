@@ -4,12 +4,34 @@ Provides a resource to create a css live_transcode_rule_attachment
 Example Usage
 
 ```hcl
+resource "tencentcloud_css_pull_stream_task" "task" {
+  source_type = "%s"
+  source_urls = ["%s"]
+  domain_name = "%s"
+  app_name = "%s"
+  stream_name = "%s"
+  start_time = "%s"
+  end_time = "%s"
+  operator = "%s"
+  comment = "This is a demo."
+}
+
+resource "tencentcloud_css_live_transcode_template" "temp" {
+  template_name = "xxx"
+  acodec = "aac"
+  video_bitrate = 100
+  vcodec = "origin"
+  description = "This_is_a_tf_test_temp."
+  need_video = 1
+  need_audio = 1
+}
+
 resource "tencentcloud_css_live_transcode_rule_attachment" "live_transcode_rule_attachment" {
-  domain_name = ""
-  app_name = ""
-  stream_name = ""
-  template_id = ""
-    }
+  domain_name = tencentcloud_css_pull_stream_task.task.domain_name
+  app_name = tencentcloud_css_pull_stream_task.task.app_name
+  stream_name = tencentcloud_css_pull_stream_task.task.stream_name
+  template_id = tencentcloud_css_live_transcode_template.temp.id
+}
 
 ```
 Import
@@ -71,7 +93,7 @@ func resourceTencentCloudCssLiveTranscodeRuleAttachment() *schema.Resource {
 			},
 
 			"create_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "create time.",
 			},
@@ -153,41 +175,50 @@ func resourceTencentCloudCssLiveTranscodeRuleAttachmentRead(d *schema.ResourceDa
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	domainName := idSplit[0]
+	appName := idSplit[1]
+	streamName := idSplit[2]
 	templateId := idSplit[3]
 
-	liveTranscodeRuleAttachment, err := service.DescribeCssLiveTranscodeRuleAttachment(ctx, helper.String(domainName), helper.String(templateId))
-
+	rules, err := service.DescribeCssLiveTranscodeRuleAttachment(ctx, helper.String(domainName), helper.String(templateId))
 	if err != nil {
 		return err
 	}
 
-	if liveTranscodeRuleAttachment == nil {
+	if rules == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `liveTranscodeRuleAttachment` %s does not exist", d.Id())
 	}
 
-	if liveTranscodeRuleAttachment.DomainName != nil {
-		_ = d.Set("domain_name", liveTranscodeRuleAttachment.DomainName)
-	}
+	for _, v := range rules {
+		if *v.DomainName != domainName || *v.AppName != appName || *v.StreamName != streamName || *v.TemplateId != helper.StrToInt64(templateId) {
+			log.Printf("[DEBUG]%s api[%s] this rule does not match with:[%s]\n", logId, "query attachment", d.Id())
+			continue
+		}
 
-	if liveTranscodeRuleAttachment.AppName != nil {
-		_ = d.Set("app_name", liveTranscodeRuleAttachment.AppName)
-	}
+		liveTranscodeRuleAttachment := v
+		if liveTranscodeRuleAttachment.DomainName != nil {
+			_ = d.Set("domain_name", liveTranscodeRuleAttachment.DomainName)
+		}
 
-	if liveTranscodeRuleAttachment.StreamName != nil {
-		_ = d.Set("stream_name", liveTranscodeRuleAttachment.StreamName)
-	}
+		if liveTranscodeRuleAttachment.AppName != nil {
+			_ = d.Set("app_name", liveTranscodeRuleAttachment.AppName)
+		}
 
-	if liveTranscodeRuleAttachment.TemplateId != nil {
-		_ = d.Set("template_id", liveTranscodeRuleAttachment.TemplateId)
-	}
+		if liveTranscodeRuleAttachment.StreamName != nil {
+			_ = d.Set("stream_name", liveTranscodeRuleAttachment.StreamName)
+		}
 
-	if liveTranscodeRuleAttachment.CreateTime != nil {
-		_ = d.Set("create_time", liveTranscodeRuleAttachment.CreateTime)
-	}
+		if liveTranscodeRuleAttachment.TemplateId != nil {
+			_ = d.Set("template_id", liveTranscodeRuleAttachment.TemplateId)
+		}
 
-	if liveTranscodeRuleAttachment.UpdateTime != nil {
-		_ = d.Set("update_time", liveTranscodeRuleAttachment.UpdateTime)
+		if liveTranscodeRuleAttachment.CreateTime != nil {
+			_ = d.Set("create_time", liveTranscodeRuleAttachment.CreateTime)
+		}
+
+		if liveTranscodeRuleAttachment.UpdateTime != nil {
+			_ = d.Set("update_time", liveTranscodeRuleAttachment.UpdateTime)
+		}
 	}
 
 	return nil

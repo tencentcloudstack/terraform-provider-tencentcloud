@@ -799,7 +799,6 @@ const (
 // CSS
 const (
 	defaultCSSLiveType   = "PullLivePushLive"
-	defaultCSSVodType    = "PullVodPushLive"
 	defaultCSSDomainName = "177154.push.tlivecloud.com"
 	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
 	defaultCSSAppName    = "live"
