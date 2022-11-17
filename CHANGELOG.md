@@ -1,3 +1,18 @@
+## 1.78.11 (November 15, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_pts_alert_channel` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_cron_job` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_file` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_job` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_project` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_scenario` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: Remove maximum item limit on data disks ([#1390](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1390))
+
 ## 1.78.10 (November 11, 2022)
 
 BUG FIXES:

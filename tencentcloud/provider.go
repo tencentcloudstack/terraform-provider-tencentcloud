@@ -635,6 +635,8 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
     tencentcloud_dnspod_record
+  Data Source
+    tencentcloud_dnspod_records
 
 PrivateDNS
   Resource
@@ -746,7 +748,7 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
-tdcpg
+TDSQL-C for PostgreSQL(TDCPG)
   Data Source
 	tencentcloud_tdcpg_clusters
 	tencentcloud_tdcpg_instances
@@ -754,6 +756,30 @@ tdcpg
   Resource
 	tencentcloud_tdcpg_cluster
 	tencentcloud_tdcpg_instance
+
+Cloud Streaming Services(CSS)
+  Resource
+    tencentcloud_css_watermark
+	tencentcloud_css_pull_stream_task
+	tencentcloud_css_live_transcode_template
+	tencentcloud_css_live_transcode_rule_attachment
+
+Performance Testing Service(PTS)
+  Resource
+	tencentcloud_pts_project
+	tencentcloud_pts_alert_channel
+	tencentcloud_pts_scenario
+	tencentcloud_pts_file
+	tencentcloud_pts_job
+	tencentcloud_pts_cron_job
+
+TencentCloud Automation Tools(TAT)
+  Data Source
+	tencentcloud_tat_command
+	tencentcloud_tat_invoker
+  Resource
+	tencentcloud_tat_command
+	tencentcloud_tat_invoker
 
 */
 package tencentcloud
@@ -1069,6 +1095,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdcpg_instances":                          dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
+			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1348,6 +1377,18 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_tdcpg_cluster":                        resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                       resourceTencentCloudTdcpgInstance(),
+			"tencentcloud_css_watermark":                        resourceTencentCloudCssWatermark(),
+			"tencentcloud_css_pull_stream_task":                 resourceTencentCloudCssPullStreamTask(),
+			"tencentcloud_css_live_transcode_template":          resourceTencentCloudCssLiveTranscodeTemplate(),
+			"tencentcloud_css_live_transcode_rule_attachment":   resourceTencentCloudCssLiveTranscodeRuleAttachment(),
+			"tencentcloud_pts_project":                          resourceTencentCloudPtsProject(),
+			"tencentcloud_pts_alert_channel":                    resourceTencentCloudPtsAlertChannel(),
+			"tencentcloud_pts_scenario":                         resourceTencentCloudPtsScenario(),
+			"tencentcloud_pts_file":                             resourceTencentCloudPtsFile(),
+			"tencentcloud_pts_job":                              resourceTencentCloudPtsJob(),
+			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
+			"tencentcloud_tat_command":                          resourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                          resourceTencentCloudTatInvoker(),
 		},
 
 		ConfigureFunc: providerConfigure,

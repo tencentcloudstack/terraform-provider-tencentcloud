@@ -324,7 +324,6 @@ func (me *GaapService) CreateProxy(
 	createRequest.Concurrent = helper.IntUint64(concurrent)
 	createRequest.AccessRegion = &accessRegion
 	createRequest.RealServerRegion = &realserverRegion
-	createRequest.ClientToken = helper.String(helper.BuildToken())
 	for k, v := range tags {
 		createRequest.TagSet = append(createRequest.TagSet, &gaap.TagPair{
 			TagKey:   helper.String(k),
@@ -334,6 +333,7 @@ func (me *GaapService) CreateProxy(
 
 	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(createRequest.GetAction())
+		createRequest.ClientToken = helper.String(helper.BuildToken())
 
 		response, err := client.CreateProxy(createRequest)
 		if err != nil {
@@ -412,10 +412,10 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 
 	enableRequest := gaap.NewOpenProxiesRequest()
 	enableRequest.ProxyIds = []*string{&id}
-	enableRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(enableRequest.GetAction())
+		enableRequest.ClientToken = helper.String(helper.BuildToken())
 
 		response, err := client.OpenProxies(enableRequest)
 		if err != nil {
@@ -491,10 +491,10 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 
 	disableRequest := gaap.NewCloseProxiesRequest()
 	disableRequest.ProxyIds = []*string{&id}
-	disableRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(disableRequest.GetAction())
+		disableRequest.ClientToken = helper.String(helper.BuildToken())
 
 		response, err := client.CloseProxies(disableRequest)
 		if err != nil {
@@ -649,10 +649,10 @@ func (me *GaapService) ModifyProxyName(ctx context.Context, id, name string) err
 	request := gaap.NewModifyProxiesAttributeRequest()
 	request.ProxyIds = []*string{&id}
 	request.ProxyName = &name
-	request.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
+		request.ClientToken = helper.String(helper.BuildToken())
 
 		if _, err := me.client.UseGaapClient().ModifyProxiesAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -674,10 +674,10 @@ func (me *GaapService) ModifyProxyProjectId(ctx context.Context, id string, proj
 	request := gaap.NewModifyProxiesProjectRequest()
 	request.ProxyIds = []*string{&id}
 	request.ProjectId = helper.IntInt64(projectId)
-	request.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
+		request.ClientToken = helper.String(helper.BuildToken())
 
 		if _, err := me.client.UseGaapClient().ModifyProxiesProject(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -705,10 +705,10 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	if concurrent != nil {
 		modifyRequest.Concurrent = helper.IntUint64(*concurrent)
 	}
-	modifyRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(modifyRequest.GetAction())
+		modifyRequest.ClientToken = helper.String(helper.BuildToken())
 
 		if _, err := client.ModifyProxyConfiguration(modifyRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",

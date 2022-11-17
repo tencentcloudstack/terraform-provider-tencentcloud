@@ -786,6 +786,34 @@ const (
 )
 
 // End of MARIADB
+// PTS
+const (
+	defaultPtsProjectId  = "project-45vw7v82"
+	defaultScenarioId    = "scenario-gb5ix8m2"
+	defaultScenarioIdJob = "scenario-22q19f3k"
+	defaultPtsNoticeId   = "notice-tj75hgqj"
+)
+
+// End of PTS
+
+// CSS
+const (
+	defaultCSSLiveType   = "PullLivePushLive"
+	defaultCSSDomainName = "177154.push.tlivecloud.com"
+	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName    = "live"
+	defaultCSSOperator   = "tf_admin"
+	defaultCSSPrefix     = "tf_css_"
+)
+
+// End of CSS
+
+// TAT
+const (
+	defaultInstanceId = "ins-881b1c8w"
+)
+
+// End of TAT
 
 // TDCPG
 const (
