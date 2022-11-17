@@ -26,9 +26,9 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
   instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
   kind        = "cvm-http-sd-exporter"
   content     = jsonencode({
-		"kind": "cvm-http-sd-exporter",
-		"spec": {
-			"job": <<-EOT
+    "kind": "cvm-http-sd-exporter",
+    "spec": {
+      "job": <<-EOT
         job_name: example-job-name
         metrics_path: /metrics
         cvm_sd_configs:
@@ -49,18 +49,18 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
           - source_labels: [__meta_cvm_region]
             target_label: region
             action: replace
-			EOT
-		}
-	})
-	kube_type   = 3
+      EOT
+    }
+  })
+  kube_type   = 3
   cluster_id  = ""
 }
 
 #Integration Center: Cloud Monitor
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationCloudMonitor" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "qcloud-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "qcloud-exporter"
+  content = jsonencode({
     "name": "qcloud-exporter-example",
     "kind": "qcloud-exporter",
     "spec": {
@@ -99,15 +99,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Health Check
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationBlackbox" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "blackbox-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "blackbox-exporter"
+  content = jsonencode({
     "name": "blackbox-exporter-example",
     "kind": "blackbox-exporter",
     "spec": {
@@ -125,15 +125,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Consul
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationConsul" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "consul-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "consul-exporter"
+  content = jsonencode({
     "name": "consul-exporter-example",
     "kind": "consul-exporter",
     "spec": {
@@ -145,15 +145,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: ElasticSearch
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationEs" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "es-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "es-exporter"
+  content = jsonencode({
     "name": "ex-exporter-example",
     "kind": "es-exporter",
     "spec": {
@@ -174,15 +174,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Kafka
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationKafka" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "kafka-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "kafka-exporter"
+  content = jsonencode({
     "name": "kafka-exporter-example",
     "kind": "kafka-exporter",
     "spec": {
@@ -197,15 +197,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       "exporterSpec": {}
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Memcached
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationMemcached" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "memcached-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "memcached-exporter"
+  content = jsonencode({
     "name": "memcached-exporter-example",
     "kind": "memcached-exporter",
     "spec": {
@@ -217,15 +217,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: MongoDB
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationMongodb" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "mongodb-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "mongodb-exporter"
+  content = jsonencode({
     "name": "mongodb-exporter-example",
     "kind": "mongodb-exporter",
     "spec": {
@@ -249,15 +249,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Mysql
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationMysql" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "mysql-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "mysql-exporter"
+  content = jsonencode({
     "name": "mysql-exporter",
     "kind": "mysql-exporter",
     "spec": {
@@ -271,15 +271,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Postgres
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationPostgres" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "postgres-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "postgres-exporter"
+  content = jsonencode({
     "name": "postgres-exporter-example",
     "kind": "postgres-exporter",
     "spec": {
@@ -293,15 +293,15 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Redis
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationRedis" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "redis-exporter"
-	content = jsonencode({
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "redis-exporter"
+  content = jsonencode({
     "name": "redis-exporter-example",
     "kind": "redis-exporter",
     "spec": {
@@ -314,26 +314,26 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       }
     }
   })
-	cluster_id = ""
-	kube_type  = 3
+  cluster_id = ""
+  kube_type  = 3
 }
 
 #Integration Center: Scrape Job
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationRaw" {
-	instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
-	kind        = "raw-job"
-	content = jsonencode({
-		"kind": "raw-job",
-		"spec": {
-			"job": <<-EOT
+  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id 
+  kind        = "raw-job"
+  content = jsonencode({
+    "kind": "raw-job",
+    "spec": {
+      "job": <<-EOT
         job_name: example-raw-job-name
         metrics_path: /metrics
         static_configs:
           - targets:
             - 127.0.0.1:9090
-			EOT
-		}
-	})
-	cluster_id = ""
-	kube_type  = 3
+      EOT
+    }
+  })
+  cluster_id = ""
+  kube_type  = 3
 }
