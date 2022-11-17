@@ -1,3 +1,21 @@
+## 1.78.12 (November 17, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dnspod_records` ([#1398](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1398))
+* **New Data Source:** `tencentcloud_tat_command` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Data Source:** `tencentcloud_tat_invoker` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Resource:** `tencentcloud_css_live_transcode_rule_attachment` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_live_transcode_template` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_pull_stream_task` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_watermark` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_tat_command` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Resource:** `tencentcloud_tat_invoker` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+
+BUG FIXES:
+
+* resource/tencentcloud_gaap_proxy: fix gaap proxy retry error `DuplicatedRequest` ([#1402](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1402))
+
 ## 1.78.11 (November 15, 2022)
 
 FEATURES:

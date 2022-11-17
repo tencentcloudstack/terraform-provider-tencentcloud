@@ -32,7 +32,7 @@ CHANGELOG=$($(go env GOPATH)/bin/changelog-build -this-release $TARGET_SHA \
                       -entries-dir .changelog \
                       -changelog-template $__dir/changelog.tmpl \
                       -note-template $__dir/release-note.tmpl \
-                      -storage-mode filesystem)
+                      )
 if [ -z "$CHANGELOG" ]
 then
     echo "No changelog generated."
