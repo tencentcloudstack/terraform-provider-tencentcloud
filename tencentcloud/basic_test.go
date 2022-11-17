@@ -807,3 +807,10 @@ const (
 )
 
 // End of CSS
+
+// TAT
+const (
+	defaultInstanceId = "ins-881b1c8w"
+)
+
+// End of TAT

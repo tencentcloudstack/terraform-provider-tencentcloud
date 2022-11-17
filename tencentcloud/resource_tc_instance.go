@@ -353,7 +353,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 			},
 			"data_disks": {
 				Type:        schema.TypeList,
-				MaxItems:    10,
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
