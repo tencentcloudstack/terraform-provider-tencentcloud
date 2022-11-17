@@ -85,14 +85,17 @@ func (me *TdcpgService) IsolateTdcpgInstanceById(ctx context.Context, clusterId,
 func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *string) (errRet error) {
 	logId := getLogId(ctx)
 	var status string
+	if err := me.IsolateTdcpgClusterById(ctx, clusterId); err != nil {
+		return err
+	}
 
-	// query the cluster's status
+	// polling the cluster's status to isolated
 	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgCluster(ctx, clusterId)
 		if err != nil {
 			return retryError(err)
 		}
-		if result.ClusterSet[0] != nil {
+		if result != nil {
 			status = *result.ClusterSet[0].Status
 			if status == "isolated" || status == "deleted" {
 				return nil
@@ -100,13 +103,8 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 			if status == "isolating" {
 				return resource.RetryableError(fmt.Errorf("cluster status still on isolating, retry..."))
 			}
-
-			if err := me.IsolateTdcpgClusterById(ctx, clusterId); err != nil {
-				return retryError(err)
-			}
 		}
-		// return resource.RetryableError(fmt.Errorf("can not get cluster[%s] status, retry...", *clusterId))
-		return resource.NonRetryableError(fmt.Errorf("exit isolate tdcpg instance..."))
+		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITICAL]%s query tdcpg cluster failed, reason:%+v", logId, err)
@@ -146,7 +144,7 @@ func (me *TdcpgService) DeleteTdcpgClusterById(ctx context.Context, clusterId *s
 				return nil
 			}
 		}
-		return resource.NonRetryableError(fmt.Errorf("exit query tdcpg cluster..."))
+		return nil
 	})
 	if err != nil {
 		errRet = err
@@ -245,9 +243,12 @@ func (me *TdcpgService) IsolateTdcpgClusterById(ctx context.Context, clusterId *
 func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, instanceId *string) (errRet error) {
 	logId := getLogId(ctx)
 	var status string
+	if err := me.IsolateTdcpgInstanceById(ctx, clusterId, instanceId); err != nil {
+		return err
+	}
 
-	// isolate the instance's status to isolated
-	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	// polling the instance's status to isolated
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgInstance(ctx, clusterId, instanceId)
 		if err != nil {
 			return retryError(err)
@@ -261,12 +262,8 @@ func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, 
 			if status == "isolating" {
 				return resource.RetryableError(fmt.Errorf("instance status still on isolating, retry..."))
 			}
-
-			if err := me.IsolateTdcpgInstanceById(ctx, clusterId, instanceId); err != nil {
-				return retryError(err)
-			}
 		}
-		return resource.NonRetryableError(fmt.Errorf("exit isolate tdcpg instance..."))
+		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITICAL]%s query tdcpg instance failed, reason:%+v", logId, err)
@@ -297,7 +294,7 @@ func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, 
 	}
 
 	// wait the instance to be deleted
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		result, err := me.DescribeTdcpgInstance(ctx, clusterId, instanceId)
 		if err != nil {
 			return retryError(err)
@@ -308,7 +305,7 @@ func (me *TdcpgService) DeleteTdcpgInstanceById(ctx context.Context, clusterId, 
 				return nil
 			}
 		}
-		return resource.NonRetryableError(fmt.Errorf("exit query tdcpg instance..."))
+		return nil
 	})
 	if err != nil {
 		errRet = err

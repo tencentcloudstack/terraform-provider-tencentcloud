@@ -78,7 +78,6 @@ func resourceTencentCloudTdcpgInstance() *schema.Resource {
 			"operation_timing": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "operation timing, optional value is IMMEDIATE or MAINTAIN_PERIOD.",
 			},
 		},
@@ -275,7 +274,7 @@ func resourceTencentCloudTdcpgInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 
 		if instances != nil && instances.InstanceSet != nil {
-			instance:=*instances.InstanceSet[0]
+			instance := *instances.InstanceSet[0]
 
 			if *instance.Status == "running" {
 				if int(*instance.CPU) != d.Get("cpu").(int) || int(*instance.Memory) != d.Get("memory").(int) {

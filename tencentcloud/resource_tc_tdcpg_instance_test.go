@@ -38,8 +38,9 @@ func testSweepTdcpgInstance(r string) error {
 	for _, v := range instances {
 		delId := v.InstanceId
 		delName := v.InstanceName
+		status := *v.Status
 
-		if strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {
+		if status == "running" && strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				err := tdcpgService.DeleteTdcpgInstanceById(ctx, helper.String(defaultTdcpgClusterId), delId)
 				if err != nil {
@@ -74,7 +75,7 @@ func TestAccTencentCloudTdcpgInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccTdcpgInstance_update, defaultTdcpgClusterId),
+				Config: fmt.Sprintf(testAccTdcpgInstance_update, defaultTdcpgClusterId, defaultTdcpgTestNamePrefix),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdcpgInstanceExists("tencentcloud_tdcpg_instance.instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "cluster_id", defaultTdcpgClusterId),
@@ -85,9 +86,10 @@ func TestAccTencentCloudTdcpgInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdcpg_instance.instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_tdcpg_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"operation_timing"},
 			},
 		},
 	})
@@ -165,6 +167,7 @@ resource "tencentcloud_tdcpg_instance" "instance" {
   cluster_id = "%s"
   cpu = 2
   memory = 4
+  instance_name = "%sinstance"
   operation_timing = "IMMEDIATE"
 }
 

@@ -37,8 +37,9 @@ func testSweepTdcpgCluster(r string) error {
 	for _, v := range clusters {
 		delId := v.ClusterId
 		delName := v.ClusterName
+		status := *v.Status
 
-		if *v.Status == "deleted" {
+		if status == "deleted" {
 			continue
 		}
 		if strings.HasPrefix(*delName, defaultTdcpgTestNamePrefix) {

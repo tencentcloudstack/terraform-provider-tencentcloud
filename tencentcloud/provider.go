@@ -748,15 +748,6 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
-TDSQL-C for PostgreSQL(TDCPG)
-  Data Source
-	tencentcloud_tdcpg_clusters
-	tencentcloud_tdcpg_instances
-
-  Resource
-	tencentcloud_tdcpg_cluster
-	tencentcloud_tdcpg_instance
-
 Cloud Streaming Services(CSS)
   Resource
     tencentcloud_css_watermark
