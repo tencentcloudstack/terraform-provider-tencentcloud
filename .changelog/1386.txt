@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_css_watermark
+```
+
+```release-note:new-resource
+tencentcloud_css_pull_stream_task
+```
+
+```release-note:new-resource
+tencentcloud_css_live_transcode_template
+```
+
+```release-note:new-resource
+tencentcloud_css_live_transcode_rule_attachment
+```

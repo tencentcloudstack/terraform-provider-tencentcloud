@@ -163,9 +163,19 @@ func Int64ToStr(s int64) (i string) {
 	return
 }
 
+func Int64ToStrPoint(s int64) *string {
+	i := Int64ToStr(s)
+	return &i
+}
+
 func StrToInt64(s string) (i int64) {
 	i, _ = strconv.ParseInt(s, 10, 64)
 	return
+}
+
+func StrToInt64Point(s string) *int64 {
+	i := StrToInt64(s)
+	return &i
 }
 
 func UInt64ToStr(s uint64) (i string) {
@@ -177,6 +187,11 @@ func StrToUInt64(s string) (i uint64) {
 	intNum, _ := strconv.Atoi(s)
 	i = uint64(intNum)
 	return
+}
+
+func StrToUint64Point(s string) *uint64 {
+	i := StrToUInt64(s)
+	return &i
 }
 
 func StrToBool(s string) (i bool) {

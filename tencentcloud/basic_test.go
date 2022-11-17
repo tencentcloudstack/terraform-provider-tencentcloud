@@ -796,6 +796,18 @@ const (
 
 // End of PTS
 
+// CSS
+const (
+	defaultCSSLiveType   = "PullLivePushLive"
+	defaultCSSDomainName = "177154.push.tlivecloud.com"
+	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName    = "live"
+	defaultCSSOperator   = "tf_admin"
+	defaultCSSPrefix     = "tf_css_"
+)
+
+// End of CSS
+
 // TAT
 const (
 	defaultInstanceId = "ins-881b1c8w"

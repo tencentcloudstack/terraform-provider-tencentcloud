@@ -47,6 +47,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -132,6 +133,7 @@ type TencentCloudClient struct {
 	temConn            *tem.Client
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
+	cssConn            *css.Client
 	sesConn            *ses.Client
 	dcdbConn           *dcdb.Client
 	smsConn            *sms.Client
@@ -790,6 +792,19 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	me.tcmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcmConn
+}
+
+// UseCssClient returns css client for service
+func (me *TencentCloudClient) UseCssClient() *css.Client {
+	if me.cssConn != nil {
+		return me.cssConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cssConn, _ = css.NewClient(me.Credential, me.Region, cpf)
+	me.cssConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cssConn
 }
 
 // UseSesClient returns Ses client for service
