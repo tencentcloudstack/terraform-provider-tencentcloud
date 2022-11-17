@@ -5,12 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_watermark" "watermark" {
-  picture_url = ""
-  watermark_name = ""
-  x_position = ""
-  y_position = ""
-  width = ""
-  height = ""
+  picture_url = "picture_url"
+  watermark_name = "watermark_name"
+  x_position = 0
+  y_position = 0
+  width = 0
+  height = 0
 }
 
 ```
@@ -214,7 +214,7 @@ func resourceTencentCloudCssWatermarkUpdate(d *schema.ResourceData, meta interfa
 
 	watermarkId := d.Id()
 
-	request.WatermarkId = helper.Int64(helper.StrToInt64(watermarkId))
+	request.WatermarkId = helper.StrToInt64Point(watermarkId)
 
 	if d.HasChange("picture_url") {
 		if v, ok := d.GetOk("picture_url"); ok {
@@ -282,7 +282,7 @@ func resourceTencentCloudCssWatermarkDelete(d *schema.ResourceData, meta interfa
 
 	watermarkId := d.Id()
 
-	if err := service.DeleteCssWatermarkById(ctx, helper.Int64(helper.StrToInt64(watermarkId))); err != nil {
+	if err := service.DeleteCssWatermarkById(ctx, helper.StrToInt64Point(watermarkId)); err != nil {
 		return err
 	}
 

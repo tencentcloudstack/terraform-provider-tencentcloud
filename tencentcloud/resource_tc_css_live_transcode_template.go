@@ -5,28 +5,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_live_transcode_template" "live_transcode_template" {
-  template_name = ""
-  video_bitrate = ""
-  acodec = ""
-  audio_bitrate = ""
-  vcodec = ""
-  description = ""
-  need_video = ""
-  width = ""
-  need_audio = ""
-  height = ""
-  fps = ""
-  gop = ""
-  rotate = ""
-  profile = ""
-  bitrate_to_orig = ""
-  height_to_orig = ""
-  fps_to_orig = ""
-  ai_trans_code = ""
-  adapt_bitrate_percent = ""
-  short_edge_as_height = ""
-  d_r_m_type = ""
-  d_r_m_tracks = ""
+  template_name = "template_name"
+  acodec = "aac"
+  audio_bitrate = 128
+  video_bitrate = 100
+  vcodec = "origin"
+  description = "This_is_a_tf_test_temp."
+  need_video = 1
+  width = 0
+  need_audio = 1
+  height = 0
+  fps = 0
+  gop = 2
+  rotate = 0
+  profile = "baseline"
+  bitrate_to_orig = 0
+  height_to_orig = 0
+  fps_to_orig = 0
+  ai_trans_code = 0
+  adapt_bitrate_percent = 0
+  short_edge_as_height = 0
+  drm_type = "fairplay"
+  drm_tracks = "SD"
 }
 
 ```
@@ -75,7 +75,7 @@ func resourceTencentCloudCssLiveTranscodeTemplate() *schema.Resource {
 			"acodec": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "default acc, not support now.",
+				Description: "default aac, not support now.",
 			},
 
 			"audio_bitrate": {
@@ -180,13 +180,13 @@ func resourceTencentCloudCssLiveTranscodeTemplate() *schema.Resource {
 				Description: "let the short edge as the height.",
 			},
 
-			"d_r_m_type": {
+			"drm_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "DRM type, support fairplay/normalaes/widevine.",
 			},
 
-			"d_r_m_tracks": {
+			"drm_tracks": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "DRM tracks, support AUDIO/SD/HD/UHD1/UHD2.",
@@ -208,95 +208,90 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 	)
 
 	if v, ok := d.GetOk("template_name"); ok {
-
 		request.TemplateName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("video_bitrate"); ok {
+	if v, _ := d.GetOk("video_bitrate"); v != nil {
 		request.VideoBitrate = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("acodec"); ok {
-
 		request.Acodec = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("audio_bitrate"); ok {
+	if v, _ := d.GetOk("audio_bitrate"); v != nil {
 		request.AudioBitrate = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("vcodec"); ok {
-
 		request.Vcodec = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
-
 		request.Description = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("need_video"); ok {
+	if v, _ := d.GetOk("need_video"); v != nil {
 		request.NeedVideo = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("width"); ok {
+	if v, _ := d.GetOk("width"); v != nil {
 		request.Width = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("need_audio"); ok {
+	if v, _ := d.GetOk("need_audio"); v != nil {
 		request.NeedAudio = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("height"); ok {
+	if v, _ := d.GetOk("height"); v != nil {
 		request.Height = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("fps"); ok {
+	if v, _ := d.GetOk("fps"); v != nil {
 		request.Fps = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("gop"); ok {
+	if v, _ := d.GetOk("gop"); v != nil {
 		request.Gop = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("rotate"); ok {
+	if v, _ := d.GetOk("rotate"); v != nil {
 		request.Rotate = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("profile"); ok {
-
+	if v, _ := d.GetOk("profile"); v != nil {
 		request.Profile = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("bitrate_to_orig"); ok {
+	if v, _ := d.GetOk("bitrate_to_orig"); v != nil {
 		request.BitrateToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("height_to_orig"); ok {
+	if v, _ := d.GetOk("height_to_orig"); v != nil {
 		request.HeightToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("fps_to_orig"); ok {
+	if v, _ := d.GetOk("fps_to_orig"); v != nil {
 		request.FpsToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("ai_trans_code"); ok {
+	if v, _ := d.GetOk("ai_trans_code"); v != nil {
 		request.AiTransCode = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("adapt_bitrate_percent"); ok {
+	if v, _ := d.GetOk("adapt_bitrate_percent"); v != nil {
 		request.AdaptBitratePercent = helper.Float64(v.(float64))
 	}
 
-	if v, ok := d.GetOk("short_edge_as_height"); ok {
+	if v, _ := d.GetOk("short_edge_as_height"); v != nil {
 		request.ShortEdgeAsHeight = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("d_r_m_type"); ok {
+	if v, ok := d.GetOk("drm_type"); ok {
 		request.DRMType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("d_r_m_tracks"); ok {
+	if v, ok := d.GetOk("drm_tracks"); ok {
 		request.DRMTracks = helper.String(v.(string))
 	}
 
@@ -334,7 +329,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateRead(d *schema.ResourceData, me
 
 	templateId := d.Id()
 
-	liveTranscodeTemplate, err := service.DescribeCssLiveTranscodeTemplate(ctx, helper.Int64(helper.StrToInt64(templateId)))
+	liveTranscodeTemplate, err := service.DescribeCssLiveTranscodeTemplate(ctx, helper.StrToInt64Point(templateId))
 
 	if err != nil {
 		return err
@@ -426,11 +421,11 @@ func resourceTencentCloudCssLiveTranscodeTemplateRead(d *schema.ResourceData, me
 	}
 
 	if liveTranscodeTemplate.DRMType != nil {
-		_ = d.Set("d_r_m_type", liveTranscodeTemplate.DRMType)
+		_ = d.Set("drm_type", liveTranscodeTemplate.DRMType)
 	}
 
 	if liveTranscodeTemplate.DRMTracks != nil {
-		_ = d.Set("d_r_m_tracks", liveTranscodeTemplate.DRMTracks)
+		_ = d.Set("drm_tracks", liveTranscodeTemplate.DRMTracks)
 	}
 
 	return nil
@@ -445,7 +440,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 
 	request := css.NewModifyLiveTranscodeTemplateRequest()
 
-	request.TemplateId = helper.Int64(helper.StrToInt64(d.Id()))
+	request.TemplateId = helper.StrToInt64Point(d.Id())
 
 	if d.HasChange("template_name") {
 
@@ -454,7 +449,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("video_bitrate") {
-		if v, ok := d.GetOk("video_bitrate"); ok {
+		if v, _ := d.GetOk("video_bitrate"); v != nil {
 			request.VideoBitrate = helper.IntInt64(v.(int))
 		}
 	}
@@ -482,43 +477,43 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("need_video") {
-		if v, ok := d.GetOk("need_video"); ok {
+		if v, _ := d.GetOk("need_video"); v != nil {
 			request.NeedVideo = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("width") {
-		if v, ok := d.GetOk("width"); ok {
+		if v, _ := d.GetOk("width"); v != nil {
 			request.Width = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("need_audio") {
-		if v, ok := d.GetOk("need_audio"); ok {
+		if v, _ := d.GetOk("need_audio"); v != nil {
 			request.NeedAudio = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("height") {
-		if v, ok := d.GetOk("height"); ok {
+		if v, _ := d.GetOk("height"); v != nil {
 			request.Height = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("fps") {
-		if v, ok := d.GetOk("fps"); ok {
+		if v, _ := d.GetOk("fps"); v != nil {
 			request.Fps = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("gop") {
-		if v, ok := d.GetOk("gop"); ok {
+		if v, _ := d.GetOk("gop"); v != nil {
 			request.Gop = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("rotate") {
-		if v, ok := d.GetOk("rotate"); ok {
+		if v, _ := d.GetOk("rotate"); v != nil {
 			request.Rotate = helper.IntInt64(v.(int))
 		}
 	}
@@ -530,20 +525,20 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("bitrate_to_orig") {
-		if v, ok := d.GetOk("bitrate_to_orig"); ok {
+		if v, _ := d.GetOk("bitrate_to_orig"); v != nil {
 			request.BitrateToOrig = helper.IntInt64(v.(int))
 		}
 
 	}
 
 	if d.HasChange("height_to_orig") {
-		if v, ok := d.GetOk("height_to_orig"); ok {
+		if v, _ := d.GetOk("height_to_orig"); v != nil {
 			request.HeightToOrig = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("fps_to_orig") {
-		if v, ok := d.GetOk("fps_to_orig"); ok {
+		if v, _ := d.GetOk("fps_to_orig"); v != nil {
 			request.FpsToOrig = helper.IntInt64(v.(int))
 		}
 	}
@@ -553,27 +548,27 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("adapt_bitrate_percent") {
-		if v, ok := d.GetOk("adapt_bitrate_percent"); ok {
+		if v, _ := d.GetOk("adapt_bitrate_percent"); v != nil {
 			request.AdaptBitratePercent = helper.Float64(v.(float64))
 		}
 	}
 
 	if d.HasChange("short_edge_as_height") {
-		if v, ok := d.GetOk("short_edge_as_height"); ok {
+		if v, _ := d.GetOk("short_edge_as_height"); v != nil {
 			request.ShortEdgeAsHeight = helper.IntInt64(v.(int))
 		}
 
 	}
 
-	if d.HasChange("d_r_m_type") {
-		if v, ok := d.GetOk("d_r_m_type"); ok {
+	if d.HasChange("drm_type") {
+		if v, ok := d.GetOk("drm_type"); ok {
 			request.DRMType = helper.String(v.(string))
 		}
 
 	}
 
-	if d.HasChange("d_r_m_tracks") {
-		if v, ok := d.GetOk("d_r_m_tracks"); ok {
+	if d.HasChange("drm_tracks") {
+		if v, ok := d.GetOk("drm_tracks"); ok {
 			request.DRMTracks = helper.String(v.(string))
 		}
 
@@ -609,7 +604,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateDelete(d *schema.ResourceData, 
 
 	templateId := d.Id()
 
-	if err := service.DeleteCssLiveTranscodeTemplateById(ctx, helper.Int64(helper.StrToInt64(templateId))); err != nil {
+	if err := service.DeleteCssLiveTranscodeTemplateById(ctx, helper.StrToInt64Point(templateId)); err != nil {
 		return err
 	}
 

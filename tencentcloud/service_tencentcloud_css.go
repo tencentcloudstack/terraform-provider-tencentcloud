@@ -27,7 +27,7 @@ func (me *CssService) DescribeCssWatermark(ctx context.Context, watermarkId stri
 		}
 	}()
 
-	request.WatermarkId = helper.Int64Uint64(helper.StrToInt64(watermarkId))
+	request.WatermarkId = helper.StrToUint64Point(watermarkId)
 
 	response, err := me.client.UseCssClient().DescribeLiveWatermark(request)
 	if err != nil {
@@ -324,7 +324,7 @@ func (me *CssService) DescribeCssLiveTranscodeRuleAttachment(ctx context.Context
 	}
 
 	if templateId != nil {
-		request.TemplateIds = []*int64{helper.Int64(helper.StrToInt64(*templateId))}
+		request.TemplateIds = []*int64{helper.StrToInt64Point(*templateId)}
 	}
 
 	response, err := me.client.UseCssClient().DescribeLiveTranscodeRules(request)

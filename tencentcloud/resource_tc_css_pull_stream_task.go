@@ -5,36 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_pull_stream_task" "pull_stream_task" {
-  source_type = "PullLivePushLive"
-  source_urls = ""
-  domain_name = ""
-  app_name = "live"
-  stream_name = ""
-  start_time = ""
-  end_time = ""
-  operator = ""
-  push_args = ""
-  callback_events = ""
-  vod_loop_times = ""
-  vod_refresh_type = ""
-  callback_url = ""
-  extra_cmd = ""
-  comment = ""
-  to_url = ""
-  backup_source_type = ""
-  backup_source_url = ""
-  watermark_list {
-			picture_url = ""
-			x_position = ""
-			y_position = ""
-			width = ""
-			height = ""
-			location = ""
-
-  }
-  status = ""
-          file_index = ""
-  offset_time = ""
+  source_type = "source_type"
+  source_urls = ["source_urls"]
+  domain_name = "domain_name"
+  app_name = "app_name"
+  stream_name = "stream_name"
+  start_time = "2022-11-16T22:09:28Z"
+  end_time = "2022-11-16T22:09:28Z"
+  operator = "admin"
+  comment = "comment."
   }
 
 ```
@@ -338,7 +317,7 @@ func resourceTencentCloudCssPullStreamTaskCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("vod_loop_times"); ok {
-		request.VodLoopTimes = helper.String(helper.Int64ToStr(v.(int64)))
+		request.VodLoopTimes = helper.Int64ToStrPoint(v.(int64))
 	}
 
 	if v, ok := d.GetOk("vod_refresh_type"); ok {
