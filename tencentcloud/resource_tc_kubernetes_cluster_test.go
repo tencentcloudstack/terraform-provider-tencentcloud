@@ -245,7 +245,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
   cluster_intranet_subnet_id                 = local.subnet_id
-  cluster_internet_security_group               = local.sg_id
+  cluster_internet_security_group            = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
