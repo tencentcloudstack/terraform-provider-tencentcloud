@@ -29,16 +29,16 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
     "kind": "cvm-http-sd-exporter",
     "spec": {
       "job": <<-EOT
-        job_name: example-job-name
+        job_name: example-cvm-job-name
         metrics_path: /metrics
         cvm_sd_configs:
         - region: ap-guangzhou
           ports:
             - 9100
           filters:         
-            - name: tag:示例标签键
+            - name: tag:YOUR_TAG_KEY
               values: 
-              - 示例标签值
+              - YOUR_TAG_VALUE
         relabel_configs: 
           - source_labels: [__meta_cvm_instance_state]
             regex: RUNNING
