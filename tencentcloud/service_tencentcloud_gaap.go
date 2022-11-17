@@ -324,7 +324,6 @@ func (me *GaapService) CreateProxy(
 	createRequest.Concurrent = helper.IntUint64(concurrent)
 	createRequest.AccessRegion = &accessRegion
 	createRequest.RealServerRegion = &realserverRegion
-	createRequest.ClientToken = helper.String(helper.BuildToken())
 	for k, v := range tags {
 		createRequest.TagSet = append(createRequest.TagSet, &gaap.TagPair{
 			TagKey:   helper.String(k),
@@ -334,6 +333,7 @@ func (me *GaapService) CreateProxy(
 
 	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(createRequest.GetAction())
+		createRequest.ClientToken = helper.String(helper.BuildToken())
 
 		response, err := client.CreateProxy(createRequest)
 		if err != nil {
