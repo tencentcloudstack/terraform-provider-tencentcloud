@@ -277,21 +277,21 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 				return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
 			}
 			for _, v := range instance.DBInstanceNetInfo {
-				if *v.NetType == "public" {
-					if *v.Status == "opened" || *v.Status == "1" {
-						return nil
-					}
-					if *v.Status == "opening" || *v.Status == "initing" || *v.Status == "3" || *v.Status == "0" {
-						startProgressRetries = 0
-						return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
-					}
-					if startProgressRetries > 0 && *v.Status == "closed" {
-						startProgressRetries -= 1
-						return resource.RetryableError(fmt.Errorf("status still closed, retry remaining count: %d", startProgressRetries))
-					}
-					return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
-
+				if *v.NetType != "public" {
+					continue
 				}
+				if MatchAny(*v.Status, "opened", "2") {
+					return nil
+				}
+				if MatchAny(*v.Status, "opening", "4") {
+					startProgressRetries = 0
+					return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+				}
+				if startProgressRetries > 0 && MatchAny(*v.Status, "closed", "initing") {
+					startProgressRetries -= 1
+					return resource.RetryableError(fmt.Errorf("status still closed, retry remaining count: %d", startProgressRetries))
+				}
+				return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
 			}
 			// there is no public service yet
 			return resource.RetryableError(fmt.Errorf("cannot find public status, postgresql instance %s watiting", instanceId))
@@ -335,19 +335,20 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 				return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
 			}
 			for _, v := range instance.DBInstanceNetInfo {
-				if *v.NetType == "public" {
-					if *v.Status == "closed" || *v.Status == "2" {
-						return nil
-					}
-					if *v.Status == "closing" || *v.Status == "4" {
-						return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
-					}
-					if startProgressRetries > 0 && *v.Status == "opened" {
-						startProgressRetries -= 1
-						return resource.RetryableError(fmt.Errorf("status still opened, retry remaining count: %d", startProgressRetries))
-					}
-					return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
+				if *v.NetType != "public" {
+					continue
 				}
+				if MatchAny(*v.Status, "closed", "3", "initing", "1") {
+					return nil
+				}
+				if MatchAny(*v.Status, "closing", "4") {
+					return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+				}
+				if startProgressRetries > 0 && *v.Status == "opened" {
+					startProgressRetries -= 1
+					return resource.RetryableError(fmt.Errorf("status still opened, retry remaining count: %d", startProgressRetries))
+				}
+				return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
 			}
 			return nil
 		})
