@@ -635,6 +635,8 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
     tencentcloud_dnspod_record
+  Data Source
+    tencentcloud_dnspod_records
 
 PrivateDNS
   Resource
@@ -1074,6 +1076,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 		},
