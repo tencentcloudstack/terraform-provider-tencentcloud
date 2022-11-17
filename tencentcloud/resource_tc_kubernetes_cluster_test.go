@@ -300,20 +300,14 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 const testAccTkeExtensionAddons = `
 variable "addons" {
   default = [{
-    name  = "CBS",
+    name  = "CFS",
     param = {
       "kind" : "App", "spec" : {
-        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.5" },
+        "chart" : { "chartName" : "cfs", "chartVersion" : "1.0.7" },
         "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
       }
     }
   },
-    {
-      name  = "SecurityGroupPolicy",
-      param = {
-        "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
-      }
-    },
     {
       name  = "OOMGuard",
       param = {
@@ -324,20 +318,14 @@ variable "addons" {
 
 variable "addons_update" {
   default = [{
-    name  = "CBS",
+    name  = "CFS",
     param = {
       "kind" : "App", "spec" : {
-        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
+        "chart" : { "chartName" : "cfs", "chartVersion" : "1.0.8" },
         "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
       }
     }
   },
-    {
-      name  = "SecurityGroupPolicy",
-      param = {
-        "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
-      }
-    },
     {
       name  = "OOMGuard",
       param = {
@@ -569,6 +557,24 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   auto_upgrade_cluster_level				 = true
   cluster_deploy_type 						 = "MANAGED_CLUSTER"
 
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
   dynamic "extension_addon" {
     for_each = var.addons
     content {
@@ -614,6 +620,24 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
       name = extension_addon.value.name
       param = jsonencode(extension_addon.value.param)
     }
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
   }
 
   log_agent {

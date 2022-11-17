@@ -223,6 +223,15 @@ data "tencentcloud_vpc_subnets" "vpc_first" {
   availability_zone = var.availability_zone_first
 }
 
+# fetch latest addon(chart) versions
+data "tencentcloud_kubernetes_charts" "charts" {}
+
+locals {
+  chartNames    = data.tencentcloud_kubernetes_charts.charts.chart_list.*.name
+  chartVersions = data.tencentcloud_kubernetes_charts.charts.chart_list.*.latest_version
+  chartMap      = zipmap(local.chartNames, local.chartVersions)
+}
+
 resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
   cluster_cidr            = var.cluster_cidr
@@ -252,30 +261,30 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name = "CBS",
+    name = "COS"
     param = jsonencode({
       "kind" : "App", "spec" : {
-        "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
+        "chart" : { "chartName" : "cos", "chartVersion" : local.chartMap["cos"] },
         "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
       }
     })
   }
   extension_addon {
-    name = "SecurityGroupPolicy",
+    name = "SecurityGroupPolicy"
     param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
     })
   }
   extension_addon {
-    name = "OOMGuard",
+    name = "OOMGuard"
     param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
     })
   }
   extension_addon {
-    name = "OLM",
+    name = "OLM"
     param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : local.chartMap["olm"] } }
     })
   }
 }
