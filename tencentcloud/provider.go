@@ -755,6 +755,13 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
 
+TencentCloud Automation Tools(TAT)
+  Data Source
+	tencentcloud_tat_command
+	tencentcloud_tat_invoker
+  Resource
+	tencentcloud_tat_command
+	tencentcloud_tat_invoker
 */
 package tencentcloud
 
@@ -1067,6 +1074,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1350,6 +1359,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_file":                             resourceTencentCloudPtsFile(),
 			"tencentcloud_pts_job":                              resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
+			"tencentcloud_tat_command":                          resourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                          resourceTencentCloudTatInvoker(),
 		},
 
 		ConfigureFunc: providerConfigure,

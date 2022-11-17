@@ -795,3 +795,10 @@ const (
 )
 
 // End of PTS
+
+// TAT
+const (
+	defaultInstanceId = "ins-881b1c8w"
+)
+
+// End of TAT
