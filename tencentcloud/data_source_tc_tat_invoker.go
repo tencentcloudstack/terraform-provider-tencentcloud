@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tat_invoker" "invoker" {
-  invoker_id = ""
-  command_id = ""
-  type = ""
+	# invoker_id = ""
+	# command_id = ""
+	# type = ""
 }
 ```
 */
