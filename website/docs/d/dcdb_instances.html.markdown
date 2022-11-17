@@ -1,5 +1,5 @@
 ---
-subcategory: "dcdb"
+subcategory: "TDSQL for MySQL(dcdb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dcdb_instances"
 sidebar_current: "docs-tencentcloud-datasource-dcdb_instances"

@@ -1,5 +1,5 @@
 ---
-subcategory: "EMR"
+subcategory: "MapReduce(EMR)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_emr"
 sidebar_current: "docs-tencentcloud-datasource-emr"
