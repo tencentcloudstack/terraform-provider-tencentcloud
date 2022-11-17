@@ -408,3 +408,64 @@ func (me *RumService) DescribeRumWhitelistByFilter(ctx context.Context, param ma
 
 	return
 }
+
+func (me *RumService) DescribeRumTawInstanceByFilter(ctx context.Context, param map[string]interface{}) (tawInstance []*rum.RumInstanceInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeTawInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "charge_statuses" {
+			request.ChargeStatuses = v.([]*int64)
+		}
+		if k == "charge_types" {
+			request.ChargeTypes = v.([]*int64)
+		}
+		if k == "area_ids" {
+			request.AreaIds = v.([]*int64)
+		}
+		if k == "instance_statuses" {
+			request.InstanceStatuses = v.([]*int64)
+		}
+		if k == "instance_ids" {
+			request.InstanceIds = v.([]*string)
+		}
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseRumClient().DescribeTawInstances(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		tawInstance = append(tawInstance, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}

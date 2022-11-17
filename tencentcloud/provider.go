@@ -751,6 +751,7 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_project
 	tencentcloud_rum_offline_log_config
 	tencentcloud_rum_whitelist
+	tencentcloud_rum_taw_instance
   Resource
 	tencentcloud_rum_project
 	tencentcloud_rum_taw_instance
@@ -1072,6 +1073,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_project":                              dataSourceTencentCloudRumProject(),
 			"tencentcloud_rum_offline_log_config":                   dataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                            dataSourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_taw_instance":                         dataSourceTencentCloudRumTawInstance(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
