@@ -96,7 +96,6 @@ func dataSourceTencentCloudTatInvoker() *schema.Resource {
 						},
 						"schedule_settings": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Execution schedule of the invoker. This field is returned for recurring invokers.",
 							Elem: &schema.Resource{
